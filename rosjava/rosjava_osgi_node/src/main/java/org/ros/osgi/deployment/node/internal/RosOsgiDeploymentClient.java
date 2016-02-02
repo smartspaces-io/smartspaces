@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,13 +17,13 @@
 
 package org.ros.osgi.deployment.node.internal;
 
+import java.io.File;
+
 import org.osgi.framework.BundleContext;
 import org.ros.osgi.common.RosEnvironment;
 import org.ros.osgi.deployment.common.DeploymentInstaller;
 import org.ros.osgi.deployment.common.DeploymentInstallerFactory;
 import org.ros.osgi.deployment.node.DeploymentClient;
-
-import java.io.File;
 
 /**
  * A deployment client for ROS.

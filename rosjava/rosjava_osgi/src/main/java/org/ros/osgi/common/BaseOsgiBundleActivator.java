@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2014 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,7 +17,10 @@
 
 package org.ros.osgi.common;
 
-import com.google.common.collect.Lists;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -24,10 +28,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+import com.google.common.collect.Lists;
 
 /**
  * A base implementation of an OSGi bundle activator for ROS to use.
@@ -49,7 +50,8 @@ public abstract class BaseOsgiBundleActivator implements BundleActivator {
   /**
    * All service trackers we have.
    */
-  private final Map<String, MyServiceTracker<?>> serviceTrackers = new HashMap<String, MyServiceTracker<?>>();
+  private final Map<String, MyServiceTracker<?>> serviceTrackers =
+      new HashMap<String, MyServiceTracker<?>>();
 
   /**
    * Object to give lock for putting this bundle's services together.

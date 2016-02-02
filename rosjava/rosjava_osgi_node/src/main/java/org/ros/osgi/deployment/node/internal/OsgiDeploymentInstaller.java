@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,15 +17,15 @@
 
 package org.ros.osgi.deployment.node.internal;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
 import org.ros.osgi.deployment.common.DeploymentInstaller;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An OSGi deployment installer.

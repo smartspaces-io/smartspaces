@@ -1,0 +1,171 @@
+/*
+ * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2012 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package io.smartspaces.resource.repository.internal;
+
+import io.smartspaces.domain.basic.Activity;
+import io.smartspaces.domain.basic.ActivityDependency;
+import io.smartspaces.domain.basic.pojo.SimpleActivity;
+import io.smartspaces.domain.support.ActivityDescription;
+import io.smartspaces.domain.support.ActivityDescriptionReader;
+import io.smartspaces.domain.support.ActivityUtils;
+import io.smartspaces.domain.support.JdomActivityDescriptionReader;
+import io.smartspaces.master.server.services.ActivityRepository;
+import io.smartspaces.resource.Version;
+import io.smartspaces.resource.repository.ActivityRepositoryManager;
+import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
+import io.smartspaces.util.data.resource.MessageDigestResourceSignatureCalculator;
+import io.smartspaces.util.data.resource.ResourceSignatureCalculator;
+
+import java.io.InputStream;
+import java.util.Date;
+import java.util.List;
+
+import com.google.common.collect.Lists;
+import com.google.common.io.Closeables;
+
+/**
+ * The standard implementation of the {@link ActivityRepositoryManager}.
+ *
+ * @author Keith M. Hughes
+ */
+public class StandardActivityRepositoryManager implements ActivityRepositoryManager {
+
+  /**
+   * Repository for activities.
+   */
+  private ActivityRepository activityRepository;
+
+  /**
+   * Storage manager for the repository.
+   */
+  private ResourceRepositoryStorageManager repositoryStorageManager;
+
+  /**
+   * The calculator for resource signatures.
+   */
+  private ResourceSignatureCalculator resourceSignatureCalculator =
+      new MessageDigestResourceSignatureCalculator();
+
+  @Override
+  public Activity addActivity(InputStream activityStream) {
+    String stageHandle = repositoryStorageManager.stageResource(activityStream);
+    InputStream activityDescriptionStream = null;
+    try {
+      activityDescriptionStream =
+          repositoryStorageManager.getStagedResourceDescription("activity.xml", stageHandle);
+      ActivityDescriptionReader reader = new JdomActivityDescriptionReader();
+      ActivityDescription activityDescription = reader.readDescription(activityDescriptionStream);
+
+      repositoryStorageManager.commitResource(
+          ResourceRepositoryStorageManager.RESOURCE_CATEGORY_ACTIVITY,
+          activityDescription.getIdentifyingName(),
+          Version.parseVersion(activityDescription.getVersion()), stageHandle);
+
+      // TODO(keith): Might want to edit what it gives to the import so
+      // this may need to move.
+      Activity finalActivity =
+          activityRepository.getActivityByNameAndVersion(activityDescription.getIdentifyingName(),
+              activityDescription.getVersion());
+      if (finalActivity == null) {
+        finalActivity = activityRepository.newActivity();
+        finalActivity.setIdentifyingName(activityDescription.getIdentifyingName());
+        finalActivity.setVersion(activityDescription.getVersion());
+      }
+
+      ActivityUtils.copy(activityDescription, finalActivity);
+
+      // TODO(peringknife): Use appropriate TimeProvider for this.
+      finalActivity.setLastUploadDate(new Date());
+
+      copyDependencies(activityDescription, finalActivity);
+
+      calculateBundleContentHash(finalActivity);
+
+      activityRepository.saveActivity(finalActivity);
+
+      return finalActivity;
+    } finally {
+      Closeables.closeQuietly(activityDescriptionStream);
+      repositoryStorageManager.removeStagedReource(stageHandle);
+    }
+
+  }
+
+  @Override
+  public void calculateBundleContentHash(Activity activity) {
+    InputStream inputStream = null;
+    try {
+      inputStream =
+          repositoryStorageManager.getResourceStream(
+              ResourceRepositoryStorageManager.RESOURCE_CATEGORY_ACTIVITY,
+              activity.getIdentifyingName(), Version.parseVersion(activity.getVersion()));
+      String bundleSignature = resourceSignatureCalculator.getResourceSignature(inputStream);
+      activity.setBundleContentHash(bundleSignature);
+      inputStream.close();
+    } catch (Exception e) {
+      // do something!
+    } finally {
+      Closeables.closeQuietly(inputStream);
+    }
+  }
+
+  /**
+   * Copy all activity dependencies into the final activity.
+   *
+   * @param activityDescription
+   *          the activity which is being brought in
+   * @param finalActivity
+   *          the activity stored in the database
+   */
+  private void copyDependencies(SimpleActivity activityDescription, Activity finalActivity) {
+    List<ActivityDependency> finalDependencies = Lists.newArrayList();
+    for (ActivityDependency dependency : activityDescription.getDependencies()) {
+      ActivityDependency newDependency = activityRepository.newActivityDependency();
+
+      newDependency.setIdentifyingName(dependency.getIdentifyingName());
+      newDependency.setMinimumVersion(dependency.getMinimumVersion());
+      newDependency.setMaximumVersion(dependency.getMaximumVersion());
+      newDependency.setRequired(dependency.isRequired());
+
+      finalDependencies.add(newDependency);
+    }
+
+    finalActivity.setDependencies(finalDependencies);
+  }
+
+  /**
+   * Set the activity repository to use.
+   *
+   * @param activityRepository
+   *          the activity repository
+   */
+  public void setActivityRepository(ActivityRepository activityRepository) {
+    this.activityRepository = activityRepository;
+  }
+
+  /**
+   * Set the repository storage manager to use.
+   *
+   * @param repositoryStorageManager
+   *          the repository storage manager
+   */
+  public void
+      setRepositoryStorageManager(ResourceRepositoryStorageManager repositoryStorageManager) {
+    this.repositoryStorageManager = repositoryStorageManager;
+  }
+}

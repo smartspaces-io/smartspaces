@@ -1,0 +1,220 @@
+/*
+ * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2013 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: 'izpack'
+
+ext { containerType = "controller" }
+
+configurations {
+  bootstrap
+  system
+  launcher
+  extras
+  extrasDevStandalone
+
+  // TODO(keith): Eventually get from the extras themselves
+  extrasSupport
+}
+
+dependencies {
+  izpack 'org.codehaus.izpack:izpack-standalone-compiler:4.3.5'
+
+  bootstrap project(":runtime:activity:smartspaces-space-controller")
+
+  bootstrap project(":runtime:activity:smartspaces-activity-wrapper-script")
+  
+  bootstrap project(":activityapi:smartspaces-interaction")
+
+  bootstrap project(":service:smartspaces-service-script")
+  bootstrap project(":service:smartspaces-service-scheduler")
+  bootstrap project(":service:smartspaces-service-web")
+  bootstrap project(":service:smartspaces-service-audio-player")
+  bootstrap project(":service:smartspaces-service-speech-synthesis")
+  bootstrap project(":service:smartspaces-service-comm-chat")
+  bootstrap project(":service:smartspaces-service-comm-twitter")
+  bootstrap project(":service:smartspaces-service-mail-receiver")
+  bootstrap project(":service:smartspaces-service-mail-sender")
+  bootstrap project(":service:smartspaces-service-template")
+
+  bootstrap 'org.apache.felix:org.apache.felix.gogo.shell:0.10.0'
+
+  bootstrap('org.apache.felix:org.apache.felix.gogo.command:0.14.0') {
+    exclude group: 'org.osgi'
+    exclude group: 'org.easymock'
+  }
+
+  system 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'
+  system 'org.apache.log4j:com.springsource.org.apache.log4j:1.2.16'
+  system 'org.apache.felix:org.apache.felix.framework:5.0.0'
+  system project(':smartspaces-bootstrap-core')
+  system project(':smartspaces-launcher-bootstrap')
+
+  launcher project(':smartspaces-launcher')
+
+  extras project(":service:smartspaces-service-comm-usb")
+  extras project(":service:smartspaces-service-comm-bluetooth")
+  extras project(":service:smartspaces-service-comm-serial")
+  extras project(":service:smartspaces-service-image-depth")
+  extras project(":service:smartspaces-service-image-depth-openni2")
+  extras project(":service:smartspaces-service-image-vision")
+  extras project(":service:smartspaces-service-image-vision-opencv")
+
+  extrasSupport('com.nativelibs4java:bridj:0.7.0') { exclude module: 'dx' }
+
+  extrasDevStandalone project(':runtime:activity:smartspaces-activity-runtime-standalone')
+}
+
+task cleanContainers(type: Exec) {
+  commandLine "rm", "-fR", new File(project.projectDir, "build").absolutePath
+}
+
+task copyCore(type:Copy) {
+  outputs.upToDateWhen { false }
+  from rootProject.file('LICENSE.txt')
+  from rootProject.file('LICENSE.thirdparties.txt')
+  from rootProject.file('NOTICE.txt')
+  from parent.file('template-common')
+  from parent.file('common')
+  from project.file('template')
+  into project.ext.containerBuildTarget
+  filter(ReplaceTokens, tokens:[SMARTSPACES_VERSION:project.version])
+  filter(ReplaceTokens, tokens:[SMARTSPACES_CONTAINER_TYPE:project.ext.containerType])
+}
+
+task copyPythonCore(type:Copy) {
+  outputs.upToDateWhen { false }
+  from "${project.getProperty('smartspaces.dependencies.home')}/python/jython/jython2.5.2/Lib"
+  into "${project.ext.containerBuildTarget}/lib/python/PyLib"
+}
+
+task copyPythonRelease(type:Copy) {
+  outputs.upToDateWhen { false }
+  from rootProject.file('smartspaces_lib/src/main/python/release/common')
+  from rootProject.file('smartspaces_lib/src/main/python/release/controller')
+  into "${project.ext.containerBuildTarget}/lib/python/release"
+}
+
+task doAssembleExtras()
+
+task copyExtras(type:Copy, dependsOn: [doAssembleExtras]) {
+  from rootProject.subprojects.collect { it.file('build/staging/controller') }
+  into "${project.ext.containerBuildTarget}"
+}
+
+project.afterEvaluate {
+  project.configurations.extras.allDependencies.each {
+    def extrasProject = it.dependencyProject
+    extrasProject.afterEvaluate { doAssembleExtras.dependsOn extrasProject.assembleExtras }
+  }
+}
+
+task copyNeededComponents(dependsOn: [
+  copyExtras,
+  copyCore,
+  copyPythonCore,
+  copyPythonRelease
+])
+
+task copyContainerDependenciesLauncher(type: Copy) {
+  into "${project.ext.containerBuildTarget}"
+  from configurations.launcher - configurations.system
+}
+
+task copyContainerDependenciesBootstrap(type: Copy) {
+  into "${project.ext.containerBuildTarget}/${project.ext.smartSpacesContainerBootstrap}"
+  from configurations.bootstrap - configurations.system
+}
+
+task copyContainerDependenciesSystemJava(type: Copy) {
+  into "${project.ext.containerBuildTarget}/${project.ext.smartSpacesContainerSystemJava}"
+  from configurations.system
+}
+
+task copyContainerDependenciesExtrasSupport(type: Copy) {
+  into "${project.ext.containerBuildTarget}/${project.ext.smartSpacesContainerExtrasSupportJars}"
+  from configurations.extrasSupport
+}
+
+task copyContainerDependenciesExtrasDevStandalone(type: Copy) {
+  into "${project.ext.containerBuildTarget}/extras/standalone"
+  from configurations.extrasDevStandalone - configurations.bootstrap
+}
+
+task assembleContainers(dependsOn: [
+  copyNeededComponents,
+  copyContainerDependenciesLauncher,
+  copyContainerDependenciesBootstrap,
+  copyContainerDependenciesSystemJava,
+  copyContainerDependenciesExtrasSupport,
+  copyContainerDependenciesExtrasDevStandalone
+])
+
+assembleContainers.mustRunAfter cleanContainers
+
+task installDev(type: Exec, dependsOn: [
+  assembleContainers,
+  cleanContainers
+]) {
+  // TODO(keith): get the common parts into a generic task available to all
+  def stagingDir = new File(project.projectDir, "${project.ext.containerBuildTarget}").absolutePath
+  def containerDir = getProperty("smartspaces.dev.home") + "/" + project.ext.containerType
+  commandLine "bash", "../install_container.bash", version, project.ext.containerType, containerDir, stagingDir
+}
+
+task createImage(type: Copy, dependsOn: [
+  assembleContainers,
+  cleanContainers
+]) {
+  outputs.upToDateWhen { false }
+  // TODO(keith): get the common parts into a generic task available to all
+  if (project.hasProperty("imageHome")) {
+    def stagingDir = new File(project.projectDir, "${project.ext.containerBuildTarget}").absolutePath
+    def containerDir = getProperty("imageHome") + "/" + project.ext.containerType
+
+    from stagingDir
+    into containerDir
+    exclude 'config'
+  }
+}
+
+task copyInstallerDependencies(type:Copy, dependsOn: [assembleContainers]) {
+  outputs.upToDateWhen { false }
+  from project.file('src/izpack')
+  into project.ext.containerBuildTarget
+  filter(ReplaceTokens, tokens:[SMARTSPACES_VERSION:project.version])
+  filter(ReplaceTokens, tokens:[SMARTSPACES_CONTAINER_TYPE:project.ext.containerType])
+}
+
+izpack {
+  baseDir = file("${project.ext.containerBuildTarget}")
+  installFile = file('src/izpack/install.xml')
+  outputFile = file("$buildDir/distributions/smartspaces-controller-installer-${version}.jar")
+  compression = 'deflate'
+  compressionLevel = 9
+  appProperties = ['app.name': 'Smart Spaces Controller',
+    'app.version': version]
+}
+
+izPackCreateInstaller.dependsOn copyInstallerDependencies
+
+task createInstallers(dependsOn: [
+  cleanContainers,
+  izPackCreateInstaller
+])
+
+task clean(dependsOn: [cleanContainers])

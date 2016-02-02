@@ -1,0 +1,250 @@
+/*
+ * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2013 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package io.smartspaces.util.web;
+
+import io.smartspaces.service.web.HttpResponseCode;
+import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
+import io.smartspaces.service.web.server.HttpFileUpload;
+import io.smartspaces.service.web.server.HttpFileUploadListener;
+import io.smartspaces.service.web.server.HttpRequest;
+import io.smartspaces.service.web.server.HttpResponse;
+import io.smartspaces.service.web.server.internal.netty.NettyWebServer;
+import io.smartspaces.util.io.FileSupportImpl;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+
+import junit.framework.Assert;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.Jdk14Logger;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.google.common.collect.Maps;
+
+/**
+ * Test the {@link HttpClientHttpContentCopier} class.
+ *
+ * @author Keith M. Hughes
+ */
+public class HttpClientHttpContentCopierTest {
+
+  private static final String TEST_CONTENT = "This is a test";
+  private Log log;
+  private ScheduledExecutorService threadPool;
+  private HttpClientHttpContentCopier copier;
+  private NettyWebServer webServer;
+  private int webServerPort;
+  private String webServerUriPrefix;
+
+  @Before
+  public void setup() {
+    log = new Jdk14Logger("goober"); // Mockito.mock(Log.class);
+
+    threadPool = Executors.newScheduledThreadPool(100);
+
+    copier = new HttpClientHttpContentCopier();
+    copier.startup();
+
+    webServerPort = 10031;
+    webServerUriPrefix = "websockettest";
+    webServer = new NettyWebServer(threadPool, log);
+    webServer.setServerName("test-server");
+    webServer.setPort(webServerPort);
+    webServer.addDynamicContentHandler("/" + webServerUriPrefix, true,
+        new HttpDynamicRequestHandler() {
+
+          @Override
+          public void handle(HttpRequest request, HttpResponse response) {
+            String path = request.getUri().getPath();
+
+            if (path.endsWith("/error")) {
+              response.setResponseCode(HttpResponseCode.FORBIDDEN);
+            } else {
+              try {
+                response.getOutputStream().write(TEST_CONTENT.getBytes());
+              } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+              }
+            }
+          }
+        });
+
+    webServer.startup();
+  }
+
+  @After
+  public void cleanup() {
+    copier.shutdown();
+
+    webServer.shutdown();
+
+    threadPool.shutdown();
+  }
+
+  /**
+   * Test a successful transfer copying from the remote.
+   *
+   * @throws Exception
+   */
+  @Test
+  public void testCopyFromSuccess() throws Exception {
+    File destination = getTempFile();
+
+    String sourceUri = getUrlPrefix();
+
+    testCopyFromSuccessfulTransfer(destination, sourceUri);
+  }
+
+  /**
+   * Test having a failure copying from the remote and then attempting to read
+   * again.
+   *
+   * @throws Exception
+   */
+  @Test
+  public void testCopyFromFailure() throws Exception {
+    File destination = getTempFile();
+
+    String sourceUri = getUrlPrefix();
+
+    try {
+      copier.copy(sourceUri + "error", destination);
+
+      Assert.fail();
+    } catch (Exception e) {
+      // Expected
+    }
+
+    testCopyFromSuccessfulTransfer(destination, sourceUri);
+  }
+
+  /**
+   * Test a file upload from a file.
+   */
+  @Test
+  public void testFileUploadFile() throws Exception {
+    File source = getTempFile();
+    final File destination = getTempFile();
+
+    FileSupportImpl.INSTANCE.writeFile(source, TEST_CONTENT);
+
+    final AtomicReference<Map<String, String>> receivedParameters =
+        new AtomicReference<Map<String, String>>();
+    final CountDownLatch latch = new CountDownLatch(1);
+
+    webServer.setHttpFileUploadListener(new HttpFileUploadListener() {
+      @Override
+      public void handleHttpFileUpload(HttpFileUpload fileUpload) {
+        fileUpload.moveTo(destination);
+        receivedParameters.set(fileUpload.getParameters());
+        latch.countDown();
+      }
+    });
+
+    String sourceParameterName = "myfile";
+    Map<String, String> expectedParameters = Maps.newHashMap();
+    expectedParameters.put("foo", "bar");
+    expectedParameters.put("bletch", "spam");
+
+    copier.copyTo(getUrlPrefix(), source, sourceParameterName, expectedParameters);
+
+    Assert.assertTrue(latch.await(10, TimeUnit.SECONDS));
+
+    Assert.assertEquals(TEST_CONTENT, FileSupportImpl.INSTANCE.readFile(destination).trim());
+    Assert.assertEquals(expectedParameters, receivedParameters.get());
+  }
+
+  /**
+   * Test a file upload from an input stream.
+   */
+  @Test
+  public void testFileUploadInputStream() throws Exception {
+    final File destination = getTempFile();
+
+    InputStream source = new ByteArrayInputStream(TEST_CONTENT.getBytes());
+
+    final AtomicReference<Map<String, String>> receivedParameters =
+        new AtomicReference<Map<String, String>>();
+    final CountDownLatch latch = new CountDownLatch(1);
+
+    webServer.setHttpFileUploadListener(new HttpFileUploadListener() {
+      @Override
+      public void handleHttpFileUpload(HttpFileUpload fileUpload) {
+        fileUpload.moveTo(destination);
+        receivedParameters.set(fileUpload.getParameters());
+        latch.countDown();
+      }
+    });
+
+    String sourceParameterName = "myfile";
+    Map<String, String> expectedParameters = Maps.newHashMap();
+    expectedParameters.put("foo", "bar");
+    expectedParameters.put("bletch", "spam");
+
+    copier.copyTo(getUrlPrefix(), source, "foo.txt", sourceParameterName, expectedParameters);
+
+    Assert.assertTrue(latch.await(10, TimeUnit.SECONDS));
+
+    Assert.assertEquals(TEST_CONTENT, FileSupportImpl.INSTANCE.readFile(destination).trim());
+    Assert.assertEquals(expectedParameters, receivedParameters.get());
+  }
+
+  /**
+   * @param destination
+   * @param sourceUri
+   */
+  private void testCopyFromSuccessfulTransfer(File destination, String sourceUri) {
+    copier.copy(sourceUri + "success", destination);
+    String content = FileSupportImpl.INSTANCE.readFile(destination);
+    Assert.assertEquals(TEST_CONTENT, content.trim());
+  }
+
+  /**
+   * @return
+   */
+  private String getUrlPrefix() {
+    return String.format("http://127.0.0.1:%d/%s/", webServerPort, webServerUriPrefix);
+  }
+
+  /**
+   * Get an appropriately named temp file.
+   *
+   * @return The temp file
+   *
+   * @throws IOException
+   */
+  private File getTempFile() throws IOException {
+    File tempdir = new File(System.getProperty("java.io.tmpdir"));
+    File file = File.createTempFile("smartspaces-", "test", tempdir);
+    file.deleteOnExit();
+    return file;
+  }
+
+}

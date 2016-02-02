@@ -20,8 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import interactivespaces.testing.sizes.TestSizeLarge;
-
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.ros.RosTest;
@@ -33,6 +31,8 @@ import org.ros.exception.ServiceNotFoundException;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
+
+import io.smartspaces.testing.sizes.TestSizeLarge;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

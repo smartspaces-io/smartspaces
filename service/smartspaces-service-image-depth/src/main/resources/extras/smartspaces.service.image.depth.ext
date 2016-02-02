@@ -1,0 +1,3 @@
+package:org.bridj
+package:org.bridj.ann
+package:io.smartspaces.service.image.depth.internal.openni2.libraries

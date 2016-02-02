@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,12 +17,12 @@
 
 package org.ros.osgi.deployment.common;
 
+import java.util.HashMap;
+
 import org.ros.namespace.GraphName;
 import org.ros.namespace.NameResolver;
 import org.ros.node.NodeConfiguration;
 import org.ros.osgi.common.OsgiConstants;
-
-import java.util.HashMap;
 
 /**
  * Various useful methods for ROS OSGi deployment code.

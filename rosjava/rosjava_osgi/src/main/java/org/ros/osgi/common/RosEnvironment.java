@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,17 +17,17 @@
 
 package org.ros.osgi.common;
 
+import java.net.URI;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+
 import org.apache.commons.logging.Log;
 import org.ros.master.uri.MasterUriProvider;
 import org.ros.node.ConnectedNode;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeListener;
 import org.ros.node.NodeMain;
-
-import java.net.URI;
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * A ROS environment.

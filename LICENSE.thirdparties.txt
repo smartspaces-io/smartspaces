@@ -1,5 +1,10 @@
-Interactive Spaces contains code from several open source projects. Those
+Smart Spaces contains code from several open source projects. Those
 libraries and references to their licenses are given below.
+
+--------------
+
+Smart Spaces was forked from Interactive Spaces, a Google project that
+was licensed under Apache 2.
 
 --------------
 Jython and the Jython libraries are used with the following license.

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,10 +17,10 @@
 
 package org.ros.osgi.master.core.internal;
 
+import java.net.URI;
+
 import org.ros.RosCore;
 import org.ros.node.NodeConfiguration;
-
-import java.net.URI;
 
 /**
  * Bring up a pure Java ROS Master.

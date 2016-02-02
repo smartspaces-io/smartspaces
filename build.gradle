@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -47,19 +48,19 @@ allprojects {
     // be pushed to production.
     //
     // Final versions should set the qualifier to null.
-    interactiveSpacesVersion = '1.8.2'
-    interactiveSpacesVersionQualifier = 'SNAPSHOT'
+    smartSpacesVersion = '0.1.0'
+    smartSpacesVersionQualifier = 'SNAPSHOT'
 
     // These specify the layout of IS containers.
     
     // Where the Java system libraries go
-    interactiveSpacesContainerSystemJava = 'lib/system/java'
+    smartSpacesContainerSystemJava = 'lib/system/java'
     
     // Where the OSGi bootstrap bundles go
-    interactiveSpacesContainerBootstrap = 'bootstrap'
+    smartSpacesContainerBootstrap = 'bootstrap'
     
     // Where the extras support jars go.
-    interactiveSpacesContainerExtrasSupportJars = 'extras/support/jars'
+    smartSpacesContainerExtrasSupportJars = 'extras/support/jars'
 
     // When building the containers, where do we build?
     containerBuildTarget = 'build/staging'
@@ -75,11 +76,11 @@ allprojects {
       ':activityapi',
       ':workbench',
       ':service',
-      ':interactivespaces_docs', 
-      ':interactivespaces_build',   
-      ':interactivespaces_build:master',
-      ':interactivespaces_build:controller',
-      ':interactivespaces_build:workbench'
+      ':smartspaces_docs', 
+      ':smartspaces_build',   
+      ':smartspaces_build:master',
+      ':smartspaces_build:controller',
+      ':smartspaces_build:workbench'
     ]
 
     javaProjects = rootProject.subprojects.findResults {
@@ -98,9 +99,9 @@ allprojects {
       androidSdkJar = "$androidPlatformHome/android.jar"
     }
 
-    osgiVersion = interactiveSpacesVersionQualifier ? 
-        interactiveSpacesVersion + "." + interactiveSpacesVersionQualifier :
-        interactiveSpacesVersion
+    osgiVersion = smartSpacesVersionQualifier ? 
+        smartSpacesVersion + "." + smartSpacesVersionQualifier :
+        smartSpacesVersion
 
     if (project.hasProperty("testSize")) {
       ext.testSizing = project.testSize
@@ -109,7 +110,7 @@ allprojects {
     }
   }
 
-  group = 'interactivespaces'
+  group = 'smartspaces'
   version = osgiVersion
 
   tasks.withType(JavaCompile) { 
@@ -137,7 +138,7 @@ subprojects {
       apply plugin: 'com.jfrog.artifactory'
     }
 
-    if (name != 'interactivespaces-bootstrap-core') {
+    if (name != 'smartspaces-bootstrap-core') {
       apply plugin: 'osgi'
     }
 
@@ -155,16 +156,16 @@ subprojects {
       additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
     }
 
-    if (name != 'interactivespaces-testing') {
+    if (name != 'smartspaces-testing') {
       dependencies {
-        testCompile project(':interactivespaces-testing')
+        testCompile project(':smartspaces-testing')
       }
     }
 
     test {
       useJUnit {
         if (testSizing != "large") {
-          excludeCategories 'interactivespaces.testing.sizes.TestSizeLarge'
+          excludeCategories 'io.smartspaces.testing.sizes.TestSizeLarge'
         }
       }
     }

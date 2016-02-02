@@ -1,0 +1,176 @@
+/*
+ * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2013 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+apply plugin: 'izpack'
+
+ext { containerType = "workbench" }
+
+configurations {
+  bootstrap
+  system
+  launcher
+  extrasTesting
+}
+
+dependencies {
+  izpack 'org.codehaus.izpack:izpack-standalone-compiler:4.3.5'
+
+  bootstrap project(":workbench:smartspaces-workbench")
+
+  system 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'
+  system 'org.apache.log4j:com.springsource.org.apache.log4j:1.2.16'
+  system 'org.apache.felix:org.apache.felix.framework:5.0.0'
+  system project(':smartspaces-bootstrap-core')
+  system project(':smartspaces-launcher-bootstrap')
+
+  launcher project(':smartspaces-launcher')
+
+  extrasTesting project(':workbench:smartspaces-workbench-testing')
+}
+
+task cleanContainers(type: Exec) {
+  commandLine "rm", "-fR", new File(project.projectDir, "build").absolutePath
+}
+
+task copyCore(type:Copy) {
+  outputs.upToDateWhen { false }
+  from rootProject.file('LICENSE.txt')
+  from rootProject.file('LICENSE.thirdparties.txt')
+  from rootProject.file('NOTICE.txt')
+  from parent.file('common')
+  from project.file('template')
+  into project.ext.containerBuildTarget
+  filter(ReplaceTokens, tokens:[SMARTSPACES_VERSION:project.version])
+  filter(ReplaceTokens, tokens:[SMARTSPACES_CONTAINER_TYPE:project.ext.containerType])
+}
+
+task copyExamples(type:Copy) {
+  outputs.upToDateWhen { false }
+  from rootProject.file('examples')
+  into "${project.ext.containerBuildTarget}/examples"
+  exclude "**/bin/**"
+  exclude "**/classes/**"
+  exclude "**/staging/**"
+  exclude "**/.project"
+  exclude "**/.classpath"
+}
+
+task copyNeededComponents(dependsOn: [copyCore, copyExamples])
+
+task copyContainerDependenciesExtrasTesting(type: Copy) {
+  into "${project.ext.containerBuildTarget}/extras/testing"
+  from configurations.extrasTesting - configurations.bootstrap
+}
+
+task copyContainerDependenciesLauncher(type: Copy) {
+  into "${project.ext.containerBuildTarget}"
+  from configurations.launcher - configurations.system
+}
+
+task copyContainerDependenciesBootstrap(type: Copy) {
+  into "${project.ext.containerBuildTarget}/${project.ext.smartSpacesContainerBootstrap}"
+  from configurations.bootstrap - configurations.system
+}
+
+task copyContainerDependenciesSystemJava(type: Copy) {
+  into "${project.ext.containerBuildTarget}/${project.ext.smartSpacesContainerSystemJava}"
+  from configurations.system
+}
+
+// TODO(keith): Get docs built from here
+task copyHtmlDocs(type: Copy) {
+  outputs.upToDateWhen { false }
+  into "${project.ext.containerBuildTarget}/docs/html"
+  from rootProject.file('smartspaces_docs/build/html')
+}
+
+task copyPdfDocs(type: Copy) {
+  outputs.upToDateWhen { false }
+  into "${project.ext.containerBuildTarget}/docs"
+  from project(':smartspaces_docs').file('build/latex/smartspaces.pdf')
+  rename { String fileName ->
+    fileName.replace('.pdf', "-${project.version}.pdf")
+  }
+}
+
+task copyDocs (dependsOn: [copyHtmlDocs, copyPdfDocs])
+
+task assembleContainers(dependsOn: [
+  copyNeededComponents,
+  copyContainerDependenciesLauncher,
+  copyContainerDependenciesBootstrap,
+  copyContainerDependenciesSystemJava,
+//  copyContainerDependenciesExtrasAndroid,
+  copyContainerDependenciesExtrasTesting,
+  copyDocs
+])
+
+assembleContainers.mustRunAfter cleanContainers
+
+task installDev(type: Exec, dependsOn: [
+  assembleContainers,
+  cleanContainers
+]) {
+  // TODO(keith): get the common parts into a generic task available to all
+  def stagingDir = new File(project.projectDir, "${project.ext.containerBuildTarget}").absolutePath
+  def containerDir = getProperty("smartspaces.dev.home") + "/" + project.ext.containerType
+  commandLine "bash", "../install_container.bash", version, project.ext.containerType , containerDir, stagingDir
+}
+
+task createImage(type: Copy, dependsOn: [
+  assembleContainers,
+  cleanContainers
+]) {
+  outputs.upToDateWhen { false }
+  // TODO(keith): get the common parts into a generic task available to all
+  if (project.hasProperty("imageHome")) {
+    def stagingDir = new File(project.projectDir, "${project.ext.containerBuildTarget}").absolutePath
+    def containerDir = getProperty("imageHome") + "/" + project.ext.containerType
+
+    from stagingDir
+    into containerDir
+    exclude 'config'
+  }
+}
+
+task copyInstallerDependencies(type:Copy, dependsOn: [assembleContainers]) {
+  outputs.upToDateWhen { false }
+  from project.file('src/izpack')
+  into project.ext.containerBuildTarget
+  filter(ReplaceTokens, tokens:[SMARTSPACES_VERSION:project.version])
+  filter(ReplaceTokens, tokens:[SMARTSPACES_CONTAINER_TYPE:project.ext.containerType])
+}
+
+izpack {
+  baseDir = file("${project.ext.containerBuildTarget}")
+  installFile = file('src/izpack/install.xml')
+  outputFile = file("$buildDir/distributions/smartspaces-workbench-installer-${version}.jar")
+  compression = 'deflate'
+  compressionLevel = 9
+  appProperties = ['app.name': 'Smart Spaces Workbench',
+    'app.version': version]
+}
+
+izPackCreateInstaller.dependsOn copyInstallerDependencies
+
+task createInstallers(dependsOn: [
+  cleanContainers,
+  izPackCreateInstaller
+])
+
+task clean(dependsOn: [cleanContainers])

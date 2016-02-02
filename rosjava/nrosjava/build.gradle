@@ -22,7 +22,7 @@ dependencies {
   compile project(':rosjava:napache_xmlrpc_server')
   compile project(':rosjava:napache_xmlrpc_client')
 
-  compile files("${project.getProperty('interactivespaces.dependencies.home')}/comm/net/org.ros.rosjava.dnsjava-2.1.1.jar")
+  compile files("${project.getProperty('smartspaces.dependencies.home')}/comm/net/org.ros.rosjava.dnsjava-2.1.1.jar")
 
   compile 'org.apache.commons:com.springsource.org.apache.commons.net:2.0.0'
   compile 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'

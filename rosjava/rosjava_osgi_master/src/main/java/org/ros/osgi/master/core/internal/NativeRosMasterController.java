@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,14 +17,14 @@
 
 package org.ros.osgi.master.core.internal;
 
-import org.ros.osgi.master.core.RosMasterController;
-
 import java.io.File;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+
+import org.ros.osgi.master.core.RosMasterController;
 
 /**
  * A {@link RosMasterController} which uses a native ROS Master.
@@ -43,12 +44,14 @@ public class NativeRosMasterController extends BaseRosMasterController {
   private static final String ENVIRONMENT_VARIABLE_ROS_MASTER_URI = "ROS_MASTER_URI";
 
   /**
-   * The environment variable if the ROS Master URI is defined with an IP address and not a DNS host name.
+   * The environment variable if the ROS Master URI is defined with an IP
+   * address and not a DNS host name.
    */
   private static final String ENVIRONMENT_VARIABLE_ROS_IP = "ROS_IP";
 
   /**
-   * The environment variable if the ROS Master URI is defined with an DNS host name and not an IP address.
+   * The environment variable if the ROS Master URI is defined with an DNS host
+   * name and not an IP address.
    */
   private static final String ENVIRONMENT_VARIABLE_ROS_HOST = "ROS_HOST";
 

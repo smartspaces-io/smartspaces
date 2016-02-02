@@ -1,4 +1,7 @@
-Interactive Spaces
+Smart Spaces
+Copyright 2016 Keith M. HUghes
+
+THis code is derived from Interactive Spaces
 Copyright 2012 Google
 
 This product includes software developed by

@@ -1,0 +1,91 @@
+#!/bin/bash -e
+
+TARGET=$PWD
+
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  SOURCE="$(readlink "$SOURCE")"
+done
+
+EXEDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+LIBDIR=$EXEDIR/../lib
+
+export SMARTSPACES_HOME=${SMARTSPACES_HOME:-$EXEDIR/../..}
+SMARTSPACES_ROUTER=${SMARTSPACES_ROUTER:-standalone}
+
+CMD=run
+if [[ $# -gt 0 ]]; then
+  CMD="${1}"
+  shift
+fi
+
+PROJFILE=project.xml
+if [ -f $TARGET/$PROJFILE ]; then
+  SINGLE_ACTIVITY='true'
+  ACTIVITY_NAME=$(isproject extract $TARGET/project.xml '/is:project/is:name/text()')
+else
+  SINGLE_ACTIVITY='false'
+  ACTIVITY_NAME=$TARGET
+  num_activities=$(find . -name project.xml 2>/dev/null | wc -l)
+  if [[ ${num_activities} == 0 ]]; then
+    echo No valid project.xml found in current directory or subdirectories.
+    false
+  fi
+fi
+
+echo Running activity $ACTIVITY_NAME
+
+RUNDIR=$TARGET/run
+POSTFIX=
+INSTANCE_SUFFIX=
+COUNT=0
+LSOFWC=1
+while [ $LSOFWC -gt 0 ]; do
+  PIDFILE=$RUNDIR$POSTFIX/run/smartspaces.pid
+  LSOFWC=`lsof -t $PIDFILE 2> /dev/null | wc -l`
+  if [ $LSOFWC -gt 0 ]; then
+    COUNT=$((COUNT + 1))
+    INSTANCE_SUFFIX=-$COUNT
+    POSTFIX=/instance$INSTANCE_SUFFIX
+  fi
+done
+RUNDIR=$RUNDIR$POSTFIX
+echo Rundir is $RUNDIR
+
+JDLINE="suspend=y,address=5005"
+CDIR=$SMARTSPACES_HOME/controller
+WDIR=$SMARTSPACES_HOME/workbench
+
+export ISDEBUG=n
+if [ $CMD == "debug" ]; then
+  export ISSUSPEND=y
+  export ISDEBUG=y
+  export ISCOUNT=$COUNT
+fi
+
+mkdir -p $RUNDIR
+
+echo Starting up activity...
+export SMARTSPACES_MAIN_ARGS="--runtime=$RUNDIR"
+SMARTSPACES_MAIN_ARGS+=" --config=${CDIR}/config"
+SMARTSPACES_MAIN_ARGS+=" --bootstrap=${CDIR}/extras/standalone"
+SMARTSPACES_MAIN_ARGS+=" -Dsmartspaces.controller.mode=standalone"
+SMARTSPACES_MAIN_ARGS+=" -Dsmartspaces.service.mail.receiver.enable=false"
+SMARTSPACES_MAIN_ARGS+=" -Dsmartspaces.standalone.activity.single=$SINGLE_ACTIVITY"
+SMARTSPACES_MAIN_ARGS+=" -Dsmartspaces.standalone.activity.runtime=$RUNDIR"
+SMARTSPACES_MAIN_ARGS+=" -Dsmartspaces.standalone.activity.source=$TARGET"
+SMARTSPACES_MAIN_ARGS+=" -Dsmartspaces.standalone.instance=$INSTANCE_SUFFIX"
+SMARTSPACES_MAIN_ARGS+=" -Dsmartspaces.standalone.router.type=${SMARTSPACES_ROUTER}"
+# The dynamic file mapping feature required the webserver to be in debug mode to allow links.
+SMARTSPACES_MAIN_ARGS+=" -Dspace.activity.webapp.debug=true"
+SMARTSPACES_MAIN_ARGS+=" $@"
+
+echo Args: "${SMARTSPACES_MAIN_ARGS}"
+
+# Change the tab title.
+PS1=
+printf "\033]0;IS: ${ACTIVITY_NAME}\007"
+
+CONTROLLER_EXE="${CDIR}/bin/isstartup"
+
+"${CONTROLLER_EXE}" standalone | "${WDIR}/bin/islog"

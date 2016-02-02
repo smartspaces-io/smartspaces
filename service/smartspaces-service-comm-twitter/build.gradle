@@ -1,0 +1,45 @@
+/*
+ * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2012 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+dependencies {
+  compile project(':service:smartspaces-service-core')
+  compile project(':smartspaces-system')
+
+  compile files("${project.getProperty('smartspaces.dependencies.home')}/comm/twitter/smartspaces.org.twitter4j-3.0.3.jar")
+
+  provided 'org.apache.felix:org.apache.felix.framework:5.0.0'
+
+  testCompile 'junit:junit:4.8.2'
+  testCompile 'org.mockito:mockito-all:1.9.5'
+}
+
+jar {
+  manifest {
+    version = osgiVersion
+    symbolicName = 'smartspaces.service.comm.twitter'
+
+    instruction 'Bundle-Activator',
+        'io.smartspaces.service.comm.twitter.internal.osgi.TwitterServiceOsgiBundleActivator'
+
+    instruction 'Export-Package',
+        '!io.smartspaces.service.comm.twitter.internal.*',
+        'io.smartspaces.service.comm.twitter.*'
+
+    instruction 'Private-Package',
+        'io.smartspaces.service.comm.twitter.internal.*'
+  }
+}
+

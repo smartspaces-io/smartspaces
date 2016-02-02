@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2015 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -20,7 +21,8 @@ package org.ros.osgi.master.core;
  * A factory for creating ROS Master controller instances.
  *
  * <p>
- * An internal controller runs inside the Java process. An external controller does not.
+ * An internal controller runs inside the Java process. An external controller
+ * does not.
  *
  * @author Keith M. Hughes
  */

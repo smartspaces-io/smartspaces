@@ -19,8 +19,6 @@ package org.ros.internal.transport;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import interactivespaces.testing.sizes.TestSizeLarge;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jboss.netty.bootstrap.ServerBootstrap;
@@ -55,6 +53,8 @@ import org.ros.internal.transport.tcp.TcpRosServerPipelineFactory;
 import org.ros.message.MessageDefinitionProvider;
 import org.ros.message.MessageIdentifier;
 import org.ros.message.MessageListener;
+
+import io.smartspaces.testing.sizes.TestSizeLarge;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteOrder;

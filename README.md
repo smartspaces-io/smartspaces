@@ -1,7 +1,6 @@
-#Interactivespaces
+#SmartSpaces
 
-The home of the Interactive Spaces API and runtime 
-http://www.interactive-spaces.org
+The home of the Smart Spaces API and runtime 
 
 ##Building from scratch
 

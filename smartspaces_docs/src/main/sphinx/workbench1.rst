@@ -1,0 +1,887 @@
+The Workbench
+**************
+
+The Smart Spaces Workbench provides the ability to create
+and build projects. You can also create projects for IDEs such
+as Eclipse.
+
+The Workbench also contains the documentation for Smart Spaces,
+which includes both this manual, and the Javadoc for the code
+implementing Smart Spaces.
+
+The Basics
+==========
+
+Building a Project
+----------------------------
+
+Smart Spaces projects must be built with the Workbench Builder. From the
+directory where you installed the Workbench, you can type something
+like
+
+::
+
+  bin/isworkbench <projectdir> build
+
+where ``<projectdir>`` is the folder which contains the project. For example, if you are in the Workbench root directory,
+you can build
+the Simple Java Activity Example project with the command
+
+::
+
+  bin/isworkbench examples/basics/hello/interactivespaces.example.activity.hello build
+
+Cleaning a Project
+----------------------------
+
+Sometimes your project build directory gets a lot of extraneous files in, perhaps you renamed one of your classes,
+and you want to clean out the build directory and have a fresh build. You can delete the entire build folder with the
+command
+
+::
+
+  bin/isworkbench <projectdir> clean
+
+where ``<projectdir>`` is the folder which contains the project. For example, if you are in the Workbench root directory,
+you can clean
+the Simple Java Activity Example project with the command
+
+::
+
+  bin/isworkbench examples/basics/hello/interactivespaces.example.activity.hello clean
+
+Combining Workbench Commands
+----------------------------
+
+You can combine workbench commands very easily by placing them one after another on the commandline. For example, if you
+wish to first clean your project and then build it, you can use the command
+
+::
+
+  bin/isworkbench <projectdir> clean build
+
+where ``<projectdir>`` is the folder which contains the project. For example, if you are in the Workbench root directory,
+you can clean and build
+the Simple Java Activity Example project with the command
+
+::
+
+  bin/isworkbench examples/basics/hello/interactivespaces.example.activity.hello clean build
+
+
+Creating a Project
+----------------------------
+
+You can create projects very simply.
+
+::
+
+  bin/isworkbench create <type> <language> <projectdir>
+
+``<type>`` is the type of the project and would be one of ``activity`` or ``library``.
+``<language>`` is one of ``java``, ``javascript``, ``python``, or ``android``. ``<projectdir>`` is the file path to 
+the root folder which will contain the project. 
+
+
+The workbench then creates a project with an initial set of files, including the ``project.xml`` file and some
+code files for you to then start editing. If the root folder for the project does not exist it will be created.
+
+For example,
+
+
+::
+
+  bin/isworkbench create activity java foo.bar
+
+will create the skeleton for a Java-based activity in the folder ``foo.bar``. ``foo.bar`` will be the initial
+identifying name of the activity.
+
+If you are using ``android``, please see the chapter on Android for details about
+initial configurations.
+
+.. _workbench1-using-ide-label:
+
+Using an IDE
+----------------------------
+
+if you are doing Java projects, you will want an IDE project. Right
+now, only Eclipse is supported. You can also use Eclipse for a
+non-Java project, the same command works.
+
+::
+
+  bin/isworkbench <projectdir> ide eclipse
+
+where ``<projectdir>`` is the directory containing the Activity project.
+
+For example
+
+::
+
+  bin/isworkbench foo.bar.yowza ide eclipse
+
+will take the ``foo.bar.yowza`` project and generate the Eclipse
+files for it. You can then import the project into Eclipse.
+
+You should rebuild the IDE project every time you add a new JAR into the
+``bootstrap`` folder of your controller so that you will have access to the classes
+in that JAR file.
+
+Project Files
+=============
+
+Smart Spaces Workbench projects use a ``project.xml`` file which describes
+aspects about the project, including its type, its name and description,
+how to build it, and any dependencies or resources that the project needs.
+
+A basic ``project.xml`` file will be created for your project if you create
+it with the Workbench. There may be a need to extend the contents of this
+file or to edit it later on, so it is good to understand all of its pieces.
+
+A Basic Activity Project File
+-----------------------------
+
+Let's look at one of the simplest project files. This is for the
+``interactivespaces.example.activity.hello`` example which comes with
+Smart Spaces.
+
+::
+
+  <?xml version="1.0"?>
+  <project type="activity" builder="java">
+    <name>Simple Hello World Activity Example in Java</name>
+    <description>
+  A very simple Java-based activity which just logs at INFO level its
+  callback messages.
+    </description>
+
+    <identifyingName>interactivespaces.example.activity.hello</identifyingName>
+    <version>1.0.0</version>
+        
+    <activity type="interactivespaces_native">
+      <name>example_activity_hello</name>
+      <class>interactivespaces.activity.example.hello.HelloActivity</class>
+    </activity>
+  </project>
+
+As you can see, project files are XML-based. The root element is
+called ``project`` and has a couple of attributes giving information
+about the project. One is ``type`` which gives the type of the project.
+Since this example is an activity project, so the ``type`` attribute
+has the value ``activity``.
+
+The Workbench needs to know how to build projects. The ``build`` attribute
+says which builder to use for the project. The ``interactivespaces.example.activity.hello``
+project is a Java-based project, so uses the Java builder. So we give
+the attribute ``builder`` the value ``java``.
+
+Java projects are somewhat complicated to build because they need to use the
+Java compiler and create a jar file. Projects that use scripting
+languages or are web only can use a very simple builder that merely takes the
+contents of the ``src/main/resources`` folder and places them into
+a properly formatted zip file, the format that Smart Spaces uses for
+its activity files. These projects do not need to specify the ``builder``
+attribute, as you can see in the example project
+``interactivespaces.example.activity.hello.python``.
+
+::
+
+  <?xml version="1.0"?>
+  <project type="activity">
+    <name>Simple Hello World Activity Example in Python</name>
+    <description>
+  A very simple Python-based activity which just logs at INFO level its callback messages.
+    </description>
+
+    <identifyingName>interactivespaces.example.activity.hello.python</identifyingName>
+    <version>1.0.0</version>
+
+    <activity type="script">
+      <name>example_activity_hello_python</name>
+      <executable>HelloActivity.py</executable>
+    </activity>
+  </project>
+
+Notice that the ``project`` element only contains the ``type`` attribute, not the
+``builder``.
+
+The next part of the project file is the ``name`` element. This gives
+the informational name of the project, the name that will appear in the
+Smart Spaces Web Admin.
+
+The ``description`` element gives a more detailed description of the project.
+It is optional. It is also displayed in the Smart Spaces Web Admin
+when looking at the specific page for the Activity.
+
+The ``identifyingName`` element gives the Identifying Name for the project.
+This name is used by the internals of Smart Spaces and has very strict
+rules on its syntax. The combination of the Identifying Name and the Version
+uniquely identify the Activity to Smart Spaces.
+
+
+The Identifying Name is is a dot separated set of names, Examples would be
+things like
+
+* a.b.c
+* com.google.myactivity
+
+Each part of the name must start with a letter and can then be letters,
+digits, and underscores.
+
+
+The ``version`` element gives the version number of the project.
+Versions consists of 3 sets of numbers, separated by dots. Examples would be
+
+* 1.0.0
+* 0.1.0-beta
+
+Notice the last one has a dash followed by some text.
+
+The <activity> section
+^^^^^^^^^^^^^^^^^^^^^^
+
+The ``<activity>`` section describes important information about the activity. 
+
+The ``type`` attribute of the ``<activity>`` element gives the :ref:`Activity Type <activity-types-label>`.
+
+The ``<name>`` element gives the name of the activity. Every activity has a name.
+
+The <activity> Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``<configuration>`` element lives under the ``<project>`` element. It defines any configuration parameters
+for the Activity.
+
+The following example is part of the ``<activity>`` element for the 
+``examples/activity/control/interactivespaces.example.activity.control.osc.routable`` project in the workbench.
+
+::
+
+  <activity type="interactivespaces_native">
+    <name>interactivespacesExampleActivityControlOscRoutable</name>
+    <class>
+      interactivespaces.example.activity.control.osc.routable.OpenSoundControlRoutableExampleActivity
+    </class>
+
+    <configuration>
+      <property name="space.activity.log.level" value="info"
+        required="true" />
+      <property name="space.activity.ros.node.name" required="true">
+        <value>example/routable/input/osc
+        </value>
+      </property>
+      <property name="space.activity.routes.inputs" value="signal"
+        required="true" />
+      <property name="space.activity.route.input.signal"
+        required="true">
+        <value>/example/routable/signal/analog
+        </value>
+      </property>
+
+      <property name="space.activity.osc.server.host" value="127.0.0.1"
+        required="true">
+        <description>The host which contains the OSC server which is
+          being controlled by this activity.
+        </description>
+      </property>
+      <property name="space.activity.osc.server.port" value="7771"
+        required="true">
+        <description>The port the OSC server which is
+          being controlled by
+          this activity is listening on.
+        </description>
+      </property>
+    </configuration>
+  </activity>
+
+The properties for your activity are defined by the ``<property>`` elements in the ``<configuration>`` section.
+
+.. _workbench1-resource-copying-label:
+
+Resource Copying
+----------------
+
+Often you will find that you have resources that several of your projects will use. An
+example would be Javascript libraries that are being used in several of your web browser-based
+activities.
+
+You can have these resources copied into every project that uses them by putting a
+``<resources>`` section in your ``project.xml`` file. This section will specify all
+resources that should be packaged in your project.
+
+An example would be
+
+::
+
+  <resources>
+    <resource destinationDirectory="webapp/fonts/OpenSans"
+        sourceDirectory="${repo}/resources/fonts/OpenSans" />
+    <resource destinationDirectory="webapp/js/libs"
+        sourceDirectory="${repo}/resources/web/js/base" />
+    <resource destinationDirectory="webapp/js/libs"
+        sourceFile="${repo}/resources/web/js/external/jquery/core/jquery-1.9.1.min.js" />
+  </resources>
+
+These resource declarations are giving the location of resources that are needed
+and where they should be copied to.
+
+Lets look at the first one.
+
+::
+
+  <resource destinationDirectory="webapp/fonts/OpenSans"
+      sourceDirectory="${repo}/resources/fonts/OpenSans" />
+
+This gives the destination directory where the resources should be copied to in the
+``destinationDirectory`` attribute. Here the OpenSans font files are being copied to the
+``webapp/fonts/OpenSans`` subfolder of an Activity.
+
+The source of the OpenSans fonts is given by the ``sourceDirectory`` attribute. The entire
+content of the source directory will be copied from the source directory, including the
+content of any subfolders of the source directory, their subfolders, and all the way down.
+
+One thing to notice here is the use of ``${repo}``. This is an example of using a local
+configuration variable to specify where the resources are being copied from or to.
+The example here is demonstrating having a code repository which contains all resources
+being used for all projects. See :ref:`workbench1-configure-workbench-label`
+for more details on how to declare local configuration variables.
+
+The last entry in the above example shows how to copy a specific file.
+
+::
+
+  <resource destinationDirectory="webapp/js/libs"
+      sourceFile="${repo}/resources/web/js/external/jquery/core/jquery-1.9.1.min.js" />
+
+This ``<resource>`` element uses the ``sourceFile`` attribute to specify an exact file
+to be copied into the destination directory. In this case the file will be copied and given
+the exact name that the source file has, in this case ``jquery-1.9.1.min.js``.
+
+If you want to rename the file, you can use the ``destinationFile`` attribute instead of the
+``destinationDirectory`` attribute.
+
+
+::
+
+  <resource destinationFile="webapp/js/libs/jquery.js"
+      sourceFile="${repo}/resources/web/js/external/jquery/core/jquery-1.9.1.min.js" />
+
+The above example would copy the file ``jquery-1.9.1.min.js``, but would name it
+``jquery.js`` in the destination location.
+
+Your Project Source Directory
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Workbench supplies a configuration property that gives you the location of your project
+folder. It is called ``project.home`` and gives the full filepath to where your project lives.
+This can be useful for copying resources from your project from, say, a library from a C
+or C++ build.
+
+An example could be
+
+::
+
+  <resource sourceFile="${project.home}/native/build/artifact" />
+
+Which would copy the file ``artifact`` from the subfolder ``native/build`` in your project
+folder. ``native/build`` might be the folder that your C build places the final library or
+executable that it builds.
+
+.. _workbench1-resource-assemblies-label:
+
+Resource Assemblies
+^^^^^^^^^^^^^^^^^^^
+
+In addition to copied resources, it's possible to include an ``assembly``, which is a single bundle file
+that's expanded into a collection of files. See :ref:`workbench1-assembly-projects-label` for documentation
+on how assembly projects are created. To use a resource assembly, specify an ``<assembly>`` tag as in the
+example below.
+
+::
+
+  <resources>
+    <assembly packFormat="zip" sourceFile="${project.home}/javascript.bundle-1.0.0.zip" />
+  </resources>
+
+
+Additional Sources
+^^^^^^^^^^^^^^^^^^
+
+Using the ``sources`` directive in a project, it's possible to include additional directories into the project
+build source path. For example, this can be used to create a shared source java file that contains constants used
+across a number of different activities. The additional sources are passed to the underlying project builder,
+which will typically process them in the same manner as source files in the activity home directory itself.
+
+Note that is is also possible to use :ref:`workbench1-library-projects-label` to create shared activity functionality.
+
+::
+
+  <sources>
+    <source sourceDirectory="${project.home}/../shared/src/main/java" />
+  </sources>
+
+
+.. _workbench1-dependencies-label:
+
+Project Dependencies
+---------------------
+
+Sometimes your activity will have dependencies on code that is not part of the Core Smart Spaces
+distribution. These dependencies can be from external libraries or ones you have
+created yourself by creating :ref:`workbench1-library-projects-label` that contain common functionality for
+many of your activities.
+
+Smart Spaces needs to know about these dependencies so that the dependencies can be deployed
+to the controller along with
+your activities if the Smart Spaces controller where the activity is being deployed doesn't already have
+the dependencies.
+
+Dependencies are placed in the ``project.xml`` file using a ``<dependencies>`` section. An example dependencies section
+that is dependent on any version of the ``interactivespaces.sandbox.service.control.dmx`` library 
+between versions ``1.0.0`` and ``1.1.0`` would be as follows.
+
+::
+
+  <dependencies>
+    <dependency identifyingName="interactivespaces.sandbox.service.control.dmx" 
+        version="[1.0.0, 1.1.0)" 
+        required="true" />
+  </dependencies>
+
+The ``<dependency>`` item names the dependency, in this case ``interactivespaces.sandbox.service.control.dmx``
+through the ``identifyingName`` attribute.
+
+The ``version`` attribute says that the ``1.0.0`` version of the library is the minimum version which 
+can be used, while any version up to but not including ``1.1.0`` would be allowed. In other words, the 
+maximum version is exclusive, the version number has to be strictly smaller than the value given.
+The ``)`` character at the end of the version range is what marks the upper version as exclusive.
+
+If the version value was changed to ``[1.0.0, 1.1.0]", then ``1.1.0`` would also be a matching value. The ``]`` makes
+the range inclusive.
+
+A version range of ``1.0.0`` means that ``1.0.0`` is the minimum value to match, and that any other version
+greater than ``1.0.0`` is a match, all the way up to infinity.
+
+A version range of ``=1.0.0`` means that only version ``1.0.0`` is a match. This is equivalent to the
+range ``[1.0.0, 1.0.1)``.
+
+The ``required`` field says whether your code is dependent on the dependency. This sounds a little strange, but
+not requiring a dependency just says that the activity could run if the dependency is available, but it can
+also run without it. The ``required`` attribute is not required and will have a value of ``false`` if not
+specified.
+
+The ``<dependencies>`` section can have as many ``<dependency>`` items as needed.
+
+By default, dependencies are dynamically linked to your activity at runtime. This means that only one
+copy of the dependency is found in the controller and any activities that need the dependency all share the same version.
+
+Smart Spaces also supports static linking, which means that the contents of the dependency are made part
+of the activity itself at compile time. Then, when the activity is deployed, it has its own copy of the
+dependency that it doesn't share with any other activities.
+
+The following  ``<dependencies>`` section shows how to declare our dependency to be statically linked.
+The attribute ``linking`` on the ``<dependency>`` has the value ``static``.
+
+::
+
+  <dependencies>
+    <dependency name="interactivespaces.sandbox.service.control.dmx" 
+        version="[1.0.0, 1.1.0)" 
+        required="true" linking="static" />
+  </dependencies>
+
+The other value that ``linking`` can have is ``dynamic``. ``dynamic`` is the default value and if no ``linking``
+attribute is specified, the linking will be dynamic.
+
+You can also set the default for all ``<dependency>`` elements by placing the ``linking`` attribute on the
+``<dependencies>`` element.
+
+::
+
+  <dependencies linking="static">
+    <dependency name="interactivespaces.sandbox.service.control.dmx" 
+        version="[1.0.0, 1.1.0)" 
+        required="true" />
+  </dependencies>
+
+Now the default for all ``<dependency>`` elements is ``static``.
+
+.. _workbench1-import-deploy-label:
+
+Quick Importing or Deploying Your Projects
+------------------------------------------
+
+After building a project you will need to import it into the Smart Spaces Master Web
+Admin. This can involve a lot of mouse clicks, so Smart Spaces makes it easy to
+import or deploy your application from the Workbench command line. For example, something
+I do a lot is use the command
+
+::
+
+  bin/isworkbench my/project/location clean build deploy testdeploy
+
+This command would do a clean build of the project contained in the folder
+``my/project/location`` and then deploy it to the ``testdeploy`` target.
+
+Deploy targets are found in the ``project.xml`` file in the Deployments section.
+An example would be
+
+::
+
+  <deployments>
+    <deployment type="testdeploy" location="${deployment.test.deploy}" />
+    <deployment type="testimport" location="${deployment.test.import}" />
+  </deployments>
+
+The command line example given above refers to a deploy target called ``testdeploy``. The
+deployment target is defined with a ``<deployment>`` element. The ``testdeploy`` example
+
+::
+
+  <deployment type="testdeploy" location="${deployment.test.deploy}" />
+
+specifies the deployment target name in the ``type`` attribute. The Workbench would then copy
+the activity to the value of the ``location`` attribute. Here we are using a local configuration
+variable to specify where the built Activity should be copied to. See
+:ref:`workbench1-configure-workbench-label`
+for more details on how to declare local configuration variables. The value of this variable
+would be the autoimport folder (see :ref:`workbench1-best-practice-import-deploy-label`
+for details) for the Smart spaces master for your development
+installation. You could also provide deployments for your QA environment, your production
+network, etc.
+
+A Complete Project File
+-----------------------
+
+Here is an example of a complete Activity project file with resource and deployment sections.
+
+::
+
+  <?xml version="1.0"?>
+  <project type="activity" builder="java">
+    <name>My Web Activity</name>
+    <description>
+  A simple web activity.
+    </description>
+
+    <identifyingName>my.web</identifyingName>
+    <version>1.0.0</version>
+        
+    <activity type="interactivespaces_native">
+      <name>example_activity_my_web</name>
+      <class>my.web.MyActivity</class>
+      
+      <configuration>
+        <property name="space.activity.log.level" value="info" />
+      </configuration>
+    </activity>
+
+    <resources>
+      <resource destinationDirectory="webapp/fonts/OpenSans"
+          sourceDirectory="${repo.cec}/resources/fonts/OpenSans" />
+      <resource destinationDirectory="webapp/js/libs"
+          sourceDirectory="${repo.cec}/resources/web/js/base" />
+      <resource destinationDirectory="webapp/js/libs"
+          sourceFile="${repo.cec}/resources/web/js/external/jquery/core/jquery-1.9.1.min.js" />
+    </resources>
+
+    <dependencies>
+      <dependency name="foo.bar" minimumVersion="1.2.3" maximumVersion="1.3.0" required="true" />
+      <dependency name="yada.yada" minimumVersion="2.3.0" maximumVersion="2.4.0" required="true" />
+    </dependencies>
+    
+    <deployments>
+      <deployment type="testdeploy" location="${deployment.test.deploy}" />
+      <deployment type="testimport" location="${deployment.test.import}" />
+    </deployments>
+  </project>
+
+
+Other Project Types
+===================
+
+.. _workbench1-library-projects-label:
+
+Library Projects
+----------------
+
+Library projects let you write code which can be shared across multiple Smart Spaces
+Activities. Libraries are one way in which you can extend the functionality of
+Smart Spaces with your own functionality.
+
+An example ``project.xml`` file for a library project is given below.
+
+::
+
+  <?xml version="1.0"?>
+  <project type="library" >
+    <name>Support for Smart Spaces projects</name>
+    <description>
+  Support For Smart Spaces projects.
+    </description>
+
+    <identifyingName>my.support</identifyingName>
+    <version>1.0.0</version>
+  </project>
+
+Library projects must be Java-based, hence the lack of the ``builder`` attribute on the
+``<project>`` element. The project file has the same name, description, identifying name,
+and version sections that all projects must have. But the ``type`` attribute of the
+``<project>`` element has the value ``library``.
+
+The artifact built for a Library project will be a Java jar file. It is copied into
+the ``startup`` folder of an Smart Spaces controller and will then be available for
+Activities to use when compiling. An activity using the library should list the library in its dependencies
+section (see :ref:`workbench1-dependencies-label`). When ready to deploy the library with an activity, add 
+the dependency to the 
+``master/repository/interactivespaces/resources/bundles`` folder on your Smart Spaces Master.
+
+A Resource section (see :ref:`workbench1-resource-copying-label`) in your Library ``project.xml`` will copy the files
+such that they will appear in the JAR file created for the library. Destination pathnames will be relative to the
+root of the JAR file.
+
+If you add a new Library to a Controller or make changes to the method signatures in the Library already installed in a Controller, 
+make sure you recreate the IDE project
+for any Activities which will use the Library and refresh the project in your IDE.
+See :ref:`workbench1-using-ide-label`
+for more details on creating the IDE project for a Workbench project.
+
+Library Projects With OSGi Bundle Activators
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Since Smart Spaces is an OSGi application, your library projects must ultimately become an OSGi bundle.
+Normally this happens behind the scenes and you will never know about it but sometimes you need more to happen than
+just having the classes in your library made available to your activities. One very useful bit of functionality
+is to have some code called when your library starts up. This is done with an OSGi bundle. For more details, see
+*Need reference for Library Projects*.
+
+::
+
+  <?xml version="1.0"?>
+  <project type="library" >
+    <name>Support for Smart Spaces projects</name>
+    <description>
+  Support For Smart Spaces projects.
+    </description>
+
+    <identifyingName>my.support</identifyingName>
+    <version>1.0.0</version>
+    
+    <library> 
+      <container> 
+        <activator>my.support.internal.osgi.MySupportBundleActivator</activator>
+        <privatePackages> 
+          <package>my.support.internal.*</package>
+        </privatePackages>
+      </container> 
+    </library>
+  </project>
+
+
+
+Service Projects
+----------------
+
+Resource Projects
+-----------------
+
+.. _workbench1-assembly-projects-label:
+
+Assembly Projects
+-----------------
+
+Assembly projects create a bundle file (typically as a compressed ``zip`` file) that consists of several constituent files.
+The resulting bundles can then be included using an ``assembly`` resource directive
+(see :ref:`workbench1-resource-assemblies-label`). The project snippet below will create an assembly
+named ``javascript.bundle-1.0.0.zip`` that can then be included elsewhere.
+
+::
+
+    <project type="assembly" packFormat="zip" >
+      <identifyingName>javascript.bundle</identifyingName>
+      <version>1.0.0</version>
+      <sources>
+        <source sourceFile="src/main/css/base_admin.css" />
+        <bundle destinationFile="webapp/js/bundle.js">
+          <source sourceFile="src/main/js/external/jquery/core/jquery-1.9.1.min.js"/>
+          <source sourceFile="src/main/js/base_admin.js" />
+        </bundle>
+      </sources>
+    </project>
+
+Internal to the bundle, there is a ``base_admin.css`` file as well as a bundle file ``bundle.js``, which
+contains two individual source files concatenated together.
+
+Other Workbench Operations
+==========================
+
+.. _workbench1-configure-workbench-label:
+
+Configuring the Workbench
+-------------------------
+
+You can provide configuration variables to the Workbench which become
+available during project builds. These configurations would go in a file
+called ``local.conf`` and placed in the ``config`` folder found
+where you installed your Workbench.
+
+An example of a local configuration file would be
+
+::
+
+  repo=/my/home/repo
+  deployment.test.deploy=/my/home/interactivespaces/master/master/activity/deploy
+  deployment.test.import=/my/home/interactivespaces/master/master/activity/import
+
+This configuration file would make the variables ``${repo}``,
+``${deployment.test.deploy}``, and ``${deployment.test.import}``
+available for your ``project.xml`` files.
+
+These examples are showing where the code repository being used for the project
+would be found, useful if there are common resources that you want
+to use in multiple projects, and also where the Smart Spaces Master
+being used for your development work is located. The directories given are
+folders watched by the master for when files are copied into them
+which are then automatically imported into the master or deployed to all controllers
+containing Live Activities based on the Activity being copied.
+
+You can also specify command line arguments for the Java compiler and the version of Java
+to compile for in the Workbench. These are usually set through the ``workbench.conf`` file
+in your ``config`` folder, though you can also set them in your ``local.conf``.
+
+The ``interactivespaces.workbench.builder.java.compileflags`` property lets you set any compile 
+flags for the Java compiler. These flags are space separated.
+
+The ``interactivespaces.workbench.builder.java.version`` property lets you set the version of the 
+compiler you want to use. Example values are ``1.7`` or ``1.6``.
+
+
+Creating Documentation for a Project
+----------------------------
+
+When creating projects like library projects that may be shared with others,
+it is important to give good documentation for those who will use the library.
+The Workbench can create documentation fort your project.
+
+::
+
+  bin/isworkbench <projectdir> docs
+
+where ``<projectdir>`` is the folder which contains the project. For example, you can build
+the Simple Web Activity Example project with the command
+
+::
+
+  bin/isworkbench examples/basics/hello/interactivespaces.example.activity.hello docs
+
+The Workbench can only create Javadocs at the moment, which means it currently
+only works on Java-based Activities
+or Library projects. The output of the command will be placed in the ``build/docs`` folder
+of your project.
+
+Performing Workbench Operations on a Collection of Projects
+---------------------------------
+
+Sometimes you want to build a collection of Smart Spaces projects.
+If all of the projects are contained within a given root folder this is easy to do.
+
+::
+
+  bin/isworkbench <rootdir> walk <commands>
+
+Here ``<rootdir>`` is the root directory containing all of the projects
+and ``<commands>`` is the list of commands to be done on all of the
+projects.
+
+The ``walk`` command will walk all subfolders of the root directory
+looking for folders which contain a ``project.xml`` file. Those it finds
+it will perform the commands on.
+
+For instance, if you want to do a clean build all of the examples
+which come with the Workbench, you could use the command
+
+::
+
+  bin/isworkbench /my/home/interactivespaces/workbench/examples walk clean build
+
+where ``/my/home/interactivespaces/workbench`` would be the directory
+where you installed the Workbench.
+
+Adding Flags to the Java Compiler
+---------------------------------
+
+You can add additional flags to the Java compiler by defining the local configuration variable
+``interactivespaces.workbench.builder.java.compileflags`` in your local Workbench
+configuration. This will add the space-separated flags to the command line to the Java
+compiler.
+
+See :ref:`workbench1-configure-workbench-label`
+for more details on how to declare local configuration variables.
+
+OSGi Bundle Wrapping
+--------------------
+
+Smart Spaces uses a Java technology called OSGi as its runtime
+container. OSGi permits Smart Spaces to do many things, such as
+run multiple versions of the same library or Live Activity, even if
+the different versions are binary incompatible with each other.
+
+For this to work, the libraries that Smart Spaces uses must be
+made into what is called an OSGi bundle. Many open source libraries are already
+OSGi compatible, but not all are. Because of this, the Smart Spaces
+Workbench provides a way of making a Java jar into an OSGi compatible one.
+
+To create an OSGi bundle, you use the command
+
+::
+
+  bin/isworkbench osgi <pathToJar>
+
+where ``<pathToJar>`` is the path to the Java library you want made into an OSGi
+bundle. The output of the command will be a new jar with the prefix ``interactivespaces.``
+added to its name. For instance, if your jar was originally called ``foo-1.0.0.jar``,
+the OSGi bundle created from the jar will be called ``interactivespaces.foo-1.0.0.jar``.
+
+Best Practices for Developing in Smart Spaces
+===================================================
+
+There are some simple things you can do if you want to develop reasonably
+quickly in Smart Spaces.
+
+.. _workbench1-best-practice-import-deploy-label:
+
+Importing and Deploying
+-----------------------
+
+It is important to understand the difference between importing and deploying in Smart Spaces.
+Importing an Activity places an Activity into the Master's Activity Repository and makes it possible
+to find from the Master Web Admin. It is normally done from the **Activity** tab in the Master
+Web Admin.
+
+However importing an Activity into the Master does not immediately send it to the Space
+Controllers where instances of the Activity are deployed. To do that you need to deploy
+the Live Activities which are based on the Activity
+you are developing.
+
+You should create the following two folders where your Master is installed
+
+* ``/my/home/interactivespaces/master/master/activity/import``
+* ``/my/home/interactivespaces/master/master/activity/deploy``
+
+where ``/my/home/interactivespaces/master`` is where your Master is installed.
+
+Yes, that bit in the middle is real, it is not a stutter, it really is meant to be ``master/master``.
+These two folders are watched by the master and are used for automatically importing or dpeloying
+Activities or the Live Activities they are based on.
+
+If you copy an Activity into the ``import`` folder, it is the same as importing it from the Master Web Admin.
+The Activity will be created in the Master if no other activity has the same Identifying Name
+and Version. If an Activity has the same Identifying Name and Version the Activity just
+imported will replace the old Activity that was in the Activity Repository.
+
+If you copy the Activity into the ``deploy`` folder, it will first be imported into the Activity
+Repository using the same rules given above. Then any Live Activities based on the Activity
+will be re-deployed to the Space Controllers they are on. If you use the Deployment project file
+section discussed in :ref:`workbench1-import-deploy-label`. This means you can compile and deploy to the
+controller in one fell swoop.
+

@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -16,15 +17,16 @@
 
 package org.ros.osgi.master.core.internal;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.ros.osgi.common.RosEnvironment;
 import org.ros.osgi.master.core.RosMasterController;
 import org.ros.osgi.master.core.RosMasterControllerListener;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 /**
- * Support class that gives some convenience methods for the {@link RosMasterController}.
+ * Support class that gives some convenience methods for the
+ * {@link RosMasterController}.
  *
  * @author Keith M. Hughes
  */
@@ -38,7 +40,8 @@ public abstract class BaseRosMasterController implements RosMasterController {
   /**
    * All listeners for ROS Master events.
    */
-  private List<RosMasterControllerListener> listeners = new CopyOnWriteArrayList<RosMasterControllerListener>();
+  private List<RosMasterControllerListener> listeners =
+      new CopyOnWriteArrayList<RosMasterControllerListener>();
 
   /**
    * {@code true} if the ROS Master is started.

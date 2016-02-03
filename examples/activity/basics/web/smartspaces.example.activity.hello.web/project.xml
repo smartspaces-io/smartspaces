@@ -6,12 +6,12 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.hello.web
+    smartspaces.example.activity.hello.web
   </identifyingName>
   <version>1.0.0</version>
 
   <activity type="web">
-    <name>interactivespacesExampleActivityHelloWeb</name>
+    <name>smartspacesExampleActivityHelloWeb</name>
 
     <configuration>
       <property name="space.activity.webapp.web.server.port" value="9091" />

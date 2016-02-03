@@ -23,10 +23,10 @@ import io.smartspaces.container.control.message.activity.LiveActivityDeploymentR
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse.ActivityDeployStatus;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
+import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse.ContainerResourceDeploymentCommitStatus;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentItem;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
-import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse.ContainerResourceDeploymentCommitStatus;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse.QueryResponseStatus;
 import io.smartspaces.resource.ResourceDependency;
 import io.smartspaces.resource.ResourceDependencyReference;

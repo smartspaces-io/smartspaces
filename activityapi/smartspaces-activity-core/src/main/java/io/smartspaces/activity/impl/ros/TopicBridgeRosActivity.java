@@ -27,7 +27,7 @@ import io.smartspaces.util.io.FileSupportImpl;
 import java.io.File;
 
 /**
- * An {@link Activity} which provides a bridge between two Interactive Spaces
+ * An {@link Activity} which provides a bridge between two Smart Spaces
  * topics.
  *
  * @author Keith M. Hughes

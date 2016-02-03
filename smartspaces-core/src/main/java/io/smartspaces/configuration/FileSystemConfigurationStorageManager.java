@@ -129,7 +129,7 @@ public class FileSystemConfigurationStorageManager implements SystemConfiguratio
   }
 
   /**
-   * Get all configuration files from the Interactive Spaces configuration
+   * Get all configuration files from the Smart Spaces configuration
    * folder.
    *
    * @return all files in the configuration folder
@@ -140,11 +140,11 @@ public class FileSystemConfigurationStorageManager implements SystemConfiguratio
     if (configurationFolder.exists()) {
       if (!configurationFolder.isDirectory()) {
         throw new SimpleSmartSpacesException(String.format(
-            "Interactive Spaces configuration folder %s is not a directory", configurationFolder));
+            "Smart Spaces configuration folder %s is not a directory", configurationFolder));
       }
     } else {
       throw new SimpleSmartSpacesException(String.format(
-          "Interactive Spaces configuration folder %s does not exist", configurationFolder));
+          "Smart Spaces configuration folder %s does not exist", configurationFolder));
     }
 
     File[] configFiles = configurationFolder.listFiles(new FilenameFilter() {
@@ -157,7 +157,7 @@ public class FileSystemConfigurationStorageManager implements SystemConfiguratio
 
     if (configFiles.length == 0) {
       throw new SimpleSmartSpacesException(String.format(
-          "Interactive Spaces configuration folder %s contains no files ending with %s",
+          "Smart Spaces configuration folder %s contains no files ending with %s",
           configurationFolder, CONFIGURATION_FILE_EXTENSION));
     }
 

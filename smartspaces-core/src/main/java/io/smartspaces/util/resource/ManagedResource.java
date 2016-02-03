@@ -18,7 +18,7 @@
 package io.smartspaces.util.resource;
 
 /**
- * A resource managed by Interactive Spaces
+ * A resource managed by Smart Spaces
  *
  * @author Keith M. Hughes
  */

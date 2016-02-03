@@ -54,7 +54,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 /**
- * A workbench for working with Interactive Spaces Activity development.
+ * A workbench for working with Smart Spaces Activity development.
  *
  * @author Keith M. Hughes
  */
@@ -83,7 +83,7 @@ public class SmartSpacesWorkbench {
   /**
    * The directory from where the workbench was invoked.
    */
-  public static final String CONFIGURATION_PROPERTY_smartspaces_RUNDIR =
+  public static final String CONFIGURATION_PROPERTY_SMARTSPACES_RUNDIR =
       "smartspaces.rundir";
 
   /**
@@ -222,7 +222,7 @@ public class SmartSpacesWorkbench {
         .getInstallDirectory().getAbsolutePath());
 
     String runDirPath =
-        workbenchConfig.getPropertyString(CONFIGURATION_PROPERTY_smartspaces_RUNDIR);
+        workbenchConfig.getPropertyString(CONFIGURATION_PROPERTY_SMARTSPACES_RUNDIR);
     if (runDirPath != null) {
       runDirectory = new File(runDirPath);
     } else {

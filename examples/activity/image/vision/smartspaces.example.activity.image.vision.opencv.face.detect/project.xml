@@ -8,14 +8,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.image.vision.opencv.face.detect
+    smartspaces.example.activity.image.vision.opencv.face.detect
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityVisionFaceDetect</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityVisionFaceDetect</name>
     <class>
-      interactivespaces.activity.image.vision.opencv.outline.ImageOpenCvVisionFaceDetectActivity
+      io.smartspaces.activity.image.vision.opencv.outline.ImageOpenCvVisionFaceDetectActivity
     </class>
 
     <configuration>

@@ -24,7 +24,7 @@ import io.smartspaces.container.control.message.activity.SpaceControllerLiveActi
 import io.smartspaces.container.control.message.activity.SpaceControllerLiveActivityStatuses.ControllerActivityStartStatus;
 
 /**
- * A listener for events from an Interactive Spaces controller.
+ * A listener for events from an Smart Spaces controller.
  *
  * @author Keith M. Hughes
  */

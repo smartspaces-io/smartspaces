@@ -6,14 +6,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.hello.speech
+    smartspaces.example.activity.hello.speech
   </identifyingName>
   <version>1.0.0</version>
   
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityHelloSpeech</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityHelloSpeech</name>
     <class>
-      interactivespaces.example.activity.hello.speech.HelloSpeechExampleActivity
+      io.smartspaces.example.activity.hello.speech.HelloSpeechExampleActivity
     </class>
 
     <configuration>

@@ -24,7 +24,7 @@ import io.smartspaces.master.server.services.ActiveLiveActivity;
 import io.smartspaces.util.resource.ManagedResource;
 
 /**
- * Install Interactive Spaces activities to the remote location.
+ * Install Smart Spaces activities to the remote location.
  *
  * @author Keith M. Hughes
  */

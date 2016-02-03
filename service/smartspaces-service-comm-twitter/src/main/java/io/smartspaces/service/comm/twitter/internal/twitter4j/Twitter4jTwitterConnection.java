@@ -52,12 +52,12 @@ public class Twitter4jTwitterConnection implements TwitterConnection {
   public static final String TWITTER_SYMBOL_HASHTAG = "#";
 
   /**
-   * The Interactive Spaces API key for the connection.
+   * The Smart Spaces API key for the connection.
    */
   private String apiKey;
 
   /**
-   * The Interactive Spaces API key secret for the connection.
+   * The Smart Spaces API key secret for the connection.
    */
   private String apiKeySecret;
 

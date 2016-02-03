@@ -20,7 +20,7 @@ package io.smartspaces.configuration;
 import io.smartspaces.util.resource.ManagedResource;
 
 /**
- * Storage manager for the Interactive Spaces system configuration.
+ * Storage manager for the Smart Spaces system configuration.
  *
  * @author Keith M. Hughes
  */

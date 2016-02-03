@@ -22,7 +22,7 @@ import io.smartspaces.service.SupportedService;
 import java.io.File;
 
 /**
- * An Interactive Spaces service for instantiating text based templates.
+ * A Smart Spaces service for instantiating text based templates.
  *
  * <p>
  * The template will contain special strings which can be evaluated by the

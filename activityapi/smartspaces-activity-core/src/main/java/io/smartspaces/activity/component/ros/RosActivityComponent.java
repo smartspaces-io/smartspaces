@@ -36,7 +36,7 @@ public interface RosActivityComponent extends ActivityComponent {
   String COMPONENT_NAME = "comm.ros";
 
   /**
-   * Configuration property for specifying the Interactive Spaces ROS node name
+   * Configuration property for specifying the Smart Spaces ROS node name
    * for the activity.
    */
   String CONFIGURATION_ACTIVITY_ROS_NODE_NAME = "space.activity.ros.node.name";

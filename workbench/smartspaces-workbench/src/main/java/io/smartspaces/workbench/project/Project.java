@@ -33,7 +33,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
- * An Interactive Spaces project.
+ * A Smart Spaces project.
  *
  * @author Keith M. Hughes
  */
@@ -285,19 +285,19 @@ public abstract class Project {
   }
 
   /**
-   * Get the range of Interactive Spaces versions that this project requires.
+   * Get the range of Smart Spaces versions that this project requires.
    *
-   * @return the range of Interactive Spaces versions that this project requires
+   * @return the range of Smart Spaces versions that this project requires
    */
   public VersionRange getsmartspacesVersionRange() {
     return smartspacesVersion;
   }
 
   /**
-   * Set the range of Interactive Spaces versions that this project requires.
+   * Set the range of Smart Spaces versions that this project requires.
    *
    * @param smartspacesVersionRange
-   *          the range of Interactive Spaces versions that this project
+   *          the range of Smart Spaces versions that this project
    *          requires
    */
   public void setsmartspacesVersionRange(VersionRange smartspacesVersionRange) {

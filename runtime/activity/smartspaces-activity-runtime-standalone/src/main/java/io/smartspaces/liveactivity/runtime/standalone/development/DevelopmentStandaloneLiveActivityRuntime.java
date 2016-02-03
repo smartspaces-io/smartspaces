@@ -107,7 +107,7 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
   /**
    * Config parameter for whether this run is for a single activity or a group.
    */
-  public static final boolean CONFIGURATION_DEFAULT_smartspaces_STANDALONE_ACTIVITY_SINGLE =
+  public static final boolean CONFIGURATION_DEFAULT_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE =
       false;
 
   /**
@@ -278,7 +278,7 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
     boolean isSingleActivity =
         systemConfiguration.getPropertyBoolean(
             CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE,
-            CONFIGURATION_DEFAULT_smartspaces_STANDALONE_ACTIVITY_SINGLE);
+            CONFIGURATION_DEFAULT_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE);
 
     String instanceSuffixValue =
         systemConfiguration.getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_INSTANCE,

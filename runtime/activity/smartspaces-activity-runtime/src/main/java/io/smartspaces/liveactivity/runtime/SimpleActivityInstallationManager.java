@@ -77,7 +77,7 @@ public class SimpleActivityInstallationManager implements ActivityInstallationMa
   private final HttpContentCopier remoteCopier = new HttpClientHttpContentCopier();
 
   /**
-   * The Interactive Spaces environment.
+   * The Smart Spaces environment.
    */
   private final SmartSpacesEnvironment spaceEnvironment;
 

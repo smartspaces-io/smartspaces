@@ -787,7 +787,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
   }
 
   /**
-   * Translate an Interactive Spaces activity status to its ROS message
+   * Translate an Smart Spaces activity status to its ROS message
    * equivalent.
    *
    * @param state

@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.hello
+    smartspaces.example.activity.hello
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityHello</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityHello</name>
     <class>
-      interactivespaces.activity.example.hello.HelloActivity
+      io.smartspaces.activity.example.hello.HelloActivity
     </class>
 
     <configuration>

@@ -36,7 +36,7 @@ public class SimpleNativeApplicationRunnerFactory implements NativeApplicationRu
   private NativeApplicationRunnerParser runnerParser;
 
   /**
-   * The Interactive Spaces environment being run under.
+   * The Smart Spaces environment being run under.
    */
   private SmartSpacesEnvironment spaceEnvironment;
 

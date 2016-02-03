@@ -406,7 +406,7 @@ public class WorkbenchTaskContext {
     File controllerDirectory = getControllerDirectory();
     File javaSystemDirectory =
         fileSupport.newFile(controllerDirectory,
-            SmartSpacesContainer.smartspaces_CONTAINER_FOLDER_LIB_SYSTEM_JAVA);
+            SmartSpacesContainer.SMARTSPACES_CONTAINER_FOLDER_LIB_SYSTEM_JAVA);
     if (!javaSystemDirectory.isDirectory()) {
       throw new SimpleSmartSpacesException(String.format(
           "Controller directory %s configured by %s does not appear to be valid.",

@@ -1,4 +1,5 @@
 ##
+# Copyright (C) 2016 Keith M. Hughes
 # Copyright (C) 2012 Google Inc.
 #  
 #  Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,8 +15,8 @@
 #  the License.
 ##
 
-from interactivespaces.activity.impl import BaseActivity
-from interactivespaces.event import EventListener
+from io.smartspaces.activity.impl import BaseActivity
+from io.smartspaces.event import EventListener
 
 class ExampleEventBusPythonActivity(BaseActivity):
     def onActivityStartup(self):

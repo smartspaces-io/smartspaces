@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.comm.network.tcp.server.hello
+    smartspaces.example.activity.comm.network.tcp.server.hello
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityCommTcpServerHello</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityCommTcpServerHello</name>
     <class>
-      interactivespaces.example.activity.comm.network.tcp.server.hello.HelloTcpServerActivity
+      io.smartspaces.example.activity.comm.network.tcp.server.hello.HelloTcpServerActivity
     </class>
 
     <configuration>

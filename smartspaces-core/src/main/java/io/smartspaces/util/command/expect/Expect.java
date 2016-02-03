@@ -50,7 +50,7 @@ import com.google.common.collect.Lists;
  * happened.
  *
  * @author Ronnie Dong
- * @author Trevor Pering -- modified for use with Interactive Spaces
+ * @author Trevor Pering -- modified for use with Smart Spaces
  * @author Keith M. Hughes even more IS changes
  */
 public class Expect implements ManagedResource {

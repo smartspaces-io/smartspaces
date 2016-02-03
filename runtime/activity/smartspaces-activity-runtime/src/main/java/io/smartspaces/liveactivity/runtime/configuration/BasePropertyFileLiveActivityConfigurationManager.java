@@ -43,7 +43,7 @@ public abstract class BasePropertyFileLiveActivityConfigurationManager implement
   public static final String CONFIGURATION_FILE_EXTENSION = "conf";
 
   /**
-   * The Interactive Spaces environment.
+   * The Smart Spaces environment.
    */
   private final SmartSpacesEnvironment spaceEnvironment;
 

@@ -53,7 +53,7 @@ public class DevelopmentStandaloneSmartSpacesFilesystem extends
    * Create a new DevelopmentStandaloneSmartSpacesFilesystem.
    *
    * @param baseInstallDirectory
-   *          the base directory where Interactive Spaces is installed
+   *          the base directory where Smart Spaces is installed
    * @param baseRuntimeDirectory
    *          the base directory where the activity should store runtime data
    */

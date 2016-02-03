@@ -24,34 +24,34 @@ import org.ros.node.ConnectedNode;
 import org.ros.osgi.common.RosEnvironment;
 
 /**
- * The ROS context for the Interactive Spaces Master.
+ * The ROS context for the Smart Spaces Master.
  *
  * @author Keith M. Hughes
  */
 public interface MasterRosContext extends ManagedResource {
 
   /**
-   * Configuration property name for having the Interactive Spaces master create
+   * Configuration property name for having the Smart Spaces master create
    * it's own ROS master.
    */
   String CONFIGURATION_NAME_ROS_MASTER_ENABLE = "smartspaces.master.ros.master.enable";
 
   /**
    * Configuration property value for
-   * {@link #CONFIGURATION_NAME_ROS_MASTER_ENABLE} for having Interactive Spaces
+   * {@link #CONFIGURATION_NAME_ROS_MASTER_ENABLE} for having Smart Spaces
    * create it's own ROS master.
    */
   String CONFIGURATION_VALUE_MASTER_ENABLE_TRUE = CoreConfiguration.CONFIGURATION_VALUE_TRUE;
 
   /**
    * Configuration property value for
-   * {@link #CONFIGURATION_NAME_ROS_MASTER_ENABLE} for having Interactive Spaces
+   * {@link #CONFIGURATION_NAME_ROS_MASTER_ENABLE} for having Smart Spaces
    * not create it's own ROS master.
    */
   String CONFIGURATION_VALUE_MASTER_ENABLE_FALSE = CoreConfiguration.CONFIGURATION_VALUE_FALSE;
 
   /**
-   * Configuration property default value for having Interactive Spaces create
+   * Configuration property default value for having Smart Spaces create
    * it's own ROS master.
    */
   String CONFIGURATION_DEFAULT_ROS_MASTER_ENABLE = CONFIGURATION_VALUE_MASTER_ENABLE_TRUE;
@@ -59,7 +59,7 @@ public interface MasterRosContext extends ManagedResource {
   /**
    * The ROS node name for the master.
    */
-  String ROS_NODENAME_smartspaces_MASTER = "smartspaces/master";
+  String ROS_NODENAME_SMARTSPACES_MASTER = "smartspaces/master";
 
   /**
    * Get the ROS environment for the context.

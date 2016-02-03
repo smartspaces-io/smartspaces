@@ -38,14 +38,14 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 
 /**
- * A ROS context for the Interactive Spaces Master.
+ * A ROS context for the Smart Spaces Master.
  *
  * @author Keith M. Hughes
  */
 public class StandardMasterRosContext implements MasterRosContext {
 
   /**
-   * The timeout default for the registration of the Interactive Spaces Master
+   * The timeout default for the registration of the Smart Spaces Master
    * ROS node with the ROS master.
    */
   public static final int ROS_MASTER_REGISTRATION_TIMEOUT_DEFAULT = 10000;
@@ -137,7 +137,7 @@ public class StandardMasterRosContext implements MasterRosContext {
 
   @Override
   public void startup() {
-    log.info("Starting up the Interactive Spaces Master ROS context");
+    log.info("Starting up the Smart Spaces Master ROS context");
 
     startupLatch = new CountDownLatch(1);
 
@@ -153,7 +153,7 @@ public class StandardMasterRosContext implements MasterRosContext {
       if (!startupLatch.await(rosMasterRegistrationTimeout, TimeUnit.MILLISECONDS)) {
         log.error(String
             .format(
-                "Could not register the Interactive Spaces Master with the ROS Master within %d milliseconds",
+                "Could not register the Smart Spaces Master with the ROS Master within %d milliseconds",
                 rosMasterRegistrationTimeout));
       }
     } catch (InterruptedException e) {
@@ -173,9 +173,9 @@ public class StandardMasterRosContext implements MasterRosContext {
   }
 
   /**
-   * Get the ROS node for the Interactive Spaces Master.
+   * Get the ROS node for the Smart Spaces Master.
    *
-   * @return the ROS node for the Interactive Spaces Master
+   * @return the ROS node for the Smart Spaces Master
    */
   @Override
   public ConnectedNode getMasterNode() {
@@ -183,7 +183,7 @@ public class StandardMasterRosContext implements MasterRosContext {
       return masterNode;
     } else {
       throw SimpleSmartSpacesException
-          .newFormattedException("The Interactive Spaces Master is not connected to a ROS Master");
+          .newFormattedException("The Smart Spaces Master is not connected to a ROS Master");
     }
   }
 
@@ -219,16 +219,16 @@ public class StandardMasterRosContext implements MasterRosContext {
    */
   private void connectToRosMaster() {
     NodeConfiguration nodeConfiguration = rosEnvironment.getPublicNodeConfigurationWithNodeName();
-    nodeConfiguration.setNodeName(ROS_NODENAME_smartspaces_MASTER);
+    nodeConfiguration.setNodeName(ROS_NODENAME_SMARTSPACES_MASTER);
 
     rosEnvironment.newNode(nodeConfiguration, Lists.newArrayList(masterNodeListener));
   }
 
   /**
-   * Handle the startup of the ROS node for the Interactive Spaces Master.
+   * Handle the startup of the ROS node for the Smart Spaces Master.
    *
    * @param masterNode
-   *          the Interactive Spaces Master's ROS node
+   *          the Smart Spaces Master's ROS node
    */
   private void handleMasterRosNodeStartup(ConnectedNode masterNode) {
     this.masterNode = masterNode;
@@ -237,10 +237,10 @@ public class StandardMasterRosContext implements MasterRosContext {
 
   /**
    * Handle any operations after the complete shutdown of the ROS node for the
-   * Interactive Spaces Master.
+   * Smart Spaces Master.
    */
   private void handleMasterRosNodeCompleteShutdown() {
-    log.info(String.format("Got ROS node complete shutdown for Interactive Spaces master node %s",
+    log.info(String.format("Got ROS node complete shutdown for Smart Spaces master node %s",
         masterNode.getName()));
 
     if (rosMasterController != null) {
@@ -249,7 +249,7 @@ public class StandardMasterRosContext implements MasterRosContext {
   }
 
   /**
-   * Handle an error in the Interactive Spaces Master's ROS node.
+   * Handle an error in the Smart Spaces Master's ROS node.
    *
    * @param node
    *          the master's ROS node
@@ -258,7 +258,7 @@ public class StandardMasterRosContext implements MasterRosContext {
    */
   private void handleMasterRosNodeError(Node node, Throwable throwable) {
     log.error(
-        String.format("Got ROS node error for Interactive Spaces master node %s", node.getName()),
+        String.format("Got ROS node error for Smart Spaces master node %s", node.getName()),
         throwable);
   }
 
@@ -293,9 +293,9 @@ public class StandardMasterRosContext implements MasterRosContext {
   }
 
   /**
-   * Get the Interactive Spaces Master's ROS node listener.
+   * Get the Smart Spaces Master's ROS node listener.
    *
-   * @return the Interactive Spaces Master's ROS node listener
+   * @return the Smart Spaces Master's ROS node listener
    */
   @VisibleForTesting
   NodeListener getMasterNodeListener() {

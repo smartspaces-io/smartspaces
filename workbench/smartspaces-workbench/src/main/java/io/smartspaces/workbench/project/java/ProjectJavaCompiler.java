@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * A Java compiler for Interactive Spaces projects.
+ * A Java compiler for Smart Spaces projects.
  *
  * @author Keith M. Hughes
  */

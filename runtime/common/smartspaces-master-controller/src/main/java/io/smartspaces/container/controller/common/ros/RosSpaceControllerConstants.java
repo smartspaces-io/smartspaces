@@ -21,7 +21,7 @@ import smartspaces_msgs.ControllerRequest;
 import smartspaces_msgs.ControllerStatus;
 
 /**
- * A collection of constants for working with Interactive Spaces space
+ * A collection of constants for working with Smart Spaces space
  * controllers.
  *
  * @author Keith M. Hughes

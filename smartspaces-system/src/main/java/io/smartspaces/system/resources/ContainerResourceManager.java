@@ -35,7 +35,7 @@ public interface ContainerResourceManager {
    * Get all current resources in the container.
    *
    * <p>
-   * Because of the dynamic nature of an Interactive Spaces container, do not
+   * Because of the dynamic nature of an Smart Spaces container, do not
    * keep copies of this object around because the resources available can
    * change over time.
    *

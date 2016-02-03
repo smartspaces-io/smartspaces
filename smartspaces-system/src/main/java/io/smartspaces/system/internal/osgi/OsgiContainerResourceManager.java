@@ -136,7 +136,7 @@ public class OsgiContainerResourceManager implements ContainerResourceManager, M
    * @param frameworkWiring
    *          the OSGi service for wiring together bundles
    * @param filesystem
-   *          the Interactive Spaces container filesystem
+   *          the Smart Spaces container filesystem
    * @param configFolder
    *          the folder for configurations, can be {@code null}
    * @param log
@@ -471,7 +471,7 @@ public class OsgiContainerResourceManager implements ContainerResourceManager, M
 
       case LIB_SYSTEM:
         return fileSupport.newFile(filesystem.getInstallDirectory(),
-            ContainerFilesystemLayout.FOLDER_smartspaces_SYSTEM);
+            ContainerFilesystemLayout.FOLDER_SMARTSPACES_SYSTEM);
 
       case USER_BOOTSTRAP:
         return fileSupport.newFile(filesystem.getInstallDirectory(),

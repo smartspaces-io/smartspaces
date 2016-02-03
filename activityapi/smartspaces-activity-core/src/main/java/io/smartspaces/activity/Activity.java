@@ -26,7 +26,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 
 /**
- * An activity for Interactive Spaces.
+ * An activity for Smart Spaces.
  *
  * @author Keith M. Hughes
  */
@@ -48,14 +48,14 @@ public interface Activity extends ActivityControl {
   String CONFIGURATION_PROPERTY_ACTIVITY_UUID = "space.activity.uuid";
 
   /**
-   * Get the Interactive Spaces environment the activity is running under.
+   * Get the Smart Spaces environment the activity is running under.
    *
    * @return space environment for this activity
    */
   SmartSpacesEnvironment getSpaceEnvironment();
 
   /**
-   * Set the Interactive Spaces environment the activity is running under.
+   * Set the Smart Spaces environment the activity is running under.
    *
    * @param spaceEnvironment
    *          space environment for this activity

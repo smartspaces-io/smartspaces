@@ -6,7 +6,7 @@
     'native' activity type.
   </description>
 
-  <identifyingName>interactivespaces.example.activity.native.basic</identifyingName>
+  <identifyingName>smartspaces.example.activity.native.basic</identifyingName>
   <version>1.0.0</version>
 
   <activity type="native">

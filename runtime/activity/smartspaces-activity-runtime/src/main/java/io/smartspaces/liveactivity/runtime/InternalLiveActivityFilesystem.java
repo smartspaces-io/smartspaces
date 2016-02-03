@@ -29,17 +29,17 @@ import java.io.File;
 public interface InternalLiveActivityFilesystem extends ActivityFilesystem {
 
   /**
-   * Get the directory which contains internal Interactive Spaces data for the
+   * Get the directory which contains internal Smart Spaces data for the
    * activity.
    *
-   * @return the directory which contains Interactive Spaces data for the
+   * @return the directory which contains Smart Spaces data for the
    *         activity
    */
   File getInternalDirectory();
 
   /**
-   * Get an Interactive Spaces data file for the activity in the internal
-   * Interactive Spaces folder.
+   * Get an Smart Spaces data file for the activity in the internal
+   * Smart Spaces folder.
    *
    * @param relative
    *          relative path for the file

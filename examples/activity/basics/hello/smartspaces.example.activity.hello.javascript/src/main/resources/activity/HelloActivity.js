@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2012 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,7 +15,7 @@
  * the License.
  */
 
-interactivespaces.activity.impl.BaseActivity {
+io.smartspaces.activity.impl.BaseActivity {
     onActivitySetup: function() {
         this.getLog().info("Hello Javascript Activity setup");
     },

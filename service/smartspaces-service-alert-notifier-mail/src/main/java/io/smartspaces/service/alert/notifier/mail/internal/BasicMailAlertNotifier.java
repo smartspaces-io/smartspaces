@@ -37,7 +37,7 @@ public class BasicMailAlertNotifier extends BaseSupportedService implements Aler
   /**
    * Configuration property prefix for all mail alert notifier properties.
    */
-  public static final String CONFIGURATION_PREFIX_smartspaces_SERVICE_ALERT_NOTIFIER_MAIL =
+  public static final String CONFIGURATION_PREFIX_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL =
       "io.smartspaces.service.alert.notifier.mail.";
 
   /**
@@ -45,19 +45,19 @@ public class BasicMailAlertNotifier extends BaseSupportedService implements Aler
    * alert notifications.
    */
   public static final String CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_TO =
-      CONFIGURATION_PREFIX_smartspaces_SERVICE_ALERT_NOTIFIER_MAIL + "to";
+      CONFIGURATION_PREFIX_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL + "to";
 
   /**
    * Configuration property for the from email address for alert notifications.
    */
   public static final String CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_FROM =
-      CONFIGURATION_PREFIX_smartspaces_SERVICE_ALERT_NOTIFIER_MAIL + "from";
+      CONFIGURATION_PREFIX_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL + "from";
 
   /**
    * Configuration property for the subject for emails for alert notifications.
    */
   public static final String CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_SUBJECT =
-      CONFIGURATION_PREFIX_smartspaces_SERVICE_ALERT_NOTIFIER_MAIL + "subject";
+      CONFIGURATION_PREFIX_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL + "subject";
 
   /**
    * The name of the service.

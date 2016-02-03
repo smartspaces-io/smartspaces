@@ -6,14 +6,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.routable.input
+    smartspaces.example.activity.routable.input
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityRoutableInput</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityRoutableInput</name>
     <class>
-      interactivespaces.example.activity.routable.input.SimpleJavaRoutableInputActivity
+      io.smartspaces.example.activity.routable.input.SimpleJavaRoutableInputActivity
     </class>
 
     <configuration>

@@ -35,7 +35,7 @@ public abstract class BaseSpaceController implements SpaceController {
   private final SimpleSpaceController controllerInfo = new SimpleSpaceController();
 
   /**
-   * The Interactive Spaces environment being run under.
+   * The Smart Spaces environment being run under.
    */
   private final SmartSpacesEnvironment spaceEnvironment;
 

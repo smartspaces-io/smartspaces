@@ -24,7 +24,7 @@ import io.smartspaces.time.TimeProvider;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * An Interactive spaces environment giving access to portions of the
+ * A Smart spaces environment giving access to portions of the
  * environment for modification.
  *
  * @author Keith M. Hughes
@@ -40,10 +40,10 @@ public interface InternalSmartSpacesEnvironment {
   void setFilesystem(SmartSpacesFilesystem filesystem);
 
   /**
-   * Set the network type for Interactive Spaces.
+   * Set the network type for Smart Spaces.
    *
    * <p>
-   * This allows distinguishing between Interactive Spaces networks, e.g.
+   * This allows distinguishing between Smart Spaces networks, e.g.
    * localdev, prod, fredbot.
    *
    * @param networkType

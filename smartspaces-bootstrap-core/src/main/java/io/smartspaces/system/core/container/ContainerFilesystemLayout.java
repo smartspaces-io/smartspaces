@@ -18,22 +18,22 @@
 package io.smartspaces.system.core.container;
 
 /**
- * The filesystem layout for an Interactive Spaces container.
+ * The filesystem layout for an Smart Spaces container.
  *
  * @author Keith M. Hughes
  */
 public class ContainerFilesystemLayout {
 
   /**
-   * The folder where Interactive Spaces run files are kept, e.g. pid, etc.
+   * The folder where Smart Spaces run files are kept, e.g. pid, etc.
    */
-  public static final String FOLDER_smartspaces_RUN = "run";
+  public static final String FOLDER_SMARTSPACES_RUN = "run";
 
   /**
-   * The folder where Interactive Spaces system files as needed for bootstrap
+   * The folder where Smart Spaces system files as needed for bootstrap
    * are kept.
    */
-  public static final String FOLDER_smartspaces_SYSTEM = "lib/system/java";
+  public static final String FOLDER_SMARTSPACES_SYSTEM = "lib/system/java";
 
   /**
    * Subdirectory which will contain the bootstrap bundles.

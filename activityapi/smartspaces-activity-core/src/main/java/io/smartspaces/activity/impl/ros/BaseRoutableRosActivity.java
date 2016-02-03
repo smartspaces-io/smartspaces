@@ -17,7 +17,6 @@
 
 package io.smartspaces.activity.impl.ros;
 
-import smartspaces_msgs.GenericMessage;
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.component.route.MessageRouterSupportedMessageTypes;
 import io.smartspaces.activity.component.route.RoutableInputMessageListener;
@@ -29,6 +28,8 @@ import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
 
 import java.util.Map;
+
+import smartspaces_msgs.GenericMessage;
 
 /**
  * An {@link Activity} which provides a set of named input ROS topics and a set

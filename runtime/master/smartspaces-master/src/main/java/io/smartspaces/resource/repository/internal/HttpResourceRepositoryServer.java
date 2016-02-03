@@ -43,7 +43,7 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 
 /**
- * An Interactive Spaces resource repository server using HTTP.
+ * A Smart Spaces resource repository server using HTTP.
  *
  * @author Keith M. Hughes
  */
@@ -65,7 +65,7 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
    * repository.
    */
   private static final String ACTIVITY_REPOSITORY_SERVER_NAME =
-      "smartspaces_activity_repository";
+      "SMARTSPACES_activity_repository";
 
   /**
    * Parameter key for the UUID field.
@@ -93,7 +93,7 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
   private final String repositoryUrlPathPrefix = "smartspaces/resource/artifact";
 
   /**
-   * The Interactive Spaces environment.
+   * The Smart Spaces environment.
    */
   private SmartSpacesEnvironment spaceEnvironment;
 

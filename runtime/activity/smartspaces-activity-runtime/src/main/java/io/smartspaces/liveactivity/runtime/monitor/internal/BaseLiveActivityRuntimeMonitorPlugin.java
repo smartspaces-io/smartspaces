@@ -62,7 +62,7 @@ public abstract class BaseLiveActivityRuntimeMonitorPlugin implements
    * The title for the web page for the remote monitoring.
    */
   private static final String MONITOR_WEB_PAGE_TITLE =
-      "Interactive Spaces Live Activity Runtime Remote Monitoring";
+      "Smart Spaces Live Activity Runtime Remote Monitoring";
 
   /**
    * The directory entry for going up one level in the directory hierarchy.
@@ -227,7 +227,7 @@ public abstract class BaseLiveActivityRuntimeMonitorPlugin implements
     outputStream
         .write(String
             .format(
-                "<h1 class='controller-header'><a href='/'>Interactive Spaces Live Activity Runtime: %s</a></h1>",
+                "<h1 class='controller-header'><a href='/'>Smart Spaces Live Activity Runtime: %s</a></h1>",
                 controllerName).getBytes());
     if (subHeader != null) {
       outputStream.write(String.format("<h2>%s</h2>", subHeader).getBytes());

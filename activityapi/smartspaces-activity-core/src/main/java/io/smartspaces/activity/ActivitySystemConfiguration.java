@@ -21,7 +21,7 @@ import io.smartspaces.configuration.Configuration;
 import io.smartspaces.system.core.configuration.CoreConfiguration;
 
 /**
- * A collection of property names used in the Interactive Spaces system
+ * A collection of property names used in the Smart Spaces system
  * configuration specifically for activities to use.
  *
  * @author Keith M. Hughes

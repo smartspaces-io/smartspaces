@@ -8,14 +8,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.hello.shared
+    smartspaces.example.activity.hello.shared
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityHelloShared</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityHelloShared</name>
     <class>
-      interactivespaces.activity.example.hello.HelloActivity
+      io.smartspaces.activity.example.hello.HelloActivity
     </class>
 
     <configuration>

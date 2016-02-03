@@ -1,4 +1,5 @@
 /**
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2014 Google Inc.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -15,7 +16,7 @@
  */
 
 $(document).ready(function() {
-  window.ugly = new InteractiveSpacesUgly(window);
+  window.ugly = new SmartSpacesUgly(window);
   window.ugly.initialize();
 
   $('#mainContent').load(function() {

@@ -32,7 +32,7 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import java.util.Date;
 
 /**
- * The controller side of the installation manager for Interactive Spaces live
+ * The controller side of the installation manager for Smart Spaces live
  * activities.
  *
  * @author Keith M. Hughes

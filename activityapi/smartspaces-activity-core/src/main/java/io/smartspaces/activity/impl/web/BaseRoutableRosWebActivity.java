@@ -20,7 +20,7 @@ package io.smartspaces.activity.impl.web;
 import io.smartspaces.activity.component.web.BasicWebBrowserActivityComponent;
 
 /**
- * A web-based ROS Interactive Spaces activity which is routable.
+ * A web-based ROS Smart Spaces activity which is routable.
  *
  * @author Keith M. Hughes
  */

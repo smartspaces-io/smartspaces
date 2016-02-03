@@ -44,7 +44,7 @@ import org.osgi.framework.BundleContext;
 import com.google.common.collect.Maps;
 
 /**
- * A shell for performing some Interactive Spaces Space Master commands from a
+ * A shell for performing some Smart Spaces Space Master commands from a
  * command line.
  *
  * @author Keith M. Hughes
@@ -87,7 +87,7 @@ public class OsgiMasterShell {
   private BundleContext bundleContext;
 
   /**
-   * Control of the Interactive Spaces system.
+   * Control of the Smart Spaces system.
    */
   private SmartSpacesSystemControl spaceSystemControl;
 
@@ -113,7 +113,7 @@ public class OsgiMasterShell {
   }
 
   /**
-   * A shell command to shut down Interactive Spaces.
+   * A shell command to shut down Smart Spaces.
    *
    * @param session
    *          the command session

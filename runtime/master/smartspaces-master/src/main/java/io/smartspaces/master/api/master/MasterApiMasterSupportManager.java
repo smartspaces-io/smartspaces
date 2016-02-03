@@ -73,7 +73,7 @@ public interface MasterApiMasterSupportManager {
   Map<String, Object> importFromFileSystemMasterDomainModel();
 
   /**
-   * Get the Interactive Spaces Version.
+   * Get the Smart Spaces Version.
    *
    * @return the Master API response
    */

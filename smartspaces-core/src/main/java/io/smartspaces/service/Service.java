@@ -22,7 +22,7 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import java.util.Map;
 
 /**
- * An Interactive Spaces service.
+ * A Smart Spaces service.
  *
  * @author Keith M. Hughes
  */

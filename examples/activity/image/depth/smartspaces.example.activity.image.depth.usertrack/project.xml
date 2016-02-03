@@ -6,14 +6,14 @@
     controller to track users. The user position is sent on a route.
   </description>
 
-  <identifyingName>interactivespaces.example.activity.image.depth.usertrack
+  <identifyingName>smartspaces.example.activity.image.depth.usertrack
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityVisionDepthUsertrack</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityVisionDepthUsertrack</name>
     <class>
-      interactivespaces.activity.image.depth.usertrack.ImageDepthUserTrackerExampleActivity
+      io.smartspaces.activity.image.depth.usertrack.ImageDepthUserTrackerExampleActivity
     </class>
 
     <configuration>

@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.web
+    smartspaces.example.activity.web
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityWeb</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityWeb</name>
     <class>
-      interactivespaces.activity.example.web.JavaWebExampleActivity
+      io.smartspaces.activity.example.web.JavaWebExampleActivity
     </class>
 
     <configuration>

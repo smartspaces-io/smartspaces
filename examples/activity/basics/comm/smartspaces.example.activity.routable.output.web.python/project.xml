@@ -7,12 +7,12 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.routable.output.web.python
+    smartspaces.example.activity.routable.output.web.python
   </identifyingName>
   <version>1.0.0</version>
 
   <activity type="script">
-    <name>interactivespacesExampleActivityRoutableOutputWebPython</name>
+    <name>smartspacesExampleActivityRoutableOutputWebPython</name>
     <executable>ExamplePythonRoutableOutputWebActivity.py</executable>
 
     <configuration>

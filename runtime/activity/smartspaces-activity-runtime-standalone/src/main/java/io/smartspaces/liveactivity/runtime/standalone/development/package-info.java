@@ -16,7 +16,7 @@
  */
 
 /**
- * The standalone activity runner that is for Interactive Spaces development.
+ * The standalone activity runner that is for Smart Spaces development.
  *
  * <p>
  * This runner can run activities in their source folders, making it easier to

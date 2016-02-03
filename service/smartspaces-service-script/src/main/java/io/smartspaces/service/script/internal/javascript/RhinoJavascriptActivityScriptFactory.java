@@ -41,7 +41,7 @@ public class RhinoJavascriptActivityScriptFactory implements ActivityScriptFacto
   private Scriptable globalScope;
 
   /**
-   * The Interactive Spaces environment we are running under.
+   * The Smart Spaces environment we are running under.
    */
   private final SmartSpacesEnvironment spaceEnvironment;
 

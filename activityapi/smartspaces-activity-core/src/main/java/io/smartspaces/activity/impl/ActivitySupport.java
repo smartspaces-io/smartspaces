@@ -32,7 +32,7 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import org.apache.commons.logging.Log;
 
 /**
- * Common support for building an Interactive Spaces activity.
+ * Common support for building an Smart Spaces activity.
  *
  * @author Keith M. Hughes
  */
@@ -79,7 +79,7 @@ public abstract class ActivitySupport implements Activity {
   private ActivityRuntime activityRuntime;
 
   /**
-   * The Interactive Spaces environment the activity will run under.
+   * The Smart Spaces environment the activity will run under.
    */
   private SmartSpacesEnvironment spaceEnvironment;
 

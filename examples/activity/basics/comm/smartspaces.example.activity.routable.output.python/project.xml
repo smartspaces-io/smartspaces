@@ -2,17 +2,17 @@
 <project type="activity">
   <name>Routable Output Python Activity Example</name>
   <description>
-    An example of a Routable Interactive Spaces Activity written in Python
+    An example of a Routable Smart Spaces Activity written in Python
     that outputs on a route to other activities.
   </description>
 
-  <identifyingName>interactivespaces.example.activity.routable.output.python
+  <identifyingName>smartspaces.example.activity.routable.output.python
   </identifyingName>
   <version>1.0.0</version>
 
 
   <activity type="script">
-    <name>interactivespacesExampleActivityRoutableOutputPython</name>
+    <name>smartspacesExampleActivityRoutableOutputPython</name>
     <executable>
       ExampleOutputRoutablePythonActivity.py
     </executable>

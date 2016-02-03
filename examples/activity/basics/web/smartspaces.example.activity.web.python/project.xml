@@ -7,12 +7,12 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.web.python
+    smartspaces.example.activity.web.python
   </identifyingName>
   <version>1.0.0</version>
   
   <activity type="script">
-    <name>interactivespacesExampleActivityWebPython</name>
+    <name>smartspacesExampleActivityWebPython</name>
     <executable>ExamplePythonWebActivity.py</executable>
 
     <configuration>

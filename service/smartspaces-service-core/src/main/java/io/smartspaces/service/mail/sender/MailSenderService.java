@@ -21,7 +21,7 @@ import io.smartspaces.service.SupportedService;
 import io.smartspaces.service.mail.common.MailMessage;
 
 /**
- * An Interactive Spaces service for sending email.
+ * A Smart Spaces service for sending email.
  *
  * @author Keith M. Hughes
  */

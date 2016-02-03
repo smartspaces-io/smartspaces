@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.routable.output.web
+    smartspaces.example.activity.routable.output.web
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityRoutableOutputWeb</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityRoutableOutputWeb</name>
     <class>
-      interactivespaces.example.activity.routable.output.web.RoutableOutputWebExampleActivity
+      io.smartspaces.example.activity.routable.output.web.RoutableOutputWebExampleActivity
     </class>
 
     <configuration>

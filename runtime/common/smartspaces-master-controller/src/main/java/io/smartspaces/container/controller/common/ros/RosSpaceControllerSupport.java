@@ -28,7 +28,7 @@ import smartspaces_msgs.ControllerRequest;
 import smartspaces_msgs.ControllerStatus;
 
 /**
- * Various support routines for working with Interactive Spaces controllers.
+ * Various support routines for working with Smart Spaces controllers.
  *
  * @author Keith M. Hughes
  */

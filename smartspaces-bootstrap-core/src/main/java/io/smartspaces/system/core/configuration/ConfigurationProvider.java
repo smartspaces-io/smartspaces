@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.Map;
 
 /**
- * Boot configuration provider for Interactive Spaces.
+ * Boot configuration provider for Smart Spaces.
  *
  * @author Keith M. Hughes
  */

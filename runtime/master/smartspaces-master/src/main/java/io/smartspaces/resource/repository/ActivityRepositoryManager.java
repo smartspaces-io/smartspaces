@@ -22,7 +22,7 @@ import io.smartspaces.domain.basic.Activity;
 import java.io.InputStream;
 
 /**
- * A manager for handling the Interactive Spaces activity repository.
+ * A manager for handling the Smart Spaces activity repository.
  *
  * <p>
  * The activity repository will handle the actual saving of activities.

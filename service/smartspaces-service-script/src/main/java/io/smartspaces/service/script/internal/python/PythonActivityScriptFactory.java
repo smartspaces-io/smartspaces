@@ -83,7 +83,7 @@ public class PythonActivityScriptFactory implements ActivityScriptFactory {
   public static final char PYTHON_PATH_SEPARATOR = ':';
 
   /**
-   * The Interactive Spaces environment we are running under.
+   * The Smart Spaces environment we are running under.
    */
   private final SmartSpacesEnvironment spaceEnvironment;
 
@@ -119,7 +119,7 @@ public class PythonActivityScriptFactory implements ActivityScriptFactory {
    *          the properties for the python interpreter
    */
   protected void addSystemPythonPath(Properties properties) {
-    // Get all readable dirs in Interactive Spaces system python library
+    // Get all readable dirs in Smart Spaces system python library
     File systemPythonLibDirectory =
         spaceEnvironment.getFilesystem().getLibraryDirectory(CONTAINER_LIB_PYTHON);
 

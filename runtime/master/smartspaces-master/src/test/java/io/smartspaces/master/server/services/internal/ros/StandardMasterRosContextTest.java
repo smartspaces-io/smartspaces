@@ -120,7 +120,7 @@ public class StandardMasterRosContextTest {
     context.startup();
 
     Mockito.verify(nodeConfiguration).setNodeName(
-        MasterRosContext.ROS_NODENAME_smartspaces_MASTER);
+        MasterRosContext.ROS_NODENAME_SMARTSPACES_MASTER);
     Mockito.verify(rosEnvironment).newNode(nodeConfiguration,
         Lists.newArrayList(context.getMasterNodeListener()));
     Assert.assertEquals(masterNode, context.getMasterNode());
@@ -170,7 +170,7 @@ public class StandardMasterRosContextTest {
 
     Assert.assertNull(rosMasterController.getRosEnvironment());
     Mockito.verify(nodeConfiguration).setNodeName(
-        MasterRosContext.ROS_NODENAME_smartspaces_MASTER);
+        MasterRosContext.ROS_NODENAME_SMARTSPACES_MASTER);
     Mockito.verify(rosEnvironment).newNode(nodeConfiguration,
         Lists.newArrayList(context.getMasterNodeListener()));
     Assert.assertEquals(masterNode, context.getMasterNode());

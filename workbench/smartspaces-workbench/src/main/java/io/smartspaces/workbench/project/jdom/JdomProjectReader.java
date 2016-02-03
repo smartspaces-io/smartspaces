@@ -64,7 +64,7 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
    * The default version range for projects which do not specify a version
    * range.
    */
-  public static final VersionRange smartspaces_VERSION_RANGE_DEFAULT = new VersionRange(
+  public static final VersionRange SMARTSPACES_VERSION_RANGE_DEFAULT = new VersionRange(
       new Version(1, 0, 0), new Version(2, 0, 0), false);
 
   /**
@@ -126,7 +126,7 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
   public static final String PROJECT_ATTRIBUTE_NAME_PROJECT_BUILDER = "builder";
 
   /**
-   * The project attribute for the version of Interactive Spaces which is
+   * The project attribute for the version of Smart Spaces which is
    * required.
    */
   public static final String PROJECT_ATTRIBUTE_NAME_PROJECT_INTERACTIVE_SPACES_VERSION =
@@ -331,9 +331,9 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
 
     if (project.getsmartspacesVersionRange() == null) {
       getLog().warn(
-          "Did not specify a range of needed Interactive Spaces versions. Setting default to "
-              + smartspaces_VERSION_RANGE_DEFAULT);
-      project.setsmartspacesVersionRange(smartspaces_VERSION_RANGE_DEFAULT);
+          "Did not specify a range of needed Smart Spaces versions. Setting default to "
+              + SMARTSPACES_VERSION_RANGE_DEFAULT);
+      project.setsmartspacesVersionRange(SMARTSPACES_VERSION_RANGE_DEFAULT);
     }
 
     if (failure) {

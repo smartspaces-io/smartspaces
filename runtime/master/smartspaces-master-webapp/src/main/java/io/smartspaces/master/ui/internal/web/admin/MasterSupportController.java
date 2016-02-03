@@ -40,7 +40,7 @@ public class MasterSupportController extends BaseSpaceMasterController {
   /**
    * Value when the IS Version is unknown.
    */
-  private static final String smartspaces_VERSION_UNKNOWN = "Unknown";
+  private static final String SMARTSPACES_VERSION_UNKNOWN = "Unknown";
 
   /**
    * The UI manager for master support activities.

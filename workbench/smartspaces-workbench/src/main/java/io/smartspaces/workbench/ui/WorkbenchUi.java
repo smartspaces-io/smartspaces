@@ -52,7 +52,7 @@ import javax.swing.text.DefaultEditorKit;
 import com.google.common.collect.Lists;
 
 /**
- * A Swing UI window for the Interactive Spaces workbench.
+ * A Swing UI window for the Smart Spaces workbench.
  *
  * @author Keith M. Hughes
  */
@@ -225,7 +225,7 @@ public class WorkbenchUi extends JFrame implements ActionListener {
    *          the workbench for the UI
    */
   public WorkbenchUi(SmartSpacesWorkbench workbench) {
-    super("Interactive Spaces Workbench");
+    super("Smart Spaces Workbench");
 
     this.workbench = workbench;
 
@@ -423,7 +423,7 @@ public class WorkbenchUi extends JFrame implements ActionListener {
     helpMenu = new JMenu("Help");
     menuBar.add(helpMenu);
 
-    JMenuItem aboutMenu = new JMenuItem("About Interactive Spaces Workbench...");
+    JMenuItem aboutMenu = new JMenuItem("About Smart Spaces Workbench...");
     helpMenu.add(aboutMenu);
     aboutMenu.addActionListener(this);
 
@@ -505,7 +505,7 @@ public class WorkbenchUi extends JFrame implements ActionListener {
    */
   public void setCurrentProject(Project project) {
     currentProject = project;
-    setTitle("Interactive Spaces - " + currentProject.getName());
+    setTitle("Smart Spaces - " + currentProject.getName());
     desktop.setCurrentActivityProject(project);
   }
 

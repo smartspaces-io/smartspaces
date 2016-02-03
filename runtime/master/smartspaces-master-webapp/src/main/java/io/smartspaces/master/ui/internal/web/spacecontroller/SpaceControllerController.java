@@ -37,7 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.common.collect.Lists;
 
 /**
- * A controller for Interactive Spaces space controller operations.
+ * A controller for Smart Spaces space controller operations.
  *
  * @author Keith M. Hughes
  */

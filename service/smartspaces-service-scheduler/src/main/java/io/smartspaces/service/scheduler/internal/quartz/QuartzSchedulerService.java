@@ -82,13 +82,13 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
   @Override
   public void startup() {
     try {
-      // TODO(keith): Get Interactive Spaces thread pool in here.
+      // TODO(keith): Get Smart Spaces thread pool in here.
       SchedulerFactory schedulerFactory = new StdSchedulerFactory();
       scheduler = schedulerFactory.getScheduler();
 
       scheduler.start();
     } catch (SchedulerException e) {
-      throw new SmartSpacesException("Could not start Interactive Spaces scheduler", e);
+      throw new SmartSpacesException("Could not start Smart Spaces scheduler", e);
     }
   }
 
@@ -97,7 +97,7 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
     try {
       scheduler.shutdown();
     } catch (SchedulerException e) {
-      throw new SmartSpacesException("Could not shutdown Interactive Spaces scheduler", e);
+      throw new SmartSpacesException("Could not shutdown Smart Spaces scheduler", e);
     }
   }
 

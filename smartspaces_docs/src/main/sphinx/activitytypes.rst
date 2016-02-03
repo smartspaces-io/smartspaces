@@ -28,7 +28,7 @@ Out of the box, Smart Spaces supplies the following activity types:
 * ``web``, that provides a web server and a web browser, you just supply the HTML, CSS, and Javascript
 * ``native``, that allows you to provide either a executable or run a executable available on the machine the activity is running on
 * ``script``, that allows you to supply activities written in a scripting language supported by Smart Spaces
-* ``interactivespaces_native``, that allows you to develop native Smart Spaces applications in Java
+* ``smartspaces_native``, that allows you to develop native Smart Spaces applications in Java
 
 There may be other activity types that are available because of additional libraries you are using in your
 Smart Spaces installation. See the library documentation for details about activity types the library adds
@@ -62,7 +62,7 @@ The configuration for a Web Activity is pretty simple, the simplest
     <version>1.0.0</version>
   
     <activity type="web">
-      <name>interactivespacesExampleActivityHelloWeb</name>
+      <name>smartspacesExampleActivityHelloWeb</name>
   
       <configuration>
         <property name="space.activity.webapp.content.location" value="webapp" />
@@ -184,7 +184,7 @@ A pretty simple ``project.xml`` for a Native Activity is given below.
     <version>1.0.0</version>
   
     <activity type="native">
-      <name>interactivespacesExampleActivityNative</name>
+      <name>smartspacesExampleActivityNative</name>
   
       <configuration>
         <property name="space.activity.executable.linux" value="my_mp3_player" />
@@ -267,7 +267,7 @@ to play the MP3 file that comes with the Activity.
     <version>1.0.0</version>
   
     <activity type="native">
-      <name>interactivespacesExampleActivityNative</name>
+      <name>smartspacesExampleActivityNative</name>
   
       <configuration>
         <property name="space.activity.executable.linux" value="/usr/bin/mpg321" />
@@ -316,7 +316,7 @@ A simple ``project.xml`` for a Scripted Activity is given below.
     <version>1.0.0</version>
   
     <activity type="script">
-      <name>interactivespacesExampleActivityHelloPython</name>
+      <name>smartspacesExampleActivityHelloPython</name>
       <executable>ExamplePythonActivity.py</executable>
     </activity>
   </project>
@@ -400,15 +400,15 @@ given below.
     </identifyingName>
     <version>1.0.0</version>
   
-    <activity type="interactivespaces_native">
-      <name>interactivespacesExampleActivityHello</name>
+    <activity type="smartspaces_native">
+      <name>smartspacesExampleActivityHello</name>
       <class>
         interactivespaces.activity.example.hello.HelloActivity
       </class>
     </activity>
   </project>
 
-Notice that the Activity Type is ``interactivespaces_native``.
+Notice that the Activity Type is ``smartspaces_native``.
 
 The element ``<class>`` gives the name of the Java class that is the Activity. Here it has the
 value ``interactivespaces.activity.example.hello.HelloActivity``. Smart Spaces will create an

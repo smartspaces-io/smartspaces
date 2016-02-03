@@ -6,14 +6,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.wii.remote
+    smartspaces.example.activity.wii.remote
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityWiiRemote</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityWiiRemote</name>
     <class>
-      interactivespaces.example.activity.wii.remote.ExampleWiiRemoteActivity
+      io.smartspaces.example.activity.wii.remote.ExampleWiiRemoteActivity
     </class>
 
     <configuration>

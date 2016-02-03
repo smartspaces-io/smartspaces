@@ -6,13 +6,13 @@
     runner API.
   </description>
 
-  <identifyingName>interactivespaces.example.activity.native.advanced</identifyingName>
+  <identifyingName>smartspaces.example.activity.native.advanced</identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native" logLevel="info">
+  <activity type="smartspaces_native" logLevel="info">
     <name>exampleActivityNativeAdvanced</name>
     <class>
-      interactivespaces.example.activity.nativerunner.NativeApplicationRunnerExampleActivity
+      io.smartspaces.example.activity.nativerunner.NativeApplicationRunnerExampleActivity
     </class>
 
     <configuration>

@@ -20,35 +20,35 @@ package io.smartspaces.system;
 import java.io.File;
 
 /**
- * File system for a full Interactive Spaces installation.
+ * File system for a full Smart Spaces installation.
  *
  * @author Keith M. Hughes
  */
 public interface SmartSpacesFilesystem {
 
   /**
-   * Get the installation directory where Interactive Spaces was installed.
+   * Get the installation directory where Smart Spaces was installed.
    *
    * @return the installation directory
    */
   File getInstallDirectory();
 
   /**
-   * Get the system bootstrap directory for Interactive Spaces.
+   * Get the system bootstrap directory for Smart Spaces.
    *
    * @return the bootstrap directory
    */
   File getSystemBootstrapDirectory();
 
   /**
-   * Get the user library bootstrap directory for Interactive Spaces.
+   * Get the user library bootstrap directory for Smart Spaces.
    *
    * @return the bootstrap directory
    */
   File getUserBootstrapDirectory();
 
   /**
-   * Get the system log directory for Interactive Spaces.
+   * Get the system log directory for Smart Spaces.
    *
    * @return the log directory
    */
@@ -77,7 +77,7 @@ public interface SmartSpacesFilesystem {
   File getLibraryDirectory(String subdir);
 
   /**
-   * Get the root Interactive Spaces-wide data directory. This is for activities
+   * Get the root Smart Spaces-wide data directory. This is for activities
    * on the controller sharing data.
    *
    * @return the root data directory
@@ -99,7 +99,7 @@ public interface SmartSpacesFilesystem {
   File getDataDirectory(String subdir);
 
   /**
-   * Get the EInteractive Spaces-wide directory used for writing temporary
+   * Get the ESmart Spaces-wide directory used for writing temporary
    * files.
    *
    * @return the temporary directory

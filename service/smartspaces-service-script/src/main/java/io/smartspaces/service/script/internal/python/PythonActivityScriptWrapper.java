@@ -101,7 +101,7 @@ public class PythonActivityScriptWrapper implements ActivityScriptWrapper {
       return (Activity) o;
     } catch (PyException e) {
       e.printStackTrace();
-      throw new SmartSpacesException("Could not create Jython Interactive Spaces activity ", e);
+      throw new SmartSpacesException("Could not create Jython Smart Spaces activity ", e);
     }
   }
 

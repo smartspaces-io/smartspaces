@@ -2,9 +2,9 @@
 <project type="activity">
     <name>Topic Bridge Example Activity</name>
     <description>
-An example activity of a topic bridge between multiple Interactive Spaces topics.
+An example activity of a topic bridge between multiple Smart Spaces topics.
     </description>
 
-    <identifyingName>interactivespaces.example.activity.bridge.topic</identifyingName>
+    <identifyingName>smartspaces.example.activity.bridge.topic</identifyingName>
     <version>1.0.0</version>
 </project>

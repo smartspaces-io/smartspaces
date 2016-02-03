@@ -8,14 +8,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.arduino.analog.trigger
+    smartspaces.example.activity.arduino.analog.trigger
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityArduinoAnalogTrigger</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityArduinoAnalogTrigger</name>
     <class>
-      interactivespaces.example.activity.arduino.analog.trigger.TriggerArduinoAnalogActivity
+      io.smartspaces.example.activity.arduino.analog.trigger.TriggerArduinoAnalogActivity
     </class>
 
     <configuration>

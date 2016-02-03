@@ -18,7 +18,7 @@
 package io.smartspaces.activity.configuration;
 
 /**
- * Useful configuration constants and methods for Interactive Spaces activities.
+ * Useful configuration constants and methods for Smart Spaces activities.
  *
  * @author Keith M. Hughes
  */

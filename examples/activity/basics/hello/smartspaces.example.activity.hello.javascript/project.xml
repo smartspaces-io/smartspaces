@@ -7,12 +7,12 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.hello.javascript
+    smartspaces.example.activity.hello.javascript
   </identifyingName>
   <version>1.0.0</version>
 
   <activity type="script">
-    <name>interactivespacesExampleActivityHelloJavascript</name>
+    <name>smartspacesExampleActivityHelloJavascript</name>
     <executable>HelloActivity.js</executable>
 
     <configuration>

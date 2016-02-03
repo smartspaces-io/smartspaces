@@ -85,12 +85,12 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
   private ScheduledExecutorService executorService;
 
   /**
-   * Interactive Spaces environment for the container.
+   * Smart Spaces environment for the container.
    */
   private RosOsgiSmartSpacesEnvironment spaceEnvironment;
 
   /**
-   * The Interactive Spaces-wide file system.
+   * The Smart Spaces-wide file system.
    */
   private BasicSmartSpacesFilesystem filesystem;
 
@@ -110,7 +110,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
   private SimpleExpressionEvaluatorFactory expressionEvaluatorFactory;
 
   /**
-   * The system control for Interactive Spaces.
+   * The system control for Smart Spaces.
    */
   private OsgiSmartSpacesSystemControl systemControl;
 
@@ -192,7 +192,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
       spaceEnvironment.getLog().info(
           String.format(
-              "Base system startup. Interactive Spaces Version %s",
+              "Base system startup. Smart Spaces Version %s",
               spaceEnvironment.getSystemConfiguration().getPropertyString(
                   SmartSpacesEnvironment.CONFIGURATION_SMARTSPACES_VERSION)));
     } catch (Exception e) {
@@ -280,7 +280,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    * Set up the {@link SmartSpacesEnvironment} everyone should use.
    *
    * @param baseInstallDir
-   *          the base directory where Interactive Spaces is installed
+   *          the base directory where Smart Spaces is installed
    */
   private void setupSpaceEnvironment(File baseInstallDir) {
     Map<String, String> containerProperties = configurationProvider.getInitialConfiguration();
@@ -395,7 +395,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
     configureRosFromsmartspaces(containerProperties);
 
-    // Want to start Interactive Spaces with no master URI unless there was
+    // Want to start Smart Spaces with no master URI unless there was
     // one in the config properties.
     rosEnvironment.setMasterUri(null);
     rosEnvironment.startup();

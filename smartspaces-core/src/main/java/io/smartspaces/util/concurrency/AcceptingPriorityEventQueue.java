@@ -36,7 +36,7 @@ import com.google.common.collect.Queues;
  * The event queue can also be set to accepting new events or not.
  *
  * <p>
- * Integrates into Interactive Spaces thread pools.
+ * Integrates into Smart Spaces thread pools.
  *
  * @author Keith M. Hughes
  */

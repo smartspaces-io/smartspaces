@@ -54,7 +54,7 @@ public class RosOsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
   private ScheduledExecutorService executorService;
 
   /**
-   * The file system for Interactive Spaces.
+   * The file system for Smart Spaces.
    */
   private SmartSpacesFilesystem filesystem;
 
@@ -62,7 +62,7 @@ public class RosOsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
    * Network type for the container.
    *
    * <p>
-   * This allows distinguishing between different Interactive Spaces networks,
+   * This allows distinguishing between different Smart Spaces networks,
    * e.g. localdev, prod, fredbot.
    */
   private String networkType;

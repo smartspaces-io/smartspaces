@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.arduino.analog
+    smartspaces.example.activity.arduino.analog
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivitySignalAnalog</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivitySignalAnalog</name>
     <class>
-      interactivespaces.example.activity.arduino.analog.AnalogSerialReadActivity
+      io.smartspaces.example.activity.arduino.analog.AnalogSerialReadActivity
     </class>
 
     <configuration>

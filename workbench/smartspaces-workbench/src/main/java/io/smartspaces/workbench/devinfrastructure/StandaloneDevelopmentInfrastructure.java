@@ -75,7 +75,7 @@ public class StandaloneDevelopmentInfrastructure implements DevelopmentInfrastru
 
     } catch (Throwable e) {
       throw SmartSpacesException.newFormattedException(e,
-          "Could not start up the Interactive Spaces Development Infrastructure");
+          "Could not start up the Smart Spaces Development Infrastructure");
     }
   }
 

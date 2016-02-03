@@ -25,13 +25,12 @@ import io.smartspaces.service.comm.serial.xbee.XBeeCommunicationEndpointService;
 import org.apache.commons.logging.Log;
 
 /**
- * An XBee communications endpoint service using the Interactive Spaces XBee
- * library.
+ * An XBee communications endpoint service using the Smart Spaces XBee library.
  *
- * @author Keith M. Hughes s
+ * @author Keith M. Hughes
  */
-public class SmartSpacesXBeeCommunicationEndpointService extends BaseSupportedService
-    implements XBeeCommunicationEndpointService {
+public class SmartSpacesXBeeCommunicationEndpointService extends BaseSupportedService implements
+    XBeeCommunicationEndpointService {
 
   @Override
   public String getName() {

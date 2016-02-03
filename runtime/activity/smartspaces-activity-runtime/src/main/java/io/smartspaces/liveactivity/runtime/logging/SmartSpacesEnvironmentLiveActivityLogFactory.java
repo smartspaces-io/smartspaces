@@ -44,7 +44,7 @@ public class SmartSpacesEnvironmentLiveActivityLogFactory implements LiveActivit
   private static final String ACTIVITY_LOG_FILENAME = "activity.log";
 
   /**
-   * The Interactive Spaces environment this is being run in.
+   * The Smart Spaces environment this is being run in.
    */
   private SmartSpacesEnvironment spaceEnvironment;
 

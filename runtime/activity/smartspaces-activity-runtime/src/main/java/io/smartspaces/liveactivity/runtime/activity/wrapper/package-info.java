@@ -16,7 +16,7 @@
  */
 
 /**
- * Activity wrappers are used by the Interactive Spaces runtime to hide details of what the activity looks like or how
+ * Activity wrappers are used by the Smart Spaces runtime to hide details of what the activity looks like or how
  * it is created. A given wrapper reference should only be used to create one instance at a time.
  *
  * <p>

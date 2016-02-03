@@ -26,7 +26,7 @@ import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlServerCom
 import org.apache.commons.logging.Log;
 
 /**
- * An Interactive Spaces implementation of an Open Sound Control Server Endpoint
+ * A Smart Spaces implementation of an Open Sound Control Server Endpoint
  * service.
  *
  * @author Keith M. Hughes

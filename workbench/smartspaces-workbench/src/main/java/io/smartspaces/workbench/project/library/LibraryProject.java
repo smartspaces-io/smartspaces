@@ -21,7 +21,7 @@ import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.java.ContainerInfo;
 
 /**
- * An Interactive Spaces project for libraries.
+ * A Smart Spaces project for libraries.
  *
  * @author Keith M. Hughes
  */

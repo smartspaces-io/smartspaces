@@ -35,7 +35,7 @@ public class SmartSpacesNativeActivityWrapperFactory extends BaseActivityWrapper
   /**
    * The name of the activity type.
    */
-  public static final String ACTIVITY_TYPE_NAME = "smartspaces_native";
+  public static final String ACTIVITY_TYPE_NAME = "SMARTSPACES_native";
 
   /**
    * The bundle loader to use for loading live activities.

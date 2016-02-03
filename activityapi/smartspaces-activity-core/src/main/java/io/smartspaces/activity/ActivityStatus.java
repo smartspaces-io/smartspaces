@@ -21,7 +21,7 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 
 /**
- * Status of an Interactive Spaces activity.
+ * Status of an Smart Spaces activity.
  *
  * @author Keith M. Hughes
  */

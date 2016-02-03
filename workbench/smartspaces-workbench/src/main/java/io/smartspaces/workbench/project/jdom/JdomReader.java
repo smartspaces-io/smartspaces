@@ -385,7 +385,7 @@ public class JdomReader {
   }
 
   /**
-   * An EntityResolver that evaluates system IDs using an Interactive Spaces
+   * An EntityResolver that evaluates system IDs using an Smart Spaces
    * configuration evaluation.
    *
    * @author Keith M. Hughes

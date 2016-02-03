@@ -16,7 +16,7 @@
  */
 
 /**
- * Some useful classes for working with the javax.swing package in Interactive Spaces.
+ * Some useful classes for working with the javax.swing package in Smart Spaces.
  *
  * <p>
  * These classes are necessary because Swing runs its own threads and it is necessary

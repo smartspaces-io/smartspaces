@@ -47,7 +47,7 @@ public class OsgiSpaceControllerShell implements ManagedResource {
   private final SpaceController spaceController;
 
   /**
-   * Control of the Interactive Spaces system.
+   * Control of the Smart Spaces system.
    */
   private final SmartSpacesSystemControl spaceSystemControl;
 
@@ -87,7 +87,7 @@ public class OsgiSpaceControllerShell implements ManagedResource {
   }
 
   // /**
-  // * A shell command to shut down Interactive Spaces.
+  // * A shell command to shut down Smart Spaces.
   // *
   // * @param args
   // */

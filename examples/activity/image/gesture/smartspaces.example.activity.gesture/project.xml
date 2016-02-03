@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.image.gesture
+    smartspaces.example.activity.image.gesture
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityGesture</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityGesture</name>
     <class>
-      interactivespaces.example.activity.image.gesture.GestureExampleActivity
+      io.smartspaces.example.activity.image.gesture.GestureExampleActivity
     </class>
 
     <configuration>

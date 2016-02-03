@@ -118,7 +118,7 @@ public class BasicExtensionManager implements ExtensionManager {
   private AutomationManager automationManager;
 
   /**
-   * Interactive Spaces environment being run in.
+   * Smart Spaces environment being run in.
    */
   private SmartSpacesEnvironment spaceEnvironment;
 

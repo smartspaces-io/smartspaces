@@ -17,9 +17,9 @@
 
 package io.smartspaces.liveactivity.runtime.standalone.messaging;
 
-import smartspaces_msgs.GenericMessage;
-
 import org.ros.internal.message.RawMessage;
+
+import smartspaces_msgs.GenericMessage;
 
 /**
  * A generic message wrapper to use for standalone systems.

@@ -18,7 +18,7 @@
 package io.smartspaces.util.process.restart;
 
 /**
- * A restart strategy which refuses to try a restart within Interactive Spaces.
+ * A restart strategy which refuses to try a restart within Smart Spaces.
  *
  * @param <T>
  *          the type of {@link Restartable}

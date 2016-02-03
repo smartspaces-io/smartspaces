@@ -110,7 +110,7 @@ public class BasicAutomationManager implements AutomationManager {
   private MasterApiMasterSupportManager masterApiMasterSupportManager;
 
   /**
-   * Interactive Spaces environment being run in.
+   * Smart Spaces environment being run in.
    */
   private SmartSpacesEnvironment spaceEnvironment;
 

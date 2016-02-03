@@ -37,7 +37,7 @@ import org.osgi.framework.ServiceReference;
 import org.ros.concurrent.DefaultScheduledExecutorService;
 
 /**
- * OSGi activator for the Interactive Spaces Workbench.
+ * OSGi activator for the Smart Spaces Workbench.
  *
  * @author Keith M. Hughes
  */

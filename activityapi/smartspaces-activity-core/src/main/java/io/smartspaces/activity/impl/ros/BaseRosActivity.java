@@ -26,7 +26,7 @@ import org.ros.node.ConnectedNode;
 import org.ros.osgi.common.RosEnvironment;
 
 /**
- * Support for ROS Interactive Spaces activities.
+ * Support for ROS Smart Spaces activities.
  *
  * @author Keith M. Hughes
  */

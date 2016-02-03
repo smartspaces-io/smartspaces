@@ -18,7 +18,7 @@
 package io.smartspaces.container.control.message.activity;
 
 /**
- * Statuses for operations on Interactive Spaces activities in an space
+ * Statuses for operations on Smart Spaces activities in an space
  * controller.
  *
  * @author Keith M. Hughes

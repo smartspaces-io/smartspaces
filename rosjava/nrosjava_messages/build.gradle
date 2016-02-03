@@ -41,7 +41,7 @@ jar {
 		symbolicName = 'org.ros.nrosjava_messages'
 
 		instruction 'Fragment-Host',
-				'org.ros.nrosjava; bundle-version="[1.4.0,2.0.0)"'
+				'org.ros.nrosjava; bundle-version="[0.1.0,2.0.0)"'
 	}
 }
 

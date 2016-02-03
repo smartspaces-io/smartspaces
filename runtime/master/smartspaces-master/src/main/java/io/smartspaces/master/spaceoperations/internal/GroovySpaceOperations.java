@@ -37,11 +37,11 @@ public class GroovySpaceOperations implements SpaceOperations {
   public void run() {
     try {
       String[] roots =
-          new String[] { "/home/khughes/robots/ros/interactive-spaces/smartspaces_scripts" };
+          new String[] { "/home/khughes/robots/ros/interactive-spaces/SMARTSPACES_scripts" };
       GroovyScriptEngine gse = new GroovyScriptEngine(roots);
       Binding binding = new Binding();
       binding.setVariable("args", new String[] {
-          "-s=/home/khughes/robots/ros/interactive-spaces/smartspaces_scripts",
+          "-s=/home/khughes/robots/ros/interactive-spaces/SMARTSPACES_scripts",
           "sample.description", "deploy" });
       gse.run("SpaceOperationsRunner.groovy", binding);
       System.out.println(binding.getVariable("output"));

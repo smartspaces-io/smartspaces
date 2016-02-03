@@ -9,14 +9,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.routable.input.web.ball
+    smartspaces.example.activity.routable.input.web.ball
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityRoutableInputWebBall</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityRoutableInputWebBall</name>
     <class>
-      interactivespaces.activity.example.routable.input.web.ball.RoutableInputWebBallExampleActivity
+      io.smartspaces.activity.example.routable.input.web.ball.RoutableInputWebBallExampleActivity
     </class>
 
     <configuration>

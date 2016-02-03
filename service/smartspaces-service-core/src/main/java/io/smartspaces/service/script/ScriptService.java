@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Execute scripts in Interactive Spaces.
+ * Execute scripts in Smart Spaces.
  *
  * @author Keith M. Hughes
  */

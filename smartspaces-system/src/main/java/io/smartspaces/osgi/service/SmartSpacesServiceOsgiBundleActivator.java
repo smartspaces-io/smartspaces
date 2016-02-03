@@ -40,7 +40,7 @@ import com.google.common.collect.Lists;
 
 /**
  * A base class for creating OSGi BundleActivator subclasses for Interactive
- * Spaces services and other OSGi bundles from Interactive Spaces.
+ * Spaces services and other OSGi bundles from Smart Spaces.
  *
  * @author Keith M. Hughes
  */
@@ -161,7 +161,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
    * @param name
    *          name for the OSGi service
    * @param service
-   *          the Interactive Spaces service
+   *          the Smart Spaces service
    */
   public void registerOsgiService(String name, Service service) {
     osgiServiceRegistrations.add(bundleContext.registerService(name, service, null));
@@ -283,7 +283,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   }
 
   /**
-   * Get the service tracker for the Interactive Spaces environment.
+   * Get the service tracker for the Smart Spaces environment.
    *
    * @return the service tracker
    */

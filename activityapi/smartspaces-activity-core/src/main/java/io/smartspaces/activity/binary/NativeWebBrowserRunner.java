@@ -22,7 +22,7 @@ import io.smartspaces.util.process.restart.RestartStrategy;
 
 /**
  * A runner for native web browsers so that they can be controlled by
- * Interactive Spaces.
+ * Smart Spaces.
  *
  * @author Keith M. Hughes
  */

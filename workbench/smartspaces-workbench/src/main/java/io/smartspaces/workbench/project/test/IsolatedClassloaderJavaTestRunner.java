@@ -45,8 +45,8 @@ import com.google.common.collect.Lists;
  *
  * <p>
  * Tests are run in a test runner which is isolated from the classloader which
- * loads the Interactive Spaces workbench. This is to prevent mixing jar files
- * which are found in both the Interactive Spaces Workbench and controller.
+ * loads the Smart Spaces workbench. This is to prevent mixing jar files
+ * which are found in both the Smart Spaces Workbench and controller.
  *
  * @author Keith M. Hughes
  */

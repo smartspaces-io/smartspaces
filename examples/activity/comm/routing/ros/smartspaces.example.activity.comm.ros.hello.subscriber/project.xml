@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.comm.ros.hello.subscriber
+    smartspaces.example.activity.comm.ros.hello.subscriber
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityCommRosHelloSubscriber</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityCommRosHelloSubscriber</name>
     <class>
-      interactivespaces.activity.example.comm.ros.hello.subscriber.CommRosHelloSubscriberActivity
+      io.smartspaces.activity.example.comm.ros.hello.subscriber.CommRosHelloSubscriberActivity
     </class>
 
     <configuration>
@@ -24,7 +24,7 @@
           The ROS node name to be used for this activity.
         </description>
       </property>
-      <property name="interactivespaces.example.comm.ros.hello.topic" required="true">
+      <property name="smartspaces.example.comm.ros.hello.topic" required="true">
         <description>The ROS topic that this activity will be a subscriber for.</description>
         <value>/example/ros</value>
       </property>

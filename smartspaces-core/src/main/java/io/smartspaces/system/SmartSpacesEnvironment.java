@@ -41,24 +41,24 @@ public interface SmartSpacesEnvironment {
   String CONFIGURATION_SMARTSPACES_VERSION = CoreConfiguration.CONFIGURATION_SMARTSPACES_VERSION;
 
   /**
-   * Configuration property giving the Interactive Spaces container type.
+   * Configuration property giving the Smart Spaces container type.
    */
   String CONFIGURATION_CONTAINER_TYPE = "smartspaces.container.type";
 
   /**
-   * Configuration property value for the master Interactive Spaces container
+   * Configuration property value for the master Smart Spaces container
    * type.
    */
   String CONFIGURATION_CONTAINER_TYPE_MASTER = "master";
 
   /**
-   * Configuration property value for the controller Interactive Spaces
+   * Configuration property value for the controller Smart Spaces
    * container type.
    */
   String CONFIGURATION_CONTAINER_TYPE_CONTROLLER = "controller";
 
   /**
-   * Configuration property giving the Interactive Spaces type, e.g. prod, dev,
+   * Configuration property giving the Smart Spaces type, e.g. prod, dev,
    * local.
    */
   String CONFIGURATION_NETWORK_TYPE = "smartspaces.network.type";
@@ -165,14 +165,14 @@ public interface SmartSpacesEnvironment {
   String LOG_LEVEL_ERROR = LoggingProvider.LOG_LEVEL_ERROR;
 
   /**
-   * Get the Interactive Spaces system configuration.
+   * Get the Smart Spaces system configuration.
    *
    * @return the system configuration
    */
   Configuration getSystemConfiguration();
 
   /**
-   * Get the Interactive Spaces-wide filesystem.
+   * Get the Smart Spaces-wide filesystem.
    *
    * @return the filesystem for the installation
    */
@@ -183,8 +183,8 @@ public interface SmartSpacesEnvironment {
    * Spaces.
    *
    * <p>
-   * An executor service gives thread pools to be used. Interactive Spaces needs
-   * to control as many threads as possible, so anything in Interactive Spaces
+   * An executor service gives thread pools to be used. Smart Spaces needs
+   * to control as many threads as possible, so anything in Smart Spaces
    * should try and use this service.
    *
    * @return the executor service to be used for all thread usage
@@ -248,10 +248,10 @@ public interface SmartSpacesEnvironment {
   void releaseLog(Log log);
 
   /**
-   * Get the network type for the Interactive Spaces container.
+   * Get the network type for the Smart Spaces container.
    *
    * <p>
-   * This allows distinguishing between different Interactive Spaces networks,
+   * This allows distinguishing between different Smart Spaces networks,
    * e.g. localdev, prod, fredbot.
    *
    * @return network type currently used

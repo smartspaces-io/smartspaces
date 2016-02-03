@@ -16,7 +16,7 @@
  */
 
 /**
- * This package contains classes for running unit tests as part of Interactive Spaces project builds.
+ * This package contains classes for running unit tests as part of Smart Spaces project builds.
  *
  * @author Keith M. Hughes
  */

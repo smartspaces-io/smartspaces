@@ -18,14 +18,14 @@
 package io.smartspaces.spacecontroller.runtime;
 
 /**
- * A service for controlling Interactive Spaces controllers.
+ * A service for controlling Smart Spaces controllers.
  *
  * @author Keith M. Hughes
  */
 public interface SpaceControllerService {
 
   /**
-   * Start up an Interactive Spaces controller with the given ID.
+   * Start up an Smart Spaces controller with the given ID.
    *
    * @param controllerId
    *          ID of the controller to start
@@ -33,7 +33,7 @@ public interface SpaceControllerService {
   void startController(String controllerId);
 
   /**
-   * Shut down an Interactive Spaces controller with the given ID.
+   * Shut down an Smart Spaces controller with the given ID.
    *
    * @param controllerId
    *          ID of the controller to shut down

@@ -158,7 +158,7 @@ Smart Spaces.
     <identifyingName>interactivespaces.example.activity.hello</identifyingName>
     <version>1.0.0</version>
         
-    <activity type="interactivespaces_native">
+    <activity type="smartspaces_native">
       <name>example_activity_hello</name>
       <class>interactivespaces.activity.example.hello.HelloActivity</class>
     </activity>
@@ -257,8 +257,8 @@ The following example is part of the ``<activity>`` element for the
 
 ::
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityControlOscRoutable</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityControlOscRoutable</name>
     <class>
       interactivespaces.example.activity.control.osc.routable.OpenSoundControlRoutableExampleActivity
     </class>
@@ -567,7 +567,7 @@ Here is an example of a complete Activity project file with resource and deploym
     <identifyingName>my.web</identifyingName>
     <version>1.0.0</version>
         
-    <activity type="interactivespaces_native">
+    <activity type="smartspaces_native">
       <name>example_activity_my_web</name>
       <class>my.web.MyActivity</class>
       

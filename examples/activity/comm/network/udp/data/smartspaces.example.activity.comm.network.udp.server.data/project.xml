@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.comm.network.udp.server.data
+    smartspaces.example.activity.comm.network.udp.server.data
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityCommUdpServerData</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityCommUdpServerData</name>
     <class>
-      interactivespaces.example.activity.comm.network.udp.server.data.DataUdpServerActivity
+      io.smartspaces.example.activity.comm.network.udp.server.data.DataUdpServerActivity
     </class>
 
     <configuration>

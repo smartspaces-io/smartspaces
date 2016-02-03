@@ -57,7 +57,7 @@ import io.smartspaces.util.concurrency.SimpleSequentialEventQueue;
 import org.ros.osgi.common.RosEnvironment;
 
 /**
- * An OSGi activator for an Interactive Spaces space controller.
+ * An OSGi activator for an Smart Spaces space controller.
  *
  * @author Keith M. Hughes
  */

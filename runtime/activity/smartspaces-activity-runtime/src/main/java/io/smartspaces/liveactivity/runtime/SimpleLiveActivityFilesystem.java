@@ -56,7 +56,7 @@ public class SimpleLiveActivityFilesystem implements InternalLiveActivityFilesys
 
   /**
    * The subdirectory off of the base install directory where the activity's
-   * internal Interactive Spaces data is stored.
+   * internal Smart Spaces data is stored.
    */
   public static final String SUBDIRECTORY_INTERNAL = "internal";
 
@@ -81,7 +81,7 @@ public class SimpleLiveActivityFilesystem implements InternalLiveActivityFilesys
   private final File tempDataDirectory;
 
   /**
-   * Where internal Interactive Spaces files can be stored.
+   * Where internal Smart Spaces files can be stored.
    */
   private final File internalDirectory;
 
@@ -194,6 +194,6 @@ public class SimpleLiveActivityFilesystem implements InternalLiveActivityFilesys
         "Creating activity permanent data directory");
     fileSupport.directoryExists(tempDataDirectory, "Creating activity temporary data directory");
     fileSupport.directoryExists(internalDirectory,
-        "Creating activity internal Interactive Spaces directory");
+        "Creating activity internal Smart Spaces directory");
   }
 }

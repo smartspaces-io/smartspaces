@@ -23,7 +23,7 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.resource.ManagedResource;
 
 /**
- * A controller for Interactive Spaces activities.
+ * A controller for Smart Spaces activities.
  *
  * <p>
  * This controller runs on a given machine and controls a group of activities on
@@ -65,7 +65,7 @@ public interface SpaceController extends ManagedResource {
   String CONFIGURATION_SMARTSPACES_CONTROLLER_MODE = "io.smartspaces.spacecontroller.mode";
 
   /**
-   * Get the Interactive Spaces environment.
+   * Get the Smart Spaces environment.
    *
    * @return the space environment
    */

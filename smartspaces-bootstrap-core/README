@@ -1,4 +1,4 @@
-Starting up Interactive Spaces on a variety of platforms can be a challenge. As an
+Starting up Smart Spaces on a variety of platforms can be a challenge. As an
 example, logging can come from Log4J when on a standard desktop platform, while
 using the Android platform logger is preferable on Android.
 

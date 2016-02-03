@@ -7,12 +7,12 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.control.opensoundcontrol.routable
+    smartspaces.example.activity.control.opensoundcontrol.routable
   </identifyingName>
   <version>1.0.0</version>
 
   <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityControlOscRoutable</name>
+    <name>smartspacesExampleActivityControlOscRoutable</name>
     <class>
       interactivespaces.example.activity.control.opensoundcontrol.routable.OpenSoundControlRoutableExampleActivity
     </class>

@@ -1,4 +1,5 @@
 ##
+# Copyright (C) 2016 Keith M. Hughes
 # Copyright (C) 2012 Google Inc.
 #  
 #  Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,10 +15,10 @@
 #  the License.
 ##
 
-from interactivespaces.example import releaseTest
+from io.smartspaces.example import releaseTest
 import example
 
-from interactivespaces.activity.impl import BaseActivity
+from io.smartspaces.activity.impl import BaseActivity
 
 class HelloActivity(BaseActivity):
     def onActivitySetup(self):

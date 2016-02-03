@@ -17,7 +17,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Interactive Spaces Admin: Named Scripts</title>
+<title>Smart Spaces Admin: Named Scripts</title>
 
 <#include "/allpages_head.ftl" >
 </head>

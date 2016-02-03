@@ -31,7 +31,7 @@ public enum ContainerResourceLocation {
 
   /**
    * The bootstrap folder for user dependencies. This is as distinct from the
-   * Core Interactive Spaces dependencies.
+   * Core Smart Spaces dependencies.
    */
   USER_BOOTSTRAP(true),
 

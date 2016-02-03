@@ -17,7 +17,6 @@
 
 package io.smartspaces.activity.component.route.ros;
 
-import smartspaces_msgs.GenericMessage;
 import io.smartspaces.activity.component.route.MessageRouterSupportedMessageTypes;
 import io.smartspaces.messaging.MessagePublisher;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
@@ -28,6 +27,8 @@ import io.smartspaces.util.data.json.StandardJsonMapper;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
+
+import smartspaces_msgs.GenericMessage;
 
 /**
  * A simple route message publisher that uses JSON for serialization and

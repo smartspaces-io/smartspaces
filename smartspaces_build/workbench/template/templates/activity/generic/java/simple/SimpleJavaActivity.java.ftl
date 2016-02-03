@@ -3,7 +3,7 @@ package ${package};
 import io.smartspaces.activity.impl.BaseActivity;
 
 /**
- * A simple Interactive Spaces Java-based activity.
+ * A simple Smart Spaces Java-based activity.
  */
 public class ${javaClassName} extends BaseActivity {
 

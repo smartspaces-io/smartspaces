@@ -174,7 +174,7 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
   private ResourceAnalyzer resourceAnalyzer;
 
   /**
-   * The Interactive Spaces environment.
+   * The Smart Spaces environment.
    */
   private SmartSpacesEnvironment spaceEnvironment;
 

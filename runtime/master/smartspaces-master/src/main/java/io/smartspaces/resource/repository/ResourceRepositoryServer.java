@@ -25,7 +25,7 @@ import io.smartspaces.util.resource.ManagedResource;
 import java.io.OutputStream;
 
 /**
- * A repository server for Interactive Spaces resources.
+ * A repository server for Smart Spaces resources.
  *
  * @author Keith M. Hughes
  */

@@ -201,7 +201,7 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
    * @param value
    *          the string
    *
-   * @return {@code true} if the string represents an Interactive Spaces true
+   * @return {@code true} if the string represents an Smart Spaces true
    *         value
    */
   private boolean getBooleanValue(String value) {

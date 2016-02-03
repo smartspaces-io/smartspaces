@@ -6,14 +6,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.activity.music.jukebox
+    smartspaces.activity.music.jukebox
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityMusicJukebox</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityMusicJukebox</name>
     <class>
-      interactivespaces.activity.music.jukebox.MusicJukeboxActivity
+      io.smartspaces.activity.music.jukebox.MusicJukeboxActivity
     </class>
 
     <configuration>

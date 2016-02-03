@@ -2,17 +2,17 @@
 <project type="activity">
   <name>Routable Input Python Activity Example</name>
   <description>
-    An example of a Routable Interactive Spaces Activity written in Python that
+    An example of a Routable Smart Spaces Activity written in Python that
     is an input for a route.
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.routable.input.python
+    smartspaces.example.activity.routable.input.python
   </identifyingName>
   <version>1.0.0</version>
   
   <activity type="script">
-    <name>interactivespacesExampleActivityRoutableInputPython</name>
+    <name>smartspacesExampleActivityRoutableInputPython</name>
     <executable>ExampleInputRoutablePythonActivity.py</executable>
 
     <configuration>

@@ -63,7 +63,7 @@ public class ActivityProject extends Project {
   public static final String FILENAME_RESOURCE_MAP = "resource.map";
 
   /**
-   * The type of the activity, e.g. smartspaces_native.
+   * The type of the activity, e.g. SMARTSPACES_native.
    */
   private String activityType;
 

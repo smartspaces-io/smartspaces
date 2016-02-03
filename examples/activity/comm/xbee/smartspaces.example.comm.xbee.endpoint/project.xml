@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.comm.xbee.endpoint
+    smartspaces.example.comm.xbee.endpoint
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleCommXbeeEndpoint</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleCommXbeeEndpoint</name>
     <class>
-      interactivespaces.example.comm.xbee.endpoint.XBeeEndpointExampleActivity
+      io.smartspaces.example.comm.xbee.endpoint.XBeeEndpointExampleActivity
     </class>
 
     <configuration>

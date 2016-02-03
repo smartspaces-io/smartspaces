@@ -5,6 +5,6 @@
 A simple Android activity that starts up the Android web browser and displays a web page.
     </description>
 
-    <identifyingName>interactivespaces.activity.android.web</identifyingName>
+    <identifyingName>smartspaces.activity.android.web</identifyingName>
     <version>1.0.0</version>
 </project>

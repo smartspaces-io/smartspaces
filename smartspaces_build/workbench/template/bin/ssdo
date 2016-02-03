@@ -63,9 +63,9 @@ INTERACTIVE_SPACES_NAMESPACES = {'is': 'http://interactive-spaces.org/project.xs
 
 def print_help():
   """Print help information and exits."""
-  print("""Interactive Spaces command-line tool.
+  print("""Smart Spaces command-line tool.
 
-This tool handles common tasks for Interactive Spaces from the command line.
+This tool handles common tasks for Smart Spaces from the command line.
 
 Some tasks require live activities, some require activities, and some \
 require files. These can often be inferred from other information, but are never inferred \

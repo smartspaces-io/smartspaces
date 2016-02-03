@@ -17,7 +17,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Interactive Spaces Admin</title>
+<title>Smart Spaces Admin</title>
 
 <#include "/allpages_head.ftl">
 <script type="text/javascript" src="/smartspaces/static/js/ss-ugly.js"></script>

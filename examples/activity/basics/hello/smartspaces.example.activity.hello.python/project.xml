@@ -7,12 +7,12 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.hello.python
+    smartspaces.example.activity.hello.python
   </identifyingName>
   <version>1.0.0</version>
 
   <activity type="script">
-    <name>interactivespacesExampleActivityHelloPython</name>
+    <name>smartspacesExampleActivityHelloPython</name>
     <executable>HelloActivity.py</executable>
 
     <configuration>

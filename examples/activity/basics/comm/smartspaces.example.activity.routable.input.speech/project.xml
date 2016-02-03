@@ -6,14 +6,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.routable.input.speech
+    smartspaces.example.activity.routable.input.speech
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityRoutableInputSpeech</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityRoutableInputSpeech</name>
     <class>
-      interactivespaces.activity.routable.input.speech.RoutableInputSpeechExampleActivity
+      io.smartspaces.activity.routable.input.speech.RoutableInputSpeechExampleActivity
     </class>
 
     <configuration>

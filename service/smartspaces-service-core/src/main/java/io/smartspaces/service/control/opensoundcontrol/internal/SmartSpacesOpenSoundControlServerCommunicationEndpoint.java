@@ -28,7 +28,7 @@ import org.apache.commons.logging.Log;
 
 /**
  * A Open Sound Control server endpoint implementation by those crazy folks at
- * Interactive Spaces.
+ * Smart Spaces.
  *
  * @author Keith M. Hughes
  */

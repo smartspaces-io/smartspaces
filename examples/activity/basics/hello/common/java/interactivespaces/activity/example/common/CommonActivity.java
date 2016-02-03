@@ -1,4 +1,5 @@
 /*
+ * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -14,9 +15,9 @@
  * the License.
  */
 
-package interactivespaces.activity.example.common;
+package io.smartspaces.activity.example.common;
 
-import interactivespaces.activity.impl.BaseActivity;
+import io.smartspaces.activity.impl.BaseActivity;
 import java.util.Map;
 
 /**

@@ -73,7 +73,7 @@ public class SmartSpacesOpenSoundControlMessageParser {
   }
 
   /**
-   * The Interactive Spaces representation of the server packet.
+   * The Smart Spaces representation of the server packet.
    *
    * @author Keith M. Hughes
    */
@@ -413,7 +413,7 @@ public class SmartSpacesOpenSoundControlMessageParser {
   }
 
   /**
-   * The Interactive Spaces representation of a respondable OSC incoming
+   * The Smart Spaces representation of a respondable OSC incoming
    * message.
    *
    * @author Keith M. Hughes

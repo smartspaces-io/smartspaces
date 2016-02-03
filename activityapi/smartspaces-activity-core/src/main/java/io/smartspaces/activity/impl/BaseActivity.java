@@ -44,7 +44,7 @@ import java.util.TreeMap;
 import com.google.common.collect.Maps;
 
 /**
- * Support for building an Interactive Spaces activity.
+ * Support for building an Smart Spaces activity.
  *
  * @author Keith M. Hughes
  */

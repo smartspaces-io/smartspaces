@@ -57,11 +57,11 @@ fi
 # Default to IPv4 stack, so multicast (used for standalone runner) will work
 EXTRAARGS="-Djava.net.preferIPv4Stack=true ${EXTRAARGS}"
 
-# Start up Interactive Spaces
+# Start up Smart Spaces
 if [[ "${RUN_MODE}" == "foreground" || "${RUN_MODE}" == "standalone" ]]; then
-  java ${EXTRAARGS} -server -cp "${CLASSPATH}" io.smartspaces.launcher.InteractiveSpacesLauncher ${SMARTSPACES_MAIN_ARGS}
+  java ${EXTRAARGS} -server -cp "${CLASSPATH}" io.smartspaces.launcher.SmartSpacesLauncher ${SMARTSPACES_MAIN_ARGS}
 fi
 
 if [[ "${RUN_MODE}" == "background" ]]; then
-  nohup java ${EXTRAARGS} -server -cp "${CLASSPATH}" io.smartspaces.launcher.InteractiveSpacesLauncher --noshell ${SMARTSPACES_MAIN_ARGS} &>/dev/null &
+  nohup java ${EXTRAARGS} -server -cp "${CLASSPATH}" io.smartspaces.launcher.SmartSpacesLauncher --noshell ${SMARTSPACES_MAIN_ARGS} &>/dev/null &
 fi

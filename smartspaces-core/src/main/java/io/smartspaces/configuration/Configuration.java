@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * An Interactive Spaces configuration.
+ * A Smart Spaces configuration.
  *
  * @author Keith M. Hughes
  */

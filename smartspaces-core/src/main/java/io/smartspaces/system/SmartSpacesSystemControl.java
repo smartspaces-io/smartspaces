@@ -18,7 +18,7 @@
 package io.smartspaces.system;
 
 /**
- * Control of the overall Interactive Spaces container.
+ * Control of the overall Smart Spaces container.
  *
  * @author Keith M. Hughes
  */

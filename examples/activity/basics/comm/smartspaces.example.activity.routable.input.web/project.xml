@@ -8,14 +8,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.routable.input.web
+    smartspaces.example.activity.routable.input.web
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityRoutableInputWeb</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityRoutableInputWeb</name>
     <class>
-      interactivespaces.example.activity.routable.input.web.RoutableInputWebExampleActivity
+      io.smartspaces.example.activity.routable.input.web.RoutableInputWebExampleActivity
     </class>
 
     <configuration>

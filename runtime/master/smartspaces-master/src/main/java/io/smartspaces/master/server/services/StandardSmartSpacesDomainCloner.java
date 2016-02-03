@@ -31,7 +31,7 @@ import java.util.Map.Entry;
 import com.google.common.collect.Maps;
 
 /**
- * Clone Interactive Spaces domain objects.
+ * Clone Smart Spaces domain objects.
  *
  * <p>
  * An instance of this class should be used for only 1 cloning operation as it

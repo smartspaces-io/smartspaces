@@ -83,16 +83,16 @@ public class SmartSpacesFrameworkBootstrap {
   /**
    * Command line argument prefix for specifying a specific runtime path. This
    * should match the value of
-   * {@code smartspacesLauncher.COMMAND_LINE_RUNTIME_PREFIX}, but can't be
-   * a shared variable because of package dependency considerations.
+   * {@code smartspacesLauncher.COMMAND_LINE_RUNTIME_PREFIX}, but can't be a
+   * shared variable because of package dependency considerations.
    */
   public static final String ARGS_PREFIX_RUNTIME = "--runtime=";
 
   /**
    * Command line argument prefix for specifying a specific config path. This
    * should match the value of
-   * {@code smartspacesLauncher.COMMAND_LINE_CONFIG_PREFIX}, but can't be
-   * a shared variable because of package dependency considerations.
+   * {@code smartspacesLauncher.COMMAND_LINE_CONFIG_PREFIX}, but can't be a
+   * shared variable because of package dependency considerations.
    */
   public static final String ARGS_PREFIX_CONFIG = "--config=";
 
@@ -128,8 +128,8 @@ public class SmartSpacesFrameworkBootstrap {
   public static final String BUNDLE_SYMBOLIC_NAME_OSGI_SHELL = "org.apache.felix.gogo.shell";
 
   /**
-   * External packages loaded from the Interactive Spaces system folder that
-   * must be exposed for things to work.
+   * External packages loaded from the Smart Spaces system folder that must be
+   * exposed for things to work.
    *
    * <p>
    * These packages are critical, IS is crippled without them which is why they
@@ -158,21 +158,21 @@ public class SmartSpacesFrameworkBootstrap {
   public static final Class<LoggingProvider> LOGGING_PROVIDER_INTERFACE = LoggingProvider.class;
 
   /**
-   * Packages loaded from the Interactive Spaces system folder that are part of
-   * Interactive Spaces.
+   * Packages loaded from the Smart Spaces system folder that are part of
+   * Smart Spaces.
    */
-  public static final String[] PACKAGES_SYSTEM_smartspaces = new String[] {
+  public static final String[] PACKAGES_SYSTEM_SMARTSPACES = new String[] {
       LOGGING_PROVIDER_INTERFACE.getPackage().getName(),
       CONFIGURATION_PROVIDER_INTERFACE.getPackage().getName(),
       CONTAINER_COSTUMIZER_PROVIDER_INTERFACE.getPackage().getName() };
 
   /**
-   * The Jar Manifest property that gives the Interactive Spaces version.
+   * The Jar Manifest property that gives the Smart Spaces version.
    */
-  public static final String MANIFEST_PROPERTY_smartspaces_VERSION = "Bundle-Version";
+  public static final String MANIFEST_PROPERTY_SMARTSPACES_VERSION = "Bundle-Version";
 
   /**
-   * The folder where Interactive Spaces will cache OSGi plugins. This is
+   * The folder where Smart Spaces will cache OSGi plugins. This is
    * relative to the run folder.
    */
   public static final String FOLDER_PLUGINS_CACHE = "plugins-cache";
@@ -186,7 +186,7 @@ public class SmartSpacesFrameworkBootstrap {
   /**
    * Bundle manifest header indicating the start level to use.
    */
-  public static final String BUNDLE_MANIFEST_START_LEVEL_HEADER = "smartspaces-StartLevel";
+  public static final String BUNDLE_MANIFEST_START_LEVEL_HEADER = "SmartSpaces-StartLevel";
 
   /**
    * Command line argument prefix string for configuration value definitions.
@@ -202,13 +202,13 @@ public class SmartSpacesFrameworkBootstrap {
    * Environment variable that indicates the home install directory for
    * interactive spaces.
    */
-  private static final String smartspaces_HOME_ENVIRONMENT_KEY = "smartspaces_HOME";
+  private static final String SMARTSPACES_HOME_ENVIRONMENT_KEY = "SMARTSPACES_HOME";
 
   /**
    * Default directory for the home directory relative to install of this
    * component.
    */
-  private static final String smartspaces_HOME_DEFAULT_DIR = "..";
+  private static final String SMARTSPACES_HOME_DEFAULT_DIR = "..";
 
   /**
    * The name of the System property for the current operating system.
@@ -247,12 +247,12 @@ public class SmartSpacesFrameworkBootstrap {
   /**
    * Extra folders to be added to the bootstrap from the commandline.
    */
-  private final List<File> extraBootstrapFolders = new ArrayList<File>();
+  private final List<File> extraBootstrapFolders = new ArrayList<>();
 
   /**
    * All bundles installed.
    */
-  private final Set<Bundle> installedBundles = new HashSet<Bundle>();
+  private final Set<Bundle> installedBundles = new HashSet<>();
 
   /**
    * The initial set of bundles to load.
@@ -280,7 +280,7 @@ public class SmartSpacesFrameworkBootstrap {
   private SimpleContainerCustomizerProvider containerCustomizerProvider;
 
   /**
-   * The base install folder for Interactive Spaces.
+   * The base install folder for Smart Spaces.
    */
   private File baseInstallFolder;
 
@@ -380,10 +380,8 @@ public class SmartSpacesFrameworkBootstrap {
    */
   private void initializeBundleStartLevels() {
     // TODO(keith): Once Spring is removed, see if this is even necessary.
-    bundleStartLevels.put("smartspaces.master.webapp",
-        SmartSpacesStartLevel.STARTUP_LEVEL_LAST);
-    bundleStartLevels.put("smartspaces.master",
-        SmartSpacesStartLevel.STARTUP_LEVEL_PENULTIMATE);
+    bundleStartLevels.put("smartspaces.master.webapp", SmartSpacesStartLevel.STARTUP_LEVEL_LAST);
+    bundleStartLevels.put("smartspaces.master", SmartSpacesStartLevel.STARTUP_LEVEL_PENULTIMATE);
   }
 
   /**
@@ -465,15 +463,15 @@ public class SmartSpacesFrameworkBootstrap {
   private void addAutomaticConfiguration(FileConfigurationProvider configurationProvider) {
     // Calculate the proper home directory for this install of interactive
     // spaces.
-    String isHomeEnvPath = System.getenv(smartspaces_HOME_ENVIRONMENT_KEY);
+    String isHomeEnvPath = System.getenv(SMARTSPACES_HOME_ENVIRONMENT_KEY);
     File isHomeDir =
         isHomeEnvPath != null ? new File(isHomeEnvPath) : new File(baseInstallFolder,
-            smartspaces_HOME_DEFAULT_DIR);
+            SMARTSPACES_HOME_DEFAULT_DIR);
     configurationProvider.put(CoreConfiguration.CONFIGURATION_SMARTSPACES_HOME,
         isHomeDir.getAbsolutePath());
 
     String platformOs = System.getProperty(SYSTEM_PROPERTY_OS_NAME);
-    // Convert the Os string into the format Interactive Spaces is expecting.
+    // Convert the Os string into the format Smart Spaces is expecting.
     if (platformOs.equals(SYSTEM_PROPERTY_OS_VALUE_LINUX)) {
       platformOs = CoreConfiguration.CONFIGURATION_VALUE_PLATFORM_OS_LINUX;
     } else if (platformOs.equals(SYSTEM_PROPERTY_OS_VALUE_OSX)) {
@@ -488,8 +486,7 @@ public class SmartSpacesFrameworkBootstrap {
       platformOs = CoreConfiguration.CONFIGURATION_VALUE_PLATFORM_OS_UNKNOWN;
     }
 
-    configurationProvider.put(CoreConfiguration.CONFIGURATION_SMARTSPACES_PLATFORM_OS,
-        platformOs);
+    configurationProvider.put(CoreConfiguration.CONFIGURATION_SMARTSPACES_PLATFORM_OS, platformOs);
     configurationProvider.put(CoreConfiguration.CONFIGURATION_PLATFORM_FILE_SEPARATOR,
         File.separator);
   }
@@ -645,7 +642,7 @@ public class SmartSpacesFrameworkBootstrap {
   private void logBadBundle(String bundleUri, Exception e) {
     loggingProvider.getLog().error(
         String.format(
-            "Bundle %s is not an OSGi bundle, skipping during Interactive Spaces startup",
+            "Bundle %s is not an OSGi bundle, skipping during Smart Spaces startup",
             bundleUri), e);
   }
 
@@ -696,7 +693,7 @@ public class SmartSpacesFrameworkBootstrap {
 
     // Get the initial packages into the extra system packages.
     Collections.addAll(extraSystemPackages, PACKAGES_SYSTEM_EXTERNAL);
-    Collections.addAll(extraSystemPackages, PACKAGES_SYSTEM_smartspaces);
+    Collections.addAll(extraSystemPackages, PACKAGES_SYSTEM_SMARTSPACES);
     extraSystemPackages.addAll(extensionsReader.getPackages());
     configureExtraSystemPackages(frameworkConfig, extraSystemPackages);
 
@@ -712,7 +709,7 @@ public class SmartSpacesFrameworkBootstrap {
     frameworkConfig.putAll(configurationProvider.getInitialConfiguration());
 
     File pluginsCacheFolder =
-        new File(new File(runtimeFolder, ContainerFilesystemLayout.FOLDER_smartspaces_RUN),
+        new File(new File(runtimeFolder, ContainerFilesystemLayout.FOLDER_SMARTSPACES_RUN),
             FOLDER_PLUGINS_CACHE);
     frameworkConfig.put(Constants.FRAMEWORK_STORAGE, pluginsCacheFolder.getCanonicalPath());
 
@@ -991,7 +988,7 @@ public class SmartSpacesFrameworkBootstrap {
   }
 
   /**
-   * Get the Interactive Spaces version from the JAR manifest.
+   * Get the Smart Spaces version from the JAR manifest.
    *
    * @return The interactive spaces version
    */
@@ -1008,7 +1005,7 @@ public class SmartSpacesFrameworkBootstrap {
       Manifest manifest = new Manifest(in);
       Attributes attributes = manifest.getMainAttributes();
 
-      return attributes.getValue(MANIFEST_PROPERTY_smartspaces_VERSION);
+      return attributes.getValue(MANIFEST_PROPERTY_SMARTSPACES_VERSION);
     } catch (IOException ex) {
       return null;
     } finally {

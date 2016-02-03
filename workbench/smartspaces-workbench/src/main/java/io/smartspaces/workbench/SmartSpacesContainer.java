@@ -30,6 +30,6 @@ public class SmartSpacesContainer {
   /**
    * Subfolder where the system jars for the container are found.
    */
-  public static final String smartspaces_CONTAINER_FOLDER_LIB_SYSTEM_JAVA = "lib/system/java";
+  public static final String SMARTSPACES_CONTAINER_FOLDER_LIB_SYSTEM_JAVA = "lib/system/java";
 
 }

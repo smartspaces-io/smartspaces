@@ -66,7 +66,7 @@ public class FileConfigurationProvider implements ConfigurationProvider {
    * Construct a new provider.
    *
    * @param baseInstallFolder
-   *          base install folder for the Interactive Spaces Container.
+   *          base install folder for the Smart Spaces Container.
    * @param configFolder
    *          the configuration folder for this component
    * @param log

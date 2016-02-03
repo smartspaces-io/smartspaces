@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A web server for Interactive Spaces activities.
+ * A web server for Smart Spaces activities.
  *
  * <p>
  * If the server is set to be secure and no certificate files are provided, a

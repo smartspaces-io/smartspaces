@@ -62,7 +62,7 @@ public class BasicSmartSpacesFilesystem implements SmartSpacesFilesystem,
   public static final String DIRECTORY_TMP = "tmp";
 
   /**
-   * The base Interactive Spaces install directory. This is the install for a
+   * The base Smart Spaces install directory. This is the install for a
    * master or a controller.
    */
   private final File baseInstallDirectory;
@@ -101,7 +101,7 @@ public class BasicSmartSpacesFilesystem implements SmartSpacesFilesystem,
    * Create a new BasicSmartSpacesFilesystem.
    *
    * @param baseInstallDirectory
-   *          the base directory where Interactive Spaces is installed
+   *          the base directory where Smart Spaces is installed
    * @param baseRuntimeDirectory
    *          the directory where runtime data should be stored
    */
@@ -128,7 +128,7 @@ public class BasicSmartSpacesFilesystem implements SmartSpacesFilesystem,
    * Create a new BasicSmartSpacesFilesystem.
    *
    * @param baseInstallDirectory
-   *          the base directory where Interactive Spaces is installed.
+   *          the base directory where Smart Spaces is installed.
    */
   public BasicSmartSpacesFilesystem(File baseInstallDirectory) {
     this(baseInstallDirectory, null);

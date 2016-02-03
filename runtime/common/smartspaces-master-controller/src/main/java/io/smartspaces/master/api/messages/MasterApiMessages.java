@@ -647,7 +647,7 @@ public class MasterApiMessages {
       MASTER_API_COMMAND_PREFIX_ADMIN_MASTER_DOMAIN_MODEL + "/import";
 
   /**
-   * Web socket command for obtaining the Interactive Spaces version.
+   * Web socket command for obtaining the Smart Spaces version.
    */
   public static final String MASTER_API_COMMAND_INTERACTIVE_SPACES_VERSION =
       "/smartspaces/version";
@@ -750,14 +750,14 @@ public class MasterApiMessages {
   public static final String MASTER_API_PARAMETER_NAME_MODEL = "model";
 
   /**
-   * Status parameter name for the Interactive Spaces version in the Master API
+   * Status parameter name for the Smart Spaces version in the Master API
    * message.
    */
   public static final String MASTER_API_PARAMETER_NAME_INTERACTIVE_SPACES_VERSION =
       "smartspacesVersion";
 
   /**
-   * Status parameter value for an unknown Interactive Spaces version in the
+   * Status parameter value for an unknown Smart Spaces version in the
    * Master API message.
    */
   public static final String MASTER_API_PARAMETER_VALUE_INTERACTIVE_SPACES_VERSION_UNKNOWN =

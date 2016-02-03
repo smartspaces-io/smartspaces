@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.arduino.echo
+    smartspaces.example.activity.arduino.echo
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityArduinoEcho</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityArduinoEcho</name>
     <class>
-      interactivespaces.example.activity.arduino.echo.ArduinoEchoActivity
+      io.smartspaces.example.activity.arduino.echo.ArduinoEchoActivity
     </class>
 
     <configuration>

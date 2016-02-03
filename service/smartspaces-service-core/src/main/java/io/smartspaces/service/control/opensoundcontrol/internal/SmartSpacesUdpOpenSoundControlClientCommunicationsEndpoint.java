@@ -31,7 +31,7 @@ import java.net.InetSocketAddress;
 import org.apache.commons.logging.Log;
 
 /**
- * An Interactive Spaces implementation of an
+ * A Smart Spaces implementation of an
  * {@link OpenSoundControlClientCommunicationEndpoint}.
  *
  * @author Keith M. Hughes

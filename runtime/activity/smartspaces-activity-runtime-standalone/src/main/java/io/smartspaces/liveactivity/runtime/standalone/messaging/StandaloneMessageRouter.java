@@ -17,7 +17,6 @@
 
 package io.smartspaces.liveactivity.runtime.standalone.messaging;
 
-import smartspaces_msgs.GenericMessage;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.SupportedActivity;
@@ -43,6 +42,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
+
+import smartspaces_msgs.GenericMessage;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;

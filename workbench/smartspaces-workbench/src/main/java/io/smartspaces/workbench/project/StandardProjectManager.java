@@ -79,7 +79,7 @@ public class StandardProjectManager implements ProjectManager {
     }
 
     throw new SimpleSmartSpacesException(String.format(
-        "The folder %s does not contain any legal Interactive Spaces project files",
+        "The folder %s does not contain any legal Smart Spaces project files",
         baseProjectDir.getAbsolutePath()));
   }
 

@@ -21,7 +21,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
- * An Interactive Spaces exception happened.
+ * A Smart Spaces exception happened.
  *
  * @author Keith M. Hughes
  */

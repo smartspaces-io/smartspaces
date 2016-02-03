@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.control.opensoundcontrol.server
+    smartspaces.example.activity.control.opensoundcontrol.server
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityControlOpenSoundControlServer</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityControlOpenSoundControlServer</name>
     <class>
-      interactivespaces.example.activity.control.opensoundcontrol.server.OpenSoundControlServerExampleActivity
+      io.smartspaces.example.activity.control.opensoundcontrol.server.OpenSoundControlServerExampleActivity
     </class>
 
     <configuration>

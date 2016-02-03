@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.chat.xmpp
+    smartspaces.example.activity.chat.xmpp
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityChatXmpp</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityChatXmpp</name>
     <class>
-      interactivespaces.example.activity.chat.xmpp.ExampleXmppChatActivity
+      io.smartspaces.example.activity.chat.xmpp.ExampleXmppChatActivity
     </class>
 
     <configuration>

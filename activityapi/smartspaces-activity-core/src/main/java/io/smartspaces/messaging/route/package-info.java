@@ -16,7 +16,7 @@
  */
 
 /**
- * Classes in this package provide an abstraction for how messages are handled for Interactive Spaces routes.
+ * Classes in this package provide an abstraction for how messages are handled for Smart Spaces routes.
  *
  * @author Keith M. Hughes
  */

@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.image.vision.opencv.outline
+    smartspaces.example.activity.image.vision.opencv.outline
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityVisionOpencvOutline</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityVisionOpencvOutline</name>
     <class>
-      interactivespaces.activity.image.vision.opencv.outline.ImageOpenCvVisionOutlineActivity
+      io.smartspaces.activity.image.vision.opencv.outline.ImageOpenCvVisionOutlineActivity
     </class>
   </activity>
 </project>

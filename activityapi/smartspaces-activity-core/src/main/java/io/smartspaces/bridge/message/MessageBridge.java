@@ -20,7 +20,7 @@ package io.smartspaces.bridge.message;
 import io.smartspaces.util.resource.ManagedResource;
 
 /**
- * A message bridge between two Interactive Spaces topics.
+ * A message bridge between two Smart Spaces topics.
  *
  * @author Keith M. Hughes
  */

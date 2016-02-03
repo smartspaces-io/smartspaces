@@ -21,7 +21,7 @@ import io.smartspaces.liveactivity.runtime.LiveActivityRunner;
 import io.smartspaces.util.resource.ManagedResource;
 
 /**
- * Handle important status reporting for Interactive Spaces activities and
+ * Handle important status reporting for Smart Spaces activities and
  * controllers.
  *
  * @author Keith M. Hughes

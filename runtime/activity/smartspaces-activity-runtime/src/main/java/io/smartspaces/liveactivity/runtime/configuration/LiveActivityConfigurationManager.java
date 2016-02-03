@@ -21,7 +21,7 @@ import io.smartspaces.liveactivity.runtime.InternalLiveActivityFilesystem;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
 
 /**
- * Manage configurations for Interactive Spaces activities.
+ * Manage configurations for Smart Spaces activities.
  *
  * @author Keith M. Hughes
  */

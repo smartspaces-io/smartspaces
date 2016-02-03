@@ -20,7 +20,7 @@ package io.smartspaces.service.alert;
 import io.smartspaces.service.SupportedService;
 
 /**
- * Execute scripts in Interactive Spaces.
+ * Execute scripts in Smart Spaces.
  *
  * @author Keith M. Hughes
  */

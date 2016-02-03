@@ -18,7 +18,7 @@
 package io.smartspaces.event;
 
 /**
- * An Interactive Spaces event.
+ * A Smart Spaces event.
  *
  * @author Keith M. Hughes
  */

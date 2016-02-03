@@ -18,7 +18,7 @@
 package io.smartspaces.system.core.container;
 
 /**
- * Start level enum for an Interactive Spaces bundle.
+ * Start level enum for an Smart Spaces bundle.
  */
 public enum SmartSpacesStartLevel {
 

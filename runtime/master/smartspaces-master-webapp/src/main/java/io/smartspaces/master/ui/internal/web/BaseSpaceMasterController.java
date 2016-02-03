@@ -48,7 +48,7 @@ public class BaseSpaceMasterController {
   /**
    * Attribute name for the name of smartspaces.
    */
-  public static final String ATTRIBUTE_NAME_smartspaces_NAME = "smartspacesName";
+  public static final String ATTRIBUTE_NAME_SMARTSPACES_NAME = "smartspacesName";
 
   /**
    * The message source for messages.
@@ -98,7 +98,7 @@ public class BaseSpaceMasterController {
     model.put(ATTRIBUTE_NAME_NOW, new Date());
 
     model.put(
-        ATTRIBUTE_NAME_smartspaces_NAME,
+        ATTRIBUTE_NAME_SMARTSPACES_NAME,
         spaceEnvironment.getSystemConfiguration().getPropertyString(
             MasterConfigurations.CONFIGURATION_NAME_SPACE_NAME,
             MasterConfigurations.CONFIGURATION_VALUE_DEFAULT_SPACE_NAME));

@@ -17,14 +17,15 @@
 
 package io.smartspaces.master.server.services.internal.ros;
 
-import smartspaces_msgs.ControllerDataRequest;
-import smartspaces_msgs.ControllerRequest;
 import io.smartspaces.master.server.services.ActiveSpaceController;
 import io.smartspaces.master.server.services.internal.StandardMasterDataBundleManager;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.ros.message.MessageSerializer;
 import org.ros.node.ConnectedNode;
+
+import smartspaces_msgs.ControllerDataRequest;
+import smartspaces_msgs.ControllerRequest;
 
 /**
  * Ros-based implementation of a master data bundle manager.

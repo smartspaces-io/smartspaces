@@ -22,7 +22,7 @@ import io.smartspaces.service.SupportedService;
 import org.apache.commons.logging.Log;
 
 /**
- * An Interactive Spaces service for receiving email.
+ * A Smart Spaces service for receiving email.
  *
  * @author Keith M. Hughes
  */

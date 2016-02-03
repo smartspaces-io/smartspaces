@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.comm.xbee.coordinator
+    smartspaces.example.comm.xbee.coordinator
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleCommXbeeCoordinator</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleCommXbeeCoordinator</name>
     <class>
-      interactivespaces.example.comm.xbee.coordinator.XBeeCoordinatorExampleActivity
+      io.smartspaces.example.comm.xbee.coordinator.XBeeCoordinatorExampleActivity
     </class>
 
     <configuration>

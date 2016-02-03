@@ -29,7 +29,7 @@ import java.io.OutputStream;
 import java.net.URI;
 
 /**
- * A storage manager for the Interactive Spaces activity repository.
+ * A storage manager for the Smart Spaces activity repository.
  *
  * @author Keith M. Hughes
  */

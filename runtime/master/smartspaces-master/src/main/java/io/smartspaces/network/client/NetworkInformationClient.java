@@ -23,7 +23,7 @@ import io.smartspaces.network.NetworkTopicInformation;
 import java.util.List;
 
 /**
- * A client for getting information about the Interactive Spaces network.
+ * A client for getting information about the Smart Spaces network.
  *
  * @author Keith M. Hughes
  */

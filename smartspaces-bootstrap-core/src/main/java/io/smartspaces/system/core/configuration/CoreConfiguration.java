@@ -25,24 +25,24 @@ package io.smartspaces.system.core.configuration;
 public interface CoreConfiguration {
 
   /**
-   * Configuration property containing the Interactive Spaces version.
+   * Configuration property containing the Smart Spaces version.
    */
   String CONFIGURATION_SMARTSPACES_VERSION = "smartspaces.version";
 
   /**
-   * Property containing the Interactive Spaces root directory. This will be an
+   * Property containing the Smart Spaces root directory. This will be an
    * absolute path.
    */
   String CONFIGURATION_SMARTSPACES_BASE_INSTALL_DIR = "smartspaces.rootdir";
 
   /**
-   * Property containing the Interactive Spaces runtime location. This will be
+   * Property containing the Smart Spaces runtime location. This will be
    * an absolute path.
    */
   String CONFIGURATION_SMARTSPACES_RUNTIME_DIR = "smartspaces.runtime";
 
   /**
-   * Property containing the Interactive Spaces home directory.
+   * Property containing the Smart Spaces home directory.
    *
    * <p>
    * This directory is the directory that will contain one or more Interactive
@@ -51,7 +51,7 @@ public interface CoreConfiguration {
   String CONFIGURATION_SMARTSPACES_HOME = "smartspaces.home";
 
   /**
-   * The operating system Interactive Spaces is running on.
+   * The operating system Smart Spaces is running on.
    */
   String CONFIGURATION_SMARTSPACES_PLATFORM_OS = "smartspaces.platform.os";
 

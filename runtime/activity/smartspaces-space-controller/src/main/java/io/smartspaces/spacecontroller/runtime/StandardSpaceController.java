@@ -109,7 +109,7 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
   private LiveActivityRuntime liveActivityRuntime;
 
   /**
-   * The Interactive Spaces system controller.
+   * The Smart Spaces system controller.
    */
   private final SmartSpacesSystemControl spaceSystemControl;
 

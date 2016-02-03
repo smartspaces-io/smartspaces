@@ -53,7 +53,7 @@ public class SimpleLiveActivityStorageManager implements LiveActivityStorageMana
   private File activityBaseDirectory;
 
   /**
-   * The Interactive Spaces environment.
+   * The Smart Spaces environment.
    */
   private final SmartSpacesEnvironment spaceEnvironment;
 

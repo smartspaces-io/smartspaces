@@ -7,14 +7,14 @@
   </description>
 
   <identifyingName>
-    interactivespaces.example.activity.comm.network.udp.client.hello
+    smartspaces.example.activity.comm.network.udp.client.hello
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
-    <name>interactivespacesExampleActivityCommUdpClientHello</name>
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityCommUdpClientHello</name>
     <class>
-      interactivespaces.example.activity.comm.network.udp.client.hello.HelloUdpClientActivity
+      io.smartspaces.example.activity.comm.network.udp.client.hello.HelloUdpClientActivity
     </class>
 
     <configuration>

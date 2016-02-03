@@ -310,7 +310,7 @@ public class StandardProjectTaskManager implements ProjectTaskManager {
       projectTaskContext.getLog().info(
           String.format("Building project %s", getProject().getBaseDirectory().getAbsolutePath()));
       projectTaskContext.getLog().info(
-          String.format("Using Interactive Spaces Space Controller %s", projectTaskContext
+          String.format("Using Smart Spaces Space Controller %s", projectTaskContext
               .getWorkbenchTaskContext().getControllerDirectory().getAbsolutePath()));
 
       builder.build(getProject(), projectTaskContext);

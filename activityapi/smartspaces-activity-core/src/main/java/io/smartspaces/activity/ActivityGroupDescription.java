@@ -18,7 +18,7 @@
 package io.smartspaces.activity;
 
 /**
- * A group of Interactive Spaces activities to be started up by a single space
+ * A group of Smart Spaces activities to be started up by a single space
  * controller.
  *
  * @author Keith M. Hughes

@@ -22,7 +22,7 @@ import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 
 /**
- * A builder for Interactive Spaces projects.
+ * A builder for Smart Spaces projects.
  *
  * @param <T>
  *          the type of the project

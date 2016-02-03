@@ -8,9 +8,9 @@
     <appversion>@{app.version}</appversion>
     <appsubpath>smartspaces/workbench</appsubpath>
     <authors>
-      <author name="Google" email="" />
+      <author name="Keith M. Hughes" email="" />
     </authors>
-    <url>http://www.interactive-spaces.org</url>
+    <url>http://www.smartspaces.io</url>
     <javaversion>1.6</javaversion>
   </info>
 

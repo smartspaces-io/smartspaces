@@ -24,7 +24,7 @@ fi
 # means this value will be overwritten by, say, isbuild.
 SMARTSPACES_ARGS="-Dsmartspaces.rundir=${CURDIR}"
 
-# Add in the Interactive Spaces version if one has been set.
+# Add in the Smart Spaces version if one has been set.
 if [ -n "${SMARTSPACES_VERSION}" ]; then
   SMARTSPACES_ARGS="${SMARTSPACES_ARGS} -Dsmartspaces.version=${SMARTSPACES_VERSION}"
 fi

@@ -6,6 +6,6 @@ A very simple Android-based activity which just logs at INFO level its
 callback messages.
     </description>
 
-    <identifyingName>interactivespaces.example.activity.android.simple</identifyingName>
+    <identifyingName>smartspaces.example.activity.android.simple</identifyingName>
     <version>1.0.0</version>
 </project>

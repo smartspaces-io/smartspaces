@@ -14,7 +14,7 @@
   <activity type="interactivespaces_native">
     <name>smartspacesExampleActivityControlOscRoutable</name>
     <class>
-      interactivespaces.example.activity.control.opensoundcontrol.routable.OpenSoundControlRoutableExampleActivity
+      io.smartspaces.example.activity.control.opensoundcontrol.routable.OpenSoundControlRoutableExampleActivity
     </class>
 
     <configuration>

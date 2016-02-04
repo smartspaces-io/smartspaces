@@ -17,15 +17,15 @@
 
 package io.smartspaces.service.comm.serial.internal.rxtx;
 
-import gnu.io.CommPortIdentifier;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpointService;
 
+import gnu.io.CommPortIdentifier;
+
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * A factory for serial communication endpoints using the RXTX library.
@@ -42,7 +42,7 @@ public class RxtxSerialCommunicationEndpointService extends BaseSupportedService
 
   @Override
   public List<String> getSerialPorts() {
-    List<String> ports = Lists.newArrayList();
+    List<String> ports = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     Enumeration<CommPortIdentifier> portIdentifiers = CommPortIdentifier.getPortIdentifiers();

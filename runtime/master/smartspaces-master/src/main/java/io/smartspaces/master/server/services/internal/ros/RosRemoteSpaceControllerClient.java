@@ -44,10 +44,7 @@ import io.smartspaces.master.server.services.internal.RemoteSpaceControllerClien
 import io.smartspaces.spacecontroller.SpaceControllerState;
 import io.smartspaces.spacecontroller.SpaceControllerStatus;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
+import com.google.common.collect.Maps;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.ros.message.MessageDeserializer;
 import org.ros.message.MessageFactory;
@@ -58,7 +55,6 @@ import org.ros.node.ConnectedNode;
 import org.ros.node.topic.CountDownPublisherListener;
 import org.ros.node.topic.Publisher;
 import org.ros.node.topic.Subscriber;
-
 import smartspaces_msgs.ConfigurationParameterRequest;
 import smartspaces_msgs.ConfigurationRequest;
 import smartspaces_msgs.ContainerResourceCommitRequestMessage;
@@ -75,8 +71,10 @@ import smartspaces_msgs.LiveActivityDeployResponseMessage;
 import smartspaces_msgs.LiveActivityRuntimeRequest;
 import smartspaces_msgs.LiveActivityRuntimeStatus;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A {@link RemoteSpaceControllerClient} which uses ROS.
@@ -303,7 +301,7 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
 
   @Override
   public void configureSpaceController(ActiveSpaceController controller) {
-    List<ConfigurationParameterRequest> parameterRequests = Lists.newArrayList();
+    List<ConfigurationParameterRequest> parameterRequests = new ArrayList<>();
     SpaceControllerConfiguration configuration = controller.getSpaceController().getConfiguration();
     if (configuration != null) {
       for (ConfigurationParameter parameter : configuration.getParameters()) {
@@ -412,7 +410,7 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
 
   @Override
   public void fullConfigureLiveActivity(ActiveLiveActivity activity) {
-    List<ConfigurationParameterRequest> parameterRequests = Lists.newArrayList();
+    List<ConfigurationParameterRequest> parameterRequests = new ArrayList<>();
     ActivityConfiguration configuration = activity.getLiveActivity().getConfiguration();
     if (configuration != null) {
       for (ConfigurationParameter parameter : configuration.getParameters()) {

@@ -34,14 +34,13 @@ import io.smartspaces.domain.space.Space;
 import io.smartspaces.expression.FilterExpression;
 import io.smartspaces.master.server.services.BaseActivityRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
 import org.apache.openjpa.util.UnsupportedException;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * All activities installed anywhere in the the environment.
@@ -53,22 +52,22 @@ public class InMemoryActivityRepository extends BaseActivityRepository {
   /**
    * A map of activities keyed by their ID.
    */
-  private final Map<String, Activity> activitiesById = Maps.newHashMap();
+  private final Map<String, Activity> activitiesById = new HashMap<>();
 
   /**
    * A map of installed activities keyed by their ID.
    */
-  private final Map<String, LiveActivity> liveActivitiesById = Maps.newHashMap();
+  private final Map<String, LiveActivity> liveActivitiesById = new HashMap<>();
 
   /**
    * A map of installed activities keyed by their UUID.
    */
-  private final Map<String, LiveActivity> liveActivitiesByUuid = Maps.newHashMap();
+  private final Map<String, LiveActivity> liveActivitiesByUuid = new HashMap<>();
 
   /**
    * A map of activity groups keyed by their ID.
    */
-  private final Map<String, LiveActivityGroup> activityGroupsById = Maps.newHashMap();
+  private final Map<String, LiveActivityGroup> activityGroupsById = new HashMap<>();
 
   @Override
   public Activity newActivity() {
@@ -106,7 +105,7 @@ public class InMemoryActivityRepository extends BaseActivityRepository {
 
   @Override
   public List<Activity> getActivities(FilterExpression filter) {
-    List<Activity> result = Lists.newArrayList();
+    List<Activity> result = new ArrayList<>();
     List<Activity> toBeFiltered;
 
     synchronized (activitiesById) {
@@ -184,7 +183,7 @@ public class InMemoryActivityRepository extends BaseActivityRepository {
 
   @Override
   public List<LiveActivity> getLiveActivities(FilterExpression filter) {
-    List<LiveActivity> result = Lists.newArrayList();
+    List<LiveActivity> result = new ArrayList<>();
     List<LiveActivity> toBeFiltered;
 
     synchronized (liveActivitiesById) {
@@ -216,7 +215,7 @@ public class InMemoryActivityRepository extends BaseActivityRepository {
 
   @Override
   public List<LiveActivity> getLiveActivitiesByController(SpaceController controller) {
-    List<LiveActivity> results = Lists.newArrayList();
+    List<LiveActivity> results = new ArrayList<>();
 
     synchronized (liveActivitiesById) {
       for (LiveActivity iactivity : liveActivitiesById.values()) {
@@ -231,7 +230,7 @@ public class InMemoryActivityRepository extends BaseActivityRepository {
 
   @Override
   public List<LiveActivity> getLiveActivitiesByActivity(Activity activity) {
-    List<LiveActivity> results = Lists.newArrayList();
+    List<LiveActivity> results = new ArrayList<>();
 
     synchronized (liveActivitiesById) {
       for (LiveActivity iactivity : liveActivitiesById.values()) {
@@ -276,7 +275,7 @@ public class InMemoryActivityRepository extends BaseActivityRepository {
 
   @Override
   public List<LiveActivityGroup> getLiveActivityGroups(FilterExpression filter) {
-    List<LiveActivityGroup> result = Lists.newArrayList();
+    List<LiveActivityGroup> result = new ArrayList<>();
     List<LiveActivityGroup> toBeFiltered;
 
     synchronized (activitiesById) {

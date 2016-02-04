@@ -18,6 +18,7 @@
 package io.smartspaces.service.web.server.internal.netty;
 
 import static org.jboss.netty.channel.Channels.pipeline;
+
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.service.web.server.HttpAuthProvider;
@@ -31,14 +32,7 @@ import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 import io.smartspaces.util.net.NetworkBindSimpleSmartSpacesException;
 import io.smartspaces.util.web.MimeResolver;
 
-import java.io.File;
-import java.net.BindException;
-import java.net.InetSocketAddress;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
@@ -55,8 +49,15 @@ import org.jboss.netty.handler.ssl.SslContext;
 import org.jboss.netty.handler.ssl.util.SelfSignedCertificate;
 import org.jboss.netty.handler.stream.ChunkedWriteHandler;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.net.BindException;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * A web server based on Netty.
@@ -109,7 +110,7 @@ public class NettyWebServer implements WebServer {
   /**
    * HTTP headers to be sent on all responses.
    */
-  private Map<String, String> globalHttpContentHeaders = Maps.newHashMap();
+  private Map<String, String> globalHttpContentHeaders = new HashMap<>();
 
   /**
    * Logger for the web server.
@@ -155,17 +156,17 @@ public class NettyWebServer implements WebServer {
   /**
    * The complete collection of static content handlers.
    */
-  private List<HttpStaticContentRequestHandler> staticContentRequestHandlers = Lists.newArrayList();
+  private List<HttpStaticContentRequestHandler> staticContentRequestHandlers = new ArrayList<>();
 
   /**
    * The complete collection of dynamic GET request handlers.
    */
-  private List<HttpDynamicRequestHandler> dynamicGetRequestHandlers = Lists.newArrayList();
+  private List<HttpDynamicRequestHandler> dynamicGetRequestHandlers = new ArrayList<>();
 
   /**
    * The complete collection of dynamic POST request handlers.
    */
-  private List<HttpDynamicPostRequestHandler> dynamicPostRequestHandlers = Lists.newArrayList();
+  private List<HttpDynamicPostRequestHandler> dynamicPostRequestHandlers = new ArrayList<>();
 
   /**
    * Create a web server using a singular thread pool.

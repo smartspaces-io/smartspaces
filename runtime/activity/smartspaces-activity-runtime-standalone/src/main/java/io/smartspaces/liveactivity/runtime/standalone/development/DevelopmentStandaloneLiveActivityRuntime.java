@@ -32,8 +32,8 @@ import io.smartspaces.liveactivity.runtime.StandardLiveActivityRuntime;
 import io.smartspaces.liveactivity.runtime.alert.LoggingAlertStatusManager;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
 import io.smartspaces.liveactivity.runtime.installation.ActivityInstallationManager;
-import io.smartspaces.liveactivity.runtime.logging.SmartSpacesEnvironmentLiveActivityLogFactory;
 import io.smartspaces.liveactivity.runtime.logging.LiveActivityLogFactory;
+import io.smartspaces.liveactivity.runtime.logging.SmartSpacesEnvironmentLiveActivityLogFactory;
 import io.smartspaces.liveactivity.runtime.monitor.RemoteLiveActivityRuntimeMonitorService;
 import io.smartspaces.liveactivity.runtime.monitor.internal.StandardRemoteLiveActivityRuntimeMonitorService;
 import io.smartspaces.liveactivity.runtime.standalone.StandaloneActivityInstallationManager;
@@ -43,10 +43,10 @@ import io.smartspaces.liveactivity.runtime.standalone.StandaloneLiveActivityStor
 import io.smartspaces.liveactivity.runtime.standalone.StandaloneLocalLiveActivityRepository;
 import io.smartspaces.liveactivity.runtime.standalone.messaging.StandaloneMessageRouter;
 import io.smartspaces.system.DevelopmentStandaloneSmartSpacesFilesystem;
-import io.smartspaces.system.SmartSpacesFilesystem;
-import io.smartspaces.system.SmartSpacesSystemControl;
 import io.smartspaces.system.InternalSmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.system.SmartSpacesFilesystem;
+import io.smartspaces.system.SmartSpacesSystemControl;
 import io.smartspaces.util.concurrency.SequentialEventQueue;
 import io.smartspaces.util.concurrency.SimpleSequentialEventQueue;
 import io.smartspaces.util.io.FileSupport;
@@ -54,14 +54,13 @@ import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.resource.ManagedResource;
 import io.smartspaces.util.resource.ManagedResources;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.List;
-import java.util.concurrent.Future;
-
 import org.apache.commons.logging.Log;
 
-import com.google.common.collect.Lists;
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * A standalone runner for activities that takes the activities from a
@@ -427,7 +426,7 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
    *          the root folder for the activities
    */
   private void prepareForMultipleActivityRun(File suppliedRuntimeFolder, File rootFolder) {
-    List<File> foldersToUse = Lists.newArrayList();
+    List<File> foldersToUse = new ArrayList<>();
     scanForProjectFolders(rootFolder, foldersToUse);
 
     if (foldersToUse.size() == 0) {

@@ -26,9 +26,8 @@ import io.smartspaces.system.StandaloneSmartSpacesEnvironment;
 import io.smartspaces.util.SmartSpacesUtilities;
 import io.smartspaces.util.concurrency.CancellableLoop;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * A driver for the Wild Divine Iom biofeedback sensor.
@@ -141,7 +140,7 @@ public class IomDriver extends DriverSupport {
   /**
    * The listeners for this driver.
    */
-  private List<IomDeviceListener> listeners = Lists.newArrayList();
+  private List<IomDeviceListener> listeners = new ArrayList<>();
 
   /**
    * The sensor read loop.

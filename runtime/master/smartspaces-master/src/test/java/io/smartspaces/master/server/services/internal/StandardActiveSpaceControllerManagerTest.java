@@ -18,10 +18,11 @@
 package io.smartspaces.master.server.services.internal;
 
 import static org.junit.Assert.assertEquals;
+
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse.LiveActivityDeleteStatus;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse.ActivityDeployStatus;
 import io.smartspaces.controller.client.master.RemoteActivityDeploymentManager;
 import io.smartspaces.domain.basic.Activity;
@@ -37,20 +38,18 @@ import io.smartspaces.master.event.MasterEventManager;
 import io.smartspaces.master.server.services.ActiveLiveActivity;
 import io.smartspaces.master.server.services.ActiveSpaceController;
 import io.smartspaces.master.server.services.RemoteSpaceControllerClient;
-import io.smartspaces.master.server.services.internal.StandardActiveSpaceControllerManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.TimeProvider;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Tests for the {@link StandardActiveSpaceControllerManager}.
@@ -780,7 +779,7 @@ public class StandardActiveSpaceControllerManagerTest extends BaseSpaceTest {
     List<ActiveLiveActivity> activeLiveActivities2 = activeLiveActivities(liveActivities2);
     LiveActivityGroup group2 = liveActivityGroup(liveActivities2);
 
-    Set<ActiveLiveActivity> deployedActivities = Sets.newHashSet();
+    Set<ActiveLiveActivity> deployedActivities = new HashSet<>();
     activeControllerManager.deployActiveLiveActivityGroupChecked(
         activeControllerManager.getActiveLiveActivityGroup(group1), deployedActivities);
     activeControllerManager.deployActiveLiveActivityGroupChecked(
@@ -1571,7 +1570,7 @@ public class StandardActiveSpaceControllerManagerTest extends BaseSpaceTest {
    * @return the active live activities
    */
   public List<ActiveLiveActivity> activeLiveActivities(LiveActivity... liveActivities) {
-    List<ActiveLiveActivity> activeActivities = Lists.newArrayList();
+    List<ActiveLiveActivity> activeActivities = new ArrayList<>();
 
     for (LiveActivity liveActivity : liveActivities) {
       activeControllerManager.getActiveLiveActivity(liveActivity);
@@ -1589,7 +1588,7 @@ public class StandardActiveSpaceControllerManagerTest extends BaseSpaceTest {
    * @return the active live activities
    */
   public List<ActiveLiveActivity> activeLiveActivities(List<LiveActivity> liveActivities) {
-    List<ActiveLiveActivity> activeActivities = Lists.newArrayList();
+    List<ActiveLiveActivity> activeActivities = new ArrayList<>();
 
     for (LiveActivity liveActivity : liveActivities) {
       activeActivities.add(activeControllerManager.getActiveLiveActivity(liveActivity));

@@ -19,9 +19,8 @@ package io.smartspaces.bridge.message.ros;
 
 import io.smartspaces.SmartSpacesException;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * A {@link RosMessageBridgeSpecificationCompiler} which uses OGNL.
@@ -55,7 +54,7 @@ public class OgnlRosMessageBridgeSpecificationCompiler implements
     String destinationTopicName = destinations[0].trim();
     String destinationMessageType = destinations[1].trim();
 
-    List<String> expressions = Lists.newArrayList();
+    List<String> expressions = new ArrayList<>();
     for (int i = 2; i < lines.length; i++) {
       // Figure out how to compile the expressions. Classloaders in
       // OGNL and Javassist are screwing me up and no time to figure out

@@ -19,9 +19,8 @@ package io.smartspaces.master.api.messages;
 
 import io.smartspaces.SmartSpacesExceptionUtils;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * A set of methods and constants to provide uniform Master API support.
@@ -36,7 +35,7 @@ public class MasterApiMessageSupport {
    * @return a success API response
    */
   public static Map<String, Object> getSimpleSuccessResponse() {
-    Map<String, Object> response = Maps.newHashMap();
+    Map<String, Object> response = new HashMap<>();
 
     response.put(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_RESULT,
         MasterApiMessages.MASTER_API_RESULT_SUCCESS);
@@ -71,7 +70,7 @@ public class MasterApiMessageSupport {
    * @return the Master API response object
    */
   public static Map<String, Object> getFailureResponse(String reason, String detail) {
-    Map<String, Object> response = Maps.newHashMap();
+    Map<String, Object> response = new HashMap<>();
     response.put(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_RESULT,
         MasterApiMessages.MASTER_API_RESULT_FAILURE);
     response.put(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_REASON, reason);

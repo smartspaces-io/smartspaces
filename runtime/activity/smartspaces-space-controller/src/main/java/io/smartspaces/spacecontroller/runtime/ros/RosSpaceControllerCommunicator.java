@@ -45,8 +45,7 @@ import io.smartspaces.spacecontroller.runtime.SpaceControllerHeartbeat;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.SmartSpacesUtilities;
 
-import java.util.Map;
-
+import com.google.common.annotations.VisibleForTesting;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.ros.internal.node.topic.SubscriberIdentifier;
 import org.ros.message.MessageDeserializer;
@@ -61,7 +60,6 @@ import org.ros.node.topic.Publisher;
 import org.ros.node.topic.PublisherListener;
 import org.ros.node.topic.Subscriber;
 import org.ros.osgi.common.RosEnvironment;
-
 import smartspaces_msgs.ConfigurationParameterRequest;
 import smartspaces_msgs.ConfigurationRequest;
 import smartspaces_msgs.ContainerResourceCommitRequestMessage;
@@ -79,8 +77,8 @@ import smartspaces_msgs.LiveActivityDeployResponseMessage;
 import smartspaces_msgs.LiveActivityRuntimeRequest;
 import smartspaces_msgs.LiveActivityRuntimeStatus;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Maps;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An {@link SpaceControllerCommunicator} using ROS for communication.
@@ -723,7 +721,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
    * @return map of the request
    */
   private Map<String, String> extractConfigurationUpdate(ConfigurationRequest configurationRequest) {
-    Map<String, String> values = Maps.newHashMap();
+    Map<String, String> values = new HashMap<>();
 
     for (ConfigurationParameterRequest parameterRequest : configurationRequest.getParameters()) {
       if (parameterRequest.getOperation() == ConfigurationParameterRequest.OPERATION_ADD) {

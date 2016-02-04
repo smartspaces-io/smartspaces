@@ -24,6 +24,10 @@ import io.smartspaces.domain.basic.GroupLiveActivity.GroupLiveActivityDependency
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,9 +44,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A JPA implementation of a {@link LiveActivityGroup}.
@@ -91,14 +92,14 @@ public class JpaLiveActivityGroup implements LiveActivityGroup {
    */
   @OneToMany(targetEntity = JpaGroupLiveActivity.class, cascade = CascadeType.ALL,
       fetch = FetchType.EAGER, orphanRemoval = true)
-  private List<JpaGroupLiveActivity> liveActivities = Lists.newArrayList();
+  private List<JpaGroupLiveActivity> liveActivities = new ArrayList<>();
 
   /**
    * The metadata.
    */
   @OneToMany(targetEntity = JpaLiveActivityGroupMetadataItem.class, cascade = CascadeType.ALL,
       fetch = FetchType.EAGER, orphanRemoval = true)
-  private List<JpaLiveActivityGroupMetadataItem> metadata = Lists.newArrayList();
+  private List<JpaLiveActivityGroupMetadataItem> metadata = new ArrayList<>();
 
   /**
    * The database version. Used for detecting concurrent modifications.
@@ -195,7 +196,7 @@ public class JpaLiveActivityGroup implements LiveActivityGroup {
   @Override
   public Map<String, Object> getMetadata() {
     synchronized (metadata) {
-      Map<String, Object> result = Maps.newHashMap();
+      Map<String, Object> result = new HashMap<>();
 
       for (JpaLiveActivityGroupMetadataItem item : metadata) {
         result.put(item.getName(), item.getValue());

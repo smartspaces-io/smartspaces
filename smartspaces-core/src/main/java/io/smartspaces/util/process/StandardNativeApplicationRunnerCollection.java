@@ -144,17 +144,6 @@ public class StandardNativeApplicationRunnerCollection implements NativeApplicat
   }
 
   @Override
-  @Deprecated
-  public NativeApplicationRunner addNativeApplicationRunner(Map<String, Object> config) {
-    NativeApplicationRunner runner = newNativeApplicationRunner();
-    runner.configure(config);
-
-    addNativeApplicationRunner(runner);
-
-    return runner;
-  }
-
-  @Override
   public synchronized void addNativeApplicationRunner(NativeApplicationRunner runner) {
     runners.add(runner);
 

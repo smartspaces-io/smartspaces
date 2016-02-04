@@ -22,20 +22,20 @@ import io.smartspaces.network.NetworkNodeInformation;
 import io.smartspaces.network.NetworkTopicInformation;
 import io.smartspaces.network.client.NetworkInformationClient;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import org.apache.commons.logging.Log;
 import org.ros.master.client.MasterStateClient;
 import org.ros.master.client.SystemState;
 import org.ros.master.client.TopicSystemState;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Obtain information from the ROS network.
@@ -131,7 +131,7 @@ public class RosNetworkInformationClient implements NetworkInformationClient {
    * @return a potentially unsorted list of topics on the master
    */
   private List<NetworkTopicInformation> collectTopics() {
-    List<NetworkTopicInformation> topics = Lists.newArrayList();
+    List<NetworkTopicInformation> topics = new ArrayList<>();
     SystemState systemState = masterStateClient.getSystemState();
 
     for (TopicSystemState topicState : systemState.getTopics()) {
@@ -162,7 +162,7 @@ public class RosNetworkInformationClient implements NetworkInformationClient {
    * @return a potentially unsorted list of topics on the master
    */
   private List<NetworkNodeInformation> collectNodes() {
-    List<NetworkNodeInformation> nodes = Lists.newArrayList();
+    List<NetworkNodeInformation> nodes = new ArrayList<>();
 
     // maps from node name to the appropriate topic type
     Multimap<String, String> publishers = ArrayListMultimap.create();
@@ -180,7 +180,7 @@ public class RosNetworkInformationClient implements NetworkInformationClient {
 
     }
 
-    Set<String> nodesSeen = Sets.newHashSet();
+    Set<String> nodesSeen = new HashSet<>();
     for (String nodeName : publishers.keySet()) {
       nodesSeen.add(nodeName);
 
@@ -199,7 +199,7 @@ public class RosNetworkInformationClient implements NetworkInformationClient {
       }
 
       // No publisher topics or would have gotten above.
-      List<String> publisherTopics = Lists.newArrayList();
+      List<String> publisherTopics = new ArrayList<>();
 
       List<String> subscriberTopics = Lists.newArrayList(subscribers.get(nodeName));
       Collections.sort(subscriberTopics, lowerCaseStringComparator);

@@ -29,10 +29,9 @@ import io.smartspaces.util.process.NativeApplicationRunner.NativeApplicationRunn
 import io.smartspaces.util.process.NativeApplicationRunnerCollection;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-
-import com.google.common.collect.Maps;
 
 /**
  * A workbench task instance factory for native applications.
@@ -231,7 +230,7 @@ public class NativeWorkbenchTaskFactory implements WorkbenchTaskFactory {
    */
   private String evaluateTemplateContent(WorkbenchTaskContext workbenchTaskContext,
       Configuration config, String content) {
-    Map<String, Object> data = Maps.newHashMap();
+    Map<String, Object> data = new HashMap<>();
     data.put(TEMPLATE_VARIABLE_WORKBENCH_TASK_CONTEXT, workbenchTaskContext);
 
     addAdditionalTemplateData(workbenchTaskContext, data);

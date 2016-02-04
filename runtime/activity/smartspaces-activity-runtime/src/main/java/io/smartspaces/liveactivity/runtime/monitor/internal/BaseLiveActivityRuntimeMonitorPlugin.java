@@ -29,15 +29,15 @@ import io.smartspaces.spacecontroller.SpaceController;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
+import com.google.common.base.Joiner;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 
 /**
  * A base implementation of a runtime monitor plugin.
@@ -427,7 +427,7 @@ public abstract class BaseLiveActivityRuntimeMonitorPlugin implements
   protected void displayFilesystemSection(HttpResponse response, String baseUrl, String section,
       String[] requestPathComponents, int pathBegin, File rootSectionDirectory) throws Throwable {
     int length = requestPathComponents.length;
-    List<String> pathComponents = Lists.newArrayList();
+    List<String> pathComponents = new ArrayList<>();
     for (int i = pathBegin; i < length; i++) {
       pathComponents.add(requestPathComponents[i]);
     }

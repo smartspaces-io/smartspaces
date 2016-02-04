@@ -20,11 +20,10 @@ package io.smartspaces.service.control.opensoundcontrol.internal;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlIncomingMessage;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlMethod;
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A collection of OSC methods.
@@ -42,7 +41,7 @@ public class OpenSoundControlMethodCollection<M extends OpenSoundControlIncoming
   /**
    * The methods.
    */
-  private List<OpenSoundControlMethod<M>> methods = Lists.newArrayList();
+  private List<OpenSoundControlMethod<M>> methods = new ArrayList<>();
 
   /**
    * Add a new method to the collection.

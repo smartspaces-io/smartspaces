@@ -17,9 +17,6 @@
 
 package io.smartspaces.util.ros;
 
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.ros.internal.node.topic.PublisherIdentifier;
 import org.ros.message.MessageListener;
@@ -27,7 +24,9 @@ import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Subscriber;
 import org.ros.node.topic.SubscriberListener;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A collection of ROS subscribers.
@@ -42,12 +41,12 @@ public class StandardRosSubscribers<T> implements RosSubscribers<T> {
   /**
    * All subscribers registered.
    */
-  private final List<Subscriber<T>> subscribers = Lists.newArrayList();
+  private final List<Subscriber<T>> subscribers = new ArrayList<>();
 
   /**
    * All publisher listeners registered.
    */
-  private final List<SubscriberListener<T>> subscriberListeners = Lists.newArrayList();
+  private final List<SubscriberListener<T>> subscriberListeners = new ArrayList<>();
 
   /**
    * Logger for this collection.

@@ -26,11 +26,10 @@ import io.smartspaces.service.comm.serial.xbee.XBeeAddress16;
 import io.smartspaces.service.comm.serial.xbee.XBeeAddress64;
 import io.smartspaces.service.comm.serial.xbee.XBeeApiConstants;
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A frame parser for escaped XBee API frames.
@@ -127,7 +126,7 @@ public class SimpleXBeeResponseFrameParser implements XBeeResponseFrameParser {
       digitalSamples = reader.readByte() << 8 | reader.readByte();
     }
 
-    List<Integer> analogSamples = Lists.newArrayList();
+    List<Integer> analogSamples = new ArrayList<>();
     if ((analogChannelMask & XBeeApiConstants.RX_IO_SAMPLE_ANALOG_A0) != 0) {
       analogSamples.add(reader.readByte() << 8 | reader.readByte());
     }

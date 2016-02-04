@@ -101,7 +101,7 @@ public class SimpleRosEnvironment implements RosEnvironment {
   /**
    * The properties associated with this environment.
    */
-  private final Map<String, String> properties = Maps.newHashMap();
+  private final Map<String, String> properties = new HashMap<>();
 
   /**
    * {@code true} if this is an environment for masters, false otherwise.

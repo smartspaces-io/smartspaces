@@ -45,46 +45,6 @@ public interface NativeApplicationRunner extends ManagedResource, Restartable {
   char EQUALS_CHARACTER = '=';
 
   /**
-   * The name of the property which gives the fully qualified name for the
-   * application.
-   */
-  String EXECUTABLE_PATHNAME = "executablePath";
-
-  /**
-   * A set of flags for the application as a string to be parsed.
-   */
-  String EXECUTABLE_FLAGS = "executableFlags";
-
-  /**
-   * A set of environment variables for the application as a string to be
-   * parsed.
-   */
-  String EXECUTABLE_ENVIRONMENT = "executableEnvironment";
-
-  /**
-   * A map containing environment variables. Entries with a {@code null} value
-   * will be removed from the process environment.
-   */
-  String EXECUTABLE_ENVIRONMENT_MAP = "executableEnvironmentMap";
-
-  /**
-   * The name of the property which gives the fully qualified name for the
-   * application.
-   *
-   * @deprecated use {@link #EXECUTABLE_PATHNAME}
-   */
-  @Deprecated
-  String ACTIVITYNAME = EXECUTABLE_PATHNAME;
-
-  /**
-   * A set of flags for the application.
-   *
-   * @deprecated use {@link #EXECUTABLE_FLAGS}
-   */
-  @Deprecated
-  String FLAGS = EXECUTABLE_FLAGS;
-
-  /**
    * Set whether the process environment should be fully cleaned before the
    * process is started.
    *
@@ -156,18 +116,6 @@ public interface NativeApplicationRunner extends ManagedResource, Restartable {
    * @return this runner
    */
   NativeApplicationRunner parseEnvironment(String variables);
-
-  /**
-   * Configure the runner.
-   *
-   * @param config
-   *          the configuration
-   *
-   * @deprecated use the individual setters and parsers or a
-   *             {@link NativeApplicationDescription}
-   */
-  @Deprecated
-  void configure(Map<String, Object> config);
 
   /**
    * Configure the runner.

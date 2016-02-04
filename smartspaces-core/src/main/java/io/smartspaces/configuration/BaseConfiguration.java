@@ -20,15 +20,15 @@ import io.smartspaces.evaluation.EvaluationEnvironment;
 import io.smartspaces.evaluation.EvaluationSmartSpacesException;
 import io.smartspaces.evaluation.ExpressionEvaluator;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * Support for implementations of {@link Configuration}.
@@ -270,7 +270,7 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
 
   @Override
   public Map<String, String> getCollapsedMap() {
-    Map<String, String> map = Maps.newHashMap();
+    Map<String, String> map = new HashMap<>();
 
     addCollapsedEntries(map);
 

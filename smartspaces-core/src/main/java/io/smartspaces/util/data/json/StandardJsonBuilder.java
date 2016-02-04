@@ -17,12 +17,11 @@
 
 package io.smartspaces.util.data.json;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * Standard implementation of the JSON Builder.
@@ -34,7 +33,7 @@ public class StandardJsonBuilder implements JsonBuilder {
   /**
    * The root object.
    */
-  private Map<String, Object> root = Maps.newHashMap();
+  private Map<String, Object> root = new HashMap<>();
 
   /**
    * A stack of objects as we walk the graph.
@@ -106,7 +105,7 @@ public class StandardJsonBuilder implements JsonBuilder {
   @Override
   public JsonBuilder newObject(String name) {
     if (currentType == JsonType.OBJECT) {
-      Map<String, Object> newObject = Maps.newHashMap();
+      Map<String, Object> newObject = new HashMap<>();
 
       currentObject.put(name, newObject);
 
@@ -125,7 +124,7 @@ public class StandardJsonBuilder implements JsonBuilder {
   @Override
   public JsonBuilder newArray(String name) {
     if (currentType == JsonType.OBJECT) {
-      List<Object> newObject = Lists.newArrayList();
+      List<Object> newObject = new ArrayList<>();
 
       currentObject.put(name, newObject);
 
@@ -145,7 +144,7 @@ public class StandardJsonBuilder implements JsonBuilder {
   @Override
   public JsonBuilder newArray() {
     if (currentType == JsonType.ARRAY) {
-      List<Object> newObject = Lists.newArrayList();
+      List<Object> newObject = new ArrayList<>();
 
       currentArray.add(newObject);
 
@@ -164,7 +163,7 @@ public class StandardJsonBuilder implements JsonBuilder {
   @Override
   public JsonBuilder newObject() {
     if (currentType == JsonType.ARRAY) {
-      Map<String, Object> newObject = Maps.newHashMap();
+      Map<String, Object> newObject = new HashMap<>();
 
       currentArray.add(newObject);
 

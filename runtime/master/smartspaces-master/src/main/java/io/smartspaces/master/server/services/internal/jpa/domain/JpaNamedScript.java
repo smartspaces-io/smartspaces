@@ -19,6 +19,8 @@ package io.smartspaces.master.server.services.internal.jpa.domain;
 
 import io.smartspaces.domain.system.NamedScript;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,9 +38,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A JPA implementation of an {@link NamedScript}.
@@ -105,7 +104,7 @@ public class JpaNamedScript implements NamedScript {
    */
   @OneToMany(targetEntity = JpaNamedScriptMetadataItem.class, cascade = CascadeType.ALL,
       fetch = FetchType.EAGER, orphanRemoval = true)
-  private List<JpaNamedScriptMetadataItem> metadata = Lists.newArrayList();
+  private List<JpaNamedScriptMetadataItem> metadata = new ArrayList<>();
 
   /**
    * The database version. Used for detecting concurrent modifications.
@@ -194,7 +193,7 @@ public class JpaNamedScript implements NamedScript {
   @Override
   public Map<String, Object> getMetadata() {
     synchronized (metadata) {
-      Map<String, Object> result = Maps.newHashMap();
+      Map<String, Object> result = new HashMap<>();
 
       for (JpaNamedScriptMetadataItem item : metadata) {
         result.put(item.getName(), item.getValue());

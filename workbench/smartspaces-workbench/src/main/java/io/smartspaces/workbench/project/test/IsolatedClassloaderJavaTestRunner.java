@@ -28,16 +28,15 @@ import io.smartspaces.workbench.project.java.JavaProjectExtension;
 import io.smartspaces.workbench.project.java.JavaProjectType;
 import io.smartspaces.workbench.project.java.ProjectJavaCompiler;
 
+import org.apache.commons.logging.Log;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.collect.Lists;
 
 /**
  * A test runner which finds a bunch of classes which are JUnit test classes and
@@ -87,7 +86,7 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
    */
   private List<File> getClasspath(ProjectTaskContext context, JavaProjectExtension extension,
       File... additionalFiles) {
-    List<File> classpath = Lists.newArrayList();
+    List<File> classpath = new ArrayList<>();
     for (File additionalFile : additionalFiles) {
       classpath.add(additionalFile);
     }
@@ -104,7 +103,7 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
   @Override
   public void runTests(File jarDestinationFile, JavaProjectExtension extension,
       ProjectTaskContext context) throws SmartSpacesException {
-    List<File> compilationFiles = Lists.newArrayList();
+    List<File> compilationFiles = new ArrayList<>();
 
     Project project = context.getProject();
     projectCompiler.getCompilationFiles(
@@ -156,7 +155,7 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
     List<File> classpath =
         getClasspath(context, extension, jarDestinationFile, testCompilationFolder);
 
-    List<URL> urls = Lists.newArrayList();
+    List<URL> urls = new ArrayList<>();
     for (File classpathElement : classpath) {
       try {
         urls.add(classpathElement.toURL());

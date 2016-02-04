@@ -19,12 +19,12 @@ package io.smartspaces.util.graph;
 
 import io.smartspaces.SmartSpacesException;
 
+import com.google.common.collect.Sets;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * A {@link GraphWalkerObserver} which gives a dependency mapping.
@@ -49,7 +49,7 @@ public class DependencyResolver<I, T> extends BaseGraphWalkerObserver<I, T> {
   /**
    * The ordering of the data.
    */
-  private List<T> ordering = Lists.newArrayList();
+  private List<T> ordering = new ArrayList<>();
 
   /**
    * The nodes added to the resolver.

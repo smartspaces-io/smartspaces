@@ -20,11 +20,12 @@ package io.smartspaces.domain.basic.pojo;
 import io.smartspaces.domain.basic.ConfigurationParameter;
 import io.smartspaces.domain.basic.SpaceControllerConfiguration;
 
+import com.google.common.collect.Sets;
+
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * A POJO implementation of a {@link SpaceControllerConfiguration}.
@@ -46,7 +47,7 @@ public class SimpleSpaceControllerConfiguration implements SpaceControllerConfig
   /**
    * The parameters in the configuration.
    */
-  private Set<ConfigurationParameter> parameters = Sets.newHashSet();
+  private Set<ConfigurationParameter> parameters = new HashSet<>();
 
   @Override
   public String getName() {
@@ -85,7 +86,7 @@ public class SimpleSpaceControllerConfiguration implements SpaceControllerConfig
 
   @Override
   public Map<String, ConfigurationParameter> getParameterMap() {
-    Map<String, ConfigurationParameter> map = Maps.newHashMap();
+    Map<String, ConfigurationParameter> map = new HashMap<>();
 
     for (ConfigurationParameter parameter : parameters) {
       map.put(parameter.getName(), parameter);

@@ -19,10 +19,9 @@ package io.smartspaces.workbench.project.java;
 
 import io.smartspaces.resource.VersionRange;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * Information needed for the container for a Java project.
@@ -39,17 +38,17 @@ public class ContainerInfo {
   /**
    * The private packages for the library.
    */
-  private List<String> privatePackages = Lists.newArrayList();
+  private List<String> privatePackages = new ArrayList<>();
 
   /**
    * The export packages for the library.
    */
-  private List<String> exportPackages = Lists.newArrayList();
+  private List<String> exportPackages = new ArrayList<>();
 
   /**
    * The import packages for the library.
    */
-  private List<ImportPackage> importPackages = Lists.newArrayList();
+  private List<ImportPackage> importPackages = new ArrayList<>();
 
   /**
    * Get the classname of the bundle activator.

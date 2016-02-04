@@ -20,26 +20,26 @@ package io.smartspaces.service.web.server.internal.netty;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.service.web.server.HttpRequest;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
+import org.apache.commons.logging.Log;
+import org.jboss.netty.handler.codec.http.Cookie;
+import org.jboss.netty.handler.codec.http.CookieDecoder;
+
 import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.jboss.netty.handler.codec.http.Cookie;
-import org.jboss.netty.handler.codec.http.CookieDecoder;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 
 /**
  * An HTTP request that proxies the Netty HTTP request.
@@ -89,7 +89,7 @@ public class NettyHttpRequest implements HttpRequest {
 
   @Override
   public Map<String, String> getUriQueryParameters() {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
 
     String rawQuery = getUri().getRawQuery();
     if (rawQuery != null && !rawQuery.isEmpty()) {
@@ -181,9 +181,9 @@ public class NettyHttpRequest implements HttpRequest {
 
     Collection<String> cookieHeader = getHeader("Cookie");
     if (cookieHeader == null) {
-      return Sets.newHashSet();
+      return new HashSet<>();
     }
-    Collection<HttpCookie> cookies = Sets.newHashSet();
+    Collection<HttpCookie> cookies = new HashSet<>();
     for (String cookie : cookieHeader) {
       cookies.addAll(Collections2.transform(new CookieDecoder().decode(cookie),
           new Function<Cookie, HttpCookie>() {

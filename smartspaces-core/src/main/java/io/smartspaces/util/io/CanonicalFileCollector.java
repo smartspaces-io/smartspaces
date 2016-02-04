@@ -21,10 +21,9 @@ import io.smartspaces.SimpleSmartSpacesException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import com.google.common.collect.Maps;
 
 /**
  * Simple version of a file map that converts everything to a cannonical file as
@@ -37,7 +36,7 @@ public class CanonicalFileCollector implements FileCollector {
   /**
    * Internal map for keeping a set of source files.
    */
-  private Map<File, File> fileMap = Maps.newHashMap();
+  private Map<File, File> fileMap = new HashMap<>();
 
   @Override
   public void put(File destination, File source) {

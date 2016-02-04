@@ -17,9 +17,8 @@
 
 package io.smartspaces.workbench.tasks;
 
+import java.util.HashSet;
 import java.util.Set;
-
-import com.google.common.collect.Sets;
 
 /**
  * A base implementation for dependency based tasks.
@@ -37,7 +36,7 @@ public abstract class BaseDependencyWorkbenchTask extends BaseWorkbenchTask impl
   /**
    * The task dependencies for this task.
    */
-  private Set<DependencyWorkbenchTask> taskDependencies = Sets.newHashSet();
+  private Set<DependencyWorkbenchTask> taskDependencies = new HashSet<>();
 
   /**
    * Construct the task.

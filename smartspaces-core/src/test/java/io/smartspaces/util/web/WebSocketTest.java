@@ -25,7 +25,16 @@ import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerSupport;
 import io.smartspaces.service.web.server.internal.netty.NettyWebServer;
 
+import junit.framework.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.Jdk14Logger;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -35,17 +44,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-
-import junit.framework.Assert;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.Jdk14Logger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A test for web socket connections.
@@ -92,10 +90,10 @@ public class WebSocketTest {
 
     URI uri = new URI(String.format("ws://127.0.0.1:%d/%s", port, webSocketUriPrefix));
 
-    final List<Integer> serverReceivedList = Lists.newArrayList();
-    final List<Integer> clientReceivedList = Lists.newArrayList();
-    List<Integer> serverSentList = Lists.newArrayList();
-    List<Integer> clientSentList = Lists.newArrayList();
+    final List<Integer> serverReceivedList = new ArrayList<>();
+    final List<Integer> clientReceivedList = new ArrayList<>();
+    List<Integer> serverSentList = new ArrayList<>();
+    List<Integer> clientSentList = new ArrayList<>();
     Random random = new Random(System.currentTimeMillis());
 
     for (int i = 0; i < 100; i++) {
@@ -168,7 +166,7 @@ public class WebSocketTest {
 
     Assert.assertTrue(client.isOpen());
 
-    Map<String, Object> data = Maps.newHashMap();
+    Map<String, Object> data = new HashMap<>();
     for (Integer i : clientSentList) {
       data.put("message", i);
       client.writeDataAsJson(data);

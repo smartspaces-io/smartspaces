@@ -39,16 +39,17 @@ import io.smartspaces.master.server.services.SpaceControllerRepository;
 import io.smartspaces.master.server.services.internal.DataBundleState;
 import io.smartspaces.spacecontroller.SpaceControllerState;
 
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * A master API manager for space controllers.
@@ -80,7 +81,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
 
   @Override
   public Map<String, Object> getSpaceControllersByFilter(String filter) {
-    List<Map<String, Object>> responseData = Lists.newArrayList();
+    List<Map<String, Object>> responseData = new ArrayList<>();
 
     try {
       FilterExpression filterExpression = expressionFactory.getFilterExpression(filter);
@@ -90,7 +91,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       Collections.sort(spaceControllers, MasterApiUtilities.SPACE_CONTROLLER_BY_NAME_COMPARATOR);
       for (ActiveSpaceController acontroller : activeSpaceControllerManager
           .getActiveSpaceControllers(spaceControllers)) {
-        Map<String, Object> controllerData = Maps.newHashMap();
+        Map<String, Object> controllerData = new HashMap<>();
 
         SpaceController controller = acontroller.getSpaceController();
         getSpaceControllerMasterApiData(controller, controllerData);
@@ -109,13 +110,13 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
 
   @Override
   public Map<String, Object> getSpaceControllerAllView() {
-    List<Map<String, Object>> data = Lists.newArrayList();
+    List<Map<String, Object>> data = new ArrayList<>();
 
     List<SpaceController> spaceControllers = spaceControllerRepository.getSpaceControllers(null);
     Collections.sort(spaceControllers, MasterApiUtilities.SPACE_CONTROLLER_BY_NAME_COMPARATOR);
     for (ActiveSpaceController acontroller : activeSpaceControllerManager
         .getActiveSpaceControllers(spaceControllers)) {
-      Map<String, Object> controllerData = Maps.newHashMap();
+      Map<String, Object> controllerData = new HashMap<>();
 
       SpaceController controller = acontroller.getSpaceController();
       getSpaceControllerMasterApiData(controller, controllerData);
@@ -131,9 +132,9 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
   public Map<String, Object> getSpaceControllerFullView(String id) {
     SpaceController controller = spaceControllerRepository.getSpaceControllerByTypedId(id);
     if (controller != null) {
-      Map<String, Object> responseData = Maps.newHashMap();
+      Map<String, Object> responseData = new HashMap<>();
 
-      Map<String, Object> controllerData = Maps.newHashMap();
+      Map<String, Object> controllerData = new HashMap<>();
 
       getSpaceControllerMasterApiData(controller, controllerData);
 
@@ -157,7 +158,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
   public Map<String, Object> getSpaceControllerView(String id) {
     SpaceController controller = spaceControllerRepository.getSpaceControllerByTypedId(id);
     if (controller != null) {
-      Map<String, Object> controllerData = Maps.newHashMap();
+      Map<String, Object> controllerData = new HashMap<>();
 
       getSpaceControllerMasterApiData(controller, controllerData);
 
@@ -171,7 +172,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
   public Map<String, Object> getSpaceControllerConfiguration(String id) {
     SpaceController spaceController = spaceControllerRepository.getSpaceControllerByTypedId(id);
     if (spaceController != null) {
-      Map<String, String> data = Maps.newHashMap();
+      Map<String, String> data = new HashMap<>();
 
       SpaceControllerConfiguration config = spaceController.getConfiguration();
       if (config != null) {
@@ -884,7 +885,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
     if (liveActivity != null) {
       activeSpaceControllerManager.statusLiveActivity(liveActivity);
 
-      Map<String, Object> statusData = Maps.newHashMap();
+      Map<String, Object> statusData = new HashMap<>();
 
       masterApiActivityManager.getLiveActivityStatusApiData(liveActivity, statusData);
 
@@ -1025,7 +1026,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
     Space space = activityRepository.getSpaceById(id);
     if (space == null) {
 
-      Set<String> liveActivityIds = Sets.newHashSet();
+      Set<String> liveActivityIds = new HashSet<>();
       statusSpace(space, liveActivityIds);
 
       return MasterApiMessageSupport.getSimpleSuccessResponse();
@@ -1168,7 +1169,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
    * @return the Master API status object
    */
   private Map<String, Object> generateSpaceStatusApiResponse(Space space) {
-    Map<String, Object> data = Maps.newHashMap();
+    Map<String, Object> data = new HashMap<>();
 
     data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID, space.getId());
     data.put("subspaces", generateSubSpacesStatusesApiResponse(space));
@@ -1186,7 +1187,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
    * @return a list for all subspace Master API status objects
    */
   private List<Map<String, Object>> generateSubSpacesStatusesApiResponse(Space space) {
-    List<Map<String, Object>> subspaces = Lists.newArrayList();
+    List<Map<String, Object>> subspaces = new ArrayList<>();
 
     for (Space subspace : space.getSpaces()) {
       subspaces.add(generateSpaceStatusApiResponse(subspace));
@@ -1205,7 +1206,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
    * @return a list for all group Master API status objects
    */
   private List<Map<String, Object>> generateLiveActivityGroupsStatusesApiResponse(Space space) {
-    List<Map<String, Object>> groups = Lists.newArrayList();
+    List<Map<String, Object>> groups = new ArrayList<>();
 
     for (LiveActivityGroup group : space.getActivityGroups()) {
       groups.add(generateLiveActivityGroupStatusApiResponse(group));
@@ -1222,7 +1223,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
    * @return the master API response data
    */
   private Map<String, Object> generateLiveActivityGroupStatusApiResponse(LiveActivityGroup group) {
-    Map<String, Object> result = Maps.newHashMap();
+    Map<String, Object> result = new HashMap<>();
 
     result.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID, group.getId());
     result.put("liveactivities", generateLiveActivitiesStatusesApiResponse(group));
@@ -1240,7 +1241,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
    */
   private List<Map<String, Object>> generateLiveActivitiesStatusesApiResponse(
       LiveActivityGroup group) {
-    List<Map<String, Object>> activities = Lists.newArrayList();
+    List<Map<String, Object>> activities = new ArrayList<>();
 
     for (GroupLiveActivity activity : group.getLiveActivities()) {
       activities.add(generateApiLiveActivityStatus(activity.getActivity()));
@@ -1260,7 +1261,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
   private Map<String, Object> generateApiLiveActivityStatus(LiveActivity liveActivity) {
     ActiveLiveActivity active = activeSpaceControllerManager.getActiveLiveActivity(liveActivity);
 
-    Map<String, Object> response = Maps.newHashMap();
+    Map<String, Object> response = new HashMap<>();
 
     response.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID, liveActivity.getId());
     response.put("status", active.getRuntimeState().getDescription());

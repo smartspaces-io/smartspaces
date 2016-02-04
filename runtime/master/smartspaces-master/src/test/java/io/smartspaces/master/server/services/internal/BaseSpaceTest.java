@@ -227,7 +227,7 @@ public class BaseSpaceTest {
    * @return the live activity with the requested ID
    */
   protected List<LiveActivity> liveActivities(int... ids) {
-    List<LiveActivity> result = Lists.newArrayList();
+    List<LiveActivity> result = new ArrayList<>();
     for (int id : ids) {
       result.add(liveActivity(id));
     }

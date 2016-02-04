@@ -17,12 +17,11 @@
 
 package io.smartspaces.master.ui.internal.web;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.google.common.collect.Lists;
 
 /**
  * useful utilities for the user interface.
@@ -49,7 +48,7 @@ public class UiUtilities {
    * @return a sorted list of labeled values.
    */
   public static List<LabeledValue> getMetadataView(Map<String, Object> metadata) {
-    List<LabeledValue> values = Lists.newArrayList();
+    List<LabeledValue> values = new ArrayList<>();
 
     for (Entry<String, Object> entry : metadata.entrySet()) {
       values.add(new LabeledValue(entry.getKey(), entry.getValue().toString()));

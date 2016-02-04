@@ -22,11 +22,10 @@ import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.constituent.ProjectConstituent;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A group of projects.
@@ -65,17 +64,17 @@ public class GroupProjectTemplateSpecification {
    * projects, these will be specific to an actual project type and will be
    * processed by the specific project type builder as that builder needs.
    */
-  private final List<ProjectConstituent> extraConstituents = Lists.newArrayList();
+  private final List<ProjectConstituent> extraConstituents = new ArrayList<>();
 
   /**
    * Attributes for this project.
    */
-  private final Map<String, String> attributes = Maps.newHashMap();
+  private final Map<String, String> attributes = new HashMap<>();
 
   /**
    * List of projects in this group.
    */
-  private final List<Project> projectList = Lists.newArrayList();
+  private final List<Project> projectList = new ArrayList<>();
 
   /**
    * Get the project list.

@@ -24,9 +24,8 @@ import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.ui.internal.web.UiUtilities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * A simple form for spaces.
@@ -156,12 +155,12 @@ public class SpaceForm implements Serializable {
     space.setName(sourceSpace.getName());
     space.setDescription(sourceSpace.getDescription());
 
-    spaceIds = Lists.newArrayList();
+    spaceIds = new ArrayList<>();
     for (Space subspace : sourceSpace.getSpaces()) {
       spaceIds.add(subspace.getId());
     }
 
-    liveActivityGroupIds = Lists.newArrayList();
+    liveActivityGroupIds = new ArrayList<>();
     for (LiveActivityGroup group : sourceSpace.getActivityGroups()) {
       liveActivityGroupIds.add(group.getId());
     }

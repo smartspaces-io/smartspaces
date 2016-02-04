@@ -21,9 +21,8 @@ import io.smartspaces.master.resource.deployment.Feature;
 import io.smartspaces.master.resource.deployment.ResourceDependencyResolver;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
-
-import com.google.common.collect.Sets;
 
 /**
  * A very simple feature bundle resolver.
@@ -34,7 +33,7 @@ public class ObrFeatureBundleResolver implements ResourceDependencyResolver {
 
   @Override
   public Set<String> getDependencies(Collection<Feature> features) {
-    Set<String> dependencies = Sets.newHashSet();
+    Set<String> dependencies = new HashSet<>();
 
     // TODO(keith): Eventually this should look inside the bundles and see what
     // they need

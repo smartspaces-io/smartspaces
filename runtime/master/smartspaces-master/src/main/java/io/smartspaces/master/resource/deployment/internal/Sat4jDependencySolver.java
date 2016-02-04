@@ -94,7 +94,7 @@ public class Sat4jDependencySolver {
   // Set<Resource> slice) {
   // List<Resource> list = Lists.newArrayList(slice);
   // //Collections.sort(list, new ResourceSorter());
-  // List<WeightedObject<Resource>> wos = Lists.newArrayList();
+  // List<WeightedObject<Resource>> wos = new ArrayList<>();
   // int i = 1;
   // for (Resource r : list) {
   // wos.add(WeightedObject.newWO(r, 10 * i));
@@ -106,7 +106,7 @@ public class Sat4jDependencySolver {
   // private void addRequires(DependencyHelper<NamedVersionedResource, String>
   // helper, Set<Resource> slice)
   // throws ContradictionException {
-  // Set<Resource> set = Sets.newHashSet();
+  // Set<Resource> set = new HashSet<>();
   // for (Requirement req : resource.getRequirements()) {
   // set.clear();
   // for (Resource res : slice) {

@@ -20,7 +20,11 @@ package io.smartspaces.master.server.services.internal.jpa.domain;
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.ActivityDependency;
 
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,9 +41,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A JPA implementation of an {@link Activity}.
@@ -116,14 +117,14 @@ public class JpaActivity implements Activity {
    */
   @OneToMany(targetEntity = JpaActivityDependency.class, cascade = CascadeType.ALL,
       fetch = FetchType.EAGER, orphanRemoval = true)
-  private List<JpaActivityDependency> dependencies = Lists.newArrayList();
+  private List<JpaActivityDependency> dependencies = new ArrayList<>();
 
   /**
    * The metadata.
    */
   @OneToMany(targetEntity = JpaActivityMetadataItem.class, cascade = CascadeType.ALL,
       fetch = FetchType.EAGER, orphanRemoval = true)
-  private List<JpaActivityMetadataItem> metadata = Lists.newArrayList();
+  private List<JpaActivityMetadataItem> metadata = new ArrayList<>();
 
   /**
    * The database version. Used for detecting concurrent modifications.
@@ -241,7 +242,7 @@ public class JpaActivity implements Activity {
   @Override
   public Map<String, Object> getMetadata() {
     synchronized (metadata) {
-      Map<String, Object> result = Maps.newHashMap();
+      Map<String, Object> result = new HashMap<>();
 
       for (JpaActivityMetadataItem item : metadata) {
         result.put(item.getName(), item.getValue());

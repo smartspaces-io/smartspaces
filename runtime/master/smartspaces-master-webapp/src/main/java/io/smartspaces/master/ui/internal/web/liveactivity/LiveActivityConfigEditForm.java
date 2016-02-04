@@ -24,12 +24,7 @@ import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.ui.internal.web.BaseSpaceMasterController;
 import io.smartspaces.master.ui.internal.web.ConfigurationForm;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,8 +37,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * A form for editing live activities.
@@ -306,7 +305,7 @@ public class LiveActivityConfigEditForm extends BaseSpaceMasterController {
    * @return a map of the config names to values
    */
   protected Map<String, String> getSubmittedMap(ConfigurationForm form) {
-    Map<String, String> map = Maps.newHashMap();
+    Map<String, String> map = new HashMap<>();
 
     String[] lines = form.getValues().split(NAME_VALUE_LINE_SEPARATOR);
 

@@ -20,14 +20,13 @@ package io.smartspaces.util.data.json;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Test the {@link JsonBuilder}.
@@ -82,7 +81,7 @@ public class StandardJsonBuilderTest {
    */
   @Test
   public void testPutAll() {
-    Map<String, Object> testData = Maps.newHashMap();
+    Map<String, Object> testData = new HashMap<>();
 
     String keyString1 = "string1";
     String valueString1 = "bar";
@@ -233,7 +232,7 @@ public class StandardJsonBuilderTest {
     Object actualPrimitiveValue = ((List<Object>) root.get(key)).get(1);
     assertEquals(afterValue, actualPrimitiveValue);
 
-    Map<String, Object> expectedObjectValue = Maps.newHashMap();
+    Map<String, Object> expectedObjectValue = new HashMap<>();
     expectedObjectValue.put(objKey, objValue);
     Map<String, Object> actualObjectValue =
         (Map<String, Object>) ((List<Object>) root.get(key)).get(2);

@@ -25,9 +25,8 @@ import io.smartspaces.workbench.project.activity.ActivityProject;
 import io.smartspaces.workbench.project.builder.BaseProjectBuilder;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * A base activity project builder which takes care of the portions of the build
@@ -114,7 +113,7 @@ public class BaseActivityProjectBuilder extends BaseProjectBuilder<ActivityProje
     if (activityXmlSrc.exists()) {
       fileSupport.copyFile(activityXmlSrc, activityXmlDest);
     } else {
-      Map<String, Object> templateData = Maps.newHashMap();
+      Map<String, Object> templateData = new HashMap<>();
       templateData.put("project", project);
 
       context.getWorkbenchTaskContext().getWorkbench().getTemplater()
@@ -144,7 +143,7 @@ public class BaseActivityProjectBuilder extends BaseProjectBuilder<ActivityProje
 
     File generatedActivityConfFile =
         fileSupport.newFile(stagingDirectory, ActivityProject.FILENAME_ACTIVITY_CONF);
-    Map<String, Object> templateData = Maps.newHashMap();
+    Map<String, Object> templateData = new HashMap<>();
     templateData.put("project", project);
 
     context

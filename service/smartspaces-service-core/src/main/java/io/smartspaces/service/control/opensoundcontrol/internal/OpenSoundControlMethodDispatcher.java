@@ -20,11 +20,10 @@ package io.smartspaces.service.control.opensoundcontrol.internal;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlIncomingMessage;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlMethod;
 
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 
-import com.google.common.collect.Maps;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Dispatch messages to an appropriate Open Sound Control method.
@@ -42,7 +41,7 @@ public class OpenSoundControlMethodDispatcher<M extends OpenSoundControlIncoming
   /**
    * The collections of methods.
    */
-  private Map<String, OpenSoundControlMethodCollection<M>> collections = Maps.newHashMap();
+  private Map<String, OpenSoundControlMethodCollection<M>> collections = new HashMap<>();
 
   /**
    * The methods for handling unhandled messages.

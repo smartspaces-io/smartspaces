@@ -22,6 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
@@ -29,12 +30,6 @@ import io.smartspaces.container.control.message.activity.LiveActivityDeleteRespo
 import io.smartspaces.liveactivity.runtime.LiveActivityRuntime;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.spacecontroller.SpaceController;
-import io.smartspaces.spacecontroller.runtime.SpaceControllerActivityInstallationManager;
-import io.smartspaces.spacecontroller.runtime.SpaceControllerCommunicator;
-import io.smartspaces.spacecontroller.runtime.SpaceControllerDataBundleManager;
-import io.smartspaces.spacecontroller.runtime.SpaceControllerInfoPersister;
-import io.smartspaces.spacecontroller.runtime.StandardSpaceController;
-import io.smartspaces.spacecontroller.runtime.StandardSpaceControllerDataBundleManager;
 import io.smartspaces.spacecontroller.runtime.configuration.SpaceControllerConfigurationManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesFilesystem;
@@ -43,17 +38,16 @@ import io.smartspaces.time.TimeProvider;
 import io.smartspaces.util.concurrency.ImmediateRunSequentialEventQueue;
 import io.smartspaces.util.io.FileSupport;
 
-import java.io.File;
-import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
-
 import org.apache.commons.logging.Log;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.ros.concurrent.DefaultScheduledExecutorService;
 
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Unit tests for the {@link StandardSpaceController}.
@@ -260,7 +254,7 @@ public class StandardSpaceControllerTest {
    */
   @Test
   public void testLiveActivityconfigure() {
-    Map<String, String> configuration = Maps.newHashMap();
+    Map<String, String> configuration = new HashMap<>();
     configuration.put("a", "b");
 
     String uuid = "foo";

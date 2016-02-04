@@ -23,16 +23,17 @@ import io.smartspaces.activity.SupportedActivity;
 import io.smartspaces.util.SmartSpacesUtilities;
 import io.smartspaces.util.graph.DependencyResolver;
 
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A context for {@link ActivityComponent} instances to run in.
@@ -74,12 +75,12 @@ public class ActivityComponentContext {
   /**
    * All components in the activity.
    */
-  private final List<ActivityComponent> configuredComponents = Lists.newArrayList();
+  private final List<ActivityComponent> configuredComponents = new ArrayList<>();
 
   /**
    * Set of component names in the activity.
    */
-  private final Map<String, ActivityComponent> addedComponents = Maps.newHashMap();
+  private final Map<String, ActivityComponent> addedComponents = new HashMap<>();
 
   /**
    * @param activity
@@ -398,7 +399,7 @@ public class ActivityComponentContext {
    *           on internal startup error
    */
   private void startupComponents() throws Throwable {
-    List<ActivityComponent> startedComponents = Lists.newArrayList();
+    List<ActivityComponent> startedComponents = new ArrayList<>();
     try {
       for (ActivityComponent component : configuredComponents) {
         startupComponent(component);

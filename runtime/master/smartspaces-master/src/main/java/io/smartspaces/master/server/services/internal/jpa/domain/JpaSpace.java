@@ -21,6 +21,7 @@ import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.space.Space;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -38,9 +39,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A JPA implementation of a {@link Space}.
@@ -89,19 +87,19 @@ public class JpaSpace implements Space {
    */
   @OneToMany(targetEntity = JpaSpaceMetadataItem.class, cascade = CascadeType.ALL,
       fetch = FetchType.EAGER)
-  private List<JpaSpaceMetadataItem> metadata = Lists.newArrayList();
+  private List<JpaSpaceMetadataItem> metadata = new ArrayList<>();
 
   /**
    * The child spaces of this space.
    */
   @OneToMany(targetEntity = JpaSpace.class, fetch = FetchType.EAGER)
-  private List<JpaSpace> spaces = Lists.newArrayList();
+  private List<JpaSpace> spaces = new ArrayList<>();
 
   /**
    * The activity groups in for this space.
    */
   @OneToMany(targetEntity = JpaLiveActivityGroup.class, fetch = FetchType.EAGER)
-  private List<JpaLiveActivityGroup> activityGroups = Lists.newArrayList();
+  private List<JpaLiveActivityGroup> activityGroups = new ArrayList<>();
 
   /**
    * The database version. Used for detecting concurrent modifications.
@@ -161,7 +159,7 @@ public class JpaSpace implements Space {
   @Override
   public Map<String, Object> getMetadata() {
     synchronized (metadata) {
-      Map<String, Object> result = Maps.newHashMap();
+      Map<String, Object> result = new HashMap<>();
 
       for (JpaSpaceMetadataItem item : metadata) {
         result.put(item.getName(), item.getValue());
@@ -174,7 +172,7 @@ public class JpaSpace implements Space {
   @Override
   public List<? extends Space> getSpaces() {
     synchronized (spacesLock) {
-      ArrayList<JpaSpace> result = Lists.newArrayList();
+      ArrayList<JpaSpace> result = new ArrayList<>();
       if (spaces != null) {
         result.addAll(spaces);
       }
@@ -219,7 +217,7 @@ public class JpaSpace implements Space {
   @Override
   public List<? extends LiveActivityGroup> getActivityGroups() {
     synchronized (groupsLock) {
-      ArrayList<JpaLiveActivityGroup> result = Lists.newArrayList();
+      ArrayList<JpaLiveActivityGroup> result = new ArrayList<>();
       if (activityGroups != null) {
         result.addAll(activityGroups);
       }

@@ -26,9 +26,8 @@ import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.ui.internal.web.UiUtilities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * A simple form for activity groups.
@@ -124,7 +123,7 @@ public class LiveActivityGroupForm implements Serializable {
     liveActivityGroup.setName(sourceGroup.getName());
     liveActivityGroup.setDescription(sourceGroup.getDescription());
 
-    liveActivityIds = Lists.newArrayList();
+    liveActivityIds = new ArrayList<>();
     for (GroupLiveActivity activity : sourceGroup.getLiveActivities()) {
       liveActivityIds.add(activity.getActivity().getId());
     }

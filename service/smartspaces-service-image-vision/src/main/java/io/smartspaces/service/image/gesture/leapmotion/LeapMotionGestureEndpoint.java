@@ -33,14 +33,13 @@ import io.smartspaces.util.data.json.JsonNavigator;
 import io.smartspaces.util.data.json.StandardJsonNavigator;
 import io.smartspaces.util.geometry.Vector3;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A gesture connection using the Leap Motion.
@@ -291,7 +290,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
   public static final Map<String, GestureState> LEAP_MOTION_TO_GESTURE_STATES;
 
   static {
-    Map<String, GestureState> states = Maps.newHashMap();
+    Map<String, GestureState> states = new HashMap<>();
     states.put(LEAPMOTION_VALUE_GESTURE_STATE_START, GestureState.START);
     states.put(LEAPMOTION_VALUE_GESTURE_STATE_UPDATE, GestureState.UPDATE);
     states.put(LEAPMOTION_VALUE_GESTURE_STATE_STOP, GestureState.STOP);
@@ -443,7 +442,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * Handle the initial connection to leapd.
    */
   private void handleLeapdConnect() {
-    Map<String, Object> data = Maps.newHashMap();
+    Map<String, Object> data = new HashMap<>();
     data.put(LEAPMOTION_NAME_CONFIGURATION_ENABLE_GESTURES, true);
     data.put(LEAPMOTION_NAME_CONFIGURATION_ENABLE_BACKGROUND, true);
     webSocketClient.writeDataAsJson(data);
@@ -512,7 +511,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * @return a map from pointable IDs to pointables
    */
   private Map<String, GesturePointable> getPointables(JsonNavigator gdata, int numPointables) {
-    Map<String, GesturePointable> pointables = Maps.newHashMap();
+    Map<String, GesturePointable> pointables = new HashMap<>();
 
     for (int pos = 0; pos < numPointables; pos++) {
       gdata.down(pos);
@@ -590,7 +589,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * @return a map from hand IDs to hands
    */
   private Map<String, GestureHand> getHands(JsonNavigator gdata, int numHands) {
-    Map<String, GestureHand> hands = Maps.newHashMap();
+    Map<String, GestureHand> hands = new HashMap<>();
 
     for (int pos = 0; pos < numHands; pos++) {
       gdata.down(pos);
@@ -679,7 +678,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * @return the map of gesture IDs to gestures
    */
   private Map<String, Gesture> getGestures(JsonNavigator gdata, int numGestures) {
-    Map<String, Gesture> gestures = Maps.newHashMap();
+    Map<String, Gesture> gestures = new HashMap<>();
 
     for (int pos = 0; pos < numGestures; pos++) {
       gdata.down(pos);

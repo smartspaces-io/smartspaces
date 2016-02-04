@@ -34,21 +34,20 @@ import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.AutomationRepository;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.jdom2.CDATA;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
-import com.google.common.collect.Sets;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * A creator of the master domain description which uses JDOM.
@@ -442,7 +441,7 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
   private Element newSpaceEntries(ActivityRepository activityRepository) {
     Element spacesElement = new Element(ELEMENT_NAME_ROOT_SPACES);
 
-    Set<String> spacesDone = Sets.newHashSet();
+    Set<String> spacesDone = new HashSet<>();
 
     for (Space rootSpace : activityRepository.getAllSpaces()) {
       walkSpace(spacesElement, spacesDone, rootSpace);

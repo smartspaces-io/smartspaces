@@ -38,23 +38,22 @@ import io.smartspaces.liveactivity.runtime.installation.ActivityInstallationMana
 import io.smartspaces.liveactivity.runtime.logging.LiveActivityLogFactory;
 import io.smartspaces.liveactivity.runtime.monitor.RemoteLiveActivityRuntimeMonitorService;
 import io.smartspaces.liveactivity.runtime.repository.LocalLiveActivityRepository;
-import io.smartspaces.system.SmartSpacesFilesystem;
 import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.system.SmartSpacesFilesystem;
 import io.smartspaces.util.concurrency.SequentialEventQueue;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransition;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransition.TransitionResult;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransitioner;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransitionerCollection;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import org.apache.commons.logging.Log;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The standard implementation of a {@link LiveActivityRuntime}.
@@ -82,7 +81,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime implements
   /**
    * All live activity runners in this controller, indexed by UUID.
    */
-  private final Map<String, LiveActivityRunner> liveActivityRunners = Maps.newHashMap();
+  private final Map<String, LiveActivityRunner> liveActivityRunners = new HashMap<>();
 
   /**
    * Sampler for live activity runners for this controller.

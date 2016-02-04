@@ -24,18 +24,18 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 
+import com.google.common.collect.Lists;
+import org.eclipse.jdt.internal.compiler.tool.EclipseCompiler;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
-
-import org.eclipse.jdt.internal.compiler.tool.EclipseCompiler;
-
-import com.google.common.collect.Lists;
 
 /**
  * A project java compiler which uses the Eclipse compiler.
@@ -98,7 +98,7 @@ public class EclipseProjectJavaCompiler implements ProjectJavaCompiler {
 
   @Override
   public List<String> getCompilerOptions(ProjectTaskContext context) {
-    List<String> options = Lists.newArrayList();
+    List<String> options = new ArrayList<>();
 
     Configuration config = context.getProject().getConfiguration();
 

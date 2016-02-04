@@ -29,12 +29,12 @@ import io.smartspaces.util.data.json.StandardJsonMapper;
 import io.smartspaces.util.web.HttpClientHttpContentCopier;
 import io.smartspaces.util.web.HttpContentCopier;
 
+import com.google.common.base.Charsets;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.base.Charsets;
-import com.google.common.collect.Maps;
 
 /**
  * A client for talking to a remote Master Server.
@@ -108,7 +108,7 @@ public class StandardRemoteMasterServerClient implements RemoteMasterServerClien
   @Override
   public void registerSpaceController(SpaceController controller) {
     try {
-      Map<String, Object> registrationData = Maps.newHashMap();
+      Map<String, Object> registrationData = new HashMap<>();
       registrationData.put(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_UUID,
           controller.getUuid());
       registrationData.put(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_ID,

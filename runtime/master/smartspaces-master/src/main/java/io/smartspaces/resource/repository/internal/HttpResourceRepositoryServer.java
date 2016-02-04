@@ -38,9 +38,8 @@ import io.smartspaces.util.io.FileSupportImpl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * A Smart Spaces resource repository server using HTTP.
@@ -105,7 +104,7 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
   /**
    * Map for linking resource upload channels to content listeners.
    */
-  private final Map<String, CopyableResourceListener> resourceUploadListenerMap = Maps.newHashMap();
+  private final Map<String, CopyableResourceListener> resourceUploadListenerMap = new HashMap<>();
 
   /**
    * The file support to use.

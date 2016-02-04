@@ -20,11 +20,10 @@ package io.smartspaces.master.ui.internal.web.space;
 import io.smartspaces.domain.space.Space;
 import io.smartspaces.master.ui.internal.web.FormObjectValidator;
 
-import java.util.Set;
-
 import org.springframework.validation.Errors;
 
-import com.google.common.collect.Sets;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A validator for {@link SpaceForm} instances.
@@ -64,7 +63,7 @@ public class SpaceValidator extends FormObjectValidator {
     }
 
     if (space != null) {
-      Set<String> spaceIds = Sets.newHashSet();
+      Set<String> spaceIds = new HashSet<>();
       spaceIds.add(space.getId());
     }
   }

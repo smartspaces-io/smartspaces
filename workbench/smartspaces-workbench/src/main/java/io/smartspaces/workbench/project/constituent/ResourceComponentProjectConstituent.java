@@ -22,13 +22,12 @@ import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectContext;
 
-import java.io.File;
-import java.util.Map;
-
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple resource for a {@link io.smartspaces.workbench.project.Project}.
@@ -98,7 +97,7 @@ public class ResourceComponentProjectConstituent extends BaseProjectConstituent 
 
   @Override
   public Map<String, String> getAttributeMap() {
-    Map<String, String> map = Maps.newHashMap();
+    Map<String, String> map = new HashMap<>();
     map.put(SOURCE_FILE_ATTRIBUTE, sourceFile);
     map.put(SOURCE_DIRECTORY_ATTRIBUTE, sourceDirectory);
     map.put(DESTINATION_FILE_ATTRIBUTE, destinationFile);

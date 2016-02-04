@@ -32,17 +32,17 @@ import io.smartspaces.service.image.depth.internal.openni2.libraries.OpenNI2Libr
 import io.smartspaces.service.image.depth.internal.openni2.libraries.OpenNI2Library.OniStatus;
 import io.smartspaces.util.geometry.Vector3;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.logging.Log;
+import org.bridj.IntValuedEnum;
+import org.bridj.Pointer;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.commons.logging.Log;
-import org.bridj.IntValuedEnum;
-import org.bridj.Pointer;
-
-import com.google.common.collect.Lists;
 
 /**
  * A depth camera user tracking endpoint using OpenNI2 and NiTE2.
@@ -200,7 +200,7 @@ public class Openni2UserTrackerDepthCameraEndpoint implements UserTrackerDepthCa
    * A new NiTE User Track frame is available. Process it.
    */
   private void processUserTrackFrame() {
-    List<TrackedEntity<Vector3>> entities = Lists.newArrayList();
+    List<TrackedEntity<Vector3>> entities = new ArrayList<>();
 
     synchronized (this) {
       if (!sampling.get()) {

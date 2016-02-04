@@ -27,13 +27,12 @@ import io.smartspaces.service.image.depth.internal.openni2.libraries.OniDeviceIn
 import io.smartspaces.service.image.depth.internal.openni2.libraries.OpenNI2Library;
 import io.smartspaces.service.image.depth.internal.openni2.libraries.OpenNI2Library.OniStatus;
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.bridj.IntValuedEnum;
 import org.bridj.Pointer;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A depth camera service using OpenNI2.
@@ -67,7 +66,7 @@ public class Openni2DepthCameraService extends BaseSupportedService implements D
     Pointer<Pointer<OniDeviceInfo>> devices = Pointer.allocatePointer(OniDeviceInfo.class);
 
     try {
-      List<String> cameras = Lists.newArrayList();
+      List<String> cameras = new ArrayList<>();
 
       OpenNI2Library.oniGetDeviceList(devices, numDevices);
 

@@ -17,18 +17,17 @@
 
 package org.ros.osgi.common;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A base implementation of an OSGi bundle activator for ROS to use.
@@ -40,7 +39,7 @@ public abstract class BaseOsgiBundleActivator implements BundleActivator {
   /**
    * All OSGi service registrations from this bundle.
    */
-  private final List<ServiceRegistration<?>> osgiServiceRegistrations = Lists.newArrayList();
+  private final List<ServiceRegistration<?>> osgiServiceRegistrations = new ArrayList<>();
 
   /**
    * OSGi bundle context for this bundle.

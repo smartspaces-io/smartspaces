@@ -41,15 +41,6 @@ import io.smartspaces.time.TimeProvider;
 import io.smartspaces.util.resource.ManagedResource;
 import io.smartspaces.util.resource.ManagedResources;
 
-import java.io.File;
-import java.net.InetAddress;
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.logging.Log;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -65,7 +56,15 @@ import org.ros.master.uri.SwitchableMasterUriProvider;
 import org.ros.osgi.common.RosEnvironment;
 import org.ros.osgi.common.SimpleRosEnvironment;
 
-import com.google.common.collect.Lists;
+import java.io.File;
+import java.net.InetAddress;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Activate general services needed by a Spaces container.
@@ -156,7 +155,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
   /**
    * All service registrations put into place.
    */
-  private final List<ServiceRegistration<?>> serviceRegistrations = Lists.newArrayList();
+  private final List<ServiceRegistration<?>> serviceRegistrations = new ArrayList<>();
 
   /**
    * Host address to use if address lookup fails.

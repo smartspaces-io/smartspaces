@@ -20,13 +20,6 @@ package io.smartspaces.service.web.server.internal.netty;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.service.web.server.HttpFileUpload;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpCookie;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -40,7 +33,13 @@ import org.jboss.netty.handler.codec.http.multipart.HttpPostRequestDecoder.EndOf
 import org.jboss.netty.handler.codec.http.multipart.InterfaceHttpData;
 import org.jboss.netty.handler.codec.http.multipart.InterfaceHttpData.HttpDataType;
 
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpCookie;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A Netty-based {@link HttpFileUpload}.
@@ -57,7 +56,7 @@ public class NettyHttpFileUpload implements HttpFileUpload {
   /**
    * The parameters that were part of the post.
    */
-  private Map<String, String> parameters = Maps.newHashMap();
+  private Map<String, String> parameters = new HashMap<>();
 
   /**
    * The decoder.

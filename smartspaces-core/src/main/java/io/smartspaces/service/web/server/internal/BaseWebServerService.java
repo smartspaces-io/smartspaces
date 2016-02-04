@@ -21,9 +21,8 @@ import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerService;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * Support for creating an instance of a {@link WebServerService}.
@@ -35,7 +34,7 @@ public abstract class BaseWebServerService extends BaseSupportedService implemen
   /**
    * Map from server name to server.
    */
-  private List<WebServer> servers = Lists.newArrayList();
+  private List<WebServer> servers = new ArrayList<>();
 
   /**
    * Add in a new server to the list.

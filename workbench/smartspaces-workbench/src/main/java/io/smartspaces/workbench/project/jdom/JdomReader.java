@@ -26,14 +26,7 @@ import io.smartspaces.workbench.SmartSpacesWorkbench;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.constituent.ProjectConstituent;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.base.Charsets;
 import org.apache.commons.logging.Log;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -44,9 +37,15 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.EntityResolver2;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Base-class for facilitating reading XML documents using jdom.
@@ -70,7 +69,7 @@ public class JdomReader {
    * Map of resource types to resource builders.
    */
   private final Map<String, ProjectConstituent.ProjectConstituentBuilderFactory> projectConstituentFactoryMap =
-      Maps.newHashMap();
+      new HashMap<>();
 
   /**
    * {@code true} if read was successful.
@@ -315,7 +314,7 @@ public class JdomReader {
       return null;
     }
 
-    List<ProjectConstituent> constituents = Lists.newArrayList();
+    List<ProjectConstituent> constituents = new ArrayList<>();
     List<Element> childElements = getChildren(containerElement);
 
     for (Element childElement : childElements) {
@@ -343,7 +342,7 @@ public class JdomReader {
       return null;
     }
 
-    List<ProjectConstituent> constituents = Lists.newArrayList();
+    List<ProjectConstituent> constituents = new ArrayList<>();
 
     getConstituent(namespace, constituentElement, project, constituents);
 

@@ -25,9 +25,8 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * The standard implementation of the {@link MasterApiMasterSupportManager}.
@@ -52,7 +51,7 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager 
     try {
       String model = masterSupportManager.getMasterDomainModel();
 
-      Map<String, Object> data = Maps.newHashMap();
+      Map<String, Object> data = new HashMap<>();
       data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_MODEL, model);
 
       return MasterApiMessageSupport.getSuccessResponse(data);
@@ -118,7 +117,7 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager 
 
   @Override
   public Map<String, Object> getSmartSpacesVersion() {
-    Map<String, Object> data = Maps.newHashMap();
+    Map<String, Object> data = new HashMap<>();
     data.put(
         MasterApiMessages.MASTER_API_PARAMETER_NAME_SMART_SPACES_VERSION,
         spaceEnvironment.getSystemConfiguration().getPropertyString(

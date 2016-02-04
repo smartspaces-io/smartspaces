@@ -21,6 +21,8 @@ import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.basic.SpaceControllerConfiguration;
 import io.smartspaces.domain.basic.SpaceControllerMode;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,9 +43,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A JPA implementation of a {@link SpaceController}.
@@ -143,7 +142,7 @@ public class JpaSpaceController implements SpaceController {
    */
   @OneToMany(targetEntity = JpaSpaceControllerMetadataItem.class, cascade = CascadeType.ALL,
       fetch = FetchType.EAGER, orphanRemoval = true)
-  private List<JpaSpaceControllerMetadataItem> metadata = Lists.newArrayList();
+  private List<JpaSpaceControllerMetadataItem> metadata = new ArrayList<>();
 
   /**
    * The database version. Used for detecting concurrent modifications.
@@ -222,7 +221,7 @@ public class JpaSpaceController implements SpaceController {
   @Override
   public Map<String, Object> getMetadata() {
     synchronized (metadata) {
-      Map<String, Object> result = Maps.newHashMap();
+      Map<String, Object> result = new HashMap<>();
 
       for (JpaSpaceControllerMetadataItem item : metadata) {
         result.put(item.getName(), item.getValue());

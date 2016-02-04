@@ -38,16 +38,16 @@ import io.smartspaces.master.server.services.RemoteSpaceControllerClientListener
 import io.smartspaces.spacecontroller.SpaceControllerState;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 
 /**
  * An implementation of the {@link ActiveSpaceControllerManager}.
@@ -60,12 +60,12 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
   /**
    * All active controllers keyed by their controller's UUID.
    */
-  private final Map<String, ActiveSpaceController> activeSpaceControllers = Maps.newHashMap();
+  private final Map<String, ActiveSpaceController> activeSpaceControllers = new HashMap<>();
 
   /**
    * All active activities keyed by their live activity's UUID.
    */
-  private final Map<String, ActiveLiveActivity> activeLiveActivities = Maps.newHashMap();
+  private final Map<String, ActiveLiveActivity> activeLiveActivities = new HashMap<>();
 
   /**
    * Active live activities mapped by the ID of the controller which contains
@@ -77,12 +77,12 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
   /**
    * All active activity groups keyed by their activity group's ID.
    */
-  private final Map<String, ActiveLiveActivityGroup> activeLiveActivityGroups = Maps.newHashMap();
+  private final Map<String, ActiveLiveActivityGroup> activeLiveActivityGroups = new HashMap<>();
 
   /**
    * All active spaces keyed by their space's ID.
    */
-  private final Map<String, ActiveSpace> activeSpaces = Maps.newHashMap();
+  private final Map<String, ActiveSpace> activeSpaces = new HashMap<>();
 
   /**
    * Listeners for events in the manager.
@@ -882,7 +882,7 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
 
   @Override
   public void deploySpace(Space space) {
-    final Set<ActiveLiveActivity> deployedActivities = Sets.newHashSet();
+    final Set<ActiveLiveActivity> deployedActivities = new HashSet<>();
 
     SpaceWalker walker = new SpaceWalker() {
       @Override
@@ -899,7 +899,7 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
 
   @Override
   public void configureSpace(Space space) {
-    final Set<ActiveLiveActivity> configuredActivities = Sets.newHashSet();
+    final Set<ActiveLiveActivity> configuredActivities = new HashSet<>();
 
     SpaceWalker walker = new SpaceWalker() {
       @Override
@@ -990,7 +990,7 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
 
   @Override
   public List<ActiveSpaceController> getActiveSpaceControllers(List<SpaceController> controllers) {
-    List<ActiveSpaceController> results = Lists.newArrayList();
+    List<ActiveSpaceController> results = new ArrayList<>();
 
     synchronized (activeSpaceControllers) {
       for (SpaceController spaceController : controllers) {
@@ -1041,7 +1041,7 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
 
   @Override
   public List<ActiveLiveActivity> getActiveLiveActivities(List<LiveActivity> iactivities) {
-    List<ActiveLiveActivity> activeLiveActivities = Lists.newArrayList();
+    List<ActiveLiveActivity> activeLiveActivities = new ArrayList<>();
 
     synchronized (activeLiveActivities) {
       for (LiveActivity iactivity : iactivities) {

@@ -23,9 +23,8 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * A basic implementation of an {@link LiveActivityStorageManager}.
@@ -89,7 +88,7 @@ public class SimpleLiveActivityStorageManager implements LiveActivityStorageMana
 
   @Override
   public List<String> getAllInstalledActivityUuids() {
-    List<String> results = Lists.newArrayList();
+    List<String> results = new ArrayList<>();
     File[] installedActivityDirectories = activityBaseDirectory.listFiles();
     if (installedActivityDirectories != null) {
       for (File file : installedActivityDirectories) {

@@ -36,15 +36,14 @@ import io.smartspaces.workbench.project.constituent.ResourceComponentProjectCons
 import io.smartspaces.workbench.project.library.LibraryProjectConstituent;
 import io.smartspaces.workbench.project.tasks.TasksProjectConstituent;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
 import org.jdom2.Attribute;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A {@link io.smartspaces.workbench.project.ProjectReader} based on JDOM.
@@ -524,7 +523,7 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
       List<Element> itemElements =
           metadataElement.getChildren(PROJECT_ELEMENT_NAME_METADATA_ITEM, projectNamespace);
 
-      Map<String, Object> metadata = Maps.newHashMap();
+      Map<String, Object> metadata = new HashMap<>();
       for (Element itemElement : itemElements) {
         String name =
             getRequiredAttributeValue(itemElement, PROJECT_ATTRIBUTE_NAME_METADATA_ITEM_NAME);

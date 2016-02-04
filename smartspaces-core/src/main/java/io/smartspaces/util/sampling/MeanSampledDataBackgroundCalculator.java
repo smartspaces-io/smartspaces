@@ -17,10 +17,9 @@
 
 package io.smartspaces.util.sampling;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.google.common.collect.Maps;
 
 /**
  * Calculate a background for a series of sampled data by calculating the mean
@@ -33,12 +32,12 @@ public class MeanSampledDataBackgroundCalculator implements SampledDataBackgroun
   /**
    * The samples which have been captured indexed by their source.
    */
-  private final Map<String, long[]> data = Maps.newHashMap();
+  private final Map<String, long[]> data = new HashMap<>();
 
   /**
    * The samples which have been captured indexed by their source.
    */
-  private final Map<String, Integer> numberFrames = Maps.newHashMap();
+  private final Map<String, Integer> numberFrames = new HashMap<>();
 
   @Override
   public void reset() {

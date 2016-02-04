@@ -17,13 +17,12 @@
 
 package io.smartspaces.util.process;
 
-import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Maps;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Tests for the {@link BaseNativeApplicationRunner}.
@@ -103,73 +102,16 @@ public class BaseNativeApplicationRunnerTest {
   }
 
   /**
-   * Test the parsing of flags through configuring.
-   */
-  @Test
-  public void testFlagsParsingConfigure() {
-    Map<String, Object> config = Maps.newHashMap();
-    config.put(NativeApplicationRunner.EXECUTABLE_PATHNAME, "foo/bar");
-    config.put(NativeApplicationRunner.EXECUTABLE_FLAGS, " --a -b -c");
-
-    runner.configure(config);
-    runner.prepare();
-
-    Assert
-        .assertArrayEquals(new String[] { "foo/bar", "--a", "-b", "-c" }, runner.getCommandLine());
-  }
-
-  /**
-   * Test the parsing of environment variables without nulls through
-   * configuring.
-   */
-  @Test
-  public void testEnvironmentParsingConfigure() {
-    Map<String, Object> config = Maps.newHashMap();
-    config.put(NativeApplicationRunner.EXECUTABLE_PATHNAME, "foo/bar");
-    config.put(NativeApplicationRunner.EXECUTABLE_FLAGS, " --a -b -c");
-    config.put(NativeApplicationRunner.EXECUTABLE_ENVIRONMENT, "     foo=bar bar=bletch");
-
-    runner.configure(config);
-    runner.prepare();
-
-    Map<String, String> env = runner.getEnvironment();
-    Assert.assertEquals("bar", env.get("foo"));
-    Assert.assertEquals("bletch", env.get("bar"));
-
-    Assert
-        .assertArrayEquals(new String[] { "foo/bar", "--a", "-b", "-c" }, runner.getCommandLine());
-  }
-
-  /**
-   * Test the parsing of environment variables with nulls through configuring.
-   */
-  @Test
-  public void testEnvironmentParsingNullsConfigure() {
-    Map<String, Object> config = Maps.newHashMap();
-    config.put(NativeApplicationRunner.EXECUTABLE_PATHNAME, "foo/bar");
-    config.put(NativeApplicationRunner.EXECUTABLE_ENVIRONMENT, "foo bar");
-
-    runner.configure(config);
-    runner.prepare();
-
-    Map<String, String> env = runner.getEnvironment();
-    Assert.assertTrue(env.containsKey("foo"));
-    Assert.assertNull(env.get("foo"));
-    Assert.assertTrue(env.containsKey("bar"));
-    Assert.assertNull(env.get("bar"));
-  }
-
-  /**
    * Test modifying an environment.
    */
   @Test
   public void testEnvironmentModification() {
-    Map<String, String> processEnvironment = Maps.newHashMap();
+    Map<String, String> processEnvironment = new HashMap<>();
     processEnvironment.put("foo", "bar");
     processEnvironment.put("bletch", "spam");
     processEnvironment.put("spam", "blorg");
 
-    Map<String, String> modificationEnvironment = Maps.newHashMap();
+    Map<String, String> modificationEnvironment = new HashMap<>();
     modificationEnvironment.put("foo", "yowza");
     modificationEnvironment.put("hiya", "there");
     modificationEnvironment.put("spam", null);

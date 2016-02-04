@@ -22,11 +22,9 @@ import io.smartspaces.domain.pojo.SimpleObject;
 import io.smartspaces.domain.space.Space;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A POJO implementation of a {@link Space}.
@@ -53,17 +51,17 @@ public class SimpleSpace extends SimpleObject implements Space {
   /**
    * The meta data for this space.
    */
-  private Map<String, Object> metadata = Maps.newHashMap();
+  private Map<String, Object> metadata = new HashMap<>();
 
   /**
    * The child spaces of this space.
    */
-  private List<Space> spaces = Lists.newArrayList();
+  private List<Space> spaces = new ArrayList<>();
 
   /**
    * The activity groups in this space.
    */
-  private List<LiveActivityGroup> activityGroups = Lists.newArrayList();;
+  private List<LiveActivityGroup> activityGroups = new ArrayList<>();;
 
   @Override
   public String getName() {

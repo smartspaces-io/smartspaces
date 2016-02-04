@@ -26,26 +26,24 @@ import io.smartspaces.service.web.server.HttpResponse;
 import io.smartspaces.service.web.server.internal.netty.NettyWebServer;
 import io.smartspaces.util.io.FileSupportImpl;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
-
 import junit.framework.Assert;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.Jdk14Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Maps;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Test the {@link HttpClientHttpContentCopier} class.
@@ -169,7 +167,7 @@ public class HttpClientHttpContentCopierTest {
     });
 
     String sourceParameterName = "myfile";
-    Map<String, String> expectedParameters = Maps.newHashMap();
+    Map<String, String> expectedParameters = new HashMap<>();
     expectedParameters.put("foo", "bar");
     expectedParameters.put("bletch", "spam");
 
@@ -204,7 +202,7 @@ public class HttpClientHttpContentCopierTest {
     });
 
     String sourceParameterName = "myfile";
-    Map<String, String> expectedParameters = Maps.newHashMap();
+    Map<String, String> expectedParameters = new HashMap<>();
     expectedParameters.put("foo", "bar");
     expectedParameters.put("bletch", "spam");
 

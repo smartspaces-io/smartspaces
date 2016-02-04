@@ -23,7 +23,10 @@ import io.smartspaces.service.comm.serial.bluetooth.BluetoothCommunicationEndpoi
 import io.smartspaces.service.comm.serial.bluetooth.BluetoothCommunicationEndpointService;
 import io.smartspaces.service.comm.serial.bluetooth.BluetoothDevice;
 
+import com.intel.bluetooth.BlueCoveConfigProperties;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -34,9 +37,6 @@ import javax.bluetooth.DiscoveryListener;
 import javax.bluetooth.LocalDevice;
 import javax.bluetooth.RemoteDevice;
 import javax.bluetooth.ServiceRecord;
-
-import com.google.common.collect.Lists;
-import com.intel.bluetooth.BlueCoveConfigProperties;
 
 /**
  * A bluetooth connection service using Jsr82.
@@ -75,7 +75,7 @@ public class Jsr82BluetoothCommunicationEndpointService extends BaseSupportedSer
 
   @Override
   public List<BluetoothDevice> discoverRemoteDevices() {
-    final List<BluetoothDevice> devices = Lists.newArrayList();
+    final List<BluetoothDevice> devices = new ArrayList<>();
 
     try {
       final CountDownLatch done = new CountDownLatch(1);

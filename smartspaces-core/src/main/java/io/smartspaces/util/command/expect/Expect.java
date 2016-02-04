@@ -431,7 +431,7 @@ public class Expect implements ManagedResource {
    *           exception if return values should throw exceptions
    */
   public int expect(long timeout, Object... patterns) throws Exception {
-    List<Pattern> list = Lists.newArrayList();
+    List<Pattern> list = new ArrayList<>();
     for (Object o : patterns) {
       if (o instanceof String) {
         list.add(Pattern.compile(Pattern.quote((String) o)));

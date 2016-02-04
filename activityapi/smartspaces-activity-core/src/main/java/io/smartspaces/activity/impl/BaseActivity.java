@@ -106,24 +106,6 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
     return componentContext.getActivityComponent(componentType);
   }
 
-  /**
-   * Get the activity component with the specified type.
-   *
-   * @param componentType
-   *          the component type
-   * @param <T>
-   *          type of the activity component
-   *
-   * @return the component with the specified type, or {@code null} if none
-   *         registered
-   *
-   * @deprecated Use {@link #getActivityComponent(String)}.
-   */
-  @Deprecated
-  public <T extends ActivityComponent> T getComponent(String componentType) {
-    return getActivityComponent(componentType);
-  }
-
   @Override
   public <T extends ActivityComponent> T getRequiredActivityComponent(String componentType)
       throws SmartSpacesException {
@@ -273,9 +255,8 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
       setActivityStatus(ActivityState.RUNNING);
 
       if (getLog().isInfoEnabled()) {
-        getLog().info(
-            String.format("Live activity %s running in %d milliseconds", getUuid(),
-                (getSpaceEnvironment().getTimeProvider().getCurrentTime() - beginStartTime)));
+        getLog().info(String.format("Live activity %s running in %d milliseconds", getUuid(),
+            (getSpaceEnvironment().getTimeProvider().getCurrentTime() - beginStartTime)));
       }
 
       // Let everything start running before Post Startup
@@ -535,9 +516,8 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
         componentContext.waitOnNoProcessingHandlings(SHUTDOWN_EVENT_HANDLER_COMPLETION_SAMPLE_TIME,
             SHUTDOWN_EVENT_HANDLER_COMPLETION_MAX_SAMPLE_TIME);
     if (!handlersAllComplete) {
-      getLog().warn(
-          String.format("Handlers still running after %d msecs of shutdown",
-              SHUTDOWN_EVENT_HANDLER_COMPLETION_MAX_SAMPLE_TIME));
+      getLog().warn(String.format("Handlers still running after %d msecs of shutdown",
+          SHUTDOWN_EVENT_HANDLER_COMPLETION_MAX_SAMPLE_TIME));
     }
 
     if (managedCommands != null) {
@@ -652,8 +632,7 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
       // TODO(keith): Figure out if we can get an exception in here
       setActivityStatus(ActivityState.CRASHED, "Activity no longer running");
       getLog().error(
-          String.format(
-              "Activity marked as CRASHED, components stat %s, onCheckActivityState() %s",
+          String.format("Activity marked as CRASHED, components stat %s, onCheckActivityState() %s",
               areAllComponentsRunning, callOnCheckActivityState));
 
       try {
@@ -809,20 +788,7 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
 
   @Override
   public void onActivityConfigurationUpdate(Map<String, String> update) {
-    // Default is to call the old method.
-    Map<String, Object> remap = null;
-
-    if (update != null) {
-      remap = Maps.newHashMap();
-      remap.putAll(update);
-    }
-
-    onActivityConfiguration(remap);
-  }
-
-  @Override
-  public void onActivityConfiguration(Map<String, Object> update) {
-    // Default is to do nothing.
+    // Default is do nothing.
   }
 
   @Override

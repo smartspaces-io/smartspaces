@@ -21,11 +21,10 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * A simple implementation of the {@link ServiceRegistry}.
@@ -37,7 +36,7 @@ public class SimpleServiceRegistry implements ServiceRegistry {
   /**
    * All services in the registry.
    */
-  private Map<String, ServiceEntry> services = Maps.newHashMap();
+  private Map<String, ServiceEntry> services = new HashMap<>();
 
   /**
    * The space environment for services.
@@ -76,7 +75,7 @@ public class SimpleServiceRegistry implements ServiceRegistry {
 
   @Override
   public synchronized Set<ServiceDescription> getAllServiceDescriptions() {
-    Set<ServiceDescription> allDescriptions = Sets.newHashSet();
+    Set<ServiceDescription> allDescriptions = new HashSet<>();
 
     // TODO(keith): Cache these as services are registered and unregistered.
     for (ServiceEntry entry : services.values()) {

@@ -22,23 +22,12 @@ import static org.jboss.netty.handler.codec.http.HttpHeaders.getHeader;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.isKeepAlive;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.setContentLength;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.service.web.server.HttpStaticContentRequestHandler;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.web.MimeResolver;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.net.HttpCookie;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -57,7 +46,18 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.ssl.SslHandler;
 import org.jboss.netty.handler.stream.ChunkedFile;
 
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.net.HttpCookie;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Handle static web content using Netty.
@@ -116,7 +116,7 @@ public class NettyStaticContentHandler implements NettyHttpGetRequestHandler,
   /**
    * Extra headers to add to the response.
    */
-  private Map<String, String> extraHttpContentHeaders = Maps.newHashMap();
+  private Map<String, String> extraHttpContentHeaders = new HashMap<>();
 
   /**
    * Should this web-server allow links to be accessed? (Wander outside the root

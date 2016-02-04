@@ -20,6 +20,7 @@ package io.smartspaces.master.server.services;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.ActivityConfiguration;
 import io.smartspaces.domain.basic.ConfigurationParameter;
@@ -35,13 +36,8 @@ import io.smartspaces.domain.basic.pojo.SimpleLiveActivityGroup;
 import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
 import io.smartspaces.domain.space.Space;
 import io.smartspaces.domain.space.pojo.SimpleSpace;
-import io.smartspaces.master.server.services.ActivityRepository;
-import io.smartspaces.master.server.services.StandardSmartSpacesDomainCloner;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -50,8 +46,10 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Tests for a {@link StandardSmartSpacesDomainCloner}.
@@ -84,7 +82,7 @@ public class StandardSmartSpacesDomainClonerTest {
   private Activity activity2;
   private Activity activity3;
 
-  Map<String, Object> metadata = Maps.newHashMap();
+  Map<String, Object> metadata = new HashMap<>();
 
   @Before
   public void setup() {
@@ -195,7 +193,7 @@ public class StandardSmartSpacesDomainClonerTest {
    */
   @Test
   public void testLiveActivityCopyControllerMapMissing() {
-    Map<SpaceController, SpaceController> controllerMap = Maps.newHashMap();
+    Map<SpaceController, SpaceController> controllerMap = new HashMap<>();
     controllerMap.put(controller2, controller3);
     cloner.setControllerMap(controllerMap);
 
@@ -213,7 +211,7 @@ public class StandardSmartSpacesDomainClonerTest {
    */
   @Test
   public void testLiveActivityCopyControllerMap() {
-    Map<SpaceController, SpaceController> controllerMap = Maps.newHashMap();
+    Map<SpaceController, SpaceController> controllerMap = new HashMap<>();
     controllerMap.put(controller1, controller3);
     cloner.setControllerMap(controllerMap);
 

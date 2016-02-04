@@ -23,13 +23,14 @@ import io.smartspaces.util.data.json.StandardJsonMapper;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
+import com.google.common.collect.Maps;
+
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import com.google.common.collect.Maps;
 
 /**
  * The standard implementation of a concurrent JSON file.
@@ -59,7 +60,7 @@ public class StandardConcurrentJsonFile implements ConcurrentJsonFile {
   /**
    * The map.
    */
-  private Map<String, Object> map = Maps.newHashMap();
+  private Map<String, Object> map = new HashMap<>();
 
   /**
    * The file support for file operations.

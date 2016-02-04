@@ -20,6 +20,8 @@ package io.smartspaces.master.server.services.internal.jpa.domain;
 import io.smartspaces.domain.basic.ActivityConfiguration;
 import io.smartspaces.domain.basic.ConfigurationParameter;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,9 +35,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * A JPA implementation of a {@link ActivityConfiguration}.
@@ -71,7 +70,7 @@ public class JpaActivityConfiguration implements ActivityConfiguration {
    */
   @OneToMany(targetEntity = JpaActivityConfigurationParameter.class, cascade = CascadeType.ALL,
       fetch = FetchType.EAGER, orphanRemoval = true)
-  private Set<JpaActivityConfigurationParameter> parameters = Sets.newHashSet();
+  private Set<JpaActivityConfigurationParameter> parameters = new HashSet<>();
 
   /**
    * The database version. Used for detecting concurrent modifications.
@@ -124,7 +123,7 @@ public class JpaActivityConfiguration implements ActivityConfiguration {
 
   @Override
   public Set<ConfigurationParameter> getParameters() {
-    Set<ConfigurationParameter> result = Sets.newHashSet();
+    Set<ConfigurationParameter> result = new HashSet<>();
 
     for (ConfigurationParameter parameter : parameters) {
       result.add(parameter);
@@ -135,7 +134,7 @@ public class JpaActivityConfiguration implements ActivityConfiguration {
 
   @Override
   public Map<String, ConfigurationParameter> getParameterMap() {
-    Map<String, ConfigurationParameter> map = Maps.newHashMap();
+    Map<String, ConfigurationParameter> map = new HashMap<>();
 
     for (ConfigurationParameter parameter : parameters) {
       map.put(parameter.getName(), parameter);

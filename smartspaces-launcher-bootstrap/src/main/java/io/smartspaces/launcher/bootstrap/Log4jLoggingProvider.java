@@ -45,13 +45,6 @@ import org.apache.log4j.RollingFileAppender;
 public class Log4jLoggingProvider implements LoggingProvider {
 
   /**
-   * Where the logging properties file is kept in lib/system/java. This is
-   * deprecated.
-   */
-  public static final String LOGGING_PROPERTIES_FILE_LIB_SYSTEM_JAVA =
-      "lib/system/java/log4j.properties";
-
-  /**
    * Where the logging properties file is kept in the config folder.
    */
   public static final String LOGGING_PROPERTIES_FILE_CONFIG = "system/log4j.properties";
@@ -159,11 +152,6 @@ public class Log4jLoggingProvider implements LoggingProvider {
     // TODO(keith): Sort out all config locations so can have a base folder for
     // just configs that this can look into.
     File loggingPropertiesFile = new File(configDir, LOGGING_PROPERTIES_FILE_CONFIG);
-    if (loggingPropertiesFile.isFile()) {
-      return loggingPropertiesFile;
-    }
-
-    loggingPropertiesFile = new File(baseInstallDir, LOGGING_PROPERTIES_FILE_LIB_SYSTEM_JAVA);
     if (loggingPropertiesFile.isFile()) {
       return loggingPropertiesFile;
     }

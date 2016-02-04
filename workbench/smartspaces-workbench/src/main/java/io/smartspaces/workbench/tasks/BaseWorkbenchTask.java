@@ -17,10 +17,9 @@
 
 package io.smartspaces.workbench.tasks;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * A base class for workbench tasks that provides some support.
@@ -32,12 +31,12 @@ public abstract class BaseWorkbenchTask implements WorkbenchTask {
   /**
    * Tasks to be done before this task executes.
    */
-  private List<WorkbenchTask> beforeTasks = Lists.newArrayList();
+  private List<WorkbenchTask> beforeTasks = new ArrayList<>();
 
   /**
    * Tasks to be done after this task executes.
    */
-  private List<WorkbenchTask> afterTasks = Lists.newArrayList();
+  private List<WorkbenchTask> afterTasks = new ArrayList<>();
 
   @Override
   public void addWorkbenchTaskBefore(WorkbenchTask... tasks) {

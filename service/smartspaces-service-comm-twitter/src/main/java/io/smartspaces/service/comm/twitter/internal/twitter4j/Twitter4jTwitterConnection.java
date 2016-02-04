@@ -21,11 +21,7 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.service.comm.twitter.TwitterConnection;
 import io.smartspaces.service.comm.twitter.TwitterConnectionListener;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
-
 import twitter4j.AsyncTwitter;
 import twitter4j.AsyncTwitterFactory;
 import twitter4j.Query;
@@ -37,7 +33,9 @@ import twitter4j.TwitterListener;
 import twitter4j.TwitterMethod;
 import twitter4j.conf.ConfigurationBuilder;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A {@link TwitterConnection} using Twitter4J.
@@ -107,7 +105,7 @@ public class Twitter4jTwitterConnection implements TwitterConnection {
     this.userAccessToken = userAccessToken;
     this.userAccessTokenSecret = userAccessTokenSecret;
 
-    listeners = Lists.newArrayList();
+    listeners = new ArrayList<>();
     listeners = Collections.synchronizedList(listeners);
   }
 

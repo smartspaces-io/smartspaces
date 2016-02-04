@@ -22,11 +22,10 @@ import io.smartspaces.expression.FilterExpression;
 import io.smartspaces.master.server.services.AutomationRepository;
 import io.smartspaces.master.server.services.internal.jpa.domain.JpaNamedScript;
 
-import java.util.List;
-
 import org.springframework.orm.jpa.JpaTemplate;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A JPA implementation of {@link AutomationRepository}.
@@ -81,7 +80,7 @@ public class JpaAutomationRepository implements AutomationRepository {
     @SuppressWarnings("unchecked")
     List<NamedScript> scripts = template.findByNamedQuery("namedScriptAll");
 
-    List<NamedScript> results = Lists.newArrayList();
+    List<NamedScript> results = new ArrayList<>();
 
     if (filter != null) {
       for (NamedScript script : scripts) {

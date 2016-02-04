@@ -17,9 +17,8 @@
 
 package io.smartspaces.evaluation;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * A standalone {@link EvaluationEnvironment}.
@@ -32,7 +31,7 @@ public class SimpleEvaluationEnvironment implements EvaluationEnvironment {
   /**
    * The map of values for the environment.
    */
-  private Map<String, String> values = Maps.newHashMap();
+  private Map<String, String> values = new HashMap<>();
 
   @Override
   public String lookupVariableValue(String variable) throws EvaluationSmartSpacesException {

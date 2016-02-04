@@ -21,13 +21,12 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectContext;
 
-import java.io.File;
-import java.util.Map;
-
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An assembly resource for a {@link io.smartspaces.workbench.project.Project}.
@@ -102,7 +101,7 @@ public class AssemblyComponentProjectConstituent extends BaseContentProjectConst
 
   @Override
   public Map<String, String> getAttributeMap() {
-    Map<String, String> map = Maps.newHashMap();
+    Map<String, String> map = new HashMap<>();
     map.put(PACK_FORMAT_ATTRIBUTE, ZIP_PACK_FORMAT);
     map.put(SOURCE_FILE_ATTRIBUTE, sourceFile);
     map.put(DESTINATION_DIRECTORY_ATTRIBUTE, destinationDirectory);

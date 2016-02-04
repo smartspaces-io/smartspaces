@@ -39,13 +39,12 @@ import io.smartspaces.master.server.services.internal.jpa.domain.JpaLiveActivity
 import io.smartspaces.master.server.services.internal.jpa.domain.JpaSpace;
 import io.smartspaces.util.uuid.UuidGenerator;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.orm.jpa.JpaTemplate;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A JPA implementation of {@link ActivityRepository}.
@@ -95,7 +94,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
     @SuppressWarnings("unchecked")
     List<Activity> activities = template.findByNamedQuery("activityAll");
 
-    List<Activity> results = Lists.newArrayList();
+    List<Activity> results = new ArrayList<>();
 
     for (Activity activity : activities) {
       if (filter.accept(activity)) {
@@ -113,7 +112,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
 
   @Override
   public Activity getActivityByNameAndVersion(String identifyingName, String version) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("identifyingName", identifyingName);
     params.put("version", version);
     @SuppressWarnings("unchecked")
@@ -184,7 +183,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
     @SuppressWarnings("unchecked")
     List<LiveActivity> activities = template.findByNamedQuery("liveActivityAll");
 
-    List<LiveActivity> results = Lists.newArrayList();
+    List<LiveActivity> results = new ArrayList<>();
 
     for (LiveActivity activity : activities) {
       if (filter.accept(activity)) {
@@ -202,7 +201,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
 
   @Override
   public LiveActivity getLiveActivityByUuid(String uuid) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("uuid", uuid);
     @SuppressWarnings("unchecked")
     List<LiveActivity> results =
@@ -216,7 +215,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
 
   @Override
   public List<LiveActivity> getLiveActivitiesByController(SpaceController controller) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("controller_id", controller.getId());
     @SuppressWarnings("unchecked")
     List<LiveActivity> results =
@@ -226,7 +225,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
 
   @Override
   public long getNumberLiveActivitiesByController(SpaceController controller) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("controller_id", controller.getId());
     @SuppressWarnings("unchecked")
     List<Long> results =
@@ -236,7 +235,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
 
   @Override
   public List<LiveActivity> getLiveActivitiesByActivity(Activity activity) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("activity_id", activity.getId());
     @SuppressWarnings("unchecked")
     List<LiveActivity> results =
@@ -246,7 +245,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
 
   @Override
   public long getNumberLiveActivitiesByActivity(Activity activity) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("activity_id", activity.getId());
     @SuppressWarnings("unchecked")
     List<Long> results =
@@ -292,7 +291,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
     @SuppressWarnings("unchecked")
     List<LiveActivityGroup> groups = template.findByNamedQuery("liveActivityGroupAll");
 
-    List<LiveActivityGroup> results = Lists.newArrayList();
+    List<LiveActivityGroup> results = new ArrayList<>();
 
     for (LiveActivityGroup group : groups) {
       if (filter.accept(group)) {
@@ -310,7 +309,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
 
   @Override
   public List<LiveActivityGroup> getLiveActivityGroupsByLiveActivity(LiveActivity liveActivity) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("activity_id", liveActivity.getId());
     @SuppressWarnings("unchecked")
     List<LiveActivityGroup> results =
@@ -320,7 +319,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
 
   @Override
   public long getNumberLiveActivityGroupsByLiveActivity(LiveActivity liveActivity) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("activity_id", liveActivity.getId());
     @SuppressWarnings("unchecked")
     List<Long> results =
@@ -366,7 +365,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
     @SuppressWarnings("unchecked")
     List<Space> spaces = template.findByNamedQuery("spaceAll");
 
-    List<Space> results = Lists.newArrayList();
+    List<Space> results = new ArrayList<>();
 
     for (Space space : spaces) {
       if (filter.accept(space)) {
@@ -383,7 +382,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
 
   @Override
   public List<Space> getSpacesByLiveActivityGroup(LiveActivityGroup liveActivityGroup) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("live_activity_group_id", liveActivityGroup.getId());
     @SuppressWarnings("unchecked")
     List<Space> results =
@@ -394,7 +393,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
 
   @Override
   public long getNumberSpacesByLiveActivityGroup(LiveActivityGroup liveActivityGroup) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("live_activity_group_id", liveActivityGroup.getId());
     @SuppressWarnings("unchecked")
     List<Long> results =
@@ -405,7 +404,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
 
   @Override
   public List<Space> getSpacesBySubspace(Space subspace) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("subspace_id", subspace.getId());
     @SuppressWarnings("unchecked")
     List<Space> results = template.findByNamedQueryAndNamedParams("spaceBySubspace", params);
@@ -415,7 +414,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
 
   @Override
   public long getNumberSpacesBySubspace(Space subspace) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("subspace_id", subspace.getId());
     @SuppressWarnings("unchecked")
     List<Long> results = template.findByNamedQueryAndNamedParams("countSpaceBySubspace", params);

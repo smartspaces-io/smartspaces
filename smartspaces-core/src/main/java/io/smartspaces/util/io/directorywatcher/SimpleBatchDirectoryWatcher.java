@@ -19,14 +19,15 @@ package io.smartspaces.util.io.directorywatcher;
 
 import io.smartspaces.system.SmartSpacesEnvironment;
 
+import com.google.common.collect.Sets;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * A basic {@link BatchDirectoryWatcher}.
@@ -38,17 +39,17 @@ public class SimpleBatchDirectoryWatcher implements BatchDirectoryWatcher, Runna
   /**
    * The directories being watched.
    */
-  private final List<File> directoriesWatched = Lists.newArrayList();
+  private final List<File> directoriesWatched = new ArrayList<>();
 
   /**
    * The files seen on the last round.
    */
-  private Set<File> filesLastScanned = Sets.newHashSet();
+  private Set<File> filesLastScanned = new HashSet<>();
 
   /**
    * The listeners.
    */
-  private final List<BatchDirectoryWatcherListener> listeners = Lists.newArrayList();
+  private final List<BatchDirectoryWatcherListener> listeners = new ArrayList<>();
 
   /**
    * The future used for scheduling the scanning.
@@ -124,7 +125,7 @@ public class SimpleBatchDirectoryWatcher implements BatchDirectoryWatcher, Runna
    *          the files from the current scan
    */
   private void findAddedFiles(Set<File> currentScan) {
-    Set<File> filesAdded = Sets.newHashSet();
+    Set<File> filesAdded = new HashSet<>();
     for (File fileFromCurrent : currentScan) {
       if (!filesLastScanned.contains(fileFromCurrent)) {
         filesAdded.add(fileFromCurrent);
@@ -139,7 +140,7 @@ public class SimpleBatchDirectoryWatcher implements BatchDirectoryWatcher, Runna
    * @return the set of all files which are currently in the folders
    */
   private Set<File> scanAllDirectories() {
-    Set<File> currentScan = Sets.newHashSet();
+    Set<File> currentScan = new HashSet<>();
     for (File directory : directoriesWatched) {
       if (directory.isDirectory()) {
         File[] files = directory.listFiles();

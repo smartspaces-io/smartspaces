@@ -22,9 +22,8 @@ import io.smartspaces.domain.basic.SpaceControllerConfiguration;
 import io.smartspaces.domain.basic.SpaceControllerMode;
 import io.smartspaces.domain.pojo.SimpleObject;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * A POJO implementation of a {@link SpaceController}.
@@ -71,7 +70,7 @@ public class SimpleSpaceController extends SimpleObject implements SpaceControll
   /**
    * The meta data for this space controller.
    */
-  private Map<String, Object> metadata = Maps.newHashMap();
+  private Map<String, Object> metadata = new HashMap<>();
 
   @Override
   public String getHostId() {

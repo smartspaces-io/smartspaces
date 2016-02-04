@@ -38,20 +38,19 @@ import io.smartspaces.workbench.project.ProjectDependency;
 import io.smartspaces.workbench.project.ProjectManager;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 
+import com.google.common.io.Closeables;
+import org.apache.commons.logging.Log;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.io.Closeables;
 
 /**
  * The main context for a workbench task run.
@@ -137,7 +136,7 @@ public class WorkbenchTaskContext {
   /**
    * The list of tasks.
    */
-  private final List<DependencyWorkbenchTask> tasks = Lists.newArrayList();
+  private final List<DependencyWorkbenchTask> tasks = new ArrayList<>();
 
   /**
    * The collection of projects scanned from the project path.
@@ -167,7 +166,7 @@ public class WorkbenchTaskContext {
   /**
    * Map of project task contextx for the current run.
    */
-  private Map<Project, ProjectTaskContext> projectTaskContexts = Maps.newHashMap();
+  private Map<Project, ProjectTaskContext> projectTaskContexts = new HashMap<>();
 
   /**
    * Construct a new context.
@@ -381,7 +380,7 @@ public class WorkbenchTaskContext {
    * @return all files in bootstrap folder.
    */
   public List<File> getAllWorkbenchBootstrapFiles() {
-    List<File> files = Lists.newArrayList();
+    List<File> files = new ArrayList<>();
 
     addJarFiles(workbench.getWorkbenchFileSystem().getSystemBootstrapDirectory(), files);
     File userBootstrap = workbench.getWorkbenchFileSystem().getUserBootstrapDirectory();
@@ -398,7 +397,7 @@ public class WorkbenchTaskContext {
    * @return all files on the classpath
    */
   public List<File> getControllerSystemBootstrapClasspath() {
-    List<File> classpath = Lists.newArrayList();
+    List<File> classpath = new ArrayList<>();
 
     addJarFiles(fileSupport.newFile(getControllerDirectory(),
         ContainerFilesystemLayout.FOLDER_SYSTEM_BOOTSTRAP), classpath);

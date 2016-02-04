@@ -19,12 +19,11 @@ package io.smartspaces.util.data.json;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Maps;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Test the {@link JsonMapper}.
@@ -54,7 +53,7 @@ public class StandardJsonMapperTest {
   public void testI18nToString() {
     String key = "foo";
     String i18n = TEST_VALUE_I18N;
-    Map<String, Object> object = Maps.newHashMap();
+    Map<String, Object> object = new HashMap<>();
     object.put(key, i18n);
 
     String json = mapper.toString(object);

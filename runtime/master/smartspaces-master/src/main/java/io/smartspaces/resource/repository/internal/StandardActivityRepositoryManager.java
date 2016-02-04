@@ -31,12 +31,12 @@ import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
 import io.smartspaces.util.data.resource.MessageDigestResourceSignatureCalculator;
 import io.smartspaces.util.data.resource.ResourceSignatureCalculator;
 
+import com.google.common.io.Closeables;
+
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.google.common.collect.Lists;
-import com.google.common.io.Closeables;
 
 /**
  * The standard implementation of the {@link ActivityRepositoryManager}.
@@ -133,7 +133,7 @@ public class StandardActivityRepositoryManager implements ActivityRepositoryMana
    *          the activity stored in the database
    */
   private void copyDependencies(SimpleActivity activityDescription, Activity finalActivity) {
-    List<ActivityDependency> finalDependencies = Lists.newArrayList();
+    List<ActivityDependency> finalDependencies = new ArrayList<>();
     for (ActivityDependency dependency : activityDescription.getDependencies()) {
       ActivityDependency newDependency = activityRepository.newActivityDependency();
 

@@ -17,9 +17,8 @@
 
 package io.smartspaces.service.mail.common;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * A concrete mail message which is composable.
@@ -31,17 +30,17 @@ public class SimpleMailMessage implements ComposableMailMessage {
   /**
    * All To addresses for this mail.
    */
-  private List<String> toAddresses = Lists.newArrayList();
+  private List<String> toAddresses = new ArrayList<>();
 
   /**
    * All CC addresses for this mail.
    */
-  private List<String> ccAddresses = Lists.newArrayList();
+  private List<String> ccAddresses = new ArrayList<>();
 
   /**
    * All BCC addresses for this mail.
    */
-  private List<String> bccAddresses = Lists.newArrayList();
+  private List<String> bccAddresses = new ArrayList<>();
 
   /**
    * The FROM address for this email.

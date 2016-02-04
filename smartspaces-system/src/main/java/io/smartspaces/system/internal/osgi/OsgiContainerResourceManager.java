@@ -35,16 +35,9 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.resource.ManagedResource;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -52,9 +45,17 @@ import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.FrameworkListener;
 import org.osgi.framework.wiring.FrameworkWiring;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A container resource manager using OSGi.
@@ -373,7 +374,7 @@ public class OsgiContainerResourceManager implements ContainerResourceManager, M
    * @return {@code true} if an activity is dependent
    */
   private Collection<Bundle> getLoadedActivitiesDependentOnBundle(Bundle dependencyBundle) {
-    List<Bundle> dependentActivities = Lists.newArrayList();
+    List<Bundle> dependentActivities = new ArrayList<>();
 
     Collection<Bundle> dependencyClosure =
         frameworkWiring.getDependencyClosure(Lists.newArrayList(dependencyBundle));
@@ -519,7 +520,7 @@ public class OsgiContainerResourceManager implements ContainerResourceManager, M
       return;
     }
 
-    cachedResources = Maps.newHashMap();
+    cachedResources = new HashMap<>();
 
     for (Bundle bundle : bundleContext.getBundles()) {
       addNewContainerResource(bundle);

@@ -104,7 +104,7 @@ public final class MessageUtils {
    */
   @SuppressWarnings("unchecked")
   private static List<Object> deepCloneAndRedact(List<Object> target, Object redact) {
-    List<Object> output = Lists.newArrayList();
+    List<Object> output = new ArrayList<>();
 
     List<Object> source = (redact instanceof List) ? (List) redact : target;
     for (Object entry : source) {

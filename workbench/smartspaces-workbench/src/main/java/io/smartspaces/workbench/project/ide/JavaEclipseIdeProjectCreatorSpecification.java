@@ -26,11 +26,12 @@ import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.java.JavaProjectExtension;
 import io.smartspaces.workbench.project.java.JavaProjectType;
 
+import com.google.common.collect.Lists;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
 
 /**
  * Specification for Java projects.
@@ -142,7 +143,7 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
       Map<String, Object> freemarkerContext, FreemarkerTemplater templater) throws Exception {
     JavaProjectType projectType = context.getProjectType();
 
-    List<Project> dynamicProjects = Lists.newArrayList();
+    List<Project> dynamicProjects = new ArrayList<>();
     for (ProjectDependency dependency : project.getDependencies()) {
       if (dependency.isDynamic()) {
         Project dependencyProject =
@@ -153,7 +154,7 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
       }
     }
 
-    List<File> projectLibs = Lists.newArrayList();
+    List<File> projectLibs = new ArrayList<>();
     projectType.getProjectClasspath(false, context, projectLibs, extensions,
         context.getWorkbenchTaskContext());
 

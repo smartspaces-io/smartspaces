@@ -20,17 +20,15 @@ package io.smartspaces.domain.basic.pojo;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.domain.basic.GroupLiveActivity;
+import io.smartspaces.domain.basic.GroupLiveActivity.GroupLiveActivityDependency;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
-import io.smartspaces.domain.basic.GroupLiveActivity.GroupLiveActivityDependency;
 import io.smartspaces.domain.pojo.SimpleObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A POJO implementation of a {@link LiveActivityGroup}.
@@ -62,13 +60,13 @@ public class SimpleLiveActivityGroup extends SimpleObject implements LiveActivit
   /**
    * The meta data for this live activity group.
    */
-  private Map<String, Object> metadata = Maps.newHashMap();
+  private Map<String, Object> metadata = new HashMap<>();
 
   /**
    * Construct a new group.
    */
   public SimpleLiveActivityGroup() {
-    activities = Lists.newArrayList();
+    activities = new ArrayList<>();
   }
 
   @Override

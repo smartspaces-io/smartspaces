@@ -21,12 +21,11 @@ import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.comm.twitter.TwitterConnection;
 import io.smartspaces.service.comm.twitter.TwitterService;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A {@link TwitterService} using Twitter4j.
@@ -39,13 +38,13 @@ public class Twitter4jTwitterConnectionService extends BaseSupportedService impl
   /**
    * All twitter connections currently live.
    */
-  private List<TwitterConnection> connections = Lists.newArrayList();
+  private List<TwitterConnection> connections = new ArrayList<>();
 
   /**
    * Construct a new twitter service.
    */
   public Twitter4jTwitterConnectionService() {
-    connections = Lists.newArrayList();
+    connections = new ArrayList<>();
     connections = Collections.synchronizedList(connections);
   }
 

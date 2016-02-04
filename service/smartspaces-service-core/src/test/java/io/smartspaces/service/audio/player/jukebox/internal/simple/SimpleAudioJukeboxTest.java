@@ -21,22 +21,20 @@ import io.smartspaces.service.audio.player.FilePlayableAudioTrack;
 import io.smartspaces.service.audio.player.SimpleAudioTrack;
 import io.smartspaces.service.audio.player.jukebox.AudioJukebox;
 import io.smartspaces.service.audio.player.jukebox.AudioJukeboxListener;
-import io.smartspaces.service.audio.player.jukebox.internal.simple.SimpleAudioJukebox;
 import io.smartspaces.service.audio.player.support.InMemoryAudioRepository;
 import io.smartspaces.service.audio.player.test.TestAudioTrackPlayer;
 import io.smartspaces.system.StandaloneSmartSpacesEnvironment;
 
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
+import com.google.common.collect.Sets;
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Sets;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Tests for the {@link SimpleAudioJukebox}.
@@ -75,8 +73,8 @@ public class SimpleAudioJukeboxTest {
 
   @Test
   public void testShufflePlay() throws Exception {
-    final Set<String> stopContent = Sets.newHashSet();
-    final Set<String> startContent = Sets.newHashSet();
+    final Set<String> stopContent = new HashSet<>();
+    final Set<String> startContent = new HashSet<>();
     final CountDownLatch completed = new CountDownLatch(1);
 
     jukebox.addListener(new AudioJukeboxListener() {

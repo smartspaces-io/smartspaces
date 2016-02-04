@@ -17,15 +17,17 @@
 
 package io.smartspaces.workbench;
 
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapperBuilder;
-import freemarker.template.Template;
-import freemarker.template.Version;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.resource.ManagedResource;
+
+import com.google.common.io.Closeables;
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapperBuilder;
+import freemarker.template.Template;
+import freemarker.template.Version;
 
 import java.io.File;
 import java.io.FileReader;
@@ -35,11 +37,9 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.io.Closeables;
 
 /**
  * A templater using Freemarker.
@@ -201,7 +201,7 @@ public class FreemarkerTemplater implements ManagedResource {
   public void writeTemplate(Map<String, Object> data, File outputFile, String template,
       int evaluationPasses) {
     fileSupport.directoryExists(outputFile.getParentFile());
-    List<File> deleteList = Lists.newArrayList();
+    List<File> deleteList = new ArrayList<>();
     File tempFile =
         fileSupport.newFile(String.format("%s.%d", outputFile.getAbsolutePath(), evaluationPasses));
     deleteList.add(tempFile);

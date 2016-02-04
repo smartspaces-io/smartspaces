@@ -30,14 +30,13 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * Live activity repository using flat files in the file system.
@@ -94,7 +93,7 @@ public class FileLocalLiveActivityRepository implements LocalLiveActivityReposit
   /**
    * A map of all activities by their UUID.
    */
-  private final Map<String, SimpleInstalledLiveActivity> activitiesByUuid = Maps.newHashMap();
+  private final Map<String, SimpleInstalledLiveActivity> activitiesByUuid = new HashMap<>();
 
   /**
    * The space environment.
@@ -155,7 +154,7 @@ public class FileLocalLiveActivityRepository implements LocalLiveActivityReposit
   public List<InstalledLiveActivity> getAllInstalledLiveActivities() {
     lock.readLock().lock();
     try {
-      List<InstalledLiveActivity> result = Lists.newArrayList();
+      List<InstalledLiveActivity> result = new ArrayList<>();
       for (SimpleInstalledLiveActivity activity : activitiesByUuid.values()) {
         result.add(new SimpleInstalledLiveActivity(activity));
       }

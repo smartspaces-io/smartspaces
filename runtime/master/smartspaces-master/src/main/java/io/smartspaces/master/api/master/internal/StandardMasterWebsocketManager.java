@@ -50,15 +50,14 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.web.CommonMimeTypes;
 
-import java.io.File;
-import java.util.Date;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import org.apache.commons.logging.Log;
+
+import java.io.File;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A basic {@link MasterWebsocketManager} implementation.
@@ -120,7 +119,7 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
   /**
    * A mapping of command name to the handler for that command.
    */
-  private final Map<String, MasterApiWebSocketCommandHandler> commandHandlers = Maps.newHashMap();
+  private final Map<String, MasterApiWebSocketCommandHandler> commandHandlers = new HashMap<>();
 
   /**
    * The master communication manager.
@@ -984,7 +983,7 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
   private void handleLiveActivityStateChange(ActiveLiveActivity activeLiveActivity,
       ActivityState oldState, ActivityState newState) {
     LiveActivity liveActivity = activeLiveActivity.getLiveActivity();
-    Map<String, Object> data = Maps.newHashMap();
+    Map<String, Object> data = new HashMap<>();
 
     data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_STATUS_TYPE,
         MasterApiMessages.MASTER_API_PARAMETER_VALUE_TYPE_STATUS_LIVE_ACTIVITY);
@@ -999,7 +998,7 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
     data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_STATUS_TIME, new Date(spaceEnvironment
         .getTimeProvider().getCurrentTime()));
 
-    Map<String, Object> message = Maps.newHashMap();
+    Map<String, Object> message = new HashMap<>();
     message.put(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_TYPE,
         MasterApiMessages.MASTER_API_MESSAGE_TYPE_STATUS_UPDATE);
     message.put(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA, data);

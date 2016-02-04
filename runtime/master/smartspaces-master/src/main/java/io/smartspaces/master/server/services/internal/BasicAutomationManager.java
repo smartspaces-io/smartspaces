@@ -41,11 +41,10 @@ import io.smartspaces.util.io.directorywatcher.SimpleDirectoryWatcher;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
-import com.google.common.collect.Maps;
 
 /**
  * A basic implementation of the {@link AutomationManager}.
@@ -187,7 +186,7 @@ public class BasicAutomationManager implements AutomationManager {
    * Prepare the bindings for automation.
    */
   private void prepareAutomationBindings() {
-    automationBindings = Maps.newHashMap();
+    automationBindings = new HashMap<>();
     automationBindings.put(ScriptingNames.SCRIPTING_NAME_ACTIVITY_REPOSITORY, activityRepository);
     automationBindings.put(ScriptingNames.SCRIPTING_NAME_SPACE_CONTROLLER_REPOSITORY,
         spaceControllerRepository);

@@ -23,12 +23,11 @@ import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.time.TimeProvider;
 
-import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
-
 import org.apache.commons.logging.Log;
 
-import com.google.common.collect.Maps;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * An {@link SmartSpacesEnvironment} that can be simply put together.
@@ -73,7 +72,7 @@ public class SimpleSmartSpacesEnvironment implements SmartSpacesEnvironment {
   /**
    * Simple value map.
    */
-  private Map<String, Object> values = Maps.newHashMap();
+  private Map<String, Object> values = new HashMap<>();
 
   @Override
   public Configuration getSystemConfiguration() {

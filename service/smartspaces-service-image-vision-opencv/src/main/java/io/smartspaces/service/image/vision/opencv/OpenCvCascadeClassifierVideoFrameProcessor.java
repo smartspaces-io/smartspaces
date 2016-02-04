@@ -21,8 +21,7 @@ import io.smartspaces.interaction.detection.DetectionEventListener;
 import io.smartspaces.service.image.video.BaseVideoFrameProcessor;
 import io.smartspaces.util.geometry.Rectangle2;
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -32,7 +31,8 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.objdetect.CascadeClassifier;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A video frame listener that applies a cascade classifier to the video frame
@@ -106,7 +106,7 @@ public class OpenCvCascadeClassifierVideoFrameProcessor extends BaseVideoFramePr
     MatOfRect classifierDetections = new MatOfRect();
     classifier.detectMultiScale(frame, classifierDetections);
 
-    List<Rectangle2> eventData = Lists.newArrayList();
+    List<Rectangle2> eventData = new ArrayList<>();
 
     for (Rect detectionRect : classifierDetections.toArray()) {
       Point topLeft = detectionRect.tl();

@@ -21,12 +21,12 @@ import io.smartspaces.service.audio.player.AudioRepository;
 import io.smartspaces.service.audio.player.AudioTrackMetadata;
 import io.smartspaces.service.audio.player.FilePlayableAudioTrack;
 
-import java.util.Collection;
-import java.util.Map;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A base implementation of an in-memory repository for audio.
@@ -41,7 +41,7 @@ public class InMemoryAudioRepository implements AudioRepository {
   /**
    * Map of track ID to playable tracks.
    */
-  private final Map<String, FilePlayableAudioTrack> tracks = Maps.newHashMap();
+  private final Map<String, FilePlayableAudioTrack> tracks = new HashMap<>();
 
   @Override
   public void startup() {

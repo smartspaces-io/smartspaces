@@ -31,15 +31,15 @@ import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.activity.type.ProjectType;
 import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 
+import com.google.common.base.Joiner;
+
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * Useful constants and methods for working with Java projects.
@@ -131,7 +131,7 @@ public abstract class JavaProjectType implements ProjectType {
     addClasspathConfiguration(bootstrapClasspath,
         CONFIGURATION_NAME_PROJECT_JAVA_CLASSPATH_BOOTSTRAP, projectTaskContext);
 
-    Set<File> classpathAdditions = Sets.newHashSet();
+    Set<File> classpathAdditions = new HashSet<>();
     Set<File> dynamicProjectDependencies =
         addDependenciesFromDynamicProjectTaskContexts(projectTaskContext);
     classpath.addAll(dynamicProjectDependencies);
@@ -142,8 +142,8 @@ public abstract class JavaProjectType implements ProjectType {
     // statically linked. The runtime class path will be bundles that will be
     // available at runtime and won't be
     // statically linked.
-    Set<File> compiletimeClasspathFromUserBootstrap = Sets.newHashSet();
-    Set<File> runtimeClasspathFromUserBootstrap = Sets.newHashSet();
+    Set<File> compiletimeClasspathFromUserBootstrap = new HashSet<>();
+    Set<File> runtimeClasspathFromUserBootstrap = new HashSet<>();
     addDependenciesFromUserBootstrap(compiletimeClasspathFromUserBootstrap,
         runtimeClasspathFromUserBootstrap, needsDynamicArtifacts, projectTaskContext,
         workbenchTaskContext);
@@ -167,7 +167,7 @@ public abstract class JavaProjectType implements ProjectType {
    */
   private void addClasspathConfiguration(Collection<File> classpathPiece,
       String configurationParameter, ProjectTaskContext projectTaskContext) {
-    List<String> path = Lists.newArrayList();
+    List<String> path = new ArrayList<>();
     for (File file : classpathPiece) {
       path.add(file.getAbsolutePath());
     }
@@ -187,7 +187,7 @@ public abstract class JavaProjectType implements ProjectType {
    */
   private Set<File> addDependenciesFromDynamicProjectTaskContexts(
       ProjectTaskContext projectTaskContext) {
-    Set<File> filesToAdd = Sets.newHashSet();
+    Set<File> filesToAdd = new HashSet<>();
     for (ProjectTaskContext dynamicProjectTaskContext : projectTaskContext
         .getDynamicProjectDependencyContexts()) {
       filesToAdd.addAll(dynamicProjectTaskContext.getGeneratedArtifacts());

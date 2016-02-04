@@ -21,13 +21,12 @@ import io.smartspaces.activity.component.BaseActivityComponent;
 import io.smartspaces.activity.component.route.MessageRouterActivityComponentListener;
 import io.smartspaces.configuration.Configuration;
 
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
 import org.ros.namespace.GraphName;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A helpful superclass for implementors of the ROS message routing activity
@@ -184,7 +183,7 @@ public abstract class BaseRosMessageRouterActivityComponent<T> extends BaseActiv
    * @return the set of unique names
    */
   protected Set<String> parseTopicNames(String topicNames) {
-    Set<String> topicNameSet = Sets.newHashSet();
+    Set<String> topicNameSet = new HashSet<>();
 
     for (String topicName : topicNames.split(CONFIGURATION_VALUES_SEPARATOR)) {
       topicName = topicName.trim();

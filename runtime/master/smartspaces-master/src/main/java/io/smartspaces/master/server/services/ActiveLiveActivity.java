@@ -23,9 +23,8 @@ import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.time.TimeProvider;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
-
-import com.google.common.collect.Sets;
 
 /**
  * A {@link LiveActivity} which is active.
@@ -104,12 +103,12 @@ public class ActiveLiveActivity {
   /**
    * The groups which have requested live activity to run.
    */
-  private Set<ActiveLiveActivityGroup> groupsRunning = Sets.newHashSet();
+  private Set<ActiveLiveActivityGroup> groupsRunning = new HashSet<>();
 
   /**
    * The groups which have requested live activity to activate.
    */
-  private Set<ActiveLiveActivityGroup> groupsActivated = Sets.newHashSet();
+  private Set<ActiveLiveActivityGroup> groupsActivated = new HashSet<>();
 
   /**
    * Creates a new active live activity.

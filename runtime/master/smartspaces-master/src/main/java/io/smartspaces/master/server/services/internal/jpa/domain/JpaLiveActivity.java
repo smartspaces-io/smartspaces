@@ -22,7 +22,9 @@ import io.smartspaces.domain.basic.ActivityConfiguration;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.SpaceController;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,9 +43,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A JPA implementation of a {@link LiveActivity}.
@@ -133,7 +132,7 @@ public class JpaLiveActivity implements LiveActivity {
    */
   @OneToMany(targetEntity = JpaLiveActivityMetadataItem.class, cascade = CascadeType.ALL,
       fetch = FetchType.EAGER, orphanRemoval = true)
-  private List<JpaLiveActivityMetadataItem> metadata = Lists.newArrayList();
+  private List<JpaLiveActivityMetadataItem> metadata = new ArrayList<>();
 
   /**
    * The database version. Used for detecting concurrent modifications.
@@ -258,7 +257,7 @@ public class JpaLiveActivity implements LiveActivity {
   @Override
   public Map<String, Object> getMetadata() {
     synchronized (metadata) {
-      Map<String, Object> result = Maps.newHashMap();
+      Map<String, Object> result = new HashMap<>();
 
       for (JpaLiveActivityMetadataItem item : metadata) {
         result.put(item.getName(), item.getValue());

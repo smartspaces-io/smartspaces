@@ -39,16 +39,17 @@ import io.smartspaces.util.io.directorywatcher.DirectoryWatcherListener;
 import io.smartspaces.util.io.directorywatcher.SimpleBatchDirectoryWatcher;
 import io.smartspaces.util.io.directorywatcher.SimpleDirectoryWatcher;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A basic implementation of an {@link ExtensionManager}.
@@ -195,7 +196,7 @@ public class BasicExtensionManager implements ExtensionManager {
    * Create the bindings object which sets the context for all scripting.
    */
   private void initializeBindings() {
-    bindings = Maps.newHashMap();
+    bindings = new HashMap<>();
     bindings.put(ScriptingNames.SCRIPTING_NAME_ACTIVITY_REPOSITORY, activityRepository);
     bindings.put(ScriptingNames.SCRIPTING_NAME_SPACE_CONTROLLER_REPOSITORY,
         spaceControllerRepository);

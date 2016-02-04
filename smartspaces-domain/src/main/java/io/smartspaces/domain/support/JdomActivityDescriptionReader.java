@@ -23,16 +23,15 @@ import io.smartspaces.domain.basic.pojo.SimpleActivityDependency;
 import io.smartspaces.resource.Version;
 import io.smartspaces.resource.VersionRange;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An {@link ActivityDescriptionReader} which uses JDOM to process the XML.
@@ -97,7 +96,7 @@ public class JdomActivityDescriptionReader implements ActivityDescriptionReader 
 
       ActivityDescription description = new ActivityDescription();
 
-      List<String> errors = Lists.newArrayList();
+      List<String> errors = new ArrayList<>();
 
       getMainData(description, rootElement, errors);
       getMetadata(description, rootElement, errors);
@@ -158,7 +157,7 @@ public class JdomActivityDescriptionReader implements ActivityDescriptionReader 
       @SuppressWarnings("unchecked")
       List<Element> itemElements = metadataElement.getChildren("item");
 
-      Map<String, Object> metadata = Maps.newHashMap();
+      Map<String, Object> metadata = new HashMap<>();
       for (Element itemElement : itemElements) {
         String name = itemElement.getAttributeValue("name");
         String value = itemElement.getTextNormalize();
@@ -187,7 +186,7 @@ public class JdomActivityDescriptionReader implements ActivityDescriptionReader 
       List<Element> dependencyElements =
           dependenciesElement.getChildren(ACTIVITY_ELEMENT_NAME_DEPENDENCY_ITEM);
 
-      List<ActivityDependency> dependencies = Lists.newArrayList();
+      List<ActivityDependency> dependencies = new ArrayList<>();
       for (Element dependencyElement : dependencyElements) {
         ActivityDependency dependency = getDependency(dependencyElement, errors);
         if (dependency != null) {

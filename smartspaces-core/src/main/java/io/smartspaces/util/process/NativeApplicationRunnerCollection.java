@@ -49,24 +49,6 @@ public interface NativeApplicationRunnerCollection extends ManagedResource {
   NativeApplicationRunner addNativeApplicationRunner(NativeApplicationDescription description);
 
   /**
-   * Create a new application runner with the given config.
-   *
-   * <p>
-   * The runner is added to the collection. The collection will handle the
-   * lifecycle of the runner.
-   *
-   * @param config
-   *          the configuration for the runner
-   *
-   * @return a new application runner appropriate for the current platform
-   *
-   * @deprecated Use {@link #newNativeApplicationRunner() and use the
-   *             configuration setters.
-   */
-  @Deprecated
-  NativeApplicationRunner addNativeApplicationRunner(Map<String, Object> config);
-
-  /**
    * Add a native application runner to the collection.
    *
    * <p>

@@ -21,12 +21,13 @@ import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.ActivityDependency;
 import io.smartspaces.domain.pojo.SimpleObject;
 
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A POJO implementation of a {@link Activity}.
@@ -81,12 +82,12 @@ public class SimpleActivity extends SimpleObject implements Activity {
   /**
    * The dependencies the activity has.
    */
-  private List<ActivityDependency> dependencies = Lists.newArrayList();
+  private List<ActivityDependency> dependencies = new ArrayList<>();
 
   /**
    * The meta data for this activity.
    */
-  private Map<String, Object> metadata = Maps.newHashMap();
+  private Map<String, Object> metadata = new HashMap<>();
 
   @Override
   public String getIdentifyingName() {

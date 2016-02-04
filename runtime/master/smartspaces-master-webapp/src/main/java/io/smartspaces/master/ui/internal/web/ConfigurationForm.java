@@ -17,11 +17,10 @@
 
 package io.smartspaces.master.ui.internal.web;
 
-import java.util.Map;
-
 import org.springframework.validation.Errors;
 
-import com.google.common.collect.Maps;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A form for playing with configurations.
@@ -59,7 +58,7 @@ public class ConfigurationForm {
    * @return a map of the names to values
    */
   public Map<String, Object> getSubmittedMap() {
-    Map<String, Object> map = Maps.newHashMap();
+    Map<String, Object> map = new HashMap<>();
 
     String[] lines = values.split("\n");
 

@@ -45,20 +45,21 @@ import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
 import io.smartspaces.resource.repository.ActivityRepositoryManager;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
+import com.google.common.io.Closeables;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.common.io.Closeables;
 
 /**
  * Simple Master API manager for activity operations.
@@ -140,7 +141,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
   @Override
   public Map<String, Object> getActivitiesByFilter(String filter) {
-    List<Map<String, Object>> responseData = Lists.newArrayList();
+    List<Map<String, Object>> responseData = new ArrayList<>();
 
     try {
       FilterExpression filterExpression = expressionFactory.getFilterExpression(filter);
@@ -177,7 +178,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   public Map<String, Object> getActivityFullView(String id) {
     Activity activity = activityRepository.getActivityById(id);
     if (activity != null) {
-      Map<String, Object> fullView = Maps.newHashMap();
+      Map<String, Object> fullView = new HashMap<>();
 
       Map<String, Object> activityData = extractBasicActivityApiData(activity);
       fullView.put("activity", activityData);
@@ -200,7 +201,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    * @return a Master API coded object giving the basic information
    */
   private Map<String, Object> extractBasicActivityApiData(Activity activity) {
-    Map<String, Object> data = Maps.newHashMap();
+    Map<String, Object> data = new HashMap<>();
 
     data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID, activity.getId());
     data.put("identifyingName", activity.getIdentifyingName());
@@ -225,13 +226,13 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    *          the dependencies
    */
   private void extractActivityDependencyData(Activity activity, Map<String, Object> activityData) {
-    List<Map<String, Object>> dependencies = Lists.newArrayList();
+    List<Map<String, Object>> dependencies = new ArrayList<>();
     activityData.put("dependencies", dependencies);
 
     List<? extends ActivityDependency> activityDependencies = activity.getDependencies();
     if (activityDependencies != null) {
       for (ActivityDependency activityDependency : activityDependencies) {
-        Map<String, Object> dependencyData = Maps.newHashMap();
+        Map<String, Object> dependencyData = new HashMap<>();
         dependencies.add(dependencyData);
 
         dependencyData.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_IDENTIFYING_NAME,
@@ -325,7 +326,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
   @Override
   public Map<String, Object> getLiveActivitiesByFilter(String filter) {
-    List<Map<String, Object>> responseData = Lists.newArrayList();
+    List<Map<String, Object>> responseData = new ArrayList<>();
 
     try {
       FilterExpression filterExpression = expressionFactory.getFilterExpression(filter);
@@ -333,7 +334,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
       List<LiveActivity> liveActivities = activityRepository.getLiveActivities(filterExpression);
       Collections.sort(liveActivities, MasterApiUtilities.LIVE_ACTIVITY_BY_NAME_COMPARATOR);
       for (LiveActivity activity : liveActivities) {
-        Map<String, Object> activityData = Maps.newHashMap();
+        Map<String, Object> activityData = new HashMap<>();
 
         extractLiveActivityApiData(activity, activityData);
 
@@ -356,7 +357,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   public Map<String, Object> getLiveActivityView(String id) {
     LiveActivity liveactivity = activityRepository.getLiveActivityByTypedId(id);
     if (liveactivity != null) {
-      Map<String, Object> data = Maps.newHashMap();
+      Map<String, Object> data = new HashMap<>();
 
       extractLiveActivityApiData(liveactivity, data);
 
@@ -370,9 +371,9 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   public Map<String, Object> getLiveActivityFullView(String id) {
     LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(id);
     if (liveActivity != null) {
-      Map<String, Object> responseData = Maps.newHashMap();
+      Map<String, Object> responseData = new HashMap<>();
 
-      Map<String, Object> liveActivityData = Maps.newHashMap();
+      Map<String, Object> liveActivityData = new HashMap<>();
       extractLiveActivityApiData(liveActivity, liveActivityData);
 
       responseData.put("liveactivity", liveActivityData);
@@ -458,7 +459,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
     LiveActivity newLiveActivity = activityRepository.newAndSaveLiveActivity(liveActivityTemplate);
 
-    Map<String, Object> responseData = Maps.newHashMap();
+    Map<String, Object> responseData = new HashMap<>();
     extractLiveActivityApiData(newLiveActivity, responseData);
 
     return MasterApiMessageSupport.getSuccessResponse(responseData);
@@ -468,7 +469,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   public Map<String, Object> getLiveActivityConfiguration(String id) {
     LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(id);
     if (liveActivity != null) {
-      Map<String, String> data = Maps.newHashMap();
+      Map<String, String> data = new HashMap<>();
 
       ActivityConfiguration config = liveActivity.getConfiguration();
       if (config != null) {
@@ -740,7 +741,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
   @Override
   public Map<String, Object> getBasicSpaceControllerApiData(SpaceController controller) {
-    Map<String, Object> data = Maps.newHashMap();
+    Map<String, Object> data = new HashMap<>();
 
     data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID, controller.getId());
     data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_UUID, controller.getUuid());
@@ -753,7 +754,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   public Map<String, Object> getSpaceControllerConfiguration(String id) {
     SpaceController spaceController = spaceControllerRepository.getSpaceControllerById(id);
     if (spaceController != null) {
-      Map<String, String> data = Maps.newHashMap();
+      Map<String, String> data = new HashMap<>();
 
       SpaceControllerConfiguration config = spaceController.getConfiguration();
       if (config != null) {
@@ -921,7 +922,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   public void getLiveActivityStatusApiData(LiveActivity liveActivity, Map<String, Object> data) {
     ActiveLiveActivity active = activeSpaceControllerManager.getActiveLiveActivity(liveActivity);
 
-    Map<String, Object> activeData = Maps.newHashMap();
+    Map<String, Object> activeData = new HashMap<>();
     data.put("active", activeData);
 
     ActivityState runtimeState = active.getRuntimeState();
@@ -957,10 +958,10 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   public Map<String, Object> getLiveActivityGroupFullView(String id) {
     LiveActivityGroup liveActivityGroup = activityRepository.getLiveActivityGroupById(id);
     if (liveActivityGroup != null) {
-      Map<String, Object> responseData = Maps.newHashMap();
+      Map<String, Object> responseData = new HashMap<>();
       responseData.put("liveactivitygroup", getLiveActivityGroupApiData(liveActivityGroup));
 
-      List<LiveActivity> liveActivities = Lists.newArrayList();
+      List<LiveActivity> liveActivities = new ArrayList<>();
       for (GroupLiveActivity gla : liveActivityGroup.getLiveActivities()) {
         liveActivities.add(gla.getActivity());
       }
@@ -981,7 +982,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
   @Override
   public Map<String, Object> getLiveActivityGroupsByFilter(String filter) {
-    List<Map<String, Object>> responseData = Lists.newArrayList();
+    List<Map<String, Object>> responseData = new ArrayList<>();
 
     try {
       FilterExpression filterExpression = expressionFactory.getFilterExpression(filter);
@@ -992,7 +993,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
           MasterApiUtilities.LIVE_ACTIVITY_GROUP_BY_NAME_COMPARATOR);
 
       for (LiveActivityGroup group : liveActivityGroups) {
-        Map<String, Object> groupData = Maps.newHashMap();
+        Map<String, Object> groupData = new HashMap<>();
 
         extractLiveActivityGroup(group, groupData);
 
@@ -1020,21 +1021,21 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    * @return the API Response data describing the group
    */
   private Map<String, Object> getLiveActivityGroupApiData(LiveActivityGroup liveActivityGroup) {
-    Map<String, Object> data = Maps.newHashMap();
+    Map<String, Object> data = new HashMap<>();
 
     extractLiveActivityGroup(liveActivityGroup, data);
 
-    List<Map<String, Object>> activityData = Lists.newArrayList();
+    List<Map<String, Object>> activityData = new ArrayList<>();
     data.put("liveActivities", activityData);
 
-    List<LiveActivity> liveActivities = Lists.newArrayList();
+    List<LiveActivity> liveActivities = new ArrayList<>();
     for (GroupLiveActivity gactivity : liveActivityGroup.getLiveActivities()) {
       liveActivities.add(gactivity.getActivity());
     }
     Collections.sort(liveActivities, MasterApiUtilities.LIVE_ACTIVITY_BY_NAME_COMPARATOR);
 
     for (LiveActivity liveActivity : liveActivities) {
-      Map<String, Object> liveActivityData = Maps.newHashMap();
+      Map<String, Object> liveActivityData = new HashMap<>();
       activityData.add(liveActivityData);
 
       extractLiveActivityApiData(liveActivity, liveActivityData);
@@ -1062,11 +1063,11 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    * @return list of the data for all live activities
    */
   private List<Map<String, Object>> extractLiveActivities(List<LiveActivity> liveActivities) {
-    List<Map<String, Object>> result = Lists.newArrayList();
+    List<Map<String, Object>> result = new ArrayList<>();
 
     if (liveActivities != null) {
       for (LiveActivity liveActivity : liveActivities) {
-        Map<String, Object> data = Maps.newHashMap();
+        Map<String, Object> data = new HashMap<>();
         extractLiveActivityApiData(liveActivity, data);
         result.add(data);
       }
@@ -1085,11 +1086,11 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    */
   private List<Map<String, Object>> extractLiveActivityGroups(
       List<LiveActivityGroup> liveActivityGroups) {
-    List<Map<String, Object>> result = Lists.newArrayList();
+    List<Map<String, Object>> result = new ArrayList<>();
 
     if (liveActivityGroups != null) {
       for (LiveActivityGroup liveActivityGroup : liveActivityGroups) {
-        Map<String, Object> data = Maps.newHashMap();
+        Map<String, Object> data = new HashMap<>();
         extractLiveActivityGroup(liveActivityGroup, data);
         result.add(data);
       }
@@ -1100,7 +1101,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
   @Override
   public Map<String, Object> getSpacesByFilter(String filter) {
-    List<Map<String, Object>> data = Lists.newArrayList();
+    List<Map<String, Object>> data = new ArrayList<>();
 
     try {
       FilterExpression filterExpression = expressionFactory.getFilterExpression(filter);
@@ -1213,7 +1214,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    * @return the Master API data
    */
   private Map<String, Object> getBasicSpaceViewApiResponse(Space space) {
-    Map<String, Object> spaceData = Maps.newHashMap();
+    Map<String, Object> spaceData = new HashMap<>();
 
     getBasicSpaceApiResponse(space, spaceData);
 
@@ -1229,7 +1230,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    * @return a list of the basic space data
    */
   private List<Map<String, Object>> getSpaceApiData(List<Space> spaces) {
-    List<Map<String, Object>> data = Lists.newArrayList();
+    List<Map<String, Object>> data = new ArrayList<>();
 
     for (Space space : spaces) {
       data.add(getBasicSpaceViewApiResponse(space));
@@ -1268,7 +1269,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   public Map<String, Object> getSpaceFullView(String id) {
     Space space = activityRepository.getSpaceById(id);
     if (space != null) {
-      Map<String, Object> responseData = Maps.newHashMap();
+      Map<String, Object> responseData = new HashMap<>();
 
       responseData.put("space", getSpaceViewApiResponse(space));
 
@@ -1296,11 +1297,11 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   public Map<String, Object> getSpaceLiveActivityGroupView(String id) {
     Space space = activityRepository.getSpaceById(id);
     if (space != null) {
-      Map<String, Object> responseData = Maps.newHashMap();
+      Map<String, Object> responseData = new HashMap<>();
 
       responseData.put("space", getSpaceViewApiResponse(space));
 
-      Set<LiveActivityGroup> liveActivityGroupsSet = Sets.newHashSet();
+      Set<LiveActivityGroup> liveActivityGroupsSet = new HashSet<>();
       collectLiveActivityGroupsForSpace(space, liveActivityGroupsSet);
       List<LiveActivityGroup> liveActivityGroups = Lists.newArrayList(liveActivityGroupsSet);
       Collections.sort(liveActivityGroups,
@@ -1341,7 +1342,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    *          the Master API result for the space
    */
   private void addLiveActivityGroupsDataApiResponse(Space space, Map<String, Object> data) {
-    List<Map<String, Object>> groupData = Lists.newArrayList();
+    List<Map<String, Object>> groupData = new ArrayList<>();
     data.put("liveActivityGroups", groupData);
 
     for (LiveActivityGroup group : space.getActivityGroups()) {
@@ -1358,7 +1359,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    *          the Master API result for the space
    */
   private void generateSubspacesViewApiResponse(Space space, Map<String, Object> data) {
-    List<Map<String, Object>> subspaceData = Lists.newArrayList();
+    List<Map<String, Object>> subspaceData = new ArrayList<>();
     data.put("subspaces", subspaceData);
 
     for (Space subspace : space.getSpaces()) {
@@ -1393,11 +1394,11 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    */
   private List<Map<String, Object>> getLiveActivityGroupsMasterApi(
       List<? extends LiveActivityGroup> groups) {
-    List<Map<String, Object>> response = Lists.newArrayList();
+    List<Map<String, Object>> response = new ArrayList<>();
 
     if (groups != null) {
       for (LiveActivityGroup group : groups) {
-        Map<String, Object> groupData = Maps.newHashMap();
+        Map<String, Object> groupData = new HashMap<>();
         extractLiveActivityGroup(group, groupData);
         response.add(groupData);
       }
@@ -1416,7 +1417,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    */
   private List<Map<String, Object>> getLiveActivityGroupsLiveActivitiesMasterApi(
       List<? extends LiveActivityGroup> groups) {
-    List<Map<String, Object>> response = Lists.newArrayList();
+    List<Map<String, Object>> response = new ArrayList<>();
 
     if (groups != null) {
       for (LiveActivityGroup group : groups) {

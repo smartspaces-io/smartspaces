@@ -21,16 +21,15 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
-import java.io.File;
-import java.util.Map;
-import java.util.Set;
-import java.util.jar.Manifest;
-
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Constants;
 import aQute.lib.osgi.Jar;
 
-import com.google.common.collect.Sets;
+import java.io.File;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.jar.Manifest;
 
 /**
  * Analyze the contents of an existing bundle using BND.
@@ -63,7 +62,7 @@ public class BndOsgiContainerBundleAnalyzer implements ContainerBundleAnalyzer {
 
         packageExports = exported.keySet();
       } else {
-        packageExports = Sets.newHashSet();
+        packageExports = new HashSet<>();
       }
     } catch (Exception e) {
       throw new SmartSpacesException(String.format("Could not analyze bundle %s",

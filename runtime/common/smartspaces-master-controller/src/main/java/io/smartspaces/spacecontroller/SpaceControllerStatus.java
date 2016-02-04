@@ -17,9 +17,8 @@
 
 package io.smartspaces.spacecontroller;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * The status of a space controller operation.
@@ -42,7 +41,7 @@ public enum SpaceControllerStatus {
    * Static map containing the reverse-lookup from the description to the enum
    * type.
    */
-  private static final Map<String, SpaceControllerStatus> DESCRIPTION_MAP = Maps.newHashMap();
+  private static final Map<String, SpaceControllerStatus> DESCRIPTION_MAP = new HashMap<>();
 
   /**
    * Construct the requisite reverse-lookup map.

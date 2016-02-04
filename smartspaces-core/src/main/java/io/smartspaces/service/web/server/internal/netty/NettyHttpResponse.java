@@ -21,12 +21,8 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.service.web.HttpResponseCode;
 import io.smartspaces.service.web.server.HttpResponse;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpCookie;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferOutputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -35,9 +31,12 @@ import org.jboss.netty.handler.codec.http.Cookie;
 import org.jboss.netty.handler.codec.http.CookieEncoder;
 import org.jboss.netty.handler.codec.http.DefaultCookie;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpCookie;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A Netty-based HttpResponse
@@ -78,10 +77,10 @@ public class NettyHttpResponse implements HttpResponse {
    */
   private static Set<Integer> createPortList(String portString) {
     if (portString == null) {
-      return Sets.newHashSet();
+      return new HashSet<>();
     }
     String[] portStrings = portString.split(",");
-    Set<Integer> ports = Sets.newHashSet();
+    Set<Integer> ports = new HashSet<>();
     for (String port : portStrings) {
       ports.add(Integer.valueOf(port));
     }

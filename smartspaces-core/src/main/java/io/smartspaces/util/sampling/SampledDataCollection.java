@@ -17,9 +17,8 @@
 
 package io.smartspaces.util.sampling;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * A collection of data samples from a collection of named sources.
@@ -37,7 +36,7 @@ public class SampledDataCollection {
    * Construct a new sampled data collection with no data as of yet.
    */
   public SampledDataCollection() {
-    this.data = Maps.newHashMap();
+    this.data = new HashMap<>();
   }
 
   /**

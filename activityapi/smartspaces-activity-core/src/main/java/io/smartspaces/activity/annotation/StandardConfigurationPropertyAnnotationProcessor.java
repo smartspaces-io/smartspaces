@@ -20,17 +20,16 @@ package io.smartspaces.activity.annotation;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.configuration.Configuration;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-
 import com.google.common.base.Defaults;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
+import org.apache.commons.logging.Log;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * An annotation processor that injects configuration values into fields marked
@@ -67,8 +66,8 @@ public class StandardConfigurationPropertyAnnotationProcessor implements
   @Override
   public void process(Object obj) {
     log.info("Processing configuration annotations on " + obj);
-    List<String> errors = Lists.newArrayList();
-    List<String> successes = Lists.newArrayList();
+    List<String> errors = new ArrayList<>();
+    List<String> successes = new ArrayList<>();
     for (Class<?> c = obj.getClass(); c != null; c = c.getSuperclass()) {
       Field[] fields = c.getDeclaredFields();
       for (Field field : fields) {

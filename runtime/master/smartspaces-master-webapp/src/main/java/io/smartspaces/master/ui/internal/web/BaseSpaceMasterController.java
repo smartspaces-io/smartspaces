@@ -21,17 +21,16 @@ import io.smartspaces.expression.ExpressionFactory;
 import io.smartspaces.master.server.services.MasterConfigurations;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.springframework.context.MessageSource;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 
-import com.google.common.collect.Maps;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Base support for Spring MVC controllers for the space master.
@@ -48,7 +47,7 @@ public class BaseSpaceMasterController {
   /**
    * Attribute name for the name of smartspaces.
    */
-  public static final String ATTRIBUTE_NAME_SMARTSPACES_NAME = "smartspacesName";
+  public static final String ATTRIBUTE_NAME_SMARTSPACES_NAME = "smartSpacesName";
 
   /**
    * The message source for messages.
@@ -111,7 +110,7 @@ public class BaseSpaceMasterController {
    *          the model to add to
    */
   public void addGlobalModelItems(Model model) {
-    Map<String, Object> items = Maps.newHashMap();
+    Map<String, Object> items = new HashMap<>();
     addGlobalModelItems(items);
     model.addAllAttributes(items);
   }
@@ -123,7 +122,7 @@ public class BaseSpaceMasterController {
    *          the viewScope to add to
    */
   public void addGlobalModelItems(MutableAttributeMap viewScope) {
-    Map<String, Object> items = Maps.newHashMap();
+    Map<String, Object> items = new HashMap<>();
     addGlobalModelItems(items);
     for (Entry<String, Object> entry : items.entrySet()) {
       viewScope.put(entry.getKey(), entry.getValue());

@@ -20,9 +20,8 @@ package io.smartspaces.domain.system.pojo;
 import io.smartspaces.domain.pojo.SimpleObject;
 import io.smartspaces.domain.system.NamedScript;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * A POJO {@link NamedScript}.
@@ -69,7 +68,7 @@ public class SimpleNamedScript extends SimpleObject implements NamedScript {
   /**
    * The meta data for this script.
    */
-  private Map<String, Object> metadata = Maps.newHashMap();
+  private Map<String, Object> metadata = new HashMap<>();
 
   @Override
   public String getName() {

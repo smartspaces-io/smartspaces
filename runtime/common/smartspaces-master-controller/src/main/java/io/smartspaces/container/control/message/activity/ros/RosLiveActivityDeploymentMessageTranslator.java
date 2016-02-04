@@ -34,10 +34,7 @@ import io.smartspaces.resource.Version;
 import io.smartspaces.resource.VersionRange;
 import io.smartspaces.system.resources.ContainerResourceLocation;
 
-import java.util.List;
-
 import org.ros.message.MessageFactory;
-
 import smartspaces_msgs.ContainerResourceCommitRequestMessage;
 import smartspaces_msgs.ContainerResourceCommitResponseMessage;
 import smartspaces_msgs.ContainerResourceQueryItem;
@@ -47,7 +44,8 @@ import smartspaces_msgs.LiveActivityDeployRequestMessage;
 import smartspaces_msgs.LiveActivityDeployResponseMessage;
 import smartspaces_msgs.LocatableResourceDescription;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A translator from internal messages to and from ROS messages.
@@ -193,7 +191,7 @@ public class RosLiveActivityDeploymentMessageTranslator {
     rosMessage.setType(ContainerResourceQueryRequestMessage.TYPE_SPECIFIC_QUERY);
     rosMessage.setTransactionId(query.getTransactionId());
 
-    List<ContainerResourceQueryItem> rosItems = Lists.newArrayList();
+    List<ContainerResourceQueryItem> rosItems = new ArrayList<>();
     for (ResourceDependency dependency : query.getQueries()) {
       ContainerResourceQueryItem rosItem =
           messageFactory.newFromType(ContainerResourceQueryItem._TYPE);
@@ -303,7 +301,7 @@ public class RosLiveActivityDeploymentMessageTranslator {
       ContainerResourceCommitRequestMessage rosMessage, MessageFactory messageFactory) {
     rosMessage.setTransactionId(request.getTransactionId());
 
-    List<smartspaces_msgs.ContainerResourceDeploymentItem> rosItems = Lists.newArrayList();
+    List<smartspaces_msgs.ContainerResourceDeploymentItem> rosItems = new ArrayList<>();
     for (ContainerResourceDeploymentItem item : request.getItems()) {
       smartspaces_msgs.ContainerResourceDeploymentItem rosItem =
           messageFactory.newFromType(smartspaces_msgs.ContainerResourceDeploymentItem._TYPE);

@@ -27,13 +27,12 @@ import io.smartspaces.util.data.resource.ResourceSignatureCalculator;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
-import java.io.File;
-import java.util.Map;
-
+import com.google.common.annotations.VisibleForTesting;
 import org.osgi.framework.Bundle;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A basic implementation of a {@link LiveActivityBundleLoader}.
@@ -56,7 +55,7 @@ public class StandardLiveActivityBundleLoader implements LiveActivityBundleLoade
    * The bundles currently loaded by the loader, indexed by the resource
    * representing the bundle.
    */
-  private final Map<NamedVersionedResource, LiveActivityBundle> loadedBundles = Maps.newHashMap();
+  private final Map<NamedVersionedResource, LiveActivityBundle> loadedBundles = new HashMap<>();
 
   /**
    * The file support to use.

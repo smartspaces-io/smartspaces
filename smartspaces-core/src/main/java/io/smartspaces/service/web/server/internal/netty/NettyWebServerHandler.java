@@ -26,6 +26,7 @@ import static org.jboss.netty.handler.codec.http.HttpMethod.POST;
 import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FOUND;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesExceptionUtils;
 import io.smartspaces.service.web.HttpConstants;
@@ -36,14 +37,9 @@ import io.smartspaces.service.web.server.WebResourceAccessManager;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 
-import java.io.IOException;
-import java.net.HttpCookie;
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import org.apache.commons.logging.Log;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
@@ -70,10 +66,14 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.jboss.netty.util.CharsetUtil;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
+import java.io.IOException;
+import java.net.HttpCookie;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * A web socket server handler for Netty.
@@ -112,12 +112,12 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   /**
    * All GET request handlers handled by this instance.
    */
-  private List<NettyHttpGetRequestHandler> httpGetRequestHandlers = Lists.newArrayList();
+  private List<NettyHttpGetRequestHandler> httpGetRequestHandlers = new ArrayList<>();
 
   /**
    * All POST request handlers handled by this instance.
    */
-  private List<NettyHttpPostRequestHandler> httpPostRequestHandlers = Lists.newArrayList();
+  private List<NettyHttpPostRequestHandler> httpPostRequestHandlers = new ArrayList<>();
 
   /**
    * Map of Netty channel IDs to web socket handlers.

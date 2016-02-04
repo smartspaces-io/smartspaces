@@ -17,9 +17,8 @@
 
 package io.smartspaces.util.graph;
 
+import java.util.HashSet;
 import java.util.Set;
-
-import com.google.common.collect.Sets;
 
 /**
  * A node in a graph for a graph walker.
@@ -46,7 +45,7 @@ public class WalkableGraphNode<I, T> {
   /**
    * All neighbors for the node.
    */
-  private Set<WalkableGraphNode<I, T>> neighbors = Sets.newHashSet();
+  private Set<WalkableGraphNode<I, T>> neighbors = new HashSet<>();
 
   /**
    * The parent of the node.

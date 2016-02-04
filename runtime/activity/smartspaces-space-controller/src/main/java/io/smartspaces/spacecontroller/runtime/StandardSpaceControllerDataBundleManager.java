@@ -27,13 +27,12 @@ import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.web.HttpClientHttpContentCopier;
 import io.smartspaces.util.web.HttpContentCopier;
 
-import java.io.File;
-import java.util.Map;
-import java.util.zip.ZipOutputStream;
-
 import org.apache.commons.logging.Log;
 
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Controller-side manager for copying data bundles between master and
@@ -108,7 +107,7 @@ public class StandardSpaceControllerDataBundleManager implements SpaceController
   public void captureControllerDataBundle(String destinationUri) {
     File dataBundle = createDataBundle();
     try {
-      Map<String, String> parameters = Maps.newHashMap();
+      Map<String, String> parameters = new HashMap<>();
       parameters.put("uuid", getControllerUuid());
       String channel = ResourceRepositoryUploadChannel.DATA_BUNDLE_UPLOAD.getChannelId();
       contentCopier.copyTo(destinationUri, dataBundle, channel, parameters);

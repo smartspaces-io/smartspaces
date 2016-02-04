@@ -17,10 +17,9 @@
 
 package io.smartspaces.master.ui.internal.web;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * Support base class for metadata editing classes.
@@ -66,7 +65,7 @@ public abstract class MetadataEditFormSupport extends BaseSpaceMasterController 
    * @return a map of the metadata names to values
    */
   protected Map<String, Object> getSubmittedMap(ConfigurationForm form) {
-    Map<String, Object> map = Maps.newHashMap();
+    Map<String, Object> map = new HashMap<>();
 
     String[] lines = form.getValues().split("\n");
 

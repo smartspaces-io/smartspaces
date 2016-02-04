@@ -36,17 +36,16 @@ import io.smartspaces.master.server.services.AutomationRepository;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
 import io.smartspaces.time.TimeProvider;
 
-import java.io.StringReader;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An importer of the master domain description.
@@ -61,28 +60,28 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
    * Map of space controller IDs from the description to the created space
    * controller.
    */
-  private Map<String, SpaceController> spaceControllers = Maps.newHashMap();
+  private Map<String, SpaceController> spaceControllers = new HashMap<>();
 
   /**
    * Map of activity IDs from the description to the created activity.
    */
-  private Map<String, Activity> activities = Maps.newHashMap();
+  private Map<String, Activity> activities = new HashMap<>();
 
   /**
    * Map of live activity IDs from the description to the created live activity.
    */
-  private Map<String, LiveActivity> liveActivities = Maps.newHashMap();
+  private Map<String, LiveActivity> liveActivities = new HashMap<>();
 
   /**
    * Map of live activity group IDs from the description to the created live
    * activity groups.
    */
-  private Map<String, LiveActivityGroup> liveActivityGroups = Maps.newHashMap();
+  private Map<String, LiveActivityGroup> liveActivityGroups = new HashMap<>();
 
   /**
    * Map of space IDs from the description to the created spaces.
    */
-  private Map<String, Space> spaces = Maps.newHashMap();
+  private Map<String, Space> spaces = new HashMap<>();
 
   /**
    * Import a master domain model.
@@ -327,7 +326,7 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
       ActivityRepository activityRepository) {
     Element dependenciesElement = activityElement.getChild(ELEMENT_NAME_ROOT_ACTIVITY_DEPENDENCIES);
     if (dependenciesElement != null) {
-      List<ActivityDependency> dependencies = Lists.newArrayList();
+      List<ActivityDependency> dependencies = new ArrayList<>();
 
       List<Element> dependencyElements =
           dependenciesElement.getChildren(ELEMENT_NAME_INDIVIDUAL_ACTIVITY_DEPENDENCY);
@@ -733,7 +732,7 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
       return null;
     }
 
-    Map<String, Object> metadata = Maps.newHashMap();
+    Map<String, Object> metadata = new HashMap<>();
 
     List<Element> itemElements = metadataElement.getChildren(ELEMENT_NAME_METADATA_ITEM);
     for (Element itemElement : itemElements) {

@@ -17,12 +17,11 @@
 
 package io.smartspaces.util.process;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A description of a native application.
@@ -39,12 +38,12 @@ public class NativeApplicationDescription {
   /**
    * The arguments for the application.
    */
-  private List<String> arguments = Lists.newArrayList();
+  private List<String> arguments = new ArrayList<>();
 
   /**
    * The environment for the native application.
    */
-  private Map<String, String> environment = Maps.newHashMap();
+  private Map<String, String> environment = new HashMap<>();
 
   /**
    * The runner parser to use.

@@ -161,18 +161,6 @@ public interface SupportedActivity extends Activity {
   void onActivityConfigurationUpdate(Map<String, String> update);
 
   /**
-   * A configuration update is coming in.
-   *
-   * @param update
-   *          the full update, will be {@code null} when called during setup,
-   *          though the initial activity configuration will be valid
-   *
-   * @deprecated Override {@link #onActivityConfigurationUpdate(Map)}
-   */
-  @Deprecated
-  void onActivityConfiguration(Map<String, Object> update);
-
-  /**
    * Add a new component to the activity.
    *
    * @param component

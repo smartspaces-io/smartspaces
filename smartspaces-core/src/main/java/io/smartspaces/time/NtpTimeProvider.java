@@ -17,21 +17,20 @@
 
 package io.smartspaces.time;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-
+import com.google.common.base.Preconditions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.net.ntp.NTPUDPClient;
 import org.apache.commons.net.ntp.TimeInfo;
 import org.ros.math.CollectionMath;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A {@link TimeProvider} which uses NTP.
@@ -120,7 +119,7 @@ public class NtpTimeProvider implements TimeProvider {
    * @throws IOException
    */
   public void updateTime() throws IOException {
-    List<Long> offsets = Lists.newArrayList();
+    List<Long> offsets = new ArrayList<>();
     for (int i = 0; i < SAMPLE_SIZE; i++) {
       offsets.add(computeOffset());
     }

@@ -25,12 +25,13 @@ import io.smartspaces.workbench.project.constituent.ContentProjectConstituent;
 import io.smartspaces.workbench.project.constituent.ProjectConstituent;
 import io.smartspaces.workbench.project.constituent.ResourceComponentProjectConstituent;
 
+import com.google.common.collect.Lists;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A Smart Spaces project.
@@ -87,7 +88,7 @@ public abstract class Project {
   /**
    * The dependencies the project has.
    */
-  private final List<ProjectDependency> dependencies = Lists.newArrayList();
+  private final List<ProjectDependency> dependencies = new ArrayList<>();
 
   /**
    * The resources the project requires. A {@code null} value indicates that no
@@ -95,7 +96,7 @@ public abstract class Project {
    * than saying an empty set of resources have been specified, which would be
    * indicated by the empty list).
    */
-  private final List<ContentProjectConstituent> resources = Lists.newArrayList();
+  private final List<ContentProjectConstituent> resources = new ArrayList<>();
 
   /**
    * The sources the project requires. A {@code null} value indicates that no
@@ -103,29 +104,29 @@ public abstract class Project {
    * than saying an empty set of sources have been specified, which would be
    * indicated by the empty list).
    */
-  private final List<ContentProjectConstituent> sources = Lists.newArrayList();
+  private final List<ContentProjectConstituent> sources = new ArrayList<>();
 
   /**
    * An extra set of project constituents. Some constituents are common to all
    * projects, these will be specific to an actual project type and will be
    * processed by the specific project type builder as that builder needs.
    */
-  private final List<ProjectConstituent> extraConstituents = Lists.newArrayList();
+  private final List<ProjectConstituent> extraConstituents = new ArrayList<>();
 
   /**
    * The deployments the project requires.
    */
-  private final List<ProjectDeployment> deployments = Lists.newArrayList();
+  private final List<ProjectDeployment> deployments = new ArrayList<>();
 
   /**
    * The meta data for this project.
    */
-  private Map<String, Object> metadata = Maps.newHashMap();
+  private Map<String, Object> metadata = new HashMap<>();
 
   /**
    * Attributes for this project.
    */
-  private final Map<String, String> attributes = Maps.newHashMap();
+  private final Map<String, String> attributes = new HashMap<>();
 
   /**
    * The configuration for this project.

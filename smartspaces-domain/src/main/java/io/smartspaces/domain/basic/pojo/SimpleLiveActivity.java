@@ -23,10 +23,11 @@ import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.pojo.SimpleObject;
 
-import java.util.Date;
-import java.util.Map;
-
 import com.google.common.collect.Maps;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A POJO implementation of a {@link LiveActivity}.
@@ -82,7 +83,7 @@ public class SimpleLiveActivity extends SimpleObject implements LiveActivity {
   /**
    * The meta data for this live activity.
    */
-  private Map<String, Object> metadata = Maps.newHashMap();
+  private Map<String, Object> metadata = new HashMap<>();
 
   @Override
   public Activity getActivity() {

@@ -25,18 +25,17 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.resource.ManagedResource;
 import io.smartspaces.util.resource.ManagedResources;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A base class for creating OSGi BundleActivator subclasses for Interactive
@@ -49,12 +48,12 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   /**
    * All OSGi service registrations from this bundle.
    */
-  private final List<ServiceRegistration<?>> osgiServiceRegistrations = Lists.newArrayList();
+  private final List<ServiceRegistration<?>> osgiServiceRegistrations = new ArrayList<>();
 
   /**
    * All services registered by this bundle.
    */
-  private final List<Service> registeredServices = Lists.newArrayList();
+  private final List<Service> registeredServices = new ArrayList<>();
 
   /**
    * OSGi service tracker for the interactive spaces environment.

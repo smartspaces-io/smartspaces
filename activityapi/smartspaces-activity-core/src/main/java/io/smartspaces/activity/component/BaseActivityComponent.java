@@ -22,10 +22,11 @@ import io.smartspaces.activity.execution.ActivityExecutionContext;
 import io.smartspaces.activity.execution.ActivityMethodInvocation;
 import io.smartspaces.configuration.Configuration;
 
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A support class for implementations of {@link ActivityComponent}.
@@ -42,7 +43,7 @@ public abstract class BaseActivityComponent implements ActivityComponent {
   /**
    * Any additional dependencies for the component.
    */
-  private final List<String> additionalDependencies = Lists.newArrayList();
+  private final List<String> additionalDependencies = new ArrayList<>();
 
   /**
    * Component context this component is running under.

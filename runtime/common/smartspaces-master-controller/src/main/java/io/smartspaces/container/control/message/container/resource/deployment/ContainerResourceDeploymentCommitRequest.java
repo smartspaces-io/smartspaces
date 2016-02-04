@@ -17,9 +17,8 @@
 
 package io.smartspaces.container.control.message.container.resource.deployment;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * A request for a commit of container resources.
@@ -36,7 +35,7 @@ public class ContainerResourceDeploymentCommitRequest {
   /**
    * The items which are part of the commit request.
    */
-  private final List<ContainerResourceDeploymentItem> items = Lists.newArrayList();
+  private final List<ContainerResourceDeploymentItem> items = new ArrayList<>();
 
   /**
    * Construct a commit request.

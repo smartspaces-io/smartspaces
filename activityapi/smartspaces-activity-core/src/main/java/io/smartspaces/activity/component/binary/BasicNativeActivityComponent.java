@@ -32,9 +32,8 @@ import io.smartspaces.util.process.NativeApplicationRunnerListener;
 import io.smartspaces.util.process.restart.RestartStrategy;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * An {@link ActivityComponent} which launches native applications.
@@ -72,7 +71,7 @@ public class BasicNativeActivityComponent extends BaseActivityComponent implemen
   /**
    * The listeners to add to the runner when it is created.
    */
-  private List<NativeApplicationRunnerListener> listeners = Lists.newArrayList();
+  private List<NativeApplicationRunnerListener> listeners = new ArrayList<>();
 
   /**
    * The file support instance to use for dealing with files.

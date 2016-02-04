@@ -19,11 +19,11 @@ package io.smartspaces.service.image.video;
 
 import io.smartspaces.SmartSpacesException;
 
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A video frame listener that gives a sequence of video frame listeners to be
@@ -39,7 +39,7 @@ public class CompositeVideoFrameProcessor<T> implements VideoFrameProcessor<T> {
   /**
    * The components of the composite listener.
    */
-  private final List<VideoFrameProcessor<T>> components = Lists.newCopyOnWriteArrayList();
+  private final List<VideoFrameProcessor<T>> components = new CopyOnWriteArrayList<>();
 
   /**
    * Logger for the listener.
@@ -81,7 +81,7 @@ public class CompositeVideoFrameProcessor<T> implements VideoFrameProcessor<T> {
 
   @Override
   public void startup() {
-    List<VideoFrameProcessor<T>> componentsStarted = Lists.newArrayList();
+    List<VideoFrameProcessor<T>> componentsStarted = new ArrayList<>();
     try {
       for (VideoFrameProcessor<T> component : components) {
         component.startup();

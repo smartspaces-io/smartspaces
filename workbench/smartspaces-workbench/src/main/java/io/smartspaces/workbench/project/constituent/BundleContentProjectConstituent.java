@@ -18,23 +18,23 @@
 package io.smartspaces.workbench.project.constituent;
 
 import static com.google.common.io.Closeables.closeQuietly;
+
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectContext;
 
+import org.jdom2.Element;
+import org.jdom2.Namespace;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
-
-import org.jdom2.Element;
-import org.jdom2.Namespace;
-
-import com.google.common.collect.Lists;
 
 /**
  * A bundle resource for a {@link io.smartspaces.workbench.project.Project}.
@@ -68,7 +68,7 @@ public class BundleContentProjectConstituent extends BaseContentProjectConstitue
   /**
    * List of source paths to assemble.
    */
-  private final List<String> sourcePaths = Lists.newArrayList();
+  private final List<String> sourcePaths = new ArrayList<>();
 
   /**
    * The file support to use.

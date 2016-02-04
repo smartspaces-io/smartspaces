@@ -30,14 +30,13 @@ import io.smartspaces.master.server.services.AutomationManager;
 import io.smartspaces.master.server.services.AutomationRepository;
 import io.smartspaces.service.scheduler.SchedulerService;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A basic implementation of the {@link MasterApiAutomationManager}.
@@ -149,7 +148,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
 
   @Override
   public Map<String, Object> getNamedScriptsByFilter(String filter) {
-    List<Map<String, Object>> responseData = Lists.newArrayList();
+    List<Map<String, Object>> responseData = new ArrayList<>();
 
     try {
       FilterExpression filterExpression = expressionFactory.getFilterExpression(filter);
@@ -178,7 +177,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
    * @return a Master API coded object giving the basic information
    */
   private Map<String, Object> extractBasicNamedScriptApiData(NamedScript script) {
-    Map<String, Object> data = Maps.newHashMap();
+    Map<String, Object> data = new HashMap<>();
 
     data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID, script.getId());
     data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_NAME, script.getName());

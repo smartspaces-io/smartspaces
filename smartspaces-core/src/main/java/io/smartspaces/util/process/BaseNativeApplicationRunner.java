@@ -25,24 +25,24 @@ import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.process.restart.RestartStrategy;
 import io.smartspaces.util.process.restart.RestartStrategyInstance;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import org.apache.commons.logging.Log;
+
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A support superclass for {@link NativeApplicationRunner} implementations.
@@ -129,12 +129,12 @@ public abstract class BaseNativeApplicationRunner implements NativeApplicationRu
   /**
    * A map of environment variables set for the runner.
    */
-  private Map<String, String> environment = Maps.newHashMap();
+  private Map<String, String> environment = new HashMap<>();
 
   /**
    * The list of command line arguments for the runner.
    */
-  private List<String> commandArguments = Lists.newArrayList();
+  private List<String> commandArguments = new ArrayList<>();
 
   /**
    * The application runner listeners.
@@ -223,48 +223,12 @@ public abstract class BaseNativeApplicationRunner implements NativeApplicationRu
     environment.putAll(description.getEnvironment());
   }
 
-  @SuppressWarnings("unchecked")
-  @Override
-  public void configure(Map<String, Object> config) {
-    executablePath = (String) config.get(EXECUTABLE_PATHNAME);
-    if (executablePath == null) {
-      SimpleSmartSpacesException.throwFormattedException("Missing required property "
-          + EXECUTABLE_PATHNAME);
-    }
-
-    // Build up the command line.
-    for (Map.Entry<String, Object> entry : config.entrySet()) {
-      String key = entry.getKey();
-      switch (key) {
-        case EXECUTABLE_PATHNAME:
-          break;
-        case EXECUTABLE_FLAGS:
-          runnerParser.parseCommandArguments(commandArguments, (String) entry.getValue());
-          break;
-        case EXECUTABLE_ENVIRONMENT:
-          runnerParser.parseEnvironment(environment, (String) entry.getValue());
-          break;
-        case EXECUTABLE_ENVIRONMENT_MAP:
-          environment.putAll((Map<String, String>) entry.getValue());
-          break;
-        default:
-          String arg = " --" + key;
-          Object value = entry.getValue();
-          if (value != null) {
-            arg += "=" + value.toString();
-          }
-
-          commandArguments.add(arg);
-      }
-    }
-  }
-
   /**
    * Prepare the runner.
    */
   @VisibleForTesting
   void prepare() {
-    List<String> commandLineComponents = Lists.newArrayList();
+    List<String> commandLineComponents = new ArrayList<>();
 
     commandLineComponents.add(executablePath);
 

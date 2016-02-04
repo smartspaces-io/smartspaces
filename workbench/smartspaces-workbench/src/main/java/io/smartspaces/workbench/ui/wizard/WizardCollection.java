@@ -20,11 +20,10 @@ package io.smartspaces.workbench.ui.wizard;
 import io.smartspaces.workbench.ui.validation.ValidationMessageDisplay;
 import io.smartspaces.workbench.ui.validation.ValidationResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComponent;
-
-import com.google.common.collect.Lists;
 
 /**
  * A collection of {@link Wizard} elements which work as a unit.
@@ -42,7 +41,7 @@ public class WizardCollection implements Wizard {
   /**
    * The collection of wizards.
    */
-  private List<Wizard> wizards = Lists.newArrayList();
+  private List<Wizard> wizards = new ArrayList<>();
 
   /**
    * The current wizard.

@@ -30,11 +30,19 @@ import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.constituent.ContentProjectConstituent;
 import io.smartspaces.workbench.project.java.ContainerInfo.ImportPackage;
 
+import aQute.lib.osgi.Analyzer;
+import aQute.lib.osgi.Constants;
+import aQute.lib.osgi.Jar;
+import com.google.common.base.Joiner;
+import com.google.common.io.Closeables;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -43,15 +51,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.ZipOutputStream;
-
-import aQute.lib.osgi.Analyzer;
-import aQute.lib.osgi.Constants;
-import aQute.lib.osgi.Jar;
-
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.io.Closeables;
 
 /**
  * A {@link JavaJarCompiler} using the system Java compiler.
@@ -105,7 +104,7 @@ public class StandardJavaJarCompiler implements JavaJarCompiler {
       JavaProjectExtension extensions, ContainerInfo containerInfo, ProjectTaskContext context) {
     JavaProjectType projectType = context.getProjectType();
 
-    List<File> classpath = Lists.newArrayList();
+    List<File> classpath = new ArrayList<>();
     projectType.getRuntimeClasspath(true, context, classpath, extensions,
         context.getWorkbenchTaskContext());
 
@@ -116,7 +115,7 @@ public class StandardJavaJarCompiler implements JavaJarCompiler {
         fileSupport
             .newFile(context.getBuildDirectory(), JavaProjectType.SOURCE_GENERATED_MAIN_JAVA);
 
-    List<File> compilationFiles = Lists.newArrayList();
+    List<File> compilationFiles = new ArrayList<>();
     projectCompiler.getCompilationFiles(mainSourceDirectory, compilationFiles);
     projectCompiler.getCompilationFiles(generatedSourceDirectory, compilationFiles);
 
@@ -137,7 +136,7 @@ public class StandardJavaJarCompiler implements JavaJarCompiler {
       }
       File addedSource = context.getProjectTargetFile(project.getBaseDirectory(), sourceDirectory);
 
-      List<File> additionalSources = Lists.newArrayList();
+      List<File> additionalSources = new ArrayList<>();
       projectCompiler.getCompilationFiles(addedSource, additionalSources);
       compilationFiles.addAll(additionalSources);
 
@@ -270,7 +269,7 @@ public class StandardJavaJarCompiler implements JavaJarCompiler {
       ContainerInfo containerInfo, ProjectTaskContext context) {
     // Map Java package names which are supplied by project dependencies to
     // those dependencies.
-    Map<String, ProjectDependency> dependencyInfo = Maps.newHashMap();
+    Map<String, ProjectDependency> dependencyInfo = new HashMap<>();
     analyzeClasspathForDependencies(classpath, project, dependencyInfo, context);
 
     Analyzer analyzer = new Analyzer();
@@ -290,7 +289,7 @@ public class StandardJavaJarCompiler implements JavaJarCompiler {
         analyzer.setProperty(Constants.BUNDLE_ACTIVATOR, activatorClassname);
       }
 
-      List<String> exportPackages = Lists.newArrayList();
+      List<String> exportPackages = new ArrayList<>();
 
       List<String> privatePackages = containerInfo.getPrivatePackages();
       if (!privatePackages.isEmpty()) {
@@ -319,7 +318,7 @@ public class StandardJavaJarCompiler implements JavaJarCompiler {
       analyzer.setProperty(Constants.EXPORT_PACKAGE, Joiner.on(",").join(exportPackages));
 
       // This will make sure any imports we miss will be added to the imports.
-      List<String> importPackages = Lists.newArrayList();
+      List<String> importPackages = new ArrayList<>();
       for (ImportPackage importPackage : containerInfo.getImportPackages()) {
         importPackages.add(importPackage.getOsgiHeader());
       }
@@ -381,7 +380,7 @@ public class StandardJavaJarCompiler implements JavaJarCompiler {
       Map<String, ProjectDependency> dependencyInfo, ProjectTaskContext context) {
     ContainerBundleAnalyzer bundleAnalyzer = new BndOsgiContainerBundleAnalyzer();
 
-    Map<String, ProjectDependency> dependencies = Maps.newHashMap();
+    Map<String, ProjectDependency> dependencies = new HashMap<>();
     for (ProjectDependency dependency : project.getDependencies()) {
       dependencies.put(dependency.getIdentifyingName(), dependency);
 

@@ -18,13 +18,9 @@
 package io.smartspaces.service.web.server.internal.netty;
 
 import static org.jboss.netty.handler.codec.http.HttpHeaders.addHeader;
+
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpFileUpload;
-
-import java.io.IOException;
-import java.net.HttpCookie;
-import java.util.Map;
-import java.util.Set;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
@@ -33,7 +29,11 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
-import com.google.common.collect.Maps;
+import java.io.IOException;
+import java.net.HttpCookie;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A Netty handler for {@link NettyHttpPostRequestHandler}.
@@ -60,7 +60,7 @@ public class NettyHttpDynamicPostRequestHandlerHandler implements NettyHttpPostR
   /**
    * Extra headers to add to the response.
    */
-  private Map<String, String> extraHttpContentHeaders = Maps.newHashMap();
+  private Map<String, String> extraHttpContentHeaders = new HashMap<>();
 
   /**
    * Construct a dynamic request handler.

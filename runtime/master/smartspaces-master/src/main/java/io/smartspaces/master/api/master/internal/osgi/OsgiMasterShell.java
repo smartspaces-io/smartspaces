@@ -30,18 +30,17 @@ import io.smartspaces.service.script.ScriptService;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesSystemControl;
 
-import java.io.Console;
-import java.io.File;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.felix.service.command.CommandProcessor;
 import org.apache.felix.service.command.CommandSession;
 import org.osgi.framework.BundleContext;
 
-import com.google.common.collect.Maps;
+import java.io.Console;
+import java.io.File;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A shell for performing some Smart Spaces Space Master commands from a
@@ -554,7 +553,7 @@ public class OsgiMasterShell {
       System.out.println("script script1 script2 script3... where each script is a filename");
     }
 
-    Map<String, Object> bindings = Maps.newHashMap();
+    Map<String, Object> bindings = new HashMap<>();
     bindings.put("controllerManager", masterApiSpaceControllerManager);
 
     try {

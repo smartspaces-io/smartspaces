@@ -33,16 +33,16 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
+import com.google.common.collect.Lists;
+import com.google.common.io.Closeables;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.io.Closeables;
 
 /**
  * A local live activity repository for project-based standalone running.
@@ -59,7 +59,7 @@ public class StandaloneLocalLiveActivityRepository implements LocalLiveActivityR
   /**
    * The installed live activities.
    */
-  private Map<String, InstalledLiveActivity> installedLiveActivities = Maps.newHashMap();
+  private Map<String, InstalledLiveActivity> installedLiveActivities = new HashMap<>();
 
   /**
    * The space environment to use.

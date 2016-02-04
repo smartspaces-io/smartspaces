@@ -31,6 +31,12 @@ import io.smartspaces.service.script.StringScriptSource;
 import io.smartspaces.service.script.internal.javascript.RhinoJavascriptActivityScriptFactory;
 import io.smartspaces.service.script.internal.python.PythonActivityScriptFactory;
 
+import com.google.common.collect.Sets;
+import org.codehaus.groovy.jsr223.GroovyScriptEngineFactory;
+import org.python.jsr223.PyScriptEngineFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,13 +49,6 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 
-import org.codehaus.groovy.jsr223.GroovyScriptEngineFactory;
-import org.python.jsr223.PyScriptEngineFactory;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
 /**
  * An {@link ScriptService} using {@code javax.script}.
  *
@@ -60,17 +59,17 @@ public class JavaxScriptScriptService extends BaseSupportedService implements Sc
   /**
    * All engines stored in the script engine.
    */
-  private final List<ScriptLanguage> languages = Lists.newArrayList();
+  private final List<ScriptLanguage> languages = new ArrayList<>();
 
   /**
    * A mapping from names of languages to the factory.
    */
-  private final Map<String, ScriptLanguage> nameToLanguage = Maps.newHashMap();
+  private final Map<String, ScriptLanguage> nameToLanguage = new HashMap<>();
 
   /**
    * A mapping from names of extensions to the factory.
    */
-  private final Map<String, ScriptLanguage> extensionToLanguage = Maps.newHashMap();
+  private final Map<String, ScriptLanguage> extensionToLanguage = new HashMap<>();
 
   @Override
   public String getName() {

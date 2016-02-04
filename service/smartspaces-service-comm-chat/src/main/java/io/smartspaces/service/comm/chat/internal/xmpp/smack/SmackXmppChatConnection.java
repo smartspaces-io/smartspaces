@@ -21,8 +21,6 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.service.comm.chat.ChatConnection;
 import io.smartspaces.service.comm.chat.ChatConnectionListener;
 
-import java.util.List;
-
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.PacketListener;
@@ -31,7 +29,8 @@ import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A {@link ChatConnection} for XMPP using the Smack library.
@@ -68,7 +67,7 @@ public class SmackXmppChatConnection implements ChatConnection {
   /**
    * The listeners for the connection.
    */
-  private List<ChatConnectionListener> listeners = Lists.newArrayList();
+  private List<ChatConnectionListener> listeners = new ArrayList<>();
 
   /**
    * The chat connection.

@@ -17,9 +17,8 @@
 
 package io.smartspaces.util.process;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * All Unix return values.
@@ -206,7 +205,7 @@ public enum UnixReturnValue {
   /**
    * Map from the unix return values to the enum.
    */
-  private static final Map<Integer, UnixReturnValue> VALUE_TO_ENUM = Maps.newHashMap();
+  private static final Map<Integer, UnixReturnValue> VALUE_TO_ENUM = new HashMap<>();
 
   static {
     for (UnixReturnValue value : UnixReturnValue.values()) {

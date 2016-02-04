@@ -23,12 +23,11 @@ import io.smartspaces.master.resource.deployment.FeatureRepository;
 import io.smartspaces.master.resource.deployment.RemoteRepositoryMaster;
 import io.smartspaces.master.resource.deployment.ResourceDependencyResolver;
 
-import java.util.List;
-import java.util.Set;
-
 import org.ros.osgi.common.RosEnvironment;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A feature deployer for ROS nodes.
@@ -75,7 +74,7 @@ public class RosDeploymentServer implements DeploymentServer {
       return;
     }
 
-    List<Feature> bundles = Lists.newArrayList();
+    List<Feature> bundles = new ArrayList<>();
 
     for (String featureId : features) {
       Feature feature = featureRepository.getFeature(featureId);

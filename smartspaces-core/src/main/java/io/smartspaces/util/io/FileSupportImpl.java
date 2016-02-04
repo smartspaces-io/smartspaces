@@ -18,8 +18,11 @@
 package io.smartspaces.util.io;
 
 import static com.google.common.io.Closeables.closeQuietly;
+
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
+
+import com.google.common.io.Closeables;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,13 +40,11 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import com.google.common.collect.Lists;
-import com.google.common.io.Closeables;
 
 /**
  * Various useful file routines.
@@ -628,7 +629,7 @@ public class FileSupportImpl implements FileSupport {
 
   @Override
   public List<File> collectFiles(File baseDir, FileFilter filter, boolean recurse) {
-    List<File> files = Lists.newArrayList();
+    List<File> files = new ArrayList<>();
 
     collectFiles(baseDir, filter, recurse, files);
 

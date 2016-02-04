@@ -19,9 +19,8 @@ package io.smartspaces.container.control.message.container.resource.deployment;
 
 import io.smartspaces.resource.ResourceDependency;
 
+import java.util.HashSet;
 import java.util.Set;
-
-import com.google.common.collect.Sets;
 
 /**
  * A request for resource deployments to the container.
@@ -38,7 +37,7 @@ public class ContainerResourceDeploymentQueryRequest {
   /**
    * The queries.
    */
-  private final Set<ResourceDependency> queries = Sets.newHashSet();
+  private final Set<ResourceDependency> queries = new HashSet<>();
 
   /**
    * Construct a new query.

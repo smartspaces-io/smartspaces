@@ -29,11 +29,10 @@ import io.smartspaces.workbench.project.group.GroupProjectType;
 import io.smartspaces.workbench.project.library.LibraryProject;
 import io.smartspaces.workbench.project.library.LibraryProjectType;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A simple implemention of a {@link ProjectTypeRegistry}.
@@ -55,12 +54,12 @@ public class StandardProjectTypeRegistry implements ProjectTypeRegistry {
   /**
    * The mapping of names to project types.
    */
-  private final List<ProjectType> projectTypes = Lists.newArrayList();
+  private final List<ProjectType> projectTypes = new ArrayList<>();
 
   /**
    * Map containing project creator factories, by project type.
    */
-  private final Map<String, Class<? extends Project>> projectCreatorMap = Maps.newHashMap();
+  private final Map<String, Class<? extends Project>> projectCreatorMap = new HashMap<>();
 
   /**
    * Create a basic registry for project types.

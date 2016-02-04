@@ -26,13 +26,12 @@ import io.smartspaces.util.SmartSpacesUtilities;
 
 import java.awt.Rectangle;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-
-import com.google.common.collect.Lists;
 
 /**
  * Driver for a Sensacell.
@@ -233,7 +232,7 @@ public class SensacellDriver extends DriverSupport {
   /**
    * The listeners for the cell.
    */
-  private List<SensacellListener> listeners = Lists.newArrayList();
+  private List<SensacellListener> listeners = new ArrayList<>();
 
   /**
    * The update loop for this app.

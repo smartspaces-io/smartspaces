@@ -23,9 +23,8 @@ import io.smartspaces.workbench.FreemarkerTemplater;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * Create an eclipse project.
@@ -79,7 +78,7 @@ public class EclipseIdeProjectCreator {
       EclipseIdeProjectCreatorSpecification spec) {
     try {
       // Create the freemarkerContext hash
-      Map<String, Object> freemarkerContext = Maps.newHashMap();
+      Map<String, Object> freemarkerContext = new HashMap<>();
       freemarkerContext.put("project", project);
 
       spec.addSpecificationData(project, context, freemarkerContext);

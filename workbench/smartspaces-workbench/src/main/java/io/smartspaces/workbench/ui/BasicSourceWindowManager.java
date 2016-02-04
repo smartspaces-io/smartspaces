@@ -20,7 +20,11 @@ package io.smartspaces.workbench.ui;
 import io.smartspaces.workbench.project.ProjectManager;
 import io.smartspaces.workbench.project.source.Source;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 import java.awt.Component;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -28,10 +32,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Lists;
 
 /**
  * A basic implementation of a {@link SourceWindowManager}.
@@ -63,7 +63,7 @@ public class BasicSourceWindowManager implements SourceWindowManager {
   /**
    * Code editor listeners that should be placed on all code editors.
    */
-  private List<SourceEditorListener> editorListeners = Lists.newArrayList();
+  private List<SourceEditorListener> editorListeners = new ArrayList<>();
 
   /**
    * The project manager used for file operations.

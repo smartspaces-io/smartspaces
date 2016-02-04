@@ -35,15 +35,15 @@ import io.smartspaces.service.web.server.WebServerService;
 import io.smartspaces.service.web.server.WebServerWebSocketHandler;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.logging.Log;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.collect.Lists;
 
 /**
  * An {@link ActivityComponent} which starts up a web server.
@@ -71,7 +71,7 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
   /**
    * List of static content for the web server.
    */
-  private final List<StaticContent> staticContent = Lists.newArrayList();
+  private final List<StaticContent> staticContent = new ArrayList<>();
 
   /**
    * List of dynamic GET content for the web server.

@@ -19,9 +19,8 @@ package io.smartspaces.util.statemachine.simplegoal;
 
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransitioner.SimpleGoalStateTransitionResult;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * A collection of {@link SimpleGoalStateTransitioner} instances.
@@ -44,7 +43,7 @@ public class SimpleGoalStateTransitionerCollection<S, C> {
   /**
    * a map of activity controllers keyed by the key for the transitioner.
    */
-  private Map<String, SimpleGoalStateTransitioner<S, C>> transitioners = Maps.newHashMap();
+  private Map<String, SimpleGoalStateTransitioner<S, C>> transitioners = new HashMap<>();
 
   /**
    * Add a new transitioner to the collection.

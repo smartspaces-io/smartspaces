@@ -43,15 +43,15 @@ import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 import io.smartspaces.workbench.ui.UserInterfaceFactory;
 import io.smartspaces.workbench.ui.editor.swing.PlainSwingUserInterfaceFactory;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import org.apache.commons.logging.Log;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A workbench for working with Smart Spaces Activity development.
@@ -251,7 +251,7 @@ public class SmartSpacesWorkbench {
       throw new SimpleSmartSpacesException("No args given for OSGI command");
     }
 
-    List<File> sources = Lists.newArrayList();
+    List<File> sources = new ArrayList<>();
     File outputFile = null;
     File headersFile = null;
     for (int i = 0; i < args.size(); i++) {

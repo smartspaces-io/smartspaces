@@ -20,14 +20,13 @@ package io.smartspaces.util.concurrency;
 import io.smartspaces.util.events.EventDelay;
 import io.smartspaces.util.events.EventFrequency;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.logging.Log;
+
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * @author Keith M. Hughes
@@ -37,7 +36,7 @@ public class SimpleManagedCommands implements ManagedCommands {
   /**
    * All managed commands in collection.
    */
-  private final Set<ManagedCommand> managedCommands = Sets.newHashSet();
+  private final Set<ManagedCommand> managedCommands = new HashSet<>();
 
   /**
    * The executor service for this collection.

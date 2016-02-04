@@ -19,14 +19,13 @@ package io.smartspaces.workbench.project.jdom;
 
 import io.smartspaces.SimpleSmartSpacesException;
 
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.base.Preconditions;
 import org.jdom2.Element;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Processor for project prototypes in a project group.
@@ -64,7 +63,7 @@ class JdomPrototypeProcessor {
   /**
    * Map of prototype names to generating elements.
    */
-  private Map<String, Element> prototypeMap = Maps.newHashMap();
+  private Map<String, Element> prototypeMap = new HashMap<>();
 
   /**
    * Add a prototype record for the given element.
@@ -91,7 +90,7 @@ class JdomPrototypeProcessor {
    * @return prototype chain (ordered list of elements to process)
    */
   public List<Element> getPrototypeChain(Element element) {
-    List<Element> prototypeChain = Lists.newArrayList();
+    List<Element> prototypeChain = new ArrayList<>();
     followPrototypeChain(element, prototypeChain);
     return prototypeChain;
   }

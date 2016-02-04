@@ -19,16 +19,15 @@ package io.smartspaces.util.ros;
 
 import io.smartspaces.SimpleSmartSpacesException;
 
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.ros.internal.node.topic.SubscriberIdentifier;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Publisher;
 import org.ros.node.topic.PublisherListener;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A collection of ROS publishers for a given message type.
@@ -43,12 +42,12 @@ public class StandardRosPublishers<T> implements RosPublishers<T> {
   /**
    * All publishers registered.
    */
-  private final List<Publisher<T>> publishers = Lists.newArrayList();
+  private final List<Publisher<T>> publishers = new ArrayList<>();
 
   /**
    * All publisher listeners registered.
    */
-  private final List<PublisherListener<T>> publisherListeners = Lists.newArrayList();
+  private final List<PublisherListener<T>> publisherListeners = new ArrayList<>();
 
   /**
    * Logger for this collection.

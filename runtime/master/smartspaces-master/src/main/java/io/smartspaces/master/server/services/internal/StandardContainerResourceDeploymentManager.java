@@ -36,9 +36,8 @@ import io.smartspaces.util.uuid.JavaUuidGenerator;
 import io.smartspaces.util.uuid.UuidGenerator;
 
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Set;
-
-import com.google.common.collect.Sets;
 
 /**
  * Standard implementation of a container resource deployment manager.
@@ -92,7 +91,7 @@ public class StandardContainerResourceDeploymentManager implements
   @Override
   public Set<NamedVersionedResourceWithData<URI>> satisfyDependencies(
       Set<ResourceDependency> dependencies) {
-    Set<NamedVersionedResourceWithData<URI>> results = Sets.newHashSet();
+    Set<NamedVersionedResourceWithData<URI>> results = new HashSet<>();
 
     NamedVersionedResourceCollection<NamedVersionedResourceWithData<URI>> allResources =
         resourceRepositoryStorageManager

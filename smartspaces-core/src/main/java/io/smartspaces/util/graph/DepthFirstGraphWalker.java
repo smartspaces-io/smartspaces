@@ -17,9 +17,8 @@
 
 package io.smartspaces.util.graph;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * Walk a graph in a depth-first manner with an observer.
@@ -39,7 +38,7 @@ public class DepthFirstGraphWalker<I, T> {
   /**
    * Map from node IDs to their data.
    */
-  private Map<I, WalkableGraphNode<I, T>> idToNode = Maps.newHashMap();
+  private Map<I, WalkableGraphNode<I, T>> idToNode = new HashMap<>();
 
   /**
    * Current time in the walker.

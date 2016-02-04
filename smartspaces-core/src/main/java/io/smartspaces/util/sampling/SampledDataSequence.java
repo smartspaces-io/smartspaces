@@ -17,9 +17,8 @@
 
 package io.smartspaces.util.sampling;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * A sequence of data sampled from a variety of named sources.
@@ -31,7 +30,7 @@ public class SampledDataSequence {
   /**
    * The samples which have been captured indexed by their source.
    */
-  private final List<SampledDataFrame> frames = Lists.newArrayList();
+  private final List<SampledDataFrame> frames = new ArrayList<>();
 
   /**
    * Clear the sequence out.

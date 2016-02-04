@@ -20,15 +20,14 @@ package io.smartspaces.util.data.json;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import com.google.common.collect.Sets;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.junit.Test;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * Test the {@link JsonNavigator}.
@@ -42,7 +41,7 @@ public class StandardJsonNavigatorTest {
    */
   @Test
   public void testPrimitives() {
-    Map<String, Object> root = Maps.newHashMap();
+    Map<String, Object> root = new HashMap<>();
 
     String keyString1 = "string1";
     String valueString1 = "bar";
@@ -84,9 +83,9 @@ public class StandardJsonNavigatorTest {
    */
   @Test
   public void testDescent() {
-    Map<String, Object> root = Maps.newHashMap();
+    Map<String, Object> root = new HashMap<>();
 
-    Map<String, Object> obj1 = Maps.newHashMap();
+    Map<String, Object> obj1 = new HashMap<>();
     String obj1Key = "foo";
     root.put(obj1Key, obj1);
 
@@ -100,7 +99,7 @@ public class StandardJsonNavigatorTest {
 
     obj1.put(obj1ValueKey2, obj1Value2);
 
-    Map<String, Object> obj2 = Maps.newHashMap();
+    Map<String, Object> obj2 = new HashMap<>();
     String obj2Key = "banana";
     obj1.put(obj2Key, obj2);
 
@@ -109,7 +108,7 @@ public class StandardJsonNavigatorTest {
 
     obj2.put(obj2ValueKey, obj2Value);
 
-    List<Object> array = Lists.newArrayList();
+    List<Object> array = new ArrayList<>();
     array.add(17);
     array.add("glork");
 
@@ -150,10 +149,10 @@ public class StandardJsonNavigatorTest {
    */
   @Test
   public void testArrayPrimitives() {
-    Map<String, Object> root = Maps.newHashMap();
+    Map<String, Object> root = new HashMap<>();
 
     String keyString = "test";
-    List<Object> array = Lists.newArrayList();
+    List<Object> array = new ArrayList<>();
     root.put(keyString, array);
 
     String objectValue1 = "bar";
@@ -169,7 +168,7 @@ public class StandardJsonNavigatorTest {
     boolean arrayValueBoolean = true;
     array.add(arrayValueBoolean);
 
-    Map<String, Object> arrayValueMap = Maps.newHashMap();
+    Map<String, Object> arrayValueMap = new HashMap<>();
     array.add(arrayValueMap);
     String objectKey1 = "foo";
     arrayValueMap.put(objectKey1, objectValue1);
@@ -208,9 +207,9 @@ public class StandardJsonNavigatorTest {
    */
   @Test
   public void testPaths() {
-    Map<String, Object> root = Maps.newHashMap();
+    Map<String, Object> root = new HashMap<>();
 
-    Map<String, Object> obj1 = Maps.newHashMap();
+    Map<String, Object> obj1 = new HashMap<>();
     String obj1Key = "foo";
     root.put(obj1Key, obj1);
 
@@ -224,7 +223,7 @@ public class StandardJsonNavigatorTest {
 
     obj1.put(obj1ValueKey2, obj1Value2);
 
-    Map<String, Object> obj2 = Maps.newHashMap();
+    Map<String, Object> obj2 = new HashMap<>();
     String obj2Key = "banana";
     obj1.put(obj2Key, obj2);
 
@@ -233,12 +232,12 @@ public class StandardJsonNavigatorTest {
 
     obj2.put(obj2ValueKey, obj2Value);
 
-    Map<String, Object> arrayElement1 = Maps.newHashMap();
+    Map<String, Object> arrayElement1 = new HashMap<>();
     String arrayElement1ValueKey = "orangina";
     String arrayElement1Value = "apple sauce";
     arrayElement1.put(arrayElement1ValueKey, arrayElement1Value);
 
-    List<Object> array = Lists.newArrayList();
+    List<Object> array = new ArrayList<>();
     String arrayElement0 = "glork";
     array.add(arrayElement0);
     array.add(arrayElement1);

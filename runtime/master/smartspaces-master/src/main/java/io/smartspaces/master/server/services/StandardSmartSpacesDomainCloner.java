@@ -25,10 +25,11 @@ import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.space.Space;
 
+import com.google.common.collect.Maps;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import com.google.common.collect.Maps;
 
 /**
  * Clone Smart Spaces domain objects.
@@ -49,12 +50,12 @@ public class StandardSmartSpacesDomainCloner implements SmartSpacesDomainCloner 
   /**
    * A map from the old live activity to the cloned live activity.
    */
-  private Map<String, LiveActivity> liveActivityClones = Maps.newHashMap();
+  private Map<String, LiveActivity> liveActivityClones = new HashMap<>();
 
   /**
    * A map from the old live activity group to the cloned live activity group.
    */
-  private Map<String, LiveActivityGroup> liveActivityGroupClones = Maps.newHashMap();
+  private Map<String, LiveActivityGroup> liveActivityGroupClones = new HashMap<>();
 
   /**
    * A map from the old space to the cloned space.

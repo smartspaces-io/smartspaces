@@ -24,12 +24,13 @@ import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.activity.ActivityProject;
 
+import com.google.common.collect.Maps;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A base builder class for common project types.
@@ -129,8 +130,8 @@ public abstract class BaseProjectBuilder<T extends Project> implements ProjectBu
     File resourceMapFile =
         fileSupport.newFile(context.getBuildDirectory(), ActivityProject.FILENAME_RESOURCE_MAP);
 
-    Map<String, Object> templateData = Maps.newHashMap();
-    List<Map<String, String>> srcList = Lists.newArrayList();
+    Map<String, Object> templateData = new HashMap<>();
+    List<Map<String, String>> srcList = new ArrayList<>();
     templateData.put(TEMPLATE_SRC_LIST_KEY, srcList);
 
     String stagingPrefix = stagingDirectory.getAbsolutePath() + File.separatorChar;

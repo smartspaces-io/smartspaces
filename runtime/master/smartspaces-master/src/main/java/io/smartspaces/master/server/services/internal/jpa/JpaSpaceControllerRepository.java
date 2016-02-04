@@ -29,13 +29,12 @@ import io.smartspaces.master.server.services.internal.jpa.domain.JpaSpaceControl
 import io.smartspaces.master.server.services.internal.jpa.domain.JpaSpaceControllerConfigurationParameter;
 import io.smartspaces.util.uuid.UuidGenerator;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.orm.jpa.JpaTemplate;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A JPA implementation of {@link SpaceControllerRepository}.
@@ -116,7 +115,7 @@ public class JpaSpaceControllerRepository extends BaseSpaceControllerRepository 
     @SuppressWarnings("unchecked")
     List<SpaceController> controllers = template.findByNamedQuery("spaceControllerAll");
 
-    List<SpaceController> results = Lists.newArrayList();
+    List<SpaceController> results = new ArrayList<>();
 
     if (filter != null) {
       for (SpaceController controller : controllers) {
@@ -138,7 +137,7 @@ public class JpaSpaceControllerRepository extends BaseSpaceControllerRepository 
 
   @Override
   public SpaceController getSpaceControllerByUuid(String uuid) {
-    Map<String, String> params = Maps.newHashMap();
+    Map<String, String> params = new HashMap<>();
     params.put("uuid", uuid);
     @SuppressWarnings("unchecked")
     List<SpaceController> results =

@@ -17,11 +17,10 @@
 
 package io.smartspaces.resource;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A collection of versioned resources where the resources have both a name and
@@ -49,7 +48,7 @@ public class NamedVersionedResourceCollection<T> {
   /**
    * The resources.
    */
-  private final Map<String, VersionedResourceCollection<T>> resources = Maps.newHashMap();
+  private final Map<String, VersionedResourceCollection<T>> resources = new HashMap<>();
 
   /**
    * Add in a new resource into the collection.
@@ -160,7 +159,7 @@ public class NamedVersionedResourceCollection<T> {
    * @return a newly constructed list of all resources
    */
   public List<T> getAllResources() {
-    List<T> all = Lists.newArrayList();
+    List<T> all = new ArrayList<>();
 
     for (VersionedResourceCollection<T> resourceCollection : resources.values()) {
       all.addAll(resourceCollection.getAllResources());

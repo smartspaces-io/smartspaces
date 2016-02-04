@@ -19,9 +19,8 @@ package io.smartspaces.spacecontroller.runtime;
 
 import io.smartspaces.util.data.resource.LocatableResource;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * A dependency for the controller container.
@@ -53,7 +52,7 @@ public class SpaceControllerContainerDependency {
   /**
    * The resources unknown which can supply this dependency.
    */
-  private List<LocatableResource> resources = Lists.newArrayList();
+  private List<LocatableResource> resources = new ArrayList<>();
 
   /**
    * Construct the dependency.

@@ -22,12 +22,13 @@ import io.smartspaces.liveactivity.runtime.monitor.PluginFunctionalityDescriptor
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
 
+import com.google.common.collect.Lists;
+
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * The live activity monitor plugin that provides a web index for all the
@@ -77,7 +78,7 @@ public class IndexLiveActivityRuntimeMonitorPlugin extends BaseLiveActivityRunti
     OutputStream outputStream = startWebResponse(response, false);
     addCommonPageHeader(outputStream, "Debugging");
 
-    List<PluginFunctionalityDescriptor> descriptors = Lists.newArrayList();
+    List<PluginFunctionalityDescriptor> descriptors = new ArrayList<>();
     for (LiveActivityRuntimeMonitorPlugin plugin : getMonitorService().getPlugins()) {
       descriptors.addAll(plugin.getFunctionalityDescriptors());
     }

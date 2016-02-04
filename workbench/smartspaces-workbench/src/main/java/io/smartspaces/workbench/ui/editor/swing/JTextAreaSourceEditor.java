@@ -21,6 +21,7 @@ import io.smartspaces.workbench.project.source.Source;
 import io.smartspaces.workbench.ui.SourceEditor;
 import io.smartspaces.workbench.ui.SourceEditorListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -31,8 +32,6 @@ import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.UndoManager;
-
-import com.google.common.collect.Lists;
 
 /**
  * A {@link SourceEditor} using a {@link JTextArea}.
@@ -54,7 +53,7 @@ public class JTextAreaSourceEditor implements SourceEditor {
   /**
    * Everyone who wants to know when this code was edited.
    */
-  private List<SourceEditorListener> editorListeners = Lists.newArrayList();
+  private List<SourceEditorListener> editorListeners = new ArrayList<>();
 
   /**
    * The undo/redo manager for the text area.

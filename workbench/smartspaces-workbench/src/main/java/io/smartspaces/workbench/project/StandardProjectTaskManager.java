@@ -37,9 +37,8 @@ import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * Standard implementation of the project tasks manager.
@@ -125,7 +124,7 @@ public class StandardProjectTaskManager implements ProjectTaskManager {
     // with tasks having a classification, e.g.
     // build, clean, etc. If so, workbench task context objects should be used
     // once or have a reset functionality.
-    Map<Project, ProjectBuildTask> buildTasks = Maps.newHashMap();
+    Map<Project, ProjectBuildTask> buildTasks = new HashMap<>();
     addProjectBuildTask(project, projectTaskContext, workbenchTaskContext, buildTasks);
   }
 

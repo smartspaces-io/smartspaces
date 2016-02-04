@@ -22,10 +22,9 @@ import io.smartspaces.hardware.driver.DriverSupport;
 import io.smartspaces.service.comm.serial.bluetooth.BluetoothCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.bluetooth.BluetoothCommunicationEndpointService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
-
-import com.google.common.collect.Lists;
 
 /**
  * A driver for the Wii remote.
@@ -148,7 +147,7 @@ public class WiiRemoteDriver extends DriverSupport {
   /**
    * The list of all listeners for events.
    */
-  private List<WiiRemoteEventListener> listeners = Lists.newArrayList();
+  private List<WiiRemoteEventListener> listeners = new ArrayList<>();
 
   /**
    * Construct a driver for the given address.

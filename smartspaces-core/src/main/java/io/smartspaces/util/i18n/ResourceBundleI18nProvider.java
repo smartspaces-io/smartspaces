@@ -19,6 +19,8 @@ package io.smartspaces.util.i18n;
 
 import io.smartspaces.SmartSpacesException;
 
+import com.google.common.collect.Lists;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,15 +29,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.MessageFormat;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Set;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * Use the Java ResourceBundle API to provide internationalization services.
@@ -141,7 +141,7 @@ public class ResourceBundleI18nProvider implements I18nProvider {
 
   @Override
   public Set<Locale> getSupportedLocales() {
-    Set<Locale> locales = Sets.newHashSet();
+    Set<Locale> locales = new HashSet<>();
 
     // Only take the ones with the _ as these are the locale specific
     // entries.
@@ -172,7 +172,7 @@ public class ResourceBundleI18nProvider implements I18nProvider {
 
   @Override
   public Set<I18nSource> getAllSupportedSources() {
-    Set<I18nSource> sources = Sets.newHashSet();
+    Set<I18nSource> sources = new HashSet<>();
 
     for (Locale locale : getSupportedLocales()) {
       sources.add(getSource(locale));

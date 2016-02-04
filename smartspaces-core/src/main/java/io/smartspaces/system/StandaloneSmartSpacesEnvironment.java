@@ -28,14 +28,13 @@ import io.smartspaces.time.TimeProvider;
 import io.smartspaces.util.resource.ManagedResource;
 import io.smartspaces.util.resource.ManagedResources;
 
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.Jdk14Logger;
 
-import com.google.common.collect.Maps;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * An {@link SmartSpacesEnvironment} that can be used for standalone running of
@@ -103,7 +102,7 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
   /**
    * Simple value map.
    */
-  private final Map<String, Object> values = Maps.newHashMap();
+  private final Map<String, Object> values = new HashMap<>();
 
   /**
    * The managed resources for this environment.

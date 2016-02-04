@@ -38,7 +38,7 @@ jar {
     symbolicName = 'smartspaces.controller'
 	
 	instruction 'Bundle-Activator',
-		'io.smartspaces.controller.runtime.internal.osgi.OsgiControllerActivator'
+		'io.smartspaces.spacecontroller.runtime.internal.osgi.OsgiSpaceControllerActivator'
 
     instruction 'Export-Package',
 		'io.smartspaces.*'

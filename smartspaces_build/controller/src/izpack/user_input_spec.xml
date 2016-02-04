@@ -30,22 +30,22 @@
 
     <field type="space" />
 
-    <field type="check" align="left" variable="smartspaces.controller.manualconfig">
-      <spec id="input.smartspaces.controller.manualconfig" true="true" false="false" />
+    <field type="check" align="left" variable="smartspaces.spacecontroller.manualconfig">
+      <spec id="input.smartspaces.spacecontroller.manualconfig" true="true" false="false" />
     </field>
   </panel>
 
   <panel order="1">
     <field type="title" id="static.main.title" />
 
-    <field type="staticText" id="static.smartspaces.controller.uuid" />
+    <field type="staticText" id="static.smartspaces.spacecontroller.uuid" />
 
     <field type="space" />
     <field type="space" />
 
-    <field type="text" variable="smartspaces.controller.uuid">
-      <spec id="input.smartspaces.controller.uuid" size="30" />
-      <validator class="com.izforge.izpack.util.RegularExpressionValidator" id="input.smartspaces.controller.uuid.invalid">
+    <field type="text" variable="smartspaces.spacecontroller.uuid">
+      <spec id="input.smartspaces.spacecontroller.uuid" size="30" />
+      <validator class="com.izforge.izpack.util.RegularExpressionValidator" id="input.smartspaces.spacecontroller.uuid.invalid">
         <param name="pattern" value="[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}" />
       </validator>
     </field>
@@ -54,13 +54,13 @@
   <panel order="2">
     <field type="title" id="static.main.title" />
 
-    <field type="text" variable="smartspaces.controller.name">
-      <spec id="input.smartspaces.controller.name" size="30" />
-      <validator class="com.izforge.izpack.util.NotEmptyValidator" id="input.smartspaces.controller.name.invalid" />
+    <field type="text" variable="smartspaces.spacecontroller.name">
+      <spec id="input.smartspaces.spacecontroller.name" size="30" />
+      <validator class="com.izforge.izpack.util.NotEmptyValidator" id="input.smartspaces.spacecontroller.name.invalid" />
     </field>
 
-    <field type="text" variable="smartspaces.controller.description">
-      <spec id="input.smartspaces.controller.description" size="30" />
+    <field type="text" variable="smartspaces.spacecontroller.description">
+      <spec id="input.smartspaces.spacecontroller.description" size="30" />
     </field>
   </panel>
 

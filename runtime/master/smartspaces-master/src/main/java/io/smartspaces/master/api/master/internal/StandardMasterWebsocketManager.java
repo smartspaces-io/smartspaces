@@ -876,10 +876,10 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
       }
     });
     registerMasterApiHandler(new MasterApiWebSocketCommandHandler(
-        MasterApiMessages.MASTER_API_COMMAND_INTERACTIVE_SPACES_VERSION) {
+        MasterApiMessages.MASTER_API_COMMAND_SMART_SPACES_VERSION) {
       @Override
       public Map<String, Object> execute(Map<String, Object> commandArgs) {
-        return masterApiMasterSupportManager.getsmartspacesVersion();
+        return masterApiMasterSupportManager.getSmartSpacesVersion();
       }
     });
   }

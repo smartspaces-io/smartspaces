@@ -80,9 +80,9 @@ public abstract class Project {
   private Version version;
 
   /**
-   * The version range for interactive spaces for the project.
+   * The version range for Smart Spaces for the project.
    */
-  private VersionRange smartspacesVersion;
+  private VersionRange smartSpacesVersion;
 
   /**
    * The dependencies the project has.
@@ -289,19 +289,19 @@ public abstract class Project {
    *
    * @return the range of Smart Spaces versions that this project requires
    */
-  public VersionRange getsmartspacesVersionRange() {
-    return smartspacesVersion;
+  public VersionRange getSmartSpacesVersionRange() {
+    return smartSpacesVersion;
   }
 
   /**
    * Set the range of Smart Spaces versions that this project requires.
    *
-   * @param smartspacesVersionRange
+   * @param smartSpacesVersionRange
    *          the range of Smart Spaces versions that this project
    *          requires
    */
-  public void setsmartspacesVersionRange(VersionRange smartspacesVersionRange) {
-    this.smartspacesVersion = smartspacesVersionRange;
+  public void setSmartSpacesVersionRange(VersionRange smartSpacesVersionRange) {
+    this.smartSpacesVersion = smartSpacesVersionRange;
   }
 
   /**

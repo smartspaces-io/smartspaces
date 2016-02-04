@@ -37,22 +37,22 @@ public interface SpaceController extends ManagedResource {
    * Environment value giving the controller's
    * {@link NativeActivityRunnerFactory}.
    */
-  String ENVIRONMENT_CONTROLLER_NATIVE_RUNNER = "controller.native.runner";
+  String ENVIRONMENT_CONTROLLER_NATIVE_RUNNER = "spacecontroller.native.runner";
 
   /**
    * Configuration property giving the UUID of the controller.
    */
-  String CONFIGURATION_CONTROLLER_UUID = "io.smartspaces.spacecontroller.uuid";
+  String CONFIGURATION_CONTROLLER_UUID = "smartspaces.spacecontroller.uuid";
 
   /**
    * Configuration property giving the name of the controller.
    */
-  String CONFIGURATION_CONTROLLER_NAME = "io.smartspaces.spacecontroller.name";
+  String CONFIGURATION_CONTROLLER_NAME = "smartspaces.spacecontroller.name";
 
   /**
    * Configuration property giving the description of the controller.
    */
-  String CONFIGURATION_CONTROLLER_DESCRIPTION = "io.smartspaces.spacecontroller.description";
+  String CONFIGURATION_CONTROLLER_DESCRIPTION = "smartspaces.spacecontroller.description";
 
   /**
    * Specification for standard controller mode.
@@ -62,7 +62,7 @@ public interface SpaceController extends ManagedResource {
   /**
    * Configuration property name for controller mode.
    */
-  String CONFIGURATION_SMARTSPACES_CONTROLLER_MODE = "io.smartspaces.spacecontroller.mode";
+  String CONFIGURATION_SMARTSPACES_CONTROLLER_MODE = "smartspaces.spacecontroller.mode";
 
   /**
    * Get the Smart Spaces environment.

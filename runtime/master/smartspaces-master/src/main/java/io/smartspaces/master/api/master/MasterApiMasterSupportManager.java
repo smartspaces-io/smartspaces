@@ -77,5 +77,5 @@ public interface MasterApiMasterSupportManager {
    *
    * @return the Master API response
    */
-  Map<String, Object> getsmartspacesVersion();
+  Map<String, Object> getSmartSpacesVersion();
 }

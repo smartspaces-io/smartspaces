@@ -33,7 +33,7 @@ CONTAINER_TEMPLATES="${CONTAINER}/templates"
 
 ${DO_CMD} rm -f "${CONTAINER_BOOTSTRAP}/"*
 ${DO_CMD} rm -f "${CONTAINER_LIB_SYSTEM_JAVA}/"*.jar
-${DO_CMD} rm -f "${CONTAINER}/interactivespaces-launcher-"*.jar
+${DO_CMD} rm -f "${CONTAINER}/smartspaces-launcher-"*.jar
 
 if [ "${CONTAINER_TYPE}" == "controller" ]; then
   ${DO_CMD} rm -rf "${CONTAINER_EXTRAS}/"*
@@ -56,7 +56,7 @@ ${DO_CMD} cp "${STAGING}/bootstrap/"* "${CONTAINER_BOOTSTRAP}"
 ${DO_CMD} cp "${STAGING}/bin/"* "${CONTAINER_BIN}"
 ${DO_CMD} cp "${STAGING}/lib/system/java/delegations.conf" "${CONTAINER_LIB_SYSTEM_JAVA}"
 ${DO_CMD} cp "${STAGING}/lib/system/java/"*.jar "${CONTAINER_LIB_SYSTEM_JAVA}"
-${DO_CMD} cp "${STAGING}/interactivespaces-launcher-${VERSION}.jar" "${CONTAINER}"
+${DO_CMD} cp "${STAGING}/smartspaces-launcher-${VERSION}.jar" "${CONTAINER}"
 
 if [ "${CONTAINER_TYPE}" == "controller" ]; then
   ${DO_CMD} cp -R "${STAGING}/extras/"* "${CONTAINER_EXTRAS}"

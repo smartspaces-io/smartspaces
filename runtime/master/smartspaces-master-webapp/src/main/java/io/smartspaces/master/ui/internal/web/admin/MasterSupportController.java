@@ -56,7 +56,7 @@ public class MasterSupportController extends BaseSpaceMasterController {
   public ModelAndView supportIndexPage() {
     ModelAndView mav = getModelAndView();
 
-    Map<String, Object> response = masterApiMasterSupportManager.getsmartspacesVersion();
+    Map<String, Object> response = masterApiMasterSupportManager.getSmartSpacesVersion();
     mav.addAllObjects(MasterApiMessageSupport.getResponseDataMap(response));
 
     mav.setViewName("admin/SupportAll");

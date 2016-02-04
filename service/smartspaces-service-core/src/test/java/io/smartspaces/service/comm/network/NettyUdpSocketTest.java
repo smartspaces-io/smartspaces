@@ -89,7 +89,7 @@ public class NettyUdpSocketTest {
     final byte[] serverResponseExpectedData = new byte[] { 17, 2, 89, 127 };
     byte[] serverRequestExpectedData = new byte[] { 55, 66, 22, 87 };
 
-    int serverPort = 10000;
+    int serverPort = 8099;
 
     final CountDownLatch serverReceiveLatch = new CountDownLatch(1);
     final AtomicReference<UdpServerRequest> serverRequestActualData =

@@ -129,8 +129,8 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
    * The project attribute for the version of Smart Spaces which is
    * required.
    */
-  public static final String PROJECT_ATTRIBUTE_NAME_PROJECT_INTERACTIVE_SPACES_VERSION =
-      "smartspacesVersion";
+  public static final String PROJECT_ATTRIBUTE_NAME_PROJECT_SMART_SPACES_VERSION =
+      "smartSpacesVersion";
 
   /**
    * The version of the project.
@@ -329,11 +329,11 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
     processPrototypeChain(project, projectNamespace, projectElement);
     configureProjectFromElement(project, projectNamespace, projectElement);
 
-    if (project.getsmartspacesVersionRange() == null) {
+    if (project.getSmartSpacesVersionRange() == null) {
       getLog().warn(
           "Did not specify a range of needed Smart Spaces versions. Setting default to "
               + SMARTSPACES_VERSION_RANGE_DEFAULT);
-      project.setsmartspacesVersionRange(SMARTSPACES_VERSION_RANGE_DEFAULT);
+      project.setSmartSpacesVersionRange(SMARTSPACES_VERSION_RANGE_DEFAULT);
     }
 
     if (failure) {
@@ -479,14 +479,14 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
     project.setBuilderType(getAttributeValue(rootElement, PROJECT_ATTRIBUTE_NAME_PROJECT_BUILDER,
         project.getBuilderType()));
 
-    String smartspacesVersionRangeAttribute =
-        getAttributeValue(rootElement, PROJECT_ATTRIBUTE_NAME_PROJECT_INTERACTIVE_SPACES_VERSION,
+    String smartSpacesVersionRangeAttribute =
+        getAttributeValue(rootElement, PROJECT_ATTRIBUTE_NAME_PROJECT_SMART_SPACES_VERSION,
             null);
 
-    if (smartspacesVersionRangeAttribute != null) {
+    if (smartSpacesVersionRangeAttribute != null) {
       VersionRange versionRange =
-          VersionRange.parseVersionRange(smartspacesVersionRangeAttribute);
-      project.setsmartspacesVersionRange(versionRange);
+          VersionRange.parseVersionRange(smartSpacesVersionRangeAttribute);
+      project.setSmartSpacesVersionRange(versionRange);
     }
   }
 

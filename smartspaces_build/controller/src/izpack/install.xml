@@ -19,15 +19,15 @@
     <variable name="smartspaces.platform.os" value="windows" condition="izpack.windowsinstall" />
     <variable name="smartspaces.platform.os" value="osx" condition="izpack.macinstall" />
 
-    <variable name="smartspaces.controller.uuid.final" value="${smartspaces.controller.uuid}"
+    <variable name="smartspaces.controller.uuid.final" value="${smartspaces.spacecontroller.uuid}"
       condition="manualconfig" />
-    <variable name="smartspaces.controller.name.final" value="" condition="manualconfig" />
-    <variable name="smartspaces.controller.description.final" value="" condition="manualconfig" />
+    <variable name="smartspaces.spacecontroller.name.final" value="" condition="manualconfig" />
+    <variable name="smartspaces.spacecontroller.description.final" value="" condition="manualconfig" />
 
-    <variable name="smartspaces.controller.uuid.final" value="" condition="!manualconfig" />
-    <variable name="smartspaces.controller.name.final" value="${smartspaces.controller.name}"
+    <variable name="smartspaces.spacecontroller.uuid.final" value="" condition="!manualconfig" />
+    <variable name="smartspaces.spacecontroller.name.final" value="${smartspaces.spacecontroller.name}"
       condition="!manualconfig" />
-    <variable name="smartspaces.controller.description.final" value="${smartspaces.controller.description}"
+    <variable name="smartspaces.spacecontroller.description.final" value="${smartspaces.spacecontroller.description}"
       condition="!manualconfig" />
 
     <variable name="smartspaces.container.type" value="controller" />
@@ -54,7 +54,7 @@
 
   <conditions>
     <condition type="variable" id="manualconfig">
-      <name>smartspaces.controller.manualconfig</name>
+      <name>smartspaces.spacecontroller.manualconfig</name>
       <value>true</value>
     </condition>
   </conditions>

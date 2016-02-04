@@ -117,13 +117,13 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager 
   }
 
   @Override
-  public Map<String, Object> getsmartspacesVersion() {
+  public Map<String, Object> getSmartSpacesVersion() {
     Map<String, Object> data = Maps.newHashMap();
     data.put(
-        MasterApiMessages.MASTER_API_PARAMETER_NAME_INTERACTIVE_SPACES_VERSION,
+        MasterApiMessages.MASTER_API_PARAMETER_NAME_SMART_SPACES_VERSION,
         spaceEnvironment.getSystemConfiguration().getPropertyString(
             SmartSpacesEnvironment.CONFIGURATION_SMARTSPACES_VERSION,
-            MasterApiMessages.MASTER_API_PARAMETER_VALUE_INTERACTIVE_SPACES_VERSION_UNKNOWN));
+            MasterApiMessages.MASTER_API_PARAMETER_VALUE_SMART_SPACES_VERSION_UNKNOWN));
 
     return MasterApiMessageSupport.getSuccessResponse(data);
   }

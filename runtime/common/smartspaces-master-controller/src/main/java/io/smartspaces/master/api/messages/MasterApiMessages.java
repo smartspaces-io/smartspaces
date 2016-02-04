@@ -649,7 +649,7 @@ public class MasterApiMessages {
   /**
    * Web socket command for obtaining the Smart Spaces version.
    */
-  public static final String MASTER_API_COMMAND_INTERACTIVE_SPACES_VERSION =
+  public static final String MASTER_API_COMMAND_SMART_SPACES_VERSION =
       "/smartspaces/version";
 
   /**
@@ -753,14 +753,14 @@ public class MasterApiMessages {
    * Status parameter name for the Smart Spaces version in the Master API
    * message.
    */
-  public static final String MASTER_API_PARAMETER_NAME_INTERACTIVE_SPACES_VERSION =
-      "smartspacesVersion";
+  public static final String MASTER_API_PARAMETER_NAME_SMART_SPACES_VERSION =
+      "smartSpacesVersion";
 
   /**
    * Status parameter value for an unknown Smart Spaces version in the
    * Master API message.
    */
-  public static final String MASTER_API_PARAMETER_VALUE_INTERACTIVE_SPACES_VERSION_UNKNOWN =
+  public static final String MASTER_API_PARAMETER_VALUE_SMART_SPACES_VERSION_UNKNOWN =
       "Unknown";
 
   /**

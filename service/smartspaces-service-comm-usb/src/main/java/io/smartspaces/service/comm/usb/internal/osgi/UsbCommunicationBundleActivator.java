@@ -31,6 +31,6 @@ public class UsbCommunicationBundleActivator extends SmartSpacesServiceOsgiBundl
   protected void allRequiredServicesAvailable() {
     Usb4JavaUsbCommunicationEndpointService usbCommService =
         new Usb4JavaUsbCommunicationEndpointService();
-    registerNewsmartspacesService(usbCommService);
+    registerNewSmartSpacesService(usbCommService);
   }
 }

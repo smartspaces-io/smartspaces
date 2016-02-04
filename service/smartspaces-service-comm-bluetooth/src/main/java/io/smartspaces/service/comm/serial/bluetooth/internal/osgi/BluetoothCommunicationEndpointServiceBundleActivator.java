@@ -34,6 +34,6 @@ public class BluetoothCommunicationEndpointServiceBundleActivator extends
     BluetoothCommunicationEndpointService bluetoothCommService =
         new Jsr82BluetoothCommunicationEndpointService();
 
-    registerNewsmartspacesService(bluetoothCommService);
+    registerNewSmartSpacesService(bluetoothCommService);
   }
 }

@@ -32,6 +32,6 @@ public class TwitterServiceOsgiBundleActivator extends SmartSpacesServiceOsgiBun
   protected void allRequiredServicesAvailable() {
     TwitterService twitterService = new Twitter4jTwitterConnectionService();
 
-    registerNewsmartspacesService(twitterService);
+    registerNewSmartSpacesService(twitterService);
   }
 }

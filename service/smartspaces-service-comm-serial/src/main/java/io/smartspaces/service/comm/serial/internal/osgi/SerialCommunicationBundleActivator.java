@@ -31,6 +31,6 @@ public class SerialCommunicationBundleActivator extends SmartSpacesServiceOsgiBu
   protected void allRequiredServicesAvailable() {
     RxtxSerialCommunicationEndpointService serialCommService =
         new RxtxSerialCommunicationEndpointService();
-    registerNewsmartspacesService(serialCommService);
+    registerNewSmartSpacesService(serialCommService);
   }
 }

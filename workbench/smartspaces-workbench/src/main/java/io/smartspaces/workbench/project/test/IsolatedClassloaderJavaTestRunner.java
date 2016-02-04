@@ -55,7 +55,7 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
    * The classname for the isolated test runner.
    */
   public static final String ISOLATED_TESTRUNNER_CLASSNAME =
-      "smartspaces.workbench.project.test.IsolatedJavaTestRunner";
+      "io.smartspaces.workbench.project.test.IsolatedJavaTestRunner";
 
   /**
    * The method name for running tests on the isolated test runner.

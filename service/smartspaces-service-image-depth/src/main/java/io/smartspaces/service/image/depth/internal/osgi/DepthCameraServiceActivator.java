@@ -29,6 +29,6 @@ public class DepthCameraServiceActivator extends SmartSpacesServiceOsgiBundleAct
 
   @Override
   protected void allRequiredServicesAvailable() {
-    registerNewsmartspacesService(new Openni2DepthCameraService());
+    registerNewSmartSpacesService(new Openni2DepthCameraService());
   }
 }

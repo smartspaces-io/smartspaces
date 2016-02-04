@@ -29,6 +29,6 @@ public class AudioPlayerServiceOsgiBundleActivator extends SmartSpacesServiceOsg
 
   @Override
   protected void allRequiredServicesAvailable() {
-    registerNewsmartspacesService(new JLayerAudioTrackPlayerService());
+    registerNewSmartSpacesService(new JLayerAudioTrackPlayerService());
   }
 }

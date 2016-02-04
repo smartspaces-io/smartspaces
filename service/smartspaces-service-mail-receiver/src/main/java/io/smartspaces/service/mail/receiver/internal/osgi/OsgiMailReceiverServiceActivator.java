@@ -32,7 +32,7 @@ public class OsgiMailReceiverServiceActivator extends SmartSpacesServiceOsgiBund
   protected void allRequiredServicesAvailable() {
     DumbsterMailReceiverService mailReceiverService = new DumbsterMailReceiverService();
 
-    registerNewsmartspacesService(mailReceiverService);
+    registerNewSmartSpacesService(mailReceiverService);
 
     registerOsgiService(MailReceiverService.class.getName(), mailReceiverService);
   }

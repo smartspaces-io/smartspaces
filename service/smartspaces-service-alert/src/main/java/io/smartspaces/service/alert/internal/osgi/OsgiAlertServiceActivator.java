@@ -32,7 +32,7 @@ public class OsgiAlertServiceActivator extends SmartSpacesServiceOsgiBundleActiv
   protected void allRequiredServicesAvailable() {
     BasicAlertService alertService = new BasicAlertService();
 
-    registerNewsmartspacesService(alertService);
+    registerNewSmartSpacesService(alertService);
 
     registerOsgiService(AlertService.class.getName(), alertService);
   }

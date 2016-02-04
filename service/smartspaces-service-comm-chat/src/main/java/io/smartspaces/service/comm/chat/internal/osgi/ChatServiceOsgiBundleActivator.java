@@ -29,6 +29,6 @@ public class ChatServiceOsgiBundleActivator extends SmartSpacesServiceOsgiBundle
 
   @Override
   protected void allRequiredServicesAvailable() {
-    registerNewsmartspacesService(new SmackXmppChatService());
+    registerNewSmartSpacesService(new SmackXmppChatService());
   }
 }

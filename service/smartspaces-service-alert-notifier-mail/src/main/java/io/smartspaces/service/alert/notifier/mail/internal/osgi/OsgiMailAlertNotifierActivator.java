@@ -53,6 +53,6 @@ public class OsgiMailAlertNotifierActivator extends SmartSpacesServiceOsgiBundle
 
     BasicMailAlertNotifier mailAlertNotifier =
         new BasicMailAlertNotifier(alertService, mailSenderService);
-    registerNewsmartspacesService(mailAlertNotifier);
+    registerNewSmartSpacesService(mailAlertNotifier);
   }
 }

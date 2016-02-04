@@ -35,17 +35,17 @@ public class ServicesCoreOsgiBundleActivator extends SmartSpacesServiceOsgiBundl
 
   @Override
   protected void allRequiredServicesAvailable() {
-    registerNewsmartspacesService(new SmartSpacesXBeeCommunicationEndpointService());
+    registerNewSmartSpacesService(new SmartSpacesXBeeCommunicationEndpointService());
 
-    registerNewsmartspacesService(new NettyUdpClientNetworkCommunicationEndpointService());
+    registerNewSmartSpacesService(new NettyUdpClientNetworkCommunicationEndpointService());
 
-    registerNewsmartspacesService(new NettyUdpServerNetworkCommunicationEndpointService());
+    registerNewSmartSpacesService(new NettyUdpServerNetworkCommunicationEndpointService());
 
-    registerNewsmartspacesService(new NettyTcpClientNetworkCommunicationEndpointService());
+    registerNewSmartSpacesService(new NettyTcpClientNetworkCommunicationEndpointService());
 
-    registerNewsmartspacesService(new NettyTcpServerNetworkCommunicationEndpointService());
+    registerNewSmartSpacesService(new NettyTcpServerNetworkCommunicationEndpointService());
 
-    registerNewsmartspacesService(new SmartSpacesOpenSoundControlClientCommunicationEndpointService());
-    registerNewsmartspacesService(new SmartSpacesOpenSoundControlServerCommunicationEndpointService());
+    registerNewSmartSpacesService(new SmartSpacesOpenSoundControlClientCommunicationEndpointService());
+    registerNewSmartSpacesService(new SmartSpacesOpenSoundControlServerCommunicationEndpointService());
   }
 }

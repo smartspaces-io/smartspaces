@@ -109,7 +109,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
     onStop();
 
     unregisterOsgiServices();
-    unregistersmartspacesServices();
+    unregisterSmartSpacesServices();
     if (managedResources != null) {
       managedResources.shutdownResourcesAndClear();
     }
@@ -141,7 +141,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   /**
    * Unregister and shutdown all services registered with interactive spaces.
    */
-  private void unregistersmartspacesServices() {
+  private void unregisterSmartSpacesServices() {
     ServiceRegistry serviceRegistry =
         smartspacesEnvironmentTracker.getMyService().getServiceRegistry();
     for (Service service : registeredServices) {
@@ -210,7 +210,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
    * @param service
    *          the service to be registered
    */
-  public void registerNewsmartspacesService(Service service) {
+  public void registerNewSmartSpacesService(Service service) {
     try {
       smartspacesEnvironmentTracker.getMyService().getServiceRegistry()
           .registerService(service);

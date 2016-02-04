@@ -29,6 +29,6 @@ public class ImageVisionServiceActivator extends SmartSpacesServiceOsgiBundleAct
 
   @Override
   protected void allRequiredServicesAvailable() {
-    registerNewsmartspacesService(new LeapMotionGestureService());
+    registerNewSmartSpacesService(new LeapMotionGestureService());
   }
 }

@@ -32,7 +32,7 @@ public class OsgiScriptServiceActivator extends SmartSpacesServiceOsgiBundleActi
   protected void allRequiredServicesAvailable() {
     JavaxScriptScriptService scriptService = new JavaxScriptScriptService();
 
-    registerNewsmartspacesService(scriptService);
+    registerNewSmartSpacesService(scriptService);
 
     registerOsgiService(ScriptService.class.getName(), scriptService);
   }

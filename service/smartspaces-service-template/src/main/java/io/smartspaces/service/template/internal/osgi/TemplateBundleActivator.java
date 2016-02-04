@@ -30,6 +30,6 @@ public class TemplateBundleActivator extends SmartSpacesServiceOsgiBundleActivat
   @Override
   protected void allRequiredServicesAvailable() {
     FreemarkerTemplaterService freemarkerService = new FreemarkerTemplaterService();
-    registerNewsmartspacesService(freemarkerService);
+    registerNewSmartSpacesService(freemarkerService);
   }
 }

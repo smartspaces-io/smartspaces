@@ -32,7 +32,7 @@ public class OsgiSchedulerServiceActivator extends SmartSpacesServiceOsgiBundleA
   protected void allRequiredServicesAvailable() {
     QuartzSchedulerService schedulerService = new QuartzSchedulerService();
 
-    registerNewsmartspacesService(schedulerService);
+    registerNewSmartSpacesService(schedulerService);
     registerOsgiService(SchedulerService.class.getName(), schedulerService);
   }
 }

@@ -32,7 +32,7 @@ public class OsgiMailSenderServiceActivator extends SmartSpacesServiceOsgiBundle
   protected void allRequiredServicesAvailable() {
     JavaxMailMailSenderService mailSenderService = new JavaxMailMailSenderService();
 
-    registerNewsmartspacesService(mailSenderService);
+    registerNewSmartSpacesService(mailSenderService);
     registerOsgiService(MailSenderService.class.getName(), mailSenderService);
   }
 }

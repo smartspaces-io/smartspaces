@@ -33,6 +33,6 @@ public class SpeechSynthesisServiceOsgiBundleActivator extends
   protected void allRequiredServicesAvailable() {
     SpeechSynthesisService speechSynthesisService = new FreeTtsSpeechSynthesisService();
 
-    registerNewsmartspacesService(speechSynthesisService);
+    registerNewSmartSpacesService(speechSynthesisService);
   }
 }

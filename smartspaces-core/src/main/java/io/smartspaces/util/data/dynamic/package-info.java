@@ -16,6 +16,19 @@
  */
 
 /**
+ * The dynamic object support is based on a map.
+ *
+ * <p>
+ * The object maps used have Strings for keys, which give the names of the properties.
+ * Values for the properties
+ *
+ * <ul>
+ * <li>primitive object wrappers (e.g. Integer, String)</li>
+ * <li>an object map, as described above</li>
+ * <li>an array whose elements are either primitives, object maps, or arrays</li>
+ * </ul>
+
+ * <p>
  * Utilities for binding JSON parsed to maps with the Java interfaces.
  * The main idea is to work with an object of a given well-defined type,
  * while the state of the object (values of its properties) are stored in a map

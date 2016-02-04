@@ -22,10 +22,11 @@ import io.smartspaces.SmartSpacesException;
 import java.util.Map;
 
 /**
- * A mapper for JSON.
+ * A mapper to and from JSON objects.
  *
  * <p>
- * Instances of this interface are threadsafe so can be made static.
+ * These objects are considered thread-safe and can handle multiple conversions
+ * simultaneously.
  *
  * @author Keith M. Hughes
  */

@@ -25,7 +25,11 @@ import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
- * The standard JSON Mapper.
+ * The standard mapper to and from JSON objects.
+ * 
+ * <p>
+ * These objects are considered thread-safe and can handle multiple conversions
+ * simultaneously.
  *
  * @author Keith M. Hughes
  */

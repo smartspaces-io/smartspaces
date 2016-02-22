@@ -1,51 +1,51 @@
 (function() {
-  var interactiveSpacesWebAdminApp = angular.module(
-      'interactiveSpacesWebAdminApp', ['ngRoute',
-        'interactiveSpacesWebAdminControllers', 'LiveActivityDirective']);
+  var smartSpacesWebAdminApp = angular.module(
+      'smartSpacesWebAdminApp', ['ngRoute',
+        'smartSpacesWebAdminControllers', 'LiveActivityDirective']);
 
-  interactiveSpacesWebAdminApp
+  smartSpacesWebAdminApp
       .config([
         '$routeProvider',
         function($routeProvider) {
           $routeProvider
               .when('/activity', {
-                templateUrl: '/interactivespaces/static/partials/activity-main.html',
+                templateUrl: '/smartspaces/static/partials/activity-main.html',
                 controller: 'ActivityMainCtrl'
               })
               .when('/activity/:activityId', {
-                templateUrl: '/interactivespaces/static/partials/activity-detail.html',
+                templateUrl: '/smartspaces/static/partials/activity-detail.html',
                 controller: 'ActivityDetailCtrl'
               })
               .when('/liveactivity', {
-                templateUrl: '/interactivespaces/static/partials/live-activity-main.html',
+                templateUrl: '/smartspaces/static/partials/live-activity-main.html',
                 controller: 'LiveActivityMainCtrl'
               })
               .when('/liveactivity/:liveActivityId', {
-                templateUrl: '/interactivespaces/static/partials/live-activity-detail.html',
+                templateUrl: '/smartspaces/static/partials/live-activity-detail.html',
                 controller: 'LiveActivityDetailCtrl'
               })
               .when('/liveactivitygroup', {
-                templateUrl: '/interactivespaces/static/partials/live-activity-group-main.html',
+                templateUrl: '/smartspaces/static/partials/live-activity-group-main.html',
                 controller: 'LiveActivityGroupMainCtrl'
               })
               .when('/liveactivitygroup/:liveActivityGroupId', {
-                templateUrl: '/interactivespaces/static/partials/live-activity-group-detail.html',
+                templateUrl: '/smartspaces/static/partials/live-activity-group-detail.html',
                 controller: 'LiveActivityGroupDetailCtrl'
               })
               .when('/space', {
-                templateUrl: '/interactivespaces/static/partials/space-main.html',
+                templateUrl: '/smartspaces/static/partials/space-main.html',
                 controller: 'SpaceMainCtrl'
               })
               .when('/space/:spaceId', {
-                templateUrl: '/interactivespaces/static/partials/space-detail.html',
+                templateUrl: '/smartspaces/static/partials/space-detail.html',
                 controller: 'SpaceDetailCtrl'
               })
               .when('/spacecontroller', {
-                templateUrl: '/interactivespaces/static/partials/space-controller-main.html',
+                templateUrl: '/smartspaces/static/partials/space-controller-main.html',
                 controller: 'SpaceControllerMainCtrl'
               })
               .when('/spacecontroller/:spaceControllerId', {
-                templateUrl: '/interactivespaces/static/partials/space-controller-detail.html',
+                templateUrl: '/smartspaces/static/partials/space-controller-detail.html',
                 controller: 'SpaceControllerDetailCtrl'
               })
               .otherwise({

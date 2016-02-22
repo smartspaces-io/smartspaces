@@ -39,8 +39,7 @@ import javax.mail.internet.MimeMessage;
 public class JavaxMailMailSenderService extends BaseSupportedService implements MailSenderService {
 
   /**
-   * Configuration property for SMTP host interactive spaces should use. >>>>>>>
-   * master
+   * Configuration property for SMTP host smart spaces should use.
    */
   public static final String MAIL_TRANSPORT_SMTP = "smtp";
 

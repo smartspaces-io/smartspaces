@@ -12,26 +12,25 @@ Smart Spaces Space Controller.
 Starting Up a Container
 =======================
 
-The best way to start a container is to use the ``bin/isstartup`` command found in the installation
-directory for the container. While the command does have ``linux`` in its name, it will work for any operating
-system that supports the ``bash`` shell, which includes Linux and OSX.
+The best way to start a container is to use the ``bin/ssstartup`` command found in the installation
+directory for the container.
 
-The ``isstartup`` script starts by figuring out in exactly which directory the container is installed.
+The ``ssstartup`` script starts by figuring out in exactly which directory the container is installed.
 It then changes the directory for the operating system process which is running the container to that installation
 directory.
 
 By default, a container will start up in a ``foreground`` mode, a normal blocking terminal process. If
-``background`` is specified as the first argument to ``isstartup``, then it will run in a sub-process
+``background`` is specified as the first argument to ``ssstartup``, then it will run in a sub-process
 with detached input/output pipes.
 
 Setting up the Java Process Environment
 ---------------------------------------
 
-Next the startup script will execute the bash file ``.interactivespaces.rc`` in the home directory of the user
+Next the startup script will execute the bash file ``.smartspaces.rc`` in the home directory of the user
 that is starting the container.  This file can set any
 environment variables for the operating system process that will run the container and can be used, for example,
 to set the ``DISPLAY`` variable to be used for specifying which display the process should use when the container
-opens any windows, such as a web browser. Additionally, this script can modify ``INTERACTIVESPACES_MAIN_ARGS``
+opens any windows, such as a web browser. Additionally, this script can modify ``SMARTSPACES_MAIN_ARGS``
 variable to add additional container arguments.
 
 Next the startup script executes the file ``config/environment/localenvironment.rc``. This file can set any
@@ -58,7 +57,7 @@ use is setting ``-Djava.library.path``, which tells the JVM where to find native
 
 As an aside, the ``LD_LIBRARY_PATH`` is the basis for ``-Djava.library.path``, so using either is fine.
 
-The ``INTERACTIVESPACES_MAIN_ARGS`` environment variable can be used to pass command line arguments to the
+The ``SMARTSPACES_MAIN_ARGS`` environment variable can be used to pass command line arguments to the
 underlying container launcher. Any command line arguments to ``startup_linux.bash`` (after the initial
 ``background``, if any) will be appended to the environment variable and passed to the container.
 See :ref:`command-line-arguments` for more details on the command line arguments that can be used.
@@ -70,7 +69,7 @@ Container Command Line Arguments
 
 There are several command-line arguments that can be passed to a container:
 
-* ``--noshell`` start the container without an interactive OSGi shell.
+* ``--noshell`` start the container without a smart OSGi shell.
 * ``-Dx=y`` defines a container system configuration parameter ``x`` to have the value ``y``.
 
 Preparing to start the OSGi Container
@@ -79,7 +78,7 @@ Preparing to start the OSGi Container
 The next step is to start up the OSGi container itself. A small Java class called the **launcher** is used to 
 start the OSGi container (the term **OSGi container** is why the Master and Controller are called containers). 
 
-The launcher first creates the ``run/interactivespaces.pid`` file. This file contains the operating system 
+The launcher first creates the ``run/smartspaces.pid`` file. This file contains the operating system 
 process ID for the Java process on operating systems that have process IDs. The launcher then places a file lock
 on this file. If any other launcher tries to start, it will fail to obtain this file lock and it will stop
 launching the container. This means you can only run one container from a given directory at a time.
@@ -178,9 +177,9 @@ The contents of this folder are expected to be OSGi bundles and are also loaded 
 starts up.
 
 Normally, the Smart Spaces Controller container will launch and start a Standard Space Controller instance.
-However, this behavior can be controlled with the ``interactivespaces.controller.mode`` variable, and setting it
+However, this behavior can be controlled with the ``smartspaces.controller.mode`` variable, and setting it
 to something other than ``standard`` will result in no default controller instance being started, e.g., by specifying
-``-Dinteractivespaces.controller.mode=none`` on the ``startup_linux.bash`` command line.
+``-Dsmartspaces.controller.mode=none`` on the ``ssstartup`` command line.
 
 Core Services
 -------------

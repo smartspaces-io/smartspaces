@@ -57,7 +57,7 @@ The configuration for a Web Activity is pretty simple, the simplest
     </description>
   
     <identifyingName>
-      interactivespaces.example.activity.hello.web
+      io.smartspaces.example.activity.hello.web
     </identifyingName>
     <version>1.0.0</version>
   
@@ -180,7 +180,7 @@ A pretty simple ``project.xml`` for a Native Activity is given below.
       An example of a pure native code activity.
     </description>
   
-    <identifyingName>interactivespaces.example.activity.native</identifyingName>
+    <identifyingName>io.smartspaces.example.activity.native</identifyingName>
     <version>1.0.0</version>
   
     <activity type="native">
@@ -263,7 +263,7 @@ to play the MP3 file that comes with the Activity.
       An example of a pure native code activity.
     </description>
   
-    <identifyingName>interactivespaces.example.activity.native</identifyingName>
+    <identifyingName>io.smartspaces.example.activity.native</identifyingName>
     <version>1.0.0</version>
   
     <activity type="native">
@@ -311,7 +311,7 @@ A simple ``project.xml`` for a Scripted Activity is given below.
     </description>
   
     <identifyingName>
-      interactivespaces.example.activity.hello.python
+      io.smartspaces.example.activity.hello.python
     </identifyingName>
     <version>1.0.0</version>
   
@@ -347,15 +347,15 @@ one at the Space Controller-wide level, and one at the per-Live Activity
 level.
 
 The Space Controller-wide scripting library path is in the 
-``interactivespaces/controller/lib`` folder. For example, 
-``interactivespaces/controller/lib/python`` contains the Python libraries
+``smartspaces/controller/lib`` folder. For example, 
+``smartspaces/controller/lib/python`` contains the Python libraries
 which can be used by every Python script in Smart Spaces. 
 
-``interactivespaces/controller/lib/python/PyLib``
+``smartspaces/controller/lib/python/PyLib``
 contains the Python system libraries. 
 
 
-``interactivespaces/controller/lib/python/site``
+``smartspaces/controller/lib/python/site``
 is where you should put any of the libraries you want to include. Every
 directory in the ``site`` directory is automatically added to the Python
 path.
@@ -369,7 +369,7 @@ for that specific Live Activity would then be found in the folder
 
 ::
 
-  interactivespaces/controller/controller/activities/installed/
+  smartspaces/controller/controller/activities/installed/
       34eb3c27-5d37-45aa-a9cd-22d46bc85701/install/lib/python
 
 
@@ -396,14 +396,14 @@ given below.
     </description>
   
     <identifyingName>
-      interactivespaces.example.activity.hello
+      io.smartspaces.example.activity.hello
     </identifyingName>
     <version>1.0.0</version>
   
     <activity type="smartspaces_native">
       <name>smartspacesExampleActivityHello</name>
       <class>
-        interactivespaces.activity.example.hello.HelloActivity
+        io.smartspaces.activity.example.hello.HelloActivity
       </class>
     </activity>
   </project>
@@ -411,7 +411,7 @@ given below.
 Notice that the Activity Type is ``smartspaces_native``.
 
 The element ``<class>`` gives the name of the Java class that is the Activity. Here it has the
-value ``interactivespaces.activity.example.hello.HelloActivity``. Smart Spaces will create an
+value ``io.smartspaces.activity.example.hello.HelloActivity``. Smart Spaces will create an
 instance of this class when it runs the activity.
 
 For this to fully work, note the ``builder="java"`` attribute on the ``<project>`` element. This tells the

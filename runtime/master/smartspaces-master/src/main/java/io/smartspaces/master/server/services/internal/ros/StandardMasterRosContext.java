@@ -45,8 +45,8 @@ import com.google.common.collect.Lists;
 public class StandardMasterRosContext implements MasterRosContext {
 
   /**
-   * The timeout default for the registration of the Smart Spaces Master
-   * ROS node with the ROS master.
+   * The timeout default for the registration of the Smart Spaces Master ROS
+   * node with the ROS master.
    */
   public static final int ROS_MASTER_REGISTRATION_TIMEOUT_DEFAULT = 10000;
 
@@ -71,14 +71,14 @@ public class StandardMasterRosContext implements MasterRosContext {
   private Log log;
 
   /**
-   * The startup latch used for startup of the ROS node for the Interactive
-   * Spaces master.
+   * The startup latch used for startup of the ROS node for the Smart Spaces
+   * master.
    */
   private CountDownLatch startupLatch;
 
   /**
-   * The timeout for waiting for a OS master registration for the Interactive
-   * Spaces Master ROS node.
+   * The timeout for waiting for a OS master registration for the Smart Spaces
+   * Master ROS node.
    */
   private int rosMasterRegistrationTimeout = ROS_MASTER_REGISTRATION_TIMEOUT_DEFAULT;
 
@@ -257,8 +257,7 @@ public class StandardMasterRosContext implements MasterRosContext {
    *          the error
    */
   private void handleMasterRosNodeError(Node node, Throwable throwable) {
-    log.error(
-        String.format("Got ROS node error for Smart Spaces master node %s", node.getName()),
+    log.error(String.format("Got ROS node error for Smart Spaces master node %s", node.getName()),
         throwable);
   }
 

@@ -45,7 +45,7 @@ A lot of words... what does it all mean???
 Configuring Routes
 ------------------
 
-The example Workbench Activity ``interactivespaces.example.activity.routable.input``
+The example Workbench Activity ``smartspaces.example.activity.routable.input``
 reads from a route whose global topic name is ``/example/routable/channel1``.
 The Activity has the following configuration parameters:
 
@@ -55,7 +55,7 @@ The Activity has the following configuration parameters:
 | space.activity.route.input.input1 | /example/routable/channel1 |
 +-----------------------------------+----------------------------+
 
-The example Workbench Activity ``interactivespaces.example.activity.routable.output``
+The example Workbench Activity ``smartspaces.example.activity.routable.output``
 writes to the same route. The Activity has the following configuration parameters:
 
 +------------------------------------+----------------------------+
@@ -67,9 +67,9 @@ writes to the same route. The Activity has the following configuration parameter
 Notice that the configuration property ``space.activity.route.input.input1`` has the same
 value as the configuration property ``space.activity.route.output.output1``. This means that
 writing to channel ``output1`` in Activity
-``interactivespaces.example.activity.routable.output``
+``smartspaces.example.activity.routable.output``
 will show up on channel ``input1`` in Activity
-``interactivespaces.example.activity.routable.input``.
+``smartspaces.example.activity.routable.input``.
 
 ``input1`` and ``output1`` are examples of the local name part of a route. These names, once
 again, are local to an Activity, and can be anything the activity wants it to be. Even names
@@ -183,8 +183,8 @@ control a remote Activity.
 
 Look at the following two Activity examples in the workbench:
 
-#. examples/basics/comm/interactivespaces.example.activity.routable.output.web
-#. examples/basics/comm/interactivespaces.example.activity.routable.input.speech
+#. examples/basics/comm/smartspaces.example.activity.routable.output.web
+#. examples/basics/comm/smartspaces.example.activity.routable.input.speech
 
 The first example is a browser-based activity which will start up a web
 server which serves a webapp and starts up a web browser which displays

@@ -21,8 +21,8 @@ import io.smartspaces.SmartSpacesException;
 
 import java.util.Map;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The standard mapper to and from JSON objects.
@@ -47,7 +47,7 @@ public class StandardJsonMapper implements JsonMapper {
 
   static {
     MAPPER = new ObjectMapper();
-    MAPPER.getJsonFactory().enable(JsonGenerator.Feature.ESCAPE_NON_ASCII);
+    MAPPER.getFactory().enable(JsonGenerator.Feature.ESCAPE_NON_ASCII);
   }
 
   @Override

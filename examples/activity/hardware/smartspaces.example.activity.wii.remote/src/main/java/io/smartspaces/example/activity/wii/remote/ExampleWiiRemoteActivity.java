@@ -19,6 +19,7 @@ package io.smartspaces.example.activity.wii.remote;
 
 import io.smartspaces.activity.impl.BaseActivity;
 import io.smartspaces.event.simple.EventDividerSampler;
+import io.smartspaces.util.SmartSpacesUtilities;
 
 /**
  * A simple Smart Spaces activity to demonstrate use of the Wii Remote driver.
@@ -108,7 +109,7 @@ public class ExampleWiiRemoteActivity extends BaseActivity {
         for (int light = 0; light <= 3; light++) {
           driver.setLight(light);
 
-          InteractiveSpacesUtilities.delay(1000);
+          SmartSpacesUtilities.delay(1000);
         }
       }
     });

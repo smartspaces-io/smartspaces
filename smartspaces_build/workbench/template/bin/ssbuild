@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-# Usage:  'isbuild' will scan all subdirectories and make any project.xml files found.
+# Usage:  'ssbuild' will scan all subdirectories and make any project.xml files found.
 #   or, first argument is subdirectory in which to build.
 
 # Determine if we are running GNU utilities or not
@@ -67,8 +67,8 @@ SMARTSPACES_ARGS="-Dsmartspaces.rundir=${CURDIR}"
 
 BUILDDIR=build
 PROJFILE=project.xml
-PREFILE=isbuild-pre.sh
-POSTFILE=isbuild-post.sh
+PREFILE=ssbuild-pre.sh
+POSTFILE=ssbuild-post.sh
 
 # Clean old build directory
 rm -rf $BUILDDIR && mkdir -p $BUILDDIR
@@ -87,7 +87,7 @@ fi
 # If so indicated, do NOT run the workbench... just the helper scripts.
 if [ ! "$SUPPRESS_WORKBENCH" ]; then
   PROJNAME=$(isproject extract $PROJFILE '/is:project/is:name/text()')
-  echo Building interactive spaces project $PROJNAME
+  echo Building smart spaces project $PROJNAME
   WBEXE="${EXEDIR}/isworkbench"
   # Run workbench to do the build.
   SUCCESS_MARK="$(mktemp)"

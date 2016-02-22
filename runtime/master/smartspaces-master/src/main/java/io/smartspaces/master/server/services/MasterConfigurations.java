@@ -34,5 +34,5 @@ public class MasterConfigurations {
    * The default value for the configuration parameter that gives the name of
    * the space. Used to paint the Master webapp.
    */
-  public static final String CONFIGURATION_VALUE_DEFAULT_SPACE_NAME = "My Interactive Space";
+  public static final String CONFIGURATION_VALUE_DEFAULT_SPACE_NAME = "My Smart Space";
 }

@@ -17,13 +17,7 @@
 
 package io.smartspaces.activity.example.comm.ros.hello.subscriber;
 
-import io.smartspaces.activity.component.ros.RosActivityComponent;
-import io.smartspaces.activity.impl.BaseActivity;
-
-import org.ros.message.MessageListener;
-import org.ros.node.topic.Subscriber;
-
-import std_msgs.ColorRGBA;
+import org.jivesoftware.smack.MessageListener;
 
 /**
  * A Smart Spaces Java-based activity that listens on a ROS topic and prints the
@@ -61,8 +55,7 @@ public class CommRosHelloSubscriberActivity extends BaseActivity {
     rosActivityComponent = addActivityComponent(RosActivityComponent.COMPONENT_NAME);
 
     topicName =
-        getConfiguration().getRequiredPropertyString(
-            "interactivespaces.example.comm.ros.hello.topic");
+        getConfiguration().getRequiredPropertyString("smartspaces.example.comm.ros.hello.topic");
   }
 
   @Override

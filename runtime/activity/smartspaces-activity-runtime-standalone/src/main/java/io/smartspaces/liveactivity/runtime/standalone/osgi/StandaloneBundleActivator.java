@@ -24,8 +24,8 @@ import io.smartspaces.liveactivity.runtime.osgi.OsgiServiceRegistrationLiveActiv
 import io.smartspaces.liveactivity.runtime.standalone.development.DevelopmentStandaloneLiveActivityRuntime;
 import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.spacecontroller.SpaceController;
-import io.smartspaces.system.SmartSpacesSystemControl;
 import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.system.SmartSpacesSystemControl;
 import io.smartspaces.system.resources.ContainerResourceManager;
 
 import org.apache.commons.logging.Log;
@@ -45,12 +45,12 @@ public class StandaloneBundleActivator extends SmartSpacesServiceOsgiBundleActiv
   private static final String CONFIGURATION_VALUE_MONITOR_ENABLE_DEFAULT_STANDALONE = "false";
 
   /**
-   * OSGi service tracker for the interactive spaces control.
+   * OSGi service tracker for the smart spaces control.
    */
   private MyServiceTracker<SmartSpacesSystemControl> smartspacesSystemControlTracker;
 
   /**
-   * OSGi service tracker for the interactive spaces control.
+   * OSGi service tracker for the smart spaces control.
    */
   private MyServiceTracker<ContainerResourceManager> containerResourceManagerTracker;
 
@@ -70,8 +70,7 @@ public class StandaloneBundleActivator extends SmartSpacesServiceOsgiBundleActiv
 
   @Override
   protected void onStart() {
-    smartspacesSystemControlTracker =
-        newMyServiceTracker(SmartSpacesSystemControl.class.getName());
+    smartspacesSystemControlTracker = newMyServiceTracker(SmartSpacesSystemControl.class.getName());
     containerResourceManagerTracker = newMyServiceTracker(ContainerResourceManager.class.getName());
   }
 

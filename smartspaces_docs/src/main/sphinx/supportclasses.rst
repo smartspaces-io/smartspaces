@@ -10,10 +10,10 @@ Persisted Maps
 The *SimpleMapPersister* interface provides you with the ability to
 very simply persist a map of key/value pairs. The values can be lists
 or maps themselves. You can find detailed documentation in the
-:javadoc:`interactivespaces.util.data.persist.SimpleMapPersister` Javadoc.
+:javadoc:`io.smartspaces.util.data.persist.SimpleMapPersister` Javadoc.
 One particular implementation, *JsonSimpleMapPersister*, stores the 
 maps as JSON files. You can find detailed documentation in the
-:javadoc:`interactivespaces.util.data.persist.JsonSimpleMapPersister` 
+:javadoc:`io.smartspaces.util.data.persist.JsonSimpleMapPersister` 
 Javadoc.
 
 Suppose that you want to create a map to persist in a subdirectory of the

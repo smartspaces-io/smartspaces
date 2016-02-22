@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * A storage manager that scans a directory tree to find all possible
- * Interactive spaces project folders in the tree.
+ * SmartSpaces project folders in the tree.
  *
  * @author Keith M. Hughes
  */

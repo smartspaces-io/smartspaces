@@ -36,13 +36,12 @@ public class GroovySpaceOperations implements SpaceOperations {
   @Override
   public void run() {
     try {
-      String[] roots =
-          new String[] { "/home/khughes/robots/ros/interactive-spaces/SMARTSPACES_scripts" };
+      String[] roots = new String[] { "/home/keith/robots/ros/smartspaces/smartspaces_scripts" };
       GroovyScriptEngine gse = new GroovyScriptEngine(roots);
       Binding binding = new Binding();
       binding.setVariable("args", new String[] {
-          "-s=/home/khughes/robots/ros/interactive-spaces/SMARTSPACES_scripts",
-          "sample.description", "deploy" });
+          "-s=/home/keith/robots/ros/smartspaces/smartspaces_scripts", "sample.description",
+          "deploy" });
       gse.run("SpaceOperationsRunner.groovy", binding);
       System.out.println(binding.getVariable("output"));
     } catch (Exception e) {

@@ -58,7 +58,7 @@ logging.getLogger("requests").setLevel(logging.CRITICAL)
 
 ACTIVITY_UPDATE_DELAY = 3 # Seconds
 
-INTERACTIVE_SPACES_NAMESPACES = {'is': 'http://interactive-spaces.org/project.xsd'}
+SMART_SPACES_NAMESPACES = {'is': 'http://smartspaces.io/project.xsd'}
 
 
 def print_help():
@@ -1044,7 +1044,7 @@ def get_activity_name(project_path):
     if activity_node is not None:
       activity_name = activity_node.text.strip()
     else:
-      activity_name = tree.find('./is:identifyingName', INTERACTIVE_SPACES_NAMESPACES).text.strip()
+      activity_name = tree.find('./is:identifyingName', SMART_SPACES_NAMESPACES).text.strip()
     return activity_name
 
 def walk_nogit(path):

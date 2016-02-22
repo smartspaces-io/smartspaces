@@ -24,8 +24,10 @@ dependencies {
 
   compile 'io.netty:netty:3.9.3.Final'
 
-  compile 'org.codehaus.jackson:jackson-core-asl:1.9.12'
-  compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.12'
+//  compile 'org.codehaus.jackson:jackson-core-asl:1.9.12'
+//  compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.12'
+  compile 'com.fasterxml.jackson.core:jackson-core:2.6.1'
+  compile 'com.fasterxml.jackson.core:jackson-databind:2.6.1'
   compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpcore:4.1') {
     //exclude module: 'com.springsource.org.apache.commons.logging'
   }
@@ -70,7 +72,7 @@ jar {
         'org.jdom2.*;resolution:="optional"',
         'org.jboss.netty.handler.codec.http;resolution:="optional"',
         'org.jboss.netty.bootstrap;resolution:="optional"',
-        'org.codehaus.jackson.*;resolution:="optional"',
+        'com.fasterxml.jackson.*;resolution:="optional"',
         'org.apache.commons.net.ntp;resolution:="optional"',
         'org.ros.*;resolution:="optional"',
         'org.joda.*;resolution:="optional"',

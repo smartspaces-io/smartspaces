@@ -23,7 +23,7 @@ you want on the computer running the Space Controller.
 
 The folder *extras* in your Space Controller installation contains two files
 
-* interactivespaces-service-comm-serial-<version>.jar
+* smartspaces-service-comm-serial-<version>.jar
 * comm-serial-rxtx.ext
 
 where *<version>* is the version of the Communication library found in the folder.
@@ -49,7 +49,7 @@ An Example
 ^^^^^^^^^^
 
 An example of using the Serial Communication support can be found in the 
-``interactivespaces.example.activity.arduino.analog.java`` example in the Workbench's
+``smartspaces.example.activity.arduino.analog.java`` example in the Workbench's
 ``examples`` folder.
 
 Bluetooth Communication
@@ -70,7 +70,7 @@ you want on the computer running the Space Controller.
 
 The folder ``extras`` in your Space Controller installation contains two files
 
-* interactivespaces-service-comm-bluetooth-<version>.jar
+* smartspaces-service-comm-bluetooth-<version>.jar
 * comm-bluetooth-bluecove.ext
 
 where *<version>* is the version of the Bluetooth Communication library found in the folder.

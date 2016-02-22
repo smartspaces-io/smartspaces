@@ -36,7 +36,7 @@ public interface ByteMessageTranslator<T> {
    *
    * @return the destination message
    *
-   * @throws InteractiveSpacesException
+   * @throws SmartSpacesException
    */
   T translate(byte[] message) throws SmartSpacesException;
 }

@@ -11,7 +11,7 @@ Master through files.
 The PID File
 ------------
 
-The `run` folder contains a file called `interactivespaces.pid`. This file gives the
+The `run` folder contains a file called `smartspaces.pid`. This file gives the
 Process ID (or PID) of the operating system process the Master is running under. The
 file contains only the Process ID number with nothing else, including no end of line
 characters.
@@ -238,7 +238,7 @@ a variety of languages.
 The service will be called *scriptService* in your script.
 
 You can find detailed documentation in the
-:javadoc:`interactivespaces.service.script.ScriptService` Javadoc.
+:javadoc:`io.smartspaces.service.script.ScriptService` Javadoc.
 
 
 The Scheduler Service
@@ -249,7 +249,7 @@ The Scheduler Service allows you to schedule tasks in the master.
 The service will be called *schedulerService* in your script.
 
 You can find detailed documentation in the
-:javadoc:`interactivespaces.service.scheduler.SchedulerService` Javadoc.
+:javadoc:`io.smartspaces.service.scheduler.SchedulerService` Javadoc.
 
 
 The Controller Repository
@@ -260,7 +260,7 @@ The Controller Repository contains all known space controllers.
 The service will be called *spaceControllerRepository* in your script.
 
 You can find detailed documentation in the
-:javadoc:`interactivespaces.master.server.services.SpaceControllerRepository` Javadoc.
+:javadoc:`io.smartspaces.master.server.services.SpaceControllerRepository` Javadoc.
 
 
 The Activity Repository
@@ -272,7 +272,7 @@ live activity groups, and spaces.
 The service will be called *activityRepository* in your script.
 
 You can find detailed documentation in the
-:javadoc:`interactivespaces.master.server.services.ActivityRepository` Javadoc.
+:javadoc:`io.smartspaces.master.server.services.ActivityRepository` Javadoc.
 
 The Space Repository
 ~~~~~~~
@@ -282,7 +282,7 @@ The Space Repository contains all known Spaces.
 The service will be called *spaceRepository* in your script.
 
 You can find detailed documentation in the
-:javadoc:`interactivespaces.master.server.services.SpaceRepository` Javadoc.
+:javadoc:`io.smartspaces.master.server.services.SpaceRepository` Javadoc.
 
 The Active Space Controller Manager
 ~~~~~~~
@@ -293,7 +293,7 @@ on a remote Space Controller.
 The service will be called *activeSpaceControllerManager* in your script.
 
 You can find detailed documentation in the
-:javadoc:`interactivespaces.master.server.services.ActiveSpaceControllerManager` Javadoc.
+:javadoc:`io.smartspaces.master.server.services.ActiveSpaceControllerManager` Javadoc.
 
 The Master Api Activity Manager
 ~~~~~~~
@@ -305,7 +305,7 @@ an Activity ID, rather than an actual domain object.
 The service will be called *masterApiActivityManager* in your script.
 
 You can find detailed documentation in the
-:javadoc:`interactivespaces.master.api.MasterApiActivityManager` Javadoc.
+:javadoc:`io.smartspaces.master.api.MasterApiActivityManager` Javadoc.
 
 
 The Master API Controller Manager
@@ -319,7 +319,7 @@ a Live Activity ID, rather than an actual domain object.
 The service will be called *masterApiControllerManager* in your script.
 
 You can find detailed documentation in the
-:javadoc:`interactivespaces.master.server.ui.MasterApiControllerManager` Javadoc.
+:javadoc:`io.smartspaces.master.server.ui.MasterApiControllerManager` Javadoc.
 
 
 The Master API Master Support Manager
@@ -332,7 +332,7 @@ describes every aspect of the space.
 The service will be called *masterApiMasterSupportManager* in your script.
 
 You can find detailed documentation in the
-:javadoc:`interactivespaces.master.api.MasterApiMasterSupportManager` Javadoc.
+:javadoc:`io.smartspaces.master.api.MasterApiMasterSupportManager` Javadoc.
 
 
 The Smart Spaces Environment
@@ -345,7 +345,7 @@ other aspects of the container.
 The service will be called *spaceEnvironment* in your script.
 
 You can find detailed documentation in the
-:javadoc:`interactivespaces.system.SmartSpacesEnvironment` Javadoc.
+:javadoc:`io.smartspaces.system.SmartSpacesEnvironment` Javadoc.
 
 The Automation Manager
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -357,7 +357,7 @@ variety of languages.
 The service will be called *automationManager* in your script.
 
 You can find detailed documentation in the
-:javadoc:`interactivespaces.master.server.services.AutomationManager` Javadoc.
+:javadoc:`io.smartspaces.master.server.services.AutomationManager` Javadoc.
 
 Moving Ports for the Master
 ===========================
@@ -367,7 +367,7 @@ Master uses.
 
 The master has a web server used for a variety of master communications, including master/space controller
 communications and the Master API Websocket interface. This is controlled with the configuration
-property `interactivespaces.master.communication.port`. It's default value is `8090`.
+property `smartspaces.master.communication.port`. It's default value is `8090`.
 This property is set in `config/container.conf`.
 
  
@@ -379,7 +379,7 @@ port is changed to `8091`, the Master Web Admin would be addressed as
 
 ::
 
-  http://masterhost:8080/interactivespaces?isport=8091
+  http://masterhost:8080/smartspaces?isport=8091
 
 where `masterhost` is the network host for your master.
 
@@ -389,14 +389,14 @@ like
 
 ::
 
-  org.ros.master.uri=http://${interactivespaces.master.host}:11311/
+  org.ros.master.uri=http://${smartspaces.master.host}:11311/
 
 The port, here `11311`, can be changed on this line to any other port. For
 example, if the ROS master should run on port `11312`, this line should become
 
 ::
 
-  org.ros.master.uri=http://${interactivespaces.master.host}:11312/
+  org.ros.master.uri=http://${smartspaces.master.host}:11312/
 
 
 The Master Web Application's port, `8080` by default, can be changed with the configuration
@@ -405,9 +405,9 @@ property `org.osgi.service.http.port`. This property is set in `config/container
 The Master uses an HTTP server for deploying Live Activities to their controllers. The controller
 receives a URL for this server when the Master tells it a Live Activity is being deployed to
 the controller. The port for this HTTP server can be changed with the
-configuration property `interactivespaces.repository.activities.server.port`. The default value of
+configuration property `smartspaces.repository.activities.server.port`. The default value of
 `10000` is used if this property doesn't exist. This configuration property should be set
-in `config/interactivespaces/master.conf`.
+in `config/smartspaces/master.conf`.
 
 Notification for Issues
 =======================
@@ -428,25 +428,25 @@ A sample file is given below.
 
 ::
 
-  interactivespaces.mail.smtp.host=192.168.172.12
-  interactivespaces.mail.smtp.port=25
+  smartspaces.mail.smtp.host=192.168.172.12
+  smartspaces.mail.smtp.port=25
 
-  interactivespaces.service.alert.notifier.mail.to = person1@foo.com person2@foo.com
-  interactivespaces.service.alert.notifier.mail.from = interactivespaces@foo.com
-  interactivespaces.service.alert.notifier.mail.subject = Death, doom, and destruction in My Space
+  smartspaces.service.alert.notifier.mail.to = person1@foo.com person2@foo.com
+  smartspaces.service.alert.notifier.mail.from = smartspaces@foo.com
+  smartspaces.service.alert.notifier.mail.subject = Death, doom, and destruction in My Space
 
-The property `interactivespaces.mail.smtp.host` specifies a host running an SMTP server which
-will relay the alert. The` property `interactivespaces.mail.smtp.port` can
+The property `smartspaces.mail.smtp.host` specifies a host running an SMTP server which
+will relay the alert. The` property `smartspaces.mail.smtp.port` can
 be used to specify the port this SMTP server is listening on.
 
-The property `interactivespaces.service.alert.notifier.mail.to` specifies who should
+The property `smartspaces.service.alert.notifier.mail.to` specifies who should
 receive the alert email. The recipient email addresses on this list are separated by
 spaces or tabs, and there can be as many addresses as are needed.
 
-The property `interactivespaces.service.alert.notifier.mail.from` specifies what the
+The property `smartspaces.service.alert.notifier.mail.from` specifies what the
 From address of the email will be.
 
-The property `interactivespaces.service.alert.notifier.mail.subject` gives
+The property `smartspaces.service.alert.notifier.mail.subject` gives
 the Subject line the alert email will have.
 
 A sample email, though the format is subject to change, for losing contact with a Space Controller
@@ -469,7 +469,7 @@ Smart Spaces uses ROS (the Robot Operating System) for its inter-activity commun
 assumes that there is not an external ROS environment that it needs to plug itself into and so starts up its own ROS Master.
 
 If you want the Smart Spaces Master to not start up its own ROS Master, you can use the configuration parameter
-``interactivespaces.master.ros.master.enable``. Assigning it a value of ``false`` will disable the internal ROS Master.
+``smartspaces.master.ros.master.enable``. Assigning it a value of ``false`` will disable the internal ROS Master.
 Assigning it the value of ``true`` will enable the internal ROS Master. The default value for the configuration is
 ``true``.
 

@@ -29,7 +29,7 @@ the Simple Java Activity Example project with the command
 
 ::
 
-  bin/isworkbench examples/basics/hello/interactivespaces.example.activity.hello build
+  bin/isworkbench examples/basics/hello/smartspaces.example.activity.hello build
 
 Cleaning a Project
 ----------------------------
@@ -48,7 +48,7 @@ the Simple Java Activity Example project with the command
 
 ::
 
-  bin/isworkbench examples/basics/hello/interactivespaces.example.activity.hello clean
+  bin/isworkbench examples/basics/hello/smartspaces.example.activity.hello clean
 
 Combining Workbench Commands
 ----------------------------
@@ -66,7 +66,7 @@ the Simple Java Activity Example project with the command
 
 ::
 
-  bin/isworkbench examples/basics/hello/interactivespaces.example.activity.hello clean build
+  bin/isworkbench examples/basics/hello/smartspaces.example.activity.hello clean build
 
 
 Creating a Project
@@ -142,7 +142,7 @@ A Basic Activity Project File
 -----------------------------
 
 Let's look at one of the simplest project files. This is for the
-``interactivespaces.example.activity.hello`` example which comes with
+``smartspaces.example.activity.hello`` example which comes with
 Smart Spaces.
 
 ::
@@ -155,12 +155,12 @@ Smart Spaces.
   callback messages.
     </description>
 
-    <identifyingName>interactivespaces.example.activity.hello</identifyingName>
+    <identifyingName>io.smartspaces.example.activity.hello</identifyingName>
     <version>1.0.0</version>
         
     <activity type="smartspaces_native">
       <name>example_activity_hello</name>
-      <class>interactivespaces.activity.example.hello.HelloActivity</class>
+      <class>io.smartspaces.activity.example.hello.HelloActivity</class>
     </activity>
   </project>
 
@@ -171,7 +171,7 @@ Since this example is an activity project, so the ``type`` attribute
 has the value ``activity``.
 
 The Workbench needs to know how to build projects. The ``build`` attribute
-says which builder to use for the project. The ``interactivespaces.example.activity.hello``
+says which builder to use for the project. The ``smartspaces.example.activity.hello``
 project is a Java-based project, so uses the Java builder. So we give
 the attribute ``builder`` the value ``java``.
 
@@ -182,7 +182,7 @@ contents of the ``src/main/resources`` folder and places them into
 a properly formatted zip file, the format that Smart Spaces uses for
 its activity files. These projects do not need to specify the ``builder``
 attribute, as you can see in the example project
-``interactivespaces.example.activity.hello.python``.
+``smartspaces.example.activity.hello.python``.
 
 ::
 
@@ -193,7 +193,7 @@ attribute, as you can see in the example project
   A very simple Python-based activity which just logs at INFO level its callback messages.
     </description>
 
-    <identifyingName>interactivespaces.example.activity.hello.python</identifyingName>
+    <identifyingName>io.smartspaces.example.activity.hello.python</identifyingName>
     <version>1.0.0</version>
 
     <activity type="script">
@@ -253,14 +253,14 @@ The ``<configuration>`` element lives under the ``<project>`` element. It define
 for the Activity.
 
 The following example is part of the ``<activity>`` element for the 
-``examples/activity/control/interactivespaces.example.activity.control.osc.routable`` project in the workbench.
+``examples/activity/control/smartspaces.example.activity.control.osc.routable`` project in the workbench.
 
 ::
 
   <activity type="smartspaces_native">
     <name>smartspacesExampleActivityControlOscRoutable</name>
     <class>
-      interactivespaces.example.activity.control.osc.routable.OpenSoundControlRoutableExampleActivity
+      io.smartspaces.example.activity.control.osc.routable.OpenSoundControlRoutableExampleActivity
     </class>
 
     <configuration>
@@ -437,18 +437,18 @@ your activities if the Smart Spaces controller where the activity is being deplo
 the dependencies.
 
 Dependencies are placed in the ``project.xml`` file using a ``<dependencies>`` section. An example dependencies section
-that is dependent on any version of the ``interactivespaces.sandbox.service.control.dmx`` library 
+that is dependent on any version of the ``smartspaces.sandbox.service.control.dmx`` library 
 between versions ``1.0.0`` and ``1.1.0`` would be as follows.
 
 ::
 
   <dependencies>
-    <dependency identifyingName="interactivespaces.sandbox.service.control.dmx" 
+    <dependency identifyingName="io.smart.spaces.sandbox.service.control.dmx" 
         version="[1.0.0, 1.1.0)" 
         required="true" />
   </dependencies>
 
-The ``<dependency>`` item names the dependency, in this case ``interactivespaces.sandbox.service.control.dmx``
+The ``<dependency>`` item names the dependency, in this case ``io.smartspaces.sandbox.service.control.dmx``
 through the ``identifyingName`` attribute.
 
 The ``version`` attribute says that the ``1.0.0`` version of the library is the minimum version which 
@@ -485,7 +485,7 @@ The attribute ``linking`` on the ``<dependency>`` has the value ``static``.
 ::
 
   <dependencies>
-    <dependency name="interactivespaces.sandbox.service.control.dmx" 
+    <dependency name="io.smartspaces.sandbox.service.control.dmx" 
         version="[1.0.0, 1.1.0)" 
         required="true" linking="static" />
   </dependencies>
@@ -499,7 +499,7 @@ You can also set the default for all ``<dependency>`` elements by placing the ``
 ::
 
   <dependencies linking="static">
-    <dependency name="interactivespaces.sandbox.service.control.dmx" 
+    <dependency name="io.smartspaces.sandbox.service.control.dmx" 
         version="[1.0.0, 1.1.0)" 
         required="true" />
   </dependencies>
@@ -634,7 +634,7 @@ the ``startup`` folder of an Smart Spaces controller and will then be available 
 Activities to use when compiling. An activity using the library should list the library in its dependencies
 section (see :ref:`workbench1-dependencies-label`). When ready to deploy the library with an activity, add 
 the dependency to the 
-``master/repository/interactivespaces/resources/bundles`` folder on your Smart Spaces Master.
+``master/repository/smartspaces/resources/bundles`` folder on your Smart Spaces Master.
 
 A Resource section (see :ref:`workbench1-resource-copying-label`) in your Library ``project.xml`` will copy the files
 such that they will appear in the JAR file created for the library. Destination pathnames will be relative to the
@@ -730,8 +730,8 @@ An example of a local configuration file would be
 ::
 
   repo=/my/home/repo
-  deployment.test.deploy=/my/home/interactivespaces/master/master/activity/deploy
-  deployment.test.import=/my/home/interactivespaces/master/master/activity/import
+  deployment.test.deploy=/my/home/smartspaces/master/master/activity/deploy
+  deployment.test.import=/my/home/smartspaces/master/master/activity/import
 
 This configuration file would make the variables ``${repo}``,
 ``${deployment.test.deploy}``, and ``${deployment.test.import}``
@@ -749,10 +749,10 @@ You can also specify command line arguments for the Java compiler and the versio
 to compile for in the Workbench. These are usually set through the ``workbench.conf`` file
 in your ``config`` folder, though you can also set them in your ``local.conf``.
 
-The ``interactivespaces.workbench.builder.java.compileflags`` property lets you set any compile 
+The ``smartspaces.workbench.builder.java.compileflags`` property lets you set any compile 
 flags for the Java compiler. These flags are space separated.
 
-The ``interactivespaces.workbench.builder.java.version`` property lets you set the version of the 
+The ``smartspaces.workbench.builder.java.version`` property lets you set the version of the 
 compiler you want to use. Example values are ``1.7`` or ``1.6``.
 
 
@@ -772,7 +772,7 @@ the Simple Web Activity Example project with the command
 
 ::
 
-  bin/isworkbench examples/basics/hello/interactivespaces.example.activity.hello docs
+  bin/ssworkbench examples/basics/hello/smartspaces.example.activity.hello docs
 
 The Workbench can only create Javadocs at the moment, which means it currently
 only works on Java-based Activities
@@ -802,16 +802,16 @@ which come with the Workbench, you could use the command
 
 ::
 
-  bin/isworkbench /my/home/interactivespaces/workbench/examples walk clean build
+  bin/ssworkbench /my/home/smartspaces/workbench/examples walk clean build
 
-where ``/my/home/interactivespaces/workbench`` would be the directory
+where ``/my/home/smartspaces/workbench`` would be the directory
 where you installed the Workbench.
 
 Adding Flags to the Java Compiler
 ---------------------------------
 
 You can add additional flags to the Java compiler by defining the local configuration variable
-``interactivespaces.workbench.builder.java.compileflags`` in your local Workbench
+``smartspaces.workbench.builder.java.compileflags`` in your local Workbench
 configuration. This will add the space-separated flags to the command line to the Java
 compiler.
 
@@ -838,9 +838,9 @@ To create an OSGi bundle, you use the command
   bin/isworkbench osgi <pathToJar>
 
 where ``<pathToJar>`` is the path to the Java library you want made into an OSGi
-bundle. The output of the command will be a new jar with the prefix ``interactivespaces.``
+bundle. The output of the command will be a new jar with the prefix ``smartspaces.``
 added to its name. For instance, if your jar was originally called ``foo-1.0.0.jar``,
-the OSGi bundle created from the jar will be called ``interactivespaces.foo-1.0.0.jar``.
+the OSGi bundle created from the jar will be called ``smartspaces.foo-1.0.0.jar``.
 
 Best Practices for Developing in Smart Spaces
 ===================================================
@@ -865,10 +865,10 @@ you are developing.
 
 You should create the following two folders where your Master is installed
 
-* ``/my/home/interactivespaces/master/master/activity/import``
-* ``/my/home/interactivespaces/master/master/activity/deploy``
+* ``/my/home/smartspaces/master/master/activity/import``
+* ``/my/home/smartspaces/master/master/activity/deploy``
 
-where ``/my/home/interactivespaces/master`` is where your Master is installed.
+where ``/my/home/smartspaces/master`` is where your Master is installed.
 
 Yes, that bit in the middle is real, it is not a stutter, it really is meant to be ``master/master``.
 These two folders are watched by the master and are used for automatically importing or dpeloying

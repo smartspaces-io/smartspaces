@@ -87,17 +87,17 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
    * @param root
    *          the root object, must be a map
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           the root was not a map
    */
   @SuppressWarnings("unchecked")
-  public StandardDynamicObjectNavigator(Object root) throws DynamicObjectInteractiveSpacesException {
+  public StandardDynamicObjectNavigator(Object root) throws DynamicObjectSmartSpacesException {
     if (root instanceof Map) {
       this.root = (Map<String, Object>) root;
       currentType = DynamicObjectType.OBJECT;
       currentObject = this.root;
     } else {
-      throw new DynamicObjectInteractiveSpacesException("The root must be a map.");
+      throw new DynamicObjectSmartSpacesException("The root must be a map.");
     }
   }
 
@@ -118,12 +118,12 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
   @Override
   public String getRequiredString(String propertyName)
-      throws DynamicObjectInteractiveSpacesException {
+      throws DynamicObjectSmartSpacesException {
     String value = getString(propertyName);
     if (value != null) {
       return value;
     } else {
-      throw new DynamicObjectInteractiveSpacesException(String.format(
+      throw new DynamicObjectSmartSpacesException(String.format(
           "No property with name %s at the current level in the dynamic object", propertyName));
     }
   }
@@ -153,7 +153,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
     if (currentType == DynamicObjectType.OBJECT) {
       return currentObject.keySet();
     } else {
-      throw new DynamicObjectInteractiveSpacesException("Current level is not a object");
+      throw new DynamicObjectSmartSpacesException("Current level is not a object");
     }
   }
 
@@ -164,17 +164,17 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   }
 
   @Override
-  public String getString(int pos) throws DynamicObjectInteractiveSpacesException {
+  public String getString(int pos) throws DynamicObjectSmartSpacesException {
     return (String) getArrayIndex(pos);
   }
 
   @Override
-  public Integer getInteger(int pos) throws DynamicObjectInteractiveSpacesException {
+  public Integer getInteger(int pos) throws DynamicObjectSmartSpacesException {
     return (Integer) getArrayIndex(pos);
   }
 
   @Override
-  public Double getDouble(int pos) throws DynamicObjectInteractiveSpacesException {
+  public Double getDouble(int pos) throws DynamicObjectSmartSpacesException {
     Object value = getArrayIndex(pos);
 
     if (value != null) {
@@ -185,22 +185,22 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   }
 
   @Override
-  public Boolean getBoolean(int pos) throws DynamicObjectInteractiveSpacesException {
+  public Boolean getBoolean(int pos) throws DynamicObjectSmartSpacesException {
     return (Boolean) getArrayIndex(pos);
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public <T> T getItem(int pos) throws DynamicObjectInteractiveSpacesException {
+  public <T> T getItem(int pos) throws DynamicObjectSmartSpacesException {
     return (T) getArrayIndex(pos);
   }
 
   @Override
-  public int getSize() throws DynamicObjectInteractiveSpacesException {
+  public int getSize() throws DynamicObjectSmartSpacesException {
     if (currentType == DynamicObjectType.ARRAY) {
       return currentArraySize;
     } else {
-      throw new DynamicObjectInteractiveSpacesException("Current level is not array");
+      throw new DynamicObjectSmartSpacesException("Current level is not array");
     }
   }
 
@@ -212,14 +212,14 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
    *
    * @return the value of the property, or {@code null} if none
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           the current level is not an object
    */
   private Object getObjectProperty(String propertyName) {
     if (currentType == DynamicObjectType.OBJECT) {
       return currentObject.get(propertyName);
     } else {
-      throw new DynamicObjectInteractiveSpacesException(String.format(
+      throw new DynamicObjectSmartSpacesException(String.format(
           "Accessing object property %s, current level is not a object", propertyName));
     }
   }
@@ -232,34 +232,34 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
    *
    * @return the value of the property, or {@code null} if none
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           the current level is not an array
    */
   private Object getArrayIndex(int index) {
     if (currentType == DynamicObjectType.ARRAY) {
       return currentArray.get(index);
     } else {
-      throw new DynamicObjectInteractiveSpacesException(String.format(
+      throw new DynamicObjectSmartSpacesException(String.format(
           "Accessing array index %d, current level is not an array", index));
     }
   }
 
   @Override
-  public Map<String, Object> asMap() throws DynamicObjectInteractiveSpacesException {
+  public Map<String, Object> asMap() throws DynamicObjectSmartSpacesException {
     if (currentType == DynamicObjectType.OBJECT) {
       return Collections.unmodifiableMap(currentObject);
     } else {
-      throw new DynamicObjectInteractiveSpacesException("Current level is not a object");
+      throw new DynamicObjectSmartSpacesException("Current level is not a object");
     }
   }
 
   @SuppressWarnings("unchecked")
   @Override
-  public <T> List<T> asList() throws DynamicObjectInteractiveSpacesException {
+  public <T> List<T> asList() throws DynamicObjectSmartSpacesException {
     if (currentType == DynamicObjectType.ARRAY) {
       return Collections.unmodifiableList((List<T>) currentArray);
     } else {
-      throw new DynamicObjectInteractiveSpacesException("Current level is not a object");
+      throw new DynamicObjectSmartSpacesException("Current level is not a object");
     }
   }
 
@@ -276,7 +276,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
       setCurrentAsArray(value);
     } else {
-      throw new DynamicObjectInteractiveSpacesException(String.format(
+      throw new DynamicObjectSmartSpacesException(String.format(
           "The object property %s is neither an object or an array", propertyName));
     }
 
@@ -284,7 +284,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   }
 
   @Override
-  public DynamicObject down(int pos) throws DynamicObjectInteractiveSpacesException {
+  public DynamicObject down(int pos) throws DynamicObjectSmartSpacesException {
     Object value = getArrayIndex(pos);
 
     if (value instanceof Map) {
@@ -296,7 +296,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
       setCurrentAsArray(value);
     } else {
-      throw new DynamicObjectInteractiveSpacesException(String.format(
+      throw new DynamicObjectSmartSpacesException(String.format(
           "The array position %d is neither an object or an array", pos));
     }
 
@@ -316,7 +316,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
       return this;
     } else {
-      throw new DynamicObjectInteractiveSpacesException("Could not go up, was at root or blocked");
+      throw new DynamicObjectSmartSpacesException("Could not go up, was at root or blocked");
     }
   }
 
@@ -359,7 +359,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
         }
       };
     } else {
-      throw new DynamicObjectInteractiveSpacesException(
+      throw new DynamicObjectSmartSpacesException(
           "Want an object iterator but the current level is not an object");
     }
   }
@@ -374,7 +374,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
         }
       };
     } else {
-      throw new DynamicObjectInteractiveSpacesException(
+      throw new DynamicObjectSmartSpacesException(
           "Want an array iterator but the current level is not an array");
     }
   }
@@ -406,7 +406,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
       String element = elements[i].trim();
 
       if (element.isEmpty()) {
-        throw new DynamicObjectInteractiveSpacesException(String.format("Empty element in path %s",
+        throw new DynamicObjectSmartSpacesException(String.format("Empty element in path %s",
             path));
       }
 
@@ -419,14 +419,14 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
             curObject = ((List<Object>) curObject).get(index);
           } else {
-            throw new DynamicObjectInteractiveSpacesException(String.format(
+            throw new DynamicObjectSmartSpacesException(String.format(
                 "Path element %s does not end in a ]", element));
           }
         } else if (curObject instanceof Map) {
-          throw new DynamicObjectInteractiveSpacesException(
+          throw new DynamicObjectSmartSpacesException(
               "Attempt to use an array index in an object");
         } else if (i < elements.length) {
-          throw new DynamicObjectInteractiveSpacesException(
+          throw new DynamicObjectSmartSpacesException(
               "Non array or object in the middle of a path");
         }
       } else {
@@ -434,10 +434,10 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
         if (curObject instanceof Map) {
           curObject = ((Map<String, ? extends Object>) curObject).get(element);
         } else if (curObject instanceof List) {
-          throw new DynamicObjectInteractiveSpacesException(
+          throw new DynamicObjectSmartSpacesException(
               "Attempt to use an name index in an array");
         } else if (i < elements.length) {
-          throw new DynamicObjectInteractiveSpacesException(
+          throw new DynamicObjectSmartSpacesException(
               "Non array or object in the middle of a path");
         }
       }

@@ -9,7 +9,7 @@ back to what you did in the previous chapter.
 Overview
 ========
 
-An "interactive space", in Smart Spaces terms, is a collection of event producers
+A "smart space", in Smart Spaces terms, is a collection of event producers
 and consumers in a physical space which can sense what is happening inside the
 space and then react to it in some manner.
 
@@ -70,7 +70,7 @@ directly with each other.
 Activities and Live Activities
 ==============================
 
-Live Activities are the work horses of an interactive space, without them
+Live Activities are the work horses of a smart space, without them
 the space would have no interactivity.
 They contain an Activity and potentially a configuration. They also have
 a lifecycle.
@@ -151,7 +151,7 @@ Space Controllers
 =================
 
 As we've already seen, Space Controllers are where Live Activities run.
-if you have an interactive space, you need at least 1 Space Controller
+if you have a smart space, you need at least 1 Space Controller
 because you have no space without Live Activities.
 
 A space will have anywhere from 1 Space Controller to potentially hundreds
@@ -194,7 +194,7 @@ and is used to not only control the Live Activities (via the Space
 Controller which contains the Live Activity), but to also support
 maintenance, deployment, and monitoring of the entire installation.
 
-It would be very interesting to have an interactive space which has much more
+It would be very interesting to have a smart space which has much more
 decentralized control, but Smart Spaces was built to support
 installations where it was very easy to tear a space down and reconfigure it for
 a very different purpose in a short time and this is much easier

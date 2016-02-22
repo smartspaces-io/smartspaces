@@ -75,7 +75,7 @@ public class ExternalProxyInternalExampleActivity extends BaseRoutableRosWebActi
             WebSocketClientService.SERVICE_NAME);
 
     try {
-      URI u = new URI(String.format("ws://%s:%d/%s", proxyHost, proxyPort, "interactivespaces"));
+      URI u = new URI(String.format("ws://%s:%d/%s", proxyHost, proxyPort, "smartspaces"));
 
       WebSocketClient proxyClient = new NettyWebSocketClient(u, new WebSocketHandler() {
 

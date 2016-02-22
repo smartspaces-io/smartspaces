@@ -35,11 +35,11 @@ public interface DynamicObjectBuilder {
 	 *
 	 * @return this builder
 	 *
-	 * @throws DynamicObjectInteractiveSpacesException
+	 * @throws DynamicObjectSmartSpacesException
 	 *             the current level is not an object
 	 */
 	DynamicObjectBuilder setProperty(String name, Object value)
-			throws DynamicObjectInteractiveSpacesException;
+			throws DynamicObjectSmartSpacesException;
 
 	/**
 	 * Put in a collection of properties into an object.
@@ -50,11 +50,11 @@ public interface DynamicObjectBuilder {
 	 *
 	 * @return this builder
 	 *
-	 * @throws DynamicObjectInteractiveSpacesException
+	 * @throws DynamicObjectSmartSpacesException
 	 *             the current level is not an object
 	 */
 	DynamicObjectBuilder setProperties(Map<String, Object> data)
-			throws DynamicObjectInteractiveSpacesException;
+			throws DynamicObjectSmartSpacesException;
 
 	/**
 	 * Put the current object of the navigator into the object being built.
@@ -68,12 +68,12 @@ public interface DynamicObjectBuilder {
 	 *
 	 * @return this builder
 	 *
-	 * @throws DynamicObjectInteractiveSpacesException
+	 * @throws DynamicObjectSmartSpacesException
 	 *             the current level of the builder is not an object, or the
 	 *             navigator is not at an object
 	 */
 	DynamicObjectBuilder setProperties(DynamicObject navigator)
-			throws DynamicObjectInteractiveSpacesException;
+			throws DynamicObjectSmartSpacesException;
 
 	/**
 	 * Append a value into an array.
@@ -83,11 +83,11 @@ public interface DynamicObjectBuilder {
 	 *
 	 * @return this builder
 	 *
-	 * @throws DynamicObjectInteractiveSpacesException
+	 * @throws DynamicObjectSmartSpacesException
 	 *             the current level is not an array
 	 */
 	DynamicObjectBuilder add(Object value)
-			throws DynamicObjectInteractiveSpacesException;
+			throws DynamicObjectSmartSpacesException;
 
 	/**
 	 * Append a value into an array.
@@ -97,11 +97,11 @@ public interface DynamicObjectBuilder {
 	 *
 	 * @return this builder
 	 *
-	 * @throws DynamicObjectInteractiveSpacesException
+	 * @throws DynamicObjectSmartSpacesException
 	 *             the current level is not an array
 	 */
 	DynamicObjectBuilder add(Object... values)
-			throws DynamicObjectInteractiveSpacesException;
+			throws DynamicObjectSmartSpacesException;
 
 	/**
 	 * Append a collection of values into an array.
@@ -111,11 +111,11 @@ public interface DynamicObjectBuilder {
 	 *
 	 * @return this builder
 	 *
-	 * @throws DynamicObjectInteractiveSpacesException
+	 * @throws DynamicObjectSmartSpacesException
 	 *             the current level is not an array
 	 */
 	DynamicObjectBuilder add(Iterable<Object> value)
-			throws DynamicObjectInteractiveSpacesException;
+			throws DynamicObjectSmartSpacesException;
 
 	/**
 	 * Put the current array of the navigator into the array being built.
@@ -129,12 +129,12 @@ public interface DynamicObjectBuilder {
 	 *
 	 * @return this builder
 	 *
-	 * @throws DynamicObjectInteractiveSpacesException
+	 * @throws DynamicObjectSmartSpacesException
 	 *             the current level of the builder is not an array, or the
 	 *             navigator is not at an array
 	 */
 	DynamicObjectBuilder add(DynamicObject navigator)
-			throws DynamicObjectInteractiveSpacesException;
+			throws DynamicObjectSmartSpacesException;
 
 	/**
 	 * Add a new object into the current object.
@@ -144,11 +144,11 @@ public interface DynamicObjectBuilder {
 	 *
 	 * @return the builder
 	 *
-	 * @throws DynamicObjectInteractiveSpacesException
+	 * @throws DynamicObjectSmartSpacesException
 	 *             the current level is not an object
 	 */
 	DynamicObjectBuilder newObject(String name)
-			throws DynamicObjectInteractiveSpacesException;
+			throws DynamicObjectSmartSpacesException;
 
 	/**
 	 * Add a new array into the current object.
@@ -158,18 +158,18 @@ public interface DynamicObjectBuilder {
 	 *
 	 * @return the builder
 	 *
-	 * @throws DynamicObjectInteractiveSpacesException
+	 * @throws DynamicObjectSmartSpacesException
 	 *             the current level is not an object
 	 */
 	DynamicObjectBuilder newArray(String name)
-			throws DynamicObjectInteractiveSpacesException;
+			throws DynamicObjectSmartSpacesException;
 
 	/**
 	 * Add a new array into the current array.
 	 *
 	 * @return the builder
 	 *
-	 * @throws DynamicObjectInteractiveSpacesException
+	 * @throws DynamicObjectSmartSpacesException
 	 *             the current level is not an array
 	 */
 	DynamicObjectBuilder newArray();
@@ -179,21 +179,21 @@ public interface DynamicObjectBuilder {
 	 *
 	 * @return the builder
 	 *
-	 * @throws DynamicObjectInteractiveSpacesException
+	 * @throws DynamicObjectSmartSpacesException
 	 *             the current level is not an array
 	 */
 	DynamicObjectBuilder newObject()
-			throws DynamicObjectInteractiveSpacesException;
+			throws DynamicObjectSmartSpacesException;
 
 	/**
 	 * Move up a level.
 	 *
 	 * @return this builder
 	 *
-	 * @throws DynamicObjectInteractiveSpacesException
+	 * @throws DynamicObjectSmartSpacesException
 	 *             the builder is at the top level
 	 */
-	DynamicObjectBuilder up() throws DynamicObjectInteractiveSpacesException;
+	DynamicObjectBuilder up() throws DynamicObjectSmartSpacesException;
 
 	/**
 	 * Build the final object as a map.

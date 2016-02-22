@@ -60,10 +60,10 @@ public interface DynamicObject {
    *
    * @return value of the field, or {@code null} if nothing for that key
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an object
    */
-  String getString(String name) throws DynamicObjectInteractiveSpacesException;
+  String getString(String name) throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is a object, get a string field from the object. The
@@ -74,10 +74,10 @@ public interface DynamicObject {
    *
    * @return value of the field
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an object or the field does not exist
    */
-  String getRequiredString(String name) throws DynamicObjectInteractiveSpacesException;
+  String getRequiredString(String name) throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is a object, get an integer field from the object.
@@ -87,10 +87,10 @@ public interface DynamicObject {
    *
    * @return value of the field, or {@code null} if nothing for that key
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an object
    */
-  Integer getInteger(String name) throws DynamicObjectInteractiveSpacesException;
+  Integer getInteger(String name) throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is a object, get a double field from the object.
@@ -100,10 +100,10 @@ public interface DynamicObject {
    *
    * @return value of the field, or {@code null} if nothing for that key
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an object
    */
-  Double getDouble(String name) throws DynamicObjectInteractiveSpacesException;
+  Double getDouble(String name) throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is a object, get a boolean field from the object.
@@ -113,10 +113,10 @@ public interface DynamicObject {
    *
    * @return value of the field, or {@code null} if nothing for that key
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an object
    */
-  Boolean getBoolean(String name) throws DynamicObjectInteractiveSpacesException;
+  Boolean getBoolean(String name) throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is a object, get the names of all properties for that
@@ -124,10 +124,10 @@ public interface DynamicObject {
    *
    * @return names of all properties for the object
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           the current level is not an object
    */
-  Set<String> getProperties() throws DynamicObjectInteractiveSpacesException;
+  Set<String> getProperties() throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is a object, get an object field from the object.
@@ -139,10 +139,10 @@ public interface DynamicObject {
    *
    * @return value of the field, or {@code null} if nothing for that key
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an object
    */
-  <T> T getItem(String name) throws DynamicObjectInteractiveSpacesException;
+  <T> T getItem(String name) throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is an array, get a string field from the object.
@@ -152,10 +152,10 @@ public interface DynamicObject {
    *
    * @return value of the field
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an array
    */
-  String getString(int pos) throws DynamicObjectInteractiveSpacesException;
+  String getString(int pos) throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is an array, get an integer field from the object.
@@ -165,10 +165,10 @@ public interface DynamicObject {
    *
    * @return value of the field
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an array
    */
-  Integer getInteger(int pos) throws DynamicObjectInteractiveSpacesException;
+  Integer getInteger(int pos) throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is an array, get a double field from the object.
@@ -178,10 +178,10 @@ public interface DynamicObject {
    *
    * @return value of the field
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an array
    */
-  Double getDouble(int pos) throws DynamicObjectInteractiveSpacesException;
+  Double getDouble(int pos) throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is an array, get a boolean field from the object.
@@ -191,10 +191,10 @@ public interface DynamicObject {
    *
    * @return value of the field
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an array
    */
-  Boolean getBoolean(int pos) throws DynamicObjectInteractiveSpacesException;
+  Boolean getBoolean(int pos) throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is an array, get an object field from the object.
@@ -206,20 +206,20 @@ public interface DynamicObject {
    *
    * @return value of the field
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an array
    */
-  <T> T getItem(int pos) throws DynamicObjectInteractiveSpacesException;
+  <T> T getItem(int pos) throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is an array, get the size of the array.
    *
    * @return size of the current array
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an array
    */
-  int getSize() throws DynamicObjectInteractiveSpacesException;
+  int getSize() throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is a object, get that object.\ as a map.
@@ -230,10 +230,10 @@ public interface DynamicObject {
    *
    * @return the current object
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           the current level was not an object
    */
-  Map<String, ? extends Object> asMap() throws DynamicObjectInteractiveSpacesException;
+  Map<String, ? extends Object> asMap() throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is an array, get that array.
@@ -251,10 +251,10 @@ public interface DynamicObject {
    *
    * @return the current array
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           the current level was not an array
    */
-  <T> List<T> asList() throws DynamicObjectInteractiveSpacesException;
+  <T> List<T> asList() throws DynamicObjectSmartSpacesException;
 
   /**
    * Move into the object to the object at a given name.
@@ -267,10 +267,10 @@ public interface DynamicObject {
    *
    * @return this dynamic object
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           current level not an object or there is no property with the name
    */
-  DynamicObject down(String name) throws DynamicObjectInteractiveSpacesException;
+  DynamicObject down(String name) throws DynamicObjectSmartSpacesException;
 
   /**
    * Move into the array to the item at a given position.
@@ -283,20 +283,20 @@ public interface DynamicObject {
    *
    * @return this dynamic object
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an array
    */
-  DynamicObject down(int pos) throws DynamicObjectInteractiveSpacesException;
+  DynamicObject down(int pos) throws DynamicObjectSmartSpacesException;
 
   /**
    * Move up one level in the navigation.
    *
    * @return this dynamic object
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           can't move up because either blocked or no up to go to
    */
-  DynamicObject up() throws DynamicObjectInteractiveSpacesException;
+  DynamicObject up() throws DynamicObjectSmartSpacesException;
 
   /**
    * Get an iterator for walking through the current object.
@@ -311,11 +311,11 @@ public interface DynamicObject {
    *
    * @return an iterable for the current object
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an object
    */
   Iterable<ObjectDynamicObjectEntry> getObjectEntries()
-      throws DynamicObjectInteractiveSpacesException;
+      throws DynamicObjectSmartSpacesException;
 
   /**
    * Get an iterator for walking through the current array.
@@ -330,11 +330,11 @@ public interface DynamicObject {
    *
    * @return an iterable for the current array
    *
-   * @throws DynamicObjectInteractiveSpacesException
+   * @throws DynamicObjectSmartSpacesException
    *           not an array
    */
   Iterable<ArrayDynamicObjectEntry> getArrayEntries()
-      throws DynamicObjectInteractiveSpacesException;
+      throws DynamicObjectSmartSpacesException;
 
   /**
    * An entry in an object in a dynamic object.

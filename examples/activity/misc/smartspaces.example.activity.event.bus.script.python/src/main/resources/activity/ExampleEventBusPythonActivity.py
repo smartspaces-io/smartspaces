@@ -34,14 +34,14 @@ class ExampleEventBusPythonActivity(BaseActivity):
                     self.spaceEnvironment.log.info("I hear my own voice inside my head")
                     
         self.eventListener = MyEventListener(self.spaceEnvironment, self.uuid)
-        self.eventSubscriber = self.spaceEnvironment.getValue('interactivespaces.event.bus.subscriber')
+        self.eventSubscriber = self.spaceEnvironment.getValue('smartspaces.event.bus.subscriber')
         if self.eventSubscriber:
             self.log.info("Have event subscriber")
             self.eventSubscriber.addEventListener("activity", self.eventListener)
         else:
             self.log.info("Have no event subscriber")
 
-        self.eventPublisher = self.spaceEnvironment.getValue('interactivespaces.event.bus.publisher')
+        self.eventPublisher = self.spaceEnvironment.getValue('smartspaces.event.bus.publisher')
         if self.eventPublisher:
             self.log.info("Have event publisher")
         else:

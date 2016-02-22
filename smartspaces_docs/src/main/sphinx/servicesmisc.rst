@@ -43,7 +43,7 @@ the script code
 will print ``Hello, World``.
 
 For more details about what you can do with the Script Service, see the
-:javadoc:`interactivespaces.service.script.ScriptService` 
+:javadoc:`io.smartspaces.service.script.ScriptService` 
 Javadoc.
 
 The Scheduler Service
@@ -57,7 +57,7 @@ at 3AM.
 
 
 For more details about what you can do with the Scheduler Service, see the
-:javadoc:`interactivespaces.service.scheduler.SchedulerService` 
+:javadoc:`io.smartspaces.service.scheduler.SchedulerService` 
 Javadoc.
 
 The Scheduler Service is for more coarse grained scheduling. If you need finer grained scheduling for something

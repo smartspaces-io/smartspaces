@@ -26,7 +26,16 @@ import io.smartspaces.workbench.SmartSpacesWorkbench;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.constituent.ProjectConstituent;
 
-import com.google.common.base.Charsets;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -37,15 +46,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.EntityResolver2;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.common.base.Charsets;
 
 /**
  * Base-class for facilitating reading XML documents using jdom.
@@ -77,7 +78,7 @@ public class JdomReader {
   protected boolean failure;
 
   /**
-   * Interactive spaces workbench used by this reader.
+   * Smart Spaces workbench used by this reader.
    */
   private final SmartSpacesWorkbench workbench;
 

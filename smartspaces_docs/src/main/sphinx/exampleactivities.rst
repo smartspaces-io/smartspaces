@@ -11,8 +11,8 @@ into Smart Spaces.
 
 Remember, the artifact you want to upload to the Smart Spaces Master is the *zip* file
 found in the *build* folder of the example. For example, to upload the simplest Hello World
-Activity, load the file *interactivespaces.example.activity.hello-1.0.0.zip* found
-in the folder *examples/basics/hello/interactivespaces.example.activity.hello/build* in the
+Activity, load the file *smartspaces.example.activity.hello-1.0.0.zip* found
+in the folder *examples/basics/hello/smartspaces.example.activity.hello/build* in the
 Workbench install folder.
 
 
@@ -25,9 +25,9 @@ Hello World: The Simple Events
 The following are written in a variety of programming languages and are found in the
 *examples/basics/hello* folder of the workbench.
 
-* interactivespaces.example.activity.hello
-* interactivespaces.example.activity.hello.javascript
-* interactivespaces.example.activity.hello.python
+* smartspaces.example.activity.hello
+* smartspaces.example.activity.hello.javascript
+* smartspaces.example.activity.hello.python
 
 These activities merely log some Smart Spaces events which take
 place when a Live Activity runs. These examples can help you understand 
@@ -44,7 +44,7 @@ only be logged if the logging level for the activity is set to DEBUG.
 For fun, there is also a talking Hello World example. Just turn up your computer's speakers
 and enjoy.
 
-* interactivespaces.example.activity.hello.speech
+* smartspaces.example.activity.hello.speech
 
 
 Web Activities
@@ -62,7 +62,7 @@ It is very easy to use Smart Spaces to display a web application. Smart Spaces
 will provide a web server which will serve your HTML, CSS, and Javascript, and a web browser
 to display that HTML, CSS, and Javascript.
 
-* interactivespaces.example.activity.hello.web
+* smartspaces.example.activity.hello.web
 
 This is a standalone browser activity which shows a single page and not much
 else.
@@ -77,9 +77,9 @@ The following Activities are browser based, but use Web Sockets so that
 the Activity code running in the browser can communicate with the Live Activity
 which is running it on the Space Controller.
 
-* interactivespaces.example.activity.web
-* interactivespaces.example.activity.web.javascript
-* interactivespaces.example.activity.web.python
+* smartspaces.example.activity.web
+* smartspaces.example.activity.web.javascript
+* smartspaces.example.activity.web.python
 
 Pushing the Activate and Deactivate buttons will show different pictures. Pushing
 the button in the browser will send a message to the controlling Live Activity which
@@ -106,10 +106,10 @@ into JSON messages and read from JSON messages.
 The following examples are found in the
 *examples/basics/comm* folder of the workbench.
 
-* interactivespaces.example.activity.routable.input
-* interactivespaces.example.activity.routable.output
-* interactivespaces.example.activity.routable.input.python
-* interactivespaces.example.activity.routable.output.python
+* smartspaces.example.activity.routable.input
+* smartspaces.example.activity.routable.output
+* smartspaces.example.activity.routable.input.python
+* smartspaces.example.activity.routable.output.python
 
 The above output examples will write a message onb a route. The above input examples
 will read the message and write it in the controller's logs. make sure oyu look in the
@@ -127,14 +127,14 @@ controllers.
 Want some fun? Run the following route example which will listen on the same route as the
 examples above, but will speak the message sent over the route rather than just logging it.
 
-* interactivespaces.example.activity.routable.input.speech
+* smartspaces.example.activity.routable.input.speech
 
 It is very easy to have a browser based web application use routes. It requires you to
 write a Live Activity which will communicate with the browser application over a web socket
 connection and will listen to routes or write to routes.
 
-* interactivespaces.example.activity.routable.input.web
-* interactivespaces.example.activity.routable.output.web
+* smartspaces.example.activity.routable.input.web
+* smartspaces.example.activity.routable.output.web
 
 The above two examples demonstrate how to do this. The output activity will send the text
 typed into its message box if the Live Activity is activated and you click the *Send* button
@@ -157,7 +157,7 @@ that don't run inside the Smart Spaces container.
 
 The following examples are found in the *examples/basics/native* folder of the Workbench.
 
-* interactivespaces.example.activity.native
+* smartspaces.example.activity.native
 
 This example uses the Linux *mpg321* to play an audio file found in the
 activity.
@@ -184,7 +184,7 @@ These examples are found in the *examples/comm/serial* folder of the workbench.
 You need to configure your controller to work with serial, please see the chapter on 
 Smart Spaces Comm Support for instructions.
 
-* interactivespaces.example.activity.arduino.echo
+* smartspaces.example.activity.arduino.echo
 
 This Arduino example is very simple. When you activate the Live Activity, it will generate
 a random 8 bit number and write it to the serial port. The source for this activity includes
@@ -192,7 +192,7 @@ an Arduino sketch called *Echo* which will read any bytes which come over the se
 and write them back. The example will only log the values to keep the example simple, so
 make sure to look at the controller's logs.
 
-* interactivespaces.example.activity.arduino.analog.trigger
+* smartspaces.example.activity.arduino.analog.trigger
 
 This Arduino example connects to the Arduino and expects a value from an analog port
 to be written. The Arduino code for the example is included in the workbench.
@@ -210,8 +210,8 @@ communicate with remote hardware wirelessly.
 
 The radios must contain the API firmware and be set with AP=2 (escaped protocol).
 
-* interactivespaces.example.comm.xbee.coordinator
-* interactivespaces.example.comm.xbee.endpoint
+* smartspaces.example.comm.xbee.coordinator
+* smartspaces.example.comm.xbee.endpoint
 
 The first example runs on a coordinator radio. When you activate the activity it will
 first send a local AT AP informational command and log the result. It will then transmit
@@ -235,7 +235,7 @@ be a publisher or a subscriber of ROS messages.
 
 The following activities are provided as examples
 
-* interactivespaces.example.activity.comm.ros.hello.subscriber
+* smartspaces.example.activity.comm.ros.hello.subscriber
 
 The subscriber example shows how to register a ROS subscriber and respond to incoming messages.
 
@@ -253,7 +253,7 @@ Many wireless devices use Bluetooth for short range wireless communication.
 The example with Smart Spaces lets you use a Wii Remote as part of your space.
 read the activity documentation to see how to use the example.
 
-* interactivespaces.example.activity.wii.remote
+* smartspaces.example.activity.wii.remote
 
 Misc
 ====
@@ -274,7 +274,7 @@ to another by writing a tiny script which merely says which field or fields
 from the source message are combined to create the fields of the destination
 message.
 
-* interactivespaces.example.activity.bridge.topic
+* smartspaces.example.activity.bridge.topic
 
 XMPP Chat
 ---------
@@ -286,14 +286,14 @@ The example with Smart Spaces will sign into an XMPP-based chat service, such
 as Google Chat and echo the chat back to the user chatting with the activity. Instead you
 could use information that users send to the space to affect the space.
 
-* interactivespaces.example.activity.chat.xmpp
+* smartspaces.example.activity.chat.xmpp
 
 Music Jukebox
 ---------
 
 Sometimes you would like to use Smart Spaces to play music or other audio files.
 
-* interactivespaces.example.activity.music.jukebox
+* smartspaces.example.activity.music.jukebox
 
 The above will play MP3 files. A folder of music is set in the Live Activity's configuration
 and the example will shuffle play MP3s from this folder when activated.
@@ -306,9 +306,9 @@ Space Controllers can run on Android devices.
 The following examples demonstrate writing activities for Android devices and are found in the
 *examples/android* folder of the Workbench.
 
-* interactivespaces.example.activity.android.simple
-* interactivespaces.example.activity.android.web
-* interactivespaces.example.activity.android.accelerometer
+* smartspaces.example.activity.android.simple
+* smartspaces.example.activity.android.web
+* smartspaces.example.activity.android.accelerometer
 
 The first merely logs to the Android logs various Activity lifecycle events.
 The second will

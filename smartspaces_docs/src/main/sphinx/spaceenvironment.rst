@@ -6,7 +6,7 @@ needed in Smart Spaces. It is available to Live Activities, Space Controllers,
 and the Master.
 
 The definitive documentation is found in the
-:javadoc:`interactivespaces.system.SmartSpacesEnvironment` Javadoc.
+:javadoc:`io.smartspaces.system.SmartSpacesEnvironment` Javadoc.
 
 Logging
 =======
@@ -20,20 +20,20 @@ Live Activities.
 
 
 If the
-root folder for your master is *interactivespaces*, then the container logs are found
+root folder for your master is *smartspaces*, then the container logs are found
 in the folder
 
 ::
 
-  interactivespaces/master/logs
+  smartspaces/master/logs
 
 If the
-root folder for your controller is *interactivespaces*, then the container logs are found
+root folder for your controller is *smartspaces*, then the container logs are found
 in the folder
 
 ::
 
-  interactivespaces/controller/logs
+  smartspaces/controller/logs
 
 
 Activity logging should be done with the usual :ref:`activity logging <activity-logging-reference-label>`.
@@ -73,7 +73,7 @@ A safer way to do it would be
       getSpaceEnvironment().getServiceRegistry().getService(ScriptService.SERVICE_NAME);
   
 You can get more details about the Service Registry in the
-:javadoc:`interactivespaces.service.ServiceRegistry` 
+:javadoc:`io.smartspaces.service.ServiceRegistry` 
 Javadoc.
 
 You can read more about services in the :doc:`services` Chapter.

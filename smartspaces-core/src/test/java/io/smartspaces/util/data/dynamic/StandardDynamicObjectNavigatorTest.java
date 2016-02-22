@@ -137,7 +137,7 @@ public class StandardDynamicObjectNavigatorTest {
       nav.up();
 
       fail();
-    } catch (DynamicObjectInteractiveSpacesException e) {
+    } catch (DynamicObjectSmartSpacesException e) {
       // Expected
     }
   }
@@ -266,7 +266,7 @@ public class StandardDynamicObjectNavigatorTest {
     try {
       nav.traversePath(String.format("%s.%s.foo", obj2Key, obj2ValueKey));
       fail();
-    } catch (DynamicObjectInteractiveSpacesException e) {
+    } catch (DynamicObjectSmartSpacesException e) {
       // Expected
     }
   }

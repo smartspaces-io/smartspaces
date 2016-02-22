@@ -46,20 +46,18 @@ public interface SmartSpacesEnvironment {
   String CONFIGURATION_CONTAINER_TYPE = "smartspaces.container.type";
 
   /**
-   * Configuration property value for the master Smart Spaces container
-   * type.
+   * Configuration property value for the master Smart Spaces container type.
    */
   String CONFIGURATION_CONTAINER_TYPE_MASTER = "master";
 
   /**
-   * Configuration property value for the controller Smart Spaces
-   * container type.
+   * Configuration property value for the controller Smart Spaces container
+   * type.
    */
   String CONFIGURATION_CONTAINER_TYPE_CONTROLLER = "controller";
 
   /**
-   * Configuration property giving the Smart Spaces type, e.g. prod, dev,
-   * local.
+   * Configuration property giving the Smart Spaces type, e.g. prod, dev, local.
    */
   String CONFIGURATION_NETWORK_TYPE = "smartspaces.network.type";
 
@@ -179,13 +177,12 @@ public interface SmartSpacesEnvironment {
   SmartSpacesFilesystem getFilesystem();
 
   /**
-   * Get the {@link ScheduledExecutorService} to be used inside Interactive
-   * Spaces.
+   * Get the {@link ScheduledExecutorService} to be used inside Smart Spaces.
    *
    * <p>
-   * An executor service gives thread pools to be used. Smart Spaces needs
-   * to control as many threads as possible, so anything in Smart Spaces
-   * should try and use this service.
+   * An executor service gives thread pools to be used. Smart Spaces needs to
+   * control as many threads as possible, so anything in Smart Spaces should try
+   * and use this service.
    *
    * @return the executor service to be used for all thread usage
    */
@@ -251,8 +248,8 @@ public interface SmartSpacesEnvironment {
    * Get the network type for the Smart Spaces container.
    *
    * <p>
-   * This allows distinguishing between different Smart Spaces networks,
-   * e.g. localdev, prod, fredbot.
+   * This allows distinguishing between different Smart Spaces networks, e.g.
+   * localdev, prod, fredbot.
    *
    * @return network type currently used
    */

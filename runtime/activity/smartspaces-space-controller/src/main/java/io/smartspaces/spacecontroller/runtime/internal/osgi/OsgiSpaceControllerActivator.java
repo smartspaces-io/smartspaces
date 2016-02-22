@@ -69,7 +69,7 @@ public class OsgiSpaceControllerActivator extends SmartSpacesServiceOsgiBundleAc
   private static final String CONFIGURATION_VALUE_MONITOR_ENABLE_DEFAULT_CONTROLLER = "true";
 
   /**
-   * OSGi service tracker for the interactive spaces control.
+   * OSGi service tracker for the smart spaces control.
    */
   private MyServiceTracker<SmartSpacesSystemControl> smartspacesSystemControlTracker;
 
@@ -95,8 +95,7 @@ public class OsgiSpaceControllerActivator extends SmartSpacesServiceOsgiBundleAc
 
   @Override
   public void onStart() {
-    smartspacesSystemControlTracker =
-        newMyServiceTracker(SmartSpacesSystemControl.class.getName());
+    smartspacesSystemControlTracker = newMyServiceTracker(SmartSpacesSystemControl.class.getName());
 
     rosEnvironmentTracker = newMyServiceTracker(RosEnvironment.class.getName());
 
@@ -133,8 +132,7 @@ public class OsgiSpaceControllerActivator extends SmartSpacesServiceOsgiBundleAc
         RemoteLiveActivityRuntimeMonitorService.CONFIGURATION_NAME_MONITOR_ENABLE_DEFAULT,
         CONFIGURATION_VALUE_MONITOR_ENABLE_DEFAULT_CONTROLLER);
 
-    SmartSpacesSystemControl spaceSystemControl =
-        smartspacesSystemControlTracker.getMyService();
+    SmartSpacesSystemControl spaceSystemControl = smartspacesSystemControlTracker.getMyService();
     RosEnvironment rosEnvironment = rosEnvironmentTracker.getMyService();
     ExpressionEvaluatorFactory expressionEvaluatorFactory =
         expressionEvaluatorFactoryTracker.getMyService();

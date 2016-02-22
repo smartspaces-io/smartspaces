@@ -23,7 +23,7 @@ import io.smartspaces.SimpleSmartSpacesException;
  *
  * @author Keith M. Hughes
  */
-public class DynamicObjectInteractiveSpacesException extends SimpleSmartSpacesException {
+public class DynamicObjectSmartSpacesException extends SimpleSmartSpacesException {
 
   /**
    * Construct a new dynamic object exception.
@@ -31,7 +31,7 @@ public class DynamicObjectInteractiveSpacesException extends SimpleSmartSpacesEx
    * @param message
    *          the message to send
    */
-  public DynamicObjectInteractiveSpacesException(String message) {
+  public DynamicObjectSmartSpacesException(String message) {
     super(message);
   }
 }

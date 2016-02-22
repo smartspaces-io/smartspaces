@@ -33,12 +33,12 @@ public interface MailSenderService extends SupportedService {
   String SERVICE_NAME = "mail.sender";
 
   /**
-   * Configuration property for SMTP host interactive spaces should use.
+   * Configuration property for SMTP host smart spaces should use.
    */
   String CONFIGURATION_MAIL_SMTP_HOST = "smartspaces.service.mail.sender.smtp.host";
 
   /**
-   * Configuration property for SMTP host port interactive spaces should use.
+   * Configuration property for SMTP host port smart spaces should use.
    */
   String CONFIGURATION_MAIL_SMTP_PORT = "smartspaces.service.mail.sender.smtp.port";
 

@@ -28,13 +28,13 @@ import io.smartspaces.time.TimeProvider;
 import io.smartspaces.util.resource.ManagedResource;
 import io.smartspaces.util.resource.ManagedResources;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.Jdk14Logger;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.Jdk14Logger;
 
 /**
  * An {@link SmartSpacesEnvironment} that can be used for standalone running of
@@ -55,12 +55,11 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
    * @return the space environment
    */
   public static StandaloneSmartSpacesEnvironment newStandaloneSmartSpacesEnvironment() {
-    StandaloneSmartSpacesEnvironment environment =
-        new StandaloneSmartSpacesEnvironment();
+    StandaloneSmartSpacesEnvironment environment = new StandaloneSmartSpacesEnvironment();
 
     environment.systemConfiguration = SimpleConfiguration.newConfiguration();
     environment.executorService = Executors.newScheduledThreadPool(NUM_THREADS_IN_POOL);
-    environment.log = new StandardExtendedLog(new Jdk14Logger("test.interactive.spaces"));
+    environment.log = new StandardExtendedLog(new Jdk14Logger("test.smartspaces"));
     environment.serviceRegistry = new SimpleServiceRegistry(environment);
     environment.timeProvider = new SettableTimeProvider();
     environment.managedResources = new ManagedResources(environment.log);

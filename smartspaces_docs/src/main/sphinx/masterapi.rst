@@ -17,7 +17,7 @@ Every API URL fill be prefixed with the following
 
 ::
 
-  http://spacemaster:8080/interactivespaces/
+  http://spacemaster:8080/smartspaces/
 
 where *spacemaster* is the domain name of the machine running the Smart
 Spaces Master.
@@ -26,7 +26,7 @@ For example, the API call to obtain all Live Activities know by the system is
 
 ::
 
-  http://spacemaster:8080/interactivespaces/liveactivity/all.json
+  http://spacemaster:8080/smartspaces/liveactivity/all.json
 
 
 Results

@@ -125,6 +125,6 @@ with the text spoken asynchronously. if the value is ``true`` the method
 will block, if it is ``false`` the method will return immediately.
 
 For more details about what you can do with the Speech Synthesis Service, see the
-:javadoc:`interactivespaces.service.speech.synthesis.SpeechSynthesisService` 
+:javadoc:`io.smartspaces.service.speech.synthesis.SpeechSynthesisService` 
 Javadoc.
 

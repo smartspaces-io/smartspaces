@@ -36,8 +36,8 @@ public interface CoreConfiguration {
   String CONFIGURATION_SMARTSPACES_BASE_INSTALL_DIR = "smartspaces.rootdir";
 
   /**
-   * Property containing the Smart Spaces runtime location. This will be
-   * an absolute path.
+   * Property containing the Smart Spaces runtime location. This will be an
+   * absolute path.
    */
   String CONFIGURATION_SMARTSPACES_RUNTIME_DIR = "smartspaces.runtime";
 
@@ -45,8 +45,8 @@ public interface CoreConfiguration {
    * Property containing the Smart Spaces home directory.
    *
    * <p>
-   * This directory is the directory that will contain one or more Interactive
-   * Spaces containers, such as a master and a controller.
+   * This directory is the directory that will contain one or more Smart Spaces
+   * containers, such as a master and a controller.
    */
   String CONFIGURATION_SMARTSPACES_HOME = "smartspaces.home";
 
@@ -56,20 +56,17 @@ public interface CoreConfiguration {
   String CONFIGURATION_SMARTSPACES_PLATFORM_OS = "smartspaces.platform.os";
 
   /**
-   * The value of the smartspaces configuration property value when it is
-   * Linux.
+   * The value of the smartspaces configuration property value when it is Linux.
    */
   String CONFIGURATION_VALUE_PLATFORM_OS_LINUX = "linux";
 
   /**
-   * The value of the smartspaces configuration property value when it is
-   * OSX.
+   * The value of the smartspaces configuration property value when it is OSX.
    */
   String CONFIGURATION_VALUE_PLATFORM_OS_OSX = "osx";
 
   /**
-   * The value of the smartspaces configuration property value when it is
-   * OSX.
+   * The value of the smartspaces configuration property value when it is OSX.
    */
   String CONFIGURATION_VALUE_PLATFORM_OS_WINDOWS = "windows";
 

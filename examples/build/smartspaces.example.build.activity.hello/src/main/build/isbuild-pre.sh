@@ -1,12 +1,12 @@
 #!/bin/bash
 
-FULLPATH="${1}/interactivespaces/build/test"
+FULLPATH="${1}/smartspaces/build/test"
 mkdir -p "${FULLPATH}"
 NEWFILE="${FULLPATH}/Foo.java"
 echo $NEWFILE
 
 read -d '' classdef <<- EOF
-package interactivespaces.build.test;
+package smartspaces.build.test;
 
 public class Foo {
 }

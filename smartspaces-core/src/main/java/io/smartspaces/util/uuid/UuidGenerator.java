@@ -34,7 +34,7 @@ public interface UuidGenerator extends ManagedResource {
    *
    * <p>
    * Comes from generating the name based UUID from
-   * {@code http://interactive-spaces.org/objects/spacecontroller}.
+   * {@code http://smartspaces.io/objects/spacecontroller}.
    */
   String NAMESPACE_SPACE_CONTROLLER = "d06715fb-3529-31a7-9d50-f8bc98a98dc";
 

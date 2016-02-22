@@ -79,7 +79,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an object
 
-      throw new DynamicObjectInteractiveSpacesException(
+      throw new DynamicObjectSmartSpacesException(
           "The builder is not currently building an object");
     }
 
@@ -88,13 +88,13 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
 
   @Override
   public DynamicObjectBuilder setProperties(Map<String, Object> data)
-      throws DynamicObjectInteractiveSpacesException {
+      throws DynamicObjectSmartSpacesException {
     if (currentType == DynamicObjectType.OBJECT) {
       currentObject.putAll(data);
     } else {
       // Must be an object
 
-      throw new DynamicObjectInteractiveSpacesException(
+      throw new DynamicObjectSmartSpacesException(
           "The builder is not currently building an object");
     }
 
@@ -103,13 +103,13 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
 
   @Override
   public DynamicObjectBuilder setProperties(DynamicObject navigator)
-      throws DynamicObjectInteractiveSpacesException {
+      throws DynamicObjectSmartSpacesException {
     if (currentType == DynamicObjectType.OBJECT) {
       currentObject.putAll(navigator.asMap());
     } else {
       // Must be an object
 
-      throw new DynamicObjectInteractiveSpacesException(
+      throw new DynamicObjectSmartSpacesException(
           "The builder is not currently building an object");
     }
 
@@ -123,7 +123,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an array
 
-      throw new DynamicObjectInteractiveSpacesException(
+      throw new DynamicObjectSmartSpacesException(
           "The builder is not currently building an array");
     }
 
@@ -141,7 +141,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an array
 
-      throw new DynamicObjectInteractiveSpacesException(
+      throw new DynamicObjectSmartSpacesException(
           "The builder is not currently building an array");
     }
 
@@ -159,7 +159,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an array
 
-      throw new DynamicObjectInteractiveSpacesException(
+      throw new DynamicObjectSmartSpacesException(
           "The builder is not currently building an array");
     }
 
@@ -174,7 +174,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an array
 
-      throw new DynamicObjectInteractiveSpacesException(
+      throw new DynamicObjectSmartSpacesException(
           "The builder is not currently building an array");
     }
 
@@ -194,7 +194,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an array
 
-      throw new DynamicObjectInteractiveSpacesException("Cannot put named item into an array");
+      throw new DynamicObjectSmartSpacesException("Cannot put named item into an array");
     }
 
     return this;
@@ -214,7 +214,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an array
 
-      throw new DynamicObjectInteractiveSpacesException("Cannot put named item into an array");
+      throw new DynamicObjectSmartSpacesException("Cannot put named item into an array");
     }
 
     return this;
@@ -233,7 +233,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an object
 
-      throw new DynamicObjectInteractiveSpacesException("Cannot put unnamed item into an object");
+      throw new DynamicObjectSmartSpacesException("Cannot put unnamed item into an object");
     }
 
     return this;
@@ -253,7 +253,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an object
 
-      throw new DynamicObjectInteractiveSpacesException("Cannot put unnamed item into an object");
+      throw new DynamicObjectSmartSpacesException("Cannot put unnamed item into an object");
     }
 
     return this;
@@ -275,7 +275,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
         currentType = DynamicObjectType.ARRAY;
       }
     } else {
-      throw new DynamicObjectInteractiveSpacesException("Cannot move up in builder, nothing left");
+      throw new DynamicObjectSmartSpacesException("Cannot move up in builder, nothing left");
     }
 
     return this;

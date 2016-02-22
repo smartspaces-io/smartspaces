@@ -12,7 +12,7 @@ Activities completely from scratch, which you should rarely have to do, you will
 have to implement all of them yourself.
 
 The definitive documentation for activities is found in the
-:javadoc:`interactivespaces.activity.Activity` Javadoc.
+:javadoc:`io.smartspaces.activity.Activity` Javadoc.
 
 General Activity Information
 ============================
@@ -36,7 +36,7 @@ The Activity's configuration can be accessed with the
 
 You can find out more details of an Activity's configuration in the
 :doc:`activityconfigurations` chapter and in the
-:javadoc:`interactivespaces.configuration.Configuration` Javadoc. 
+:javadoc:`io.smartspaces.configuration.Configuration` Javadoc. 
 
 .. _activity-logging-reference-label:
 
@@ -51,7 +51,7 @@ Getting the Activity Status
 
 An Activity can check its own status by calling 
 ``getActivityStatus()``. This returns an ActivityStatus object
-(:javadoc:`interactivespaces.activity.ActivityStatus` Javadoc)
+(:javadoc:`io.smartspaces.activity.ActivityStatus` Javadoc)
 which contains information about the current status of the Activity.
 
 Is the Activity Activated?
@@ -68,7 +68,7 @@ Setting the Activity Status
 
 An Activity can change its status by calling ``setActivityStatus()``. 
 This method takes an ActivityStatus object
-(:javadoc:`interactivespaces.activity.ActivityStatus` Javadoc) as its
+(:javadoc:`io.smartspaces.activity.ActivityStatus` Javadoc) as its
 only argument.
 
 There should be little reason for you to use this method if you are 
@@ -92,7 +92,7 @@ Activity would then be found in the folder
 
 ::
 
-  interactivespaces/controller/controller/activities/installed/
+  smartspaces/controller/controller/activities/installed/
       34eb3c27-5d37-45aa-a9cd-22d46bc85701/log
 
 The configuration parameter *space.activity.log.level* lets you set the logging
@@ -241,7 +241,7 @@ The Activity can access the Space Controller which it is running under.
 The Space Controller is accessed with the ``getController()`` call.
 
 See the
-:javadoc:`interactivespaces.controller.SpaceController` Javadoc for
+:javadoc:`io.smartspaces.controller.SpaceController` Javadoc for
 details.
 
 The Space Environment

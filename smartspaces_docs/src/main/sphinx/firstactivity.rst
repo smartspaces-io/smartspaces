@@ -30,7 +30,7 @@ Now click  **Upload**. This will show you the following screen.
 .. image:: images/ActivityUploadStep1.png
 
 Click the **Choose File** button and go to where you installed the Smart Spaces Workbench.
-Find the ``interactivespaces.example.activity.hello`` in the ``examples/basics/hello`` folder
+Find the ``smartspaces.example.activity.hello`` in the ``examples/basics/hello`` folder
 of the Workbench, go
 into the target folder, and select the file ending with ``.zip``. You should end up with something
 like the following.

@@ -158,8 +158,8 @@ public class SmartSpacesFrameworkBootstrap {
   public static final Class<LoggingProvider> LOGGING_PROVIDER_INTERFACE = LoggingProvider.class;
 
   /**
-   * Packages loaded from the Smart Spaces system folder that are part of
-   * Smart Spaces.
+   * Packages loaded from the Smart Spaces system folder that are part of Smart
+   * Spaces.
    */
   public static final String[] PACKAGES_SYSTEM_SMARTSPACES = new String[] {
       LOGGING_PROVIDER_INTERFACE.getPackage().getName(),
@@ -172,8 +172,8 @@ public class SmartSpacesFrameworkBootstrap {
   public static final String MANIFEST_PROPERTY_SMARTSPACES_VERSION = "Bundle-Version";
 
   /**
-   * The folder where Smart Spaces will cache OSGi plugins. This is
-   * relative to the run folder.
+   * The folder where Smart Spaces will cache OSGi plugins. This is relative to
+   * the run folder.
    */
   public static final String FOLDER_PLUGINS_CACHE = "plugins-cache";
 
@@ -199,8 +199,8 @@ public class SmartSpacesFrameworkBootstrap {
   public static final String COMMAND_LINE_VALUE_DEFINITION_SPLIT = "=";
 
   /**
-   * Environment variable that indicates the home install directory for
-   * interactive spaces.
+   * Environment variable that indicates the home install directory for Smart
+   * Spaces.
    */
   private static final String SMARTSPACES_HOME_ENVIRONMENT_KEY = "SMARTSPACES_HOME";
 
@@ -461,8 +461,8 @@ public class SmartSpacesFrameworkBootstrap {
    *          data
    */
   private void addAutomaticConfiguration(FileConfigurationProvider configurationProvider) {
-    // Calculate the proper home directory for this install of interactive
-    // spaces.
+    // Calculate the proper home directory for this install of Smart
+    // Spaces.
     String isHomeEnvPath = System.getenv(SMARTSPACES_HOME_ENVIRONMENT_KEY);
     File isHomeDir =
         isHomeEnvPath != null ? new File(isHomeEnvPath) : new File(baseInstallFolder,
@@ -641,8 +641,7 @@ public class SmartSpacesFrameworkBootstrap {
    */
   private void logBadBundle(String bundleUri, Exception e) {
     loggingProvider.getLog().error(
-        String.format(
-            "Bundle %s is not an OSGi bundle, skipping during Smart Spaces startup",
+        String.format("Bundle %s is not an OSGi bundle, skipping during Smart Spaces startup",
             bundleUri), e);
   }
 
@@ -704,7 +703,7 @@ public class SmartSpacesFrameworkBootstrap {
         runtimeFolder.getAbsolutePath());
 
     frameworkConfig.put(CoreConfiguration.CONFIGURATION_SMARTSPACES_VERSION,
-        getsmartspacesVersion());
+        getSmartSpacesVersion());
 
     frameworkConfig.putAll(configurationProvider.getInitialConfiguration());
 
@@ -990,9 +989,9 @@ public class SmartSpacesFrameworkBootstrap {
   /**
    * Get the Smart Spaces version from the JAR manifest.
    *
-   * @return The interactive spaces version
+   * @return The smart spaces version
    */
-  private String getsmartspacesVersion() {
+  private String getSmartSpacesVersion() {
     // This little lovely line gives us the name of the jar that gave the class
     // we are looking at.
     String classContainer =

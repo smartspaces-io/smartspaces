@@ -18,7 +18,7 @@
 package io.smartspaces.workbench;
 
 /**
- * Information about an interactive spaces container.
+ * Information about a smart spaces container.
  *
  * <p>
  * A container is either a master or controller.

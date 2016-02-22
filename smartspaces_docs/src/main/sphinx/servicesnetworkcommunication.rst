@@ -523,7 +523,7 @@ Instances of the ``HttpContentCopier`` interface are instances of ``ManagedResou
 be controlled by an Activity through the ``addManagedResource()`` call.
 
 The only current implementation of ``HttpContentCopier`` is 
-``interactivespaces.util.web.HttpClientHttpContentCopier``, which uses the Apache Commons HttpClient libraries.
+``io.smartspaces.util.web.HttpClientHttpContentCopier``, which uses the Apache Commons HttpClient libraries.
 
 .. code-block:: java
 
@@ -639,7 +639,7 @@ An example showing how to use the service is given below.
 
   ComposableMailMessage message = new SimpleMailMessage();
   message.setSubject("Greetings");
-  message.setFromAddress("the-space@interactivespaces.com");
+  message.setFromAddress("the-space@smartspaces.com");
   message.addToAddress("you@you.com");
   message.setBody("Hello World");
   
@@ -647,7 +647,7 @@ An example showing how to use the service is given below.
   
 
 For more details about what you can do with the Mail Sender Service, see the
-:javadoc:`interactivespaces.service.mail.sender.MailSenderService` 
+:javadoc:`io.smartspaces.service.mail.sender.MailSenderService` 
 Javadoc.
 
 Configuring the Mail Sender Service
@@ -655,21 +655,21 @@ Configuring the Mail Sender Service
 
 The Mail Sender Service needs to be configured properly if it going to
 be able to send mail. Configurations for the mail service should be placed in the
-``config/interactivespaces`` directory. These configurations are usually placed in a
+``config/smartspaces`` directory. These configurations are usually placed in a
 file called ``mail.conf``.
 
 The mail sender service needs to know an SMTP server that it can use
 to transport the mail to its destination. The SMTP
-server host is set with the ``interactivespaces.service.mail.sender.smtp.host`` configuration
+server host is set with the ``smartspaces.service.mail.sender.smtp.host`` configuration
 property. The port of the SMTP server is set with the
-``interactivespaces.service.mail.sender.smtp.port`` configuration property.
+``smartspaces.service.mail.sender.smtp.port`` configuration property.
 
 An example would be
 
 ::
 
-  interactivespaces.service.mail.sender.smtp.host=172.22.58.11
-  interactivespaces.service.mail.sender.smtp.port=25
+  smartspaces.service.mail.sender.smtp.host=172.22.58.11
+  smartspaces.service.mail.sender.smtp.port=25
 
 
 Receiving Email
@@ -699,7 +699,7 @@ and nothing else.
 A listener can be removed with the ``removeListener()`` method on the service.
 
 For more details about what you can do with the Mail Receiver Service, see the
-:javadoc:`interactivespaces.service.mail.receiver.MailReceiverService` 
+:javadoc:`io.smartspaces.service.mail.receiver.MailReceiverService` 
 Javadoc.
 
 
@@ -708,17 +708,17 @@ Configuring the Mail Receiver Service
 
 The Mail Receiver Service normally listens for SMTP traffic on port
 ``9999``. It can be reconfigured. Configurations for mail services should 
-be placed in the``config/interactivespaces`` directory. These configurations are usually 
+be placed in the``config/smartspaces`` directory. These configurations are usually 
 placed in a file called ``mail.conf``, the same file as the Email Sender configurations.
 
 The port of the SMTP receiver is set with the
-``interactivespaces.service.mail.receiver.smtp.port`` configuration property.
+``smartspaces.service.mail.receiver.smtp.port`` configuration property.
 
 An example would be
 
 ::
 
-  interactivespaces.service.mail.receiver.smtp.port=10000
+  smartspaces.service.mail.receiver.smtp.port=10000
 
 Misc
 ====
@@ -732,7 +732,7 @@ The Chat Service provides support for both reading from and writing to chat serv
 The current implementation only supports XMPP-based chat.
 
 For more details about what you can do with the Chat Service, see the
-:javadoc:`interactivespaces.service.comm.chat.ChatService` 
+:javadoc:`io.smartspaces.service.comm.chat.ChatService` 
 Javadoc.
 
 Twitter Service
@@ -742,7 +742,7 @@ The Twitter Service provides support for both sending Twitter Status updates and
 being notified of any tweets containing a specified hashtag.
 
 For more details about what you can do with the Chat Service, see the
-:javadoc:`interactivespaces.service.comm.twitter.TwitterService` 
+:javadoc:`io.smartspaces.service.comm.twitter.TwitterService` 
 Javadoc.
 
 Open Sound Control
@@ -752,5 +752,5 @@ Smart Spaces includes support for building both Open Sound Control servers and c
 only support UDP connections.
 
 For more details about what you can do with the Open Sound Control Services, see the
-:javadoc:`interactivespaces.service.control.opensoundcontrol` 
+:javadoc:`io.smartspaces.service.control.opensoundcontrol` 
 Javadoc.

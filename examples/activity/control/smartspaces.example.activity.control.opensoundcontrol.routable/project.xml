@@ -11,7 +11,7 @@
   </identifyingName>
   <version>1.0.0</version>
 
-  <activity type="interactivespaces_native">
+  <activity type="smartspaces_native">
     <name>smartspacesExampleActivityControlOscRoutable</name>
     <class>
       io.smartspaces.example.activity.control.opensoundcontrol.routable.OpenSoundControlRoutableExampleActivity

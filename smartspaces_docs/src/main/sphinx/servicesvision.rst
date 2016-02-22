@@ -11,7 +11,7 @@ meeting some criteria in the image. The result will be a series of bounding rect
 well as an image map that will say which pixels are associated with which blobs.
 
 For more details about the Blob Detection classes, see the
-:javadoc:`interactivespaces.service.image.blob` 
+:javadoc:`io.smartspaces.service.image.blob` 
 Javadoc.
 
 Depth Cameras
@@ -22,7 +22,7 @@ Smart Spaces has some elementary support for depth cameras. This support include
 Currently only the OpenNI libraries are supported.
 
 For more details about  the Depth Camera classes, see the
-:javadoc:`interactivespaces.service.image.depth` 
+:javadoc:`io.smartspaces.service.image.depth` 
 Javadoc. Examples are found in the ``examples/activity/image/depth`` folder of the Smart Spaces Workbench.
 
 Leap Motion Gesture Detection
@@ -41,5 +41,5 @@ Currently only OpenCV operations are supported through the OpenCV Java API.
 
 
 For more details about the Video classes, see the
-:javadoc:`interactivespaces.service.image.video` 
+:javadoc:`io.smartspaces.service.image.video` 
 Javadoc. Examples are found in the ``examples/activity/image/vision`` folder of the Smart Spaces Workbench.

@@ -30,7 +30,7 @@
       </templateComponents>
     </prototype>
 
-    <prototype prototypeName="baseProject" inheritsFrom="commonVars" interactiveSpacesVersion="1.0.0">
+    <prototype prototypeName="baseProject" inheritsFrom="commonVars" smartSpacesVersion="1.0.0">
       <templateComponents>
 
         <assign name="idName" value="${groupName}" />

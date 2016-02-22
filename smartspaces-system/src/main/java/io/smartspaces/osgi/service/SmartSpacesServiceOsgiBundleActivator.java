@@ -25,21 +25,21 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.resource.ManagedResource;
 import io.smartspaces.util.resource.ManagedResources;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.util.tracker.ServiceTracker;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.util.tracker.ServiceTracker;
+
 /**
- * A base class for creating OSGi BundleActivator subclasses for Interactive
- * Spaces services and other OSGi bundles from Smart Spaces.
+ * A base class for creating OSGi BundleActivator subclasses for Smart Spaces
+ * services and other OSGi bundles from Smart Spaces.
  *
  * @author Keith M. Hughes
  */
@@ -56,7 +56,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   private final List<Service> registeredServices = new ArrayList<>();
 
   /**
-   * OSGi service tracker for the interactive spaces environment.
+   * OSGi service tracker for the smart spaces environment.
    */
   private MyServiceTracker<SmartSpacesEnvironment> smartspacesEnvironmentTracker;
 
@@ -85,8 +85,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   public void start(BundleContext context) throws Exception {
     this.bundleContext = context;
 
-    smartspacesEnvironmentTracker =
-        newMyServiceTracker(SmartSpacesEnvironment.class.getName());
+    smartspacesEnvironmentTracker = newMyServiceTracker(SmartSpacesEnvironment.class.getName());
 
     // Get the registrations from the subclass.
     onStart();
@@ -139,7 +138,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   }
 
   /**
-   * Unregister and shutdown all services registered with interactive spaces.
+   * Unregister and shutdown all services registered with smart spaces.
    */
   private void unregisterSmartSpacesServices() {
     ServiceRegistry serviceRegistry =
@@ -212,8 +211,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
    */
   public void registerNewSmartSpacesService(Service service) {
     try {
-      smartspacesEnvironmentTracker.getMyService().getServiceRegistry()
-          .registerService(service);
+      smartspacesEnvironmentTracker.getMyService().getServiceRegistry().registerService(service);
 
       if (SupportedService.class.isAssignableFrom(service.getClass())) {
         ((SupportedService) service).startup();

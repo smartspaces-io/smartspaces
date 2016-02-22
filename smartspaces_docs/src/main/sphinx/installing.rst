@@ -33,7 +33,7 @@ If you are using a command line interface for your operating system, use the com
 
 ::
 
-  java -jar interactivespaces-master-installer-x.y.z.jar
+  java -jar smartspaces-master-installer-x.y.z.jar
 
 
 where ``x.y.z`` is the version of the Smart Spaces Master you are installing.
@@ -53,7 +53,7 @@ You should see a bunch of text scroll by as the master starts up. When you see n
 
 ::
 
-  http://localhost:8080/interactivespaces
+  http://localhost:8080/smartspaces
 
 If everything installed correctly you should be seeing the Master Web Interface in your browser.
 
@@ -74,7 +74,7 @@ If you are using a command line interface for your operating system, use the com
 
 ::
 
-  java -jar interactivespaces-controller-installer-x.y.z.jar
+  java -jar smartspaces-controller-installer-x.y.z.jar
 
 where ``x.y.z`` is the version of the Smart Spaces Controller you are installing.
 
@@ -100,7 +100,7 @@ Go to the Master Web Interface in your browser. The URL is
 
 ::
 
-  http://localhost:8080/interactivespaces
+  http://localhost:8080/smartspaces
 
 Go to the Controller menu. You should see an entry with the name of the controller you created.
 Click on this and click Connect. If everything is working you should see
@@ -147,7 +147,7 @@ If you are using a command line interface for your operating system, use the com
 
 ::
 
-  java -jar interactivespaces-workbench-installer-x.y.z.jar
+  java -jar smartspaces-workbench-installer-x.y.z.jar
 
 where ``x.y.z`` is the version of the Smart Spaces Workbench you are installing.
 
@@ -164,7 +164,7 @@ your controllers and workbenches.
 1. bootstrap
 2. lib/system/java
 
-Also delete the file *interactivespaces-launcher-x.y.z* from the root folder
+Also delete the file *smartspaces-launcher-x.y.z* from the root folder
 of each master, controller, and workbench, where *x.y.z* was the version
 of the launcher that was there before the update.
 

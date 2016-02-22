@@ -2,7 +2,7 @@
 -I "$(NITE_HOME)/Include"
 
 -preferJavac
--package interactivespaces.service.image.depth.internal.openni2.libraries
+-package smartspaces.service.image.depth.internal.openni2.libraries
 -mode Directory
 -o src/main/java
 -U_WIN32

@@ -20,7 +20,7 @@ package io.smartspaces.service;
 import io.smartspaces.util.resource.ManagedResource;
 
 /**
- * An interactive spaces service which is more fully supported by the framework.
+ * A Smart Spaces service which is more fully supported by the framework.
  *
  * @author Keith M. Hughes
  */

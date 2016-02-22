@@ -245,7 +245,7 @@ Smart Spaces will do it automatically when the Activity is
 cleaned up.
 
 For more details, see the
-:javadoc:`interactivespaces.util.concurrency.ManagedCommands`
+:javadoc:`io.smartspaces.util.concurrency.ManagedCommands`
 Javadoc.
 
 Managed Resources

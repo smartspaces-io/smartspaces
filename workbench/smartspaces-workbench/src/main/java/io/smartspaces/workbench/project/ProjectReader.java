@@ -31,7 +31,7 @@ public interface ProjectReader {
   /**
    * XML namespace for the v 1.0.0 project format.
    */
-  String XML_NAMESPACE_1_0_0 = "http://interactive-spaces.org/project.xsd";
+  String XML_NAMESPACE_1_0_0 = "http://smartspaces.io/project.xsd";
 
   /**
    * Read the description input stream contents into the supplied

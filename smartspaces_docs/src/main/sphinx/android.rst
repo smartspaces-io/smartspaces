@@ -53,7 +53,7 @@ Installing the Controller
 -----------------------------------------
 
 The Smart Spaces release has a file named 
-*interactivespaces-controller-android.apk*. This is the Android application
+*io.smartspaces-controller-android.apk*. This is the Android application
 which must be loaded onto your Android device. You will need to sideload
 this application into your device.
 
@@ -155,7 +155,7 @@ Workbench. When creating the project, be sure to specify the project kind as
 
 ::
 
-  java -jar interactivespaces-launcher-0.0.0.jar create activity android
+  java -jar smartspaces-launcher-0.0.0.jar create activity android
 
 if using the command line interface, or by chosing one of the Android templates
 if using the Workbench GUI.
@@ -209,7 +209,7 @@ which is required to start up an Android activity outside of the Smart Spaces Co
                     
             try {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW );
-                browserIntent.setData( Uri.parse("https://code.google.com/p/interactive-spaces/") );
+                browserIntent.setData( Uri.parse("https://www.smartspaces.io/") );
                 browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 androidService.getAndroidContext().getApplicationContext().startActivity(browserIntent);
             } catch (Exception e) {
@@ -239,7 +239,7 @@ Notice the accelerometer is released in the cleanup event.
         @Override
         public void onActivitySetup() {
             getLog().info(
-                    "Activity interactivespaces.example.activity.android.accelerometer setup");
+                    "Activity smartspaces.example.activity.android.accelerometer setup");
     
             AndroidOsService androidService = getSpaceEnvironment()
                     .getServiceRegistry().getService(AndroidOsService.SERVICE_NAME);

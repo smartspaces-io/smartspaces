@@ -17,27 +17,12 @@
 
 package io.smartspaces.activity.music.jukebox;
 
-import io.smartspaces.activity.impl.ros.BaseRosActivity;
-import io.smartspaces.configuration.Configuration;
-import io.smartspaces.service.audio.player.AudioTrackMetadata;
-import io.smartspaces.service.audio.player.AudioTrackPlayer;
-import io.smartspaces.service.audio.player.AudioTrackPlayerService;
-import io.smartspaces.service.audio.player.FilePlayableAudioTrack;
-import io.smartspaces.service.audio.player.internal.ScanningFileAudioRepository;
-import io.smartspaces.service.audio.player.jukebox.AudioJukebox;
-import io.smartspaces.service.audio.player.jukebox.AudioJukeboxListener;
-import io.smartspaces.service.audio.player.jukebox.internal.simple.SimpleAudioJukebox;
-import io.smartspaces.util.ros.RosPublishers;
-import io.smartspaces.util.ros.RosSubscribers;
-import io.smartspaces.util.ros.StandardRosPublishers;
-import io.smartspaces.util.ros.StandardRosSubscribers;
-
 import java.io.File;
 import java.util.List;
 
-import org.ros.message.MessageFactory;
-import org.ros.message.MessageListener;
-import org.ros.node.ConnectedNode;
+import javax.xml.soap.MessageFactory;
+
+import org.jivesoftware.smack.MessageListener;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -149,8 +134,8 @@ public class MusicJukeboxActivity extends BaseRosActivity implements AudioJukebo
     rosMessageFactory = node.getTopicMessageFactory();
 
     jukeboxControlSubscribers = new StandardRosSubscribers<MusicJukeboxControl>(getLog());
-    jukeboxControlSubscribers.addSubscribers(node, "interactivespaces_msgs/MusicJukeboxControl",
-        Sets.newHashSet(configuration
+    jukeboxControlSubscribers.addSubscribers(node, "smartspaces_msgs/MusicJukeboxControl", Sets
+        .newHashSet(configuration
             .getRequiredPropertyString(CONFIGURATION_MUSIC_JUKEBOX_CONTROL_ROS_TOPIC_NAME)),
         new MessageListener<MusicJukeboxControl>() {
           @Override
@@ -160,8 +145,8 @@ public class MusicJukeboxActivity extends BaseRosActivity implements AudioJukebo
         });
 
     jukeboxAnnouncePublishers = new StandardRosPublishers<MusicJukeboxAnnounce>(getLog());
-    jukeboxAnnouncePublishers.addPublishers(node, "interactivespaces_msgs/MusicJukeboxAnnounce",
-        Sets.newHashSet(configuration
+    jukeboxAnnouncePublishers.addPublishers(node, "smartspaces_msgs/MusicJukeboxAnnounce", Sets
+        .newHashSet(configuration
             .getRequiredPropertyString(CONFIGURATION_MUSIC_JUKEBOX_ANNOUNCE_ROS_TOPIC_NAME)));
   }
 
@@ -181,7 +166,7 @@ public class MusicJukeboxActivity extends BaseRosActivity implements AudioJukebo
       musicRepository.setRepositoryBases(baseRespositories);
       addManagedResource(musicRepository);
     } else {
-      throw new SimpleInteractiveSpacesException(String.format("No configuration parameter %s",
+      throw new SimpleSmartSpacesException(String.format("No configuration parameter %s",
           CONFIGURATION_MUSIC_JUKEBOX_MUSIC_REPOSITORY_BASE));
     }
   }

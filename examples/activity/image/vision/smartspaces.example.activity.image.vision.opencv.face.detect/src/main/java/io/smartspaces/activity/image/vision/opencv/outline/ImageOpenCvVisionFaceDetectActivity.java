@@ -17,6 +17,7 @@
 
 package io.smartspaces.activity.image.vision.opencv.outline;
 
+import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.impl.ros.BaseRoutableRosActivity;
 import io.smartspaces.interaction.detection.DetectionEventListener;
 import io.smartspaces.util.data.json.JsonBuilder;
@@ -198,8 +199,8 @@ public class ImageOpenCvVisionFaceDetectActivity extends BaseRoutableRosActivity
     String classifierPath = new File(haarCascadesDirectoryPath, classifierName).getAbsolutePath();
     CascadeClassifier classifier = new CascadeClassifier(classifierPath);
     if (classifier.empty()) {
-      throw new SimpleInteractiveSpacesException(String.format(
-          "Cannot find face classification file %s", classifierPath));
+      throw new SimpleSmartSpacesException(String.format("Cannot find face classification file %s",
+          classifierPath));
     }
 
     return classifier;

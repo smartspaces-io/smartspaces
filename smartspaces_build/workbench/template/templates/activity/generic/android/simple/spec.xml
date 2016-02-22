@@ -9,7 +9,7 @@
       </templateVars>
     </prototype>
 
-    <prototype prototypeName="baseProject" inheritsFrom="commonVars" interactiveSpacesVersion="1.0.0">
+    <prototype prototypeName="baseProject" inheritsFrom="commonVars" smartSpacesVersion="1.0.0">
       <templateVars>
         <var name="idName" value="${groupName}" />
         <var name="activityClassPackage" value="${groupName}" />

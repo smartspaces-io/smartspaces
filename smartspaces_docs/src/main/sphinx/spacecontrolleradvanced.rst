@@ -11,7 +11,7 @@ Space Controller through files.
 The PID File
 ------------
 
-The `run` folder contains a file called `interactivespaces.pid`. This file gives the
+The `run` folder contains a file called `smartspaces.pid`. This file gives the
 Process ID (or PID) of the operating system process the controller is running under. The
 file contains only the Process ID number with nothing else, including no end of line
 characters.

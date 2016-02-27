@@ -54,4 +54,11 @@ public interface MessagePublisher {
    *          the message to send
    */
   void sendMessage(String message);
+
+  /**
+   * Get the channel ID for the publisher.
+   * 
+   * @return the channel ID
+   */
+  String getChannelId();
 }

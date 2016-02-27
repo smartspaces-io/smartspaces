@@ -41,7 +41,7 @@ buildscript {
 
 allprojects {
   ext {
-    // Specify the IS version here.
+    // Specify the SS version here.
     //
     // The intermediate designation is for marking a particular build
     // as an intermediate version. An intermediate version must never
@@ -114,8 +114,8 @@ allprojects {
   version = osgiVersion
 
   tasks.withType(JavaCompile) { 
-    sourceCompatibility = "1.7"
-    targetCompatibility = "1.7" 
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8" 
   }
 }
 

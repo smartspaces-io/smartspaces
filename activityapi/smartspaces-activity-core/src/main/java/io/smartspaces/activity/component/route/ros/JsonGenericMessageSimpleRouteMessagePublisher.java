@@ -68,6 +68,11 @@ public class JsonGenericMessageSimpleRouteMessagePublisher implements MessagePub
   }
 
   @Override
+  public String getChannelId() {
+    return messagePublisher.getChannelId();
+  }
+
+  @Override
   public void sendMessage(Map<String, Object> message) {
     GenericMessage outgoing = messagePublisher.newMessage();
 

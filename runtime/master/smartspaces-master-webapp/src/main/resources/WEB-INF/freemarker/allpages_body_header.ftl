@@ -16,7 +16,7 @@
  -->
 <div>
 <img src="/smartspaces/static/img/smartspaces_logo_small.png" alt="Smart Spaces logo" />
-<span id="spaceName">${smartspacesName}</span>
+<span id="spaceName">${smartSpacesName}</span>
 </div>
 
 <div id="navMain">

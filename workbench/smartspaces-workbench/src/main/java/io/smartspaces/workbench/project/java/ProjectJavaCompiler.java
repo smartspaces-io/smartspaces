@@ -42,7 +42,7 @@ public interface ProjectJavaCompiler {
   /**
    * The default version of Java that items are compiled for.
    */
-  String JAVA_VERSION_DEFAULT = "1.7";
+  String JAVA_VERSION_DEFAULT = "1.8";
 
   /**
    * Configuration property for adding options to the JavaC compiler.

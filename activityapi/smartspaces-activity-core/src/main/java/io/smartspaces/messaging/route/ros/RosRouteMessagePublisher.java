@@ -49,6 +49,7 @@ public class RosRouteMessagePublisher<T> implements InternalRouteMessagePublishe
    *          the ROS publishers
    */
   public RosRouteMessagePublisher(String channelId, RosPublishers<T> publishers) {
+    this.channelId = channelId;
     this.publishers = publishers;
   }
 

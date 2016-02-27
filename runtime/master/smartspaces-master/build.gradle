@@ -27,12 +27,18 @@ dependencies {
   
   compile 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.jdom:2.0.6_1'
 
-  compile('org.apache.openjpa:openjpa:2.3.0') {
+  compile('org.apache.openjpa:openjpa:2.4.0') {
     exclude group: 'org.apache.geronimo.specs'
     exclude group: 'javax.xml.stream'
     exclude group: 'net.sourceforge.serp'
     exclude group: 'commons-collections'
     exclude group: 'commons-lang'
+    exclude module: 'openjpa-jdbc'
+    exclude module: 'openjpa-jest'
+    exclude module: 'openjpa-kernel'
+    exclude module: 'openjpa-lib'
+    exclude module: 'openjpa-persistence'
+    exclude module: 'openjpa-persistence-jdbc'
   }
   
   compile 'javax.persistence:com.springsource.javax.persistence:2.0.0'

@@ -1,6 +1,8 @@
 #SmartSpaces
 
-The home of the Smart Spaces API and runtime 
+The home of the Smart Spaces API and runtime.
+
+SmartSpaces will only run under a Java 8 JVM.
 
 ##Building from scratch
 

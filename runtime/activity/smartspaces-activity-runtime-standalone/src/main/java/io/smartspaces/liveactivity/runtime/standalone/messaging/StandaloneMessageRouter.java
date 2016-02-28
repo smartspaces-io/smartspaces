@@ -245,12 +245,7 @@ public class StandaloneMessageRouter extends BaseRosMessageRouterActivityCompone
     try {
       router.startup();
 
-      activity.getManagedCommands().submit(new Runnable() {
-        @Override
-        public void run() {
-          receiveLoop();
-        }
-      });
+      activity.getManagedCommands().submit(() -> receiveLoop());
 
       if (!messageWhiteList.isEmpty()) {
         final boolean autoFlush = true;

@@ -68,12 +68,7 @@ public class SimpleSequentialEventQueue implements SequentialEventQueue {
 
   @Override
   public void startup() {
-    queueFuture = spaceEnvironment.getExecutorService().submit(new Runnable() {
-      @Override
-      public void run() {
-        processEvents();
-      }
-    });
+    queueFuture = spaceEnvironment.getExecutorService().submit(() -> processEvents());
   }
 
   @Override

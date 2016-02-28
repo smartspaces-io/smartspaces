@@ -229,14 +229,11 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
 
     controllerHeartbeat = spaceControllerCommunicator.newSpaceControllerHeartbeat();
     controllerHeartbeatControl =
-        getSpaceEnvironment().getExecutorService().scheduleAtFixedRate(new Runnable() {
-          @Override
-          public void run() {
-            try {
-              controllerHeartbeat.sendHeartbeat();
-            } catch (Exception e) {
-              log.error("Exception while trying to send a Space Controller heartbeat", e);
-            }
+        getSpaceEnvironment().getExecutorService().scheduleAtFixedRate(() -> {
+          try {
+            controllerHeartbeat.sendHeartbeat();
+          } catch (Exception e) {
+            log.error("Exception while trying to send a Space Controller heartbeat", e);
           }
         }, heartbeatDelay, heartbeatDelay, TimeUnit.MILLISECONDS);
 
@@ -265,12 +262,8 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
     if (errorBuilder.length() != 0) {
       // DO NOT LIKE THIS BUT HOW TO SHUT THE CONTAINER DOWN WITHOUT TONS OF
       // STARTUP ERRORS.
-      getSpaceEnvironment().getExecutorService().schedule(new Runnable() {
-        @Override
-        public void run() {
-          spaceSystemControl.shutdown();
-        }
-      }, CONTROLLER_ERROR_SHUTDOWN_WAIT_TIME, TimeUnit.MILLISECONDS);
+      getSpaceEnvironment().getExecutorService().schedule(() -> spaceSystemControl.shutdown(),
+          CONTROLLER_ERROR_SHUTDOWN_WAIT_TIME, TimeUnit.MILLISECONDS);
 
       throw new SimpleSmartSpacesException(errorBuilder.toString());
     }
@@ -362,12 +355,8 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
   @Override
   public void captureControllerDataBundle(final String bundleUri) {
     getSpaceEnvironment().getLog().info("Capture controller data bundle");
-    getSpaceEnvironment().getExecutorService().submit(new Runnable() {
-      @Override
-      public void run() {
-        executeCaptureControllerDataBundle(bundleUri);
-      }
-    });
+    getSpaceEnvironment().getExecutorService().submit(
+        () -> executeCaptureControllerDataBundle(bundleUri));
   }
 
   /**
@@ -393,12 +382,8 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
   @Override
   public void restoreControllerDataBundle(final String bundleUri) {
     getSpaceEnvironment().getLog().info("Restore controller data bundle");
-    getSpaceEnvironment().getExecutorService().submit(new Runnable() {
-      @Override
-      public void run() {
-        executeRestoreControllerDataBundle(bundleUri);
-      }
-    });
+    getSpaceEnvironment().getExecutorService().submit(
+        () -> executeRestoreControllerDataBundle(bundleUri));
   }
 
   /**
@@ -499,12 +484,7 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
 
   @Override
   public void publishActivityStatus(final String uuid, final ActivityStatus status) {
-    eventQueue.addEvent(new Runnable() {
-      @Override
-      public void run() {
-        spaceControllerCommunicator.publishActivityStatus(uuid, status);
-      }
-    });
+    eventQueue.addEvent(() -> spaceControllerCommunicator.publishActivityStatus(uuid, status));
   }
 
   @Override

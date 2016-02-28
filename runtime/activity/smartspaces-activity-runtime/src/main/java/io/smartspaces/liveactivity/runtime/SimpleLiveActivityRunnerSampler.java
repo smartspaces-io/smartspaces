@@ -86,12 +86,8 @@ public class SimpleLiveActivityRunnerSampler implements LiveActivityRunnerSample
   @Override
   public void startup() {
     liveActivityRunnerSamplerControl =
-        spaceEnvironment.getExecutorService().scheduleAtFixedRate(new Runnable() {
-          @Override
-          public void run() {
-            sample();
-          }
-        }, liveActivityRunnerSamplerDelay, liveActivityRunnerSamplerDelay, TimeUnit.MILLISECONDS);
+        spaceEnvironment.getExecutorService().scheduleAtFixedRate(() -> sample(),
+            liveActivityRunnerSamplerDelay, liveActivityRunnerSamplerDelay, TimeUnit.MILLISECONDS);
   }
 
   @Override

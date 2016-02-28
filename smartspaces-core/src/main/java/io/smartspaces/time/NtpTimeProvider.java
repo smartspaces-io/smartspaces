@@ -17,12 +17,6 @@
 
 package io.smartspaces.time;
 
-import com.google.common.base.Preconditions;
-import org.apache.commons.logging.Log;
-import org.apache.commons.net.ntp.NTPUDPClient;
-import org.apache.commons.net.ntp.TimeInfo;
-import org.ros.math.CollectionMath;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -31,6 +25,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.net.ntp.NTPUDPClient;
+import org.apache.commons.net.ntp.TimeInfo;
+import org.ros.math.CollectionMath;
+
+import com.google.common.base.Preconditions;
 
 /**
  * A {@link TimeProvider} which uses NTP.
@@ -151,14 +152,11 @@ public class NtpTimeProvider implements TimeProvider {
     //
     // Note that errors thrown while periodically updating time will be
     // logged but not rethrown.
-    scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          updateTime();
-        } catch (IOException e) {
-          log.error("Periodic NTP update failed.", e);
-        }
+    scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(() -> {
+      try {
+        updateTime();
+      } catch (IOException e) {
+        log.error("Periodic NTP update failed.", e);
       }
     }, 0, updatePeriod, updatePeriodTimeUnit);
   }

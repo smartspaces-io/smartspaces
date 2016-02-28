@@ -46,14 +46,15 @@ import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransition.Tra
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransitioner;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransitionerCollection;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.logging.Log;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
 
 /**
  * The standard implementation of a {@link LiveActivityRuntime}.
@@ -631,12 +632,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime implements
       final ActivityStatus oldStatus, final ActivityStatus newStatus) {
     // TODO(keith): Android hates garbage collection. This may need an object
     // pool.
-    eventQueue.addEvent(new Runnable() {
-      @Override
-      public void run() {
-        handleActivityStateChange(activity, oldStatus, newStatus);
-      }
-    });
+    eventQueue.addEvent(() -> handleActivityStateChange(activity, oldStatus, newStatus));
   }
 
   @Override
@@ -901,13 +897,8 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime implements
       final String uuid) {
     // TODO(keith): Android hates garbage collection. This may need an object
     // pool.
-    eventQueue.addEvent(new Runnable() {
-      @Override
-      public void run() {
-        activityStateTransitioners.transition(uuid, liveActivityRunner.sampleActivityStatus()
-            .getState());
-      }
-    });
+    eventQueue.addEvent(() -> activityStateTransitioners.transition(uuid, liveActivityRunner
+        .sampleActivityStatus().getState()));
   }
 
   /**

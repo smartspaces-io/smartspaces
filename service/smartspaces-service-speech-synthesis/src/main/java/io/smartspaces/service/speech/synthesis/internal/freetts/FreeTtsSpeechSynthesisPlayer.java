@@ -90,13 +90,7 @@ public class FreeTtsSpeechSynthesisPlayer implements SpeechSynthesisPlayer {
     if (sync) {
       voice.speak(text);
     } else {
-      executorService.submit(new Runnable() {
-
-        @Override
-        public void run() {
-          voice.speak(text);
-        }
-      });
+      executorService.submit(() -> voice.speak(text));
     }
   }
 }

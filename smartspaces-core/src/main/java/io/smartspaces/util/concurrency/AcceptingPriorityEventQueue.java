@@ -96,12 +96,7 @@ public class AcceptingPriorityEventQueue {
   public void startup() {
     synchronized (runningMutex) {
       if (queueFuture == null) {
-        queueFuture = spaceEnvironment.getExecutorService().submit(new Runnable() {
-          @Override
-          public void run() {
-            processEvents();
-          }
-        });
+        queueFuture = spaceEnvironment.getExecutorService().submit(() -> processEvents());
       }
     }
   }

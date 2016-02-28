@@ -163,12 +163,7 @@ public class SmartSpacesWorkbenchActivator implements BundleActivator {
     // Make sure the bundle is us.
     if (event.getBundle().equals(bundleContext.getBundle())) {
       if (event.getType() == BundleEvent.STARTED) {
-        spaceEnvironment.getExecutorService().execute(new Runnable() {
-          @Override
-          public void run() {
-            runWorkbench();
-          }
-        });
+        spaceEnvironment.getExecutorService().execute(() -> runWorkbench());
       }
     }
   }
@@ -181,8 +176,7 @@ public class SmartSpacesWorkbenchActivator implements BundleActivator {
     Bundle systemBundle = bundleContext.getBundle(0);
     ClassLoader systemClassLoader = systemBundle.getClass().getClassLoader();
 
-    SmartSpacesWorkbench workbench =
-        new SmartSpacesWorkbench(spaceEnvironment, systemClassLoader);
+    SmartSpacesWorkbench workbench = new SmartSpacesWorkbench(spaceEnvironment, systemClassLoader);
 
     List<String> commandLineArguments = containerCustomizerProvider.getCommandLineArguments();
     if (commandLineArguments.size() == 1

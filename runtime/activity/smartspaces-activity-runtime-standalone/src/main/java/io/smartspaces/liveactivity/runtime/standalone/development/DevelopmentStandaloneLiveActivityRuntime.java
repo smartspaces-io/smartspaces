@@ -54,13 +54,13 @@ import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.resource.ManagedResource;
 import io.smartspaces.util.resource.ManagedResources;
 
-import org.apache.commons.logging.Log;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
+
+import org.apache.commons.logging.Log;
 
 /**
  * A standalone runner for activities that takes the activities from a
@@ -106,8 +106,7 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
   /**
    * Config parameter for whether this run is for a single activity or a group.
    */
-  public static final boolean CONFIGURATION_DEFAULT_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE =
-      false;
+  public static final boolean CONFIGURATION_DEFAULT_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE = false;
 
   /**
    * Config parameter for activity runtime.
@@ -280,8 +279,7 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
             CONFIGURATION_DEFAULT_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE);
 
     String instanceSuffixValue =
-        systemConfiguration.getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_INSTANCE,
-            "");
+        systemConfiguration.getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_INSTANCE, "");
     setInstanceSuffix(instanceSuffixValue);
 
     File activityRuntimeFolder = null;
@@ -306,14 +304,12 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
     internalSpaceEnvironment.setFilesystem(newFileSystem);
 
     String activitySourceFolderPath =
-        systemConfiguration
-            .getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_SOURCE);
+        systemConfiguration.getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_SOURCE);
     getLog().info("activitySourcePath is " + activitySourceFolderPath);
     File activitySourceFolder = fileSupport.newFile(activitySourceFolderPath);
 
     String standaloneRouterType =
-        systemConfiguration
-            .getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_ROUTER_TYPE);
+        systemConfiguration.getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_ROUTER_TYPE);
     if (standaloneRouterType != null) {
       getLog().info("configuring to use router type " + standaloneRouterType);
       setUseStandaloneRouter(CONFIGURATION_VALUE_CONTROLLER_MODE_STANDALONE
@@ -370,12 +366,7 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
 
     managedResources.startupResources();
 
-    playerFuture = spaceEnvironment.getExecutorService().submit(new Runnable() {
-      @Override
-      public void run() {
-        play();
-      }
-    });
+    playerFuture = spaceEnvironment.getExecutorService().submit(() -> play());
   }
 
   @Override

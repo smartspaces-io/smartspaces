@@ -22,7 +22,6 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.process.NativeApplicationRunner.NativeApplicationRunnerState;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -111,12 +110,9 @@ public class StandardNativeApplicationRunnerCollection implements NativeApplicat
       for (NativeApplicationRunner runner : runners) {
         runner.startup();
       }
-      samplingFuture = spaceEnvironment.getExecutorService().scheduleAtFixedRate(new Runnable() {
-        @Override
-        public void run() {
-          sampleRunners();
-        }
-      }, samplingPeriod, samplingPeriod, TimeUnit.MILLISECONDS);
+      samplingFuture =
+          spaceEnvironment.getExecutorService().scheduleAtFixedRate(() -> sampleRunners(),
+              samplingPeriod, samplingPeriod, TimeUnit.MILLISECONDS);
     }
   }
 

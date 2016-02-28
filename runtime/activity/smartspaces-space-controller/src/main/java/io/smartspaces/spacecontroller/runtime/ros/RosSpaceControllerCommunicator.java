@@ -45,7 +45,9 @@ import io.smartspaces.spacecontroller.runtime.SpaceControllerHeartbeat;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.SmartSpacesUtilities;
 
-import com.google.common.annotations.VisibleForTesting;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.ros.internal.node.topic.SubscriberIdentifier;
 import org.ros.message.MessageDeserializer;
@@ -60,6 +62,7 @@ import org.ros.node.topic.Publisher;
 import org.ros.node.topic.PublisherListener;
 import org.ros.node.topic.Subscriber;
 import org.ros.osgi.common.RosEnvironment;
+
 import smartspaces_msgs.ConfigurationParameterRequest;
 import smartspaces_msgs.ConfigurationRequest;
 import smartspaces_msgs.ContainerResourceCommitRequestMessage;
@@ -77,8 +80,7 @@ import smartspaces_msgs.LiveActivityDeployResponseMessage;
 import smartspaces_msgs.LiveActivityRuntimeRequest;
 import smartspaces_msgs.LiveActivityRuntimeStatus;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.common.annotations.VisibleForTesting;
 
 /**
  * An {@link SpaceControllerCommunicator} using ROS for communication.
@@ -635,58 +637,58 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
    */
   @VisibleForTesting
   void handleLiveActivityRuntimeRequest(final LiveActivityRuntimeRequest request) {
-    spaceEnvironment.getExecutorService().submit(new Runnable() {
-      @Override
-      public void run() {
-        String uuid = request.getLiveActivityUuid();
-        switch (request.getOperation()) {
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_STARTUP:
-            controllerControl.startupLiveActivity(uuid);
+    spaceEnvironment.getExecutorService()
+        .submit(
+            () -> {
+              String uuid = request.getLiveActivityUuid();
+              switch (request.getOperation()) {
+                case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_STARTUP:
+                  controllerControl.startupLiveActivity(uuid);
 
-            break;
+                  break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_ACTIVATE:
-            controllerControl.activateLiveActivity(uuid);
+                case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_ACTIVATE:
+                  controllerControl.activateLiveActivity(uuid);
 
-            break;
+                  break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_DEACTIVATE:
-            controllerControl.deactivateLiveActivity(uuid);
+                case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_DEACTIVATE:
+                  controllerControl.deactivateLiveActivity(uuid);
 
-            break;
+                  break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_SHUTDOWN:
-            controllerControl.shutdownLiveActivity(uuid);
+                case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_SHUTDOWN:
+                  controllerControl.shutdownLiveActivity(uuid);
 
-            break;
+                  break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_STATUS:
-            controllerControl.statusLiveActivity(uuid);
+                case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_STATUS:
+                  controllerControl.statusLiveActivity(uuid);
 
-            break;
+                  break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_CONFIGURE:
-            handleLiveActivityConfigurationRequest(uuid,
-                configurationRequestDeserializer.deserialize(request.getPayload()));
+                case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_CONFIGURE:
+                  handleLiveActivityConfigurationRequest(uuid,
+                      configurationRequestDeserializer.deserialize(request.getPayload()));
 
-            break;
+                  break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_CLEAN_DATA_PERMANENT:
-            controllerControl.cleanLiveActivityPermanentData(uuid);
+                case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_CLEAN_DATA_PERMANENT:
+                  controllerControl.cleanLiveActivityPermanentData(uuid);
 
-            break;
+                  break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_CLEAN_DATA_TMP:
-            controllerControl.cleanLiveActivityTmpData(uuid);
+                case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_CLEAN_DATA_TMP:
+                  controllerControl.cleanLiveActivityTmpData(uuid);
 
-            break;
+                  break;
 
-          default:
-            spaceEnvironment.getLog().error(
-                String.format("Unknown ROS activity runtime request %d", request.getOperation()));
-        }
-      }
-    });
+                default:
+                  spaceEnvironment.getLog().error(
+                      String.format("Unknown ROS activity runtime request %d",
+                          request.getOperation()));
+              }
+            });
   }
 
   /**
@@ -785,8 +787,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
   }
 
   /**
-   * Translate an Smart Spaces activity status to its ROS message
-   * equivalent.
+   * Translate an Smart Spaces activity status to its ROS message equivalent.
    *
    * @param state
    *          object

@@ -24,6 +24,7 @@ import io.smartspaces.service.web.server.WebServerWebSocketHandler;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerSupport;
 import io.smartspaces.service.web.server.internal.netty.NettyWebServer;
+import io.smartspaces.testing.sizes.TestSizeLarge;
 
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
@@ -31,6 +32,7 @@ import org.apache.commons.logging.impl.Jdk14Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -53,6 +55,7 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @author Keith M. Hughes
  */
+@Category(TestSizeLarge.class)
 public class WebSocketTest {
 
   private Log log;

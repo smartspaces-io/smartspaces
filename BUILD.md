@@ -55,7 +55,7 @@ sure you install texlive, textlive-latex-extra, and texlive-fonts-*. You also
 need pygments.
 
 ```
-sudo apt-get install texlive texlive-latex-extra texlive-fonts-* 
+sudo apt-get install python-sphinx texlive texlive-latex-extra texlive-fonts-* 
 sudo pip install pygments
 ```
 

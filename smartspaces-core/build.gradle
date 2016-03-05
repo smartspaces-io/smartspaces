@@ -47,6 +47,8 @@ dependencies {
   compile 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'
 
   compile 'joda-time:joda-time:2.7'
+  
+  compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
 
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
@@ -76,6 +78,7 @@ jar {
         'org.apache.commons.net.ntp;resolution:="optional"',
         'org.ros.*;resolution:="optional"',
         'org.joda.*;resolution:="optional"',
+        'org.eclipse.paho.client.mqttv3.*;resolution:="optional"',
         'javassist.*;resolution:="optional"',
         'io.smartspaces.system.bootstrap.osgi;resolution:="optional"',
         'com.google.common;resolution:="optional"',

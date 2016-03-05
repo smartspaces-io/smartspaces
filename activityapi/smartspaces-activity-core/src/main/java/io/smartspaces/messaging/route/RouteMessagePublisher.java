@@ -17,15 +17,14 @@
 
 package io.smartspaces.messaging.route;
 
+import java.util.Map;
+
 /**
  * A publisher for a message route.
- *
- * @param <T>
- *          the message type for the publisher
- *
+s *
  * @author Keith M. Hughes
  */
-public interface RouteMessagePublisher<T> {
+public interface RouteMessagePublisher {
 
   /**
    * Get the channel ID for the publisher.
@@ -40,12 +39,5 @@ public interface RouteMessagePublisher<T> {
    * @param message
    *          The message to be published.
    */
-  void writeOutputMessage(T message);
-
-  /**
-   * Create an instance of the message.
-   *
-   * @return an instance of the message
-   */
-  T newMessage();
+  void writeOutputMessage(Map<String, Object> message);
 }

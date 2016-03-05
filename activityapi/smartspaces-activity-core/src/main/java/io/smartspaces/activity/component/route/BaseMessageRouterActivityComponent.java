@@ -14,11 +14,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package io.smartspaces.activity.component.route.ros;
+package io.smartspaces.activity.component.route;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.component.BaseActivityComponent;
-import io.smartspaces.activity.component.route.MessageRouterActivityComponentListener;
+import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
 import io.smartspaces.configuration.Configuration;
 
 import com.google.common.collect.Lists;
@@ -37,8 +37,8 @@ import java.util.Set;
  *
  * @author Keith M. Hughes
  */
-public abstract class BaseRosMessageRouterActivityComponent<T> extends BaseActivityComponent
-    implements RosMessageRouterActivityComponent<T> {
+public abstract class BaseMessageRouterActivityComponent extends BaseActivityComponent
+    implements RosMessageRouterActivityComponent {
 
   /**
    * The listeners for this component.

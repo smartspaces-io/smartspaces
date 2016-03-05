@@ -21,12 +21,9 @@ package io.smartspaces.messaging.route;
  * The internal specification of a route message publisher that declares methods
  * that should normally not be called.
  *
- * @param <T>
- *          the message type for the publisher
- *
  * @author Keith M. Hughes
  */
-public interface InternalRouteMessagePublisher<T> extends RouteMessagePublisher<T> {
+public interface InternalRouteMessagePublisher extends RouteMessagePublisher {
 
   /**
    * Shut the publisher down.

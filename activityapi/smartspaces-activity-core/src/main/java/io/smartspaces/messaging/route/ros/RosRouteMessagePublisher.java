@@ -17,18 +17,20 @@
 
 package io.smartspaces.messaging.route.ros;
 
+import io.smartspaces.activity.component.route.ros.MessageCodec;
 import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
 import io.smartspaces.util.ros.RosPublishers;
+
+import smartspaces_msgs.GenericMessage;
+
+import java.util.Map;
 
 /**
  * A route message publisher for ROS.
  *
- * @param <T>
- *          the message type for the publisher
- *
  * @author Keith M. Hughes
  */
-public class RosRouteMessagePublisher<T> implements InternalRouteMessagePublisher<T> {
+public class RosRouteMessagePublisher implements InternalRouteMessagePublisher {
 
   /**
    * The channel ID for this publisher.
@@ -38,7 +40,12 @@ public class RosRouteMessagePublisher<T> implements InternalRouteMessagePublishe
   /**
    * The publishers for this message publisher.
    */
-  private RosPublishers<T> publishers;
+  private RosPublishers<GenericMessage> publishers;
+
+  /**
+   * The message codec to use for message translation.
+   */
+  private MessageCodec<Map<String, Object>, GenericMessage> messageCodec;
 
   /**
    * Construct a new publisher.
@@ -47,10 +54,14 @@ public class RosRouteMessagePublisher<T> implements InternalRouteMessagePublishe
    *          the channel ID for the route
    * @param publishers
    *          the ROS publishers
+   * @param messageCodec
+   *          the message codec to use for message translation.
    */
-  public RosRouteMessagePublisher(String channelId, RosPublishers<T> publishers) {
+  public RosRouteMessagePublisher(String channelId, RosPublishers<GenericMessage> publishers,
+      MessageCodec<Map<String, Object>, GenericMessage> messageCodec) {
     this.channelId = channelId;
     this.publishers = publishers;
+    this.messageCodec = messageCodec;
   }
 
   @Override
@@ -59,13 +70,8 @@ public class RosRouteMessagePublisher<T> implements InternalRouteMessagePublishe
   }
 
   @Override
-  public void writeOutputMessage(T message) {
-    publishers.publishMessage(message);
-  }
-
-  @Override
-  public T newMessage() {
-    return publishers.newMessage();
+  public void writeOutputMessage(Map<String, Object> message) {
+    publishers.publishMessage(messageCodec.encode(message));
   }
 
   @Override

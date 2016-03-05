@@ -18,18 +18,18 @@
 package io.smartspaces.activity.impl.ros;
 
 import io.smartspaces.activity.Activity;
-import io.smartspaces.activity.component.route.MessageRouterSupportedMessageTypes;
 import io.smartspaces.activity.component.route.RoutableInputMessageListener;
 import io.smartspaces.activity.component.route.ros.BasicRosMessageRouterActivityComponent;
 import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
 import io.smartspaces.activity.execution.ActivityMethodInvocation;
+import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
 import io.smartspaces.util.data.json.JsonBuilder;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
 
-import java.util.Map;
-
 import smartspaces_msgs.GenericMessage;
+
+import java.util.Map;
 
 /**
  * An {@link Activity} which provides a set of named input ROS topics and a set
@@ -47,21 +47,20 @@ public class BaseRoutableRosActivity extends BaseRosActivity {
   /**
    * Router for input and output messages.
    */
-  private RosMessageRouterActivityComponent<GenericMessage> router;
+  private RosMessageRouterActivityComponent router;
 
   @Override
   public void commonActivitySetup() {
     super.commonActivitySetup();
 
-    router =
-        addActivityComponent(new BasicRosMessageRouterActivityComponent<GenericMessage>(
-            GenericMessage._TYPE, new RoutableInputMessageListener<GenericMessage>() {
-              @SuppressWarnings("unchecked")
-              @Override
-              public void onNewRoutableInputMessage(String channelName, GenericMessage message) {
-                handleRoutableInputMessage(channelName, message);
-              }
-            }));
+    router = addActivityComponent(new BasicRosMessageRouterActivityComponent(
+        GenericMessage._TYPE, new RoutableInputMessageListener() {
+          @SuppressWarnings("unchecked")
+          @Override
+          public void onNewRoutableInputMessage(String channelName, Map<String, Object> message) {
+            handleRoutableInputMessage(channelName, message);
+          }
+        }));
   }
 
   /**
@@ -72,19 +71,11 @@ public class BaseRoutableRosActivity extends BaseRosActivity {
    * @param message
    *          the generic message
    */
-  private void handleRoutableInputMessage(String channelName, GenericMessage message) {
-    if (MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE.equals(message.getType())) {
-      try {
-        callOnNewInputJson(channelName, message);
-      } catch (Exception e) {
-        getLog().error("Could not process input message", e);
-      }
-    } else if (MessageRouterSupportedMessageTypes.STRING_MESSAGE_TYPE.equals(message.getType())) {
-      callOnNewInputString(channelName, message);
-    } else {
-      getLog().warn(
-          String.format("Dropped message on channel %s of unknown type %s", channelName,
-              message.getType()));
+  private void handleRoutableInputMessage(String channelName, Map<String, Object> message) {
+    try {
+      callOnNewInputMessage(channelName, message);
+    } catch (Exception e) {
+      getLog().error("Could not process input message", e);
     }
   }
 
@@ -113,116 +104,59 @@ public class BaseRoutableRosActivity extends BaseRosActivity {
   }
 
   /**
-   * A new JSON message is coming in.
+   * A new message is coming in.
    *
    * @param channelName
    *          name of the input channel the message came in on
    * @param message
    *          the message that came in
    */
-  public void onNewInputJson(String channelName, Map<String, Object> message) {
+  public void onNewInputMessage(String channelName, Map<String, Object> message) {
     // Default is to do nothing.
   }
 
   /**
-   * A new string message is coming in.
-   *
-   * @param channelName
-   *          name of the input channel the message came in on
-   * @param message
-   *          the message that came in
-   */
-  public void onNewInputString(String channelName, String message) {
-    // Default is to do nothing.
-  }
-
-  /**
-   * Send an output JSON message.
+   * Send an output message.
    *
    * @param channelName
    *          the name of the output channel to send the message on
    * @param message
    *          the message to send
    */
-  public void sendOutputJson(String channelName, Map<String, Object> message) {
-    GenericMessage outgoing = router.newMessage();
-
+  public void sendOutputMessage(String channelName, Map<String, Object> message) {
     try {
-      outgoing.setType(MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE);
-      outgoing.setMessage(MAPPER.toString(message));
-
-      router.writeOutputMessage(channelName, outgoing);
+      router.writeOutputMessage(channelName, message);
     } catch (Throwable e) {
       getLog().error(
-          String.format("Could not write JSON message on output channel %s", channelName), e);
+          String.format("Could not write message on route soutput channel %s", channelName), e);
     }
   }
 
   /**
-   * Send an output JSON message from a {@link JsonBuilder}.
+   * Send an output message from a {@link DynamicObjectBuilder}.
    *
    * @param channelName
    *          the name of the output channel to send the message on
    * @param message
    *          the message to send
    */
-  public void sendOutputJsonBuilder(String channelName, JsonBuilder message) {
-    sendOutputJson(channelName, message.build());
+  public void sendOutputMessage(String channelName, DynamicObjectBuilder message) {
+    sendOutputMessage(channelName, message.buildAsMap());
   }
 
   /**
-   * Send an output string message.
-   *
-   * @param channelName
-   *          the name of the output channel to send the message on
-   * @param message
-   *          the message to send
-   */
-  public void sendOutputString(String channelName, String message) {
-    GenericMessage outgoing = router.newMessage();
-    try {
-      outgoing.setType(MessageRouterSupportedMessageTypes.STRING_MESSAGE_TYPE);
-      outgoing.setMessage(message);
-
-      router.writeOutputMessage(channelName, outgoing);
-    } catch (Exception e) {
-      getLog().error(String.format("Could not write message on output channel %s", channelName), e);
-    }
-  }
-
-  /**
-   * Call the {@link #onNewInputJson(String, Map)} method.
+   * Call the {@link #onNewInputMessage(String, Map)} method.
    *
    * @param channelName
    *          the name of the channel
    * @param message
-   *          the message in JSON format
+   *          the message
    */
-  private void callOnNewInputJson(String channelName, GenericMessage message) {
+  private void callOnNewInputMessage(String channelName, Map<String, Object> message) {
     ActivityMethodInvocation invocation = getExecutionContext().enterMethod();
 
     try {
-      String msg = message.getMessage();
-
-      onNewInputJson(channelName, MAPPER.parseObject(msg));
-    } finally {
-      getExecutionContext().exitMethod(invocation);
-    }
-  }
-
-  /**
-   * Call {@link #onNewInputString(String, String)} in a safe manner.
-   *
-   * @param channelName
-   *          name of the channel
-   * @param message
-   *          message for the channel
-   */
-  private void callOnNewInputString(String channelName, GenericMessage message) {
-    ActivityMethodInvocation invocation = getExecutionContext().enterMethod();
-
-    try {
-      onNewInputString(channelName, message.getMessage());
+      onNewInputMessage(channelName, message);
     } finally {
       getExecutionContext().exitMethod(invocation);
     }

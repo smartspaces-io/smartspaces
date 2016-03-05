@@ -18,7 +18,7 @@
 package io.smartspaces.activity.component.route;
 
 /**
- * Message types supported out of the box for IS routes.
+ * Message types supported out of the box for SS routes.
  *
  * @author Keith M. Hughes
  */

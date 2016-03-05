@@ -15,5 +15,8 @@
 # the License.
 ##
 
+# The type of the message
 string type
-string message
+
+# The contents of the message
+byte[] message

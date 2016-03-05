@@ -19,16 +19,15 @@ package io.smartspaces.activity.component.route;
 
 import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
 
+import java.util.Map;
+
 /**
  * A listener for input messages from a
  * {@link RosMessageRouterActivityComponent} input topics.
  *
- * @param <T>
- *          the type of the messages being sent over the rdoute
- *
  * @author Keith M. Hughes
  */
-public interface RoutableInputMessageListener<T> {
+public interface RoutableInputMessageListener {
 
   /**
    * A new message has come in.
@@ -38,5 +37,5 @@ public interface RoutableInputMessageListener<T> {
    * @param message
    *          the message which has come in
    */
-  void onNewRoutableInputMessage(String channelName, T message);
+  void onNewRoutableInputMessage(String channelName, Map<String,Object> message);
 }

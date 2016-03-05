@@ -21,9 +21,9 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.SupportedActivity;
 import io.smartspaces.activity.component.ros.RosActivityComponent;
+import io.smartspaces.activity.component.route.BaseMessageRouterActivityComponent;
 import io.smartspaces.activity.component.route.MessageRouterSupportedMessageTypes;
 import io.smartspaces.activity.component.route.RoutableInputMessageListener;
-import io.smartspaces.activity.component.route.ros.BaseRosMessageRouterActivityComponent;
 import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.liveactivity.runtime.standalone.development.DevelopmentStandaloneLiveActivityRuntime;
@@ -55,7 +55,7 @@ import com.google.common.collect.Sets;
  *
  * @author Trevor Pering
  */
-public class StandaloneMessageRouter extends BaseRosMessageRouterActivityComponent<GenericMessage> {
+public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent {
 
   /**
    * Json mapper for message conversion.
@@ -105,7 +105,7 @@ public class StandaloneMessageRouter extends BaseRosMessageRouterActivityCompone
   /**
    * A route input message listener.
    */
-  private RoutableInputMessageListener<GenericMessage> listener;
+  private RoutableInputMessageListener listener;
 
   /**
    * Output for tracing received messages.
@@ -172,13 +172,9 @@ public class StandaloneMessageRouter extends BaseRosMessageRouterActivityCompone
   }
 
   @Override
-  public GenericMessage newMessage() {
-    return new StandaloneGenericMessage();
-  }
-
-  @Override
-  public void writeOutputMessage(String outputChannelId, GenericMessage message) {
-    sendOutputMessage(outputChannelId, message.getType(), message.getMessage());
+  public void writeOutputMessage(String outputChannelId, Map<String, Object> message) {
+    sendOutputMessage(outputChannelId, MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE,
+        MAPPER.toString(message));
   }
 
   @Override
@@ -194,7 +190,7 @@ public class StandaloneMessageRouter extends BaseRosMessageRouterActivityCompone
     timeProvider = getComponentContext().getActivity().getSpaceEnvironment().getTimeProvider();
     activity = getComponentContext().getActivity();
     router = getRouter();
-    listener = (RoutableInputMessageListener<GenericMessage>) activity;
+    listener = (RoutableInputMessageListener) activity;
   }
 
   @Override
@@ -286,9 +282,8 @@ public class StandaloneMessageRouter extends BaseRosMessageRouterActivityCompone
         // more
         // flexible to keep everything as JSON, instead as a string embedded in
         // Json.
-        Object baseMessage =
-            (MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE.equals(type)) ? MAPPER
-                .parseObject(message) : message;
+        Object baseMessage = (MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE.equals(type))
+            ? MAPPER.parseObject(message) : message;
 
         MessageMap messageObject = new MessageMap();
         messageObject.put("message", baseMessage);
@@ -406,21 +401,17 @@ public class StandaloneMessageRouter extends BaseRosMessageRouterActivityCompone
     }
 
     Object rawMessage = messageObject.get("message");
-    String message =
-        (MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE.equals(type)) ? MAPPER
-            .toString(rawMessage) : (String) rawMessage;
-    GenericMessage genericMessage = new StandaloneGenericMessage();
-    genericMessage.setType(type);
-    genericMessage.setMessage(message);
+    @SuppressWarnings("unchecked")
+    Map<String, Object> message = (Map<String,Object>) rawMessage;
 
     if (sendOnRoute) {
       String channel = (String) messageObject.get("channel");
-      writeOutputMessage(channel, genericMessage);
+      writeOutputMessage(channel, message);
     } else {
       Collection<String> channels = inputRoutesToChannels.get(route);
       if (channels != null) {
         for (String channel : channels) {
-          listener.onNewRoutableInputMessage(channel, genericMessage);
+          listener.onNewRoutableInputMessage(channel, message);
         }
       }
     }
@@ -525,8 +516,8 @@ public class StandaloneMessageRouter extends BaseRosMessageRouterActivityCompone
   }
 
   @Override
-  public synchronized RouteMessagePublisher<GenericMessage> registerOutputChannelTopic(
-      String outputChannelId, Set<String> topicNames, boolean latch) {
+  public synchronized RouteMessagePublisher
+      registerOutputChannelTopic(String outputChannelId, Set<String> topicNames, boolean latch) {
     if (outputChannelsToRoutes.containsKey(outputChannelId)) {
       throw new SimpleSmartSpacesException("Output channel already registered: " + outputChannelId);
     }
@@ -544,7 +535,8 @@ public class StandaloneMessageRouter extends BaseRosMessageRouterActivityCompone
   }
 
   @Override
-  public synchronized void registerInputChannelTopic(String inputChannelId, Set<String> topicNames) {
+  public synchronized void registerInputChannelTopic(String inputChannelId,
+      Set<String> topicNames) {
     if (inputRoutesToChannels.values().contains(inputChannelId)) {
       SimpleSmartSpacesException.throwFormattedException("Duplicate route entry for channel %s",
           inputChannelId);
@@ -569,7 +561,7 @@ public class StandaloneMessageRouter extends BaseRosMessageRouterActivityCompone
   }
 
   @Override
-  public RouteMessagePublisher<GenericMessage> getMessagePublisher(String outputChannelId) {
+  public RouteMessagePublisher getMessagePublisher(String outputChannelId) {
     return new StandaloneRouteMessagePublisher(outputChannelId);
   }
 
@@ -583,7 +575,7 @@ public class StandaloneMessageRouter extends BaseRosMessageRouterActivityCompone
    *
    * @author Keith M. Hughes
    */
-  private class StandaloneRouteMessagePublisher implements RouteMessagePublisher<GenericMessage> {
+  private class StandaloneRouteMessagePublisher implements RouteMessagePublisher {
 
     /**
      * The channel ID for the output channel.
@@ -606,13 +598,8 @@ public class StandaloneMessageRouter extends BaseRosMessageRouterActivityCompone
     }
 
     @Override
-    public void writeOutputMessage(GenericMessage message) {
+    public void writeOutputMessage(Map<String, Object> message) {
       StandaloneMessageRouter.this.writeOutputMessage(channelId, message);
-    }
-
-    @Override
-    public GenericMessage newMessage() {
-      return newMessage();
     }
   }
 }

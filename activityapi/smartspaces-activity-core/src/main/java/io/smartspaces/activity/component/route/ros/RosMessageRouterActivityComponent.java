@@ -21,9 +21,10 @@ import io.smartspaces.activity.component.ActivityComponent;
 import io.smartspaces.activity.component.ros.RosActivityComponent;
 import io.smartspaces.activity.component.route.MessageRouterActivityComponent;
 
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * An {@link ActivityComponent} instance which supports multiple named message
@@ -34,7 +35,7 @@ import com.google.common.collect.ImmutableList;
  *
  * @author Keith M. Hughes
  */
-public interface RosMessageRouterActivityComponent<T> extends MessageRouterActivityComponent<T> {
+public interface RosMessageRouterActivityComponent extends MessageRouterActivityComponent {
 
   /**
    * Name of the component.

@@ -20,6 +20,7 @@ package io.smartspaces.activity.component.route.ros;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.component.ros.RosActivityComponent;
+import io.smartspaces.activity.component.route.BaseMessageRouterActivityComponent;
 import io.smartspaces.activity.component.route.RoutableInputMessageListener;
 import io.smartspaces.activity.impl.StatusDetail;
 import io.smartspaces.configuration.Configuration;
@@ -27,6 +28,8 @@ import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
 import io.smartspaces.messaging.route.ros.RosRouteMessagePublisher;
 import io.smartspaces.time.TimeProvider;
+import io.smartspaces.util.data.json.JsonMapper;
+import io.smartspaces.util.data.json.StandardJsonMapper;
 import io.smartspaces.util.ros.BasePublisherListener;
 import io.smartspaces.util.ros.BaseSubscriberListener;
 import io.smartspaces.util.ros.RosPublishers;
@@ -34,12 +37,10 @@ import io.smartspaces.util.ros.RosSubscribers;
 import io.smartspaces.util.ros.StandardRosPublishers;
 import io.smartspaces.util.ros.StandardRosSubscribers;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.atomic.AtomicLong;
-
+import com.google.common.base.Charsets;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.apache.commons.logging.Log;
 import org.ros.internal.node.topic.PublisherIdentifier;
 import org.ros.internal.node.topic.SubscriberIdentifier;
@@ -48,22 +49,21 @@ import org.ros.node.topic.Publisher;
 import org.ros.node.topic.PublisherListener;
 import org.ros.node.topic.Subscriber;
 import org.ros.node.topic.SubscriberListener;
+import smartspaces_msgs.GenericMessage;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * The basic implementation of the ROS message router activity component.
  *
- * @param <T>
- *          the type of messages handled by the component
- *
  * @author Keith M. Hughes
  */
-public class BasicRosMessageRouterActivityComponent<T> extends
-    BaseRosMessageRouterActivityComponent<T> {
-
+public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterActivityComponent {
+  
   /**
    * The ROS activity component this component requires.
    */
@@ -77,7 +77,7 @@ public class BasicRosMessageRouterActivityComponent<T> extends
   /**
    * The listener for input messages.
    */
-  private final RoutableInputMessageListener<T> messageListener;
+  private final RoutableInputMessageListener messageListener;
 
   /**
    * The name of the ROS message type.
@@ -87,7 +87,7 @@ public class BasicRosMessageRouterActivityComponent<T> extends
   /**
    * All topic inputs mapped to their subscribers.
    */
-  private final Map<String, RosSubscribers<T>> inputs = Maps.newConcurrentMap();
+  private final Map<String, RosSubscribers<GenericMessage>> inputs = Maps.newConcurrentMap();
 
   /**
    * All topic inputs mapped to their topic names.
@@ -97,20 +97,12 @@ public class BasicRosMessageRouterActivityComponent<T> extends
   /**
    * All topic outputs mapped to their publishers.
    */
-  private final Map<String, InternalRouteMessagePublisher<T>> outputs = Maps.newConcurrentMap();
+  private final Map<String, InternalRouteMessagePublisher> outputs = Maps.newConcurrentMap();
 
   /**
    * All topic outputs mapped to their topic names.
    */
   private final Map<String, String> outputTopics = new ConcurrentSkipListMap<String, String>();
-
-  /**
-   * A publisher collection to be used as a message factory.
-   *
-   * <p>
-   * Null if there are no outputs for this component.
-   */
-  private InternalRouteMessagePublisher<T> messageFactory;
 
   /**
    * A creator for handler invocation IDs.
@@ -120,22 +112,31 @@ public class BasicRosMessageRouterActivityComponent<T> extends
   /**
    * The publisher listener to get events to this router instance.
    */
-  private final PublisherListener<T> publisherListener = new BasePublisherListener<T>() {
-    @Override
-    public void onNewSubscriber(Publisher<T> publisher, SubscriberIdentifier subscriberIdentifier) {
-      handleNewSubscriber(publisher, subscriberIdentifier);
-    }
-  };
+  private final PublisherListener<GenericMessage> publisherListener =
+      new BasePublisherListener<GenericMessage>() {
+        @Override
+        public void onNewSubscriber(Publisher<GenericMessage> publisher,
+            SubscriberIdentifier subscriberIdentifier) {
+          handleNewSubscriber(publisher, subscriberIdentifier);
+        }
+      };
 
   /**
    * The subscriber listener to get events to this router instance.
    */
-  private final SubscriberListener<T> subscriberListener = new BaseSubscriberListener<T>() {
-    @Override
-    public void onNewPublisher(Subscriber<T> subscriber, PublisherIdentifier publisherIdentifier) {
-      handleNewPublisher(subscriber, publisherIdentifier);
-    }
-  };
+  private final SubscriberListener<GenericMessage> subscriberListener =
+      new BaseSubscriberListener<GenericMessage>() {
+        @Override
+        public void onNewPublisher(Subscriber<GenericMessage> subscriber,
+            PublisherIdentifier publisherIdentifier) {
+          handleNewPublisher(subscriber, publisherIdentifier);
+        }
+      };
+      
+  /**
+   * The codec for route messages to ROS messages.
+   */
+  private MessageCodec<Map<String,Object>, GenericMessage> messageCodec;
 
   /**
    * Construct a new ROS message router activity component.
@@ -146,7 +147,7 @@ public class BasicRosMessageRouterActivityComponent<T> extends
    *          the listener for message events
    */
   public BasicRosMessageRouterActivityComponent(String rosMessageType,
-      RoutableInputMessageListener<T> messageListener) {
+      RoutableInputMessageListener messageListener) {
     this.rosMessageType = rosMessageType;
     this.messageListener = messageListener;
   }
@@ -205,62 +206,48 @@ public class BasicRosMessageRouterActivityComponent<T> extends
   }
 
   @Override
-  public T newMessage() {
-    if (messageFactory != null) {
-      return messageFactory.newMessage();
-    } else {
-      throw new SimpleSmartSpacesException(
-          String
-              .format(
-                  "Attempting to write on an output route when no output routes declared. The configuration %s is not set.",
-                  CONFIGURATION_ROUTES_OUTPUTS));
-    }
-  }
-
-  @Override
-  public synchronized RouteMessagePublisher<T> registerOutputChannelTopic(String channelId,
+  public synchronized RouteMessagePublisher registerOutputChannelTopic(String channelId,
       Set<String> topicNames, boolean latch) throws SmartSpacesException {
     if (outputs.containsKey(channelId)) {
       throw new SimpleSmartSpacesException("Output channel already registered: " + channelId);
     }
 
-    RosPublishers<T> publishers =
-        new StandardRosPublishers<T>(getComponentContext().getActivity().getLog());
+    RosPublishers<GenericMessage> publishers =
+        new StandardRosPublishers<GenericMessage>(getComponentContext().getActivity().getLog());
     publishers.addPublisherListener(publisherListener);
     publishers.addPublishers(rosActivityComponent.getNode(), rosMessageType, topicNames, latch);
 
-    InternalRouteMessagePublisher<T> routeMessagePublisher =
-        new RosRouteMessagePublisher<>(channelId, publishers);
+    if (messageCodec == null) {
+      messageCodec = new MapGenericMessageMessageCodec(publishers);
+    }
+    
+    InternalRouteMessagePublisher routeMessagePublisher =
+        new RosRouteMessagePublisher(channelId, publishers, messageCodec);
 
     outputs.put(channelId, routeMessagePublisher);
     outputTopics.put(channelId, Joiner.on(CONFIGURATION_VALUES_SEPARATOR).join(topicNames));
-
-    // Only matters that we get one. They are all for the same
-    // message type, so will take the last one.
-    messageFactory = routeMessagePublisher;
 
     return routeMessagePublisher;
   }
 
   @Override
-  public synchronized void
-      registerInputChannelTopic(final String channelId, Set<String> topicNames)
-          throws SmartSpacesException {
+  public synchronized void registerInputChannelTopic(final String channelId, Set<String> topicNames)
+      throws SmartSpacesException {
     if (inputs.containsKey(channelId)) {
       throw new SimpleSmartSpacesException("Input channel already registered: " + channelId);
     }
 
-    RosSubscribers<T> subscribers =
-        new StandardRosSubscribers<T>(getComponentContext().getActivity().getLog());
+    RosSubscribers<GenericMessage> subscribers =
+        new StandardRosSubscribers<GenericMessage>(getComponentContext().getActivity().getLog());
     subscribers.addSubscriberListener(subscriberListener);
 
     inputs.put(channelId, subscribers);
     inputTopics.put(channelId, Joiner.on(CONFIGURATION_VALUES_SEPARATOR).join(topicNames));
 
     subscribers.addSubscribers(rosActivityComponent.getNode(), rosMessageType, topicNames,
-        new MessageListener<T>() {
+        new MessageListener<GenericMessage>() {
           @Override
-          public void onNewMessage(T message) {
+          public void onNewMessage(GenericMessage message) {
             handleNewIncomingMessage(channelId, message);
           }
         });
@@ -268,13 +255,13 @@ public class BasicRosMessageRouterActivityComponent<T> extends
 
   @Override
   public synchronized void clearAllChannelTopics() {
-    for (RosSubscribers<T> input : inputs.values()) {
+    for (RosSubscribers<GenericMessage> input : inputs.values()) {
       input.shutdown();
     }
     inputs.clear();
     inputTopics.clear();
 
-    for (InternalRouteMessagePublisher<T> output : outputs.values()) {
+    for (InternalRouteMessagePublisher output : outputs.values()) {
       output.shutdown();
     }
     outputs.clear();
@@ -289,7 +276,7 @@ public class BasicRosMessageRouterActivityComponent<T> extends
    * @param message
    *          the message that came in
    */
-  void handleNewIncomingMessage(String channelId, T message) {
+  void handleNewIncomingMessage(String channelId, GenericMessage message) {
     if (!getComponentContext().canHandlerRun()) {
       return;
     }
@@ -303,12 +290,13 @@ public class BasicRosMessageRouterActivityComponent<T> extends
       String handlerInvocationId = newHandlerInvocationId();
       Log log = getComponentContext().getActivity().getLog();
       if (log.isTraceEnabled()) {
-        log.trace(String.format("Entering ROS route message handler invocation %s",
-            handlerInvocationId));
+        log.trace(
+            String.format("Entering ROS route message handler invocation %s", handlerInvocationId));
       }
 
       // Send the message out to the listener.
-      messageListener.onNewRoutableInputMessage(channelId, message);
+      Map<String, Object> msg = messageCodec.decode(message);
+      messageListener.onNewRoutableInputMessage(channelId, msg);
 
       if (log.isTraceEnabled()) {
         log.trace(String.format("Exiting ROS route message handler invocation %s after %dms",
@@ -323,12 +311,12 @@ public class BasicRosMessageRouterActivityComponent<T> extends
   }
 
   @Override
-  public void writeOutputMessage(String outputChannelId, T message) {
+  public void writeOutputMessage(String outputChannelId, Map<String,Object> message) {
     try {
       getComponentContext().enterHandler();
 
       if (outputChannelId != null) {
-        final RouteMessagePublisher<T> output = outputs.get(outputChannelId);
+        RouteMessagePublisher output = outputs.get(outputChannelId);
         if (output != null) {
           output.writeOutputMessage(message);
 
@@ -381,7 +369,7 @@ public class BasicRosMessageRouterActivityComponent<T> extends
   }
 
   @Override
-  public RouteMessagePublisher<T> getMessagePublisher(String outputChannelId) {
+  public RouteMessagePublisher getMessagePublisher(String outputChannelId) {
     return outputs.get(outputChannelId);
   }
 
@@ -418,8 +406,8 @@ public class BasicRosMessageRouterActivityComponent<T> extends
    * @param subscriberIdentifier
    *          the identifier for the new subscriber
    */
-  private void
-      handleNewSubscriber(Publisher<T> publisher, SubscriberIdentifier subscriberIdentifier) {
+  private void handleNewSubscriber(Publisher<GenericMessage> publisher,
+      SubscriberIdentifier subscriberIdentifier) {
     // String topicName = publisher.getTopicName().toString();
     // String subscriberName =
     // subscriberIdentifier.getNodeIdentifier().getName().toString();
@@ -428,7 +416,8 @@ public class BasicRosMessageRouterActivityComponent<T> extends
     // try {
     // listener.onNewSubscriber(topicName, subscriberName);
     // } catch (Exception e) {
-    // getComponentContext().getActivity().getLog().error("Error notifying listener about new subscriber",
+    // getComponentContext().getActivity().getLog().error("Error notifying
+    // listener about new subscriber",
     // e);
     // }
     // }
@@ -442,8 +431,8 @@ public class BasicRosMessageRouterActivityComponent<T> extends
    * @param publisherIdentifier
    *          the identifier for the new publisher
    */
-  private void
-      handleNewPublisher(Subscriber<T> subscriber, PublisherIdentifier publisherIdentifier) {
+  private void handleNewPublisher(Subscriber<GenericMessage> subscriber,
+      PublisherIdentifier publisherIdentifier) {
     // String topicName = subscriber.getTopicName().toString();
     // String publisherName =
     // publisherIdentifier.getNodeIdentifier().getName().toString();
@@ -452,7 +441,8 @@ public class BasicRosMessageRouterActivityComponent<T> extends
     // try {
     // listener.onNewPublisher(topicName, publisherName);
     // } catch (Exception e) {
-    // getComponentContext().getActivity().getLog().error("Error notifying listener about new publisher",
+    // getComponentContext().getActivity().getLog().error("Error notifying
+    // listener about new publisher",
     // e);
     // }
     // }

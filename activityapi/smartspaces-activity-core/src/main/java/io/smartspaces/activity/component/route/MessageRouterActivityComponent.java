@@ -21,17 +21,15 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.component.ActivityComponent;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
  * An activity component which supports route messaging.
  *
- * @param <T>
- *          class of messages
- *
  * @author Keith M. Hughes
  */
-public interface MessageRouterActivityComponent<T> extends ActivityComponent {
+public interface MessageRouterActivityComponent extends ActivityComponent {
 
   /**
    * Separator for configuration values which allow multiple values.
@@ -66,16 +64,6 @@ public interface MessageRouterActivityComponent<T> extends ActivityComponent {
   String getNodeName();
 
   /**
-   * Create a new message to send.
-   *
-   * <p>
-   * This will only work if there are output routes for the topic.
-   *
-   * @return the new message
-   */
-  T newMessage();
-
-  /**
    * Send out a message on one of the output channels.
    *
    * <p>
@@ -87,7 +75,7 @@ public interface MessageRouterActivityComponent<T> extends ActivityComponent {
    * @param message
    *          message to send
    */
-  void writeOutputMessage(String outputChannelId, T message);
+  void writeOutputMessage(String outputChannelId, Map<String,Object> message);
 
   /**
    * Register a new channel output topic route.
@@ -104,7 +92,7 @@ public interface MessageRouterActivityComponent<T> extends ActivityComponent {
    * @throws SmartSpacesException
    *           the output ID has been used before
    */
-  RouteMessagePublisher<T> registerOutputChannelTopic(String outputChannelId,
+  RouteMessagePublisher registerOutputChannelTopic(String outputChannelId,
       Set<String> topicNames, boolean latch) throws SmartSpacesException;
 
   /**
@@ -161,7 +149,7 @@ public interface MessageRouterActivityComponent<T> extends ActivityComponent {
    * @return the output publisher, or {@code null} if none found for the
    *         specified ID
    */
-  RouteMessagePublisher<T> getMessagePublisher(String outputChannelId);
+  RouteMessagePublisher getMessagePublisher(String outputChannelId);
 
   /**
    * Get all input channel IDs from the component.

@@ -21,10 +21,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.ros.Assert.assertGraphNameEquals;
 
+import io.smartspaces.testing.sizes.TestSizeLarge;
+
 import com.google.common.collect.Lists;
 import com.google.common.net.InetAddresses;
-
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.ros.RosCore;
 import org.ros.RosTest;
 import org.ros.concurrent.Holder;
@@ -56,6 +58,7 @@ import java.util.concurrent.TimeUnit;
  * @author kwc@willowgarage.com (Ken Conley)
  * @author damonkohler@google.com (Damon Kohler)
  */
+@Category(TestSizeLarge.class)
 public class DefaultNodeTest extends RosTest {
 
   void checkHostName(String hostName) {

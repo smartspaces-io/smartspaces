@@ -26,7 +26,7 @@ import io.smartspaces.service.web.server.HttpFileUpload;
 import io.smartspaces.service.web.server.HttpFileUploadListener;
 import io.smartspaces.service.web.server.MultipleConnectionWebSocketHandler;
 import io.smartspaces.service.web.server.WebServer;
-import io.smartspaces.util.data.json.JsonBuilder;
+import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
 
@@ -151,8 +151,8 @@ public class BaseRoutableRosWebServerActivity extends BaseRoutableRosActivity im
    * @param data
    *          the data to send
    */
-  public void sendWebSocketJsonBuilder(String connectionId, JsonBuilder data) {
-    sendWebSocketJson(connectionId, data.build());
+  public void sendWebSocketDynamicObjectBuilder(String connectionId, DynamicObjectBuilder data) {
+    sendWebSocketJson(connectionId, data.buildAsMap());
   }
 
   /**
@@ -171,8 +171,8 @@ public class BaseRoutableRosWebServerActivity extends BaseRoutableRosActivity im
    * @param data
    *          the data to send
    */
-  public void sendAllWebSocketJsonBuilder(JsonBuilder data) {
-    sendAllWebSocketJson(data.build());
+  public void sendAllWebSocketDynamicObjectBuilder(DynamicObjectBuilder data) {
+    sendAllWebSocketJson(data.buildAsMap());
   }
 
   /**

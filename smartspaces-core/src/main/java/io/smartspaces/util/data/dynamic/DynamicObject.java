@@ -119,6 +119,19 @@ public interface DynamicObject {
   Boolean getBoolean(String name) throws DynamicObjectSmartSpacesException;
 
   /**
+   * Does the current object contain a property with the given name?
+   *
+   * @param name
+   *          the name of the property to check for
+   *
+   * @return {@code true} if the property exists
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           the current level was not an object
+   */
+  boolean containsProperty(String name) throws DynamicObjectSmartSpacesException;
+
+  /**
    * If the current level is a object, get the names of all properties for that
    * object.
    *
@@ -314,8 +327,7 @@ public interface DynamicObject {
    * @throws DynamicObjectSmartSpacesException
    *           not an object
    */
-  Iterable<ObjectDynamicObjectEntry> getObjectEntries()
-      throws DynamicObjectSmartSpacesException;
+  Iterable<ObjectDynamicObjectEntry> getObjectEntries() throws DynamicObjectSmartSpacesException;
 
   /**
    * Get an iterator for walking through the current array.
@@ -333,8 +345,7 @@ public interface DynamicObject {
    * @throws DynamicObjectSmartSpacesException
    *           not an array
    */
-  Iterable<ArrayDynamicObjectEntry> getArrayEntries()
-      throws DynamicObjectSmartSpacesException;
+  Iterable<ArrayDynamicObjectEntry> getArrayEntries() throws DynamicObjectSmartSpacesException;
 
   /**
    * An entry in an object in a dynamic object.

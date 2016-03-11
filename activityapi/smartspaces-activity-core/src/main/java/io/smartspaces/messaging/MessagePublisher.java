@@ -17,7 +17,7 @@
 
 package io.smartspaces.messaging;
 
-import io.smartspaces.util.data.json.JsonBuilder;
+import io.smartspaces.util.data.dynamic.DynamicObject;
 
 import java.util.Map;
 
@@ -45,7 +45,7 @@ public interface MessagePublisher {
    * @param message
    *          the message to send
    */
-  void sendMessage(JsonBuilder message);
+  void sendMessage(DynamicObject message);
 
   /**
    * Send an output string message.

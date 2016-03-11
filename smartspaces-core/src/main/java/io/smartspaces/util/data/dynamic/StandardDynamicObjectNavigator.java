@@ -117,8 +117,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   }
 
   @Override
-  public String getRequiredString(String propertyName)
-      throws DynamicObjectSmartSpacesException {
+  public String getRequiredString(String propertyName) throws DynamicObjectSmartSpacesException {
     String value = getString(propertyName);
     if (value != null) {
       return value;
@@ -146,6 +145,16 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   @Override
   public Boolean getBoolean(String propertyName) {
     return (Boolean) getObjectProperty(propertyName);
+  }
+
+  @Override
+  public boolean containsProperty(String name) {
+    if (currentType == DynamicObjectType.OBJECT) {
+      return currentObject.containsKey(name);
+    } else {
+      throw new DynamicObjectSmartSpacesException(String.format(
+          "Current level is not a object when checking for property name %s", name));
+    }
   }
 
   @Override
@@ -406,8 +415,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
       String element = elements[i].trim();
 
       if (element.isEmpty()) {
-        throw new DynamicObjectSmartSpacesException(String.format("Empty element in path %s",
-            path));
+        throw new DynamicObjectSmartSpacesException(String.format("Empty element in path %s", path));
       }
 
       if (element.equals("$")) {
@@ -423,22 +431,18 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
                 "Path element %s does not end in a ]", element));
           }
         } else if (curObject instanceof Map) {
-          throw new DynamicObjectSmartSpacesException(
-              "Attempt to use an array index in an object");
+          throw new DynamicObjectSmartSpacesException("Attempt to use an array index in an object");
         } else if (i < elements.length) {
-          throw new DynamicObjectSmartSpacesException(
-              "Non array or object in the middle of a path");
+          throw new DynamicObjectSmartSpacesException("Non array or object in the middle of a path");
         }
       } else {
         // Have a result name
         if (curObject instanceof Map) {
           curObject = ((Map<String, ? extends Object>) curObject).get(element);
         } else if (curObject instanceof List) {
-          throw new DynamicObjectSmartSpacesException(
-              "Attempt to use an name index in an array");
+          throw new DynamicObjectSmartSpacesException("Attempt to use an name index in an array");
         } else if (i < elements.length) {
-          throw new DynamicObjectSmartSpacesException(
-              "Non array or object in the middle of a path");
+          throw new DynamicObjectSmartSpacesException("Non array or object in the middle of a path");
         }
       }
     }

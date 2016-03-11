@@ -17,12 +17,12 @@
 
 package io.smartspaces.util.sampling;
 
-import io.smartspaces.util.data.json.JsonBuilder;
+import io.smartspaces.util.data.dynamic.DynamicObject;
+import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
+import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder;
+import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator;
 import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.JsonNavigator;
-import io.smartspaces.util.data.json.StandardJsonBuilder;
 import io.smartspaces.util.data.json.StandardJsonMapper;
-import io.smartspaces.util.data.json.StandardJsonNavigator;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.sampling.SampledDataSequence.SampledDataFrame;
@@ -69,7 +69,7 @@ public class JsonFileSampledDataSequenceLoader implements SampledDataSequenceLoa
 
   @Override
   public void save(File dataFile, SampledDataSequence dataSequence) {
-    JsonBuilder builder = new StandardJsonBuilder();
+    DynamicObjectBuilder builder = new StandardDynamicObjectBuilder();
 
     builder.newArray(PROPERTY_NAME_FRAMES);
 
@@ -78,13 +78,13 @@ public class JsonFileSampledDataSequenceLoader implements SampledDataSequenceLoa
       SampledDataFrame frame = frames.get(i);
       builder.newObject();
 
-      builder.put(PROPERTY_NAME_FRAME_SOURCE, frame.getSource());
-      builder.put(PROPERTY_NAME_FRAME_TIMESTAMP, Long.toString(frame.getTimestamp()));
+      builder.setProperty(PROPERTY_NAME_FRAME_SOURCE, frame.getSource());
+      builder.setProperty(PROPERTY_NAME_FRAME_TIMESTAMP, Long.toString(frame.getTimestamp()));
 
       builder.newArray(PROPERTY_NAME_FRAME_SAMPLES);
 
       for (int sample : frame.getSamples()) {
-        builder.put(sample);
+        builder.add(sample);
       }
 
       // From array of samples
@@ -94,15 +94,15 @@ public class JsonFileSampledDataSequenceLoader implements SampledDataSequenceLoa
       builder.up();
     }
 
-    fileSupport.writeFile(dataFile, JSON_MAPPER.toString(builder.build()));
+    fileSupport.writeFile(dataFile, JSON_MAPPER.toString(builder.buildAsMap()));
   }
 
   @Override
   public int load(File dataFile, SampledDataSequence dataSequence) {
     dataSequence.reset();
 
-    JsonNavigator nav =
-        new StandardJsonNavigator(JSON_MAPPER.parseObject(fileSupport.readFile(dataFile)));
+    DynamicObject nav =
+        new StandardDynamicObjectNavigator(JSON_MAPPER.parseObject(fileSupport.readFile(dataFile)));
 
     nav.down(PROPERTY_NAME_FRAMES);
     int numberFrames = nav.getSize();

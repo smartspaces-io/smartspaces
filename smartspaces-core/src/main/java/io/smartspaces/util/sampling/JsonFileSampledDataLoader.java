@@ -17,12 +17,12 @@
 
 package io.smartspaces.util.sampling;
 
-import io.smartspaces.util.data.json.JsonBuilder;
+import io.smartspaces.util.data.dynamic.DynamicObject;
+import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
+import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder;
+import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator;
 import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.JsonNavigator;
-import io.smartspaces.util.data.json.StandardJsonBuilder;
 import io.smartspaces.util.data.json.StandardJsonMapper;
-import io.smartspaces.util.data.json.StandardJsonNavigator;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
@@ -54,7 +54,7 @@ public class JsonFileSampledDataLoader implements SampledDataLoader {
 
   @Override
   public void save(File dataFile, Map<String, int[]> data) {
-    JsonBuilder builder = new StandardJsonBuilder();
+    DynamicObjectBuilder builder = new StandardDynamicObjectBuilder();
 
     for (Entry<String, int[]> entry : data.entrySet()) {
       builder.newObject(entry.getKey());
@@ -62,7 +62,7 @@ public class JsonFileSampledDataLoader implements SampledDataLoader {
       builder.newArray(PROPERTY_NAME_SAMPLES_ARRAY);
 
       for (int sample : entry.getValue()) {
-        builder.put(sample);
+        builder.add(sample);
       }
 
       // From array of samples
@@ -72,7 +72,7 @@ public class JsonFileSampledDataLoader implements SampledDataLoader {
       builder.up();
     }
 
-    fileSupport.writeFile(dataFile, JSON_MAPPER.toString(builder.build()));
+    fileSupport.writeFile(dataFile, JSON_MAPPER.toString(builder.buildAsMap()));
   }
 
   @Override
@@ -83,8 +83,8 @@ public class JsonFileSampledDataLoader implements SampledDataLoader {
   @Override
   public void load(File dataFile, Map<String, int[]> data) {
     data.clear();
-    JsonNavigator nav =
-        new StandardJsonNavigator(JSON_MAPPER.parseObject(fileSupport.readFile(dataFile)));
+    DynamicObject nav =
+        new StandardDynamicObjectNavigator(JSON_MAPPER.parseObject(fileSupport.readFile(dataFile)));
 
     for (String name : nav.getProperties()) {
       nav.down(name);

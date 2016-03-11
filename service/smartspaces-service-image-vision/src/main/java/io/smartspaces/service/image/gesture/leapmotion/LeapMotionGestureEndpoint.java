@@ -29,17 +29,18 @@ import io.smartspaces.service.web.WebSocketHandler;
 import io.smartspaces.service.web.client.WebSocketClient;
 import io.smartspaces.service.web.client.WebSocketClientService;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.util.data.json.JsonNavigator;
-import io.smartspaces.util.data.json.StandardJsonNavigator;
+import io.smartspaces.util.data.dynamic.DynamicObject;
+import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator;
 import io.smartspaces.util.geometry.Vector3;
-
-import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.logging.Log;
+
+import com.google.common.collect.Lists;
 
 /**
  * A gesture connection using the Leap Motion.
@@ -456,7 +457,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    */
   private void handleGestureData(Object data) {
     if (data != null) {
-      JsonNavigator gdata = new StandardJsonNavigator(data);
+      DynamicObject gdata = new StandardDynamicObjectNavigator(data);
       processPointables(gdata);
       processHands(gdata);
       processGestures(gdata);
@@ -469,7 +470,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * @param gdata
    *          the data from the Leap Motion
    */
-  private void processPointables(JsonNavigator gdata) {
+  private void processPointables(DynamicObject gdata) {
     if (!pointableListeners.isEmpty() && gdata.containsProperty(LEAPMOTION_NAME_POINTABLES)) {
       gdata.down(LEAPMOTION_NAME_POINTABLES);
       int numPointables = gdata.getSize();
@@ -488,7 +489,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * @param numPointables
    *          the number of pointables
    */
-  private void processPointables(JsonNavigator gdata, int numPointables) {
+  private void processPointables(DynamicObject gdata, int numPointables) {
     Map<String, GesturePointable> pointables = getPointables(gdata, numPointables);
 
     for (GesturePointableListener listener : pointableListeners) {
@@ -510,7 +511,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    *
    * @return a map from pointable IDs to pointables
    */
-  private Map<String, GesturePointable> getPointables(JsonNavigator gdata, int numPointables) {
+  private Map<String, GesturePointable> getPointables(DynamicObject gdata, int numPointables) {
     Map<String, GesturePointable> pointables = new HashMap<>();
 
     for (int pos = 0; pos < numPointables; pos++) {
@@ -547,7 +548,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * @param gdata
    *          the data from the Leap Motion
    */
-  private void processHands(JsonNavigator gdata) {
+  private void processHands(DynamicObject gdata) {
     if (!handListeners.isEmpty() && gdata.containsProperty(LEAPMOTION_NAME_HANDS)) {
       gdata.down(LEAPMOTION_NAME_HANDS);
       int numHands = gdata.getSize();
@@ -566,7 +567,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * @param numHands
    *          the number of hands
    */
-  private void processHands(JsonNavigator gdata, int numHands) {
+  private void processHands(DynamicObject gdata, int numHands) {
     Map<String, GestureHand> hands = getHands(gdata, numHands);
 
     for (GestureHandListener listener : handListeners) {
@@ -588,7 +589,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    *
    * @return a map from hand IDs to hands
    */
-  private Map<String, GestureHand> getHands(JsonNavigator gdata, int numHands) {
+  private Map<String, GestureHand> getHands(DynamicObject gdata, int numHands) {
     Map<String, GestureHand> hands = new HashMap<>();
 
     for (int pos = 0; pos < numHands; pos++) {
@@ -636,7 +637,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * @param gdata
    *          the data from the Leap Motion
    */
-  private void processGestures(JsonNavigator gdata) {
+  private void processGestures(DynamicObject gdata) {
     if (!gestureListeners.isEmpty() && gdata.containsProperty(LEAPMOTION_NAME_GESTURES)) {
       gdata.down(LEAPMOTION_NAME_GESTURES);
       int numGestures = gdata.getSize();
@@ -655,7 +656,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * @param numGestures
    *          the number of gestures
    */
-  private void processGestures(JsonNavigator gdata, int numGestures) {
+  private void processGestures(DynamicObject gdata, int numGestures) {
     Map<String, Gesture> gestures = getGestures(gdata, numGestures);
 
     for (GestureListener listener : gestureListeners) {
@@ -677,7 +678,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    *
    * @return the map of gesture IDs to gestures
    */
-  private Map<String, Gesture> getGestures(JsonNavigator gdata, int numGestures) {
+  private Map<String, Gesture> getGestures(DynamicObject gdata, int numGestures) {
     Map<String, Gesture> gestures = new HashMap<>();
 
     for (int pos = 0; pos < numGestures; pos++) {

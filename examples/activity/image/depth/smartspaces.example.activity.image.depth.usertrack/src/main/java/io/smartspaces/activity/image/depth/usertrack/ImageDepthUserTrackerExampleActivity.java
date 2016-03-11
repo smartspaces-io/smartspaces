@@ -20,8 +20,8 @@ package io.smartspaces.activity.image.depth.usertrack;
 import io.smartspaces.activity.impl.ros.BaseRoutableRosActivity;
 import io.smartspaces.interaction.model.entity.TrackedEntity;
 import io.smartspaces.interaction.model.entity.TrackedEntityListener;
-import io.smartspaces.util.data.json.JsonBuilder;
-import io.smartspaces.util.data.json.StandardJsonBuilder;
+import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
+import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder;
 import io.smartspaces.util.geometry.Vector3;
 
 import java.util.List;
@@ -95,7 +95,7 @@ public class ImageDepthUserTrackerExampleActivity extends BaseRoutableRosActivit
   private void handleTrackedEntityUpdate(List<TrackedEntity<Vector3>> entities) {
 
     if (isActivated()) {
-      JsonBuilder message = new StandardJsonBuilder();
+      DynamicObjectBuilder message = new StandardDynamicObjectBuilder();
 
       message.newArray(MESSAGE_PROPERTY_ENTITIES);
 
@@ -114,7 +114,7 @@ public class ImageDepthUserTrackerExampleActivity extends BaseRoutableRosActivit
 
       getLog().debug(String.format("Entities detected: %s", message));
 
-      sendOutputJsonBuilder(ROUTE_CHANNEL, message);
+      sendOutputDynamicObjectBuilder(ROUTE_CHANNEL, message);
     }
   }
 }

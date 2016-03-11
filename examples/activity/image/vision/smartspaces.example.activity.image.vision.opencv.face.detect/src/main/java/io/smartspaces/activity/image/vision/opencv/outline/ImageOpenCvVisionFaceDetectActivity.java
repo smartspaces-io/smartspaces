@@ -20,8 +20,8 @@ package io.smartspaces.activity.image.vision.opencv.outline;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.impl.ros.BaseRoutableRosActivity;
 import io.smartspaces.interaction.detection.DetectionEventListener;
-import io.smartspaces.util.data.json.JsonBuilder;
-import io.smartspaces.util.data.json.StandardJsonBuilder;
+import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
+import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder;
 import io.smartspaces.util.geometry.Rectangle2;
 import io.smartspaces.util.ui.swing.JFrameManagedResource;
 
@@ -163,7 +163,7 @@ public class ImageOpenCvVisionFaceDetectActivity extends BaseRoutableRosActivity
    */
   private void handleNewDetectionEvent(Collection<Rectangle2> eventData) {
     if (isActivated()) {
-      JsonBuilder message = new StandardJsonBuilder();
+      DynamicObjectBuilder message = new StandardDynamicObjectBuilder();
 
       message.newArray(MESSAGE_PROPERTY_FACES);
 
@@ -180,7 +180,7 @@ public class ImageOpenCvVisionFaceDetectActivity extends BaseRoutableRosActivity
 
       getLog().debug(String.format("Faces detected: %s", message));
 
-      sendOutputJsonBuilder(ROUTE_CHANNEL, message);
+      sendOutputDynamicObjectBuilder(ROUTE_CHANNEL, message);
     }
   }
 

@@ -23,13 +23,12 @@ import io.smartspaces.activity.component.route.ros.BasicRosMessageRouterActivity
 import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
 import io.smartspaces.activity.execution.ActivityMethodInvocation;
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
-import io.smartspaces.util.data.json.JsonBuilder;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
 
-import smartspaces_msgs.GenericMessage;
-
 import java.util.Map;
+
+import smartspaces_msgs.GenericMessage;
 
 /**
  * An {@link Activity} which provides a set of named input ROS topics and a set
@@ -53,14 +52,16 @@ public class BaseRoutableRosActivity extends BaseRosActivity {
   public void commonActivitySetup() {
     super.commonActivitySetup();
 
-    router = addActivityComponent(new BasicRosMessageRouterActivityComponent(
-        GenericMessage._TYPE, new RoutableInputMessageListener() {
-          @SuppressWarnings("unchecked")
-          @Override
-          public void onNewRoutableInputMessage(String channelName, Map<String, Object> message) {
-            handleRoutableInputMessage(channelName, message);
-          }
-        }));
+    router =
+        addActivityComponent(new BasicRosMessageRouterActivityComponent(GenericMessage._TYPE,
+            new RoutableInputMessageListener() {
+              @SuppressWarnings("unchecked")
+              @Override
+              public void
+                  onNewRoutableInputMessage(String channelName, Map<String, Object> message) {
+                handleRoutableInputMessage(channelName, message);
+              }
+            }));
   }
 
   /**

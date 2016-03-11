@@ -366,7 +366,12 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
 
     managedResources.startupResources();
 
-    playerFuture = spaceEnvironment.getExecutorService().submit(() -> play());
+    playerFuture = spaceEnvironment.getExecutorService().submit(new Runnable() {
+      @Override
+      public void run() {
+        play();
+      }
+    });
   }
 
   @Override

@@ -43,8 +43,6 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 
-import smartspaces_msgs.GenericMessage;
-
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
@@ -241,7 +239,12 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     try {
       router.startup();
 
-      activity.getManagedCommands().submit(() -> receiveLoop());
+      activity.getManagedCommands().submit(new Runnable() {
+        @Override
+        public void run() {
+          receiveLoop();
+        }
+      });
 
       if (!messageWhiteList.isEmpty()) {
         final boolean autoFlush = true;
@@ -282,8 +285,9 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
         // more
         // flexible to keep everything as JSON, instead as a string embedded in
         // Json.
-        Object baseMessage = (MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE.equals(type))
-            ? MAPPER.parseObject(message) : message;
+        Object baseMessage =
+            (MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE.equals(type)) ? MAPPER
+                .parseObject(message) : message;
 
         MessageMap messageObject = new MessageMap();
         messageObject.put("message", baseMessage);
@@ -402,7 +406,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
 
     Object rawMessage = messageObject.get("message");
     @SuppressWarnings("unchecked")
-    Map<String, Object> message = (Map<String,Object>) rawMessage;
+    Map<String, Object> message = (Map<String, Object>) rawMessage;
 
     if (sendOnRoute) {
       String channel = (String) messageObject.get("channel");
@@ -516,8 +520,8 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   }
 
   @Override
-  public synchronized RouteMessagePublisher
-      registerOutputChannelTopic(String outputChannelId, Set<String> topicNames, boolean latch) {
+  public synchronized RouteMessagePublisher registerOutputChannelTopic(String outputChannelId,
+      Set<String> topicNames, boolean latch) {
     if (outputChannelsToRoutes.containsKey(outputChannelId)) {
       throw new SimpleSmartSpacesException("Output channel already registered: " + outputChannelId);
     }
@@ -535,8 +539,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   }
 
   @Override
-  public synchronized void registerInputChannelTopic(String inputChannelId,
-      Set<String> topicNames) {
+  public synchronized void registerInputChannelTopic(String inputChannelId, Set<String> topicNames) {
     if (inputRoutesToChannels.values().contains(inputChannelId)) {
       SimpleSmartSpacesException.throwFormattedException("Duplicate route entry for channel %s",
           inputChannelId);

@@ -165,12 +165,15 @@ public class LimitedRetryRestartStrategy<T extends Restartable> extends BaseRest
      * Do the first restart attempt.
      */
     public void startRestartAttempts() {
-      executorService.execute(() -> {
-        attemptRestart();
+      executorService.execute(new Runnable() {
+        @Override
+        public void run() {
+          attemptRestart();
 
-        while (running && !Thread.interrupted()) {
-          SmartSpacesUtilities.delay(getCurrentSampleDelay());
-          repeatedRestartAttempt();
+          while (running && !Thread.interrupted()) {
+            SmartSpacesUtilities.delay(getCurrentSampleDelay());
+            repeatedRestartAttempt();
+          }
         }
       });
     }

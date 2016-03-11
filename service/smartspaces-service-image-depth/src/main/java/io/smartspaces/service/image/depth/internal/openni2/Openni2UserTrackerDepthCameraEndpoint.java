@@ -153,9 +153,12 @@ public class Openni2UserTrackerDepthCameraEndpoint implements UserTrackerDepthCa
 
     pointerTrackerFrame = Pointer.allocatePointer(NiteUserTrackerFrame.class);
 
-    frameReaderLoop =
-        executorService.scheduleAtFixedRate(() -> processUserTrackFrame(), 0, readerLoopRate,
-            TimeUnit.MILLISECONDS);
+    frameReaderLoop = executorService.scheduleAtFixedRate(new Runnable() {
+      @Override
+      public void run() {
+        processUserTrackFrame();
+      }
+    }, 0, readerLoopRate, TimeUnit.MILLISECONDS);
 
     sampling.set(true);
   }

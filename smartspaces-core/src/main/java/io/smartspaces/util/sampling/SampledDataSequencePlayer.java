@@ -130,13 +130,16 @@ public class SampledDataSequencePlayer implements ManagedResource {
    */
   public synchronized void startPlayback() {
     if (runningFuture == null) {
-      runningFuture = executorService.submit(() -> {
-        try {
-          play();
-        } catch (InterruptedException e) {
-          log.info("Playback of sample data frames interrupted");
-        } catch (Exception e) {
-          log.error("Error while sending sampled data frame", e);
+      runningFuture = executorService.submit(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            play();
+          } catch (InterruptedException e) {
+            log.info("Playback of sample data frames interrupted");
+          } catch (Exception e) {
+            log.error("Error while sending sampled data frame", e);
+          }
         }
       });
     }

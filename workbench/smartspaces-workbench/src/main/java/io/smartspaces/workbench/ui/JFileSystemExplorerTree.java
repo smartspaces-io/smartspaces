@@ -109,7 +109,12 @@ public class JFileSystemExplorerTree extends JTree implements TreeSelectionListe
       rootNode = null;
     }
 
-    SwingUtilities.invokeLater(() -> invalidate());
+    SwingUtilities.invokeLater(new Runnable() {
+      @Override
+      public void run() {
+        invalidate();
+      }
+    });
   }
 
   /**

@@ -298,9 +298,12 @@ public class SensacellDriver extends DriverSupport {
 
       setupComplete = true;
 
-      updater =
-          spaceEnvironment.getExecutorService().scheduleWithFixedDelay(() -> update(), 0,
-              (long) (1000.0 / sensorUpdateRate), TimeUnit.MILLISECONDS);
+      updater = spaceEnvironment.getExecutorService().scheduleWithFixedDelay(new Runnable() {
+        @Override
+        public void run() {
+          update();
+        }
+      }, 0, (long) (1000.0 / sensorUpdateRate), TimeUnit.MILLISECONDS);
     } catch (Exception e) {
       throw new SmartSpacesException(
           String.format("Cannot set up port %s for sensacell", portName), e);

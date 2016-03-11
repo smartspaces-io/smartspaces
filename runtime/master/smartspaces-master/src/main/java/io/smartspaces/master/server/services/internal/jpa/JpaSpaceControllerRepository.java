@@ -29,12 +29,11 @@ import io.smartspaces.master.server.services.internal.jpa.domain.JpaSpaceControl
 import io.smartspaces.master.server.services.internal.jpa.domain.JpaSpaceControllerConfigurationParameter;
 import io.smartspaces.util.uuid.UuidGenerator;
 
-import org.springframework.orm.jpa.JpaTemplate;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 /**
  * A JPA implementation of {@link SpaceControllerRepository}.
@@ -54,9 +53,9 @@ public class JpaSpaceControllerRepository extends BaseSpaceControllerRepository 
   private UuidGenerator uuidGenerator;
 
   /**
-   * The Spring JPA template.
+   * The entity manager for JPA entities.
    */
-  private JpaTemplate template;
+  private EntityManager entityManager;
 
   @Override
   public SpaceController newSpaceController() {
@@ -99,21 +98,23 @@ public class JpaSpaceControllerRepository extends BaseSpaceControllerRepository 
 
   @Override
   public long getNumberSpaceControllers() {
-    @SuppressWarnings("unchecked")
-    List<Long> results = template.findByNamedQuery("countSpaceControllerAll");
+    TypedQuery<Long> query = entityManager.createNamedQuery("countSpaceControllerAll", Long.class);
+    List<Long> results = query.getResultList();
     return results.get(0);
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public List<SpaceController> getAllSpaceControllers() {
-    return template.findByNamedQuery("spaceControllerAll");
+    TypedQuery<SpaceController> query =
+        entityManager.createNamedQuery("spaceControllerAll", SpaceController.class);
+    return query.getResultList();
   }
 
   @Override
   public List<SpaceController> getSpaceControllers(FilterExpression filter) {
-    @SuppressWarnings("unchecked")
-    List<SpaceController> controllers = template.findByNamedQuery("spaceControllerAll");
+    TypedQuery<SpaceController> query =
+        entityManager.createNamedQuery("spaceControllerAll", SpaceController.class);
+    List<SpaceController> controllers = query.getResultList();
 
     List<SpaceController> results = new ArrayList<>();
 
@@ -132,16 +133,15 @@ public class JpaSpaceControllerRepository extends BaseSpaceControllerRepository 
 
   @Override
   public SpaceController getSpaceControllerById(String id) {
-    return template.find(JpaSpaceController.class, id);
+    return entityManager.find(JpaSpaceController.class, id);
   }
 
   @Override
   public SpaceController getSpaceControllerByUuid(String uuid) {
-    Map<String, String> params = new HashMap<>();
-    params.put("uuid", uuid);
-    @SuppressWarnings("unchecked")
-    List<SpaceController> results =
-        template.findByNamedQueryAndNamedParams("spaceControllerByUuid", params);
+    TypedQuery<SpaceController> query =
+        entityManager.createNamedQuery("spaceControllerByUuid", SpaceController.class);
+    query.setParameter("uuid", uuid);
+    List<SpaceController> results = query.getResultList();
     if (!results.isEmpty()) {
       return results.get(0);
     } else {
@@ -152,9 +152,9 @@ public class JpaSpaceControllerRepository extends BaseSpaceControllerRepository 
   @Override
   public SpaceController saveSpaceController(SpaceController controller) {
     if (controller.getId() != null) {
-      return template.merge(controller);
+      return entityManager.merge(controller);
     } else {
-      template.persist(controller);
+      entityManager.persist(controller);
 
       return controller;
     }
@@ -164,7 +164,7 @@ public class JpaSpaceControllerRepository extends BaseSpaceControllerRepository 
   public void deleteSpaceController(SpaceController controller) {
     long count = activityRepository.getNumberLiveActivitiesByController(controller);
     if (count == 0) {
-      template.remove(controller);
+      entityManager.remove(controller);
     } else {
       throw new SimpleSmartSpacesException(String.format(
           "Cannot delete space controller %s, it is in %d live activities", controller.getId(),
@@ -199,10 +199,10 @@ public class JpaSpaceControllerRepository extends BaseSpaceControllerRepository 
   }
 
   /**
-   * @param template
-   *          the template to set
+   * @param entityManager
+   *          the entity manager to set
    */
-  public void setTemplate(JpaTemplate template) {
-    this.template = template;
+  public void setEntityManager(EntityManager entityManager) {
+    this.entityManager = entityManager;
   }
 }

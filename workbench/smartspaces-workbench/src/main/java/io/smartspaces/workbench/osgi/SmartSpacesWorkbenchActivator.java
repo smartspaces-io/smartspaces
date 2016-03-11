@@ -163,7 +163,12 @@ public class SmartSpacesWorkbenchActivator implements BundleActivator {
     // Make sure the bundle is us.
     if (event.getBundle().equals(bundleContext.getBundle())) {
       if (event.getType() == BundleEvent.STARTED) {
-        spaceEnvironment.getExecutorService().execute(() -> runWorkbench());
+        spaceEnvironment.getExecutorService().execute(new Runnable() {
+          @Override
+          public void run() {
+            runWorkbench();
+          }
+        });
       }
     }
   }

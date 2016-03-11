@@ -114,13 +114,16 @@ public class JLayerAudioTrackPlayer extends BaseAudioTrackPlayer {
       // The JLayer play() method runs entirely in the calling thread,
       // which means it blocks until the song is complete. So run in its own
       // thread.
-      executorService.submit(() -> {
-        try {
-          player.play();
-        } catch (JavaLayerException e) {
-          log.error("JLayer player failed during MP3 playback", e);
-        } finally {
-          Closeables.closeQuietly(trackStream);
+      executorService.submit(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            player.play();
+          } catch (JavaLayerException e) {
+            log.error("JLayer player failed during MP3 playback", e);
+          } finally {
+            Closeables.closeQuietly(trackStream);
+          }
         }
       });
     } catch (Exception e) {

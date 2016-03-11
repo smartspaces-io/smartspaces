@@ -22,10 +22,11 @@ import io.smartspaces.expression.FilterExpression;
 import io.smartspaces.master.server.services.AutomationRepository;
 import io.smartspaces.master.server.services.internal.jpa.domain.JpaNamedScript;
 
-import org.springframework.orm.jpa.JpaTemplate;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 /**
  * A JPA implementation of {@link AutomationRepository}.
@@ -35,9 +36,9 @@ import java.util.List;
 public class JpaAutomationRepository implements AutomationRepository {
 
   /**
-   * The Spring JPA template.
+   * The entity manager for JPA entities.
    */
-  private JpaTemplate template;
+  private EntityManager entityManager;
 
   @Override
   public NamedScript newNamedScript() {
@@ -69,16 +70,18 @@ public class JpaAutomationRepository implements AutomationRepository {
     return script;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public List<NamedScript> getAllNamedScripts() {
-    return template.findByNamedQuery("namedScriptAll");
+    TypedQuery<NamedScript> query =
+        entityManager.createNamedQuery("namedScriptAll", NamedScript.class);
+    return query.getResultList();
   }
 
   @Override
   public List<NamedScript> getNamedScripts(FilterExpression filter) {
-    @SuppressWarnings("unchecked")
-    List<NamedScript> scripts = template.findByNamedQuery("namedScriptAll");
+    TypedQuery<NamedScript> query =
+        entityManager.createNamedQuery("namedScriptAll", NamedScript.class);
+    List<NamedScript> scripts = query.getResultList();
 
     List<NamedScript> results = new ArrayList<>();
 
@@ -97,15 +100,15 @@ public class JpaAutomationRepository implements AutomationRepository {
 
   @Override
   public NamedScript getNamedScriptById(String id) {
-    return template.find(JpaNamedScript.class, id);
+    return entityManager.find(JpaNamedScript.class, id);
   }
 
   @Override
   public NamedScript saveNamedScript(NamedScript script) {
     if (script.getId() != null) {
-      return template.merge(script);
+      return entityManager.merge(script);
     } else {
-      template.persist(script);
+      entityManager.persist(script);
 
       return script;
     }
@@ -113,14 +116,14 @@ public class JpaAutomationRepository implements AutomationRepository {
 
   @Override
   public void deleteNamedScript(NamedScript script) {
-    template.remove(script);
+    entityManager.remove(script);
   }
 
   /**
-   * @param template
-   *          the template to set
+   * @param entityManager
+   *          the entity manager to set
    */
-  public void setTemplate(JpaTemplate template) {
-    this.template = template;
+  public void setEntityManager(EntityManager entityManager) {
+    this.entityManager = entityManager;
   }
 }

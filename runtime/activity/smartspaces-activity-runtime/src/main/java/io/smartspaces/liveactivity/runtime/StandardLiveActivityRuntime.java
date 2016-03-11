@@ -632,7 +632,12 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime implements
       final ActivityStatus oldStatus, final ActivityStatus newStatus) {
     // TODO(keith): Android hates garbage collection. This may need an object
     // pool.
-    eventQueue.addEvent(() -> handleActivityStateChange(activity, oldStatus, newStatus));
+    eventQueue.addEvent(new Runnable() {
+      @Override
+      public void run() {
+        handleActivityStateChange(activity, oldStatus, newStatus);
+      }
+    });
   }
 
   @Override
@@ -897,8 +902,13 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime implements
       final String uuid) {
     // TODO(keith): Android hates garbage collection. This may need an object
     // pool.
-    eventQueue.addEvent(() -> activityStateTransitioners.transition(uuid, liveActivityRunner
-        .sampleActivityStatus().getState()));
+    eventQueue.addEvent(new Runnable() {
+      @Override
+      public void run() {
+        activityStateTransitioners.transition(uuid, liveActivityRunner.sampleActivityStatus()
+            .getState());
+      }
+    });
   }
 
   /**

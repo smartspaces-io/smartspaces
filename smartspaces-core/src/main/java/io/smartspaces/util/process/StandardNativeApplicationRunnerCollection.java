@@ -110,9 +110,12 @@ public class StandardNativeApplicationRunnerCollection implements NativeApplicat
       for (NativeApplicationRunner runner : runners) {
         runner.startup();
       }
-      samplingFuture =
-          spaceEnvironment.getExecutorService().scheduleAtFixedRate(() -> sampleRunners(),
-              samplingPeriod, samplingPeriod, TimeUnit.MILLISECONDS);
+      samplingFuture = spaceEnvironment.getExecutorService().scheduleAtFixedRate(new Runnable() {
+        @Override
+        public void run() {
+          sampleRunners();
+        }
+      }, samplingPeriod, samplingPeriod, TimeUnit.MILLISECONDS);
     }
   }
 

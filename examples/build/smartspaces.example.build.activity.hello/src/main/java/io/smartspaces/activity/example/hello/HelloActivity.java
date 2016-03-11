@@ -90,7 +90,7 @@ public class HelloActivity extends BaseActivity {
   }
 
   @Override
-  public void onActivityConfiguration(Map<String, Object> update) {
+  public void onActivityConfigurationUpdate(Map<String, String> update) {
     getLog().info(String.format("Hello Activity config update %s", update));
   }
 }

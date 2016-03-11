@@ -63,6 +63,7 @@ public class JavaWebExampleActivity extends BaseWebActivity {
   public void onWebSocketReceive(String connectionId, Object d) {
     getLog().info("Got web socket data from connection " + connectionId);
 
+    @SuppressWarnings("unchecked")
     Map<String, Object> data = (Map<String, Object>) d;
     getLog().info(data);
   }

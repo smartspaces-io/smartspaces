@@ -27,7 +27,7 @@ import java.util.Map;
 public class SimpleJavaRoutableInputActivity extends BaseRoutableRosActivity {
 
   @Override
-  public void onNewInputJson(String channelName, Map<String, Object> message) {
+  public void onNewInputMessage(String channelName, Map<String, Object> message) {
     getLog().info("Got message on input channel " + channelName);
     getLog().info(message);
   }

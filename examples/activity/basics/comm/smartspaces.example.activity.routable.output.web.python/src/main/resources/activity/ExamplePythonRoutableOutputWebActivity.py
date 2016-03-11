@@ -43,4 +43,4 @@ class ExamplePythonRoutableOutputWebActivity(BaseRoutableRosWebActivity):
 
         message = {}
         message["message"] = data["message"]
-        self.sendOutputJson("output1", message)
+        self.sendOutputMessage("output1", message)

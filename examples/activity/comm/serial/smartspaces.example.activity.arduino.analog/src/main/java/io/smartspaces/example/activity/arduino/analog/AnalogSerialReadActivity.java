@@ -129,7 +129,7 @@ public class AnalogSerialReadActivity extends BaseRoutableRosActivity {
     Map<String, Object> message = Maps.newHashMap();
     message.put("analog", value1);
     message.put("analog2", value2);
-    sendOutputJson("signal", message);
+    sendOutputMessage("signal", message);
   }
 
   /**

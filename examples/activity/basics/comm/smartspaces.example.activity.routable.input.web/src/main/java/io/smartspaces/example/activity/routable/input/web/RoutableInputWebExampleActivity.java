@@ -32,7 +32,7 @@ import java.util.Map;
 public class RoutableInputWebExampleActivity extends BaseRoutableRosWebActivity {
 
   @Override
-  public void onNewInputJson(String channelName, Map<String, Object> message) {
+  public void onNewInputMessage(String channelName, Map<String, Object> message) {
     // There is only 1 channel for this activity, so don't bother checking
     // which one it is.
     if (isActivated()) {

@@ -188,6 +188,6 @@ public class TriggerArduinoAnalogActivity extends BaseRoutableRosActivity {
 
     Map<String, Object> message = Maps.newHashMap();
     message.put("message", "Do not stand so close to me!");
-    sendOutputJson("triggermessage", message);
+    sendOutputMessage("triggermessage", message);
   }
 }

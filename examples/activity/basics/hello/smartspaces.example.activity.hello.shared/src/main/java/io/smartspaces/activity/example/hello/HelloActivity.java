@@ -17,6 +17,8 @@
 
 package io.smartspaces.activity.example.hello;
 
+import io.smartspaces.activity.example.common.CommonActivity;
+
 /**
  * A very simple activity that does nothing other than delegate to a subclass.
  * This shows an example of how additional project <sources/> and <resources/>

@@ -82,7 +82,7 @@ public abstract class CommonActivity extends BaseActivity {
   }
 
   @Override
-  public void onActivityConfiguration(Map<String, Object> update) {
+  public void onActivityConfigurationUpdate(Map<String, String> update) {
     getLog().info(String.format(getName() + " Activity config update %s", update));
   }
 }

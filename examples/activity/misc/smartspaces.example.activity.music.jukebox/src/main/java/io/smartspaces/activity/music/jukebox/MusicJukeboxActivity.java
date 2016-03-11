@@ -17,12 +17,28 @@
 
 package io.smartspaces.activity.music.jukebox;
 
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.activity.impl.ros.BaseRosActivity;
+import io.smartspaces.configuration.Configuration;
+import io.smartspaces.service.audio.player.AudioTrackMetadata;
+import io.smartspaces.service.audio.player.AudioTrackPlayer;
+import io.smartspaces.service.audio.player.AudioTrackPlayerService;
+import io.smartspaces.service.audio.player.FilePlayableAudioTrack;
+import io.smartspaces.service.audio.player.internal.ScanningFileAudioRepository;
+import io.smartspaces.service.audio.player.jukebox.AudioJukebox;
+import io.smartspaces.service.audio.player.jukebox.AudioJukeboxListener;
+import io.smartspaces.service.audio.player.jukebox.internal.simple.SimpleAudioJukebox;
+import io.smartspaces.util.ros.RosPublishers;
+import io.smartspaces.util.ros.RosSubscribers;
+import io.smartspaces.util.ros.StandardRosPublishers;
+import io.smartspaces.util.ros.StandardRosSubscribers;
+
 import java.io.File;
 import java.util.List;
 
-import javax.xml.soap.MessageFactory;
-
-import org.jivesoftware.smack.MessageListener;
+import org.ros.message.MessageFactory;
+import org.ros.message.MessageListener;
+import org.ros.node.ConnectedNode;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

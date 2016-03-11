@@ -32,13 +32,13 @@ public class SimpleJavaRoutableOutputActivity extends BaseRoutableRosActivity {
   public void onActivityActivate() {
     Map<String, Object> message = Maps.newHashMap();
     message.put("message", "yipee! activated!");
-    sendOutputJson("output1", message);
+    sendOutputMessage("output1", message);
   }
 
   @Override
   public void onActivityDeactivate() {
     Map<String, Object> message = Maps.newHashMap();
     message.put("message", "bummer! deactivated!");
-    sendOutputJson("output1", message);
+    sendOutputMessage("output1", message);
   }
 }

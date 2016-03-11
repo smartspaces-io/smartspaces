@@ -23,10 +23,10 @@ class ExampleOutputRoutablePythonActivity(BaseRoutableRosActivity):
         self.log.info("Activated")
         message = {}
         message["message"] = "yipee! activated!"
-        self.sendOutputJson("output1", message)
+        self.sendOutputMessage("output1", message)
 
     def onActivityDeactivate(self):
         self.log.info("Deactivated")
         message = {}
         message["message"] = "bummer! deactivated!"
-        self.sendOutputJson("output1", message)
+        self.sendOutputMessage("output1", message)

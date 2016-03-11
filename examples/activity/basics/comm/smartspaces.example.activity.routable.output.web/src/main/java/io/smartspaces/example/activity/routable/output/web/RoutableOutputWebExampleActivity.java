@@ -42,7 +42,7 @@ public class RoutableOutputWebExampleActivity extends BaseRoutableRosWebActivity
     if (isActivated()) {
       // In this example, just pass though the message as it came across.
       // This is not always the best choice.
-      sendOutputJson("output1", data);
+      sendOutputMessage("output1", data);
     }
   }
 }

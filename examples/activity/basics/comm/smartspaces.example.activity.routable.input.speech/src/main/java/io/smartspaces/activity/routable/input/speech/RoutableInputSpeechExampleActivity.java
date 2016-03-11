@@ -48,7 +48,7 @@ public class RoutableInputSpeechExampleActivity extends BaseRoutableRosActivity 
   }
 
   @Override
-  public void onNewInputJson(String channelName, Map<String, Object> message) {
+  public void onNewInputMessage(String channelName, Map<String, Object> message) {
     if (isActivated() && "speech".equals(channelName)) {
       String toSpeak = (String) message.get("message");
       if (toSpeak != null) {

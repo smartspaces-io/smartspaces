@@ -19,7 +19,7 @@ from io.smartspaces.activity.impl.ros import BaseRoutableRosActivity
 
 class ExampleInputRoutablePythonActivity(BaseRoutableRosActivity):
 
-    def onNewInputJson(self, channelName, message):
+    def onNewInputMessage(self, channelName, message):
         self.log.info("Got message on input channel " + channelName)
         self.log.info(message)
 

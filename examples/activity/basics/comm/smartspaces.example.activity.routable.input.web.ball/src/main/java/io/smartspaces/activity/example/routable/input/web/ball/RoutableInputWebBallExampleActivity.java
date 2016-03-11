@@ -30,7 +30,7 @@ import java.util.Map;
 public class RoutableInputWebBallExampleActivity extends BaseRoutableRosWebActivity {
 
   @Override
-  public void onNewInputJson(String channelName, Map<String, Object> message) {
+  public void onNewInputMessage(String channelName, Map<String, Object> message) {
     if ("input1".equals(channelName) && isActivated()) {
       sendAllWebSocketJson(message);
     }
@@ -50,6 +50,7 @@ public class RoutableInputWebBallExampleActivity extends BaseRoutableRosWebActiv
   public void onWebSocketReceive(String connectionId, Object d) {
     getLog().info("Got web socket data from connection " + connectionId);
 
+    @SuppressWarnings("unchecked")
     Map<String, Object> data = (Map<String, Object>) d;
     getLog().info(data);
   }

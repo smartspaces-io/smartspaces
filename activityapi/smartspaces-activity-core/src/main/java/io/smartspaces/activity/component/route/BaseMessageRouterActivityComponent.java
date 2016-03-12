@@ -21,12 +21,12 @@ import io.smartspaces.activity.component.BaseActivityComponent;
 import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
 import io.smartspaces.configuration.Configuration;
 
-import com.google.common.collect.Lists;
-import org.ros.namespace.GraphName;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.ros.namespace.GraphName;
 
 /**
  * A helpful superclass for implementors of the ROS message routing activity
@@ -37,14 +37,14 @@ import java.util.Set;
  *
  * @author Keith M. Hughes
  */
-public abstract class BaseMessageRouterActivityComponent extends BaseActivityComponent
-    implements RosMessageRouterActivityComponent {
+public abstract class BaseMessageRouterActivityComponent extends BaseActivityComponent implements
+    RosMessageRouterActivityComponent {
 
   /**
    * The listeners for this component.
    */
-  private final List<MessageRouterActivityComponentListener> listeners = Lists
-      .newCopyOnWriteArrayList();
+  private final List<MessageRouterActivityComponentListener> listeners =
+      new CopyOnWriteArrayList<>();
 
   @Override
   public void addListener(MessageRouterActivityComponentListener listener) {

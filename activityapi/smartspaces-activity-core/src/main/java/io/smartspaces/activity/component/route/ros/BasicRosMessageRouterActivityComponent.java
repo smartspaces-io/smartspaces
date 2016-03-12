@@ -25,11 +25,13 @@ import io.smartspaces.activity.component.route.RoutableInputMessageListener;
 import io.smartspaces.activity.impl.StatusDetail;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
+import io.smartspaces.messaging.route.MessageDecoder;
+import io.smartspaces.messaging.route.MessageEncoder;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
+import io.smartspaces.messaging.route.ros.MapGenericMessageMessageDecoder;
+import io.smartspaces.messaging.route.ros.MapGenericMessageMessageEncoder;
 import io.smartspaces.messaging.route.ros.RosRouteMessagePublisher;
 import io.smartspaces.time.TimeProvider;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
 import io.smartspaces.util.ros.BasePublisherListener;
 import io.smartspaces.util.ros.BaseSubscriberListener;
 import io.smartspaces.util.ros.RosPublishers;
@@ -37,10 +39,12 @@ import io.smartspaces.util.ros.RosSubscribers;
 import io.smartspaces.util.ros.StandardRosPublishers;
 import io.smartspaces.util.ros.StandardRosSubscribers;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.apache.commons.logging.Log;
 import org.ros.internal.node.topic.PublisherIdentifier;
 import org.ros.internal.node.topic.SubscriberIdentifier;
@@ -49,13 +53,12 @@ import org.ros.node.topic.Publisher;
 import org.ros.node.topic.PublisherListener;
 import org.ros.node.topic.Subscriber;
 import org.ros.node.topic.SubscriberListener;
+
 import smartspaces_msgs.GenericMessage;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.atomic.AtomicLong;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * The basic implementation of the ROS message router activity component.
@@ -63,7 +66,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Keith M. Hughes
  */
 public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterActivityComponent {
-  
+
   /**
    * The ROS activity component this component requires.
    */
@@ -92,7 +95,7 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
   /**
    * All topic inputs mapped to their topic names.
    */
-  private final Map<String, String> inputTopics = new ConcurrentSkipListMap<String, String>();
+  private final Map<String, String> inputTopics = new ConcurrentSkipListMap<>();
 
   /**
    * All topic outputs mapped to their publishers.
@@ -102,7 +105,7 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
   /**
    * All topic outputs mapped to their topic names.
    */
-  private final Map<String, String> outputTopics = new ConcurrentSkipListMap<String, String>();
+  private final Map<String, String> outputTopics = new ConcurrentSkipListMap<>();
 
   /**
    * A creator for handler invocation IDs.
@@ -132,11 +135,17 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
           handleNewPublisher(subscriber, publisherIdentifier);
         }
       };
-      
+
   /**
-   * The codec for route messages to ROS messages.
+   * The decoder for route messages to ROS messages.
    */
-  private MessageCodec<Map<String,Object>, GenericMessage> messageCodec;
+  private MessageDecoder<Map<String, Object>, GenericMessage> messageDecoder =
+      new MapGenericMessageMessageDecoder();
+
+  /**
+   * The decoder for route messages to ROS messages.
+   */
+  private MessageEncoder<Map<String, Object>, GenericMessage> messageEncoder;
 
   /**
    * Construct a new ROS message router activity component.
@@ -217,12 +226,13 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
     publishers.addPublisherListener(publisherListener);
     publishers.addPublishers(rosActivityComponent.getNode(), rosMessageType, topicNames, latch);
 
-    if (messageCodec == null) {
-      messageCodec = new MapGenericMessageMessageCodec(publishers);
+    if (messageEncoder == null) {
+      messageEncoder = new MapGenericMessageMessageEncoder(publishers);
+      getComponentContext().getActivity().getLog().info("Got message codec");
     }
-    
+
     InternalRouteMessagePublisher routeMessagePublisher =
-        new RosRouteMessagePublisher(channelId, publishers, messageCodec);
+        new RosRouteMessagePublisher(channelId, publishers, messageEncoder);
 
     outputs.put(channelId, routeMessagePublisher);
     outputTopics.put(channelId, Joiner.on(CONFIGURATION_VALUES_SEPARATOR).join(topicNames));
@@ -231,8 +241,9 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
   }
 
   @Override
-  public synchronized void registerInputChannelTopic(final String channelId, Set<String> topicNames)
-      throws SmartSpacesException {
+  public synchronized void
+      registerInputChannelTopic(final String channelId, Set<String> topicNames)
+          throws SmartSpacesException {
     if (inputs.containsKey(channelId)) {
       throw new SimpleSmartSpacesException("Input channel already registered: " + channelId);
     }
@@ -290,12 +301,12 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
       String handlerInvocationId = newHandlerInvocationId();
       Log log = getComponentContext().getActivity().getLog();
       if (log.isTraceEnabled()) {
-        log.trace(
-            String.format("Entering ROS route message handler invocation %s", handlerInvocationId));
+        log.trace(String.format("Entering ROS route message handler invocation %s",
+            handlerInvocationId));
       }
 
       // Send the message out to the listener.
-      Map<String, Object> msg = messageCodec.decode(message);
+      Map<String, Object> msg = messageDecoder.decode(message);
       messageListener.onNewRoutableInputMessage(channelId, msg);
 
       if (log.isTraceEnabled()) {
@@ -311,7 +322,7 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
   }
 
   @Override
-  public void writeOutputMessage(String outputChannelId, Map<String,Object> message) {
+  public void writeOutputMessage(String outputChannelId, Map<String, Object> message) {
     try {
       getComponentContext().enterHandler();
 

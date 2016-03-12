@@ -14,37 +14,26 @@
  * the License.
  */
 
-package io.smartspaces.activity.component.route.ros;
+package io.smartspaces.messaging.route.ros;
 
 import io.smartspaces.activity.component.route.MessageRouterSupportedMessageTypes;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.messaging.route.MessageEncoder;
 import io.smartspaces.util.ros.RosPublishers;
 
-import com.google.common.base.Charsets;
-import org.jboss.netty.buffer.ChannelBuffers;
-import smartspaces_msgs.GenericMessage;
-
-import java.nio.charset.Charset;
+import java.nio.ByteOrder;
 import java.util.Map;
 
+import org.jboss.netty.buffer.ChannelBuffers;
+
+import smartspaces_msgs.GenericMessage;
+
 /**
- * A codec between a map and a Generic Message.
+ * A encoder between a map and a Generic Message.
  * 
  * @author Keith M. Hughes
  */
-public class MapGenericMessageMessageCodec
-    implements MessageCodec<Map<String, Object>, GenericMessage> {
-
-  /**
-   * The JSON mapper for message translation.
-   */
-  private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
-
-  /**
-   * The character set for the generic message encoding.
-   */
-  private Charset charset = Charsets.UTF_8;
+public class MapGenericMessageMessageEncoder extends MapGenericMessageCodec implements
+    MessageEncoder<Map<String, Object>, GenericMessage> {
 
   /**
    * The message factory for {@link GenericMessage} instances.
@@ -57,23 +46,17 @@ public class MapGenericMessageMessageCodec
    * @param messageFactory
    *          the message factory for the ROS message
    */
-  public MapGenericMessageMessageCodec(RosPublishers<GenericMessage> messageFactory) {
+  public MapGenericMessageMessageEncoder(RosPublishers<GenericMessage> messageFactory) {
     this.messageFactory = messageFactory;
-  }
-
-  @Override
-  public Map<String, Object> decode(GenericMessage in) {
-    Map<String, Object> msg = MAPPER.parseObject(new String(in.getMessage().toString(charset)));
-    return msg;
   }
 
   @Override
   public GenericMessage encode(Map<String, Object> out) {
     GenericMessage message = messageFactory.newMessage();
     message.setType(MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE);
-    message.setMessage(ChannelBuffers.wrappedBuffer(MAPPER.toString(out).getBytes(charset)));
+    message.setMessage(ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN, MAPPER.toString(out)
+        .getBytes(charset)));
 
     return message;
-
   }
 }

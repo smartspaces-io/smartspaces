@@ -17,13 +17,13 @@
 
 package io.smartspaces.messaging.route.ros;
 
-import io.smartspaces.activity.component.route.ros.MessageCodec;
 import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
+import io.smartspaces.messaging.route.MessageEncoder;
 import io.smartspaces.util.ros.RosPublishers;
 
-import smartspaces_msgs.GenericMessage;
-
 import java.util.Map;
+
+import smartspaces_msgs.GenericMessage;
 
 /**
  * A route message publisher for ROS.
@@ -43,9 +43,9 @@ public class RosRouteMessagePublisher implements InternalRouteMessagePublisher {
   private RosPublishers<GenericMessage> publishers;
 
   /**
-   * The message codec to use for message translation.
+   * The message encoder to use for message translation.
    */
-  private MessageCodec<Map<String, Object>, GenericMessage> messageCodec;
+  private MessageEncoder<Map<String, Object>, GenericMessage> messageEncoder;
 
   /**
    * Construct a new publisher.
@@ -54,14 +54,14 @@ public class RosRouteMessagePublisher implements InternalRouteMessagePublisher {
    *          the channel ID for the route
    * @param publishers
    *          the ROS publishers
-   * @param messageCodec
-   *          the message codec to use for message translation.
+   * @param messageEncoder
+   *          the message encoder to use for message translation.
    */
   public RosRouteMessagePublisher(String channelId, RosPublishers<GenericMessage> publishers,
-      MessageCodec<Map<String, Object>, GenericMessage> messageCodec) {
+      MessageEncoder<Map<String, Object>, GenericMessage> messageEncoder) {
     this.channelId = channelId;
     this.publishers = publishers;
-    this.messageCodec = messageCodec;
+    this.messageEncoder = messageEncoder;
   }
 
   @Override
@@ -71,7 +71,7 @@ public class RosRouteMessagePublisher implements InternalRouteMessagePublisher {
 
   @Override
   public void writeOutputMessage(Map<String, Object> message) {
-    publishers.publishMessage(messageCodec.encode(message));
+    publishers.publishMessage(messageEncoder.encode(message));
   }
 
   @Override

@@ -14,14 +14,13 @@
  * the License.
  */
 
-package io.smartspaces.activity.component.route.ros;
+package io.smartspaces.messaging.route;
 
 /**
- * A codec for coding and decoding messages.
+ * A decoder for messages.
  * 
  * <p>
- * Instances are threadsafe and can encode and decode multiple messages
- * simultaneously.
+ * Instances are threadsafe and can decode multiple messages simultaneously.
  * 
  * @param <I>
  *          the type of internal messages
@@ -30,7 +29,7 @@ package io.smartspaces.activity.component.route.ros;
  * 
  * @author Keith M. Hughes
  */
-public interface MessageCodec<I, O> {
+public interface MessageDecoder<I, O> {
 
   /**
    * Decode an incoming message.
@@ -41,15 +40,4 @@ public interface MessageCodec<I, O> {
    * @return the decoded message
    */
   I decode(O in);
-
-  /**
-   * Encode a message to go out.
-   * 
-   * @param out
-   *          the outgoing message
-   * 
-   * @return the encoded message
-   */
-  O encode(I out);
-
 }

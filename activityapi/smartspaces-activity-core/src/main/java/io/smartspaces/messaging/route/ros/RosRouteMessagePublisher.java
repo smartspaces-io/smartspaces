@@ -17,8 +17,8 @@
 
 package io.smartspaces.messaging.route.ros;
 
+import io.smartspaces.messaging.MessageEncoder;
 import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
-import io.smartspaces.messaging.route.MessageEncoder;
 import io.smartspaces.util.ros.RosPublishers;
 
 import java.util.Map;

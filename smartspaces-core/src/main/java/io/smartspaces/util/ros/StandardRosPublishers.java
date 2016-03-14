@@ -19,15 +19,15 @@ package io.smartspaces.util.ros;
 
 import io.smartspaces.SimpleSmartSpacesException;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.logging.Log;
 import org.ros.internal.node.topic.SubscriberIdentifier;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Publisher;
 import org.ros.node.topic.PublisherListener;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * A collection of ROS publishers for a given message type.
@@ -74,17 +74,26 @@ public class StandardRosPublishers<T> implements RosPublishers<T> {
   }
 
   @Override
-  public void addPublishers(ConnectedNode node, String messageType, Set<String> topicNames) {
-    addPublishers(node, messageType, topicNames, false);
-  }
-
-  @Override
   public synchronized void addPublishers(ConnectedNode node, String messageType,
-      Set<String> topicNames, boolean latch) {
+      Set<String> topicNames) {
     log.debug(String.format("Adding publishers for topic names %s with message type %s",
         topicNames, messageType));
 
     for (String topicName : topicNames) {
+      boolean latch = false;
+      int semiPos = topicName.indexOf(';');
+      if (semiPos != -1) {
+        String extra = topicName.substring(0, semiPos);
+        topicName = topicName.substring(semiPos + 1);
+
+        String[] pair = extra.split("=");
+        if (pair.length > 1) {
+          if ("latch".equals(pair[0].trim())) {
+            latch = "true".equals(pair[1].trim());
+          }
+        }
+      }
+
       log.debug(String.format("Adding publisher topic %s", topicName));
       Publisher<T> publisher = node.newPublisher(topicName, messageType);
       log.debug(String.format("Added publisher topic %s", topicName));

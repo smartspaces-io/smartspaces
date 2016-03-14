@@ -54,8 +54,18 @@ public class StandardJsonMapper implements JsonMapper {
   public Map<String, Object> parseObject(String object) throws SmartSpacesException {
     try {
       @SuppressWarnings("unchecked")
-      Map<String, Object> map = MAPPER.readValue(object, Map.class);
-      return map;
+      Map<String, Object> value = MAPPER.readValue(object, Map.class);
+      return value;
+    } catch (Throwable e) {
+      throw new JsonSmartSpacesException("Could not parse JSON string", e);
+    }
+  }
+
+  @Override
+  public Object parse(String object) throws SmartSpacesException {
+    try {
+      Object value = MAPPER.readValue(object, Object.class);
+      return value;
     } catch (Throwable e) {
       throw new JsonSmartSpacesException("Could not parse JSON string", e);
     }

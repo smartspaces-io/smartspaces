@@ -19,9 +19,8 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.evaluation.EvaluationEnvironment;
 import io.smartspaces.evaluation.EvaluationSmartSpacesException;
 import io.smartspaces.evaluation.ExpressionEvaluator;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import io.smartspaces.util.data.json.JsonMapper;
+import io.smartspaces.util.data.json.StandardJsonMapper;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,12 +29,20 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 /**
  * Support for implementations of {@link Configuration}.
  *
  * @author Keith M. Hughes
  */
 public abstract class BaseConfiguration implements Configuration, EvaluationEnvironment {
+
+  /**
+   * The JSON mapper for JSON parsing.
+   */
+  private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
 
   /**
    * Parent configuration to this configuration.
@@ -195,14 +202,25 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
     }
   }
 
+  @Override
+  public <T> T getPropertyJson(String property) {
+    String value = getValue(property);
+    if (value != null) {
+      @SuppressWarnings("unchecked")
+      T result = (T) MAPPER.parse(value);
+      return result;
+    } else {
+      return null;
+    }
+  }
+
   /**
    * Get the boolean value for the given string.
    *
    * @param value
    *          the string
    *
-   * @return {@code true} if the string represents an Smart Spaces true
-   *         value
+   * @return {@code true} if the string represents an Smart Spaces true value
    */
   private boolean getBooleanValue(String value) {
     return "true".equalsIgnoreCase(value);

@@ -17,16 +17,14 @@
 
 package io.smartspaces.activity.component.route.ros;
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.component.ros.RosActivityComponent;
 import io.smartspaces.activity.component.route.BaseMessageRouterActivityComponent;
 import io.smartspaces.activity.component.route.RoutableInputMessageListener;
-import io.smartspaces.activity.impl.StatusDetail;
+import io.smartspaces.activity.component.route.RouteDescription;
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.messaging.MessageDecoder;
+import io.smartspaces.messaging.MessageEncoder;
 import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
-import io.smartspaces.messaging.route.MessageDecoder;
-import io.smartspaces.messaging.route.MessageEncoder;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
 import io.smartspaces.messaging.route.ros.MapGenericMessageMessageDecoder;
 import io.smartspaces.messaging.route.ros.MapGenericMessageMessageEncoder;
@@ -39,10 +37,10 @@ import io.smartspaces.util.ros.RosSubscribers;
 import io.smartspaces.util.ros.StandardRosPublishers;
 import io.smartspaces.util.ros.StandardRosSubscribers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.commons.logging.Log;
@@ -56,9 +54,8 @@ import org.ros.node.topic.SubscriberListener;
 
 import smartspaces_msgs.GenericMessage;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import com.google.common.collect.SetMultimap;
 
 /**
  * The basic implementation of the ROS message router activity component.
@@ -90,22 +87,14 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
   /**
    * All topic inputs mapped to their subscribers.
    */
-  private final Map<String, RosSubscribers<GenericMessage>> inputs = Maps.newConcurrentMap();
-
-  /**
-   * All topic inputs mapped to their topic names.
-   */
-  private final Map<String, String> inputTopics = new ConcurrentSkipListMap<>();
+  private final Map<String, RosSubscribers<GenericMessage>> inputSubscribers = Maps
+      .newConcurrentMap();
 
   /**
    * All topic outputs mapped to their publishers.
    */
-  private final Map<String, InternalRouteMessagePublisher> outputs = Maps.newConcurrentMap();
-
-  /**
-   * All topic outputs mapped to their topic names.
-   */
-  private final Map<String, String> outputTopics = new ConcurrentSkipListMap<>();
+  private final Map<String, InternalRouteMessagePublisher> outputPublishers = Maps
+      .newConcurrentMap();
 
   /**
    * A creator for handler invocation IDs.
@@ -215,68 +204,72 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
   }
 
   @Override
-  public synchronized RouteMessagePublisher registerOutputChannelTopic(String channelId,
-      Set<String> topicNames, boolean latch) throws SmartSpacesException {
-    if (outputs.containsKey(channelId)) {
-      throw new SimpleSmartSpacesException("Output channel already registered: " + channelId);
+  protected InternalRouteMessagePublisher internalRegisterOutputRoute(
+      RouteDescription routeDescription) {
+    String channelId = routeDescription.getChannelId();
+    SetMultimap<String, String> protocolToTopic = routeDescription.getProtocolToTopic();
+
+    List<InternalRouteMessagePublisher> routeMessagePublishers = new ArrayList<>();
+    for (String routeProtocol : protocolToTopic.keySet()) {
+      Set<String> topicNamesForProtocol = protocolToTopic.get(routeProtocol);
+      if ("ros".equals(routeProtocol)) {
+        RosPublishers<GenericMessage> publishers =
+            new StandardRosPublishers<GenericMessage>(getComponentContext().getActivity().getLog());
+        publishers.addPublisherListener(publisherListener);
+        publishers.addPublishers(rosActivityComponent.getNode(), rosMessageType,
+            topicNamesForProtocol);
+
+        if (messageEncoder == null) {
+          messageEncoder = new MapGenericMessageMessageEncoder(publishers);
+        }
+
+        routeMessagePublishers.add(new RosRouteMessagePublisher(channelId, publishers,
+            messageEncoder));
+      }
+
     }
 
-    RosPublishers<GenericMessage> publishers =
-        new StandardRosPublishers<GenericMessage>(getComponentContext().getActivity().getLog());
-    publishers.addPublisherListener(publisherListener);
-    publishers.addPublishers(rosActivityComponent.getNode(), rosMessageType, topicNames, latch);
+    outputPublishers.put(channelId, routeMessagePublishers.get(0));
 
-    if (messageEncoder == null) {
-      messageEncoder = new MapGenericMessageMessageEncoder(publishers);
-      getComponentContext().getActivity().getLog().info("Got message codec");
-    }
-
-    InternalRouteMessagePublisher routeMessagePublisher =
-        new RosRouteMessagePublisher(channelId, publishers, messageEncoder);
-
-    outputs.put(channelId, routeMessagePublisher);
-    outputTopics.put(channelId, Joiner.on(CONFIGURATION_VALUES_SEPARATOR).join(topicNames));
-
-    return routeMessagePublisher;
+    return routeMessagePublishers.get(0);
   }
 
   @Override
-  public synchronized void
-      registerInputChannelTopic(final String channelId, Set<String> topicNames)
-          throws SmartSpacesException {
-    if (inputs.containsKey(channelId)) {
-      throw new SimpleSmartSpacesException("Input channel already registered: " + channelId);
+  protected void internalRegisterInputRoute(RouteDescription routeDescription) {
+    final String channelId = routeDescription.getChannelId();
+    SetMultimap<String, String> protocolToTopic = routeDescription.getProtocolToTopic();
+
+    for (String routeProtocol : protocolToTopic.keySet()) {
+      Set<String> topicNamesForProtocol = protocolToTopic.get(routeProtocol);
+      if ("ros".equals(routeProtocol)) {
+        RosSubscribers<GenericMessage> subscribers =
+            new StandardRosSubscribers<GenericMessage>(getComponentContext().getActivity().getLog());
+        subscribers.addSubscriberListener(subscriberListener);
+
+        subscribers.addSubscribers(rosActivityComponent.getNode(), rosMessageType,
+            topicNamesForProtocol, new MessageListener<GenericMessage>() {
+              @Override
+              public void onNewMessage(GenericMessage message) {
+                handleNewIncomingMessage(channelId, message);
+              }
+            });
+
+        inputSubscribers.put(channelId, subscribers);
+      }
     }
-
-    RosSubscribers<GenericMessage> subscribers =
-        new StandardRosSubscribers<GenericMessage>(getComponentContext().getActivity().getLog());
-    subscribers.addSubscriberListener(subscriberListener);
-
-    inputs.put(channelId, subscribers);
-    inputTopics.put(channelId, Joiner.on(CONFIGURATION_VALUES_SEPARATOR).join(topicNames));
-
-    subscribers.addSubscribers(rosActivityComponent.getNode(), rosMessageType, topicNames,
-        new MessageListener<GenericMessage>() {
-          @Override
-          public void onNewMessage(GenericMessage message) {
-            handleNewIncomingMessage(channelId, message);
-          }
-        });
   }
 
   @Override
   public synchronized void clearAllChannelTopics() {
-    for (RosSubscribers<GenericMessage> input : inputs.values()) {
+    for (RosSubscribers<GenericMessage> input : inputSubscribers.values()) {
       input.shutdown();
     }
-    inputs.clear();
-    inputTopics.clear();
+    inputSubscribers.clear();
 
-    for (InternalRouteMessagePublisher output : outputs.values()) {
+    for (InternalRouteMessagePublisher output : outputPublishers.values()) {
       output.shutdown();
     }
-    outputs.clear();
-    outputTopics.clear();
+    outputPublishers.clear();
   }
 
   /**
@@ -327,7 +320,7 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
       getComponentContext().enterHandler();
 
       if (outputChannelId != null) {
-        RouteMessagePublisher output = outputs.get(outputChannelId);
+        RouteMessagePublisher output = outputPublishers.get(outputChannelId);
         if (output != null) {
           output.writeOutputMessage(message);
 
@@ -356,57 +349,8 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
   }
 
   @Override
-  public String getComponentStatusDetail() {
-    Map<String, String> sortedRoutes = Maps.newTreeMap();
-    for (Map.Entry<String, String> input : inputTopics.entrySet()) {
-      String key = input.getKey();
-      sortedRoutes.put(key + ">",
-          makeRouteDetail("input-route", key, StatusDetail.ARROW_LEFT, input.getValue()));
-    }
-    for (Map.Entry<String, String> output : outputTopics.entrySet()) {
-      String key = output.getKey();
-      sortedRoutes.put(key + "<",
-          makeRouteDetail("output-route", key, StatusDetail.ARROW_RIGHT, output.getValue()));
-    }
-    String nodeName = rosActivityComponent.getNode().getName().toString();
-    return String.format(StatusDetail.HEADER_FORMAT, "route-detail")
-        + makeRouteDetail("node-name", "Node Name", StatusDetail.ITEM_IS, nodeName) + "\n"
-        + Joiner.on("\n").join(sortedRoutes.values()) + StatusDetail.FOOTER;
-  }
-
-  @Override
-  public Set<String> getOutputChannelIds() {
-    return Sets.newHashSet(outputs.keySet());
-  }
-
-  @Override
   public RouteMessagePublisher getMessagePublisher(String outputChannelId) {
-    return outputs.get(outputChannelId);
-  }
-
-  @Override
-  public Set<String> getInputChannelIds() {
-    return Sets.newHashSet(inputs.keySet());
-  }
-
-  /**
-   * Function to format the various parts of a status row together into a single
-   * entity.
-   *
-   * @param className
-   *          class name for the row
-   * @param key
-   *          key for entry
-   * @param bridge
-   *          bridge string between key/value
-   * @param value
-   *          value for the entry
-   *
-   * @return formatted line for a route detail
-   */
-  private String makeRouteDetail(String className, String key, String bridge, String value) {
-    return String.format(StatusDetail.PREFIX_FORMAT, className) + key + StatusDetail.SEPARATOR
-        + bridge + StatusDetail.SEPARATOR + value + StatusDetail.POSTFIX;
+    return outputPublishers.get(outputChannelId);
   }
 
   /**

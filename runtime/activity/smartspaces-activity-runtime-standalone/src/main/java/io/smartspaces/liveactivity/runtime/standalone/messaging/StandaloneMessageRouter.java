@@ -24,11 +24,13 @@ import io.smartspaces.activity.component.ros.RosActivityComponent;
 import io.smartspaces.activity.component.route.BaseMessageRouterActivityComponent;
 import io.smartspaces.activity.component.route.MessageRouterSupportedMessageTypes;
 import io.smartspaces.activity.component.route.RoutableInputMessageListener;
+import io.smartspaces.activity.component.route.RouteDescription;
 import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.liveactivity.runtime.standalone.development.DevelopmentStandaloneLiveActivityRuntime;
 import io.smartspaces.liveactivity.runtime.standalone.messaging.MessageUtils.MessageMap;
 import io.smartspaces.liveactivity.runtime.standalone.messaging.MessageUtils.MessageSetList;
+import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
 import io.smartspaces.time.TimeProvider;
 import io.smartspaces.util.data.json.JsonMapper;
@@ -521,14 +523,9 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
 
   @Override
   public synchronized RouteMessagePublisher registerOutputChannelTopic(String outputChannelId,
-      Set<String> topicNames, boolean latch) {
+      Set<String> topicNames) {
     if (outputChannelsToRoutes.containsKey(outputChannelId)) {
       throw new SimpleSmartSpacesException("Output channel already registered: " + outputChannelId);
-    }
-
-    if (latch) {
-      throw new UnsupportedOperationException(
-          "Latch functionality not supported for output channel " + outputChannelId);
     }
 
     getComponentContext().getActivity().getLog()
@@ -549,6 +546,18 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
           .warn(String.format("Registering input %s <-- %s", inputChannelId, topicNames));
       inputRoutesToChannels.put(topicName, inputChannelId);
     }
+  }
+
+  @Override
+  protected InternalRouteMessagePublisher internalRegisterOutputRoute(
+      RouteDescription routeDescription) {
+    // TODO(keith): Fill in when needed
+    return null;
+  }
+
+  @Override
+  protected void internalRegisterInputRoute(RouteDescription routeDescription) {
+    // TODO(keith): Fill in when needed
   }
 
   @Override

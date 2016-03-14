@@ -1,7 +1,7 @@
 /**
  * 
  */
-package io.smartspaces.messaging.route;
+package io.smartspaces.messaging;
 
 
 /**

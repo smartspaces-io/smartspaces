@@ -46,6 +46,19 @@ public interface JsonMapper {
   Map<String, Object> parseObject(String object) throws SmartSpacesException;
 
   /**
+   * Parse JSON.
+   *
+   * @param object
+   *          the JSON string to parse
+   *
+   * @return whatever the JSON parses as
+   *
+   * @throws SmartSpacesException
+   *           the string did not parse properly
+   */
+  Object parse(String object) throws SmartSpacesException;
+
+  /**
    * Take a map and write it as a string.
    *
    * <p>

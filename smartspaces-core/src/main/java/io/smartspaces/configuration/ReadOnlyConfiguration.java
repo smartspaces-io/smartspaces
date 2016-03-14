@@ -120,6 +120,12 @@ public class ReadOnlyConfiguration implements Configuration {
   }
 
   @Override
+  public <T> T getPropertyJson(String property) {
+    T value = wrapped.getPropertyJson(property);
+    return value;
+  }
+
+  @Override
   public String evaluate(String expression) {
     return wrapped.evaluate(expression);
   }

@@ -16,7 +16,7 @@
 
 package io.smartspaces.messaging.route.ros;
 
-import io.smartspaces.messaging.route.MessageDecoder;
+import io.smartspaces.messaging.MessageDecoder;
 
 import java.util.Map;
 

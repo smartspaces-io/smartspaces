@@ -14,10 +14,10 @@
  * the License.
  */
 
-package io.smartspaces.messaging.route;
+package io.smartspaces.messaging;
 
 /**
- * A encoder for messages.
+ * A decoder for messages.
  * 
  * <p>
  * Instances are threadsafe and can decode multiple messages simultaneously.
@@ -29,15 +29,15 @@ package io.smartspaces.messaging.route;
  * 
  * @author Keith M. Hughes
  */
-public interface MessageEncoder<I, O> {
+public interface MessageDecoder<I, O> {
 
   /**
-   * Encode a message to go out.
+   * Decode an incoming message.
    * 
-   * @param out
-   *          the outgoing message
+   * @param in
+   *          the incoming message
    * 
-   * @return the encoded message
+   * @return the decoded message
    */
-  O encode(I out);
+  I decode(O in);
 }

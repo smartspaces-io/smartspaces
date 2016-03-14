@@ -59,24 +59,6 @@ public interface RosPublishers<T> extends PublisherListener<T> {
   void addPublishers(ConnectedNode node, String messageType, Set<String> topicNames);
 
   /**
-   * Add a series of publishers to a node.
-   *
-   * <p>
-   * All topic names will be resolved using the ROS name resolver on the node.
-   *
-   * @param node
-   *          the node the publishers will be added to
-   * @param topicNames
-   *          the topics to be published to
-   * @param messageType
-   *          the message type for all of the publishers
-   * @param latch
-   *          {@code true} if the publisher should always send the last message
-   *          sent to any new subscribers
-   */
-  void addPublishers(ConnectedNode node, String messageType, Set<String> topicNames, boolean latch);
-
-  /**
    * Publish a message to all registered publishers.
    *
    * @param message

@@ -232,12 +232,24 @@ public interface Configuration {
    * @param property
    *          name of the property
    * @param delineator
-   *          the string to use to separate the property value into seperate
+   *          the string to use to separate the property value into separate
    *          strings
    *
    * @return the set of distinct values or {@code null} if no such property
    */
   Set<String> getPropertyStringSet(String property, String delineator);
+
+  /**
+   * Get the value of the property as a JSON parse.
+   *
+   * @param property
+   *          name of the property
+   * @param <T>
+   *          the type of the JSON parsed object
+   *
+   * @return the map of values or {@code null} if no such property
+   */
+  <T> T getPropertyJson(String property);
 
   /**
    * Set the value of a property.

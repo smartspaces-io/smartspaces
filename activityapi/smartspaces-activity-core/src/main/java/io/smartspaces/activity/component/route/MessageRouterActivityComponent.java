@@ -34,7 +34,7 @@ public interface MessageRouterActivityComponent extends ActivityComponent {
   /**
    * Separator for configuration values which allow multiple values.
    */
-  String CONFIGURATION_VALUES_SEPARATOR = ":";
+  String CONFIGURATION_VALUES_SEPARATOR = "\\s+";
 
   /**
    * Configuration property for listing of input routes.
@@ -57,11 +57,31 @@ public interface MessageRouterActivityComponent extends ActivityComponent {
   String CONFIGURATION_ROUTE_OUTPUT_TOPIC_PREFIX = "space.activity.route.output.";
 
   /**
+   * Configuration property to set the route protocol default.
+   */
+  String CONFIGURATION_ROUTE_PROTOCOL_DEFAULT = "space.activity.route.protocol.default";
+
+  /**
+   * Configuration property value default for the route protocol default.
+   */
+  String CONFIGURATION_VALUE_DEFAULT_ROUTE_PROTOCOL_DEFAULT = "ros";
+
+  /**
    * Get the node name for the router.
    *
    * @return the node name
    */
   String getNodeName();
+
+  /**
+   * Get the default protocol for routes.
+   * 
+   * <p>
+   * This is only valid after the component is configured.
+   * 
+   * @return the default protocol for routes
+   */
+  String getDefaultRouteProtocol();
 
   /**
    * Send out a message on one of the output channels.
@@ -75,7 +95,7 @@ public interface MessageRouterActivityComponent extends ActivityComponent {
    * @param message
    *          message to send
    */
-  void writeOutputMessage(String outputChannelId, Map<String,Object> message);
+  void writeOutputMessage(String outputChannelId, Map<String, Object> message);
 
   /**
    * Register a new channel output topic route.
@@ -84,16 +104,15 @@ public interface MessageRouterActivityComponent extends ActivityComponent {
    *          the output channel ID
    * @param topicNames
    *          output topic names
-   * @param latch
-   *          should output be latched
    *
    * @return the message publisher for the route
    *
    * @throws SmartSpacesException
-   *           the output ID has been used before
+   *           an unknown publisher protocol has been found or the channel has
+   *           already been registered
    */
-  RouteMessagePublisher registerOutputChannelTopic(String outputChannelId,
-      Set<String> topicNames, boolean latch) throws SmartSpacesException;
+  RouteMessagePublisher registerOutputChannelTopic(String outputChannelId, Set<String> topicNames)
+      throws SmartSpacesException;
 
   /**
    * Register a new input topic channel.
@@ -104,7 +123,8 @@ public interface MessageRouterActivityComponent extends ActivityComponent {
    *          input topic names
    *
    * @throws SmartSpacesException
-   *           the input name has been used before
+   *           an unknown publisher protocol has been found or the channel has
+   *           already been registered
    */
   void registerInputChannelTopic(String inputChannelId, Set<String> topicNames)
       throws SmartSpacesException;

@@ -211,6 +211,12 @@ public class StandardLiveActivityConfiguration implements LiveActivityConfigurat
     return temporary.getPropertyStringSet(property, delineator);
   }
 
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> T getPropertyJson(String property) {
+    return (T) temporary.getPropertyJson(property);
+  }
+
   @Override
   public boolean containsProperty(String property) {
     return temporary.containsProperty(property);

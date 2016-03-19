@@ -14,24 +14,9 @@
  * the License.
  */
 
-package io.smartspaces.messaging.route.ros;
-
-import java.util.Map;
-
-import io.smartspaces.messaging.codec.MessageDecoder;
-import smartspaces_msgs.GenericMessage;
-
 /**
- * A decoder between a map and a Generic Message.
+ * Classes for codecs for messaging.
  * 
  * @author Keith M. Hughes
  */
-public class MapGenericMessageMessageDecoder extends MapGenericMessageCodec implements
-    MessageDecoder<Map<String, Object>, GenericMessage> {
-
-  @Override
-  public Map<String, Object> decode(GenericMessage in) {
-    Map<String, Object> msg = MAPPER.parseObject(new String(in.getMessage().toString(charset)));
-    return msg;
-  }
-}
+package io.smartspaces.messaging.codec;

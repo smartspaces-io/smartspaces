@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2015 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,22 +14,19 @@
  * the License.
  */
 
-package io.smartspaces.messaging.route.ros;
-
-import io.smartspaces.messaging.codec.MessageEncoder;
-import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
-import io.smartspaces.util.messaging.ros.RosPublishers;
+package io.smartspaces.messaging.route.mqtt;
 
 import java.util.Map;
 
-import smartspaces_msgs.GenericMessage;
+import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
+import io.smartspaces.util.messaging.mqtt.MqttPublishers;
 
 /**
- * A route message publisher for ROS.
- *
+ * A route message publisher for MQTT messages.
+ * 
  * @author Keith M. Hughes
  */
-public class RosRouteMessagePublisher implements InternalRouteMessagePublisher {
+public class MqttRouteMessagePublisher implements InternalRouteMessagePublisher {
 
   /**
    * The channel ID for this publisher.
@@ -40,12 +36,7 @@ public class RosRouteMessagePublisher implements InternalRouteMessagePublisher {
   /**
    * The publishers for this message publisher.
    */
-  private RosPublishers<GenericMessage> publishers;
-
-  /**
-   * The message encoder to use for message translation.
-   */
-  private MessageEncoder<Map<String, Object>, GenericMessage> messageEncoder;
+  private MqttPublishers<Map<String, Object>> publishers;
 
   /**
    * Construct a new publisher.
@@ -53,15 +44,12 @@ public class RosRouteMessagePublisher implements InternalRouteMessagePublisher {
    * @param channelId
    *          the channel ID for the route
    * @param publishers
-   *          the ROS publishers
-   * @param messageEncoder
-   *          the message encoder to use for message translation.
+   *          the MQTT publishers
    */
-  public RosRouteMessagePublisher(String channelId, RosPublishers<GenericMessage> publishers,
-      MessageEncoder<Map<String, Object>, GenericMessage> messageEncoder) {
+  public MqttRouteMessagePublisher(String channelId,
+      MqttPublishers<Map<String, Object>> publishers) {
     this.channelId = channelId;
     this.publishers = publishers;
-    this.messageEncoder = messageEncoder;
   }
 
   @Override
@@ -71,7 +59,7 @@ public class RosRouteMessagePublisher implements InternalRouteMessagePublisher {
 
   @Override
   public void writeOutputMessage(Map<String, Object> message) {
-    publishers.publishMessage(messageEncoder.encode(message));
+    publishers.publishMessage(message);
   }
 
   @Override

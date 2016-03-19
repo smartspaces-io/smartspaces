@@ -65,7 +65,7 @@ jar {
         'io.smartspaces.util.data.persist',
         'io.smartspaces.util.io',
         'io.smartspaces.util.process.restart',
-        'io.smartspaces.util.ros',
+        'io.smartspaces.util.messaging.ros',
         'io.smartspaces.util.uuid',
         'io.smartspaces.util.web',
         'io.smartspaces.service.web.server',

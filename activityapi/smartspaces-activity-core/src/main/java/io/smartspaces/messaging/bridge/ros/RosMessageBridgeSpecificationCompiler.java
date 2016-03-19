@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,24 +15,27 @@
  * the License.
  */
 
-package io.smartspaces.messaging.route.ros;
-
-import java.util.Map;
-
-import io.smartspaces.messaging.codec.MessageDecoder;
-import smartspaces_msgs.GenericMessage;
+package io.smartspaces.messaging.bridge.ros;
 
 /**
- * A decoder between a map and a Generic Message.
- * 
+ * A compiler for bridge specifications.
+ *
  * @author Keith M. Hughes
  */
-public class MapGenericMessageMessageDecoder extends MapGenericMessageCodec implements
-    MessageDecoder<Map<String, Object>, GenericMessage> {
+public interface RosMessageBridgeSpecificationCompiler {
 
-  @Override
-  public Map<String, Object> decode(GenericMessage in) {
-    Map<String, Object> msg = MAPPER.parseObject(new String(in.getMessage().toString(charset)));
-    return msg;
-  }
+  /**
+   * Compile the source and give a specification.
+   *
+   * @param <SourceType>
+   *          the type of the source message
+   * @param <DestinationType>
+   *          the type of the destination message
+   * @param source
+   *          the specification source
+   *
+   * @return the compiled specification
+   */
+  <SourceType, DestinationType> RosMessageBridgeSpecification<SourceType, DestinationType> compile(
+      String source);
 }

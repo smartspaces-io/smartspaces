@@ -18,9 +18,9 @@
 package io.smartspaces.activity.impl.ros;
 
 import io.smartspaces.activity.Activity;
-import io.smartspaces.bridge.message.MessageBridge;
-import io.smartspaces.bridge.message.MessageBridgeFactory;
-import io.smartspaces.bridge.message.ros.RosMessageBridgeFactory;
+import io.smartspaces.messaging.bridge.MessageBridge;
+import io.smartspaces.messaging.bridge.MessageBridgeFactory;
+import io.smartspaces.messaging.bridge.ros.RosMessageBridgeFactory;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 

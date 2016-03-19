@@ -17,8 +17,8 @@
 package io.smartspaces.messaging.route.ros;
 
 import io.smartspaces.activity.component.route.MessageRouterSupportedMessageTypes;
-import io.smartspaces.messaging.MessageEncoder;
-import io.smartspaces.util.ros.RosPublishers;
+import io.smartspaces.messaging.codec.MessageEncoder;
+import io.smartspaces.util.messaging.ros.RosPublishers;
 
 import java.nio.ByteOrder;
 import java.util.Map;

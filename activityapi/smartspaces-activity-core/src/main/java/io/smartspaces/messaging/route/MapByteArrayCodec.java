@@ -14,29 +14,42 @@
  * the License.
  */
 
-package io.smartspaces.messaging.route.ros;
+package io.smartspaces.messaging.route;
 
 import java.nio.charset.Charset;
+import java.util.Map;
 
 import com.google.common.base.Charsets;
 
+import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
 
 /**
- * The base class for ROS GenericMessage coders and decoders.
+ * A codec for translating between maps and byte arrays.
  * 
  * @author Keith M. Hughes
  */
-public class MapGenericMessageCodec {
+public class MapByteArrayCodec implements MessageCodec<Map<String, Object>, byte[]> {
 
   /**
    * The JSON mapper for message translation.
    */
-  protected static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
+  private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
 
   /**
    * The character set for the generic message encoding.
    */
-  protected Charset charset = Charsets.UTF_8;
+  private Charset charset = Charsets.UTF_8;
+
+  @Override
+  public byte[] encode(Map<String, Object> out) {
+    return MAPPER.toString(out).getBytes(charset);
+  }
+
+  @Override
+  public Map<String, Object> decode(byte[] in) {
+    Map<String, Object> msg = MAPPER.parseObject(new String(in, charset));
+    return msg;
+  }
 }

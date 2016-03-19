@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,24 +15,26 @@
  * the License.
  */
 
-package io.smartspaces.messaging.route.ros;
+package io.smartspaces.messaging.bridge;
 
-import java.util.Map;
-
-import io.smartspaces.messaging.codec.MessageDecoder;
-import smartspaces_msgs.GenericMessage;
+import org.apache.commons.logging.Log;
 
 /**
- * A decoder between a map and a Generic Message.
- * 
+ * A factory for {@link MessageBridge} instance.
+ *
  * @author Keith M. Hughes
  */
-public class MapGenericMessageMessageDecoder extends MapGenericMessageCodec implements
-    MessageDecoder<Map<String, Object>, GenericMessage> {
+public interface MessageBridgeFactory {
 
-  @Override
-  public Map<String, Object> decode(GenericMessage in) {
-    Map<String, Object> msg = MAPPER.parseObject(new String(in.getMessage().toString(charset)));
-    return msg;
-  }
+  /**
+   * Get a message bridge from a specification.
+   *
+   * @param specification
+   *          the specification for the bridge
+   * @param log
+   *          log that the bridge should use for any logging
+   *
+   * @return A ready to run specification.
+   */
+  MessageBridge newMessageBridge(String specification, Log log);
 }

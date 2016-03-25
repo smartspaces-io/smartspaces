@@ -17,7 +17,7 @@
 
 package io.smartspaces.activity.impl.web;
 
-import io.smartspaces.activity.component.web.BasicWebBrowserActivityComponent;
+import io.smartspaces.activity.component.web.WebBrowserActivityComponent;
 
 /**
  * A web-based Smart Spaces activity that is routable.
@@ -30,6 +30,6 @@ public abstract class BaseRoutableWebActivity extends BaseRoutableWebServerActiv
   public void commonActivitySetup() {
     super.commonActivitySetup();
 
-    addActivityComponent(new BasicWebBrowserActivityComponent());
+    addActivityComponent(WebBrowserActivityComponent.COMPONENT_NAME);
   }
 }

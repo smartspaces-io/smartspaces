@@ -17,7 +17,9 @@
 
 package io.smartspaces.activity.impl.web;
 
-import io.smartspaces.activity.component.web.BasicWebServerActivityComponent;
+import java.io.File;
+import java.util.Map;
+
 import io.smartspaces.activity.component.web.WebServerActivityComponent;
 import io.smartspaces.activity.execution.ActivityMethodInvocation;
 import io.smartspaces.activity.impl.route.BaseRoutableActivity;
@@ -30,16 +32,13 @@ import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
 
-import java.io.File;
-import java.util.Map;
-
 /**
  * A web server activity which allows for ROS routes.
  *
  * @author Keith M. Hughes
  */
-public class BaseRoutableWebServerActivity extends BaseRoutableActivity implements
-    MultipleConnectionWebSocketHandler, HttpFileUploadListener {
+public class BaseRoutableWebServerActivity extends BaseRoutableActivity
+    implements MultipleConnectionWebSocketHandler, HttpFileUploadListener {
 
   /**
    * The JSON mapper.
@@ -62,7 +61,7 @@ public class BaseRoutableWebServerActivity extends BaseRoutableActivity implemen
 
     webSocketFactory = new BasicMultipleConnectionWebServerWebSocketHandlerFactory(this, getLog());
 
-    webServerComponent = addActivityComponent(new BasicWebServerActivityComponent());
+    webServerComponent = addActivityComponent(WebServerActivityComponent.COMPONENT_NAME);
     webServerComponent.setWebSocketHandlerFactory(webSocketFactory);
     webServerComponent.setHttpFileUploadListener(this);
 

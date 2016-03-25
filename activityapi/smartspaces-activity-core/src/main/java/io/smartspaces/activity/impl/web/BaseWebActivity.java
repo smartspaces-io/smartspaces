@@ -18,7 +18,7 @@
 package io.smartspaces.activity.impl.web;
 
 import io.smartspaces.activity.Activity;
-import io.smartspaces.activity.component.web.BasicWebBrowserActivityComponent;
+import io.smartspaces.activity.component.web.WebBrowserActivityComponent;
 
 /**
  * An {@link Activity} which starts up a web server with websocket handler and a
@@ -38,6 +38,6 @@ public class BaseWebActivity extends BaseWebServerActivity {
   public void commonActivitySetup() {
     super.commonActivitySetup();
 
-    addActivityComponent(new BasicWebBrowserActivityComponent());
+    addActivityComponent(WebBrowserActivityComponent.COMPONENT_NAME);
   }
 }

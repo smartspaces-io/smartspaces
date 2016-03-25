@@ -15,9 +15,16 @@
  * the License.
  */
 
-package io.smartspaces.activity.component.route.ros;
+package io.smartspaces.activity.component.route;
+
+import org.apache.commons.logging.Log;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
 import io.smartspaces.activity.component.ActivityComponentContext;
+import io.smartspaces.activity.component.route.BasicMessageRouterActivityComponent;
 import io.smartspaces.activity.component.route.RoutableInputMessageListener;
 import io.smartspaces.activity.execution.ActivityExecutionContext;
 import io.smartspaces.activity.ros.RosActivity;
@@ -28,23 +35,14 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.SettableTimeProvider;
 import io.smartspaces.time.TimeProvider;
 
-import org.apache.commons.logging.Log;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InOrder;
-import org.mockito.Mockito;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * Tests for {@link BasicRosMessageRouterActivityComponent}.
+ * Tests for {@link BasicMessageRouterActivityComponent}.
  *
  * @author Keith M. Hughes
  */
-public class BasicRosMessageRouterActivityComponentTest {
+public class BasicMessageRouterActivityComponentTest {
 
-  private BasicRosMessageRouterActivityComponent component;
+  private BasicMessageRouterActivityComponent component;
 
   private RoutableInputMessageListener messageListener;
   private ActivityComponentContext activityComponentContext;
@@ -83,7 +81,8 @@ public class BasicRosMessageRouterActivityComponentTest {
 
     configuration = new SimpleConfiguration(new SimpleExpressionEvaluator());
 
-    component = new BasicRosMessageRouterActivityComponent("string", messageListener);
+    component = new BasicMessageRouterActivityComponent();
+    component.setRoutableInputMessageListener(messageListener);
   }
 
   /**
@@ -99,14 +98,15 @@ public class BasicRosMessageRouterActivityComponentTest {
 
     Mockito.when(activityComponentContext.canHandlerRun()).thenReturn(true);
 
-//    String channelName = "foo";
-//    GenericMessage message = Mockito.mock
-//    component.handleNewIncomingMessage(channelName, message);
-//
-//    Mockito.verify(messageListener).onNewRoutableInputMessage(channelName, message);
-//
-//    activityComponentContextInOrder.verify(activityComponentContext).enterHandler();
-//    activityComponentContextInOrder.verify(activityComponentContext).exitHandler();
+    // String channelName = "foo";
+    // GenericMessage message = Mockito.mock
+    // component.handleNewIncomingMessage(channelName, message);
+    //
+    // Mockito.verify(messageListener).onNewRoutableInputMessage(channelName,
+    // message);
+    //
+    // activityComponentContextInOrder.verify(activityComponentContext).enterHandler();
+    // activityComponentContextInOrder.verify(activityComponentContext).exitHandler();
   }
 
   /**
@@ -125,17 +125,20 @@ public class BasicRosMessageRouterActivityComponentTest {
     String channelName = "foo";
     String message = "bar";
 
-//    Exception e = new RuntimeException();
-//    Mockito.doThrow(e).when(messageListener).onNewRoutableInputMessage(channelName, message);
-//
-//    component.handleNewIncomingMessage(channelName, message);
-//
-//    Mockito.verify(messageListener).onNewRoutableInputMessage(channelName, message);
-//
-//    activityComponentContextInOrder.verify(activityComponentContext).enterHandler();
-//    activityComponentContextInOrder.verify(activityComponentContext).exitHandler();
-//
-//    Mockito.verify(log, Mockito.times(1)).error(Mockito.anyString(), Mockito.eq(e));
+    // Exception e = new RuntimeException();
+    // Mockito.doThrow(e).when(messageListener).onNewRoutableInputMessage(channelName,
+    // message);
+    //
+    // component.handleNewIncomingMessage(channelName, message);
+    //
+    // Mockito.verify(messageListener).onNewRoutableInputMessage(channelName,
+    // message);
+    //
+    // activityComponentContextInOrder.verify(activityComponentContext).enterHandler();
+    // activityComponentContextInOrder.verify(activityComponentContext).exitHandler();
+    //
+    // Mockito.verify(log, Mockito.times(1)).error(Mockito.anyString(),
+    // Mockito.eq(e));
   }
 
   @Test
@@ -148,15 +151,15 @@ public class BasicRosMessageRouterActivityComponentTest {
 
     Mockito.when(activityComponentContext.canHandlerRun()).thenReturn(false);
 
-//    String channelName = "foo";
-//    String message = "bar";
-//    component.handleNewIncomingMessage(channelName, message);
-//
-//    Mockito.verify(messageListener, Mockito.never())
-//        .onNewRoutableInputMessage(channelName, message);
-//
-//    Mockito.verify(activityComponentContext, Mockito.never()).enterHandler();
-//    Mockito.verify(activityComponentContext, Mockito.never()).exitHandler();
+    // String channelName = "foo";
+    // String message = "bar";
+    // component.handleNewIncomingMessage(channelName, message);
+    //
+    // Mockito.verify(messageListener, Mockito.never())
+    // .onNewRoutableInputMessage(channelName, message);
+    //
+    // Mockito.verify(activityComponentContext, Mockito.never()).enterHandler();
+    // Mockito.verify(activityComponentContext, Mockito.never()).exitHandler();
   }
 
 }

@@ -17,12 +17,16 @@
 
 package io.smartspaces.activity.component.route;
 
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.activity.component.ActivityComponent;
-import io.smartspaces.messaging.route.RouteMessagePublisher;
-
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.google.common.collect.ImmutableList;
+
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.activity.component.ActivityComponent;
+import io.smartspaces.activity.component.ros.RosActivityComponent;
+import io.smartspaces.messaging.route.RouteMessagePublisher;
 
 /**
  * An activity component which supports route messaging.
@@ -30,6 +34,29 @@ import java.util.Set;
  * @author Keith M. Hughes
  */
 public interface MessageRouterActivityComponent extends ActivityComponent {
+
+  /**
+   * Name of the component.
+   */
+  String COMPONENT_NAME = "comm.router";
+
+  /**
+   * Description of this component.
+   */
+  String COMPONENT_DESCRIPTION = "Pub/Sub Message Router";
+
+  /**
+   * Dependencies for the component.
+   */
+  List<String> BASE_COMPONENT_DEPENDENCIES = ImmutableList.of(RosActivityComponent.COMPONENT_NAME);
+
+  /**
+   * Set the message listener for the component.
+   * 
+   * @param messageListener
+   *          the message listener
+   */
+  void setRoutableInputMessageListener(RoutableInputMessageListener messageListener);
 
   /**
    * Separator for configuration values which allow multiple values.

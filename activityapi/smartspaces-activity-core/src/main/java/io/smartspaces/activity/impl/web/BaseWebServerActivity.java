@@ -17,7 +17,9 @@
 
 package io.smartspaces.activity.impl.web;
 
-import io.smartspaces.activity.component.web.BasicWebServerActivityComponent;
+import java.io.File;
+import java.util.Map;
+
 import io.smartspaces.activity.component.web.WebServerActivityComponent;
 import io.smartspaces.activity.execution.ActivityMethodInvocation;
 import io.smartspaces.activity.impl.BaseActivity;
@@ -29,9 +31,6 @@ import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
 
-import java.io.File;
-import java.util.Map;
-
 /**
  * An activity which has a web server only.
  *
@@ -40,8 +39,8 @@ import java.util.Map;
  *
  * @author Keith M. Hughes
  */
-public class BaseWebServerActivity extends BaseActivity implements
-    MultipleConnectionWebSocketHandler, HttpFileUploadListener {
+public class BaseWebServerActivity extends BaseActivity
+    implements MultipleConnectionWebSocketHandler, HttpFileUploadListener {
 
   /**
    * The JSON mapper.
@@ -60,7 +59,7 @@ public class BaseWebServerActivity extends BaseActivity implements
 
   @Override
   public void commonActivitySetup() {
-    webServerComponent = addActivityComponent(new BasicWebServerActivityComponent());
+    webServerComponent = addActivityComponent(WebServerActivityComponent.COMPONENT_NAME);
 
     webSocketFactory = new BasicMultipleConnectionWebServerWebSocketHandlerFactory(this, getLog());
     webServerComponent.setWebSocketHandlerFactory(webSocketFactory);

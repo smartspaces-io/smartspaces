@@ -17,25 +17,6 @@
 
 package io.smartspaces.liveactivity.runtime.standalone.messaging;
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.activity.SupportedActivity;
-import io.smartspaces.activity.component.ros.RosActivityComponent;
-import io.smartspaces.activity.component.route.BaseMessageRouterActivityComponent;
-import io.smartspaces.activity.component.route.MessageRouterSupportedMessageTypes;
-import io.smartspaces.activity.component.route.RoutableInputMessageListener;
-import io.smartspaces.activity.component.route.RouteDescription;
-import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
-import io.smartspaces.configuration.Configuration;
-import io.smartspaces.liveactivity.runtime.standalone.development.DevelopmentStandaloneLiveActivityRuntime;
-import io.smartspaces.liveactivity.runtime.standalone.messaging.MessageUtils.MessageMap;
-import io.smartspaces.liveactivity.runtime.standalone.messaging.MessageUtils.MessageSetList;
-import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
-import io.smartspaces.messaging.route.RouteMessagePublisher;
-import io.smartspaces.time.TimeProvider;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -49,6 +30,25 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.activity.SupportedActivity;
+import io.smartspaces.activity.component.ros.RosActivityComponent;
+import io.smartspaces.activity.component.route.BaseMessageRouterActivityComponent;
+import io.smartspaces.activity.component.route.MessageRouterActivityComponent;
+import io.smartspaces.activity.component.route.MessageRouterSupportedMessageTypes;
+import io.smartspaces.activity.component.route.RoutableInputMessageListener;
+import io.smartspaces.activity.component.route.RouteDescription;
+import io.smartspaces.configuration.Configuration;
+import io.smartspaces.liveactivity.runtime.standalone.development.DevelopmentStandaloneLiveActivityRuntime;
+import io.smartspaces.liveactivity.runtime.standalone.messaging.MessageUtils.MessageMap;
+import io.smartspaces.liveactivity.runtime.standalone.messaging.MessageUtils.MessageSetList;
+import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
+import io.smartspaces.messaging.route.RouteMessagePublisher;
+import io.smartspaces.time.TimeProvider;
+import io.smartspaces.util.data.json.JsonMapper;
+import io.smartspaces.util.data.json.StandardJsonMapper;
 
 /**
  * A standalone message router that uses multicast.
@@ -105,7 +105,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   /**
    * A route input message listener.
    */
-  private RoutableInputMessageListener listener;
+  private RoutableInputMessageListener messageListener;
 
   /**
    * Output for tracing received messages.
@@ -163,6 +163,11 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   }
 
   @Override
+  public void setRoutableInputMessageListener(RoutableInputMessageListener messageListener) {
+    this.messageListener = messageListener;
+  }
+
+  @Override
   public String getNodeName() {
     // TODO(keith): For now only ROS is used for node names as ROS is our only
     // router. Eventually change
@@ -181,7 +186,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   public String getName() {
     // This isn't strictly accurate, but there should ideally be a general name
     // for message router components.
-    return RosMessageRouterActivityComponent.COMPONENT_NAME;
+    return MessageRouterActivityComponent.COMPONENT_NAME;
   }
 
   @Override
@@ -190,7 +195,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     timeProvider = getComponentContext().getActivity().getSpaceEnvironment().getTimeProvider();
     activity = getComponentContext().getActivity();
     router = getRouter();
-    listener = (RoutableInputMessageListener) activity;
+    messageListener = (RoutableInputMessageListener) activity;
   }
 
   @Override
@@ -223,7 +228,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
       }
     } finally {
       activity = null;
-      listener = null;
+      messageListener = null;
       playbackRunner = null;
     }
   }
@@ -287,9 +292,8 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
         // more
         // flexible to keep everything as JSON, instead as a string embedded in
         // Json.
-        Object baseMessage =
-            (MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE.equals(type)) ? MAPPER
-                .parseObject(message) : message;
+        Object baseMessage = (MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE.equals(type))
+            ? MAPPER.parseObject(message) : message;
 
         MessageMap messageObject = new MessageMap();
         messageObject.put("message", baseMessage);
@@ -417,7 +421,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
       Collection<String> channels = inputRoutesToChannels.get(route);
       if (channels != null) {
         for (String channel : channels) {
-          listener.onNewRoutableInputMessage(channel, message);
+          messageListener.onNewRoutableInputMessage(channel, message);
         }
       }
     }
@@ -536,7 +540,8 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   }
 
   @Override
-  public synchronized void registerInputChannelTopic(String inputChannelId, Set<String> topicNames) {
+  public synchronized void registerInputChannelTopic(String inputChannelId,
+      Set<String> topicNames) {
     if (inputRoutesToChannels.values().contains(inputChannelId)) {
       SimpleSmartSpacesException.throwFormattedException("Duplicate route entry for channel %s",
           inputChannelId);
@@ -549,8 +554,8 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   }
 
   @Override
-  protected InternalRouteMessagePublisher internalRegisterOutputRoute(
-      RouteDescription routeDescription) {
+  protected InternalRouteMessagePublisher
+      internalRegisterOutputRoute(RouteDescription routeDescription) {
     // TODO(keith): Fill in when needed
     return null;
   }

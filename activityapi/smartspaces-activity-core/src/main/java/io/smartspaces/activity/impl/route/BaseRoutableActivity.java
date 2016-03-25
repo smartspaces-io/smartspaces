@@ -20,15 +20,14 @@ package io.smartspaces.activity.impl.route;
 import java.util.Map;
 
 import io.smartspaces.activity.Activity;
+import io.smartspaces.activity.component.route.BasicMessageRouterActivityComponent;
+import io.smartspaces.activity.component.route.MessageRouterActivityComponent;
 import io.smartspaces.activity.component.route.RoutableInputMessageListener;
-import io.smartspaces.activity.component.route.ros.BasicRosMessageRouterActivityComponent;
-import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
 import io.smartspaces.activity.execution.ActivityMethodInvocation;
 import io.smartspaces.activity.impl.ros.BaseRosActivity;
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
-import smartspaces_msgs.GenericMessage;
 
 /**
  * An {@link Activity} that simplifies the use of SmartSpaces routes.
@@ -45,19 +44,19 @@ public class BaseRoutableActivity extends BaseRosActivity {
   /**
    * Router for input and output messages.
    */
-  private RosMessageRouterActivityComponent router;
+  private MessageRouterActivityComponent router;
 
   @Override
   public void commonActivitySetup() {
     super.commonActivitySetup();
 
-    router = addActivityComponent(new BasicRosMessageRouterActivityComponent(GenericMessage._TYPE,
-        new RoutableInputMessageListener() {
-          @Override
-          public void onNewRoutableInputMessage(String channelName, Map<String, Object> message) {
-            handleRoutableInputMessage(channelName, message);
-          }
-        }));
+    router = addActivityComponent(BasicMessageRouterActivityComponent.COMPONENT_NAME);
+    router.setRoutableInputMessageListener(new RoutableInputMessageListener() {
+      @Override
+      public void onNewRoutableInputMessage(String channelName, Map<String, Object> message) {
+        handleRoutableInputMessage(channelName, message);
+      }
+    });
   }
 
   /**

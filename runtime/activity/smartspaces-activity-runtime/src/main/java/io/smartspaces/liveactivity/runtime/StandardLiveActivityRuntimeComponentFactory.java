@@ -25,7 +25,8 @@ import io.smartspaces.activity.component.binary.BasicNativeActivityComponent;
 import io.smartspaces.activity.component.binary.NativeActivityComponent;
 import io.smartspaces.activity.component.ros.BasicRosActivityComponent;
 import io.smartspaces.activity.component.ros.RosActivityComponent;
-import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
+import io.smartspaces.activity.component.route.BasicMessageRouterActivityComponent;
+import io.smartspaces.activity.component.route.MessageRouterActivityComponent;
 import io.smartspaces.activity.component.web.BasicWebBrowserActivityComponent;
 import io.smartspaces.activity.component.web.BasicWebServerActivityComponent;
 import io.smartspaces.activity.component.web.WebBrowserActivityComponent;
@@ -52,8 +53,8 @@ import io.smartspaces.system.resources.ContainerResourceManager;
  *
  * @author Keith M. Hughes
  */
-public class StandardLiveActivityRuntimeComponentFactory implements
-    LiveActivityRuntimeComponentFactory {
+public class StandardLiveActivityRuntimeComponentFactory
+    implements LiveActivityRuntimeComponentFactory {
 
   /**
    * Run under a space environment.
@@ -130,8 +131,8 @@ public class StandardLiveActivityRuntimeComponentFactory implements
 
     factory.register(NativeActivityComponent.COMPONENT_NAME, BasicNativeActivityComponent.class);
     factory.register(RosActivityComponent.COMPONENT_NAME, BasicRosActivityComponent.class);
-    factory.register(RosMessageRouterActivityComponent.COMPONENT_NAME,
-        RosMessageRouterActivityComponent.class);
+    factory.register(MessageRouterActivityComponent.COMPONENT_NAME,
+        BasicMessageRouterActivityComponent.class);
     factory.register(WebBrowserActivityComponent.COMPONENT_NAME,
         BasicWebBrowserActivityComponent.class);
     factory.register(WebServerActivityComponent.COMPONENT_NAME,

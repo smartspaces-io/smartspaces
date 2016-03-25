@@ -17,13 +17,11 @@
 
 package io.smartspaces.activity.component.route;
 
-import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
-
 import java.util.Map;
 
 /**
- * A listener for input messages from a
- * {@link RosMessageRouterActivityComponent} input topics.
+ * A listener for input messages from a {@link MessageRouterActivityComponent}
+ * input topics.
  *
  * @author Keith M. Hughes
  */
@@ -37,5 +35,5 @@ public interface RoutableInputMessageListener {
    * @param message
    *          the message which has come in
    */
-  void onNewRoutableInputMessage(String channelName, Map<String,Object> message);
+  void onNewRoutableInputMessage(String channelName, Map<String, Object> message);
 }

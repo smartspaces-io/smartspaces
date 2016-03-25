@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.activity.component.route.ros;
+package io.smartspaces.activity.component.route;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +33,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.SetMultimap;
 
 import io.smartspaces.activity.component.ros.RosActivityComponent;
-import io.smartspaces.activity.component.route.BaseMessageRouterActivityComponent;
-import io.smartspaces.activity.component.route.IncomingRouteMessageHandler;
-import io.smartspaces.activity.component.route.RoutableInputMessageListener;
-import io.smartspaces.activity.component.route.RouteDescription;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.messaging.codec.MessageDecoder;
@@ -70,8 +66,10 @@ import smartspaces_msgs.GenericMessage;
  *
  * @author Keith M. Hughes
  */
-public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterActivityComponent
+public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivityComponent
     implements IncomingRouteMessageHandler {
+
+  private static final String ROS_ROUTE_MESSAGE_TYPE = GenericMessage._TYPE;
 
   /**
    * The ROS activity component this component requires.
@@ -86,12 +84,7 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
   /**
    * The listener for input messages.
    */
-  private final RoutableInputMessageListener messageListener;
-
-  /**
-   * The name of the ROS message type.
-   */
-  private final String rosMessageType;
+  private RoutableInputMessageListener messageListener;
 
   /**
    * All topic inputs mapped to their subscribers.
@@ -126,20 +119,6 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
    */
   private MessageCodec<Map<String, Object>, byte[]> mqttMessageCodec = new MapByteArrayCodec();
 
-  /**
-   * Construct a new ROS message router activity component.
-   *
-   * @param rosMessageType
-   *          the ROS message type for the route
-   * @param messageListener
-   *          the listener for message events
-   */
-  public BasicRosMessageRouterActivityComponent(String rosMessageType,
-      RoutableInputMessageListener messageListener) {
-    this.rosMessageType = rosMessageType;
-    this.messageListener = messageListener;
-  }
-
   @Override
   public String getName() {
     return COMPONENT_NAME;
@@ -153,6 +132,11 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
   @Override
   public List<String> getBaseDependencies() {
     return BASE_COMPONENT_DEPENDENCIES;
+  }
+
+  @Override
+  public void setRoutableInputMessageListener(RoutableInputMessageListener messageListener) {
+    this.messageListener = messageListener;
   }
 
   @Override
@@ -205,7 +189,7 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
       if ("ros".equals(routeProtocol)) {
         RosPublishers<GenericMessage> publishers =
             new StandardRosPublishers<GenericMessage>(getComponentContext().getActivity().getLog());
-        publishers.addPublishers(rosActivityComponent.getNode(), rosMessageType,
+        publishers.addPublishers(rosActivityComponent.getNode(), ROS_ROUTE_MESSAGE_TYPE,
             topicNamesForProtocol);
 
         if (rosMessageEncoder == null) {
@@ -262,7 +246,7 @@ public class BasicRosMessageRouterActivityComponent extends BaseMessageRouterAct
             new RosRouteMessageSubscriber(channelId, subscribers, rosMessageDecoder);
         routeMessageSubscribers.add(rosRouteMessageSubscriber);
 
-        subscribers.addSubscribers(rosActivityComponent.getNode(), rosMessageType,
+        subscribers.addSubscribers(rosActivityComponent.getNode(), ROS_ROUTE_MESSAGE_TYPE,
             topicNamesForProtocol, new MessageListener<GenericMessage>() {
               @Override
               public void onNewMessage(GenericMessage message) {

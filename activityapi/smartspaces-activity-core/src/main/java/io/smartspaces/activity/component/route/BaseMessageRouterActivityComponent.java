@@ -16,15 +16,6 @@
  */
 package io.smartspaces.activity.component.route;
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.activity.component.BaseActivityComponent;
-import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
-import io.smartspaces.activity.impl.StatusDetail;
-import io.smartspaces.configuration.Configuration;
-import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
-import io.smartspaces.messaging.route.RouteMessagePublisher;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,6 +31,14 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.activity.component.BaseActivityComponent;
+import io.smartspaces.activity.impl.StatusDetail;
+import io.smartspaces.configuration.Configuration;
+import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
+import io.smartspaces.messaging.route.RouteMessagePublisher;
+
 /**
  * A helpful superclass for implementors of the ROS message routing activity
  * component.
@@ -49,8 +48,8 @@ import com.google.common.collect.Sets;
  *
  * @author Keith M. Hughes
  */
-public abstract class BaseMessageRouterActivityComponent extends BaseActivityComponent implements
-    RosMessageRouterActivityComponent {
+public abstract class BaseMessageRouterActivityComponent extends BaseActivityComponent
+    implements MessageRouterActivityComponent {
 
   /**
    * The listeners for this component.
@@ -89,9 +88,8 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
 
     StringBuilder routeErrors = new StringBuilder();
 
-    defaultRouteProtocol =
-        configuration.getPropertyString(CONFIGURATION_ROUTE_PROTOCOL_DEFAULT,
-            CONFIGURATION_VALUE_DEFAULT_ROUTE_PROTOCOL_DEFAULT);
+    defaultRouteProtocol = configuration.getPropertyString(CONFIGURATION_ROUTE_PROTOCOL_DEFAULT,
+        CONFIGURATION_VALUE_DEFAULT_ROUTE_PROTOCOL_DEFAULT);
 
     String inputChannelIds = configuration.getPropertyString(CONFIGURATION_ROUTES_INPUTS);
     if (inputChannelIds != null) {
@@ -149,8 +147,8 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
             }
           }
 
-          outputRouteDescriptions.put(channelId, new RouteDescription(channelId,
-              protocolToTopicName));
+          outputRouteDescriptions.put(channelId,
+              new RouteDescription(channelId, protocolToTopicName));
         } else {
           handleError(String.format("Output route %s not defined, missing topic configuration %s",
               channelId, propertyName), null);
@@ -167,9 +165,9 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
 
     if ((inputChannelIds == null || inputChannelIds.isEmpty())
         && (outputChannelIds == null || outputChannelIds.isEmpty())) {
-      throw new SimpleSmartSpacesException(String.format(
-          "Router has no routes. Define either %s or %s in your configuration",
-          CONFIGURATION_ROUTES_INPUTS, CONFIGURATION_ROUTES_OUTPUTS));
+      throw new SimpleSmartSpacesException(
+          String.format("Router has no routes. Define either %s or %s in your configuration",
+              CONFIGURATION_ROUTES_INPUTS, CONFIGURATION_ROUTES_OUTPUTS));
     }
   }
 
@@ -211,9 +209,8 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
   }
 
   @Override
-  public synchronized void
-      registerInputChannelTopic(final String channelId, Set<String> topicNames)
-          throws SmartSpacesException {
+  public synchronized void registerInputChannelTopic(final String channelId, Set<String> topicNames)
+      throws SmartSpacesException {
     if (inputRouteDescriptions.containsKey(channelId)) {
       throw new SimpleSmartSpacesException("Input channel already registered: " + channelId);
     }
@@ -236,8 +233,8 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
    * 
    * @return the message publisher
    */
-  protected abstract InternalRouteMessagePublisher internalRegisterOutputRoute(
-      RouteDescription routeDescription);
+  protected abstract InternalRouteMessagePublisher
+      internalRegisterOutputRoute(RouteDescription routeDescription);
 
   /**
    * Register an input route.
@@ -275,7 +272,7 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
    *          the topic name to check
    *
    * @return {@code true if syntactically correct
-
+   * 
    */
   protected boolean isSyntacticallyCorrectTopicName(String topicName) {
     return GraphName.VALID_GRAPH_NAME_PATTERN.matcher(topicName).matches();
@@ -344,17 +341,13 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
     Map<String, String> sortedRoutes = new TreeMap<>();
     for (RouteDescription input : inputRouteDescriptions.values()) {
       String key = input.getChannelId();
-      sortedRoutes.put(
-          key + ">",
-          makeRouteDetail("input-route", key, StatusDetail.ARROW_LEFT, input.getProtocolToTopic()
-              .toString()));
+      sortedRoutes.put(key + ">", makeRouteDetail("input-route", key, StatusDetail.ARROW_LEFT,
+          input.getProtocolToTopic().toString()));
     }
     for (RouteDescription output : outputRouteDescriptions.values()) {
       String key = output.getChannelId();
-      sortedRoutes.put(
-          key + "<",
-          makeRouteDetail("output-route", key, StatusDetail.ARROW_RIGHT, output
-              .getProtocolToTopic().toString()));
+      sortedRoutes.put(key + "<", makeRouteDetail("output-route", key, StatusDetail.ARROW_RIGHT,
+          output.getProtocolToTopic().toString()));
     }
     String nodeName = getNodeName();
     return String.format(StatusDetail.HEADER_FORMAT, "route-detail")

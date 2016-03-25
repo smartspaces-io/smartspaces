@@ -17,13 +17,12 @@
 
 package io.smartspaces.activity.impl.ros;
 
-import io.smartspaces.activity.component.ros.BasicRosActivityComponent;
+import org.ros.node.ConnectedNode;
+import org.ros.osgi.common.RosEnvironment;
+
 import io.smartspaces.activity.component.ros.RosActivityComponent;
 import io.smartspaces.activity.impl.BaseActivity;
 import io.smartspaces.activity.ros.RosActivity;
-
-import org.ros.node.ConnectedNode;
-import org.ros.osgi.common.RosEnvironment;
 
 /**
  * Support for ROS Smart Spaces activities.
@@ -41,7 +40,7 @@ public abstract class BaseRosActivity extends BaseActivity implements RosActivit
   public void commonActivitySetup() {
     super.commonActivitySetup();
 
-    rosActivityComponent = addActivityComponent(new BasicRosActivityComponent());
+    rosActivityComponent = addActivityComponent(RosActivityComponent.COMPONENT_NAME);
   }
 
   @Override

@@ -18,7 +18,7 @@
 package io.smartspaces.liveactivity.runtime.activity.wrapper.internal.bridge.topic;
 
 import io.smartspaces.activity.Activity;
-import io.smartspaces.activity.impl.route.TopicBridgeRosActivity;
+import io.smartspaces.activity.impl.route.TopicBridgeRoutableActivity;
 import io.smartspaces.liveactivity.runtime.activity.wrapper.ActivityWrapper;
 import io.smartspaces.liveactivity.runtime.activity.wrapper.BaseActivityWrapper;
 
@@ -31,7 +31,7 @@ public class TopicBridgeActivityWrapper extends BaseActivityWrapper {
 
   @Override
   public Activity newInstance() {
-    TopicBridgeRosActivity instance = new TopicBridgeRosActivity();
+    TopicBridgeRoutableActivity instance = new TopicBridgeRoutableActivity();
 
     return instance;
   }

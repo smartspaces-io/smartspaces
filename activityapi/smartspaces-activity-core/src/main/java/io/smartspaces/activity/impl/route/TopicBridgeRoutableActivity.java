@@ -33,7 +33,7 @@ import java.io.File;
  *
  * @author Keith M. Hughes
  */
-public class TopicBridgeRosActivity extends BaseRosActivity {
+public class TopicBridgeRoutableActivity extends BaseRosActivity {
 
   /**
    * Configuration property which gives the locations of the bridge

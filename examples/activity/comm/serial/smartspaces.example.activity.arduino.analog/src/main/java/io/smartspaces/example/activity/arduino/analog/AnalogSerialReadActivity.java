@@ -17,15 +17,15 @@
 
 package io.smartspaces.example.activity.arduino.analog;
 
-import io.smartspaces.activity.impl.ros.BaseRoutableRosActivity;
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+
+import io.smartspaces.activity.impl.route.BaseRoutableActivity;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpointService;
 import io.smartspaces.util.concurrency.CancellableLoop;
 import io.smartspaces.util.resource.ManagedResourceWithTask;
-
-import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * A Smart Spaces Java-based activity which communicates with an Arduino sketch
@@ -51,7 +51,7 @@ import com.google.common.collect.Maps;
  *
  * @author Keith M. Hughes
  */
-public class AnalogSerialReadActivity extends BaseRoutableRosActivity {
+public class AnalogSerialReadActivity extends BaseRoutableActivity {
 
   /**
    * The name of the config property for obtaining the serial port.
@@ -76,9 +76,8 @@ public class AnalogSerialReadActivity extends BaseRoutableRosActivity {
 
   @Override
   public void onActivitySetup() {
-    communicationEndpointService =
-        getSpaceEnvironment().getServiceRegistry().getRequiredService(
-            SerialCommunicationEndpointService.SERVICE_NAME);
+    communicationEndpointService = getSpaceEnvironment().getServiceRegistry()
+        .getRequiredService(SerialCommunicationEndpointService.SERVICE_NAME);
     getLog().info(
         String.format("Serial ports available: %s", communicationEndpointService.getSerialPorts()));
 
@@ -87,8 +86,8 @@ public class AnalogSerialReadActivity extends BaseRoutableRosActivity {
 
     arduinoEndpoint = communicationEndpointService.newSerialEndpoint(portName);
 
-    addManagedResource(new ManagedResourceWithTask(arduinoEndpoint, new SerialReadTask(),
-        getSpaceEnvironment()));
+    addManagedResource(
+        new ManagedResourceWithTask(arduinoEndpoint, new SerialReadTask(), getSpaceEnvironment()));
   }
 
   /**

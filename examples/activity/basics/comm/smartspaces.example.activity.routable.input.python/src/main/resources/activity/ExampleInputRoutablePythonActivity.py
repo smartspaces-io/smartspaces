@@ -15,9 +15,9 @@
 #  the License.
 ##
 
-from io.smartspaces.activity.impl.ros import BaseRoutableRosActivity
+from io.smartspaces.activity.impl.route import BaseRoutableActivity
 
-class ExampleInputRoutablePythonActivity(BaseRoutableRosActivity):
+class ExampleInputRoutablePythonActivity(BaseRoutableActivity):
 
     def onNewInputMessage(self, channelName, message):
         self.log.info("Got message on input channel " + channelName)

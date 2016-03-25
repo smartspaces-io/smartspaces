@@ -17,18 +17,18 @@
 
 package io.smartspaces.example.activity.control.opensoundcontrol.routable;
 
-import io.smartspaces.activity.impl.ros.BaseRoutableRosActivity;
+import java.util.Map;
+
+import io.smartspaces.activity.impl.route.BaseRoutableActivity;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlClientCommunicationEndpoint;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlClientCommunicationEndpointService;
-
-import java.util.Map;
 
 /**
  * A Smart Spaces Java-based activity that controls an OSC device from a route.
  *
  * @author Keith M. Hughes
  */
-public class OpenSoundControlRoutableExampleActivity extends BaseRoutableRosActivity {
+public class OpenSoundControlRoutableExampleActivity extends BaseRoutableActivity {
 
   /**
    * Configuration property giving the host of the OSC server.
@@ -132,8 +132,8 @@ public class OpenSoundControlRoutableExampleActivity extends BaseRoutableRosActi
   public void onActivitySetup() {
 
     OpenSoundControlClientCommunicationEndpointService endpointService =
-        getSpaceEnvironment().getServiceRegistry().getRequiredService(
-            OpenSoundControlClientCommunicationEndpointService.SERVICE_NAME);
+        getSpaceEnvironment().getServiceRegistry()
+            .getRequiredService(OpenSoundControlClientCommunicationEndpointService.SERVICE_NAME);
 
     String remoteHost =
         getConfiguration().getRequiredPropertyString(CONFIGURATION_PROPERTY_OSC_SERVER_HOST);
@@ -143,13 +143,11 @@ public class OpenSoundControlRoutableExampleActivity extends BaseRoutableRosActi
     controlEndpoint = endpointService.newUdpEndpoint(remoteHost, remotePort, getLog());
     addManagedResource(controlEndpoint);
 
-    frequencyBase =
-        getConfiguration().getRequiredPropertyDouble(CONFIGURATION_PROPERTY_OSC_FREQUENCY_BASE)
-            .floatValue();
-    signalMultiplier =
-        getConfiguration().getRequiredPropertyDouble(CONFIGURATION_PROPERTY_OSC_SIGNAL_MULTIPLER)
-            .floatValue()
-            / getConfiguration().getRequiredPropertyInteger(CONFIGURATION_PROPERTY_ANALOG_MAX);
+    frequencyBase = getConfiguration()
+        .getRequiredPropertyDouble(CONFIGURATION_PROPERTY_OSC_FREQUENCY_BASE).floatValue();
+    signalMultiplier = getConfiguration()
+        .getRequiredPropertyDouble(CONFIGURATION_PROPERTY_OSC_SIGNAL_MULTIPLER).floatValue()
+        / getConfiguration().getRequiredPropertyInteger(CONFIGURATION_PROPERTY_ANALOG_MAX);
 
     oscAddress1 = getConfiguration().getRequiredPropertyString(CONFIGURATION_PROPERTY_OSC_ADDRESS1);
     oscAddress2 = getConfiguration().getRequiredPropertyString(CONFIGURATION_PROPERTY_OSC_ADDRESS2);

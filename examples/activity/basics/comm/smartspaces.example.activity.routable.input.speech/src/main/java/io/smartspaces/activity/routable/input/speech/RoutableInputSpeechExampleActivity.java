@@ -17,11 +17,11 @@
 
 package io.smartspaces.activity.routable.input.speech;
 
-import io.smartspaces.activity.impl.ros.BaseRoutableRosActivity;
+import java.util.Map;
+
+import io.smartspaces.activity.impl.route.BaseRoutableActivity;
 import io.smartspaces.service.speech.synthesis.SpeechSynthesisPlayer;
 import io.smartspaces.service.speech.synthesis.SpeechSynthesisService;
-
-import java.util.Map;
 
 /**
  * An example Speech synthesis activity which listens on a route and speaks what
@@ -29,7 +29,7 @@ import java.util.Map;
  * 
  * @author Keith M. Hughes
  */
-public class RoutableInputSpeechExampleActivity extends BaseRoutableRosActivity {
+public class RoutableInputSpeechExampleActivity extends BaseRoutableActivity {
 
   /**
    * The speech player.
@@ -38,9 +38,8 @@ public class RoutableInputSpeechExampleActivity extends BaseRoutableRosActivity 
 
   @Override
   public void onActivitySetup() {
-    SpeechSynthesisService speechSynthesisService =
-        getSpaceEnvironment().getServiceRegistry().getRequiredService(
-            SpeechSynthesisService.SERVICE_NAME);
+    SpeechSynthesisService speechSynthesisService = getSpaceEnvironment().getServiceRegistry()
+        .getRequiredService(SpeechSynthesisService.SERVICE_NAME);
 
     speechPlayer = speechSynthesisService.newPlayer();
 

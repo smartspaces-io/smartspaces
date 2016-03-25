@@ -17,9 +17,9 @@
 
 package io.smartspaces.example.activity.routable.output.web;
 
-import io.smartspaces.activity.impl.web.BaseRoutableRosWebActivity;
-
 import java.util.Map;
+
+import io.smartspaces.activity.impl.web.BaseRoutableWebActivity;
 
 /**
  * A Smart Spaces activity which provides a routable output web example.
@@ -30,7 +30,7 @@ import java.util.Map;
  * 
  * @author Keith M. Hughes
  */
-public class RoutableOutputWebExampleActivity extends BaseRoutableRosWebActivity {
+public class RoutableOutputWebExampleActivity extends BaseRoutableWebActivity {
 
   @Override
   public void onWebSocketReceive(String connectionId, Object d) {

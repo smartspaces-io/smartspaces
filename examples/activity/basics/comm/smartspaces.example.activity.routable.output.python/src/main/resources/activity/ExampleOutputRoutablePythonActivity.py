@@ -15,9 +15,9 @@
 #  the License.
 ##
 
-from io.smartspaces.activity.impl.ros import BaseRoutableRosActivity
+from io.smartspaces.activity.impl.route import BaseRoutableActivity
 
-class ExampleOutputRoutablePythonActivity(BaseRoutableRosActivity):
+class ExampleOutputRoutablePythonActivity(BaseRoutableActivity):
 
     def onActivityActivate(self):
         self.log.info("Activated")

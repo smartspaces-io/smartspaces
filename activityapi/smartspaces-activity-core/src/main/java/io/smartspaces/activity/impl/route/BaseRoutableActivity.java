@@ -15,28 +15,27 @@
  * the License.
  */
 
-package io.smartspaces.activity.impl.ros;
+package io.smartspaces.activity.impl.route;
+
+import java.util.Map;
 
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.component.route.RoutableInputMessageListener;
 import io.smartspaces.activity.component.route.ros.BasicRosMessageRouterActivityComponent;
 import io.smartspaces.activity.component.route.ros.RosMessageRouterActivityComponent;
 import io.smartspaces.activity.execution.ActivityMethodInvocation;
+import io.smartspaces.activity.impl.ros.BaseRosActivity;
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
-
-import java.util.Map;
-
 import smartspaces_msgs.GenericMessage;
 
 /**
- * An {@link Activity} which provides a set of named input ROS topics and a set
- * of named output ROS topics which will communicate via strings or JSON.
+ * An {@link Activity} that simplifies the use of SmartSpaces routes.
  *
  * @author Keith M. Hughes
  */
-public class BaseRoutableRosActivity extends BaseRosActivity {
+public class BaseRoutableActivity extends BaseRosActivity {
 
   /**
    * The JSON mapper.
@@ -52,16 +51,13 @@ public class BaseRoutableRosActivity extends BaseRosActivity {
   public void commonActivitySetup() {
     super.commonActivitySetup();
 
-    router =
-        addActivityComponent(new BasicRosMessageRouterActivityComponent(GenericMessage._TYPE,
-            new RoutableInputMessageListener() {
-              @SuppressWarnings("unchecked")
-              @Override
-              public void
-                  onNewRoutableInputMessage(String channelName, Map<String, Object> message) {
-                handleRoutableInputMessage(channelName, message);
-              }
-            }));
+    router = addActivityComponent(new BasicRosMessageRouterActivityComponent(GenericMessage._TYPE,
+        new RoutableInputMessageListener() {
+          @Override
+          public void onNewRoutableInputMessage(String channelName, Map<String, Object> message) {
+            handleRoutableInputMessage(channelName, message);
+          }
+        }));
   }
 
   /**

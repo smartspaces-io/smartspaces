@@ -17,9 +17,9 @@
 
 package io.smartspaces.example.activity.routable.input.web;
 
-import io.smartspaces.activity.impl.web.BaseRoutableRosWebActivity;
-
 import java.util.Map;
+
+import io.smartspaces.activity.impl.web.BaseRoutableWebActivity;
 
 /**
  * A Smart Spaces activity which provides a routable input web example.
@@ -29,7 +29,7 @@ import java.util.Map;
  *
  * @author Keith M. Hughes
  */
-public class RoutableInputWebExampleActivity extends BaseRoutableRosWebActivity {
+public class RoutableInputWebExampleActivity extends BaseRoutableWebActivity {
 
   @Override
   public void onNewInputMessage(String channelName, Map<String, Object> message) {

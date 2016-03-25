@@ -18,7 +18,7 @@
 package io.smartspaces.liveactivity.runtime.activity.wrapper.internal.bridge.topic;
 
 import io.smartspaces.activity.Activity;
-import io.smartspaces.activity.impl.ros.TopicBridgeRosActivity;
+import io.smartspaces.activity.impl.route.TopicBridgeRosActivity;
 import io.smartspaces.liveactivity.runtime.activity.wrapper.ActivityWrapper;
 import io.smartspaces.liveactivity.runtime.activity.wrapper.BaseActivityWrapper;
 

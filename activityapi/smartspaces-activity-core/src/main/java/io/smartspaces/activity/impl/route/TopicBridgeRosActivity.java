@@ -15,9 +15,10 @@
  * the License.
  */
 
-package io.smartspaces.activity.impl.ros;
+package io.smartspaces.activity.impl.route;
 
 import io.smartspaces.activity.Activity;
+import io.smartspaces.activity.impl.ros.BaseRosActivity;
 import io.smartspaces.messaging.bridge.MessageBridge;
 import io.smartspaces.messaging.bridge.MessageBridgeFactory;
 import io.smartspaces.messaging.bridge.ros.RosMessageBridgeFactory;

@@ -17,16 +17,16 @@
 
 package io.smartspaces.example.activity.routable.output;
 
-import io.smartspaces.activity.impl.ros.BaseRoutableRosActivity;
-
 import java.util.Map;
 
 import com.google.common.collect.Maps;
 
+import io.smartspaces.activity.impl.route.BaseRoutableActivity;
+
 /**
  * A simple Smart Spaces Java-based activity for writing to a route.
  */
-public class SimpleJavaRoutableOutputActivity extends BaseRoutableRosActivity {
+public class SimpleJavaRoutableOutputActivity extends BaseRoutableActivity {
 
   @Override
   public void onActivityActivate() {

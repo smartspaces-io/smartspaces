@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,21 +14,10 @@
  * the License.
  */
 
-package io.smartspaces.activity.impl.web;
-
-import io.smartspaces.activity.component.web.BasicWebBrowserActivityComponent;
-
 /**
- * A web-based ROS Smart Spaces activity which is routable.
- *
+ * This package gives activity base classes that simplify the use of the
+ * SmartSpaces inter-activity communication system called routes.
+ * 
  * @author Keith M. Hughes
  */
-public abstract class BaseRoutableRosWebActivity extends BaseRoutableRosWebServerActivity {
-
-  @Override
-  public void commonActivitySetup() {
-    super.commonActivitySetup();
-
-    addActivityComponent(new BasicWebBrowserActivityComponent());
-  }
-}
+package io.smartspaces.activity.impl.route;

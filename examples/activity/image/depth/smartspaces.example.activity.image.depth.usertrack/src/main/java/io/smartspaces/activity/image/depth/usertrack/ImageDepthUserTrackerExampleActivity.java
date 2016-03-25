@@ -17,21 +17,21 @@
 
 package io.smartspaces.activity.image.depth.usertrack;
 
-import io.smartspaces.activity.impl.ros.BaseRoutableRosActivity;
+import java.util.List;
+
+import io.smartspaces.activity.impl.route.BaseRoutableActivity;
 import io.smartspaces.interaction.model.entity.TrackedEntity;
 import io.smartspaces.interaction.model.entity.TrackedEntityListener;
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder;
 import io.smartspaces.util.geometry.Vector3;
 
-import java.util.List;
-
 /**
  * An activity that tracks users in front of a depth camera.
  *
  * @author Keith M. Hughes
  */
-public class ImageDepthUserTrackerExampleActivity extends BaseRoutableRosActivity {
+public class ImageDepthUserTrackerExampleActivity extends BaseRoutableActivity {
 
   /**
    * Route channel to write on.
@@ -70,9 +70,8 @@ public class ImageDepthUserTrackerExampleActivity extends BaseRoutableRosActivit
   public void onActivitySetup() {
     getLog().info("Depth camera usertrack activity starting!");
 
-    DepthCameraService service =
-        getSpaceEnvironment().getServiceRegistry().getRequiredService(
-            DepthCameraService.SERVICE_NAME);
+    DepthCameraService service = getSpaceEnvironment().getServiceRegistry()
+        .getRequiredService(DepthCameraService.SERVICE_NAME);
 
     UserTrackerDepthCameraEndpoint endpoint = service.newUserTrackerDepthCameraEndpoint(getLog());
     endpoint.addTrackedEntityListener(new TrackedEntityListener<Vector3>() {
@@ -102,19 +101,19 @@ public class ImageDepthUserTrackerExampleActivity extends BaseRoutableRosActivit
       for (TrackedEntity<Vector3> entity : entities) {
         message.newObject();
 
-        message.put(MESSAGE_PROPERTY_ENTITY_ID, entity.getId());
+        message.setProperty(MESSAGE_PROPERTY_ENTITY_ID, entity.getId());
 
         Vector3 position = entity.getPosition();
-        message.put(MESSAGE_PROPERTY_ENTITY_X, position.getV0());
-        message.put(MESSAGE_PROPERTY_ENTITY_Y, position.getV1());
-        message.put(MESSAGE_PROPERTY_ENTITY_Z, position.getV2());
+        message.setProperty(MESSAGE_PROPERTY_ENTITY_X, position.getV0());
+        message.setProperty(MESSAGE_PROPERTY_ENTITY_Y, position.getV1());
+        message.setProperty(MESSAGE_PROPERTY_ENTITY_Z, position.getV2());
 
         message.up();
       }
 
       getLog().debug(String.format("Entities detected: %s", message));
 
-      sendOutputDynamicObjectBuilder(ROUTE_CHANNEL, message);
+      sendOutputMessage(ROUTE_CHANNEL, message);
     }
   }
 }

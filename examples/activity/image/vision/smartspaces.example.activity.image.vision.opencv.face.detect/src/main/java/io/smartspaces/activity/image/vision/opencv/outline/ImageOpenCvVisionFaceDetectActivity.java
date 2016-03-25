@@ -17,18 +17,18 @@
 
 package io.smartspaces.activity.image.vision.opencv.outline;
 
+import java.io.File;
+import java.util.Collection;
+
+import javax.swing.JFrame;
+
 import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.activity.impl.ros.BaseRoutableRosActivity;
+import io.smartspaces.activity.impl.route.BaseRoutableActivity;
 import io.smartspaces.interaction.detection.DetectionEventListener;
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder;
 import io.smartspaces.util.geometry.Rectangle2;
 import io.smartspaces.util.ui.swing.JFrameManagedResource;
-
-import java.io.File;
-import java.util.Collection;
-
-import javax.swing.JFrame;
 
 /**
  * An activity which captures video frames and detects faces in them and sends
@@ -36,7 +36,7 @@ import javax.swing.JFrame;
  *
  * @author Keith M. Hughes
  */
-public class ImageOpenCvVisionFaceDetectActivity extends BaseRoutableRosActivity {
+public class ImageOpenCvVisionFaceDetectActivity extends BaseRoutableActivity {
 
   /**
    * Location in the controller filesystem for obtaining the classifiers.
@@ -120,7 +120,8 @@ public class ImageOpenCvVisionFaceDetectActivity extends BaseRoutableRosActivity
     cascadeListener
         .addDetectionEventListener(new DetectionEventListener<OpenCvVideoLoop, Rectangle2>() {
           @Override
-          public void onNewDetectionEvent(OpenCvVideoLoop source, Collection<Rectangle2> eventData) {
+          public void onNewDetectionEvent(OpenCvVideoLoop source,
+              Collection<Rectangle2> eventData) {
             handleNewDetectionEvent(eventData);
           }
         });
@@ -129,9 +130,9 @@ public class ImageOpenCvVisionFaceDetectActivity extends BaseRoutableRosActivity
         new CompositeVideoFrameProcessor<Mat>(getLog());
     compositeListener.addComponent(cascadeListener);
 
-    OpenCvVideoLoop videoLoop =
-        new OpenCvVideoLoop(getConfiguration().getPropertyInteger(CONFIGURATION_NAME_CAMERA_ID,
-            CAMERA_ID_DEFAULT), getLog());
+    OpenCvVideoLoop videoLoop = new OpenCvVideoLoop(
+        getConfiguration().getPropertyInteger(CONFIGURATION_NAME_CAMERA_ID, CAMERA_ID_DEFAULT),
+        getLog());
     videoLoop.addProcessor(compositeListener);
     getManagedCommands().submit(videoLoop);
 
@@ -199,8 +200,8 @@ public class ImageOpenCvVisionFaceDetectActivity extends BaseRoutableRosActivity
     String classifierPath = new File(haarCascadesDirectoryPath, classifierName).getAbsolutePath();
     CascadeClassifier classifier = new CascadeClassifier(classifierPath);
     if (classifier.empty()) {
-      throw new SimpleSmartSpacesException(String.format("Cannot find face classification file %s",
-          classifierPath));
+      throw new SimpleSmartSpacesException(
+          String.format("Cannot find face classification file %s", classifierPath));
     }
 
     return classifier;

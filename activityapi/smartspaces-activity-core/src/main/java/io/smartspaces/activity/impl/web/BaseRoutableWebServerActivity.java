@@ -20,7 +20,7 @@ package io.smartspaces.activity.impl.web;
 import io.smartspaces.activity.component.web.BasicWebServerActivityComponent;
 import io.smartspaces.activity.component.web.WebServerActivityComponent;
 import io.smartspaces.activity.execution.ActivityMethodInvocation;
-import io.smartspaces.activity.impl.ros.BaseRoutableRosActivity;
+import io.smartspaces.activity.impl.route.BaseRoutableActivity;
 import io.smartspaces.service.web.server.BasicMultipleConnectionWebServerWebSocketHandlerFactory;
 import io.smartspaces.service.web.server.HttpFileUpload;
 import io.smartspaces.service.web.server.HttpFileUploadListener;
@@ -38,7 +38,7 @@ import java.util.Map;
  *
  * @author Keith M. Hughes
  */
-public class BaseRoutableRosWebServerActivity extends BaseRoutableRosActivity implements
+public class BaseRoutableWebServerActivity extends BaseRoutableActivity implements
     MultipleConnectionWebSocketHandler, HttpFileUploadListener {
 
   /**

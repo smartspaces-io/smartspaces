@@ -17,9 +17,9 @@
 
 package io.smartspaces.activity.example.routable.input.web.ball;
 
-import io.smartspaces.activity.impl.web.BaseRoutableRosWebActivity;
-
 import java.util.Map;
+
+import io.smartspaces.activity.impl.web.BaseRoutableWebActivity;
 
 /**
  * A sample Smart Spaces Java-based activity which uses web sockets to
@@ -27,7 +27,7 @@ import java.util.Map;
  *
  * @author Keith M. Hughes
  */
-public class RoutableInputWebBallExampleActivity extends BaseRoutableRosWebActivity {
+public class RoutableInputWebBallExampleActivity extends BaseRoutableWebActivity {
 
   @Override
   public void onNewInputMessage(String channelName, Map<String, Object> message) {

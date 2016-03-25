@@ -3,25 +3,32 @@ Basic Smart Spaces Communications
 
 Bringing Live Activities up and down is nice and all, but if you really
 want interesting behaviors in your space, you need your Live Activities
-to communicate with each other.
+to communicate with each other. In Smart Spaces, the easiest way is with  *routes*.
 
-Smart Spaces uses ROS to provide communication. Using ROS directly gives the
-most power, but it is somewhat complex to use. So Smart Spaces
-provides a simpler-to-use mechanism called *routes* based on the popular communication
-format JSON which is used in web applications for transferring name/value
-pairs between Live Activities. Routes use ROS under the covers,
-but other than a few configuration parameters that are ROS specific,
-you need never think about ROS.
+Routes use a technology called pub/sub (or publish/subscribe) to provide communication
+between activities. pub/sub uses the concept of *topics*, which you can think of as global 
+communication channels that can have multiple writers, called *publishers*, and multiple 
+readers, called *subscribers*. Using pub/sub has a real nice consequence, it means your
+activity communication can be *composable*. You needn't figure out every piece that needs to
+talk with every other piece ahead of time. Instead you define a topic, and the format for
+messages on that topic. You can then easily add in subscribers for the messages on that topic as
+you find some other component needs the information on the topic. New providers of the topic
+information can be added as you have new ways of obtaining that information. This is probably 
+as clear as mud right now, but hopefully it will become clearer as we go through more detailed
+examples.
 
-Direct use of ROS will be covered in another chapter.
+Message formats in general pub/sub can be anything. But in SmartSpaces, routes specifically use
+a collection of name/value pairs. The collection is anything serialization as a JSON dictionary, 
+the message is transmitted on the network as a JSON-encoded string.
+
+SmsrtSpaces supports both ROS and MQTT pub/sub out of the box. It is possible to use raw
+ROS and MQTT messaging in SmartSpaces, but routes give a simplified model of both of these packages
+and all you need to think about are a few simple configuration parameters. Examples will be given
+later in this manual on using the raw protocols
 
 Route Basics
 ==========
 
-The message format for route communication is very simple,
-a collection of name/value pairs.
-The collection is anything serialization as a JSON message, in fact the message is transmitted
-on the network as a JSON-encoded string.
 
 The basic Smart Spaces communication system uses ROS for Activity to Activity and Master
 to Controller communication. ROS uses the concept of Global Topics, which you can think of
@@ -78,11 +85,11 @@ that actually mean something for what the route is used for.
 
 The property ``space.activity.routes.inputs`` would contain the local names of all route channels
 the activity will read from. Every channel to be read from will be listed in this property,
-with each name separated by a ``:``. For example
+with each name separated by whitespace (i.e. spaces, tabs). For example
 
 
 +------------------------------+----------------+
-| space.activity.routes.inputs | foo:bar:bletch |
+| space.activity.routes.inputs | foo bar  bletch |
 +------------------------------+----------------+
 
 
@@ -95,13 +102,13 @@ input route named ``input1``, so we must have a property with the name
 global topic for the route.
 
 Multiple global topics can be listed as the value for the ``space.activity.route.input`` property, once
-again separated by a ``:``. This means the channel will listen on all topics listed at the same
+again separated by whitespace. This means the channel will listen on all topics listed at the same
 time.
 
 Similarly
 
 +-------------------------------+----------------+
-| space.activity.routes.outputs | foo:bar:bletch |
+| space.activity.routes.outputs | foo bar bletch |
 +-------------------------------+----------------+
 
 would create output channels named ``foo``, ``bar``, and ``bletch``.
@@ -113,8 +120,15 @@ output route named ``output1``, so we must have a property with the name
 global topic for the route.
 
 Multiple global topics can be listed as the value for the ``space.activity.route.output`` property, once
-again separated by a ``:``. This means the channel will write to all topics listed at the same
-time.
+again separated by whitespace. This means the channel will write to all topics listed at the same
+time. For example,
+
+
++----------------------------------+---------------------------+
+| space.activity.routes.output.foo | /my/topic /my/other/topic |
++----------------------------------+---------------------------+
+
+configures channel `foo` to write on both topics `/my/topic` and `/my/other/topic`.
 
 Any Activity which uses ROS communication, remember that routes are implemented using ROS
 communication, must have the ``space.activity.ros.node.name`` configuration property defined.
@@ -123,6 +137,32 @@ a relative name, meaning don't start it with a ``/``. Names which start with a `
 absolute names, and should only be used if you know what you are doing and have a good reason
 for it.
 
+Picking Which Pub/Sub System to Use
+===================================
+
+As stated earlier, SmartSpaces supports both ROS and MQTT for routes. The default technology 
+used is ROS. For example, if output topics are defined as
+
++----------------------------------+---------------------------+
+| space.activity.routes.output.foo | /my/topic /my/other/topic |
++----------------------------------+---------------------------+
+
+both topics `/my/topic` and `/my/other/topic` will be ROS topics. 
+
+You can configure the default technology by setting the configuration parameter 
+`space.activity.route.protocol.default`. If it has the value `ros`, the default technology 
+for a given topic will be ROS. If you give it the value `mqtt`, the default pub/sub technology
+for a topic will be MQTT.
+
+You can also specify the technology you want used as part of the topic name. For example,
+
++----------------------------------+------------------------------------+
+| space.activity.routes.output.foo | ros:/my/topic mqtt:/my/other/topic |
++----------------------------------+------------------------------------+
+
+would use ROS for the topic `/my/topic` and MQTT for the topic `/my/other/topic`. Writing
+to route `foo` would then send the same message to both ROS and MQTT subscribers.
+
 Using Routes In Code
 ====================
 
@@ -130,10 +170,10 @@ Using Routes In Code
 Routes with ``BaseRoutableRosActivity``
 --------------------
 
-The simplest way to use a route is to base your Activity on the ``BaseRoutableRosActivity``
+The simplest way to use a route is to base your Activity on the ``BaseRoutableActivity``
 Supported Activity class.
 
-To read from the route, implement the ``onNewInputJson`` method. This method has two arguments,
+To read from the route, implement the ``onNewInputMessage`` method. This method has two arguments,
 one which gives the local name of the channel which received the message, and the second
 which gives the map of name/value pairs from the message.
 
@@ -142,16 +182,16 @@ from. Use the first argument to decide which route the message came from.
 
 .. code-block:: java
 
-    public class SimpleJavaRoutableInputActivity  extends BaseRoutableRosActivity {
+    public class SimpleJavaRoutableInputActivity  extends BaseRoutableActivity {
 
         @Override
-        public void onNewInputJson(String channelName, Map<String, Object> message) {
+        public void onNewInputMessage(String channelName, Map<String, Object> message) {
             getLog().info("Got message on input channel " + channelName);
             getLog().info(message);
         }
     }
 
-To write to a route, create a map of name/value pairs and call the ``sendOutputJson`` method.
+To write to a route, create a map of name/value pairs and call the ``sendOutputMessage`` method.
 The first argument will be the name of the output channel you want to write to, the second argument
 will be the map of name/value pairs to send.
 
@@ -161,16 +201,16 @@ will be the map of name/value pairs to send.
 
         @Override
         public void onActivityActivate() {
-            Map<String, Object> message = Maps.newHashMap();
+            Map<String, Object> message = new HashMap<>();
             message.put("message", "yipee! activated!");
-            sendOutputJson("output1", message);
+            sendOutputMessage("output1", message);
         }
 
         @Override
         public void onActivityDeactivate() {
-            Map<String, Object> message = Maps.newHashMap();
+            Map<String, Object> message = new HashMap<>();
             message.put("message", "bummer! deactivated!");
-            sendOutputJson("output1", message);
+            sendOutputMessage("output1", message);
         }
     }
 

@@ -17,14 +17,13 @@
 
 package io.smartspaces.activity.component.route.ros;
 
-import io.smartspaces.activity.component.ActivityComponent;
-import io.smartspaces.activity.component.ros.RosActivityComponent;
-import io.smartspaces.activity.component.route.MessageRouterActivityComponent;
+import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import java.util.List;
-import java.util.Map;
+import io.smartspaces.activity.component.ActivityComponent;
+import io.smartspaces.activity.component.ros.RosActivityComponent;
+import io.smartspaces.activity.component.route.MessageRouterActivityComponent;
 
 /**
  * An {@link ActivityComponent} instance which supports multiple named message
@@ -45,7 +44,7 @@ public interface RosMessageRouterActivityComponent extends MessageRouterActivity
   /**
    * Description of this component.
    */
-  String COMPONENT_DESCRIPTION = "ROS Message Router";
+  String COMPONENT_DESCRIPTION = "Pub/Sub Message Router";
 
   /**
    * Dependencies for the component.

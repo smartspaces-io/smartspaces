@@ -17,7 +17,11 @@
 
 package io.smartspaces.example.activity.arduino.analog.trigger;
 
-import io.smartspaces.activity.impl.ros.BaseRoutableRosActivity;
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+
+import io.smartspaces.activity.impl.route.BaseRoutableActivity;
 import io.smartspaces.event.trigger.SimpleThresholdTrigger;
 import io.smartspaces.event.trigger.Trigger;
 import io.smartspaces.event.trigger.TriggerEventType;
@@ -27,10 +31,6 @@ import io.smartspaces.service.comm.serial.SerialCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpointService;
 import io.smartspaces.util.concurrency.CancellableLoop;
 import io.smartspaces.util.resource.ManagedResourceWithTask;
-
-import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 /**
  * A Smart Spaces Java-based activity which communicates with an Arduino sketch
@@ -57,7 +57,7 @@ import com.google.common.collect.Maps;
  * 
  * @author Keith M. Hughes
  */
-public class TriggerArduinoAnalogActivity extends BaseRoutableRosActivity {
+public class TriggerArduinoAnalogActivity extends BaseRoutableActivity {
 
   /**
    * The name of the config property for obtaining the serial port.
@@ -102,9 +102,8 @@ public class TriggerArduinoAnalogActivity extends BaseRoutableRosActivity {
 
   @Override
   public void onActivitySetup() {
-    communicationEndpointService =
-        getSpaceEnvironment().getServiceRegistry().getRequiredService(
-            SerialCommunicationEndpointService.SERVICE_NAME);
+    communicationEndpointService = getSpaceEnvironment().getServiceRegistry()
+        .getRequiredService(SerialCommunicationEndpointService.SERVICE_NAME);
     getLog().info(
         String.format("Serial ports available: %s", communicationEndpointService.getSerialPorts()));
 

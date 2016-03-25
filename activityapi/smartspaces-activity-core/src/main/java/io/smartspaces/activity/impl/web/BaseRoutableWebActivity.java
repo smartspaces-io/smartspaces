@@ -1,13 +1,13 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
  * Copyright (C) 2012 Google Inc.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -15,20 +15,21 @@
  * the License.
  */
 
-package io.smartspaces.example.activity.routable.input;
+package io.smartspaces.activity.impl.web;
 
-import java.util.Map;
-
-import io.smartspaces.activity.impl.route.BaseRoutableActivity;
+import io.smartspaces.activity.component.web.BasicWebBrowserActivityComponent;
 
 /**
- * A simple Smart Spaces Java-based activity for reading from a route.
+ * A web-based Smart Spaces activity that is routable.
+ *
+ * @author Keith M. Hughes
  */
-public class SimpleJavaRoutableInputActivity extends BaseRoutableActivity {
+public abstract class BaseRoutableWebActivity extends BaseRoutableWebServerActivity {
 
   @Override
-  public void onNewInputMessage(String channelName, Map<String, Object> message) {
-    getLog().info("Got message on input channel " + channelName);
-    getLog().info(message);
+  public void commonActivitySetup() {
+    super.commonActivitySetup();
+
+    addActivityComponent(new BasicWebBrowserActivityComponent());
   }
 }

@@ -17,11 +17,10 @@
 
 package io.smartspaces.activity.example.web;
 
-import io.smartspaces.activity.impl.web.BaseWebActivity;
-
+import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
+import io.smartspaces.activity.impl.web.BaseWebActivity;
 
 /**
  * A sample Smart Spaces Java-based activity which uses web sockets to
@@ -42,7 +41,7 @@ public class JavaWebExampleActivity extends BaseWebActivity {
   }
 
   private void sendImageUrl(String imageUrl) {
-    Map<String, Object> data = Maps.newHashMap();
+    Map<String, Object> data = new HashMap<>();
     data.put("imageUrl", imageUrl);
 
     // Send data to all websocket connections

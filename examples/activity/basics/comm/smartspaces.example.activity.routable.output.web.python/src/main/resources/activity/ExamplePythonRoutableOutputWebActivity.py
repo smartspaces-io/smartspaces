@@ -15,9 +15,9 @@
 #  the License.
 ##
 
-from io.smartspaces.activity.impl.web import BaseRoutableRosWebActivity
+from io.smartspaces.activity.impl.web import BaseRoutableWebActivity
 
-class ExamplePythonRoutableOutputWebActivity(BaseRoutableRosWebActivity):
+class ExamplePythonRoutableOutputWebActivity(BaseRoutableWebActivity):
     def onActivityActivate(self):
         self.sendImageUrl("images/activate.jpg")
 

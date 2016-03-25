@@ -17,6 +17,16 @@
 
 package io.smartspaces.activity.music.jukebox;
 
+import java.io.File;
+import java.util.List;
+
+import org.ros.message.MessageFactory;
+import org.ros.message.MessageListener;
+import org.ros.node.ConnectedNode;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.impl.ros.BaseRosActivity;
 import io.smartspaces.configuration.Configuration;
@@ -28,20 +38,10 @@ import io.smartspaces.service.audio.player.internal.ScanningFileAudioRepository;
 import io.smartspaces.service.audio.player.jukebox.AudioJukebox;
 import io.smartspaces.service.audio.player.jukebox.AudioJukeboxListener;
 import io.smartspaces.service.audio.player.jukebox.internal.simple.SimpleAudioJukebox;
-import io.smartspaces.util.ros.RosPublishers;
-import io.smartspaces.util.ros.RosSubscribers;
-import io.smartspaces.util.ros.StandardRosPublishers;
-import io.smartspaces.util.ros.StandardRosSubscribers;
-
-import java.io.File;
-import java.util.List;
-
-import org.ros.message.MessageFactory;
-import org.ros.message.MessageListener;
-import org.ros.node.ConnectedNode;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import io.smartspaces.util.messaging.ros.RosPublishers;
+import io.smartspaces.util.messaging.ros.RosSubscribers;
+import io.smartspaces.util.messaging.ros.StandardRosPublishers;
+import io.smartspaces.util.messaging.ros.StandardRosSubscribers;
 
 /**
  * The Music Jukebox activity.
@@ -102,9 +102,8 @@ public class MusicJukeboxActivity extends BaseRosActivity implements AudioJukebo
     setupRosTopics(configuration);
     startMusicRepository(configuration);
 
-    AudioTrackPlayerService audioService =
-        getSpaceEnvironment().getServiceRegistry().getRequiredService(
-            AudioTrackPlayerService.SERVICE_NAME);
+    AudioTrackPlayerService audioService = getSpaceEnvironment().getServiceRegistry()
+        .getRequiredService(AudioTrackPlayerService.SERVICE_NAME);
     AudioTrackPlayer audioPlayer = audioService.newTrackPlayer(getLog());
     addManagedResource(audioPlayer);
 
@@ -150,8 +149,8 @@ public class MusicJukeboxActivity extends BaseRosActivity implements AudioJukebo
     rosMessageFactory = node.getTopicMessageFactory();
 
     jukeboxControlSubscribers = new StandardRosSubscribers<MusicJukeboxControl>(getLog());
-    jukeboxControlSubscribers.addSubscribers(node, "smartspaces_msgs/MusicJukeboxControl", Sets
-        .newHashSet(configuration
+    jukeboxControlSubscribers.addSubscribers(node, "smartspaces_msgs/MusicJukeboxControl",
+        Sets.newHashSet(configuration
             .getRequiredPropertyString(CONFIGURATION_MUSIC_JUKEBOX_CONTROL_ROS_TOPIC_NAME)),
         new MessageListener<MusicJukeboxControl>() {
           @Override
@@ -161,8 +160,8 @@ public class MusicJukeboxActivity extends BaseRosActivity implements AudioJukebo
         });
 
     jukeboxAnnouncePublishers = new StandardRosPublishers<MusicJukeboxAnnounce>(getLog());
-    jukeboxAnnouncePublishers.addPublishers(node, "smartspaces_msgs/MusicJukeboxAnnounce", Sets
-        .newHashSet(configuration
+    jukeboxAnnouncePublishers.addPublishers(node, "smartspaces_msgs/MusicJukeboxAnnounce",
+        Sets.newHashSet(configuration
             .getRequiredPropertyString(CONFIGURATION_MUSIC_JUKEBOX_ANNOUNCE_ROS_TOPIC_NAME)));
   }
 
@@ -219,8 +218,8 @@ public class MusicJukeboxActivity extends BaseRosActivity implements AudioJukebo
           getLog().error(String.format("Unknown music jukebox command %d", request.getOperation()));
       }
     } catch (Exception e) {
-      getLog().error(
-          String.format("Error during music jukebox command %d", request.getOperation()), e);
+      getLog().error(String.format("Error during music jukebox command %d", request.getOperation()),
+          e);
     }
   }
 

@@ -14,14 +14,15 @@ public interface MqttSubscribers {
   /**
    * Add a collection of subscriber topics to the collection.
    * 
-   * @param mqttMaster
-   *          the MQTT master for the topic names
+   * @param mqttBroker
+   *          the MQTT broker for the topic names
    * @param topicNames
    *          the topic names to be subscribed to from the master
    * @param callback
    *          the callback for all message responses
    */
-  void addSubscribers(String mqttMaster, Set<String> topicNames, MqttCallback callback);
+  void addSubscribers(MqttBrokerDescription mqttBroker, Set<String> topicNames,
+      MqttCallback callback);
 
   /**
    * Shut down all subscribers.

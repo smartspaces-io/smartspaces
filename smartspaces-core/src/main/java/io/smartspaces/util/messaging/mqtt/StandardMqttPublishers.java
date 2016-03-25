@@ -84,12 +84,12 @@ public class StandardMqttPublishers<T> implements MqttPublishers<T> {
   }
 
   @Override
-  public synchronized void addPublishers(String mqttMaster, Set<String> topicNames) {
+  public synchronized void addPublishers(MqttBrokerDescription mqttBroker, Set<String> topicNames) {
     // TODO(keith): Make this settable and configurable
     MqttClientPersistence persistence = new MemoryPersistence();
 
     log.debug(String.format("Adding publishers for topic names %s to MQTT master %s", topicNames,
-        mqttMaster));
+        mqttBroker));
 
     for (String topicName : topicNames) {
 
@@ -99,7 +99,7 @@ public class StandardMqttPublishers<T> implements MqttPublishers<T> {
       try {
         // TODO(keith): Create map of MQTT masters to MqttClientinformation
         // object and have set of topics inside the client info.
-        client = new MqttAsyncClient(mqttMaster, nodeName, persistence);
+        client = new MqttAsyncClient(mqttBroker.getBrokerAddress(), nodeName, persistence);
       } catch (MqttException e) {
         log.error(String.format("Failed adding publisher topic %s", topicName), e);
         continue;

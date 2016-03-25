@@ -94,6 +94,13 @@ public interface MessageRouterActivityComponent extends ActivityComponent {
   String CONFIGURATION_VALUE_DEFAULT_ROUTE_PROTOCOL_DEFAULT = "ros";
 
   /**
+   * Configuration property value for the default MQTT broker description.
+   */
+  // TODO(keith): Move this somewhere more reasonable.
+  String CONFIGURATION_MESSAGING_MQTT_BROKERDESCRIPTION_DEFAULT =
+      "smartspaces.messaging.mqtt.brokerdescription.default";
+
+  /**
    * Get the node name for the router.
    *
    * @return the node name

@@ -66,13 +66,13 @@ public class StandardMqttSubscribers implements MqttSubscribers {
   }
 
   @Override
-  public synchronized void addSubscribers(String mqttMaster, Set<String> topicNames,
+  public synchronized void addSubscribers(MqttBrokerDescription mqttBroker, Set<String> topicNames,
       MqttCallback callback) {
     // TODO(keith): Make this settable and configurable
     MqttClientPersistence persistence = new MemoryPersistence();
 
     log.debug(String.format("Adding subscribers for topic names %s to MQTT master %s", topicNames,
-        mqttMaster));
+        mqttBroker));
 
     for (String topicName : topicNames) {
 
@@ -82,7 +82,7 @@ public class StandardMqttSubscribers implements MqttSubscribers {
       try {
         // TODO(keith): Map topics to the particular MQTT client so when
         // transmitting, we get the correct client for that topic.
-        client = new MqttClient(mqttMaster, nodeName, persistence);
+        client = new MqttClient(mqttBroker.getBrokerAddress(), nodeName, persistence);
       } catch (MqttException e) {
         log.error(String.format("Failed adding subscriber topic %s", topicName), e);
         continue;

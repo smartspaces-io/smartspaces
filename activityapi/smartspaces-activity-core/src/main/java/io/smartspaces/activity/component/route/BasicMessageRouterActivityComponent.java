@@ -51,6 +51,7 @@ import io.smartspaces.messaging.route.ros.MapGenericMessageMessageEncoder;
 import io.smartspaces.messaging.route.ros.RosRouteMessagePublisher;
 import io.smartspaces.messaging.route.ros.RosRouteMessageSubscriber;
 import io.smartspaces.time.TimeProvider;
+import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
 import io.smartspaces.util.messaging.mqtt.MqttPublishers;
 import io.smartspaces.util.messaging.mqtt.MqttSubscribers;
 import io.smartspaces.util.messaging.mqtt.StandardMqttPublishers;
@@ -69,6 +70,9 @@ import smartspaces_msgs.GenericMessage;
 public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivityComponent
     implements IncomingRouteMessageHandler {
 
+  /**
+   * The ROS message type for routes.
+   */
   private static final String ROS_ROUTE_MESSAGE_TYPE = GenericMessage._TYPE;
 
   /**
@@ -118,6 +122,8 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
    * A message codec for MQTT route messages.
    */
   private MessageCodec<Map<String, Object>, byte[]> mqttMessageCodec = new MapByteArrayCodec();
+
+  private MqttBrokerDescription mqttBrokerDescription;
 
   @Override
   public String getName() {
@@ -202,7 +208,7 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
         MqttPublishers<Map<String, Object>> publishers =
             new StandardMqttPublishers<Map<String, Object>>(getNodeName(), mqttMessageCodec,
                 getComponentContext().getActivity().getLog());
-        publishers.addPublishers("tcp://localhost:1883", topicNamesForProtocol);
+        publishers.addPublishers(getMqttBrokerDescription(), topicNamesForProtocol);
 
         routeMessagePublishers.add(new MqttRouteMessagePublisher(channelId, publishers));
       } else {
@@ -261,7 +267,7 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
             new MqttRouteMessageSubscriber(channelId, subscribers, mqttMessageCodec);
         routeMessageSubscribers.add(mqttRouteMessageSubscriber);
 
-        subscribers.addSubscribers("tcp://localhost:1883", topicNamesForProtocol,
+        subscribers.addSubscribers(getMqttBrokerDescription(), topicNamesForProtocol,
             new MqttCallback() {
               @Override
               public void connectionLost(Throwable cause) {
@@ -294,6 +300,21 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
     if (routeMessageSubscriber != null) {
       inputSubscribers.put(channelId, routeMessageSubscriber);
     }
+  }
+
+  /**
+   * Get the MQTT broker description.
+   * 
+   * @return the MQTT broker description
+   */
+  private MqttBrokerDescription getMqttBrokerDescription() {
+    if (mqttBrokerDescription == null) {
+      mqttBrokerDescription =
+          new MqttBrokerDescription(getComponentContext().getActivity().getConfiguration()
+              .getRequiredPropertyString(CONFIGURATION_MESSAGING_MQTT_BROKERDESCRIPTION_DEFAULT));
+    }
+
+    return mqttBrokerDescription;
   }
 
   @Override

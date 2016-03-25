@@ -88,9 +88,9 @@ the activity will read from. Every channel to be read from will be listed in thi
 with each name separated by whitespace (i.e. spaces, tabs). For example
 
 
-+------------------------------+----------------+
++------------------------------+-----------------+
 | space.activity.routes.inputs | foo bar  bletch |
-+------------------------------+----------------+
++------------------------------+-----------------+
 
 
 would create input channels named ``foo``, ``bar``, and ``bletch``.
@@ -128,7 +128,7 @@ time. For example,
 | space.activity.routes.output.foo | /my/topic /my/other/topic |
 +----------------------------------+---------------------------+
 
-configures channel `foo` to write on both topics `/my/topic` and `/my/other/topic`.
+configures channel ``foo`` to write on both topics ``/my/topic`` and ``/my/other/topic``.
 
 Any Activity which uses ROS communication, remember that routes are implemented using ROS
 communication, must have the ``space.activity.ros.node.name`` configuration property defined.
@@ -147,11 +147,11 @@ used is ROS. For example, if output topics are defined as
 | space.activity.routes.output.foo | /my/topic /my/other/topic |
 +----------------------------------+---------------------------+
 
-both topics `/my/topic` and `/my/other/topic` will be ROS topics. 
+both topics ``/my/topic`` and ``/my/other/topic`` will be ROS topics. 
 
 You can configure the default technology by setting the configuration parameter 
-`space.activity.route.protocol.default`. If it has the value `ros`, the default technology 
-for a given topic will be ROS. If you give it the value `mqtt`, the default pub/sub technology
+`space.activity.route.protocol.default`. If it has the value ``ros``, the default technology 
+for a given topic will be ROS. If you give it the value ``mqtt``, the default pub/sub technology
 for a topic will be MQTT.
 
 You can also specify the technology you want used as part of the topic name. For example,
@@ -160,14 +160,31 @@ You can also specify the technology you want used as part of the topic name. For
 | space.activity.routes.output.foo | ros:/my/topic mqtt:/my/other/topic |
 +----------------------------------+------------------------------------+
 
-would use ROS for the topic `/my/topic` and MQTT for the topic `/my/other/topic`. Writing
-to route `foo` would then send the same message to both ROS and MQTT subscribers.
+would use ROS for the topic ``/my/topic`` and MQTT for the topic ``/my/other/topic``. Writing
+to route ``foo`` would then send the same message to both ROS and MQTT subscribers.
+
+
+Setting the Location of the MQTT Broker
+====================
+
+MQTT requires a broker for publishers and subscribers to talk to. 
+
+You set the location of the broker using the 
+``smartspaces.messaging.mqtt.brokerdescription.default`` configuration parameter. This is
+typically found in the ``config/container.conf`` configuration file, though you could also
+set this in your activity.
+
+The value for this parameter in the ``config/container.conf`` configuration file is
+``tcp://${smartspaces.master.host}:1883``. This value says that
+the connection is over TCP, the broker is running on the host for the SmartSpaces master and that
+the broker is listening on port ``1883``.
+
 
 Using Routes In Code
 ====================
 
 
-Routes with ``BaseRoutableRosActivity``
+Routes with ``BaseRoutableActivity``
 --------------------
 
 The simplest way to use a route is to base your Activity on the ``BaseRoutableActivity``
@@ -182,7 +199,7 @@ from. Use the first argument to decide which route the message came from.
 
 .. code-block:: java
 
-    public class SimpleJavaRoutableInputActivity  extends BaseRoutableActivity {
+    public class SimpleJavaRoutableInputActivity extends BaseRoutableActivity {
 
         @Override
         public void onNewInputMessage(String channelName, Map<String, Object> message) {
@@ -197,7 +214,7 @@ will be the map of name/value pairs to send.
 
 .. code-block:: java
 
-    public class SimpleJavaRoutableOutputActivity extends BaseRoutableRosActivity {
+    public class SimpleJavaRoutableOutputActivity extends BaseRoutableActivity {
 
         @Override
         public void onActivityActivate() {

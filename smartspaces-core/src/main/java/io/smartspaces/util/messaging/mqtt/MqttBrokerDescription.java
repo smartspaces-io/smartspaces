@@ -16,38 +16,35 @@
 
 package io.smartspaces.util.messaging.mqtt;
 
-import java.util.Set;
-
 /**
- * A collection of MQTT publishers for a given message topic.
+ * The description of an MQTT broker.
  * 
- * @param <T>
- *          the type of messages
- *
- * @author Keith M. Hughes
+ * @author Keith M. HUghes
  */
-public interface MqttPublishers<T> {
+public class MqttBrokerDescription {
 
   /**
-   * Add publishers to the collection.
+   * The network address of the broker.
+   */
+  private final String brokerAddress;
+
+  /**
+   * Construct a new broker address.
    * 
-   * @param mqttBroker
-   *          the MQTT broker that the topics to be published to are attached to
-   * @param topicNames
-   *          the topic names
+   * @param brokerAddress
+   *          the broker address
    */
-  void addPublishers(MqttBrokerDescription mqttBroker, Set<String> topicNames);
+  public MqttBrokerDescription(String brokerAddress) {
+    this.brokerAddress = brokerAddress;
+  }
 
   /**
-   * Publish a message to all publishers.
+   * Get the broker network address.
    * 
-   * @param message
-   *          the message to be published
+   * @return the broker network address
    */
-  void publishMessage(T message);
+  public String getBrokerAddress() {
+    return brokerAddress;
+  }
 
-  /**
-   * Shut down all publishers.
-   */
-  void shutdown();
 }

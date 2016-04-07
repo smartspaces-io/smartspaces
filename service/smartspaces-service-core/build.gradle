@@ -38,6 +38,10 @@ jar {
 
     instruction 'Export-Package',
 		'*'
+
+    instruction 'Import-Package',
+        'org.eclipse.paho.client.mqttv3.*;resolution:="optional"',
+        '*'
   }
 }
 

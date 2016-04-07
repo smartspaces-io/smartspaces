@@ -49,6 +49,8 @@ dependencies {
   compile 'joda-time:joda-time:2.7'
   
   compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
+  
+  compile 'io.reactivex:rxjava:1.0.14'
 
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
@@ -82,6 +84,7 @@ jar {
         'javassist.*;resolution:="optional"',
         'io.smartspaces.system.bootstrap.osgi;resolution:="optional"',
         'com.google.common;resolution:="optional"',
+        'rx;resolution:="optional"',
         '*'
   }
 }

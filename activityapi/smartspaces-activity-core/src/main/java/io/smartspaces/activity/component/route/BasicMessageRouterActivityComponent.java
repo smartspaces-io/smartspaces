@@ -34,6 +34,7 @@ import com.google.common.collect.SetMultimap;
 
 import io.smartspaces.activity.component.ros.RosActivityComponent;
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.messaging.codec.MapByteArrayCodec;
 import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.messaging.codec.MessageDecoder;
 import io.smartspaces.messaging.codec.MessageEncoder;
@@ -41,7 +42,6 @@ import io.smartspaces.messaging.route.CompositeRouteMessagePublisher;
 import io.smartspaces.messaging.route.CompositeRouteMessageSubscriber;
 import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
 import io.smartspaces.messaging.route.InternalRouteMessageSubscriber;
-import io.smartspaces.messaging.route.MapByteArrayCodec;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
 import io.smartspaces.messaging.route.RouteMessageSubscriber;
 import io.smartspaces.messaging.route.mqtt.MqttRouteMessagePublisher;
@@ -123,7 +123,10 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
    */
   private MessageCodec<Map<String, Object>, byte[]> mqttMessageCodec = new MapByteArrayCodec();
 
-  private MqttBrokerDescription mqttBrokerDescription;
+  /**
+   * The description for the default MQTT broker.
+   */
+  private MqttBrokerDescription mqttBrokerDescriptionDefault;
 
   @Override
   public String getName() {
@@ -308,13 +311,13 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
    * @return the MQTT broker description
    */
   private MqttBrokerDescription getMqttBrokerDescription() {
-    if (mqttBrokerDescription == null) {
-      mqttBrokerDescription =
+    if (mqttBrokerDescriptionDefault == null) {
+      mqttBrokerDescriptionDefault =
           new MqttBrokerDescription(getComponentContext().getActivity().getConfiguration()
               .getRequiredPropertyString(CONFIGURATION_MESSAGING_MQTT_BROKERDESCRIPTION_DEFAULT));
     }
 
-    return mqttBrokerDescription;
+    return mqttBrokerDescriptionDefault;
   }
 
   @Override

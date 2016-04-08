@@ -17,14 +17,6 @@
 
 package io.smartspaces.osgi.service;
 
-import io.smartspaces.resource.Version;
-import io.smartspaces.service.Service;
-import io.smartspaces.service.ServiceRegistry;
-import io.smartspaces.service.SupportedService;
-import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.util.resource.ManagedResource;
-import io.smartspaces.util.resource.ManagedResources;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +28,15 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
+
+import io.smartspaces.resource.Version;
+import io.smartspaces.service.Service;
+import io.smartspaces.service.ServiceRegistry;
+import io.smartspaces.service.SupportedService;
+import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.util.resource.ManagedResources;
+import io.smartspaces.util.resource.StandardManagedResources;
 
 /**
  * A base class for creating OSGi BundleActivator subclasses for Smart Spaces
@@ -190,7 +191,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
       }
 
       managedResources =
-          new ManagedResources(smartspacesEnvironmentTracker.getMyService().getLog());
+          new StandardManagedResources(smartspacesEnvironmentTracker.getMyService().getLog());
 
       allRequiredServicesAvailable();
 

@@ -17,6 +17,14 @@
 
 package io.smartspaces.liveactivity.runtime.standalone.development;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
+
+import org.apache.commons.logging.Log;
+
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.activity.ActivityStatus;
@@ -53,14 +61,7 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.resource.ManagedResource;
 import io.smartspaces.util.resource.ManagedResources;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Future;
-
-import org.apache.commons.logging.Log;
+import io.smartspaces.util.resource.StandardManagedResources;
 
 /**
  * A standalone runner for activities that takes the activities from a
@@ -265,7 +266,7 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
     this.liveActivityRuntimeListener = liveActivityRuntimeListener;
     this.systemControl = systemControl;
 
-    managedResources = new ManagedResources(spaceEnvironment.getLog());
+    managedResources = new StandardManagedResources(spaceEnvironment.getLog());
   }
 
   @Override
@@ -274,8 +275,7 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
     systemConfiguration = spaceEnvironment.getSystemConfiguration();
 
     boolean isSingleActivity =
-        systemConfiguration.getPropertyBoolean(
-            CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE,
+        systemConfiguration.getPropertyBoolean(CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE,
             CONFIGURATION_DEFAULT_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE);
 
     String instanceSuffixValue =
@@ -283,9 +283,8 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
     setInstanceSuffix(instanceSuffixValue);
 
     File activityRuntimeFolder = null;
-    String activityRuntimeFolderPath =
-        systemConfiguration
-            .getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_RUNTIME);
+    String activityRuntimeFolderPath = systemConfiguration
+        .getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_RUNTIME);
     if (activityRuntimeFolderPath != null) {
       getLog().info("activityRuntimePath is " + activityRuntimeFolderPath);
       activityRuntimeFolder = fileSupport.newFile(activityRuntimeFolderPath);
@@ -312,8 +311,8 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
         systemConfiguration.getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_ROUTER_TYPE);
     if (standaloneRouterType != null) {
       getLog().info("configuring to use router type " + standaloneRouterType);
-      setUseStandaloneRouter(CONFIGURATION_VALUE_CONTROLLER_MODE_STANDALONE
-          .equals(standaloneRouterType));
+      setUseStandaloneRouter(
+          CONFIGURATION_VALUE_CONTROLLER_MODE_STANDALONE.equals(standaloneRouterType));
     }
 
     if (isSingleActivity) {
@@ -355,11 +354,10 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
     RemoteLiveActivityRuntimeMonitorService runtimeDebugService =
         new StandardRemoteLiveActivityRuntimeMonitorService();
 
-    liveActivityRuntime =
-        new StandardLiveActivityRuntime(runtimeComponentFactory, liveActivityRepository,
-            activityInstallationManager, activityLogFactory, configurationManager,
-            liveActivityStorageManager, alertStatusManager, eventQueue, runtimeDebugService,
-            spaceEnvironment);
+    liveActivityRuntime = new StandardLiveActivityRuntime(runtimeComponentFactory,
+        liveActivityRepository, activityInstallationManager, activityLogFactory,
+        configurationManager, liveActivityStorageManager, alertStatusManager, eventQueue,
+        runtimeDebugService, spaceEnvironment);
     liveActivityRuntime.setLiveActivityStatusPublisher(liveActivityStatusPublisher);
     liveActivityRuntime.addRuntimeListener(liveActivityRuntimeListener);
     managedResources.addResource(liveActivityRuntime);
@@ -504,19 +502,15 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
     File installDirectory =
         fileSupport.newFile(info.getBaseSourceDirectory(), ACTIVITY_PATH_BUILD_STAGING);
 
-    File activityLogDirectory =
-        fileSupport.newFile(baseActivityRuntimeFolder, "activity-"
-            + SimpleLiveActivityFilesystem.SUBDIRECTORY_LOG);
-    File permanentDataDirectory =
-        fileSupport.newFile(baseActivityRuntimeFolder,
-            SimpleLiveActivityFilesystem.SUBDIRECTORY_DATA_PERMANENT);
-    File tempDataDirectory =
-        fileSupport.newFile(baseActivityRuntimeFolder,
-            SimpleLiveActivityFilesystem.SUBDIRECTORY_DATA_TEMPORARY);
+    File activityLogDirectory = fileSupport.newFile(baseActivityRuntimeFolder,
+        "activity-" + SimpleLiveActivityFilesystem.SUBDIRECTORY_LOG);
+    File permanentDataDirectory = fileSupport.newFile(baseActivityRuntimeFolder,
+        SimpleLiveActivityFilesystem.SUBDIRECTORY_DATA_PERMANENT);
+    File tempDataDirectory = fileSupport.newFile(baseActivityRuntimeFolder,
+        SimpleLiveActivityFilesystem.SUBDIRECTORY_DATA_TEMPORARY);
     File internalDirectory = fileSupport.newFile(projectFolder, ACTIVITY_PATH_DEVELOPMENT);
-    SimpleLiveActivityFilesystem filesystem =
-        new SimpleLiveActivityFilesystem(installDirectory, activityLogDirectory,
-            permanentDataDirectory, tempDataDirectory, internalDirectory);
+    SimpleLiveActivityFilesystem filesystem = new SimpleLiveActivityFilesystem(installDirectory,
+        activityLogDirectory, permanentDataDirectory, tempDataDirectory, internalDirectory);
     filesystem.ensureDirectories();
 
     info.setActivityFilesystem(filesystem);
@@ -612,8 +606,8 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
    *          status of the activity
    */
   private void onPublishActivityStatus(String uuid, ActivityStatus status) {
-    spaceEnvironment.getLog().info(
-        String.format("Activity status for activity %s is now %s", uuid, status));
+    spaceEnvironment.getLog()
+        .info(String.format("Activity status for activity %s is now %s", uuid, status));
 
     ActivityState state = status.getState();
     if (!state.isRunning() && !state.isTransitional()) {

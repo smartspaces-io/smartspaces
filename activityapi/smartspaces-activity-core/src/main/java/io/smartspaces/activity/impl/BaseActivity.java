@@ -17,6 +17,11 @@
 
 package io.smartspaces.activity.impl;
 
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.ActivityState;
@@ -35,13 +40,7 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.resource.ManagedResource;
 import io.smartspaces.util.resource.ManagedResources;
-
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import com.google.common.collect.Maps;
+import io.smartspaces.util.resource.StandardManagedResources;
 
 /**
  * Support for building an Smart Spaces activity.
@@ -218,7 +217,7 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
     componentContext =
         new ActivityComponentContext(this, getActivityRuntime().getActivityComponentFactory());
 
-    managedResources = new ManagedResources(getLog());
+    managedResources = new StandardManagedResources(getLog());
 
     managedCommands =
         new SimpleManagedCommands(getSpaceEnvironment().getExecutorService(), getLog());

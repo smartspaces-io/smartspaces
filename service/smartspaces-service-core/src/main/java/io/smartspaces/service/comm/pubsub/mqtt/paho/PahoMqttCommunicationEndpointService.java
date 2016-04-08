@@ -16,17 +16,12 @@
 
 package io.smartspaces.service.comm.pubsub.mqtt.paho;
 
+import org.apache.commons.logging.Log;
+
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint;
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpointService;
-import io.smartspaces.service.comm.pubsub.mqtt.MqttSubscriberListener;
-import io.smartspaces.system.StandaloneSmartSpacesEnvironment;
-import io.smartspaces.util.data.json.StandardJsonMapper;
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
-
-import org.apache.commons.logging.Log;
-
-import java.util.Map;
 
 /**
  * A service for getting MQTT communication endpoints implemented with Paho.
@@ -35,32 +30,6 @@ import java.util.Map;
  */
 public class PahoMqttCommunicationEndpointService extends BaseSupportedService
     implements MqttCommunicationEndpointService {
-
-  public static void main(String[] args) throws Exception {
-    StandaloneSmartSpacesEnvironment spaceEnvironment =
-        StandaloneSmartSpacesEnvironment.newStandaloneSmartSpacesEnvironment();
-    spaceEnvironment.getServiceRegistry().registerService(new PahoMqttCommunicationEndpointService());
-    
-    MqttCommunicationEndpointService service = spaceEnvironment.getServiceRegistry().getRequiredService(MqttCommunicationEndpointService.SERVICE_NAME);
-    MqttCommunicationEndpoint endpoint =
-        service.newMqttCommunicationEndpoint(new MqttBrokerDescription("tcp://192.168.188.109:1883"),
-            "/mqtt/publisher/async", spaceEnvironment.getLog());
-    endpoint.startup();
-
-    Thread.sleep(2000);
-
-    endpoint.addSubscriberListener(new MqttSubscriberListener() {
-
-      @Override
-      public void handleMessage(MqttCommunicationEndpoint endpoint, String topicName,
-          byte[] payload) {
-        Map<String, Object> message = StandardJsonMapper.INSTANCE.parseObject(new String(payload));
-        endpoint.getLog().info(String.format("Got message on topic %s: %s", topicName, message));
-      }
-    });
-    endpoint.subscribe("/home/sensor");
-
-  }
 
   @Override
   public String getName() {

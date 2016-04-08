@@ -17,6 +17,14 @@
 
 package io.smartspaces.system;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.Jdk14Logger;
+
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.logging.ExtendedLog;
@@ -27,14 +35,7 @@ import io.smartspaces.time.SettableTimeProvider;
 import io.smartspaces.time.TimeProvider;
 import io.smartspaces.util.resource.ManagedResource;
 import io.smartspaces.util.resource.ManagedResources;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.Jdk14Logger;
+import io.smartspaces.util.resource.StandardManagedResources;
 
 /**
  * An {@link SmartSpacesEnvironment} that can be used for standalone running of
@@ -62,7 +63,7 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
     environment.log = new StandardExtendedLog(new Jdk14Logger("test.smartspaces"));
     environment.serviceRegistry = new SimpleServiceRegistry(environment);
     environment.timeProvider = new SettableTimeProvider();
-    environment.managedResources = new ManagedResources(environment.log);
+    environment.managedResources = new StandardManagedResources(environment.log);
     environment.managedResources.startupResources();
 
     return environment;

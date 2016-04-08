@@ -26,13 +26,13 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Tests for the {@link ManagedResources} class.
+ * Tests for the {@link StandardManagedResources} class.
  *
  * @author Keith M. Hughes
  */
-public class ManagedResourcesTest {
+public class StandardManagedResourcesTest {
 
-  private ManagedResources resources;
+  private StandardManagedResources resources;
 
   private Log log;
 
@@ -40,7 +40,7 @@ public class ManagedResourcesTest {
   public void setup() {
     log = Mockito.mock(Log.class);
 
-    resources = new ManagedResources(log);
+    resources = new StandardManagedResources(log);
 
   }
 

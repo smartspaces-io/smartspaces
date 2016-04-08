@@ -14,14 +14,13 @@
  * the License.
  */
 
-package io.smartspaces.messaging.route;
+package io.smartspaces.messaging.codec;
 
 import java.nio.charset.Charset;
 import java.util.Map;
 
 import com.google.common.base.Charsets;
 
-import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
 
@@ -33,6 +32,11 @@ import io.smartspaces.util.data.json.StandardJsonMapper;
 public class MapByteArrayCodec implements MessageCodec<Map<String, Object>, byte[]> {
 
   /**
+   * The default charset for the codec.
+   */
+  public static final Charset CHARSET_DEFAULT = Charsets.UTF_8;
+
+  /**
    * The JSON mapper for message translation.
    */
   private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
@@ -40,7 +44,25 @@ public class MapByteArrayCodec implements MessageCodec<Map<String, Object>, byte
   /**
    * The character set for the generic message encoding.
    */
-  private Charset charset = Charsets.UTF_8;
+  private Charset charset;
+
+  /**
+   * Construct a codec that supports JSON ended in charset
+   * {@link #CHARSET_DEFAULT}.
+   */
+  public MapByteArrayCodec() {
+    this(CHARSET_DEFAULT);
+  }
+
+  /**
+   * Construct a codec that supports JSON ended in the given charset.
+   * 
+   * @param charset
+   *          the charset to use
+   */
+  public MapByteArrayCodec(Charset charset) {
+    this.charset = charset;
+  }
 
   @Override
   public byte[] encode(Map<String, Object> out) {

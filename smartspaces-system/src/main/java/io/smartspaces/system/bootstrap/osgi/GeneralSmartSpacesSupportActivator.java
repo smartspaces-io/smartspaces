@@ -17,30 +17,6 @@
 
 package io.smartspaces.system.bootstrap.osgi;
 
-import io.smartspaces.configuration.Configuration;
-import io.smartspaces.configuration.FileSystemConfigurationStorageManager;
-import io.smartspaces.configuration.SystemConfigurationStorageManager;
-import io.smartspaces.evaluation.ExpressionEvaluatorFactory;
-import io.smartspaces.evaluation.SimpleExpressionEvaluatorFactory;
-import io.smartspaces.service.Service;
-import io.smartspaces.service.ServiceRegistry;
-import io.smartspaces.system.BasicSmartSpacesFilesystem;
-import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.system.SmartSpacesSystemControl;
-import io.smartspaces.system.core.configuration.ConfigurationProvider;
-import io.smartspaces.system.core.configuration.CoreConfiguration;
-import io.smartspaces.system.core.container.ContainerCustomizerProvider;
-import io.smartspaces.system.core.logging.LoggingProvider;
-import io.smartspaces.system.internal.osgi.OsgiContainerResourceManager;
-import io.smartspaces.system.internal.osgi.OsgiSmartSpacesSystemControl;
-import io.smartspaces.system.internal.osgi.RosOsgiSmartSpacesEnvironment;
-import io.smartspaces.system.resources.ContainerResourceManager;
-import io.smartspaces.time.LocalTimeProvider;
-import io.smartspaces.time.NtpTimeProvider;
-import io.smartspaces.time.TimeProvider;
-import io.smartspaces.util.resource.ManagedResource;
-import io.smartspaces.util.resource.ManagedResources;
-
 import java.io.File;
 import java.net.InetAddress;
 import java.net.URI;
@@ -65,6 +41,31 @@ import org.ros.master.uri.StaticMasterUriProvider;
 import org.ros.master.uri.SwitchableMasterUriProvider;
 import org.ros.osgi.common.RosEnvironment;
 import org.ros.osgi.common.SimpleRosEnvironment;
+
+import io.smartspaces.configuration.Configuration;
+import io.smartspaces.configuration.FileSystemConfigurationStorageManager;
+import io.smartspaces.configuration.SystemConfigurationStorageManager;
+import io.smartspaces.evaluation.ExpressionEvaluatorFactory;
+import io.smartspaces.evaluation.SimpleExpressionEvaluatorFactory;
+import io.smartspaces.service.Service;
+import io.smartspaces.service.ServiceRegistry;
+import io.smartspaces.system.BasicSmartSpacesFilesystem;
+import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.system.SmartSpacesSystemControl;
+import io.smartspaces.system.core.configuration.ConfigurationProvider;
+import io.smartspaces.system.core.configuration.CoreConfiguration;
+import io.smartspaces.system.core.container.ContainerCustomizerProvider;
+import io.smartspaces.system.core.logging.LoggingProvider;
+import io.smartspaces.system.internal.osgi.OsgiContainerResourceManager;
+import io.smartspaces.system.internal.osgi.OsgiSmartSpacesSystemControl;
+import io.smartspaces.system.internal.osgi.RosOsgiSmartSpacesEnvironment;
+import io.smartspaces.system.resources.ContainerResourceManager;
+import io.smartspaces.time.LocalTimeProvider;
+import io.smartspaces.time.NtpTimeProvider;
+import io.smartspaces.time.TimeProvider;
+import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.util.resource.ManagedResources;
+import io.smartspaces.util.resource.StandardManagedResources;
 
 /**
  * Activate general services needed by a Smart Spaces container.
@@ -180,7 +181,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
       // Do not call startupResources on this. Various items needed to be
       // started up asap to be used.
-      managedResources = new ManagedResources(loggingProvider.getLog());
+      managedResources = new StandardManagedResources(loggingProvider.getLog());
 
       setupSpaceEnvironment(baseInstallDir);
 
@@ -188,11 +189,10 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
       registerOsgiServices();
 
-      spaceEnvironment.getLog().info(
-          String.format(
-              "Base system startup. Smart Spaces Version %s",
-              spaceEnvironment.getSystemConfiguration().getPropertyString(
-                  SmartSpacesEnvironment.CONFIGURATION_SMARTSPACES_VERSION)));
+      spaceEnvironment.getLog()
+          .info(String.format("Base system startup. Smart Spaces Version %s",
+              spaceEnvironment.getSystemConfiguration()
+                  .getPropertyString(SmartSpacesEnvironment.CONFIGURATION_SMARTSPACES_VERSION)));
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -203,10 +203,9 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    * Create any additional resources needed by the container.
    */
   private void createAdditionalResources() {
-    containerResourceManager =
-        new OsgiContainerResourceManager(bundleContext, bundleContext.getBundle(0).adapt(
-            FrameworkWiring.class), filesystem, configurationProvider.getConfigFolder(),
-            spaceEnvironment.getExtendedLog());
+    containerResourceManager = new OsgiContainerResourceManager(bundleContext,
+        bundleContext.getBundle(0).adapt(FrameworkWiring.class), filesystem,
+        configurationProvider.getConfigFolder(), spaceEnvironment.getExtendedLog());
     containerResourceManager.startup();
     managedResources.addResource(containerResourceManager);
   }
@@ -295,8 +294,8 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     spaceEnvironment.setExecutorService(executorService);
     spaceEnvironment.setLoggingProvider(loggingProvider);
     spaceEnvironment.setFilesystem(filesystem);
-    spaceEnvironment.setNetworkType(containerProperties
-        .get(SmartSpacesEnvironment.CONFIGURATION_NETWORK_TYPE));
+    spaceEnvironment
+        .setNetworkType(containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NETWORK_TYPE));
 
     setupSystemConfiguration(bundleContext, containerProperties);
 
@@ -305,8 +304,9 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     timeProvider.startup();
     managedResources.addResource(timeProvider);
 
-    setupRosEnvironment(systemConfigurationStorageManager.getSystemConfiguration()
-        .getCollapsedMap(), loggingProvider.getLog());
+    setupRosEnvironment(
+        systemConfigurationStorageManager.getSystemConfiguration().getCollapsedMap(),
+        loggingProvider.getLog());
 
     // TODO(keith): Get the value property in a central place.
     spaceEnvironment.setValue("environment.ros", rosEnvironment);
@@ -384,8 +384,8 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     rosEnvironment.setLog(spaceEnvironment.getLog());
     rosEnvironment.setMaster(SmartSpacesEnvironment.CONFIGURATION_CONTAINER_TYPE_MASTER
         .equals(containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_CONTAINER_TYPE)));
-    rosEnvironment.setNetworkType(containerProperties
-        .get(SmartSpacesEnvironment.CONFIGURATION_NETWORK_TYPE));
+    rosEnvironment
+        .setNetworkType(containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NETWORK_TYPE));
 
     for (Entry<String, String> entry : containerProperties.entrySet()) {
       rosEnvironment.setProperty(entry.getKey(), entry.getValue());
@@ -428,20 +428,17 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    *          the properties from the container configuration
    */
   private void configureRosFromsmartspaces(Map<String, String> containerProperties) {
-    rosEnvironment.setProperty(
-        RosEnvironment.CONFIGURATION_ROS_NODE_NAME,
+    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_ROS_NODE_NAME,
         RosEnvironment.ROS_NAME_SEPARATOR
             + containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_HOSTID));
     rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_ROS_NETWORK_TYPE,
         spaceEnvironment.getNetworkType());
-    rosEnvironment.setProperty(
-        RosEnvironment.CONFIGURATION_ROS_CONTAINER_TYPE,
-        spaceEnvironment.getSystemConfiguration().getRequiredPropertyString(
-            SmartSpacesEnvironment.CONFIGURATION_CONTAINER_TYPE));
-    rosEnvironment.setProperty(
-        RosEnvironment.CONFIGURATION_ROS_HOST,
-        spaceEnvironment.getSystemConfiguration().getRequiredPropertyString(
-            SmartSpacesEnvironment.CONFIGURATION_HOSTNAME));
+    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_ROS_CONTAINER_TYPE,
+        spaceEnvironment.getSystemConfiguration()
+            .getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_CONTAINER_TYPE));
+    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_ROS_HOST,
+        spaceEnvironment.getSystemConfiguration()
+            .getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_HOSTNAME));
 
     // This call is so that the ROS URI gets evaluated.
     rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_ROS_MASTER_URI, spaceEnvironment
@@ -478,9 +475,8 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     systemConfiguration.setValue(SmartSpacesEnvironment.CONFIGURATION_SMARTSPACES_VERSION,
         bundleContext.getProperty(CoreConfiguration.CONFIGURATION_SMARTSPACES_VERSION));
 
-    String hostAddress =
-        convertHostnameToAddress(containerProperties
-            .get(SmartSpacesEnvironment.CONFIGURATION_HOSTNAME));
+    String hostAddress = convertHostnameToAddress(
+        containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_HOSTNAME));
     systemConfiguration.setValue(SmartSpacesEnvironment.CONFIGURATION_HOST_ADDRESS, hostAddress);
 
     spaceEnvironment.setSystemConfiguration(systemConfiguration);

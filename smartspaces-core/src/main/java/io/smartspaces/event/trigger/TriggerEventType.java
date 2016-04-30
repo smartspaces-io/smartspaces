@@ -23,5 +23,13 @@ package io.smartspaces.event.trigger;
  * @author Keith M. Hughes
  */
 public enum TriggerEventType {
-  FALLING, RISING
+  /**
+   * The trigger value is falling.
+   */
+  FALLING, 
+  
+  /**
+   * The trigger value is rising.
+   */
+  RISING
 }

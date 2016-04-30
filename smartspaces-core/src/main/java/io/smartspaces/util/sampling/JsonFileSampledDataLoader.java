@@ -87,18 +87,15 @@ public class JsonFileSampledDataLoader implements SampledDataLoader {
         new StandardDynamicObjectNavigator(JSON_MAPPER.parseObject(fileSupport.readFile(dataFile)));
 
     for (String name : nav.getProperties()) {
-      nav.down(name);
+      nav.down(name).down(PROPERTY_NAME_SAMPLES_ARRAY);
 
-      nav.down(PROPERTY_NAME_SAMPLES_ARRAY);
       int numberSamples = nav.getSize();
       int[] samples = new int[numberSamples];
       for (int j = 0; j < numberSamples; j++) {
         samples[j] = nav.getInteger(j);
       }
 
-      nav.up();
-
-      nav.up();
+      nav.up().up();
 
       data.put(name, samples);
     }

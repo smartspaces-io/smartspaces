@@ -23,19 +23,11 @@ package io.smartspaces.event.trigger;
  * @author Keith M. Hughes
  */
 public interface Trigger {
-
-  /**
-   * Get the current state of the trigger.
-   *
-   * @return the tigger state
-   */
-  TriggerState getState();
-
   /**
    * Add a new listener to the trigger.
    *
    * @param listener
-   *          The new listener to add.
+   *          the new listener to add
    */
   void addListener(TriggerListener listener);
 
@@ -46,7 +38,14 @@ public interface Trigger {
    * Does nothing if the listener wasn't registered with the trigger.
    *
    * @param listener
-   *          The listener to remove.
+   *          the listener to remove
    */
   void removeListener(TriggerListener listener);
+
+  /**
+   * Get the current state of the trigger.
+   *
+   * @return the trigger state
+   */
+  TriggerState getState();
 }

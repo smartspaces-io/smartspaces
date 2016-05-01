@@ -22,6 +22,8 @@ ext {
 dependencies {
   extrasSupportCompile('com.nativelibs4java:bridj:0.7.0') { exclude module: 'dx' }
 
+  compile 'org.scala-lang:scala-library:2.11.8'
+
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
 }

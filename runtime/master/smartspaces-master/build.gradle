@@ -106,7 +106,7 @@ dependencies {
   testCompile 'org.mockito:mockito-all:1.9.5'
 }
 
-compileJava.doLast {
+compileScala.doLast {
   ant {
 	path (id: 'foo') {
 		pathelement(path: "build/classes/main")

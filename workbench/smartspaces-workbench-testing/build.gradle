@@ -17,6 +17,8 @@
 
 dependencies {
   compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.11_1')
+
+  compile 'org.scala-lang:scala-library:2.11.8'
   
   runtime 'org.mockito:mockito-all:1.9.5'
   

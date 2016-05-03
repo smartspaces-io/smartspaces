@@ -37,17 +37,17 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
   /**
    * The current value of the trigger.
    */
-  private long value;
+  private double value;
 
   /**
    * The value at which the trigger will switch on.
    */
-  private long thresholdOn;
+  private double thresholdOn;
 
   /**
    * The value at which the trigger will switch off.
    */
-  private long thresholdOff;
+  private double thresholdOff;
 
   /**
    * The current state of the trigger.
@@ -80,7 +80,7 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    * @param thresholdOn
    *          the threshold at which the trigger will switch on
    */
-  public SimpleHysteresisThresholdValueTrigger setThresholdOn(long thresholdOn) {
+  public SimpleHysteresisThresholdValueTrigger setThresholdOn(double thresholdOn) {
     this.thresholdOn = thresholdOn;
 
     return this;
@@ -91,7 +91,7 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    *
    * @return the threshold at which the trigger will switch on
    */
-  public long getThresholdOn() {
+  public double getThresholdOn() {
     return thresholdOn;
   }
 
@@ -101,7 +101,7 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    * @param thresholdOff
    *          the value at which the trigger will switch off
    */
-  public SimpleHysteresisThresholdValueTrigger setThresholdOff(long thresholdOff) {
+  public SimpleHysteresisThresholdValueTrigger setThresholdOff(double thresholdOff) {
     this.thresholdOff = thresholdOff;
 
     return this;
@@ -120,8 +120,8 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    *          the value to subtract from {@code thresholdOn} to get
    *          {@code thresholdOff}
    */
-  public SimpleHysteresisThresholdValueTrigger setThresholdsWithOffset(long thresholdOn,
-      long offset) {
+  public SimpleHysteresisThresholdValueTrigger setThresholdsWithOffset(double thresholdOn,
+      double offset) {
     this.thresholdOn = thresholdOn;
     this.thresholdOff = thresholdOn - offset;
 
@@ -133,7 +133,7 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    *
    * @return the threshold at which the trigger will switch off
    */
-  public long getThresholdOff() {
+  public double getThresholdOff() {
     return thresholdOn;
   }
 
@@ -153,7 +153,7 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    * @param newValue
    *          The new value.
    */
-  public void update(long newValue) {
+  public void update(double newValue) {
     TriggerState newState = null;
     TriggerEventType type = null;
 
@@ -187,7 +187,7 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    *
    * @return the current value of the trigger
    */
-  public long getValue() {
+  public double getValue() {
     return value;
   }
 
@@ -225,7 +225,7 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    * @param newState
    *          the new state of the trigger
    */
-  private synchronized void changeState(long newValue, TriggerState newState) {
+  private synchronized void changeState(double newValue, TriggerState newState) {
     value = newValue;
     previousState = state;
     state = newState;

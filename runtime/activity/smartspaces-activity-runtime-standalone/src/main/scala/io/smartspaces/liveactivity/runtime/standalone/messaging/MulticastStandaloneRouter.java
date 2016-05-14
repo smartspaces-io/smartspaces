@@ -34,7 +34,7 @@ import com.google.common.base.Preconditions;
  *
  * @author Trevor Pering
  */
-public class MulticastRouter implements StandaloneRouter {
+public class MulticastStandaloneRouter implements StandaloneRouter {
   /**
    * Maximum message size allowed. Not sure what happens if you try to make this
    * number larger.
@@ -88,7 +88,7 @@ public class MulticastRouter implements StandaloneRouter {
    * @param configuration
    *          configuration to use for this router
    */
-  public MulticastRouter(Configuration configuration) {
+  public MulticastStandaloneRouter(Configuration configuration) {
     int receiveBufferSize =
         configuration.getPropertyInteger(CONFIGURATION_MULTICAST_RECEIVE_BUFFER_SIZE,
             DEFAULT_RECEIVE_BUFFER_SIZE);

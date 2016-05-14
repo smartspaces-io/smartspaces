@@ -25,12 +25,12 @@ import org.mockito.Mockito;
 
 import io.smartspaces.activity.component.ActivityComponentContext;
 import io.smartspaces.activity.component.route.BasicMessageRouterActivityComponent;
-import io.smartspaces.activity.component.route.RoutableInputMessageListener;
 import io.smartspaces.activity.execution.ActivityExecutionContext;
 import io.smartspaces.activity.ros.RosActivity;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.evaluation.SimpleExpressionEvaluator;
+import io.smartspaces.messaging.route.RoutableInputMessageListener;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.SettableTimeProvider;
 import io.smartspaces.time.TimeProvider;

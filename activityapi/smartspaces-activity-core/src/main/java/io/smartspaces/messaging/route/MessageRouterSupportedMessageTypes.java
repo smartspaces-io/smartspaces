@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.activity.component.route;
+package io.smartspaces.messaging.route;
 
 /**
  * Message types supported out of the box for SS routes.

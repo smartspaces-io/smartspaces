@@ -22,9 +22,9 @@ import java.util.Map;
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.component.route.BasicMessageRouterActivityComponent;
 import io.smartspaces.activity.component.route.MessageRouterActivityComponent;
-import io.smartspaces.activity.component.route.RoutableInputMessageListener;
 import io.smartspaces.activity.execution.ActivityMethodInvocation;
 import io.smartspaces.activity.impl.ros.BaseRosActivity;
+import io.smartspaces.messaging.route.RoutableInputMessageListener;
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
@@ -124,7 +124,7 @@ public class BaseRoutableActivity extends BaseRosActivity {
       router.writeOutputMessage(channelName, message);
     } catch (Throwable e) {
       getLog().error(
-          String.format("Could not write message on route soutput channel %s", channelName), e);
+          String.format("Could not write message on route output channel %s", channelName), e);
     }
   }
 
@@ -156,5 +156,14 @@ public class BaseRoutableActivity extends BaseRosActivity {
     } finally {
       getExecutionContext().exitMethod(invocation);
     }
+  }
+
+  /**
+   * Get the router for the activity.
+   * 
+   * @return the router for the activity
+   */
+  protected MessageRouterActivityComponent getRouterActivityComponent() {
+    return router;
   }
 }

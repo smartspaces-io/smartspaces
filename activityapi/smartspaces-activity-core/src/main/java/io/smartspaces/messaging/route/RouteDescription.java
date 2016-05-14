@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.activity.component.route;
+package io.smartspaces.messaging.route;
 
 import com.google.common.collect.SetMultimap;
 

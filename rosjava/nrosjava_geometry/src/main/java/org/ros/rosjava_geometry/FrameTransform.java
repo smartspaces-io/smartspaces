@@ -16,10 +16,10 @@
 
 package org.ros.rosjava_geometry;
 
-import com.google.common.base.Preconditions;
-
 import org.ros.message.Time;
 import org.ros.namespace.GraphName;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Describes a {@link Transform} from data in the source frame to data in the
@@ -34,8 +34,8 @@ public class FrameTransform {
   private final GraphName target;
   private final Time time;
 
-  public static FrameTransform fromTransformStampedMessage(
-      geometry_msgs.TransformStamped transformStamped) {
+  public static FrameTransform
+      fromTransformStampedMessage(geometry_msgs.TransformStamped transformStamped) {
     Transform transform = Transform.fromTransformMessage(transformStamped.getTransform());
     String target = transformStamped.getHeader().getFrameId();
     String source = transformStamped.getChildFrameId();
@@ -91,8 +91,8 @@ public class FrameTransform {
     return time;
   }
 
-  public geometry_msgs.TransformStamped toTransformStampedMessage(
-      geometry_msgs.TransformStamped result) {
+  public geometry_msgs.TransformStamped
+      toTransformStampedMessage(geometry_msgs.TransformStamped result) {
     Preconditions.checkNotNull(time);
     result.getHeader().setFrameId(target.toString());
     result.getHeader().setStamp(time);

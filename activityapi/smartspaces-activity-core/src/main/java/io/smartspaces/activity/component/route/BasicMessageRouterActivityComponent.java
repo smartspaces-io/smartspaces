@@ -17,63 +17,28 @@
 
 package io.smartspaces.activity.component.route;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.apache.commons.logging.Log;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.ros.message.MessageListener;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.SetMultimap;
-
 import io.smartspaces.activity.component.ros.RosActivityComponent;
 import io.smartspaces.configuration.Configuration;
-import io.smartspaces.messaging.codec.MapByteArrayCodec;
-import io.smartspaces.messaging.codec.MessageCodec;
-import io.smartspaces.messaging.codec.MessageDecoder;
-import io.smartspaces.messaging.codec.MessageEncoder;
-import io.smartspaces.messaging.route.CompositeRouteMessagePublisher;
-import io.smartspaces.messaging.route.CompositeRouteMessageSubscriber;
-import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
-import io.smartspaces.messaging.route.InternalRouteMessageSubscriber;
+import io.smartspaces.handler.ProtectedHandlerContext;
+import io.smartspaces.messaging.route.MessageRouter;
+import io.smartspaces.messaging.route.RoutableInputMessageListener;
+import io.smartspaces.messaging.route.RouteDescription;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
-import io.smartspaces.messaging.route.RouteMessageSubscriber;
-import io.smartspaces.messaging.route.mqtt.MqttRouteMessagePublisher;
-import io.smartspaces.messaging.route.mqtt.MqttRouteMessageSubscriber;
-import io.smartspaces.messaging.route.ros.MapGenericMessageMessageDecoder;
-import io.smartspaces.messaging.route.ros.MapGenericMessageMessageEncoder;
-import io.smartspaces.messaging.route.ros.RosRouteMessagePublisher;
-import io.smartspaces.messaging.route.ros.RosRouteMessageSubscriber;
+import io.smartspaces.messaging.route.StandardMessageRouter;
 import io.smartspaces.time.TimeProvider;
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
-import io.smartspaces.util.messaging.mqtt.MqttPublishers;
-import io.smartspaces.util.messaging.mqtt.MqttSubscribers;
-import io.smartspaces.util.messaging.mqtt.StandardMqttPublishers;
-import io.smartspaces.util.messaging.mqtt.StandardMqttSubscribers;
-import io.smartspaces.util.messaging.ros.RosPublishers;
-import io.smartspaces.util.messaging.ros.RosSubscribers;
-import io.smartspaces.util.messaging.ros.StandardRosPublishers;
-import io.smartspaces.util.messaging.ros.StandardRosSubscribers;
-import smartspaces_msgs.GenericMessage;
+
+import org.apache.commons.logging.Log;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * The basic implementation of the ROS message router activity component.
  *
  * @author Keith M. Hughes
  */
-public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivityComponent
-    implements IncomingRouteMessageHandler {
-
-  /**
-   * The ROS message type for routes.
-   */
-  private static final String ROS_ROUTE_MESSAGE_TYPE = GenericMessage._TYPE;
+public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivityComponent {
 
   /**
    * The ROS activity component this component requires.
@@ -81,52 +46,29 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
   private RosActivityComponent rosActivityComponent;
 
   /**
-   * {@code true} if the component is "running", false otherwise.
-   */
-  private volatile boolean running;
-
-  /**
    * The listener for input messages.
    */
   private RoutableInputMessageListener messageListener;
 
   /**
-   * All topic inputs mapped to their subscribers.
+   * {@code true} if the component is "running", false otherwise.
    */
-  private final Map<String, InternalRouteMessageSubscriber> inputSubscribers =
-      Maps.newConcurrentMap();
+  private volatile boolean running;
 
   /**
-   * All topic outputs mapped to their publishers.
+   * The message router to be used.
    */
-  private final Map<String, InternalRouteMessagePublisher> outputPublishers =
-      Maps.newConcurrentMap();
+  private StandardMessageRouter messageRouter;
 
   /**
-   * A creator for handler invocation IDs.
+   * The time provider for the component.
    */
-  private final AtomicLong handlerInvocationId = new AtomicLong();
+  private TimeProvider timeProvider;
 
   /**
-   * The decoder for route messages to ROS messages.
+   * The logger to use.
    */
-  private MessageDecoder<Map<String, Object>, GenericMessage> rosMessageDecoder =
-      new MapGenericMessageMessageDecoder();
-
-  /**
-   * The decoder for route messages to ROS messages.
-   */
-  private MessageEncoder<Map<String, Object>, GenericMessage> rosMessageEncoder;
-
-  /**
-   * A message codec for MQTT route messages.
-   */
-  private MessageCodec<Map<String, Object>, byte[]> mqttMessageCodec = new MapByteArrayCodec();
-
-  /**
-   * The description for the default MQTT broker.
-   */
-  private MqttBrokerDescription mqttBrokerDescriptionDefault;
+  private Log log;
 
   @Override
   public String getName() {
@@ -155,6 +97,19 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
   }
 
   @Override
+  protected void onPreStartupComponent() {
+    log = getComponentContext().getActivity().getLog();
+    timeProvider = getComponentContext().getActivity().getSpaceEnvironment().getTimeProvider();
+
+    messageRouter = new StandardMessageRouter(new BasicMessageRouterProtectedHandlerContext(),
+        timeProvider, log);
+    messageRouter.setNodeName(rosActivityComponent.getNodeName());
+    messageRouter.setRosNode(rosActivityComponent.getNode());
+    messageRouter.setRoutableInputMessageListener(messageListener);
+    messageRouter.setMqttBrokerDescriptionDefault(getMqttBrokerDescription());
+  }
+
+  @Override
   public void onPostStartupComponent() {
     running = true;
   }
@@ -163,12 +118,13 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
   public void shutdownComponent() {
     running = false;
 
-    Log log = getComponentContext().getActivity().getLog();
     log.info("Shutting down ROS message router activity component");
 
-    long timeStart = System.currentTimeMillis();
+    TimeProvider timeProvider =
+        getComponentContext().getActivity().getSpaceEnvironment().getTimeProvider();
+    long timeStart = timeProvider.getCurrentTime();
 
-    clearAllChannelTopics();
+    messageRouter.clearAllChannelTopics();
 
     if (log.isInfoEnabled()) {
       log.info(String.format("ROS message router activity component shut down in %d msecs",
@@ -181,231 +137,80 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
     return running;
   }
 
-  @Override
-  public String getNodeName() {
-    return rosActivityComponent.getNodeName();
-  }
-
-  @Override
-  protected InternalRouteMessagePublisher
-      internalRegisterOutputRoute(RouteDescription routeDescription) {
-    String channelId = routeDescription.getChannelId();
-    SetMultimap<String, String> protocolToTopic = routeDescription.getProtocolToTopic();
-
-    List<InternalRouteMessagePublisher> routeMessagePublishers = new ArrayList<>();
-    for (String routeProtocol : protocolToTopic.keySet()) {
-      Set<String> topicNamesForProtocol = protocolToTopic.get(routeProtocol);
-      if ("ros".equals(routeProtocol)) {
-        RosPublishers<GenericMessage> publishers =
-            new StandardRosPublishers<GenericMessage>(getComponentContext().getActivity().getLog());
-        publishers.addPublishers(rosActivityComponent.getNode(), ROS_ROUTE_MESSAGE_TYPE,
-            topicNamesForProtocol);
-
-        if (rosMessageEncoder == null) {
-          rosMessageEncoder = new MapGenericMessageMessageEncoder(publishers);
-        }
-
-        routeMessagePublishers
-            .add(new RosRouteMessagePublisher(channelId, publishers, rosMessageEncoder));
-      } else if ("mqtt".equals(routeProtocol)) {
-        MqttPublishers<Map<String, Object>> publishers =
-            new StandardMqttPublishers<Map<String, Object>>(getNodeName(), mqttMessageCodec,
-                getComponentContext().getActivity().getLog());
-        publishers.addPublishers(getMqttBrokerDescription(), topicNamesForProtocol);
-
-        routeMessagePublishers.add(new MqttRouteMessagePublisher(channelId, publishers));
-      } else {
-        getComponentContext().getActivity().getLog()
-            .warn(String.format("unknown route protocol %s", routeProtocol));
-      }
-    }
-
-    InternalRouteMessagePublisher routeMessagePublisher = null;
-    int size = routeMessagePublishers.size();
-    if (size > 1) {
-      routeMessagePublisher = new CompositeRouteMessagePublisher(channelId, routeMessagePublishers,
-          getComponentContext().getActivity().getLog());
-    } else if (size == 1) {
-      routeMessagePublisher = routeMessagePublishers.get(0);
-    }
-
-    if (routeMessagePublisher != null) {
-      outputPublishers.put(channelId, routeMessagePublisher);
-    }
-
-    // TODO(keith): Decide what to do if no messages map properly.
-
-    return routeMessagePublisher;
-  }
-
-  @Override
-  protected void internalRegisterInputRoute(RouteDescription routeDescription) {
-    String channelId = routeDescription.getChannelId();
-    SetMultimap<String, String> protocolToTopic = routeDescription.getProtocolToTopic();
-
-    List<InternalRouteMessageSubscriber> routeMessageSubscribers = new ArrayList<>();
-
-    for (String routeProtocol : protocolToTopic.keySet()) {
-      Set<String> topicNamesForProtocol = protocolToTopic.get(routeProtocol);
-      if ("ros".equals(routeProtocol)) {
-        RosSubscribers<GenericMessage> subscribers = new StandardRosSubscribers<GenericMessage>(
-            getComponentContext().getActivity().getLog());
-
-        final RosRouteMessageSubscriber rosRouteMessageSubscriber =
-            new RosRouteMessageSubscriber(channelId, subscribers, rosMessageDecoder);
-        routeMessageSubscribers.add(rosRouteMessageSubscriber);
-
-        subscribers.addSubscribers(rosActivityComponent.getNode(), ROS_ROUTE_MESSAGE_TYPE,
-            topicNamesForProtocol, new MessageListener<GenericMessage>() {
-              @Override
-              public void onNewMessage(GenericMessage message) {
-                handleNewIncomingMessage(message, rosRouteMessageSubscriber);
-              }
-            });
-      } else if ("mqtt".equals(routeProtocol)) {
-        MqttSubscribers subscribers = new StandardMqttSubscribers(getNodeName(),
-            getComponentContext().getActivity().getLog());
-
-        final MqttRouteMessageSubscriber mqttRouteMessageSubscriber =
-            new MqttRouteMessageSubscriber(channelId, subscribers, mqttMessageCodec);
-        routeMessageSubscribers.add(mqttRouteMessageSubscriber);
-
-        subscribers.addSubscribers(getMqttBrokerDescription(), topicNamesForProtocol,
-            new MqttCallback() {
-              @Override
-              public void connectionLost(Throwable cause) {
-                getComponentContext().getActivity().getLog().warn("Lost connection to MQTT broker");
-              }
-
-              @Override
-              public void messageArrived(String topic, MqttMessage message) throws Exception {
-                handleNewIncomingMessage(message.getPayload(), mqttRouteMessageSubscriber);
-              }
-
-              @Override
-              public void deliveryComplete(IMqttDeliveryToken token) {
-                // Not used since not publishing
-              }
-            });
-      }
-
-    }
-
-    InternalRouteMessageSubscriber routeMessageSubscriber = null;
-    int size = routeMessageSubscribers.size();
-    if (size > 1) {
-      routeMessageSubscriber = new CompositeRouteMessageSubscriber(channelId,
-          routeMessageSubscribers, getComponentContext().getActivity().getLog());
-    } else if (size == 1) {
-      routeMessageSubscriber = routeMessageSubscribers.get(0);
-    }
-
-    if (routeMessageSubscriber != null) {
-      inputSubscribers.put(channelId, routeMessageSubscriber);
-    }
-  }
-
   /**
    * Get the MQTT broker description.
    * 
-   * @return the MQTT broker description
+   * @return the MQTT broker description, or {@code null} if none defined
    */
   private MqttBrokerDescription getMqttBrokerDescription() {
-    if (mqttBrokerDescriptionDefault == null) {
-      mqttBrokerDescriptionDefault =
-          new MqttBrokerDescription(getComponentContext().getActivity().getConfiguration()
-              .getRequiredPropertyString(CONFIGURATION_MESSAGING_MQTT_BROKERDESCRIPTION_DEFAULT));
+    String mqttBrokerDescriptionString = getComponentContext().getActivity().getConfiguration()
+        .getPropertyString(CONFIGURATION_MESSAGING_MQTT_BROKERDESCRIPTION_DEFAULT);
+    if (mqttBrokerDescriptionString != null) {
+      return new MqttBrokerDescription(mqttBrokerDescriptionString);
+    } else {
+      return null;
     }
-
-    return mqttBrokerDescriptionDefault;
   }
 
   @Override
-  public synchronized void clearAllChannelTopics() {
-    for (InternalRouteMessageSubscriber input : inputSubscribers.values()) {
-      input.shutdown();
-    }
-    inputSubscribers.clear();
-
-    for (InternalRouteMessagePublisher output : outputPublishers.values()) {
-      output.shutdown();
-    }
-    outputPublishers.clear();
-  }
-
-  @Override
-  public void handleNewIncomingMessage(Object message, RouteMessageSubscriber subscriber) {
-    if (!getComponentContext().canHandlerRun()) {
-      return;
-    }
-
-    String channelId = subscriber.getChannelId();
-
-    try {
-      getComponentContext().enterHandler();
-
-      TimeProvider timeProvider =
-          getComponentContext().getActivity().getSpaceEnvironment().getTimeProvider();
-      long start = timeProvider.getCurrentTime();
-      String handlerInvocationId = newHandlerInvocationId();
-      Log log = getComponentContext().getActivity().getLog();
-      if (log.isTraceEnabled()) {
-        log.trace(
-            String.format("Entering ROS route message handler invocation %s", handlerInvocationId));
-      }
-
-      // Send the message out to the listener.
-      Map<String, Object> msg = subscriber.decodeMessage(message);
-      messageListener.onNewRoutableInputMessage(channelId, msg);
-
-      if (log.isTraceEnabled()) {
-        log.trace(String.format("Exiting ROS route message handler invocation %s after %dms",
-            handlerInvocationId, timeProvider.getCurrentTime() - start));
-      }
-    } catch (Throwable e) {
-      handleError(String.format("Error after receiving routing message for channel %s", channelId),
-          e);
-    } finally {
-      getComponentContext().exitHandler();
-    }
+  public String getNodeName() {
+    return messageRouter.getNodeName();
   }
 
   @Override
   public void writeOutputMessage(String outputChannelId, Map<String, Object> message) {
-    try {
-      getComponentContext().enterHandler();
-
-      if (outputChannelId != null) {
-        RouteMessagePublisher output = outputPublishers.get(outputChannelId);
-        if (output != null) {
-          output.writeOutputMessage(message);
-
-        } else {
-          handleError(
-              String.format("Unknown route output channel %s. Message dropped.", outputChannelId),
-              null);
-        }
-      } else {
-        handleError("Route output channel has no name. Message dropped.", null);
-      }
-    } catch (Throwable e) {
-      handleError(String.format("Error writing message on channel %s", outputChannelId), e);
-    } finally {
-      getComponentContext().exitHandler();
-    }
+    messageRouter.writeOutputMessage(outputChannelId, message);
   }
 
-  /**
-   * Create a new handler invocation ID.
-   *
-   * @return a unique ID for the handler invocation
-   */
-  private String newHandlerInvocationId() {
-    return Long.toHexString(handlerInvocationId.getAndIncrement());
+  @Override
+  public void clearAllChannelTopics() {
+    messageRouter.clearAllChannelTopics();
   }
 
   @Override
   public RouteMessagePublisher getMessagePublisher(String outputChannelId) {
-    return outputPublishers.get(outputChannelId);
+    return messageRouter.getMessagePublisher(outputChannelId);
+  }
+
+  @Override
+  public MessageRouter getMessageRouter() {
+    return messageRouter;
+  }
+
+  @Override
+  protected RouteMessagePublisher internalRegisterOutputRoute(RouteDescription routeDescription) {
+    return messageRouter.registerOutputChannelTopic(routeDescription);
+  }
+
+  @Override
+  protected void internalRegisterInputRoute(RouteDescription routeDescription) {
+    messageRouter.registerInputChannelTopic(routeDescription);
+  }
+
+  /**
+   * The protected handler context for this activity component.
+   * 
+   * @author Keith M. Hughes
+   */
+  public class BasicMessageRouterProtectedHandlerContext implements ProtectedHandlerContext {
+    @Override
+    public boolean canHandlerRun() {
+      return getComponentContext().canHandlerRun();
+    }
+
+    @Override
+    public void enterHandler() {
+      getComponentContext().enterHandler();
+    }
+
+    @Override
+    public void exitHandler() {
+      getComponentContext().exitHandler();
+    }
+
+    @Override
+    public void handleHandlerError(String message, Throwable t) {
+      handleError(message, t);
+    }
   }
 }

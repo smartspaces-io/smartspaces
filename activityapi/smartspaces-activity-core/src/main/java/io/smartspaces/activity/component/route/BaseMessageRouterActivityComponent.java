@@ -16,6 +16,21 @@
  */
 package io.smartspaces.activity.component.route;
 
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.activity.component.BaseActivityComponent;
+import io.smartspaces.activity.impl.StatusDetail;
+import io.smartspaces.configuration.Configuration;
+import io.smartspaces.messaging.route.MessageRouter;
+import io.smartspaces.messaging.route.RouteDescription;
+import io.smartspaces.messaging.route.RouteMessagePublisher;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
+import org.ros.namespace.GraphName;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,21 +38,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.ros.namespace.GraphName;
-
-import com.google.common.base.Joiner;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
-
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.activity.component.BaseActivityComponent;
-import io.smartspaces.activity.impl.StatusDetail;
-import io.smartspaces.configuration.Configuration;
-import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
-import io.smartspaces.messaging.route.RouteMessagePublisher;
 
 /**
  * A helpful superclass for implementors of the ROS message routing activity
@@ -63,12 +63,12 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
   private String defaultRouteProtocol;
 
   /**
-   * The route descriptions for all inputs.
+   * The route descriptions for all inputs keyed by channel IDs.
    */
   private Map<String, RouteDescription> inputRouteDescriptions = new HashMap<>();
 
   /**
-   * The route descriptions for all outputs.
+   * The route descriptions for all outputs keyed by channel IDs.
    */
   private Map<String, RouteDescription> outputRouteDescriptions = new HashMap<>();
 
@@ -89,7 +89,7 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
     StringBuilder routeErrors = new StringBuilder();
 
     defaultRouteProtocol = configuration.getPropertyString(CONFIGURATION_ROUTE_PROTOCOL_DEFAULT,
-        CONFIGURATION_VALUE_DEFAULT_ROUTE_PROTOCOL_DEFAULT);
+        MessageRouter.DEFAULT_ROUTE_PROTOCOL_DEFAULT);
 
     String inputChannelIds = configuration.getPropertyString(CONFIGURATION_ROUTES_INPUTS);
     if (inputChannelIds != null) {
@@ -209,7 +209,7 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
   }
 
   @Override
-  public synchronized void registerInputChannelTopic(final String channelId, Set<String> topicNames)
+  public synchronized void registerInputChannelTopic(String channelId, Set<String> topicNames)
       throws SmartSpacesException {
     if (inputRouteDescriptions.containsKey(channelId)) {
       throw new SimpleSmartSpacesException("Input channel already registered: " + channelId);
@@ -233,7 +233,7 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
    * 
    * @return the message publisher
    */
-  protected abstract InternalRouteMessagePublisher
+  protected abstract RouteMessagePublisher
       internalRegisterOutputRoute(RouteDescription routeDescription);
 
   /**
@@ -374,5 +374,4 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
     return String.format(StatusDetail.PREFIX_FORMAT, className) + key + StatusDetail.SEPARATOR
         + bridge + StatusDetail.SEPARATOR + value + StatusDetail.POSTFIX;
   }
-
 }

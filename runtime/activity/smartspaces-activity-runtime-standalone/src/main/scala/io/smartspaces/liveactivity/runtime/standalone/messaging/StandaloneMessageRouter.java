@@ -17,38 +17,39 @@
 
 package io.smartspaces.liveactivity.runtime.standalone.messaging;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
-
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.SupportedActivity;
 import io.smartspaces.activity.component.ros.RosActivityComponent;
 import io.smartspaces.activity.component.route.BaseMessageRouterActivityComponent;
 import io.smartspaces.activity.component.route.MessageRouterActivityComponent;
-import io.smartspaces.activity.component.route.MessageRouterSupportedMessageTypes;
-import io.smartspaces.activity.component.route.RoutableInputMessageListener;
-import io.smartspaces.activity.component.route.RouteDescription;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.liveactivity.runtime.standalone.development.DevelopmentStandaloneLiveActivityRuntime;
 import io.smartspaces.liveactivity.runtime.standalone.messaging.MessageUtils.MessageMap;
 import io.smartspaces.liveactivity.runtime.standalone.messaging.MessageUtils.MessageSetList;
 import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
+import io.smartspaces.messaging.route.MessageRouter;
+import io.smartspaces.messaging.route.MessageRouterSupportedMessageTypes;
+import io.smartspaces.messaging.route.RoutableInputMessageListener;
+import io.smartspaces.messaging.route.RouteDescription;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
+import io.smartspaces.messaging.route.RouteMessageSubscriber;
 import io.smartspaces.time.TimeProvider;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
+import org.apache.commons.logging.Log;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A standalone message router that uses multicast.
@@ -153,6 +154,11 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   private TimeProvider timeProvider;
 
   /**
+   * The message router for this component.
+   */
+  private MyMessageRouter myMessageRouter;
+
+  /**
    * Create a new message router.
    *
    * @param activityRunner
@@ -169,23 +175,16 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
 
   @Override
   public String getNodeName() {
-    // TODO(keith): For now only ROS is used for node names as ROS is our only
-    // router. Eventually change
-    // to a more generic route name config parameter.
-    return getComponentContext().getActivity().getConfiguration()
-        .getPropertyString(RosActivityComponent.CONFIGURATION_ACTIVITY_ROS_NODE_NAME);
+    return myMessageRouter.getNodeName();
   }
 
   @Override
   public void writeOutputMessage(String outputChannelId, Map<String, Object> message) {
-    sendOutputMessage(outputChannelId, MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE,
-        MAPPER.toString(message));
+    myMessageRouter.writeOutputMessage(outputChannelId, message);
   }
 
   @Override
   public String getName() {
-    // This isn't strictly accurate, but there should ideally be a general name
-    // for message router components.
     return MessageRouterActivityComponent.COMPONENT_NAME;
   }
 
@@ -194,12 +193,14 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   protected void onPreStartupComponent() {
     timeProvider = getComponentContext().getActivity().getSpaceEnvironment().getTimeProvider();
     activity = getComponentContext().getActivity();
-    router = getRouter();
+    router = getStandaloneRouter();
     messageListener = (RoutableInputMessageListener) activity;
   }
 
   @Override
   protected void onPostStartupComponent() {
+    myMessageRouter = new MyMessageRouter();
+
     initializeCommunication();
     if (playbackRunner != null) {
       getComponentContext().getActivity().getSpaceEnvironment().getExecutorService()
@@ -212,11 +213,12 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
    *
    * @return the router
    */
-  private StandaloneRouter getRouter() {
+  private StandaloneRouter getStandaloneRouter() {
     Configuration configuration = activity.getConfiguration();
     boolean useLoopback = configuration.getPropertyBoolean("standalone.router.loopback", false);
 
-    return useLoopback ? new LoopbackRouter(configuration) : new MulticastRouter(configuration);
+    return useLoopback ? new LoopbackStandaloneRouter(configuration)
+        : new MulticastStandaloneRouter(configuration);
   }
 
   @Override
@@ -236,6 +238,11 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   @Override
   public boolean isComponentRunning() {
     return router != null && router.isRunning();
+  }
+
+  @Override
+  public MessageRouter getMessageRouter() {
+    return myMessageRouter;
   }
 
   /**
@@ -264,53 +271,6 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
       }
     } catch (Exception e) {
       throw new SimpleSmartSpacesException("While creating standalone message route", e);
-    }
-  }
-
-  /**
-   * Send an output message.
-   *
-   * @param channelName
-   *          the channel name on which to send the message
-   * @param type
-   *          type of message to send
-   * @param message
-   *          message to send
-   */
-  private void sendOutputMessage(String channelName, String type, String message) {
-    try {
-      Set<String> routes = outputChannelsToRoutes.get(channelName);
-      if (routes == null) {
-        getLog().error("Attempt to send on unregistered output channel " + channelName);
-        Set<String> unknown = Sets.newHashSet("unknown");
-        outputChannelsToRoutes.put(channelName, unknown);
-        routes = unknown;
-      }
-
-      for (String route : routes) {
-        // This is horribly inefficient but preserves the right semantics. It's
-        // more
-        // flexible to keep everything as JSON, instead as a string embedded in
-        // Json.
-        Object baseMessage = (MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE.equals(type))
-            ? MAPPER.parseObject(message) : message;
-
-        MessageMap messageObject = new MessageMap();
-        messageObject.put("message", baseMessage);
-        messageObject.put("type", type);
-        messageObject.put("route", route);
-        messageObject.put("channel", channelName);
-        messageObject.put(SOURCE_UUID_KEY, activity.getUuid());
-        router.send(messageObject);
-
-        if (messageCheckRunner != null) {
-          if (messageCheckRunner.checkMessage(messageObject)) {
-            messageCheckRunner.finalizeVerification();
-          }
-        }
-      }
-    } catch (Exception e) {
-      throw new SimpleSmartSpacesException("While sending standalone message", e);
     }
   }
 
@@ -542,7 +502,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   @Override
   public synchronized void registerInputChannelTopic(String inputChannelId,
       Set<String> topicNames) {
-    if (inputRoutesToChannels.values().contains(inputChannelId)) {
+    if (myMessageRouter.isInputChannelRegistered(inputChannelId)) {
       SimpleSmartSpacesException.throwFormattedException("Duplicate route entry for channel %s",
           inputChannelId);
     }
@@ -568,13 +528,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   @Override
   public synchronized void clearAllChannelTopics() {
     getComponentContext().getActivity().getLog().warn("Clearing all channel topics");
-    inputRoutesToChannels.clear();
-    outputChannelsToRoutes.clear();
-  }
-
-  @Override
-  public Set<String> getOutputChannelIds() {
-    return Sets.newHashSet(outputChannelsToRoutes.keySet());
+    myMessageRouter.clearAllChannelTopics();
   }
 
   @Override
@@ -582,9 +536,137 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     return new StandaloneRouteMessagePublisher(outputChannelId);
   }
 
-  @Override
-  public Set<String> getInputChannelIds() {
-    return Sets.newHashSet(inputRoutesToChannels.keySet());
+  private class MyMessageRouter implements MessageRouter {
+
+    @Override
+    public void handleNewIncomingMessage(Object message, RouteMessageSubscriber subscriber) {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void setRoutableInputMessageListener(RoutableInputMessageListener messageListener) {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public String getNodeName() {
+      // TODO(keith): For now only ROS is used for node names as ROS is our
+      // only
+      // router. Eventually change
+      // to a more generic route name config parameter.
+      return getComponentContext().getActivity().getConfiguration()
+          .getPropertyString(RosActivityComponent.CONFIGURATION_ACTIVITY_ROS_NODE_NAME);
+    }
+
+    @Override
+    public String getDefaultRouteProtocol() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public void writeOutputMessage(String outputChannelId, Map<String, Object> message) {
+      sendOutputMessage(outputChannelId, MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE,
+          MAPPER.toString(message));
+    }
+
+    @Override
+    public boolean isOutputChannelRegistered(String channelId) {
+      return outputChannelsToRoutes.containsKey(channelId);
+    }
+
+    @Override
+    public RouteMessagePublisher registerOutputChannelTopic(RouteDescription routeDescription)
+        throws SmartSpacesException {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public boolean isInputChannelRegistered(String channelId) {
+      // TODO Auto-generated method stub
+      return inputRoutesToChannels.values().contains(channelId);
+    }
+
+    @Override
+    public void registerInputChannelTopic(RouteDescription routeDescription)
+        throws SmartSpacesException {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void clearAllChannelTopics() {
+      inputRoutesToChannels.clear();
+      outputChannelsToRoutes.clear();
+    }
+
+    @Override
+    public Set<String> getOutputChannelIds() {
+      return Sets.newHashSet(outputChannelsToRoutes.keySet());
+    }
+
+    @Override
+    public Set<String> getInputChannelIds() {
+      return Sets.newHashSet(inputRoutesToChannels.values());
+    }
+
+    @Override
+    public RouteMessagePublisher getMessagePublisher(String outputChannelId) {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    /**
+     * Send an output message.
+     *
+     * @param channelName
+     *          the channel name on which to send the message
+     * @param type
+     *          type of message to send
+     * @param message
+     *          message to send
+     */
+    private void sendOutputMessage(String channelName, String type, String message) {
+      try {
+        Set<String> routes = outputChannelsToRoutes.get(channelName);
+        if (routes == null) {
+          getLog().error("Attempt to send on unregistered output channel " + channelName);
+          Set<String> unknown = Sets.newHashSet("unknown");
+          outputChannelsToRoutes.put(channelName, unknown);
+          routes = unknown;
+        }
+
+        for (String route : routes) {
+          // This is horribly inefficient but preserves the right
+          // semantics. It's
+          // more
+          // flexible to keep everything as JSON, instead as a string
+          // embedded in
+          // Json.
+          Object baseMessage = (MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE.equals(type))
+              ? MAPPER.parseObject(message) : message;
+
+          MessageMap messageObject = new MessageMap();
+          messageObject.put("message", baseMessage);
+          messageObject.put("type", type);
+          messageObject.put("route", route);
+          messageObject.put("channel", channelName);
+          messageObject.put(SOURCE_UUID_KEY, activity.getUuid());
+          router.send(messageObject);
+
+          if (messageCheckRunner != null) {
+            if (messageCheckRunner.checkMessage(messageObject)) {
+              messageCheckRunner.finalizeVerification();
+            }
+          }
+        }
+      } catch (Exception e) {
+        throw new SimpleSmartSpacesException("While sending standalone message", e);
+      }
+    }
   }
 
   /**

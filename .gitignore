@@ -9,12 +9,12 @@ gradle.properties
 .DS_Store
 .pydevproject
 *.iml
-interactivespaces_docs/src/main/sphinx/conf.py
-interactivespaces_docs/src/main/sphinx/interactivespaces.pyc
-interactivespaces_docs/src/main/sphinx/javadoc.pyc
+smartspaces_docs/src/main/sphinx/conf.py
+smartspaces_docs/src/main/sphinx/smartspaces.pyc
+smartspaces_docs/src/main/sphinx/javadoc.pyc
 **/build/
 **/bin/
-!interactivespaces_build/workbench/template/bin
+!smartspaces_build/workbench/template/bin
 **/dist/
 **/msg_gen/
 **/srv_gen/
@@ -22,6 +22,8 @@ interactivespaces_docs/src/main/sphinx/javadoc.pyc
 **/test_output/
 **/osgi_build/
 **/target/
-interactivespaces-controller-android/libs/**
+smartspaces-controller-android/libs/**
 *.iml
-interactivespaces_docs/src/main/sphinx/__pycache__/*
+smartspaces_docs/src/main/sphinx/__pycache__/*
+**/.cache-main
+**/.cache-tests

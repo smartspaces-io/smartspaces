@@ -30,7 +30,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author Trevor Pering
  */
-public class LoopbackRouter implements StandaloneRouter {
+public class LoopbackStandaloneRouter implements StandaloneRouter {
 
   /**
    * Internal message queue of messages for loopback.
@@ -48,7 +48,7 @@ public class LoopbackRouter implements StandaloneRouter {
    * @param configuration
    *          configuration of the router
    */
-  public LoopbackRouter(Configuration configuration) {
+  public LoopbackStandaloneRouter(Configuration configuration) {
   }
 
   @Override

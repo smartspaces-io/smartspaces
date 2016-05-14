@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,25 +14,22 @@
  * the License.
  */
 
-package io.smartspaces.activity.component.route;
-
-import java.util.Map;
+package io.smartspaces.messaging.route;
 
 /**
- * A listener for input messages from a {@link MessageRouterActivityComponent}
- * input topics.
- *
+ * A handler for messages coming into a route message subscriber.
+ * 
  * @author Keith M. Hughes
  */
-public interface RoutableInputMessageListener {
+public interface IncomingRouteMessageHandler {
 
   /**
-   * A new message has come in.
+   * Handle a new route message.
    *
-   * @param channelName
-   *          the name of the channel the message came in on
    * @param message
-   *          the message which has come in
+   *          the message that came in
+   * @param subscriber
+   *          the subscriber for the message.
    */
-  void onNewRoutableInputMessage(String channelName, Map<String, Object> message);
+  void handleNewIncomingMessage(Object message, RouteMessageSubscriber subscriber);
 }

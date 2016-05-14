@@ -17,16 +17,18 @@
 
 package io.smartspaces.activity.component.route;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.google.common.collect.ImmutableList;
-
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.component.ActivityComponent;
 import io.smartspaces.activity.component.ros.RosActivityComponent;
+import io.smartspaces.messaging.route.MessageRouter;
+import io.smartspaces.messaging.route.RoutableInputMessageListener;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
+
+import com.google.common.collect.ImmutableList;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An activity component which supports route messaging.
@@ -87,11 +89,6 @@ public interface MessageRouterActivityComponent extends ActivityComponent {
    * Configuration property to set the route protocol default.
    */
   String CONFIGURATION_ROUTE_PROTOCOL_DEFAULT = "space.activity.route.protocol.default";
-
-  /**
-   * Configuration property value default for the route protocol default.
-   */
-  String CONFIGURATION_VALUE_DEFAULT_ROUTE_PROTOCOL_DEFAULT = "ros";
 
   /**
    * Configuration property value for the default MQTT broker description.
@@ -211,4 +208,11 @@ public interface MessageRouterActivityComponent extends ActivityComponent {
    * @return all input channel IDs
    */
   Set<String> getInputChannelIds();
+
+  /**
+   * Get the message router for this component.
+   * 
+   * @return the message router
+   */
+  MessageRouter getMessageRouter();
 }

@@ -114,8 +114,8 @@ allprojects {
   version = osgiVersion
 
   tasks.withType(JavaCompile) { 
-    sourceCompatibility = "1.7"
-    targetCompatibility = "1.7" 
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8" 
   }
 }
 
@@ -189,6 +189,14 @@ subprojects {
 
     sourceSets {
       main { 
+           // Provided libraries should be on the compile classpath, though
+           // not in the compile configuration.
+      	   compileClasspath += configurations.provided
+      	   compileClasspath += configurations.expandedJars
+      	   compileClasspath += configurations.extrasCompile
+      	   compileClasspath += configurations.extrasSupportCompile
+      }
+      test { 
            // Provided libraries should be on the compile classpath, though
            // not in the compile configuration.
       	   compileClasspath += configurations.provided

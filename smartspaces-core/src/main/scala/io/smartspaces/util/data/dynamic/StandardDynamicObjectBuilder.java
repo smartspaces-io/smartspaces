@@ -282,7 +282,12 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   }
 
   @Override
-  public Map<String, Object> buildAsMap() {
+  public DynamicObject toDynamicObject() {
+    return new StandardDynamicObjectNavigator(root);
+  }
+
+  @Override
+  public Map<String, Object> toMap() {
     return root;
   }
 

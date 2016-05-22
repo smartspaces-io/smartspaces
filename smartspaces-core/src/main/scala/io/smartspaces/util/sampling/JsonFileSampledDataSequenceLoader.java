@@ -94,7 +94,7 @@ public class JsonFileSampledDataSequenceLoader implements SampledDataSequenceLoa
       builder.up();
     }
 
-    fileSupport.writeFile(dataFile, JSON_MAPPER.toString(builder.buildAsMap()));
+    fileSupport.writeFile(dataFile, JSON_MAPPER.toString(builder.toMap()));
   }
 
   @Override

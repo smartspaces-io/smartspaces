@@ -137,7 +137,7 @@ public class BaseRoutableActivity extends BaseRosActivity {
    *          the message to send
    */
   public void sendOutputMessage(String channelName, DynamicObjectBuilder message) {
-    sendOutputMessage(channelName, message.buildAsMap());
+    sendOutputMessage(channelName, message.toMap());
   }
 
   /**

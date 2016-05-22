@@ -66,7 +66,7 @@ public class StandardDynamicObjectBuilderTest {
     boolean valueBoolean = true;
     builder.setProperty(keyBoolean, valueBoolean);
 
-    Map<String, Object> object = builder.buildAsMap();
+    Map<String, Object> object = builder.toMap();
 
     assertEquals(valueString1, object.get(keyString1));
     assertEquals(valueString2, object.get(keyString2));
@@ -104,7 +104,7 @@ public class StandardDynamicObjectBuilderTest {
 
     builder.setProperties(testData);
 
-    Map<String, Object> object = builder.buildAsMap();
+    Map<String, Object> object = builder.toMap();
 
     assertEquals(valueString1, object.get(keyString1));
     assertEquals(valueString2, object.get(keyString2));
@@ -142,7 +142,7 @@ public class StandardDynamicObjectBuilderTest {
     String nextValue1 = "value7";
     builder.setProperty(nextKey1, nextValue1);
 
-    Map<String, Object> root = builder.buildAsMap();
+    Map<String, Object> root = builder.toMap();
 
     assertEquals(value0, root.get(key));
 
@@ -190,7 +190,7 @@ public class StandardDynamicObjectBuilderTest {
       builder.add(value);
     }
 
-    Map<String, Object> root = builder.buildAsMap();
+    Map<String, Object> root = builder.toMap();
 
     List<Object> actual = (List<Object>) root.get(key);
     assertEquals(expected, actual);
@@ -223,7 +223,7 @@ public class StandardDynamicObjectBuilderTest {
     builder.newObject();
     builder.setProperty(objKey, objValue);
 
-    Map<String, Object> root = builder.buildAsMap();
+    Map<String, Object> root = builder.toMap();
 
     List<Object> actualArray = (List<Object>) ((List<Object>) root.get(key)).get(0);
     assertEquals(expectedArray, actualArray);

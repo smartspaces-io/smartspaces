@@ -151,7 +151,7 @@ public class BaseRoutableWebServerActivity extends BaseRoutableActivity
    *          the data to send
    */
   public void sendWebSocketDynamicObjectBuilder(String connectionId, DynamicObjectBuilder data) {
-    sendWebSocketJson(connectionId, data.buildAsMap());
+    sendWebSocketJson(connectionId, data.toMap());
   }
 
   /**
@@ -171,7 +171,7 @@ public class BaseRoutableWebServerActivity extends BaseRoutableActivity
    *          the data to send
    */
   public void sendAllWebSocketDynamicObjectBuilder(DynamicObjectBuilder data) {
-    sendAllWebSocketJson(data.buildAsMap());
+    sendAllWebSocketJson(data.toMap());
   }
 
   /**

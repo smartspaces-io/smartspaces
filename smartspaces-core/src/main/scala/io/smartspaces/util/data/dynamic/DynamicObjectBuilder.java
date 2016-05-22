@@ -195,17 +195,25 @@ public interface DynamicObjectBuilder {
 	 */
 	DynamicObjectBuilder up() throws DynamicObjectSmartSpacesException;
 
+
+    /**
+     * Build the final object as a dynamic object.
+     *
+     * @return the fully built object as a dynamic object
+     */
+    DynamicObject toDynamicObject();
+
 	/**
 	 * Build the final object as a map.
 	 *
 	 * @return the fully built object as a map
 	 */
-	Map<String, Object> buildAsMap();
+	Map<String, Object> toMap();
 
 	/**
 	 * Render the final object as a JSON string.
 	 * 
-	 * @return the final object as a JSON strings
+	 * @return the final object as a JSON string
 	 */
 	String toJson();
 }

@@ -19,6 +19,9 @@ package io.smartspaces.event.trigger;
 
 /**
  * A listener for trigger events.
+ * 
+ * @param <D>
+ *          the type of the data handed with the trigger
  *
  * @author Keith M. Hughes
  */
@@ -27,13 +30,13 @@ public interface TriggerListener {
   /**
    * Have triggered to a new state.
    *
-   * @param src
-   *          The source of the event.
+   * @param trigger
+   *          the trigger that triggered
    * @param newState
-   *          The new state.
+   *          the new state
    * @param event
-   *          The type of event created by the trigger.
+   *          the type of event created by the trigger
    */
-  void onTrigger(Trigger src, TriggerState newState, TriggerEventType event);
+  void onTrigger(Trigger trigger, TriggerState newState, TriggerEventType event);
 
 }

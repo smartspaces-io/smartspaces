@@ -151,7 +151,7 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    * Update the value, potentially triggering and notifying listeners.
    *
    * @param newValue
-   *          The new value.
+   *          the new value
    */
   public void update(double newValue) {
     TriggerState newState = null;

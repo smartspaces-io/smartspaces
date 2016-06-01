@@ -152,8 +152,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
     if (currentType == DynamicObjectType.OBJECT) {
       return currentObject.containsKey(name);
     } else {
-      throw new DynamicObjectSmartSpacesException(String.format(
-          "Current level is not a object when checking for property name %s", name));
+      throw new DynamicObjectSmartSpacesException(
+          String.format("Current level is not a object when checking for property name %s", name));
     }
   }
 
@@ -228,8 +228,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
     if (currentType == DynamicObjectType.OBJECT) {
       return currentObject.get(propertyName);
     } else {
-      throw new DynamicObjectSmartSpacesException(String.format(
-          "Accessing object property %s, current level is not a object", propertyName));
+      throw new DynamicObjectSmartSpacesException(String
+          .format("Accessing object property %s, current level is not a object", propertyName));
     }
   }
 
@@ -248,9 +248,14 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
     if (currentType == DynamicObjectType.ARRAY) {
       return currentArray.get(index);
     } else {
-      throw new DynamicObjectSmartSpacesException(String.format(
-          "Accessing array index %d, current level is not an array", index));
+      throw new DynamicObjectSmartSpacesException(
+          String.format("Accessing array index %d, current level is not an array", index));
     }
+  }
+
+  @Override
+  public boolean isObject() {
+    return currentType == DynamicObjectType.OBJECT;
   }
 
   @Override
@@ -260,6 +265,11 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
     } else {
       throw new DynamicObjectSmartSpacesException("Current level is not a object");
     }
+  }
+
+  @Override
+  public boolean isArray() {
+    return currentType == DynamicObjectType.ARRAY;
   }
 
   @SuppressWarnings("unchecked")
@@ -285,8 +295,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
       setCurrentAsArray(value);
     } else {
-      throw new DynamicObjectSmartSpacesException(String.format(
-          "The object property %s is neither an object or an array", propertyName));
+      throw new DynamicObjectSmartSpacesException(
+          String.format("The object property %s is neither an object or an array", propertyName));
     }
 
     return this;
@@ -305,8 +315,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
       setCurrentAsArray(value);
     } else {
-      throw new DynamicObjectSmartSpacesException(String.format(
-          "The array position %d is neither an object or an array", pos));
+      throw new DynamicObjectSmartSpacesException(
+          String.format("The array position %d is neither an object or an array", pos));
     }
 
     return this;
@@ -400,7 +410,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
    * @return the final object
    */
   @SuppressWarnings("unchecked")
-  Object traversePath(String path) {
+      Object traversePath(String path) {
     Object curObject = null;
 
     if (currentType == DynamicObjectType.OBJECT) {
@@ -415,7 +425,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
       String element = elements[i].trim();
 
       if (element.isEmpty()) {
-        throw new DynamicObjectSmartSpacesException(String.format("Empty element in path %s", path));
+        throw new DynamicObjectSmartSpacesException(
+            String.format("Empty element in path %s", path));
       }
 
       if (element.equals("$")) {
@@ -427,13 +438,14 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
             curObject = ((List<Object>) curObject).get(index);
           } else {
-            throw new DynamicObjectSmartSpacesException(String.format(
-                "Path element %s does not end in a ]", element));
+            throw new DynamicObjectSmartSpacesException(
+                String.format("Path element %s does not end in a ]", element));
           }
         } else if (curObject instanceof Map) {
           throw new DynamicObjectSmartSpacesException("Attempt to use an array index in an object");
         } else if (i < elements.length) {
-          throw new DynamicObjectSmartSpacesException("Non array or object in the middle of a path");
+          throw new DynamicObjectSmartSpacesException(
+              "Non array or object in the middle of a path");
         }
       } else {
         // Have a result name
@@ -442,7 +454,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
         } else if (curObject instanceof List) {
           throw new DynamicObjectSmartSpacesException("Attempt to use an name index in an array");
         } else if (i < elements.length) {
-          throw new DynamicObjectSmartSpacesException("Non array or object in the middle of a path");
+          throw new DynamicObjectSmartSpacesException(
+              "Non array or object in the middle of a path");
         }
       }
     }

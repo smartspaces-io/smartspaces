@@ -233,9 +233,16 @@ public interface DynamicObject {
    *           not an array
    */
   int getSize() throws DynamicObjectSmartSpacesException;
+  
+  /**
+   * Is the current level an object?
+   * 
+   * @return {@code true} if the current level is an object
+   */
+  boolean isObject();
 
   /**
-   * If the current level is a object, get that object.\ as a map.
+   * If the current level is a object, get that object as a map.
    *
    * <p>
    * The map returned is not protected. If modified, the navigator will have a
@@ -247,6 +254,13 @@ public interface DynamicObject {
    *           the current level was not an object
    */
   Map<String, ? extends Object> asMap() throws DynamicObjectSmartSpacesException;
+  
+  /**
+   * Is the current level an array?
+   * 
+   * @return {@code true} if the current level is an array
+   */
+  boolean isArray();
 
   /**
    * If the current level is an array, get that array.

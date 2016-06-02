@@ -246,7 +246,12 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
    */
   private Object getArrayIndex(int index) {
     if (currentType == DynamicObjectType.ARRAY) {
-      return currentArray.get(index);
+      if (index < currentArray.size()) {
+        return currentArray.get(index);
+      } else {
+        throw new DynamicObjectSmartSpacesException(String
+            .format("Accessing array index %d, array size is %d", index, currentArray.size()));
+      }
     } else {
       throw new DynamicObjectSmartSpacesException(
           String.format("Accessing array index %d, current level is not an array", index));
@@ -303,6 +308,28 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   }
 
   @Override
+  public boolean downChecked(String propertyName) {
+    Object value = getObjectProperty(propertyName);
+
+    if (value == null) {
+      return false;
+    } else if (value instanceof Map) {
+      nav.push(currentObject);
+
+      setCurrentAsObject(value);
+    } else if (value instanceof List) {
+      nav.push(currentObject);
+
+      setCurrentAsArray(value);
+    } else {
+      throw new DynamicObjectSmartSpacesException(
+          String.format("The object property %s is neither an object or an array", propertyName));
+    }
+
+    return true;
+  }
+
+  @Override
   public DynamicObject down(int pos) throws DynamicObjectSmartSpacesException {
     Object value = getArrayIndex(pos);
 
@@ -320,6 +347,35 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
     }
 
     return this;
+  }
+
+  @Override
+  public boolean downChecked(int pos) throws DynamicObjectSmartSpacesException {
+    if (currentType == DynamicObjectType.ARRAY) {
+      if (pos >= currentArray.size()) {
+        return false;
+      }
+    } else {
+      throw new DynamicObjectSmartSpacesException(
+          String.format("Accessing array index %d, current level is not an array", pos));
+    }
+
+    Object value = currentArray.get(pos);
+
+    if (value instanceof Map) {
+      nav.push(currentArray);
+
+      setCurrentAsObject(value);
+    } else if (value instanceof List) {
+      nav.push(currentArray);
+
+      setCurrentAsArray(value);
+    } else {
+      throw new DynamicObjectSmartSpacesException(
+          String.format("The array position %d is neither an object or an array", pos));
+    }
+
+    return true;
   }
 
   @Override

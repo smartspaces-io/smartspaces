@@ -230,4 +230,11 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
     previousState = state;
     state = newState;
   }
+
+  @Override
+  public String toString() {
+    return "SimpleHysteresisThresholdValueTrigger [value=" + value + ", state=" + state
+        + ", previousState=" + previousState + ", thresholdOn=" + thresholdOn + ", thresholdOff="
+        + thresholdOff + "]";
+  }
 }

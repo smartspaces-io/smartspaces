@@ -233,7 +233,7 @@ public interface DynamicObject {
    *           not an array
    */
   int getSize() throws DynamicObjectSmartSpacesException;
-  
+
   /**
    * Is the current level an object?
    * 
@@ -254,7 +254,7 @@ public interface DynamicObject {
    *           the current level was not an object
    */
   Map<String, ? extends Object> asMap() throws DynamicObjectSmartSpacesException;
-  
+
   /**
    * Is the current level an array?
    * 
@@ -300,6 +300,23 @@ public interface DynamicObject {
   DynamicObject down(String name) throws DynamicObjectSmartSpacesException;
 
   /**
+   * Move into the object to the object at a given name.
+   *
+   * <p>
+   * The next level must be a collection, not a primitive.
+   *
+   * @param name
+   *          the name to move down to
+   *
+   * @return {@code true} if the move was done, {@code false} if the named
+   *         property didn't exist
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           current level not an object
+   */
+  boolean downChecked(String name) throws DynamicObjectSmartSpacesException;
+
+  /**
    * Move into the array to the item at a given position.
    *
    * <p>
@@ -314,6 +331,23 @@ public interface DynamicObject {
    *           not an array
    */
   DynamicObject down(int pos) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * Move into the array to the item at a given position.
+   *
+   * <p>
+   * The next level must be a collection, not a primitive.
+   *
+   * @param pos
+   *          the position in the array
+   *
+   * @return {@code true} if the move was done, {@code false} if the position
+   *         didn't exist
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an array
+   */
+  boolean downChecked(int pos) throws DynamicObjectSmartSpacesException;
 
   /**
    * Move up one level in the navigation.

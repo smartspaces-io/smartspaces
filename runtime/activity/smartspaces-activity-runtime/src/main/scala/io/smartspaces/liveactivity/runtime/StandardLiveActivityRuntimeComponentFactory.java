@@ -37,6 +37,8 @@ import io.smartspaces.liveactivity.runtime.activity.wrapper.internal.smartspaces
 import io.smartspaces.liveactivity.runtime.activity.wrapper.internal.smartspaces.StandardLiveActivityBundleLoader;
 import io.smartspaces.liveactivity.runtime.activity.wrapper.internal.web.WebActivityWrapperFactory;
 import io.smartspaces.service.ServiceRegistry;
+import io.smartspaces.service.event.observable.EventObservableService;
+import io.smartspaces.service.event.observable.StandardEventObservableService;
 import io.smartspaces.service.web.client.WebSocketClientService;
 import io.smartspaces.service.web.client.internal.netty.NettyWebSocketClientService;
 import io.smartspaces.service.web.server.WebServerService;
@@ -67,14 +69,19 @@ public class StandardLiveActivityRuntimeComponentFactory
   private ContainerResourceManager containerResourceManager;
 
   /**
-   * The IS service for web servers.
+   * The SS service for web servers.
    */
   private WebServerService webServerService;
 
   /**
-   * The IS service for web socket clients.
+   * The SS service for web socket clients.
    */
   private WebSocketClientService webSocketClientService;
+
+  /**
+   * The SS service for event observables.
+   */
+  private EventObservableService eventObservableService;
 
   /**
    * Construct a new factory.
@@ -150,6 +157,10 @@ public class StandardLiveActivityRuntimeComponentFactory
     webSocketClientService = new NettyWebSocketClientService();
     serviceRegistry.registerService(webSocketClientService);
     webSocketClientService.startup();
+
+    eventObservableService = new StandardEventObservableService();
+    serviceRegistry.registerService(eventObservableService);
+    eventObservableService.startup();
   }
 
   @Override
@@ -159,5 +170,8 @@ public class StandardLiveActivityRuntimeComponentFactory
 
     serviceRegistry.unregisterService(webSocketClientService);
     webSocketClientService.shutdown();
+
+    serviceRegistry.unregisterService(eventObservableService);
+    eventObservableService.shutdown();
   }
 }

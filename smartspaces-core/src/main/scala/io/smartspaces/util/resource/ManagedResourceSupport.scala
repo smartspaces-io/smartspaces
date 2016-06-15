@@ -18,19 +18,17 @@
 package io.smartspaces.util.resource;
 
 /**
- * A resource managed by Smart Spaces
+ * A {@link ManagedResource} with empty default.
  *
  * @author Keith M. Hughes
  */
-public interface ManagedResource {
+trait ManagedResourceSupport extends ManagedResource {
 
-  /**
-   * Start up the resource.
-   */
-  void startup();
+  override def startup(): Unit = {
+    // Default is do nothing
+  }
 
-  /**
-   * Shut down the resource.
-   */
-  void shutdown();
+  override def shutdown(): Unit = {
+    // Default is do nothing
+  }
 }

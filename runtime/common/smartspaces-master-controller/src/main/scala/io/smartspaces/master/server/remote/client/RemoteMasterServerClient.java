@@ -18,7 +18,7 @@
 package io.smartspaces.master.server.remote.client;
 
 import io.smartspaces.domain.basic.SpaceController;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A client for communicating with a master communication server.

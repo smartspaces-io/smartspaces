@@ -23,7 +23,7 @@ import io.smartspaces.activity.ActivityRuntime;
 import io.smartspaces.activity.execution.ActivityExecutionContext;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 import java.util.List;
 import java.util.Map;

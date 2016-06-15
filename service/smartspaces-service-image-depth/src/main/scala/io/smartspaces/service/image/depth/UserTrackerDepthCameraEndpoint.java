@@ -18,8 +18,8 @@
 package io.smartspaces.service.image.depth;
 
 import io.smartspaces.interaction.model.entity.TrackedEntityListener;
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.util.geometry.Vector3;
-import io.smartspaces.util.resource.ManagedResource;
 
 /**
  * A depth camera endpoint which does user tracking.

@@ -23,7 +23,7 @@ import io.smartspaces.container.control.message.container.resource.deployment.Co
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
 import io.smartspaces.controller.client.master.RemoteActivityDeploymentManager;
 import io.smartspaces.master.server.services.internal.RemoteSpaceControllerClientListenerCollection;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A client for speaking to a remote controller.

@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.image.video;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A listener for frames captured during with a {@link VideoLoop}.

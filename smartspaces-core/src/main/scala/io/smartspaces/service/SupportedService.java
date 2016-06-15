@@ -17,7 +17,7 @@
 
 package io.smartspaces.service;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A Smart Spaces service which is more fully supported by the framework.

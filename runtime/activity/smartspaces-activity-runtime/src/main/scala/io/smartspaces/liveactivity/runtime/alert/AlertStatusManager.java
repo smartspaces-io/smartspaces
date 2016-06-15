@@ -18,7 +18,7 @@
 package io.smartspaces.liveactivity.runtime.alert;
 
 import io.smartspaces.liveactivity.runtime.LiveActivityRunner;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * Handle important status reporting for Smart Spaces activities and

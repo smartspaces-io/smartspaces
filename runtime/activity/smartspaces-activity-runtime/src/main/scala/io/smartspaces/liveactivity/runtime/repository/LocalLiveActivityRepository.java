@@ -18,7 +18,7 @@
 package io.smartspaces.liveactivity.runtime.repository;
 
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 import java.util.List;
 

@@ -21,7 +21,7 @@ import io.smartspaces.container.control.message.activity.LiveActivityDeploymentR
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
 import io.smartspaces.master.server.services.ActiveLiveActivity;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * Install Smart Spaces activities to the remote location.

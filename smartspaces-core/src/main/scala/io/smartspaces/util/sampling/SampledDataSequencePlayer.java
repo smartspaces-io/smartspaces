@@ -17,15 +17,15 @@
 
 package io.smartspaces.util.sampling;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.util.sampling.SampledDataSequence.SampledDataFrame;
+
+import org.apache.commons.logging.Log;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * Send a sampled data sequence out as a series of frames.

@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.comm.usb;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * An endpoint for USB bus device communication.

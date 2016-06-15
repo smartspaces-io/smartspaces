@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.speech.synthesis;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * The client portion of the {@link SpeechSynthesisService}.

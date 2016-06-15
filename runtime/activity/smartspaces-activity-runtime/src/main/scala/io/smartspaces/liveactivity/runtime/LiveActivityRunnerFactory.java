@@ -22,7 +22,7 @@ import io.smartspaces.configuration.Configuration;
 import io.smartspaces.liveactivity.runtime.activity.wrapper.ActivityWrapperFactory;
 import io.smartspaces.liveactivity.runtime.configuration.LiveActivityConfiguration;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A factory for {@link StandardLiveActivityRunner} instances.

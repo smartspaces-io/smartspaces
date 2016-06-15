@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.audio.player.jukebox;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A jukebox for playing audio.

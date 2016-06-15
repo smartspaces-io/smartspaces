@@ -17,7 +17,7 @@
 
 package io.smartspaces.util.concurrency;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * An event queue that processes events in the order they are received.

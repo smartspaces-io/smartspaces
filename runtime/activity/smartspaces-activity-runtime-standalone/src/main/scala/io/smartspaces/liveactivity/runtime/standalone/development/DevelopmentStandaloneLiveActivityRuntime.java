@@ -50,6 +50,9 @@ import io.smartspaces.liveactivity.runtime.standalone.StandaloneLiveActivityInfo
 import io.smartspaces.liveactivity.runtime.standalone.StandaloneLiveActivityStorageManager;
 import io.smartspaces.liveactivity.runtime.standalone.StandaloneLocalLiveActivityRepository;
 import io.smartspaces.liveactivity.runtime.standalone.messaging.StandaloneMessageRouter;
+import io.smartspaces.resource.managed.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResources;
+import io.smartspaces.resource.managed.StandardManagedResources;
 import io.smartspaces.system.DevelopmentStandaloneSmartSpacesFilesystem;
 import io.smartspaces.system.InternalSmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesEnvironment;
@@ -59,9 +62,6 @@ import io.smartspaces.util.concurrency.SequentialEventQueue;
 import io.smartspaces.util.concurrency.SimpleSequentialEventQueue;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
-import io.smartspaces.util.resource.ManagedResource;
-import io.smartspaces.util.resource.ManagedResources;
-import io.smartspaces.util.resource.StandardManagedResources;
 
 /**
  * A standalone runner for activities that takes the activities from a

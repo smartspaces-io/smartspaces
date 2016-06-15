@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.image.gesture;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A connection to a gesture device.

@@ -17,9 +17,9 @@
 
 package io.smartspaces.service.comm.network.server;
 
-import io.smartspaces.util.resource.ManagedResource;
-
 import java.nio.ByteOrder;
+
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A communication endpoint for UDP servers.

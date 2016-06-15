@@ -22,6 +22,7 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.resource.Version;
 import io.smartspaces.resource.io.ResourceSource;
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.system.SmartSpacesFilesystem;
 import io.smartspaces.system.core.container.ContainerFilesystemLayout;
 import io.smartspaces.system.resources.ContainerResource;
@@ -33,7 +34,6 @@ import io.smartspaces.util.data.resource.MessageDigestResourceSignatureCalculato
 import io.smartspaces.util.data.resource.ResourceSignatureCalculator;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
-import io.smartspaces.util.resource.ManagedResource;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;

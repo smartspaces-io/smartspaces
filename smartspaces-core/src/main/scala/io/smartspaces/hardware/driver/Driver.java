@@ -18,8 +18,8 @@
 package io.smartspaces.hardware.driver;
 
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.util.resource.ManagedResource;
 
 import org.apache.commons.logging.Log;
 

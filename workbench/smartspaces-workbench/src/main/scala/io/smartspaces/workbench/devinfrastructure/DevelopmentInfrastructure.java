@@ -17,7 +17,7 @@
 
 package io.smartspaces.workbench.devinfrastructure;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * The development infrastucture.

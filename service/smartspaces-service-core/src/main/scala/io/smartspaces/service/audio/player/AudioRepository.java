@@ -17,9 +17,9 @@
 
 package io.smartspaces.service.audio.player;
 
-import io.smartspaces.util.resource.ManagedResource;
-
 import java.util.Collection;
+
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * Repository of all music.

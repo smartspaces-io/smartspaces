@@ -17,9 +17,9 @@
 
 package io.smartspaces.util.process;
 
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.util.process.restart.RestartStrategy;
 import io.smartspaces.util.process.restart.Restartable;
-import io.smartspaces.util.resource.ManagedResource;
 
 import java.util.Map;
 

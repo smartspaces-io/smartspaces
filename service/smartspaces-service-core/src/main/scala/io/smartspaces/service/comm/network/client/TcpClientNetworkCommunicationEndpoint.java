@@ -17,9 +17,9 @@
 
 package io.smartspaces.service.comm.network.client;
 
-import io.smartspaces.util.resource.ManagedResource;
-
 import java.net.InetAddress;
+
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * Communication endpoint for a TCP based client.

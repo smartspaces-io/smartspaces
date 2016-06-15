@@ -18,7 +18,7 @@
 package io.smartspaces.liveactivity.runtime.installation;
 
 import io.smartspaces.resource.Version;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 import java.util.Date;
 

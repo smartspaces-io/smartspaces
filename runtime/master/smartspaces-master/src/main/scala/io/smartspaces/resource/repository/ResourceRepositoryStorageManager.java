@@ -21,7 +21,7 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.resource.NamedVersionedResourceCollection;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.Version;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 import java.io.File;
 import java.io.InputStream;

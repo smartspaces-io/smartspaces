@@ -17,7 +17,7 @@
 
 package io.smartspaces.util.ui.swing;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;

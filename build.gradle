@@ -211,7 +211,10 @@ subprojects {
     eclipse.classpath.plusConfigurations += [configurations.expandedJars]
     eclipse.classpath.plusConfigurations += [configurations.extrasCompile]
     eclipse.classpath.plusConfigurations += [configurations.extrasSupportCompile]
-
+    dependencies {
+      compile 'org.scala-lang:scala-library:2.11.8'
+    }
+    
     artifacts {
       archives jar
     }

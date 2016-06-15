@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.web.server;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.util.web.MimeResolver;
 
 import java.io.File;

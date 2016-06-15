@@ -17,10 +17,10 @@
 
 package io.smartspaces.service.template;
 
-import io.smartspaces.util.resource.ManagedResource;
-
 import java.io.File;
 import java.util.Map;
+
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A text templater.

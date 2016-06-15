@@ -1,7 +1,9 @@
 package io.smartspaces.util.command.expect;
 
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
+
+import org.apache.commons.logging.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,10 +21,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.collect.Lists;
 
 /**
  * Provides similar functions as the Unix Expect tool.<br>

@@ -20,7 +20,7 @@ package io.smartspaces.master.api.master;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.basic.pojo.SimpleActivity;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 import java.io.InputStream;
 import java.util.Map;

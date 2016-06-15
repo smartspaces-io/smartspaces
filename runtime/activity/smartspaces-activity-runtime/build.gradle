@@ -19,7 +19,8 @@ dependencies {
   compile project(':smartspaces-system')
   
   compile project(':runtime:common:smartspaces-master-controller')
- 
+  compile project(':activityapi:smartspaces-activity-core')
+  
   provided 'org.apache.felix:org.apache.felix.framework:5.0.0'
   
   testCompile 'junit:junit:4.8.2'

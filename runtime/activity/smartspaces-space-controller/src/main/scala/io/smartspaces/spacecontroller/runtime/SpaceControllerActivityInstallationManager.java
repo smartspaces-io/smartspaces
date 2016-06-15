@@ -21,7 +21,7 @@ import io.smartspaces.container.control.message.activity.LiveActivityDeleteReque
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * The controller-side installation manager.

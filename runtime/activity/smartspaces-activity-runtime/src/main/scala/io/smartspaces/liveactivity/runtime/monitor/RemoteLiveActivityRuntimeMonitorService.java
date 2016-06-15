@@ -19,8 +19,8 @@ package io.smartspaces.liveactivity.runtime.monitor;
 
 import io.smartspaces.liveactivity.runtime.LiveActivityRuntime;
 import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.service.web.server.WebServer;
-import io.smartspaces.util.resource.ManagedResource;
 
 import java.util.List;
 

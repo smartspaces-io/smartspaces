@@ -19,9 +19,9 @@ package io.smartspaces.workbench;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
-import io.smartspaces.util.resource.ManagedResource;
 
 import com.google.common.io.Closeables;
 import freemarker.template.Configuration;

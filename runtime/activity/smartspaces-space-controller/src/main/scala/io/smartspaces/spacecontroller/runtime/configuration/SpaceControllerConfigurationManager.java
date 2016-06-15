@@ -17,9 +17,9 @@
 
 package io.smartspaces.spacecontroller.runtime.configuration;
 
-import io.smartspaces.util.resource.ManagedResource;
-
 import java.util.Map;
+
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A manager to control a space controller's configuration.

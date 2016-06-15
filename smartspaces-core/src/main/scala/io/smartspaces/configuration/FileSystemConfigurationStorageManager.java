@@ -23,14 +23,14 @@ import io.smartspaces.evaluation.ExpressionEvaluatorFactory;
 import io.smartspaces.system.SmartSpacesFilesystem;
 import io.smartspaces.system.core.container.ContainerFilesystemLayout;
 
+import org.apache.commons.logging.Log;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.util.Map.Entry;
 import java.util.Properties;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A file based {@link SystemConfigurationStorageManager}.

@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.mail.receiver;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A receiver for email.

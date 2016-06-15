@@ -1,0 +1,629 @@
+/*
+ * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2012 Google Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package io.smartspaces.activity.impl;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import io.smartspaces.activity.Activity;
+import io.smartspaces.activity.ActivityListener;
+import io.smartspaces.activity.ActivityRuntime;
+import io.smartspaces.activity.ActivityState;
+import io.smartspaces.activity.ActivityStatus;
+import io.smartspaces.activity.component.ActivityComponent;
+import io.smartspaces.activity.component.ActivityComponentContext;
+import io.smartspaces.activity.component.BaseActivityComponent;
+import io.smartspaces.activity.execution.ActivityExecutionContext;
+import io.smartspaces.configuration.Configuration;
+import io.smartspaces.configuration.SimpleConfiguration;
+import io.smartspaces.resource.managed.ManagedResource;
+import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.time.TimeProvider;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+
+import org.apache.commons.logging.Log;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
+import org.ros.concurrent.DefaultScheduledExecutorService;
+
+import com.google.common.collect.ImmutableList;
+
+/**
+ * Tests for the {@link BaseActivity}.
+ *
+ * @author Keith M. Hughes
+ */
+public class BaseActivityTest {
+
+  private static final long CURRENT_MOCK_TIME = 1000L;
+
+  private static final int SAMPLE_TIME = 500;
+
+  private BaseActivity activity;
+
+  private ScheduledExecutorService executorService;
+
+  private Log log;
+
+  private ActivityRuntime activityRuntime;
+
+  private ActivityComponent component;
+  private ManagedResource resource;
+
+  private SimpleConfiguration configuration;
+
+  private ActivityExecutionContext executionContext;
+
+  private InOrder activityInOrder;
+  private InOrder componentInOrder;
+
+  private List<ActivityComponent> componentsToAdd;
+  private List<ManagedResource> resourcesToAdd;
+
+  /**
+   * Setup for all tests.
+   */
+  @Before
+  public void setup() {
+    componentsToAdd = new ArrayList<>();
+    resourcesToAdd = new ArrayList<>();
+
+    executorService = new DefaultScheduledExecutorService();
+
+    SmartSpacesEnvironment spaceEnvironment = Mockito.mock(SmartSpacesEnvironment.class);
+    TimeProvider timeProvider = Mockito.mock(TimeProvider.class);
+    Mockito.when(spaceEnvironment.getTimeProvider()).thenReturn(timeProvider);
+    Mockito.when(timeProvider.getCurrentTime()).thenReturn(CURRENT_MOCK_TIME);
+    Mockito.when(spaceEnvironment.getExecutorService()).thenReturn(executorService);
+
+    log = Mockito.mock(Log.class);
+    activityRuntime = Mockito.mock(ActivityRuntime.class);
+    configuration = new SimpleConfiguration(null);
+    executionContext = Mockito.mock(ActivityExecutionContext.class);
+
+    component = Mockito.spy(new MyBaseActivityComponent("component1"));
+    componentsToAdd.add(component);
+    componentInOrder = Mockito.inOrder(component);
+
+    resource = Mockito.mock(ManagedResource.class);
+    resourcesToAdd.add(resource);
+
+    Mockito.when(component.getName()).thenReturn("component");
+    Mockito.when(component.getDependencies()).thenReturn(new ArrayList<String>());
+
+    activity = Mockito.spy(new MyBaseActivity());
+    activity.setActivityRuntime(activityRuntime);
+    activity.setSpaceEnvironment(spaceEnvironment);
+    activity.setConfiguration(configuration);
+    activity.setExecutionContext(executionContext);
+    activity.setLog(log);
+    activity.setUuid("123456789-10-11-12");
+
+    activityInOrder = Mockito.inOrder(activity);
+  }
+
+  /**
+   * Cleanup at the end of all tests.
+   */
+  @After
+  public void cleanup() {
+    executorService.shutdown();
+  }
+
+  /**
+   * Test that a clean startup works.
+   */
+  @Test
+  public void testCleanStartup() {
+    activity.startup();
+
+    activityInOrder.verify(activity).onActivityPreSetup();
+    activityInOrder.verify(activity).onActivitySetup();
+    activityInOrder.verify(activity).onActivityStartup();
+    activityInOrder.verify(activity).onActivityPostStartup();
+
+    componentInOrder.verify(component).setComponentContext(activity.getActivityComponentContext());
+    componentInOrder.verify(component).configureComponent(configuration);
+    componentInOrder.verify(component).startupComponent();
+
+    assertEquals(ActivityState.RUNNING, activity.getActivityStatus().getState());
+
+    assertTrue(activity.getActivityComponentContext().areHandlersAllowed());
+
+    Mockito.verify(resource).startup();
+  }
+
+  /**
+   * Test that a clean activate works.
+   */
+  @Test
+  public void testCleanActivate() {
+    activity.startup();
+    activity.activate();
+
+    activityInOrder.verify(activity).onActivityActivate();
+    assertEquals(ActivityState.ACTIVE, activity.getActivityStatus().getState());
+  }
+
+  /**
+   * Test that a clean activate works.
+   *
+   */
+  @Test
+  public void testCleanDeactivate() {
+    activity.startup();
+    activity.activate();
+    activity.deactivate();
+
+    activityInOrder.verify(activity).onActivityDeactivate();
+    assertEquals(ActivityState.RUNNING, activity.getActivityStatus().getState());
+  }
+
+  /**
+   * Test that a clean shutdown works.
+   */
+  @Test
+  public void testCleanShutdown() {
+    activity.startup();
+    activity.shutdown();
+
+    activityInOrder.verify(activity).onActivityPreShutdown();
+    activityInOrder.verify(activity).onActivityShutdown();
+    activityInOrder.verify(activity).onActivityCleanup();
+
+    componentInOrder.verify(component).shutdownComponent();
+
+    assertEquals(ActivityState.READY, activity.getActivityStatus().getState());
+
+    ActivityComponentContext activityComponentContext = activity.getActivityComponentContext();
+    assertFalse(activityComponentContext.areHandlersAllowed());
+    assertTrue(activityComponentContext.waitOnNoProcessingHandlings(SAMPLE_TIME, SAMPLE_TIME * 2));
+
+    Mockito.verify(resource).shutdown();
+  }
+
+  /**
+   * Test that a clean shutdown works even if a handler hasn't returned.
+   */
+  @Test
+  public void testShutdownWithRunningHandler() {
+    activity.startup();
+
+    activity.getActivityComponentContext().enterHandler();
+
+    activity.shutdown();
+
+    activityInOrder.verify(activity).onActivityPreShutdown();
+    activityInOrder.verify(activity).onActivityShutdown();
+    activityInOrder.verify(activity).onActivityCleanup();
+
+    componentInOrder.verify(component).shutdownComponent();
+
+    assertEquals(ActivityState.READY, activity.getActivityStatus().getState());
+
+    ActivityComponentContext activityComponentContext = activity.getActivityComponentContext();
+    assertFalse(activityComponentContext.areHandlersAllowed());
+    assertTrue(activityComponentContext.areProcessingHandlers());
+
+    Mockito.verify(log, Mockito.times(1)).warn(Mockito.anyString());
+
+    Mockito.verify(resource).shutdown();
+  }
+
+  /**
+   * Test that a broken presetup works.
+   */
+  @Test
+  public void testBrokenPreSetup() {
+    Error e = new Error();
+    Mockito.doThrow(e).when(activity).onActivityPreSetup();
+
+    activity.startup();
+
+    activityInOrder.verify(activity).onActivityPreSetup();
+    Mockito.verify(activity, Mockito.never()).onActivitySetup();
+    Mockito.verify(activity, Mockito.never()).onActivityStartup();
+    Mockito.verify(activity, Mockito.never()).onActivityPostStartup();
+
+    assertEquals(ActivityState.STARTUP_FAILURE, activity.getActivityStatus().getState());
+    Mockito.verify(log, Mockito.times(1)).error(Mockito.anyString(), Mockito.eq(e));
+
+    assertFalse(activity.getActivityComponentContext().areHandlersAllowed());
+  }
+
+  /**
+   * Test that a broken setup works.
+   */
+  @Test
+  public void testBrokenSetup() {
+    Error e = new Error();
+    Mockito.doThrow(e).when(activity).onActivitySetup();
+
+    activity.startup();
+
+    activityInOrder.verify(activity).onActivitySetup();
+    Mockito.verify(activity, Mockito.never()).onActivityStartup();
+    Mockito.verify(activity, Mockito.never()).onActivityPostStartup();
+
+    assertEquals(ActivityState.STARTUP_FAILURE, activity.getActivityStatus().getState());
+    Mockito.verify(log, Mockito.times(1)).error(Mockito.anyString(), Mockito.eq(e));
+
+    assertFalse(activity.getActivityComponentContext().areHandlersAllowed());
+  }
+
+  /**
+   * Test that a broken component configuring works.
+   */
+  @Test
+  public void testBrokenComponentConfigure() {
+    Error e = new Error();
+    Mockito.doThrow(e).when(component).configureComponent((Configuration) Mockito.anyObject());
+
+    activity.startup();
+
+    activityInOrder.verify(activity).onActivitySetup();
+    Mockito.verify(activity, Mockito.never()).onActivityStartup();
+    Mockito.verify(activity, Mockito.never()).onActivityPostStartup();
+
+    assertEquals(ActivityState.STARTUP_FAILURE, activity.getActivityStatus().getState());
+    Mockito.verify(log, Mockito.times(1)).error(Mockito.anyString(), Mockito.eq(e));
+
+    componentInOrder.verify(component).setComponentContext(activity.getActivityComponentContext());
+    componentInOrder.verify(component).configureComponent(configuration);
+
+    assertFalse(activity.getActivityComponentContext().areHandlersAllowed());
+
+    Mockito.verify(resource).startup();
+    Mockito.verify(resource).shutdown();
+  }
+
+  /**
+   * Test that a broken component startup works.
+   */
+  @Test
+  public void testBrokenComponentStartup() {
+    Error e = new Error();
+    Mockito.doThrow(e).when(component).startupComponent();
+
+    activity.startup();
+
+    activityInOrder.verify(activity).onActivitySetup();
+    Mockito.verify(activity, Mockito.never()).onActivityStartup();
+    Mockito.verify(activity, Mockito.never()).onActivityPostStartup();
+
+    assertEquals(ActivityState.STARTUP_FAILURE, activity.getActivityStatus().getState());
+    Mockito.verify(log, Mockito.atLeast(1)).error(Mockito.anyString(), Mockito.eq(e));
+
+    componentInOrder.verify(component).setComponentContext(activity.getActivityComponentContext());
+    componentInOrder.verify(component).configureComponent(configuration);
+    componentInOrder.verify(component).startupComponent();
+
+    assertFalse(activity.getActivityComponentContext().areHandlersAllowed());
+
+    Mockito.verify(resource).startup();
+    Mockito.verify(resource).shutdown();
+  }
+
+  /**
+   * Test that a broken component startup works when there are two components
+   * and the second one craps out. The first one should then shut down.
+   */
+  @Test
+  public void testBrokenComponentStartupWithComponentShutdown() {
+    ActivityComponent component2 = Mockito.spy(new MyBaseActivityComponent("component2"));
+    List<String> dependencies = ImmutableList.of(component.getName());
+    Mockito.when(component2.getDependencies()).thenReturn(dependencies);
+
+    componentInOrder = Mockito.inOrder(component, component2);
+    componentsToAdd.add(component2);
+
+    Error e = new Error();
+    Mockito.doThrow(e).when(component2).startupComponent();
+
+    activity.startup();
+
+    activityInOrder.verify(activity).onActivitySetup();
+    Mockito.verify(activity, Mockito.never()).onActivityStartup();
+    Mockito.verify(activity, Mockito.never()).onActivityPostStartup();
+
+    assertEquals(ActivityState.STARTUP_FAILURE, activity.getActivityStatus().getState());
+    Mockito.verify(log, Mockito.atLeast(1)).error(Mockito.anyString(), Mockito.eq(e));
+
+    Mockito.verify(component).setComponentContext(activity.getActivityComponentContext());
+    Mockito.verify(component2).setComponentContext(activity.getActivityComponentContext());
+
+    componentInOrder.verify(component).configureComponent(configuration);
+    componentInOrder.verify(component2).configureComponent(configuration);
+
+    componentInOrder.verify(component).startupComponent();
+    componentInOrder.verify(component2).startupComponent();
+
+    Mockito.verify(component).shutdownComponent();
+    Mockito.verify(component2, Mockito.never()).shutdownComponent();
+
+    assertFalse(activity.getActivityComponentContext().areHandlersAllowed());
+
+    Mockito.verify(resource).startup();
+    Mockito.verify(resource).shutdown();
+  }
+
+  /**
+   * Test that a broken resource startup fails the activity startup.
+   */
+  @Test
+  public void testBrokenManagedResourceFailsStartup() {
+    Error e = new Error();
+    Mockito.doThrow(e).when(resource).startup();
+
+    activity.startup();
+
+    activityInOrder.verify(activity).onActivitySetup();
+    Mockito.verify(activity, Mockito.never()).onActivityStartup();
+    Mockito.verify(activity, Mockito.never()).onActivityPostStartup();
+
+    assertEquals(ActivityState.STARTUP_FAILURE, activity.getActivityStatus().getState());
+    Mockito.verify(log, Mockito.atLeast(1))
+        .error(Mockito.anyString(), Mockito.any(Throwable.class));
+  }
+
+  /**
+   * Test that a broken onStartup works.
+   */
+  @Test
+  public void testBrokenStartup() {
+    Error e = new Error();
+    Mockito.doThrow(e).when(activity).onActivityStartup();
+
+    activity.startup();
+
+    activityInOrder.verify(activity).onActivitySetup();
+    activityInOrder.verify(activity).onActivityStartup();
+    Mockito.verify(activity, Mockito.never()).onActivityPostStartup();
+
+    assertEquals(ActivityState.STARTUP_FAILURE, activity.getActivityStatus().getState());
+    Mockito.verify(log, Mockito.times(1)).error(Mockito.anyString(), Mockito.eq(e));
+
+    componentInOrder.verify(component).setComponentContext(activity.getActivityComponentContext());
+    componentInOrder.verify(component).configureComponent(configuration);
+    componentInOrder.verify(component).startupComponent();
+
+    assertFalse(activity.getActivityComponentContext().areHandlersAllowed());
+
+    Mockito.verify(resource).startup();
+    Mockito.verify(resource).shutdown();
+  }
+
+  /**
+   * Test that a clean startup with broken Post Startup will actually end up
+   * with a running activity.
+   */
+  @Test
+  public void testBrokenPostStartup() {
+    Error e = new Error();
+    Mockito.doThrow(e).when(activity).onActivityPostStartup();
+
+    activity.startup();
+
+    activityInOrder.verify(activity).onActivitySetup();
+    activityInOrder.verify(activity).onActivityStartup();
+    activityInOrder.verify(activity).onActivityPostStartup();
+
+    componentInOrder.verify(component).setComponentContext(activity.getActivityComponentContext());
+    componentInOrder.verify(component).configureComponent(configuration);
+    componentInOrder.verify(component).startupComponent();
+
+    assertEquals(ActivityState.RUNNING, activity.getActivityStatus().getState());
+
+    assertTrue(activity.getActivityComponentContext().areHandlersAllowed());
+
+    // Make sure the failure is logged.
+    Mockito.verify(log, Mockito.times(1)).error(Mockito.anyString(), Mockito.eq(e));
+
+    Mockito.verify(resource).startup();
+    Mockito.verify(resource, Mockito.times(0)).shutdown();
+  }
+
+  /**
+   * Test that a broken onActivate works.
+   */
+  @Test
+  public void testBrokenActivate() {
+    Error e = new Error();
+    Mockito.doThrow(e).when(activity).onActivityActivate();
+
+    activity.startup();
+    activity.activate();
+
+    activityInOrder.verify(activity).onActivityActivate();
+    assertEquals(ActivityState.ACTIVATE_FAILURE, activity.getActivityStatus().getState());
+    Mockito.verify(log, Mockito.times(1)).error(Mockito.anyString(), Mockito.eq(e));
+  }
+
+  /**
+   * Test that a broken onDeactivate works.
+   */
+  @Test
+  public void testBrokenDeactivate() {
+    Error e = new Error();
+    Mockito.doThrow(e).when(activity).onActivityDeactivate();
+
+    activity.startup();
+    activity.activate();
+    activity.deactivate();
+
+    activityInOrder.verify(activity).onActivityDeactivate();
+    assertEquals(ActivityState.DEACTIVATE_FAILURE, activity.getActivityStatus().getState());
+    Mockito.verify(log, Mockito.times(1)).error(Mockito.anyString(), Mockito.eq(e));
+  }
+
+  /**
+   * Test that a broken onPreShutdown works.
+   */
+  @Test
+  public void testBrokenPreShutdown() {
+    Error e = new Error();
+    Mockito.doThrow(e).when(activity).onActivityPreShutdown();
+
+    activity.startup();
+    activity.shutdown();
+
+    activityInOrder.verify(activity).onActivityPreShutdown();
+    Mockito.verify(activity, Mockito.never()).onActivityShutdown();
+
+    // Cleanup must always be called.
+    activityInOrder.verify(activity).onActivityCleanup();
+
+    assertEquals(ActivityState.SHUTDOWN_FAILURE, activity.getActivityStatus().getState());
+    Mockito.verify(log, Mockito.times(1)).error(Mockito.anyString(), Mockito.eq(e));
+
+    // Everything is shut down
+    componentInOrder.verify(component).shutdownComponent();
+
+    assertFalse(activity.getActivityComponentContext().areHandlersAllowed());
+
+    Mockito.verify(resource).shutdown();
+  }
+
+  /**
+   * Test that a broken onShutdown works.
+   */
+  @Test
+  public void testBrokenShutdown() {
+    Error e = new Error();
+    Mockito.doThrow(e).when(activity).onActivityShutdown();
+
+    activity.startup();
+    activity.shutdown();
+
+    activityInOrder.verify(activity).onActivityShutdown();
+
+    // Cleanup must always be called.
+    activityInOrder.verify(activity).onActivityCleanup();
+
+    assertEquals(ActivityState.SHUTDOWN_FAILURE, activity.getActivityStatus().getState());
+    Mockito.verify(log, Mockito.times(1)).error(Mockito.anyString(), Mockito.eq(e));
+
+    // Everything is shut down
+    componentInOrder.verify(component).shutdownComponent();
+
+    assertFalse(activity.getActivityComponentContext().areHandlersAllowed());
+
+    Mockito.verify(resource).shutdown();
+  }
+
+  /**
+   * Test that a broken onShutdown works.
+   */
+  @Test
+  public void testBrokenComponentShutdown() {
+    Error e = new Error();
+    Mockito.doThrow(e).when(component).shutdownComponent();
+
+    activity.startup();
+    activity.shutdown();
+
+    activityInOrder.verify(activity).onActivityShutdown();
+
+    // Cleanup must always be called.
+    activityInOrder.verify(activity).onActivityCleanup();
+
+    assertEquals(ActivityState.SHUTDOWN_FAILURE, activity.getActivityStatus().getState());
+    Mockito.verify(log, Mockito.times(1)).error(Mockito.anyString(), Mockito.eq(e));
+
+    // Everything is shut down
+    componentInOrder.verify(component).shutdownComponent();
+
+    assertFalse(activity.getActivityComponentContext().areHandlersAllowed());
+
+    Mockito.verify(resource).shutdown();
+  }
+
+  /**
+   * Test that status listeners work.
+   */
+  @Test
+  public void testStatusListener() {
+    ActivityListener listener = Mockito.mock(ActivityListener.class);
+
+    ActivityStatus oldStatus = activity.getActivityStatus();
+    ActivityStatus newStatus = Mockito.mock(ActivityStatus.class);
+
+    activity.addActivityListener(listener);
+
+    activity.setActivityStatus(newStatus);
+
+    // Need the any() because we are spying on the BaseActivity so the
+    // object for the listener isn't the same as the spy makes a wrapper
+    // class
+    Mockito.verify(listener, Mockito.times(1)).onActivityStatusChange(Mockito.any(Activity.class),
+        Mockito.eq(oldStatus), Mockito.any(ActivityStatus.class));
+  }
+
+  private class MyBaseActivity extends BaseActivity {
+    @Override
+    public void onActivitySetup() {
+      for (ActivityComponent component : componentsToAdd) {
+        addActivityComponent(component);
+      }
+
+      for (ManagedResource resource : resourcesToAdd) {
+        addManagedResource(resource);
+      }
+    }
+  }
+
+  private class MyBaseActivityComponent extends BaseActivityComponent {
+    private String name;
+    private boolean running;
+
+    MyBaseActivityComponent(String name) {
+      this.name = name;
+    }
+
+    @Override
+    public String getName() {
+      return name;
+    }
+
+    @Override
+    public void configureComponent(Configuration configuration) {
+      super.configureComponent(configuration);
+    }
+
+    @Override
+    public void startupComponent() {
+      running = true;
+    }
+
+    @Override
+    public void shutdownComponent() {
+      running = false;
+    }
+
+    @Override
+    public boolean isComponentRunning() {
+      return running;
+    }
+  }
+}

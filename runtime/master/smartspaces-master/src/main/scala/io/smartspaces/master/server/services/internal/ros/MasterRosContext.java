@@ -17,8 +17,8 @@
 
 package io.smartspaces.master.server.services.internal.ros;
 
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.system.core.configuration.CoreConfiguration;
-import io.smartspaces.util.resource.ManagedResource;
 
 import org.ros.node.ConnectedNode;
 import org.ros.osgi.common.RosEnvironment;

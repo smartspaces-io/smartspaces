@@ -17,7 +17,7 @@
 
 package io.smartspaces.master.server.services;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * Manager for supporting master operations.

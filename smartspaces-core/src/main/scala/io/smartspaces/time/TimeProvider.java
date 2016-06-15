@@ -17,7 +17,7 @@
 
 package io.smartspaces.time;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * Get the time.

@@ -17,7 +17,7 @@
 
 package io.smartspaces.comm;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A communication endpoint.

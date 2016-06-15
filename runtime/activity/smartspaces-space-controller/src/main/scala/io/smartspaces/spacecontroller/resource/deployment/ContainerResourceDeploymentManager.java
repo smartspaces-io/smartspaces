@@ -21,7 +21,7 @@ import io.smartspaces.container.control.message.container.resource.deployment.Co
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * The manager for handling container resource deployment.

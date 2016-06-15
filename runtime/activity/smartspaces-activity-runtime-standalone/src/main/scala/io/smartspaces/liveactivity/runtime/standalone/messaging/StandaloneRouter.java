@@ -18,7 +18,7 @@
 package io.smartspaces.liveactivity.runtime.standalone.messaging;
 
 import io.smartspaces.liveactivity.runtime.standalone.messaging.MessageUtils.MessageMap;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  *

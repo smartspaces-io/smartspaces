@@ -17,7 +17,7 @@
 
 package io.smartspaces.configuration;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * Storage manager for the Smart Spaces system configuration.

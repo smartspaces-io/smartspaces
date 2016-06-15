@@ -18,10 +18,8 @@
 package io.smartspaces.util.process;
 
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.util.process.NativeApplicationRunner.NativeApplicationRunnerState;
-import io.smartspaces.util.resource.ManagedResource;
-
-import java.util.Map;
 
 /**
  * A collection of native application runners.

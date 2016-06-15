@@ -17,25 +17,25 @@
 
 package io.smartspaces.system;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.Jdk14Logger;
-
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
+import io.smartspaces.resource.managed.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResources;
+import io.smartspaces.resource.managed.StandardManagedResources;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.SimpleServiceRegistry;
 import io.smartspaces.time.SettableTimeProvider;
 import io.smartspaces.time.TimeProvider;
-import io.smartspaces.util.resource.ManagedResource;
-import io.smartspaces.util.resource.ManagedResources;
-import io.smartspaces.util.resource.StandardManagedResources;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.Jdk14Logger;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * An {@link SmartSpacesEnvironment} that can be used for standalone running of

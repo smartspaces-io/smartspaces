@@ -17,8 +17,8 @@
 
 package io.smartspaces.master.communication;
 
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.service.web.server.WebServer;
-import io.smartspaces.util.resource.ManagedResource;
 
 /**
  * The manager for master communications.

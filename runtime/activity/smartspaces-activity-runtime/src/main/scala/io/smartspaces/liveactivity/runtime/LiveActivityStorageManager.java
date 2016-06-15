@@ -17,7 +17,7 @@
 
 package io.smartspaces.liveactivity.runtime;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 import java.io.File;
 import java.util.List;

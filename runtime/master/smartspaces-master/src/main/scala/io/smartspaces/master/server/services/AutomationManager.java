@@ -18,7 +18,7 @@
 package io.smartspaces.master.server.services;
 
 import io.smartspaces.domain.system.NamedScript;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 import java.util.Map;
 import java.util.Set;

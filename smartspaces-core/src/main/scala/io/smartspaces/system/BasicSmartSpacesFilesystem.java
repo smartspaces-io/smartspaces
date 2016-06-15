@@ -18,7 +18,7 @@
 package io.smartspaces.system;
 
 import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 import java.io.File;
 

@@ -47,6 +47,9 @@ import io.smartspaces.configuration.FileSystemConfigurationStorageManager;
 import io.smartspaces.configuration.SystemConfigurationStorageManager;
 import io.smartspaces.evaluation.ExpressionEvaluatorFactory;
 import io.smartspaces.evaluation.SimpleExpressionEvaluatorFactory;
+import io.smartspaces.resource.managed.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResources;
+import io.smartspaces.resource.managed.StandardManagedResources;
 import io.smartspaces.service.Service;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.system.BasicSmartSpacesFilesystem;
@@ -63,9 +66,6 @@ import io.smartspaces.system.resources.ContainerResourceManager;
 import io.smartspaces.time.LocalTimeProvider;
 import io.smartspaces.time.NtpTimeProvider;
 import io.smartspaces.time.TimeProvider;
-import io.smartspaces.util.resource.ManagedResource;
-import io.smartspaces.util.resource.ManagedResources;
-import io.smartspaces.util.resource.StandardManagedResources;
 
 /**
  * Activate general services needed by a Smart Spaces container.

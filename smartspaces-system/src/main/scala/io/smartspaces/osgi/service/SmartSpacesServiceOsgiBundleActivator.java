@@ -30,13 +30,13 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 
 import io.smartspaces.resource.Version;
+import io.smartspaces.resource.managed.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResources;
+import io.smartspaces.resource.managed.StandardManagedResources;
 import io.smartspaces.service.Service;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.SupportedService;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.util.resource.ManagedResource;
-import io.smartspaces.util.resource.ManagedResources;
-import io.smartspaces.util.resource.StandardManagedResources;
 
 /**
  * A base class for creating OSGi BundleActivator subclasses for Smart Spaces

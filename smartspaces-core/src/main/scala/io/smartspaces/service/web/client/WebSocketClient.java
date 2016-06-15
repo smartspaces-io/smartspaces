@@ -17,9 +17,9 @@
 
 package io.smartspaces.service.web.client;
 
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.service.web.WebSocketConnection;
 import io.smartspaces.service.web.WebSocketHandler;
-import io.smartspaces.util.resource.ManagedResource;
 
 /**
  * A web socket client.

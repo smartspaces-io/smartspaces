@@ -16,8 +16,8 @@
 
 package io.smartspaces.service.comm.pubsub.mqtt;
 
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
-import io.smartspaces.util.resource.ManagedResource;
 
 import org.apache.commons.logging.Log;
 

@@ -17,11 +17,11 @@
 
 package io.smartspaces.service.comm.network.client;
 
-import io.smartspaces.util.resource.ManagedResource;
-
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
+
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A communication endpoint for UDP clients which listens on a UDP broadcast

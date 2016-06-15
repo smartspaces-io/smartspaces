@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.comm.network.server;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * Communication endpoint for a TCP based server.

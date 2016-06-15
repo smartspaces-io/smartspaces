@@ -17,12 +17,12 @@
 
 package io.smartspaces.spacecontroller.runtime;
 
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesSystemControl;
 import io.smartspaces.util.io.directorywatcher.DirectoryWatcher;
 import io.smartspaces.util.io.directorywatcher.DirectoryWatcherListener;
 import io.smartspaces.util.io.directorywatcher.SimpleDirectoryWatcher;
-import io.smartspaces.util.resource.ManagedResource;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;

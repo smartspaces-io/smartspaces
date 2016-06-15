@@ -19,8 +19,8 @@ package io.smartspaces.resource.repository;
 
 import io.smartspaces.common.ResourceRepositoryUploadChannel;
 import io.smartspaces.resource.Version;
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.util.data.resource.CopyableResourceListener;
-import io.smartspaces.util.resource.ManagedResource;
 
 import java.io.OutputStream;
 

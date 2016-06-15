@@ -18,7 +18,7 @@
 package io.smartspaces.service.audio.player;
 
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * Something which can play audio tracks.

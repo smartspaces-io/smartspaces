@@ -19,7 +19,7 @@ package io.smartspaces.master.server.services;
 
 import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.ResourceDependency;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 import java.net.URI;
 import java.util.Set;

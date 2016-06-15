@@ -18,7 +18,7 @@
 package io.smartspaces.spacecontroller.runtime;
 
 import io.smartspaces.liveactivity.runtime.LiveActivityStorageManager;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * Controller interface for copying data bundles between master and controller.

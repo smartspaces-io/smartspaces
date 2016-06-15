@@ -17,7 +17,7 @@
 
 package io.smartspaces.master.api.master;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * A websocket connection to the master.

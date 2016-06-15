@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.control.opensoundcontrol;
 
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * An Open Sound Control client communication endpoint.

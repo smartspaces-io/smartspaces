@@ -17,8 +17,8 @@
 
 package io.smartspaces.service.comm.network.client;
 
+import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.service.comm.network.WriteableUdpPacket;
-import io.smartspaces.util.resource.ManagedResource;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;

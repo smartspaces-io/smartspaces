@@ -54,8 +54,6 @@ dependencies {
 
   compile 'javax.jmdns:jmdns:3.4.1'
 
-  compile 'org.scala-lang:scala-library:2.11.8'
-
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
 }

@@ -18,7 +18,7 @@
 package io.smartspaces.master.server.services.internal;
 
 import io.smartspaces.master.server.services.ActiveSpaceController;
-import io.smartspaces.util.resource.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResource;
 
 /**
  * Interface for master side capability of capture/restore of data bundles with

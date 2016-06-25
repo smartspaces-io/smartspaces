@@ -83,6 +83,11 @@ allprojects {
       ':smartspaces_build:workbench'
     ]
 
+    systemJavaProjects = [
+      ':smartspaces-bootstrap-core',
+      ':smartspaces-launcher-bootstrap'
+    ]
+    
     javaProjects = rootProject.subprojects.findResults {
       (!nonjavaProjects.contains(it.path)) ? it : null
     }
@@ -211,8 +216,11 @@ subprojects {
     eclipse.classpath.plusConfigurations += [configurations.expandedJars]
     eclipse.classpath.plusConfigurations += [configurations.extrasCompile]
     eclipse.classpath.plusConfigurations += [configurations.extrasSupportCompile]
-    dependencies {
-      compile 'org.scala-lang:scala-library:2.11.8'
+
+    if (!ext.systemJavaProjects.contains(path)) {
+      dependencies {
+        compile 'org.scala-lang:scala-library:2.11.8'
+      }
     }
     
     artifacts {

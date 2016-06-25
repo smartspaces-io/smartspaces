@@ -26,7 +26,7 @@ import io.smartspaces.service.template.internal.freemarker.FreemarkerTemplaterSe
  * @author Keith M. Hughes
  */
 public class TemplateBundleActivator extends SmartSpacesServiceOsgiBundleActivator {
-
+	
   @Override
   protected void allRequiredServicesAvailable() {
     FreemarkerTemplaterService freemarkerService = new FreemarkerTemplaterService();

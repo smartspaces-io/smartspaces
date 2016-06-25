@@ -75,7 +75,7 @@ task copyCore(type:Copy) {
 
 task copyPythonCore(type:Copy) {
   outputs.upToDateWhen { false }
-  from "${project.getProperty('smartspaces.dependencies.home')}/python/jython/jython2.5.2/Lib"
+  from "${project.getProperty('smartspaces.dependencies.home')}/python/jython/jython2.7.0/Lib"
   into "${project.ext.containerBuildTarget}/lib/python/PyLib"
 }
 

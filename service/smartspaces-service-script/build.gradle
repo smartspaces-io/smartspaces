@@ -18,8 +18,8 @@ dependencies {
   compile project(':service:smartspaces-service-core')
   compile project(':smartspaces-system')
 
-  expandedJars 'org.codehaus.groovy:groovy-all:2.0.6'
-  expandedJars files("${project.getProperty('smartspaces.dependencies.home')}/python/jython/jython2.5.2/jython.jar")
+  expandedJars 'org.codehaus.groovy:groovy-all:2.2.1'
+  expandedJars files("${project.getProperty('smartspaces.dependencies.home')}/python/jython/jython2.7.0/jython.jar")
   expandedJars 'org.mozilla:rhino:1.7R4'
 
   provided 'org.apache.felix:org.apache.felix.framework:5.0.0'
@@ -51,7 +51,7 @@ jar {
         'io.smartspaces.activity',
         'io.smartspaces.activity.impl',
         'io.smartspaces.activity.impl.binary',
-        'io.smartspaces.activity.impl.ros',
+        'io.smartspaces.activity.impl.route',
         'io.smartspaces.activity.impl.web',
         'io.smartspaces.activity.binary',
         'io.smartspaces.activity.component',
@@ -101,4 +101,3 @@ jar {
         '*'
   }
 }
-

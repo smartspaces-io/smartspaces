@@ -23,7 +23,7 @@ dependencies {
     transitive = false
   }
 
-  provided 'org.apache.felix:org.apache.felix.framework:5.0.0'
+  provided "${project.ext.osgiContainerDependency}"
 
   runtime 'org.slf4j:slf4j-api:1.6.4'
   runtime 'org.slf4j:slf4j-simple:1.6.4'

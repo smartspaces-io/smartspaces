@@ -22,7 +22,7 @@ dependencies {
   expandedJars files("${project.getProperty('smartspaces.dependencies.home')}/python/jython/jython2.7.0/jython.jar")
   expandedJars 'org.mozilla:rhino:1.7.7.1'
 
-  provided 'org.apache.felix:org.apache.felix.framework:5.0.0'
+  provided "${project.ext.osgiContainerDependency}"
 
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'

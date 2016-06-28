@@ -20,7 +20,7 @@ dependencies {
   compile project(':smartspaces-system')
   compile project(':runtime:activity:smartspaces-activity-runtime')
 
-  provided 'org.apache.felix:org.apache.felix.framework:5.0.0'
+  provided "${project.ext.osgiContainerDependency}"
 
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'

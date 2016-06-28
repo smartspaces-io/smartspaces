@@ -26,7 +26,7 @@ dependencies {
   extrasCompile files("${project.getProperty('smartspaces.dependencies.home')}/comm/usb/jsr80-1.0.1.jar")
   extrasCompile files("${project.getProperty('smartspaces.dependencies.home')}/comm/usb/usb4java-1.0.0.jar")
 
-  provided 'org.apache.felix:org.apache.felix.framework:5.0.0'
+  provided "${project.ext.osgiContainerDependency}"
 
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'

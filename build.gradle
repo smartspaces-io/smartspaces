@@ -113,6 +113,9 @@ allprojects {
     } else {
       ext.testSizing = "small"
     }
+
+    // Define which OSGi framrwork is being used.
+    osgiContainerDependency = 'org.apache.felix:org.apache.felix.framework:5.4.0'
   }
 
   group = 'smartspaces'

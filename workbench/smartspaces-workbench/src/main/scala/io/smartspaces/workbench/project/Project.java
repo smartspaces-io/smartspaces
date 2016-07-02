@@ -51,9 +51,9 @@ public abstract class Project {
   private File specificationSource;
 
   /**
-   * The type of builder for the project.
+   * The language for the project.
    */
-  private String builderType;
+  private String language;
 
   /**
    * The type of the project.
@@ -191,22 +191,22 @@ public abstract class Project {
   }
 
   /**
-   * Get the type of builder for the project.
+   * Get the language for the project.
    *
-   * @return the builder type
+   * @return the language
    */
-  public String getBuilderType() {
-    return builderType;
+  public String getLanguage() {
+    return language;
   }
 
   /**
-   * Set the builder type of the project.
+   * Set the language of the project.
    *
-   * @param builderType
-   *          the builder type to set
+   * @param language
+   *          the language to set
    */
-  public void setBuilderType(String builderType) {
-    this.builderType = builderType;
+  public void setLanguage(String language) {
+    this.language = language;
   }
 
   /**

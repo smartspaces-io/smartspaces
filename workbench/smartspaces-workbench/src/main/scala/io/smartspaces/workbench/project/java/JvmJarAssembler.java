@@ -26,14 +26,14 @@ import java.io.File;
  *
  * @author Keith M. Hughes
  */
-public interface JavaJarCompiler {
+public interface JvmJarAssembler {
 
   /**
    * Compile Java classes and build a proper JAR file.
    *
    * @param jarDestinationFile
    *          the JAR file to be created
-   * @param compilationFolder
+   * @param compilationBuildFolder
    *          the folder where the classes should be compiled into
    * @param extensions
    *          any extensions for the build
@@ -42,6 +42,6 @@ public interface JavaJarCompiler {
    * @param context
    *          the context for building a project
    */
-  void buildJar(File jarDestinationFile, File compilationFolder, JavaProjectExtension extensions,
+  void buildJar(File jarDestinationFile, File compilationBuildFolder, JvmProjectExtension extensions,
       ContainerInfo containerInfo, ProjectTaskContext context);
 }

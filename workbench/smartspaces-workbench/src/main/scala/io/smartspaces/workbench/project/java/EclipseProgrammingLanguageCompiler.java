@@ -28,6 +28,7 @@ import com.google.common.collect.Lists;
 import org.eclipse.jdt.internal.compiler.tool.EclipseCompiler;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ import javax.tools.StandardLocation;
  *
  * @author Keith M. Hughes
  */
-public class EclipseProjectJavaCompiler implements ProjectJavaCompiler {
+public class EclipseProgrammingLanguageCompiler implements ProgrammingLanguageCompiler {
 
   /**
    * The file extension for a Java source file.
@@ -66,9 +67,17 @@ public class EclipseProjectJavaCompiler implements ProjectJavaCompiler {
    */
   private final FileSupport fileSupport = FileSupportImpl.INSTANCE;
 
+  private final FileFilter sourceFileFilter = new FileFilter() {
+
+    @Override
+    public boolean accept(File file) {
+      return file.getName().endsWith(FILE_EXTENSION_JAVA_SOURCE) && !file.isHidden();
+    }
+  };
+
   @Override
-  public void compile(File compilationBuildDirectory, List<File> classpath,
-      List<File> compilationFiles, List<String> compilerOptions) {
+  public void compile(ProjectTaskContext context, File compilationBuildDirectory,
+      List<File> classpath, List<File> compilationFiles, List<String> compilerOptions) {
 
     StandardJavaFileManager fileManager = null;
     try {
@@ -82,9 +91,8 @@ public class EclipseProjectJavaCompiler implements ProjectJavaCompiler {
       Iterable<? extends JavaFileObject> compilationUnits1 =
           fileManager.getJavaFileObjectsFromFiles(compilationFiles);
 
-      Boolean success =
-          compiler.getTask(null, fileManager, null, compilerOptions, null, compilationUnits1)
-              .call();
+      Boolean success = compiler
+          .getTask(null, fileManager, null, compilerOptions, null, compilationUnits1).call();
 
       if (!success) {
         throw new SimpleSmartSpacesException("The Java compilation failed");
@@ -122,44 +130,11 @@ public class EclipseProjectJavaCompiler implements ProjectJavaCompiler {
 
   @Override
   public void getCompilationFiles(File baseSourceDirectory, List<File> files) {
-    if (baseSourceDirectory.isDirectory()) {
-      scanDirectory(baseSourceDirectory, files);
-    }
+    files.addAll(fileSupport.collectFiles(baseSourceDirectory, sourceFileFilter, true));
   }
 
-  /**
-   * Scan the given directory for files to add.
-   *
-   * <p>
-   * This method will recurse into subdirectories.
-   *
-   * @param directory
-   *          the directory to scan
-   * @param files
-   *          collection to add found files in
-   */
-  private void scanDirectory(File directory, List<File> files) {
-    File[] directoryListing = directory.listFiles();
-    if (directoryListing != null) {
-      for (File file : directoryListing) {
-        if (file.isDirectory()) {
-          scanDirectory(file, files);
-        } else if (shouldProcessFile(file)) {
-          files.add(file);
-        }
-      }
-    }
-  }
-
-  /**
-   * Should the file be processed?
-   *
-   * @param file
-   *          the file to check
-   *
-   * @return {@code true} if the file should be processed
-   */
-  private boolean shouldProcessFile(File file) {
-    return file.getName().endsWith(FILE_EXTENSION_JAVA_SOURCE) && !file.isHidden();
+  @Override
+  public FileFilter getSourceFileFilter() {
+    return sourceFileFilter;
   }
 }

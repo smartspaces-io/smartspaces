@@ -23,7 +23,7 @@ import io.smartspaces.workbench.project.ProjectTemplate;
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;
 import io.smartspaces.workbench.project.ide.JavaEclipseIdeProjectCreatorSpecification;
-import io.smartspaces.workbench.project.java.JavaProjectType;
+import io.smartspaces.workbench.project.java.JvmProjectType;
 
 import com.google.common.collect.Lists;
 
@@ -32,7 +32,7 @@ import com.google.common.collect.Lists;
  *
  * @author Keith M. Hughes
  */
-public class LibraryProjectType extends JavaProjectType {
+public class LibraryProjectType extends JvmProjectType {
 
   @Override
   public String getProjectTypeName() {
@@ -57,7 +57,7 @@ public class LibraryProjectType extends JavaProjectType {
   @Override
   public EclipseIdeProjectCreatorSpecification getEclipseIdeProjectCreatorSpecification() {
     return new JavaEclipseIdeProjectCreatorSpecification(
-        Lists.newArrayList(JavaProjectType.SOURCE_MAIN_JAVA),
-        Lists.newArrayList(JavaProjectType.SOURCE_MAIN_TESTS));
+        Lists.newArrayList(JvmProjectType.SOURCE_MAIN_JAVA),
+        Lists.newArrayList(JvmProjectType.SOURCE_MAIN_TESTS));
   }
 }

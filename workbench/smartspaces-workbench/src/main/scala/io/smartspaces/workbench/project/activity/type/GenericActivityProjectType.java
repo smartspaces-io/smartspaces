@@ -25,7 +25,7 @@ import io.smartspaces.workbench.project.activity.builder.BaseActivityProjectBuil
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;
 import io.smartspaces.workbench.project.ide.JavaEclipseIdeProjectCreatorSpecification;
-import io.smartspaces.workbench.project.java.JavaProjectType;
+import io.smartspaces.workbench.project.java.JvmProjectType;
 
 import com.google.common.collect.Lists;
 
@@ -59,7 +59,7 @@ public class GenericActivityProjectType implements ProjectType {
   @Override
   public boolean isProperType(Project project) {
     return ActivityProject.PROJECT_TYPE_NAME.equals(project.getType())
-        && builderType.equals(project.getBuilderType());
+        && builderType.equals(project.getLanguage());
   }
 
   @Override
@@ -76,6 +76,6 @@ public class GenericActivityProjectType implements ProjectType {
   public EclipseIdeProjectCreatorSpecification getEclipseIdeProjectCreatorSpecification() {
     return new JavaEclipseIdeProjectCreatorSpecification(
         Lists.newArrayList(ProjectType.SOURCE_MAIN_RESOURCES),
-        Lists.newArrayList(JavaProjectType.SOURCE_MAIN_TESTS));
+        Lists.newArrayList(JvmProjectType.SOURCE_MAIN_TESTS));
   }
 }

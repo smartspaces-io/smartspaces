@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
-  <name>Routable Input Java Example</name>
+<project type="activity" language="java">
+  <name>Routable Input Scala Example</name>
   <description>
-    An example of reading from a route in Java.
+    An example of reading from a route in Scala.
   </description>
 
   <identifyingName>
-    smartspaces.example.activity.routable.input
+    smartspaces.example.activity.routable.input.scala
   </identifyingName>
   <version>1.0.0</version>
 
   <activity type="smartspaces_native">
-    <name>smartspacesExampleActivityRoutableInput</name>
+    <name>smartspacesExampleActivityRoutableInputScala</name>
     <class>
-      io.smartspaces.example.activity.routable.input.SimpleJavaRoutableInputActivity
+      io.smartspaces.example.activity.routable.input.SimpleScalaRoutableInputActivity
     </class>
 
     <configuration>

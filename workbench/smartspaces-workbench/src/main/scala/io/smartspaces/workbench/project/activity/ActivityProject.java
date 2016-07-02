@@ -23,7 +23,7 @@ import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectConfigurationProperty;
 import io.smartspaces.workbench.project.activity.type.ProjectType;
-import io.smartspaces.workbench.project.java.JavaProjectType;
+import io.smartspaces.workbench.project.java.JvmProjectType;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -206,7 +206,7 @@ public class ActivityProject extends Project {
    * @return the location of the source directory for activities
    */
   public File getActivitySourceDirectory() {
-    return fileSupport.newFile(getBaseDirectory(), JavaProjectType.SOURCE_MAIN_JAVA);
+    return fileSupport.newFile(getBaseDirectory(), JvmProjectType.SOURCE_MAIN_JAVA);
   }
 
   /**

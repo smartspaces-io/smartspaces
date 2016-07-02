@@ -17,9 +17,23 @@
 
 package io.smartspaces.workbench.tasks;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileReader;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.common.io.Closeables;
+
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.resource.NamedVersionedResourceCollection;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.Version;
@@ -37,20 +51,6 @@ import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectDependency;
 import io.smartspaces.workbench.project.ProjectManager;
 import io.smartspaces.workbench.project.ProjectTaskContext;
-
-import com.google.common.io.Closeables;
-import org.apache.commons.logging.Log;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * The main context for a workbench task run.
@@ -700,7 +700,7 @@ public class WorkbenchTaskContext {
    *
    * @return the context log
    */
-  public Log getLog() {
+  public ExtendedLog getLog() {
     return getWorkbench().getLog();
   }
 

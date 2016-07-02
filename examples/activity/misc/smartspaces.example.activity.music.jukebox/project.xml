@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>Music Jukebox Example Activity</name>
   <description>
     A music jukebox activity.

@@ -84,7 +84,7 @@ public class ExternalJavadocGenerator implements JavadocGenerator {
 
     File classesFolder =
         fileSupport.newFile(context.getBuildDirectory(),
-            ProjectJavaCompiler.BUILD_DIRECTORY_CLASSES_MAIN);
+            ProgrammingLanguageCompiler.BUILD_DIRECTORY_CLASSES_MAIN);
     WorkbenchTaskContext workbenchTaskContext = context.getWorkbenchTaskContext();
     if (!classesFolder.exists() || !classesFolder.isDirectory()) {
       workbenchTaskContext.handleError(String.format("Java class files folder %s does not exist",
@@ -93,7 +93,7 @@ public class ExternalJavadocGenerator implements JavadocGenerator {
 
     File sourcesFolder =
         fileSupport.newFile(context.getProject().getBaseDirectory(),
-            JavaProjectType.SOURCE_MAIN_JAVA);
+            JvmProjectType.SOURCE_MAIN_JAVA);
     if (!sourcesFolder.exists() || !sourcesFolder.isDirectory()) {
       workbenchTaskContext.handleError(String.format("Java source files folder %s does not exist",
           classesFolder.getAbsolutePath()));

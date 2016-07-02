@@ -21,7 +21,7 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.workbench.project.BaseProjectTemplate;
 import io.smartspaces.workbench.project.creator.ProjectCreationContext;
-import io.smartspaces.workbench.project.java.JavaProjectType;
+import io.smartspaces.workbench.project.java.JvmProjectType;
 
 import java.io.File;
 
@@ -52,7 +52,7 @@ public class ActivityProjectTemplate extends BaseProjectTemplate {
    */
   public File getActivitySourceDirectory(ProjectCreationContext context) {
     return fileSupport.newFile(context.getProject().getBaseDirectory(),
-        JavaProjectType.SOURCE_MAIN_JAVA);
+        JvmProjectType.SOURCE_MAIN_JAVA);
   }
 
   /**

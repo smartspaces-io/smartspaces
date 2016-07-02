@@ -23,7 +23,7 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.process.NativeCommandsExecutor;
 import io.smartspaces.workbench.project.ProjectTaskContext;
-import io.smartspaces.workbench.project.java.JavaProjectExtension;
+import io.smartspaces.workbench.project.java.JvmProjectExtension;
 
 import java.io.File;
 import java.util.Arrays;
@@ -32,11 +32,11 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 /**
- * A java activity extension for Android.
+ * A JVM project extension for Android.
  *
  * @author Keith M. Hughes
  */
-public class AndroidJavaProjectExtension implements JavaProjectExtension {
+public class AndroidJvmProjectExtension implements JvmProjectExtension {
 
   /**
    * The configuration property name for the Android SDK home.

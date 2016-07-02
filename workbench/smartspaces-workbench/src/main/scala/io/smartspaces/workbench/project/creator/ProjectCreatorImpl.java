@@ -84,7 +84,7 @@ public class ProjectCreatorImpl implements ProjectCreator {
     if (projectType == null) {
       throw new SimpleSmartSpacesException(String.format(
           "Invalid type for project type/builder %s/%s", project.getType(),
-          project.getBuilderType()));
+          project.getLanguage()));
     }
     ProjectTemplate projectTemplate = projectType.newProjectTemplate();
     projectTemplate.setTemplater(templater);

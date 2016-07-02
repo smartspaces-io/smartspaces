@@ -472,7 +472,7 @@ public class StandardProjectTaskManager implements ProjectTaskManager {
               .getAbsolutePath()));
 
       // TODO(keith): Make work for other project types
-      if ("library".equals(project.getType()) || "java".equals(project.getBuilderType())) {
+      if ("library".equals(project.getType()) || "java".equals(project.getLanguage())) {
         JavadocGenerator generator = new ExternalJavadocGenerator();
 
         generator.generate(getProjectTaskContext());

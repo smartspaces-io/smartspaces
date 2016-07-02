@@ -63,8 +63,8 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
    * The default version range for projects which do not specify a version
    * range.
    */
-  public static final VersionRange SMARTSPACES_VERSION_RANGE_DEFAULT = new VersionRange(
-      new Version(1, 0, 0), new Version(2, 0, 0), false);
+  public static final VersionRange SMARTSPACES_VERSION_RANGE_DEFAULT =
+      new VersionRange(new Version(1, 0, 0), new Version(2, 0, 0), false);
 
   /**
    * Element name for a JDOM project specification.
@@ -81,10 +81,14 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
    */
   {
     addConstituentType(new TasksProjectConstituent.TasksProjectConstituentBuilderFactory());
-    addConstituentType(new ResourceComponentProjectConstituent.ProjectResourceConstituentBuilderFactory());
-    addConstituentType(new ResourceComponentProjectConstituent.ProjectSourceConstituentBuilderFactory());
-    addConstituentType(new AssemblyComponentProjectConstituent.ProjectAssemblyConstituentBuilderFactory());
-    addConstituentType(new BundleContentProjectConstituent.BundleProjectConstituentBuilderFactory());
+    addConstituentType(
+        new ResourceComponentProjectConstituent.ProjectResourceConstituentBuilderFactory());
+    addConstituentType(
+        new ResourceComponentProjectConstituent.ProjectSourceConstituentBuilderFactory());
+    addConstituentType(
+        new AssemblyComponentProjectConstituent.ProjectAssemblyConstituentBuilderFactory());
+    addConstituentType(
+        new BundleContentProjectConstituent.BundleProjectConstituentBuilderFactory());
     addConstituentType(new ActivityProjectConstituent.ActivityProjectBuilderFactory());
     addConstituentType(new LibraryProjectConstituent.LibraryProjectBuilderFactory());
   }
@@ -120,13 +124,12 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
   private static final String PROJECT_ATTRIBUTE_NAME_PROJECT_TYPE = "type";
 
   /**
-   * The project attribute for the project builder.
+   * The project attribute for the project language.
    */
-  public static final String PROJECT_ATTRIBUTE_NAME_PROJECT_BUILDER = "builder";
+  public static final String PROJECT_ATTRIBUTE_NAME_PROJECT_LANGUAGE = "language";
 
   /**
-   * The project attribute for the version of Smart Spaces which is
-   * required.
+   * The project attribute for the version of Smart Spaces which is required.
    */
   public static final String PROJECT_ATTRIBUTE_NAME_PROJECT_SMART_SPACES_VERSION =
       "smartSpacesVersion";
@@ -309,16 +312,15 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
     Namespace projectNamespace = projectElement.getNamespace();
 
     if (!PROJECT_ELEMENT_NAME_PROJECT.equals(projectElement.getName())) {
-      throw new SimpleSmartSpacesException("Invalid project root element name "
-          + projectElement.getName());
+      throw new SimpleSmartSpacesException(
+          "Invalid project root element name " + projectElement.getName());
     }
 
     // When an xi:include statement is used, the included elements do not pick
     // up the default namespace.
     if (!Namespace.NO_NAMESPACE.equals(projectNamespace)) {
-      getLog().info(
-          String.format("Applying default namespace '%s' to project element tree",
-              projectNamespace.getURI()));
+      getLog().info(String.format("Applying default namespace '%s' to project element tree",
+          projectNamespace.getURI()));
       applyDefaultNamespaceRecursively(projectElement, projectNamespace, true);
     }
 
@@ -329,9 +331,8 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
     configureProjectFromElement(project, projectNamespace, projectElement);
 
     if (project.getSmartSpacesVersionRange() == null) {
-      getLog().warn(
-          "Did not specify a range of needed Smart Spaces versions. Setting default to "
-              + SMARTSPACES_VERSION_RANGE_DEFAULT);
+      getLog().warn("Did not specify a range of needed Smart Spaces versions. Setting default to "
+          + SMARTSPACES_VERSION_RANGE_DEFAULT);
       project.setSmartSpacesVersionRange(SMARTSPACES_VERSION_RANGE_DEFAULT);
     }
 
@@ -357,10 +358,8 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
   void applyDefaultNamespaceRecursively(Element element, Namespace namespace, boolean shouldLog) {
     if (Namespace.NO_NAMESPACE.equals(element.getNamespace())) {
       if (shouldLog) {
-        getLog()
-            .info(
-                String.format("Applying default namespace to element tree root '%s'",
-                    element.getName()));
+        getLog().info(String.format("Applying default namespace to element tree root '%s'",
+            element.getName()));
         shouldLog = false;
       }
       element.setNamespace(namespace);
@@ -475,16 +474,18 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
       project.setBaseDirectory(fileSupport.newFile(baseDirectoryPath));
     }
 
-    project.setBuilderType(getAttributeValue(rootElement, PROJECT_ATTRIBUTE_NAME_PROJECT_BUILDER,
-        project.getBuilderType()));
+    String language = getAttributeValue(rootElement, PROJECT_ATTRIBUTE_NAME_PROJECT_LANGUAGE,
+        project.getLanguage());
+    if (language != null) {
+      language = language.toLowerCase();
+    }
+    project.setLanguage(language);
 
     String smartSpacesVersionRangeAttribute =
-        getAttributeValue(rootElement, PROJECT_ATTRIBUTE_NAME_PROJECT_SMART_SPACES_VERSION,
-            null);
+        getAttributeValue(rootElement, PROJECT_ATTRIBUTE_NAME_PROJECT_SMART_SPACES_VERSION, null);
 
     if (smartSpacesVersionRangeAttribute != null) {
-      VersionRange versionRange =
-          VersionRange.parseVersionRange(smartSpacesVersionRangeAttribute);
+      VersionRange versionRange = VersionRange.parseVersionRange(smartSpacesVersionRangeAttribute);
       project.setSmartSpacesVersionRange(versionRange);
     }
   }
@@ -551,15 +552,13 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
 
     if (configurationElement != null) {
       @SuppressWarnings("unchecked")
-      List<Element> propertyElements =
-          configurationElement.getChildren(ActivityProjectConstituent.PROPERTY_ELEMENT_NAME,
-              projectNamespace);
+      List<Element> propertyElements = configurationElement
+          .getChildren(ActivityProjectConstituent.PROPERTY_ELEMENT_NAME, projectNamespace);
 
       Configuration configuration = project.getConfiguration();
       for (Element propertyElement : propertyElements) {
-        String name =
-            getRequiredAttributeValue(propertyElement,
-                PROJECT_ATTRIBUTE_NAME_CONFIGURATION_ITEM_NAME);
+        String name = getRequiredAttributeValue(propertyElement,
+            PROJECT_ATTRIBUTE_NAME_CONFIGURATION_ITEM_NAME);
         if (name == null) {
           getWorkbench().getLog().warn("Configuration property does not have a name");
           continue;
@@ -567,8 +566,8 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
 
         String value = getConfigurationValue(projectNamespace, propertyElement, name);
         if (value == null) {
-          getWorkbench().getLog().warn(
-              String.format("Configuration property %s does not have a value", name));
+          getWorkbench().getLog()
+              .warn(String.format("Configuration property %s does not have a value", name));
           continue;
         }
 
@@ -593,16 +592,16 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
       String propertyName) {
     String valueAttribute =
         propertyElement.getAttributeValue(PROJECT_ATTRIBUTE_NAME_CONFIGURATION_ITEM_VALUE);
-    String valueChild =
-        propertyElement.getChildTextNormalize(PROJECT_ELEMENT_NAME_CONFIGURATION_ITEM_VALUE,
-            projectNamespace);
+    String valueChild = propertyElement
+        .getChildTextNormalize(PROJECT_ELEMENT_NAME_CONFIGURATION_ITEM_VALUE, projectNamespace);
 
     if (valueAttribute != null) {
       if (valueChild != null) {
-        getWorkbench().getLog().warn(
-            String.format(
+        getWorkbench().getLog()
+            .warn(String.format(
                 "Configuration property %s has both an attribute and child element giving the value. "
-                    + "The child element is being used.", propertyName));
+                    + "The child element is being used.",
+                propertyName));
         return valueChild;
       } else {
         return valueAttribute;
@@ -669,9 +668,8 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
    */
   private ProjectDependencyLinking getDependencyLinkingAttribute(Element dependencyElement,
       ProjectDependencyLinking defaultLinking) {
-    String linkingString =
-        dependencyElement.getAttributeValue(PROJECT_ATTRIBUTE_NAME_PROJECT_DEPENDENCY_LINKING,
-            defaultLinking.toString());
+    String linkingString = dependencyElement.getAttributeValue(
+        PROJECT_ATTRIBUTE_NAME_PROJECT_DEPENDENCY_LINKING, defaultLinking.toString());
     ProjectDependencyLinking linking =
         ProjectDependencyLinking.valueOf(linkingString.toUpperCase());
     if (linking == null) {
@@ -693,9 +691,8 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
    */
   private ProjectDependency getDependency(Element dependencyElement,
       ProjectDependencyLinking defaultLinking) {
-    String identifyingName =
-        getAttributeValue(dependencyElement,
-            PROJECT_ATTRIBUTE_NAME_DEPENDENCY_ITEM_IDENTIFYING_NAME);
+    String identifyingName = getAttributeValue(dependencyElement,
+        PROJECT_ATTRIBUTE_NAME_DEPENDENCY_ITEM_IDENTIFYING_NAME);
     if (identifyingName == null) {
       addError("project.xml <dependency> has no identifyingName");
       return null;
@@ -706,10 +703,12 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
         getAttributeValue(dependencyElement, PROJECT_ATTRIBUTE_NAME_DEPENDENCY_ITEM_VERSION);
     if (versionStr != null) {
       if (Character.isDigit(versionStr.charAt(0))) {
-        getWorkbench().getLog().warn(
-            String.format(
-                "A version value of %s was specified that gives a range of [%s, infinity). "
-                    + "If an exact match is wanted, use =%s", versionStr, versionStr, versionStr));
+        getWorkbench().getLog()
+            .warn(
+                String.format(
+                    "A version value of %s was specified that gives a range of [%s, infinity). "
+                        + "If an exact match is wanted, use =%s",
+                    versionStr, versionStr, versionStr));
       }
       version = VersionRange.parseVersionRange(versionStr);
     } else {
@@ -717,13 +716,11 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
       return null;
     }
 
-    boolean required =
-        PROJECT_VALUE_TRUE.equals(getAttributeValue(dependencyElement,
-            PROJECT_ATTRIBUTE_NAME_DEPENDENCY_ITEM_REQUIRED,
+    boolean required = PROJECT_VALUE_TRUE.equals(
+        getAttributeValue(dependencyElement, PROJECT_ATTRIBUTE_NAME_DEPENDENCY_ITEM_REQUIRED,
             PROJECT_ATTRIBUTE_VALUE_DEFAULT_DEPENDENCY_ITEM_REQUIRED));
-    boolean dynamic =
-        PROJECT_VALUE_TRUE.equals(getAttributeValue(dependencyElement,
-            PROJECT_ATTRIBUTE_NAME_DEPENDENCY_ITEM_DYNAMIC,
+    boolean dynamic = PROJECT_VALUE_TRUE
+        .equals(getAttributeValue(dependencyElement, PROJECT_ATTRIBUTE_NAME_DEPENDENCY_ITEM_DYNAMIC,
             PROJECT_ATTRIBUTE_VALUE_DEFAULT_DEPENDENCY_ITEM_DYNAMIC));
 
     ProjectDependencyLinking linking =

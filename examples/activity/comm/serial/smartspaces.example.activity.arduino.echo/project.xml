@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>Arduino Echo Example</name>
   <description>
     A Java Activity that writes bytes to the Arduino. The Arduino echoes the bytes back.

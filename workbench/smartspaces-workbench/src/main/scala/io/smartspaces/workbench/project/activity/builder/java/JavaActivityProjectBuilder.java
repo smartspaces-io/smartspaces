@@ -26,17 +26,17 @@ import io.smartspaces.workbench.project.activity.ActivityProject;
 import io.smartspaces.workbench.project.activity.builder.BaseActivityProjectBuilder;
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.java.ContainerInfo;
-import io.smartspaces.workbench.project.java.JavaJarCompiler;
-import io.smartspaces.workbench.project.java.JavaProjectExtension;
-import io.smartspaces.workbench.project.java.ProjectJavaCompiler;
-import io.smartspaces.workbench.project.java.StandardJavaJarCompiler;
+import io.smartspaces.workbench.project.java.JvmJarAssembler;
+import io.smartspaces.workbench.project.java.JvmProjectExtension;
+import io.smartspaces.workbench.project.java.ProgrammingLanguageCompiler;
+import io.smartspaces.workbench.project.java.StandardJvmJarAssembler;
 import io.smartspaces.workbench.project.test.IsolatedClassloaderJavaTestRunner;
 import io.smartspaces.workbench.project.test.JavaTestRunner;
 
 import java.io.File;
 
 /**
- * A {@link ProjectBuilder} for Java-base activity projects.
+ * A {@link ProjectBuilder} for JVM-base activity projects.
  *
  * @author Keith M. Hughes
  */
@@ -60,12 +60,12 @@ public class JavaActivityProjectBuilder extends BaseActivityProjectBuilder {
   /**
    * The extensions for this builder.
    */
-  private final JavaProjectExtension extensions;
+  private final JvmProjectExtension extensions;
 
   /**
    * The compiler for Java JARs.
    */
-  private final JavaJarCompiler compiler = new StandardJavaJarCompiler();
+  private final JvmJarAssembler jarAssembler = new StandardJvmJarAssembler();
 
   /**
    * File support to use.
@@ -85,7 +85,7 @@ public class JavaActivityProjectBuilder extends BaseActivityProjectBuilder {
    * @param extensions
    *          the extensions to use, can be {@code null}
    */
-  public JavaActivityProjectBuilder(JavaProjectExtension extensions) {
+  public JavaActivityProjectBuilder(JvmProjectExtension extensions) {
     this.extensions = extensions;
   }
 
@@ -101,7 +101,7 @@ public class JavaActivityProjectBuilder extends BaseActivityProjectBuilder {
     ContainerInfo containerInfo = new ContainerInfo();
     addActivityContainerInformation(project, containerInfo);
 
-    compiler.buildJar(jarDestinationFile, compilationDirectory, extensions, containerInfo, context);
+    jarAssembler.buildJar(jarDestinationFile, compilationDirectory, extensions, containerInfo, context);
 
     checkForActivityClassExistence(project, compilationDirectory);
 
@@ -186,7 +186,7 @@ public class JavaActivityProjectBuilder extends BaseActivityProjectBuilder {
    */
   private File getCompilationOutputDirectory(File buildDirectory) {
     File outputDirectory =
-        fileSupport.newFile(buildDirectory, ProjectJavaCompiler.BUILD_DIRECTORY_CLASSES_MAIN);
+        fileSupport.newFile(buildDirectory, ProgrammingLanguageCompiler.BUILD_DIRECTORY_CLASSES_MAIN);
     fileSupport.directoryExists(outputDirectory);
 
     return outputDirectory;

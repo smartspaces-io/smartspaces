@@ -19,7 +19,7 @@ package io.smartspaces.workbench.project.test;
 
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.workbench.project.ProjectTaskContext;
-import io.smartspaces.workbench.project.java.JavaProjectExtension;
+import io.smartspaces.workbench.project.java.JvmProjectExtension;
 
 import java.io.File;
 
@@ -44,6 +44,6 @@ public interface JavaTestRunner {
    *           the tests failed
    */
       void
-      runTests(File jarDestinationFile, JavaProjectExtension extensions, ProjectTaskContext context)
+      runTests(File jarDestinationFile, JvmProjectExtension extensions, ProjectTaskContext context)
           throws SmartSpacesException;
 }

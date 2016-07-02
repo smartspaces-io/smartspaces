@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>Simple Hello World Activity Build Example in Java</name>
   <description>
     A very simple project that demonstrates building with tasks defined in the

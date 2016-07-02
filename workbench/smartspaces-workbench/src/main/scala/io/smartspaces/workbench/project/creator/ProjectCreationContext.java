@@ -17,19 +17,20 @@
 
 package io.smartspaces.workbench.project.creator;
 
-import io.smartspaces.util.io.FileCollector;
-import io.smartspaces.workbench.project.Project;
-import io.smartspaces.workbench.project.ProjectContext;
-import io.smartspaces.workbench.project.activity.type.ProjectType;
-import io.smartspaces.workbench.project.group.GroupProjectTemplateSpecification;
-import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
-
 import java.io.File;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 
 import com.google.common.collect.Maps;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.util.io.FileCollector;
+import io.smartspaces.workbench.project.Project;
+import io.smartspaces.workbench.project.ProjectContext;
+import io.smartspaces.workbench.project.activity.type.ProjectType;
+import io.smartspaces.workbench.project.group.GroupProjectTemplateSpecification;
+import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 
 /**
  * Encapsulates the data necessary to create a project. Used in conjunction with
@@ -52,7 +53,7 @@ public class ProjectCreationContext implements ProjectContext {
   /**
    * Logger to use for this context.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * The project itself.
@@ -87,7 +88,7 @@ public class ProjectCreationContext implements ProjectContext {
    * @param log
    *          logger to use for this context
    */
-  public ProjectCreationContext(String description, Log log) {
+  public ProjectCreationContext(String description, ExtendedLog log) {
     this.description = description;
     this.log = log;
   }
@@ -238,7 +239,7 @@ public class ProjectCreationContext implements ProjectContext {
   }
 
   @Override
-  public Log getLog() {
+  public ExtendedLog getLog() {
     return log;
   }
 }

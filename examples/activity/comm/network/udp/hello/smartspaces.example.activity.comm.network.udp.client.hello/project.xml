@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>UDP Client Hello Example</name>
   <description>
     A Java Activity contacts a remote UDP server and tells the server when when the

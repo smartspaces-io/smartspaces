@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>Simple Hello World ROS Subscriber Activity Example in Java</name>
   <description>
     A Java-based activity that creates a ROS subscriber for a given ROS topic and logs

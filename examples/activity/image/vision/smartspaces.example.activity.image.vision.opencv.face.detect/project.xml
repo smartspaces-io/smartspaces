@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>OpenCV Vision Example: Face Detection</name>
   <description>
     An activity that uses the camera attached to the controller and detects faces. The

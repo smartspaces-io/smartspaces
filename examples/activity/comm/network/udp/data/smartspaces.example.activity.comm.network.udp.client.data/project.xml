@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>UDP Client Data Example</name>
   <description>
     A Java Activity that contacts a remote UDP server and sends data to the server when

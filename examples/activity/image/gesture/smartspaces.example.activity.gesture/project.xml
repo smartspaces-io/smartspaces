@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>Gesture Example</name>
   <description>
     An activity that uses a connected gesture detection device to register gestural

@@ -23,10 +23,10 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectTaskContext;
-import io.smartspaces.workbench.project.java.EclipseProjectJavaCompiler;
-import io.smartspaces.workbench.project.java.JavaProjectExtension;
-import io.smartspaces.workbench.project.java.JavaProjectType;
-import io.smartspaces.workbench.project.java.ProjectJavaCompiler;
+import io.smartspaces.workbench.project.java.EclipseProgrammingLanguageCompiler;
+import io.smartspaces.workbench.project.java.JvmProjectExtension;
+import io.smartspaces.workbench.project.java.JvmProjectType;
+import io.smartspaces.workbench.project.java.ProgrammingLanguageCompiler;
 
 import org.apache.commons.logging.Log;
 
@@ -44,8 +44,8 @@ import java.util.List;
  *
  * <p>
  * Tests are run in a test runner which is isolated from the classloader which
- * loads the Smart Spaces workbench. This is to prevent mixing jar files
- * which are found in both the Smart Spaces Workbench and controller.
+ * loads the Smart Spaces workbench. This is to prevent mixing jar files which
+ * are found in both the Smart Spaces Workbench and controller.
  *
  * @author Keith M. Hughes
  */
@@ -65,7 +65,7 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
   /**
    * The project compiler.
    */
-  private final ProjectJavaCompiler projectCompiler = new EclipseProjectJavaCompiler();
+  private final ProgrammingLanguageCompiler projectCompiler = new EclipseProgrammingLanguageCompiler();
 
   /**
    * File support for class.
@@ -84,16 +84,16 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
    *          any number of additional Files to add to the class path
    * @return a List<File> of all required class path entries
    */
-  private List<File> getClasspath(ProjectTaskContext context, JavaProjectExtension extension,
+  private List<File> getClasspath(ProjectTaskContext context, JvmProjectExtension extension,
       File... additionalFiles) {
     List<File> classpath = new ArrayList<>();
     for (File additionalFile : additionalFiles) {
       classpath.add(additionalFile);
     }
     classpath.add(fileSupport.newFile(context.getProject().getBaseDirectory(),
-        JavaProjectType.SOURCE_MAIN_TEST_RESOURCES));
+        JvmProjectType.SOURCE_MAIN_TEST_RESOURCES));
 
-    JavaProjectType projectType = context.getProjectType();
+    JvmProjectType projectType = context.getProjectType();
     projectType.getProjectClasspath(true, context, classpath, extension,
         context.getWorkbenchTaskContext());
 
@@ -101,36 +101,35 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
   }
 
   @Override
-  public void runTests(File jarDestinationFile, JavaProjectExtension extension,
+  public void runTests(File jarDestinationFile, JvmProjectExtension extension,
       ProjectTaskContext context) throws SmartSpacesException {
     List<File> compilationFiles = new ArrayList<>();
 
     Project project = context.getProject();
     projectCompiler.getCompilationFiles(
-        fileSupport.newFile(project.getBaseDirectory(), JavaProjectType.SOURCE_MAIN_TESTS),
+        fileSupport.newFile(project.getBaseDirectory(), JvmProjectType.SOURCE_MAIN_TESTS),
         compilationFiles);
     projectCompiler.getCompilationFiles(fileSupport.newFile(context.getBuildDirectory(),
-        JavaProjectType.SOURCE_GENERATED_MAIN_TESTS), compilationFiles);
+        JvmProjectType.SOURCE_GENERATED_MAIN_TESTS), compilationFiles);
 
     if (compilationFiles.isEmpty()) {
       // No tests mean they all succeeded in some weird philosophical sense.
       return;
     }
 
-    context.getLog().info(
-        String.format("Running Java tests for project %s", context.getProject().getBaseDirectory()
-            .getAbsolutePath()));
+    context.getLog().info(String.format("Running Java tests for project %s",
+        context.getProject().getBaseDirectory().getAbsolutePath()));
 
     List<File> classpath = getClasspath(context, extension, jarDestinationFile);
 
-    File compilationFolder =
-        fileSupport.newFile(context.getBuildDirectory(),
-            ProjectJavaCompiler.BUILD_DIRECTORY_CLASSES_TESTS);
+    File compilationFolder = fileSupport.newFile(context.getBuildDirectory(),
+        ProgrammingLanguageCompiler.BUILD_DIRECTORY_CLASSES_TESTS);
     fileSupport.directoryExists(compilationFolder);
 
     List<String> compilerOptions = projectCompiler.getCompilerOptions(context);
 
-    projectCompiler.compile(compilationFolder, classpath, compilationFiles, compilerOptions);
+    projectCompiler.compile(context, compilationFolder, classpath, compilationFiles,
+        compilerOptions);
 
     runJavaUnitTests(compilationFolder, jarDestinationFile, extension, context);
   }
@@ -151,7 +150,7 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
    *           the tests failed
    */
   private void runJavaUnitTests(File testCompilationFolder, File jarDestinationFile,
-      JavaProjectExtension extension, ProjectTaskContext context) throws SmartSpacesException {
+      JvmProjectExtension extension, ProjectTaskContext context) throws SmartSpacesException {
     List<File> classpath =
         getClasspath(context, extension, jarDestinationFile, testCompilationFolder);
 
@@ -160,19 +159,14 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
       try {
         urls.add(classpathElement.toURL());
       } catch (MalformedURLException e) {
-        context
-            .getWorkbenchTaskContext()
-            .getWorkbench()
-            .getLog()
-            .error(
-                String.format("Error while adding %s to the unit test classpath",
-                    classpathElement.getAbsolutePath()), e);
+        context.getWorkbenchTaskContext().getWorkbench().getLog()
+            .error(String.format("Error while adding %s to the unit test classpath",
+                classpathElement.getAbsolutePath()), e);
       }
     }
 
-    URLClassLoader classLoader =
-        new URLClassLoader(urls.toArray(new URL[urls.size()]), context.getWorkbenchTaskContext()
-            .getWorkbench().getBaseClassLoader());
+    URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]),
+        context.getWorkbenchTaskContext().getWorkbench().getBaseClassLoader());
 
     runTestsInIsolation(testCompilationFolder, classLoader, context);
   }
@@ -200,15 +194,13 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
       // classLoader), except
       // that it is sanitized through the test class loader.
       Class<?> testRunnerClass = classLoader.loadClass(ISOLATED_TESTRUNNER_CLASSNAME);
-      Method runner =
-          testRunnerClass.getMethod(ISOLATED_TESTRUNNER_METHODNAME, File.class,
-              URLClassLoader.class, Log.class);
+      Method runner = testRunnerClass.getMethod(ISOLATED_TESTRUNNER_METHODNAME, File.class,
+          URLClassLoader.class, Log.class);
 
       Object testRunner = testRunnerClass.newInstance();
 
-      result =
-          (Boolean) runner.invoke(testRunner, testCompilationFolder, classLoader, context
-              .getWorkbenchTaskContext().getWorkbench().getLog());
+      result = (Boolean) runner.invoke(testRunner, testCompilationFolder, classLoader,
+          context.getWorkbenchTaskContext().getWorkbench().getLog());
     } catch (Exception e) {
       // This catch here for the reflection errors
       context.getWorkbenchTaskContext().getWorkbench().getLog().error("Error running tests", e);

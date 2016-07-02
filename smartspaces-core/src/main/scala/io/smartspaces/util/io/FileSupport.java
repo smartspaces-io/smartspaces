@@ -767,4 +767,16 @@ public interface FileSupport {
    * @return the new stream
    */
   FileOutputStream newFileOutputStream(File file);
+
+  /**
+   * Filter a list of files.
+   * 
+   * @param files
+   *          the list of files to filer
+   * @param filter
+   *          the filter
+   * 
+   * @return the files passing the filterF
+   */
+  List<File> filterFiles(List<File> files, FileFilter filter);
 }

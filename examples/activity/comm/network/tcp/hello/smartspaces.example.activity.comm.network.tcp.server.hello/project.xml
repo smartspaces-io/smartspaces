@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>TCP Server Hello Example</name>
   <description>
     A Java Activity starts up a TCP server that responds to client calls with a simple text message

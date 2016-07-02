@@ -105,8 +105,8 @@ public class FileSupportImpl implements FileSupport {
     try {
       return new ZipOutputStream(new FileOutputStream(outputFile));
     } catch (IOException e) {
-      throw new SimpleSmartSpacesException("Error creating zip output file "
-          + getAbsolutePath(outputFile), e);
+      throw new SimpleSmartSpacesException(
+          "Error creating zip output file " + getAbsolutePath(outputFile), e);
     }
   }
 
@@ -134,12 +134,12 @@ public class FileSupportImpl implements FileSupport {
           }
         }
       } else {
-        throw new SimpleSmartSpacesException("File source not found/recognized: "
-            + getAbsolutePath(target));
+        throw new SimpleSmartSpacesException(
+            "File source not found/recognized: " + getAbsolutePath(target));
       }
     } catch (Exception e) {
-      throw new SimpleSmartSpacesException("Error adding file to zip stream "
-          + getAbsolutePath(baseFile), e);
+      throw new SimpleSmartSpacesException(
+          "Error adding file to zip stream " + getAbsolutePath(baseFile), e);
     } finally {
       closeQuietly(fileStream);
     }
@@ -169,11 +169,12 @@ public class FileSupportImpl implements FileSupport {
           File file = newFile(baseLocation, entry.getName());
           File parentFile = getParentFile(file);
           if (!exists(parentFile) && !mkdirs(parentFile)) {
-            throw new SimpleSmartSpacesException("Could not create parent directory: " + parentFile);
+            throw new SimpleSmartSpacesException(
+                "Could not create parent directory: " + parentFile);
           }
 
-          copyInputStream(zipFile.getInputStream(entry), new BufferedOutputStream(
-              new FileOutputStream(file)));
+          copyInputStream(zipFile.getInputStream(entry),
+              new BufferedOutputStream(new FileOutputStream(file)));
           if (fileCollector != null) {
             fileCollector.put(file, source);
           }
@@ -182,10 +183,11 @@ public class FileSupportImpl implements FileSupport {
 
       zipFile.close();
     } catch (IOException ioe) {
-      throw new SimpleSmartSpacesException(String.format("Error while unzipping file %s",
-          getAbsolutePath(source)), ioe);
+      throw new SimpleSmartSpacesException(
+          String.format("Error while unzipping file %s", getAbsolutePath(source)), ioe);
     } finally {
-      // ZipFile does not implement Closeable, so can't use utility function.
+      // ZipFile does not implement Closeable, so can't use utility
+      // function.
       if (zipFile != null) {
         try {
           zipFile.close();
@@ -221,7 +223,8 @@ public class FileSupportImpl implements FileSupport {
 
     File[] sourceFiles = listFiles(sourceDir);
     if (sourceFiles == null) {
-      throw new SimpleSmartSpacesException("Missing source directory " + getAbsolutePath(sourceDir));
+      throw new SimpleSmartSpacesException(
+          "Missing source directory " + getAbsolutePath(sourceDir));
     }
 
     for (File src : sourceFiles) {
@@ -252,8 +255,8 @@ public class FileSupportImpl implements FileSupport {
     try {
       createNewFile(destination);
     } catch (IOException e) {
-      throw new SmartSpacesException(String.format("Could not create new file %s",
-          getAbsolutePath(destination)), e);
+      throw new SmartSpacesException(
+          String.format("Could not create new file %s", getAbsolutePath(destination)), e);
     }
 
     FileChannel in = null;
@@ -272,8 +275,8 @@ public class FileSupportImpl implements FileSupport {
           try {
             out.close();
           } catch (IOException e) {
-            throw new SmartSpacesException(String.format("Could not close file %s",
-                getAbsolutePath(destination)), e);
+            throw new SmartSpacesException(
+                String.format("Could not close file %s", getAbsolutePath(destination)), e);
           }
         }
       } finally {
@@ -406,8 +409,8 @@ public class FileSupportImpl implements FileSupport {
       writer.append(contents);
       writer.flush();
     } catch (Exception e) {
-      throw new SmartSpacesException(
-          String.format("Unable to write contents out to file %s", file), e);
+      throw new SmartSpacesException(String.format("Unable to write contents out to file %s", file),
+          e);
     } finally {
       if (writer != null) {
         try {
@@ -423,19 +426,17 @@ public class FileSupportImpl implements FileSupport {
   public void directoryExists(File dir, String message) {
     if (exists(dir)) {
       if (!isDirectory(dir)) {
-        String emessage =
-            message != null ? String.format("%s: %s is not a directory", message,
-                getAbsolutePath(dir)) : String
-                .format("%s is not a directory", getAbsolutePath(dir));
+        String emessage = message != null
+            ? String.format("%s: %s is not a directory", message, getAbsolutePath(dir))
+            : String.format("%s is not a directory", getAbsolutePath(dir));
 
         throw new SimpleSmartSpacesException(emessage);
       }
     } else {
       if (!mkdirs(dir)) {
-        String emessage =
-            message != null ? String.format("%s: Could not create directory %s", message,
-                getAbsolutePath(dir)) : String.format("Could not create directory %s",
-                getAbsolutePath(dir));
+        String emessage = message != null
+            ? String.format("%s: Could not create directory %s", message, getAbsolutePath(dir))
+            : String.format("Could not create directory %s", getAbsolutePath(dir));
 
         throw new SimpleSmartSpacesException(emessage);
       }
@@ -564,8 +565,8 @@ public class FileSupportImpl implements FileSupport {
     try {
       return File.createTempFile(prefix, suffix, baseDir);
     } catch (IOException e) {
-      throw new SimpleSmartSpacesException("Error creating temp file in "
-          + baseDir.getAbsolutePath(), e);
+      throw new SimpleSmartSpacesException(
+          "Error creating temp file in " + baseDir.getAbsolutePath(), e);
     }
   }
 
@@ -681,5 +682,19 @@ public class FileSupportImpl implements FileSupport {
       throw SimpleSmartSpacesException.newFormattedException(e,
           "Could not create a new file output stream for file %s", file.getAbsolutePath());
     }
+  }
+
+  @Override
+  public List<File> filterFiles(List<File> files, FileFilter filter) {
+    List<File> filtered = new ArrayList<>();
+    
+    for (File file : files) {
+      if (filter.accept(file)) {
+        filtered.add(file);
+      }
+        
+    }
+    
+    return filtered;
   }
 }

@@ -48,7 +48,7 @@ allprojects {
     // be pushed to production.
     //
     // Final versions should set the qualifier to null.
-    smartSpacesVersion = '0.4.0'
+    smartSpacesVersion = '0.5.0'
     smartSpacesVersionQualifier = 'SNAPSHOT'
 
     // These specify the layout of IS containers.

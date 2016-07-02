@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>Wii Remote Example Activity</name>
   <description>
     An example activity using a Wii remote.

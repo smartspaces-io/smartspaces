@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
     <name>External Proxy Internal  Activity Example</name>
     <description>
 This example shows a bar code for an external facing web application. When scanned by a mobile device, the mobile device's orientation will be sent to this activity.

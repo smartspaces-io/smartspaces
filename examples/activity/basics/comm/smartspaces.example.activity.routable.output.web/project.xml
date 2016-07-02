@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>Routable Output Web Example Activity</name>
   <description>
     A Java-based routable output activity that uses a browser for the creation of the

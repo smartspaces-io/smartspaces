@@ -18,7 +18,7 @@ dependencies {
   compile project(':service:smartspaces-service-core')
   compile project(':smartspaces-system')
 
-  compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.quartz:2.1.2_1') {
+  compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.quartz:2.1.7_1') {
     exclude group: 'c3p0', module: 'c3p0'
     transitive = false
   }

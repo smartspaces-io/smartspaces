@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<project type="activity" builder="android">
+<project type="activity" language="android">
     <name>Example Android Activity for Accelerometer</name>
     <description>
-An example Android activity which reads the Android deviced accelerometer and sends it on a route.
+An example Android activity which reads the Android device's accelerometer and sends it on a route.
     </description>
 
     <identifyingName>smartspaces.example.activity.android.accelerometer</identifyingName>

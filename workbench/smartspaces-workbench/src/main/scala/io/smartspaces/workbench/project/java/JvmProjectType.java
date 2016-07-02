@@ -46,20 +46,20 @@ import java.util.Set;
  *
  * @author Keith M. Hughes
  */
-public abstract class JavaProjectType implements ProjectType {
+public abstract class JvmProjectType implements ProjectType {
 
   /**
-   * The configuration name for the project Java bootstrap classpath.
+   * The configuration name for the project bootstrap classpath.
    */
-  public static final String CONFIGURATION_NAME_PROJECT_JAVA_CLASSPATH_BOOTSTRAP =
-      "project.java.classpath.bootstrap";
+  public static final String CONFIGURATION_NAME_PROJECT_CLASSPATH_BOOTSTRAP =
+      "project.classpath.bootstrap";
 
   /**
-   * The configuration name for the project Java additional (non-bootstrap)
+   * The configuration name for the project additional (non-bootstrap)
    * classpath.
    */
-  public static final String CONFIGURATION_NAME_PROJECT_JAVA_CLASSPATH_ADDITIONS =
-      "project.java.classpath.additions";
+  public static final String CONFIGURATION_NAME_PROJECT_CLASSPATH_ADDITIONS =
+      "project.classpath.additions";
 
   /**
    * A joiner for creating classpaths.
@@ -89,14 +89,14 @@ public abstract class JavaProjectType implements ProjectType {
   /**
    * Source location for the generated Java source files.
    */
-  public static final String SOURCE_GENERATED_MAIN_JAVA = ProjectType.GENERATED_SOURCE_ROOT
-      + "/main/java";
+  public static final String SOURCE_GENERATED_MAIN_JAVA =
+      ProjectType.GENERATED_SOURCE_ROOT + "/main/java";
 
   /**
    * Source location for generated tests.
    */
-  public static final String SOURCE_GENERATED_MAIN_TESTS = ProjectType.GENERATED_SOURCE_ROOT
-      + "/test/java";
+  public static final String SOURCE_GENERATED_MAIN_TESTS =
+      ProjectType.GENERATED_SOURCE_ROOT + "/test/java";
 
   /**
    * The extras component for testing support.
@@ -118,7 +118,7 @@ public abstract class JavaProjectType implements ProjectType {
    *          the workbench task context
    */
   public void getRuntimeClasspath(boolean needsDynamicArtifacts,
-      ProjectTaskContext projectTaskContext, List<File> classpath, JavaProjectExtension extension,
+      ProjectTaskContext projectTaskContext, List<File> classpath, JvmProjectExtension extension,
       WorkbenchTaskContext workbenchTaskContext) {
     List<File> bootstrapClasspath = workbenchTaskContext.getControllerSystemBootstrapClasspath();
 
@@ -128,8 +128,8 @@ public abstract class JavaProjectType implements ProjectType {
 
     classpath.addAll(bootstrapClasspath);
 
-    addClasspathConfiguration(bootstrapClasspath,
-        CONFIGURATION_NAME_PROJECT_JAVA_CLASSPATH_BOOTSTRAP, projectTaskContext);
+    addClasspathConfiguration(bootstrapClasspath, CONFIGURATION_NAME_PROJECT_CLASSPATH_BOOTSTRAP,
+        projectTaskContext);
 
     Set<File> classpathAdditions = new HashSet<>();
     Set<File> dynamicProjectDependencies =
@@ -139,7 +139,8 @@ public abstract class JavaProjectType implements ProjectType {
 
     // The compiletime class path will be everything needed to compile the
     // project. This includes resources that will be
-    // statically linked. The runtime class path will be bundles that will be
+    // statically linked. The runtime class path will be bundles that will
+    // be
     // available at runtime and won't be
     // statically linked.
     Set<File> compiletimeClasspathFromUserBootstrap = new HashSet<>();
@@ -150,8 +151,8 @@ public abstract class JavaProjectType implements ProjectType {
     classpath.addAll(compiletimeClasspathFromUserBootstrap);
     classpathAdditions.addAll(runtimeClasspathFromUserBootstrap);
 
-    addClasspathConfiguration(classpathAdditions,
-        CONFIGURATION_NAME_PROJECT_JAVA_CLASSPATH_ADDITIONS, projectTaskContext);
+    addClasspathConfiguration(classpathAdditions, CONFIGURATION_NAME_PROJECT_CLASSPATH_ADDITIONS,
+        projectTaskContext);
   }
 
   /**
@@ -173,8 +174,8 @@ public abstract class JavaProjectType implements ProjectType {
     }
 
     String configurationValue = CLASSPATH_JOINER.join(path);
-    projectTaskContext.getProject().getConfiguration()
-        .setValue(configurationParameter, configurationValue);
+    projectTaskContext.getProject().getConfiguration().setValue(configurationParameter,
+        configurationValue);
   }
 
   /**
@@ -185,8 +186,8 @@ public abstract class JavaProjectType implements ProjectType {
    *
    * @return the files being added
    */
-  private Set<File> addDependenciesFromDynamicProjectTaskContexts(
-      ProjectTaskContext projectTaskContext) {
+  private Set<File>
+      addDependenciesFromDynamicProjectTaskContexts(ProjectTaskContext projectTaskContext) {
     Set<File> filesToAdd = new HashSet<>();
     for (ProjectTaskContext dynamicProjectTaskContext : projectTaskContext
         .getDynamicProjectDependencyContexts()) {
@@ -201,7 +202,7 @@ public abstract class JavaProjectType implements ProjectType {
    * found in the user bootstrap folder of the controller.
    *
    * <p>
-   * In essense, this method returns two values, the classpaths in the first 2
+   * In essence, this method returns two values, the classpaths in the first 2
    * arguments.
    *
    * @param compiletimeClasspathFromUserBootstrap
@@ -221,11 +222,11 @@ public abstract class JavaProjectType implements ProjectType {
 
     NamedVersionedResourceCollection<NamedVersionedResourceWithData<URI>> startupResources =
         new OsgiResourceAnalyzer(wokbenchTaskContext.getWorkbench().getLog())
-            .getResourceCollection(fileSupport.newFile(
-                wokbenchTaskContext.getControllerDirectory(),
+            .getResourceCollection(fileSupport.newFile(wokbenchTaskContext.getControllerDirectory(),
                 ContainerFilesystemLayout.FOLDER_USER_BOOTSTRAP));
     for (ProjectDependency dependency : projectTaskContext.getProject().getDependencies()) {
-      // Skip the dependency if a dynamic project that exists on the workbench
+      // Skip the dependency if a dynamic project that exists on the
+      // workbench
       // project path.
       if (dependency.isDynamic()
           && wokbenchTaskContext.getDynamicProjectFromProjectPath(dependency) != null) {
@@ -237,10 +238,9 @@ public abstract class JavaProjectType implements ProjectType {
       if (dependencyProvider != null) {
         File dependencyFile = fileSupport.newFile(dependencyProvider.getData());
 
-        projectTaskContext.getLog().info(
-            String.format("Project Dependency %s:%s is being satisfied by %s",
-                dependency.getIdentifyingName(), dependency.getVersion(),
-                dependencyFile.getAbsolutePath()));
+        projectTaskContext.getLog().formatInfo("Project Dependency %s:%s is being satisfied by %s",
+            dependency.getIdentifyingName(), dependency.getVersion(),
+            dependencyFile.getAbsolutePath());
 
         dependency.setProvider(new FileProjectDependencyProvider(dependencyFile));
 
@@ -249,7 +249,8 @@ public abstract class JavaProjectType implements ProjectType {
           runtimeClasspathFromUserBootstrap.add(dependencyFile);
         }
       } else {
-        // TODO(keith): Collect all missing and put into a single exception.
+        // TODO(keith): Collect all missing and put into a single
+        // exception.
         throw SimpleSmartSpacesException.newFormattedException(
             "Project has listed dependency that isn't available %s:%s",
             dependency.getIdentifyingName(), dependency.getVersion());
@@ -275,7 +276,7 @@ public abstract class JavaProjectType implements ProjectType {
    *          the workbench task context
    */
   public void getProjectClasspath(boolean needsDynamicArtifacts,
-      ProjectTaskContext projectTaskContext, List<File> classpath, JavaProjectExtension extension,
+      ProjectTaskContext projectTaskContext, List<File> classpath, JvmProjectExtension extension,
       WorkbenchTaskContext wokbenchTaskContext) {
     getRuntimeClasspath(needsDynamicArtifacts, projectTaskContext, classpath, extension,
         wokbenchTaskContext);

@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author Keith M. Hughes
  */
-public interface JavaProjectExtension {
+public interface JvmProjectExtension {
 
   /**
    * Add new items to the classpath.

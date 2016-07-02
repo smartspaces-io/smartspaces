@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>Simple Hello World Activity Example in Java</name>
   <description>
     A very simple Java-based activity that just logs at the current log level its

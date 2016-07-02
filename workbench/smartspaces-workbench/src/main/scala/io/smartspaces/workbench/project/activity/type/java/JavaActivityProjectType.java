@@ -25,7 +25,7 @@ import io.smartspaces.workbench.project.activity.builder.java.JavaActivityProjec
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;
 import io.smartspaces.workbench.project.ide.JavaEclipseIdeProjectCreatorSpecification;
-import io.smartspaces.workbench.project.java.JavaProjectType;
+import io.smartspaces.workbench.project.java.JvmProjectType;
 
 import com.google.common.collect.Lists;
 
@@ -34,7 +34,7 @@ import com.google.common.collect.Lists;
  *
  * @author Keith M. Hughes
  */
-public class JavaActivityProjectType extends JavaProjectType {
+public class JavaActivityProjectType extends JvmProjectType {
 
   /**
    * Name for the builder.
@@ -49,7 +49,7 @@ public class JavaActivityProjectType extends JavaProjectType {
   @Override
   public boolean isProperType(Project project) {
     return ActivityProject.PROJECT_TYPE_NAME.equals(project.getType())
-        && BUILDER_NAME.equals(project.getBuilderType());
+        && BUILDER_NAME.equals(project.getLanguage());
   }
 
   @Override
@@ -65,7 +65,7 @@ public class JavaActivityProjectType extends JavaProjectType {
   @Override
   public EclipseIdeProjectCreatorSpecification getEclipseIdeProjectCreatorSpecification() {
     return new JavaEclipseIdeProjectCreatorSpecification(
-        Lists.newArrayList(JavaProjectType.SOURCE_MAIN_JAVA),
-        Lists.newArrayList(JavaProjectType.SOURCE_MAIN_TESTS));
+        Lists.newArrayList(JvmProjectType.SOURCE_MAIN_JAVA),
+        Lists.newArrayList(JvmProjectType.SOURCE_MAIN_TESTS));
   }
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project type="activity" language="java">
+  <name>Routable Input Java Example</name>
+  <description>
+    An example of reading from a route in Java.
+  </description>
+
+  <identifyingName>
+    smartspaces.example.activity.routable.input.java
+  </identifyingName>
+  <version>1.0.0</version>
+
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityRoutableInputJava</name>
+    <class>
+      io.smartspaces.example.activity.routable.input.SimpleJavaRoutableInputActivity
+    </class>
+
+    <configuration>
+      <property name="space.activity.ros.node.name">
+        <value>
+          example/routable/input
+        </value>
+      </property>
+      <property name="space.activity.routes.inputs" value="input1" />
+      <property name="space.activity.route.input.input1">
+        <value>
+          /example/routable/channel1
+        </value>
+      </property>
+
+      <property name="space.activity.log.level" value="info" />
+    </configuration>
+  </activity>
+</project>

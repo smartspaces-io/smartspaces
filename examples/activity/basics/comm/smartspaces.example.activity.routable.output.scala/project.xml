@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
-	<name>Routable Output Java Example</name>
+<project type="activity" language="scala">
+	<name>Routable Output Scala Example</name>
 	<description>
-		An example of a Java-based activity that writes to a route.
+		An example of a Scala-based activity that writes to a route.
 	</description>
 
 	<identifyingName>
-	smartspaces.example.activity.routable.output
+	smartspaces.example.activity.routable.output.scala
 	</identifyingName>
 	<version>1.0.0</version>
 
 	<activity type="smartspaces_native">
-		<name>smartspacesExampleActivityRoutableOutput</name>
+		<name>smartspacesExampleActivityRoutableOutputScala</name>
 		<class>
-			io.smartspaces.example.activity.routable.output.SimpleJavaRoutableOutputActivity
+			io.smartspaces.example.activity.routable.output.SimpleScalaRoutableOutputActivity
 		</class>
 
 		<configuration>

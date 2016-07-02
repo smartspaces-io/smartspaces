@@ -29,11 +29,13 @@ import io.smartspaces.workbench.project.ProjectDependencyProvider;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.constituent.ContentProjectConstituent;
 import io.smartspaces.workbench.project.java.ContainerInfo.ImportPackage;
+import io.smartspaces.workbench.project.scala.PureScalaProgrammingLanguageCompiler;
 
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Constants;
 import aQute.lib.osgi.Jar;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
 
 import java.io.File;
@@ -53,11 +55,11 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipOutputStream;
 
 /**
- * A {@link JavaJarCompiler} using the system Java compiler.
+ * A {@link JvmJarAssembler} using the system Java compiler.
  *
  * @author Keith M. Hughes
  */
-public class StandardJavaJarCompiler implements JavaJarCompiler {
+public class StandardJvmJarAssembler implements JvmJarAssembler {
 
   /**
    * The name of the manifest file in a Java jar.
@@ -92,7 +94,11 @@ public class StandardJavaJarCompiler implements JavaJarCompiler {
   /**
    * The java compiler to use for the project.
    */
-  private final ProjectJavaCompiler projectCompiler = new EclipseProjectJavaCompiler();
+  private final ProgrammingLanguageCompiler scalaProjectCompiler =
+      new PureScalaProgrammingLanguageCompiler();
+
+  private final ProgrammingLanguageCompiler javaProjectCompiler =
+      new EclipseProgrammingLanguageCompiler();
 
   /**
    * The file support to use.
@@ -100,9 +106,9 @@ public class StandardJavaJarCompiler implements JavaJarCompiler {
   private final FileSupport fileSupport = FileSupportImpl.INSTANCE;
 
   @Override
-  public void buildJar(File jarDestinationFile, File compilationFolder,
-      JavaProjectExtension extensions, ContainerInfo containerInfo, ProjectTaskContext context) {
-    JavaProjectType projectType = context.getProjectType();
+  public void buildJar(File jarDestinationFile, File compilationBuildFolder,
+      JvmProjectExtension extensions, ContainerInfo containerInfo, ProjectTaskContext context) {
+    JvmProjectType projectType = context.getProjectType();
 
     List<File> classpath = new ArrayList<>();
     projectType.getRuntimeClasspath(true, context, classpath, extensions,
@@ -110,22 +116,11 @@ public class StandardJavaJarCompiler implements JavaJarCompiler {
 
     Project project = context.getProject();
     File mainSourceDirectory =
-        fileSupport.newFile(project.getBaseDirectory(), JavaProjectType.SOURCE_MAIN_JAVA);
+        fileSupport.newFile(project.getBaseDirectory(), JvmProjectType.SOURCE_MAIN_JAVA);
     File generatedSourceDirectory =
-        fileSupport
-            .newFile(context.getBuildDirectory(), JavaProjectType.SOURCE_GENERATED_MAIN_JAVA);
+        fileSupport.newFile(context.getBuildDirectory(), JvmProjectType.SOURCE_GENERATED_MAIN_JAVA);
 
-    List<File> compilationFiles = new ArrayList<>();
-    projectCompiler.getCompilationFiles(mainSourceDirectory, compilationFiles);
-    projectCompiler.getCompilationFiles(generatedSourceDirectory, compilationFiles);
-
-    if (!project.getSources().isEmpty()) {
-      context.getLog().info(
-          String.format(
-              "Found %d files for main source directory %s and generated source directory",
-              compilationFiles.size(), mainSourceDirectory.getAbsolutePath(),
-              generatedSourceDirectory.getAbsolutePath()));
-    }
+    context.addSourceDirectories(mainSourceDirectory, generatedSourceDirectory);
 
     for (ContentProjectConstituent constituent : project.getSources()) {
       String sourceDirectory = constituent.getSourceDirectory();
@@ -136,35 +131,78 @@ public class StandardJavaJarCompiler implements JavaJarCompiler {
       }
       File addedSource = context.getProjectTargetFile(project.getBaseDirectory(), sourceDirectory);
 
-      List<File> additionalSources = new ArrayList<>();
-      projectCompiler.getCompilationFiles(addedSource, additionalSources);
-      compilationFiles.addAll(additionalSources);
-
-      context.getLog().info(
-          String.format("Found %d files in added source directory %s", additionalSources.size(),
-              addedSource.getAbsolutePath()));
+      context.addSourceDirectories(addedSource);
     }
+
+    List<File> compilationFiles = getCompilationFiles(context, scalaProjectCompiler);
 
     if (compilationFiles.isEmpty()) {
-      throw new SimpleSmartSpacesException("No Java source files for Java project");
+      throw new SimpleSmartSpacesException("No Scala or Java source files for Scala project");
     }
 
-    List<String> compilerOptions = projectCompiler.getCompilerOptions(context);
+    List<String> scalaCompilerOptions = scalaProjectCompiler.getCompilerOptions(context);
 
-    context.getLog().info(
-        String.format("Running the Java compiler with arguments %s", compilerOptions));
+    context.getLog()
+        .info(String.format("Running the Scala compiler with arguments %s", scalaCompilerOptions));
 
-    projectCompiler.compile(compilationFolder, classpath, compilationFiles, compilerOptions);
+    scalaProjectCompiler.compile(context, compilationBuildFolder, classpath, compilationFiles,
+        scalaCompilerOptions);
 
-    addStaticLinkDependencies(compilationFolder, context);
+    // The Scala compiler looked at both Scala and Java sources. Keep only the
+    // Java files.
+    List<File> javaSourceFiles =
+        fileSupport.filterFiles(compilationFiles, javaProjectCompiler.getSourceFileFilter());
 
-    createJarFile(project, jarDestinationFile, compilationFolder, classpath, containerInfo, context);
+    if (!javaSourceFiles.isEmpty()) {
+      List<File> javaClassPath = Lists.newArrayList();
+
+      // Classpath needs all compiled Scala classes if any
+      if (compilationFiles.size() > javaSourceFiles.size()) {
+        javaClassPath.add(compilationBuildFolder);
+      }
+      javaClassPath.addAll(classpath);
+
+      List<String> javaCompilerOptions = javaProjectCompiler.getCompilerOptions(context);
+
+      context.getLog()
+          .info(String.format("Running the Java compiler with arguments %s", javaCompilerOptions));
+      javaProjectCompiler.compile(context, compilationBuildFolder, javaClassPath, javaSourceFiles,
+          javaCompilerOptions);
+    }
+
+    addStaticLinkDependencies(compilationBuildFolder, context);
+
+    createJarFile(project, jarDestinationFile, compilationBuildFolder, classpath, containerInfo,
+        context);
 
     if (extensions != null) {
       extensions.postProcessJar(context, jarDestinationFile);
     }
 
     context.addArtifactToInclude(jarDestinationFile);
+  }
+
+  /**
+   * Get the compilation files for the given compiler.
+   * 
+   * @param context
+   *          the project context
+   * @param projectCompiler
+   *          the project compiler
+   */
+  private List<File> getCompilationFiles(ProjectTaskContext context,
+      ProgrammingLanguageCompiler projectCompiler) {
+    List<File> compilationFiles = new ArrayList<>();
+    int currentCount = 0;
+    for (File sourceDirectory : context.getSourceDirectories()) {
+      projectCompiler.getCompilationFiles(sourceDirectory, compilationFiles);
+
+      int newCount = compilationFiles.size();
+      context.getLog().info(String.format("Found %d files for source directory %s",
+          newCount - currentCount, sourceDirectory.getAbsolutePath()));
+      currentCount = newCount;
+    }
+    return compilationFiles;
   }
 
   /**
@@ -397,9 +435,8 @@ public class StandardJavaJarCompiler implements JavaJarCompiler {
         if (packageExports != null) {
           for (String packageExport : packageExports) {
             if (dependencyInfo.put(packageExport, associatedDependency) != null) {
-              context.getLog().warn(
-                  String.format("Package export %s found in multiple classpath entities",
-                      packageExport));
+              context.getLog().warn(String
+                  .format("Package export %s found in multiple classpath entities", packageExport));
             }
           }
         }

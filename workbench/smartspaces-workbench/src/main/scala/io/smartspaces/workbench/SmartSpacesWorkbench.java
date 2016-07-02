@@ -17,8 +17,20 @@
 
 package io.smartspaces.workbench;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.system.BasicSmartSpacesFilesystem;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesFilesystem;
@@ -42,16 +54,6 @@ import io.smartspaces.workbench.project.jdom.JdomProjectGroupTemplateSpecificati
 import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 import io.smartspaces.workbench.ui.UserInterfaceFactory;
 import io.smartspaces.workbench.ui.editor.swing.PlainSwingUserInterfaceFactory;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
-
-import java.io.File;
-import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A workbench for working with Smart Spaces Activity development.
@@ -186,7 +188,7 @@ public class SmartSpacesWorkbench {
   /**
    * Logger for the workbench.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Manager for creating project tasks.
@@ -215,7 +217,7 @@ public class SmartSpacesWorkbench {
       ClassLoader baseClassLoader) {
     this.spaceEnvironment = spaceEnvironment;
     this.baseClassLoader = baseClassLoader;
-    this.log = spaceEnvironment.getLog();
+    this.log = spaceEnvironment.getExtendedLog();
 
     workbenchConfig = spaceEnvironment.getSystemConfiguration();
     workbenchConfig.setValue(CONFIGURATION_PROPERTY_WORKBENCH_HOME, workbenchFileSystem
@@ -763,7 +765,7 @@ public class SmartSpacesWorkbench {
    *
    * @return the workbench logger
    */
-  public Log getLog() {
+  public ExtendedLog getLog() {
     return log;
   }
 

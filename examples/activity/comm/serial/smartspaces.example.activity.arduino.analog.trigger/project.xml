@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>Triggering Arduino Analog Sensor with Java Example</name>
   <description>
     A Java Activity that reads from an analog sensor on an Arduino board with serial

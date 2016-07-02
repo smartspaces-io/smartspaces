@@ -22,9 +22,9 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.builder.BaseProjectBuilder;
-import io.smartspaces.workbench.project.java.JavaJarCompiler;
-import io.smartspaces.workbench.project.java.ProjectJavaCompiler;
-import io.smartspaces.workbench.project.java.StandardJavaJarCompiler;
+import io.smartspaces.workbench.project.java.JvmJarAssembler;
+import io.smartspaces.workbench.project.java.ProgrammingLanguageCompiler;
+import io.smartspaces.workbench.project.java.StandardJvmJarAssembler;
 import io.smartspaces.workbench.project.test.IsolatedClassloaderJavaTestRunner;
 import io.smartspaces.workbench.project.test.JavaTestRunner;
 
@@ -45,7 +45,7 @@ public class JavaLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject
   /**
    * The compiler for Java JARs.
    */
-  private final JavaJarCompiler compiler = new StandardJavaJarCompiler();
+  private final JvmJarAssembler jarAssembler = new StandardJvmJarAssembler();
 
   /**
    * File support to use.
@@ -57,6 +57,7 @@ public class JavaLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject
       throws SmartSpacesException {
     File buildDirectory = context.getBuildDirectory();
     File compilationFolder = getOutputDirectory(buildDirectory);
+    
     File jarDestinationFile = getBuildDestinationFile(project, buildDirectory, JAR_FILE_EXTENSION);
 
     // The resources go to the compilation folder. They will then be in the
@@ -64,7 +65,7 @@ public class JavaLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject
     context.processGeneratedResources(compilationFolder);
     context.processResources(compilationFolder);
 
-    compiler.buildJar(jarDestinationFile, compilationFolder, null, project.getContainerInfo(),
+    jarAssembler.buildJar(jarDestinationFile, compilationFolder, null, project.getContainerInfo(),
         context);
     runTests(jarDestinationFile, context);
     context.addGeneratedArtifact(jarDestinationFile);
@@ -98,7 +99,7 @@ public class JavaLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject
    */
   private File getOutputDirectory(File buildDirectory) {
     File outputDirectory =
-        fileSupport.newFile(buildDirectory, ProjectJavaCompiler.BUILD_DIRECTORY_CLASSES_MAIN);
+        fileSupport.newFile(buildDirectory, ProgrammingLanguageCompiler.BUILD_DIRECTORY_CLASSES_MAIN);
     fileSupport.directoryExists(outputDirectory);
 
     return outputDirectory;

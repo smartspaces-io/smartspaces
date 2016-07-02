@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>Web Java Activity Example</name>
   <description>
     An example Java-based web activity that uses web sockets to communicate between the

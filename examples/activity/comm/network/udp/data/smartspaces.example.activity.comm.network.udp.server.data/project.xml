@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>UDP Server Data Example</name>
   <description>
     A Java Activity that starts up a UDP server, which responds to client calls with a

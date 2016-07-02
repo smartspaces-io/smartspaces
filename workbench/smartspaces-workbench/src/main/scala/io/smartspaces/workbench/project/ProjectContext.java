@@ -17,13 +17,12 @@
 
 package io.smartspaces.workbench.project;
 
+import java.io.File;
+
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.util.io.FileCollector;
 import io.smartspaces.workbench.project.activity.type.ProjectType;
 import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
-
-import java.io.File;
-
-import org.apache.commons.logging.Log;
 
 /**
  * Interface for managing a project context, used for creating or building.
@@ -89,5 +88,5 @@ public interface ProjectContext {
    *
    * @return the log
    */
-  Log getLog();
+  ExtendedLog getLog();
 }

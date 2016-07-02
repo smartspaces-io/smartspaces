@@ -23,8 +23,8 @@ import io.smartspaces.workbench.FreemarkerTemplater;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectDependency;
 import io.smartspaces.workbench.project.ProjectTaskContext;
-import io.smartspaces.workbench.project.java.JavaProjectExtension;
-import io.smartspaces.workbench.project.java.JavaProjectType;
+import io.smartspaces.workbench.project.java.JvmProjectExtension;
+import io.smartspaces.workbench.project.java.JvmProjectType;
 
 import com.google.common.collect.Lists;
 
@@ -44,39 +44,39 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
   /**
    * Freemarker context variable for libraries which are part of the project.
    */
-  private static final String FREEMARKER_CONTEXT_LIBS = "libs";
+  public static final String FREEMARKER_CONTEXT_LIBS = "libs";
 
   /**
    * Freemarker context variable for sources which are part of the project.
    */
-  private static final String FREEMARKER_CONTEXT_SOURCES = "srcs";
+  public static final String FREEMARKER_CONTEXT_SOURCES = "srcs";
 
   /**
    * Freemarker context variable for dynamic projects which are part of the
    * project.
    */
-  private static final String FREEMARKER_CONTEXT_DYNAMIC_PROJECTS = "dynamicProjects";
+  public static final String FREEMARKER_CONTEXT_DYNAMIC_PROJECTS = "dynamicProjects";
 
   /**
    * The location of the eclipse classpath template file.
    */
-  private static final String TEMPLATE_FILEPATH_ECLIPSE_CLASSPATH =
+  public static final String TEMPLATE_FILEPATH_ECLIPSE_CLASSPATH =
       "ide/eclipse/java-classpath.ftl";
 
   /**
    * The name of the Eclipse classpath file.
    */
-  private static final String FILENAME_CLASSPATH_FILE = ".classpath";
+  public static final String FILENAME_CLASSPATH_FILE = ".classpath";
 
   /**
    * The value for the Java builder in Eclipse.
    */
-  private static final String ECLIPSE_BUILDER_JAVA = "org.eclipse.jdt.core.javabuilder";
+  public static final String ECLIPSE_BUILDER_JAVA = "org.eclipse.jdt.core.javabuilder";
 
   /**
    * The value for the Java nature for an Eclipse project.
    */
-  private static final String ECLIPSE_NATURE_JAVA = "org.eclipse.jdt.core.javanature";
+  public static final String ECLIPSE_NATURE_JAVA = "org.eclipse.jdt.core.javanature";
 
   /**
    * List of required sources for the project.
@@ -94,7 +94,7 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
    * <p>
    * Can be {@code null}.
    */
-  private final JavaProjectExtension extensions;
+  private final JvmProjectExtension extensions;
 
   /**
    * The file support to use.
@@ -125,7 +125,7 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
    *          the extensions to use, can be {@code null}
    */
   public JavaEclipseIdeProjectCreatorSpecification(List<String> sourcesRequired,
-      List<String> sourcesOptional, JavaProjectExtension extensions) {
+      List<String> sourcesOptional, JvmProjectExtension extensions) {
     this.sourcesRequired = sourcesRequired;
     this.sourcesOptional = sourcesOptional;
     this.extensions = extensions;
@@ -141,7 +141,7 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
   @Override
   public void writeAdditionalFiles(Project project, ProjectTaskContext context,
       Map<String, Object> freemarkerContext, FreemarkerTemplater templater) throws Exception {
-    JavaProjectType projectType = context.getProjectType();
+    JvmProjectType projectType = context.getProjectType();
 
     List<Project> dynamicProjects = new ArrayList<>();
     for (ProjectDependency dependency : project.getDependencies()) {

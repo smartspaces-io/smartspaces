@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" builder="java">
+<project type="activity" language="java">
   <name>XBee IO Samples Endpoint Radio Example Activity</name>
   <description>
     This Java-based activity configures an XBee endpoint radio for IO sampling and sends

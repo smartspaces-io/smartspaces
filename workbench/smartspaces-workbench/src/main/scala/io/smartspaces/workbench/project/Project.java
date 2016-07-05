@@ -59,6 +59,11 @@ public abstract class Project {
    * The type of the project.
    */
   private String type;
+  
+  /**
+   * The platform for the project.
+   */
+  private String platform;
 
   /**
    * The identifying name of the project.
@@ -150,6 +155,25 @@ public abstract class Project {
    */
   public void setType(String type) {
     this.type = type;
+  }
+
+  /**
+   * Get the platform of the project.
+   *
+   * @return the platform
+   */
+  public String getPlatform() {
+    return platform;
+  }
+
+  /**
+   * Set the platform of the project.
+   *
+   * @param platform
+   *          the platform to set
+   */
+  public void setPlatform(String platform) {
+    this.platform = platform;
   }
 
   /**

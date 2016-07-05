@@ -14,47 +14,34 @@
  * the License.
  */
 
-package io.smartspaces.workbench.project.scala
+package io.smartspaces.workbench.language.scala
 
 import java.io.File
 import java.io.FileFilter
 import java.util.ArrayList
-
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 import scala.tools.nsc.Global
 import scala.tools.nsc.Settings
-
 import io.smartspaces.SmartSpacesException
 import io.smartspaces.util.io.FileSupport
 import io.smartspaces.util.io.FileSupportImpl
 import io.smartspaces.workbench.project.ProjectTaskContext
-import io.smartspaces.workbench.project.java.ProgrammingLanguageCompiler
+import io.smartspaces.workbench.language.ProgrammingLanguageCompiler
 
 /**
- * The Compiler for Scala projects.
+ * The Compiler for Scala projects that only runs the Scala compiler.
  *
  * @author Keith M. Hughes
  */
 class PureScalaProgrammingLanguageCompiler extends ProgrammingLanguageCompiler {
 
-  /**
-   * The file support to be used.
-   */
-  val fileSupport: FileSupport = FileSupportImpl.INSTANCE
-
-  /**
-   * A file filter for locating source files.
-   */
-  val sourceFileFilter = new FileFilter {
-    override def accept(file: File): Boolean = {
-      val fileName = file.getName
-      (fileName.endsWith(".scala") || fileName.endsWith(".java")) && !file.isHidden()
-    }
-  }
-
   override def compile(context: ProjectTaskContext, compilationBuildDirectory: File, classpath: java.util.List[File], compilationFiles: java.util.List[File],
     compilerOptions: java.util.List[String]): Unit = {
+
+    context.getLog()
+      .info(String.format("Running the Scala compiler with arguments %s", compilerOptions));
+
     def errorDisplay(s: String): Unit = {
       context.getLog().formatError("Error during scala compile: %s", s)
     }
@@ -74,17 +61,5 @@ class PureScalaProgrammingLanguageCompiler extends ProgrammingLanguageCompiler {
     val compiler = new Global(settings)
     val run = new compiler.Run
     run compile sourceFiles
-  }
-
-  override def getCompilerOptions(context: ProjectTaskContext): java.util.List[String] = {
-    new ArrayList[String]
-  }
-
-  override def getCompilationFiles(baseSourceDirectory: File, files: java.util.List[File]): Unit = {
-    files.addAll(fileSupport.collectFiles(baseSourceDirectory, sourceFileFilter, true))
-  }
-  
-  override def getSourceFileFilter(): FileFilter = {
-    sourceFileFilter
   }
 }

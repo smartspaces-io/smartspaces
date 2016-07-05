@@ -19,8 +19,9 @@ package io.smartspaces.workbench.project.assembly;
 
 import io.smartspaces.workbench.project.BaseProjectTemplate;
 import io.smartspaces.workbench.project.Project;
+import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.ProjectTemplate;
-import io.smartspaces.workbench.project.activity.type.ProjectType;
+import io.smartspaces.workbench.project.ProjectType;
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;
 import io.smartspaces.workbench.project.ide.NonJavaEclipseIdeProjectCreatorSpecification;
@@ -43,7 +44,7 @@ public class AssemblyProjectType implements ProjectType {
   }
 
   @Override
-  public ProjectBuilder newBuilder() {
+  public ProjectBuilder newBuilder(ProjectTaskContext projectTaskContext) {
     return new AssemblyProjectBuilder();
   }
 
@@ -53,7 +54,8 @@ public class AssemblyProjectType implements ProjectType {
   }
 
   @Override
-  public EclipseIdeProjectCreatorSpecification getEclipseIdeProjectCreatorSpecification() {
+  public EclipseIdeProjectCreatorSpecification
+      getEclipseIdeProjectCreatorSpecification(ProjectTaskContext projectTaskContext) {
     return new NonJavaEclipseIdeProjectCreatorSpecification();
   }
 }

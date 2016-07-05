@@ -15,14 +15,12 @@
  * the License.
  */
 
-package io.smartspaces.workbench.project.activity.type;
+package io.smartspaces.workbench.project;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.activity.ActivityProject;
-import io.smartspaces.workbench.project.activity.type.android.AndroidActivityProjectType;
-import io.smartspaces.workbench.project.activity.type.java.JavaActivityProjectType;
+import io.smartspaces.workbench.project.activity.type.ActivityProjectType;
 import io.smartspaces.workbench.project.assembly.AssemblyProject;
 import io.smartspaces.workbench.project.assembly.AssemblyProjectType;
 import io.smartspaces.workbench.project.group.GroupProjectType;
@@ -65,10 +63,7 @@ public class StandardProjectTypeRegistry implements ProjectTypeRegistry {
    * Create a basic registry for project types.
    */
   public StandardProjectTypeRegistry() {
-    registerProjectType(new JavaActivityProjectType());
-    registerProjectType(new AndroidActivityProjectType());
-    registerProjectType(new GenericActivityProjectType(SCRIPT_ACTIVITY_BUILDER_TYPE));
-    registerProjectType(new GenericActivityProjectType(NATIVE_ACTIVITY_BUILDER_TYPE));
+    registerProjectType(new ActivityProjectType());
     registerProjectType(new LibraryProjectType());
     registerProjectType(new AssemblyProjectType());
     registerProjectType(new GroupProjectType());
@@ -111,8 +106,8 @@ public class StandardProjectTypeRegistry implements ProjectTypeRegistry {
 
         return project;
       } catch (Exception e) {
-        throw new SimpleSmartSpacesException(String.format(
-            "Could not create project class with type name %s", typeName), e);
+        throw new SimpleSmartSpacesException(
+            String.format("Could not create project class with type name %s", typeName), e);
       }
     } else {
       throw new SimpleSmartSpacesException(String.format("Unknown project type name %s", typeName));

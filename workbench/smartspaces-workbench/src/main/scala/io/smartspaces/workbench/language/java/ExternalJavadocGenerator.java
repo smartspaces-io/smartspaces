@@ -15,11 +15,13 @@
  * the License.
  */
 
-package io.smartspaces.workbench.project.java;
+package io.smartspaces.workbench.language.java;
 
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.process.NativeApplicationDescription;
+import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
+import io.smartspaces.workbench.project.ProjectFileLayout;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 
@@ -78,22 +80,24 @@ public class ExternalJavadocGenerator implements JavadocGenerator {
 
   @Override
   public void generate(ProjectTaskContext context) {
+    ProgrammingLanguageSupport languageSupport =
+        context.getWorkbenchTaskContext().getWorkbench().getProgrammingLanguageRegistry()
+            .getProgrammingLanguageSupport(context.getProject().getLanguage());
+
     File docBuildFolder = fileSupport.newFile(context.getBuildDirectory(), "docs/html/javadoc");
     fileSupport.directoryExists(docBuildFolder);
     fileSupport.deleteDirectoryContents(docBuildFolder);
 
-    File classesFolder =
-        fileSupport.newFile(context.getBuildDirectory(),
-            ProgrammingLanguageCompiler.BUILD_DIRECTORY_CLASSES_MAIN);
+    File classesFolder = fileSupport.newFile(context.getBuildDirectory(),
+        ProjectFileLayout.BUILD_DIRECTORY_CLASSES_MAIN);
     WorkbenchTaskContext workbenchTaskContext = context.getWorkbenchTaskContext();
     if (!classesFolder.exists() || !classesFolder.isDirectory()) {
       workbenchTaskContext.handleError(String.format("Java class files folder %s does not exist",
           classesFolder.getAbsolutePath()));
     }
 
-    File sourcesFolder =
-        fileSupport.newFile(context.getProject().getBaseDirectory(),
-            JvmProjectType.SOURCE_MAIN_JAVA);
+    File sourcesFolder = fileSupport.newFile(context.getProject().getBaseDirectory(),
+        languageSupport.getMainSourceDirectory());
     if (!sourcesFolder.exists() || !sourcesFolder.isDirectory()) {
       workbenchTaskContext.handleError(String.format("Java source files folder %s does not exist",
           classesFolder.getAbsolutePath()));
@@ -111,9 +115,8 @@ public class ExternalJavadocGenerator implements JavadocGenerator {
     workbenchTaskContext.getNativeApplicationRunners().runNativeApplicationRunner(description,
         MAX_TIME_FOR_JAVADOC_RUN);
 
-    context.getLog().info(
-        String.format("Completed Javadoc build, Javadoc found in %s",
-            docBuildFolder.getAbsolutePath()));
+    context.getLog().info(String.format("Completed Javadoc build, Javadoc found in %s",
+        docBuildFolder.getAbsolutePath()));
   }
 
   /**

@@ -18,6 +18,7 @@
 package io.smartspaces.workbench.project.test;
 
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.java.JvmProjectExtension;
 
@@ -39,11 +40,12 @@ public interface JavaTestRunner {
    *          any Java extension added, can be {@code null}
    * @param context
    *          the build context for the project
+   * @param languageSupport
+   *          support for the language being used
    *
    * @throws SmartSpacesException
    *           the tests failed
    */
-      void
-      runTests(File jarDestinationFile, JvmProjectExtension extensions, ProjectTaskContext context)
-          throws SmartSpacesException;
+  void runTests(File jarDestinationFile, JvmProjectExtension extensions, ProjectTaskContext context,
+      ProgrammingLanguageSupport languageSupport) throws SmartSpacesException;
 }

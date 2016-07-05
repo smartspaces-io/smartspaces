@@ -15,13 +15,14 @@
  * the License.
  */
 
-package io.smartspaces.workbench.project.java;
+package io.smartspaces.workbench.language.java;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+import io.smartspaces.workbench.language.ProgrammingLanguageCompiler;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 
 import com.google.common.collect.Lists;
@@ -43,37 +44,12 @@ import javax.tools.StandardLocation;
  *
  * @author Keith M. Hughes
  */
-public class EclipseProgrammingLanguageCompiler implements ProgrammingLanguageCompiler {
-
-  /**
-   * The file extension for a Java source file.
-   */
-  private static final String FILE_EXTENSION_JAVA_SOURCE = ".java";
-
-  /**
-   * The Java compiler flag that specifies which version of the Java runtime the
-   * compiler should target.
-   */
-  private static final String JAVA_COMPILER_FLAG_TARGET_VERSION = "-target";
-
-  /**
-   * The Java compiler flag that specifies which version of Java source
-   * compatibility the compiler should insist on.
-   */
-  private static final String JAVA_COMPILER_FLAG_SOURCE_VERSION = "-source";
+public class EclipseJavaProgrammingLanguageCompiler implements ProgrammingLanguageCompiler {
 
   /**
    * The file support to use.
    */
   private final FileSupport fileSupport = FileSupportImpl.INSTANCE;
-
-  private final FileFilter sourceFileFilter = new FileFilter() {
-
-    @Override
-    public boolean accept(File file) {
-      return file.getName().endsWith(FILE_EXTENSION_JAVA_SOURCE) && !file.isHidden();
-    }
-  };
 
   @Override
   public void compile(ProjectTaskContext context, File compilationBuildDirectory,
@@ -102,39 +78,5 @@ public class EclipseProgrammingLanguageCompiler implements ProgrammingLanguageCo
     } finally {
       fileSupport.close(fileManager, false);
     }
-  }
-
-  @Override
-  public List<String> getCompilerOptions(ProjectTaskContext context) {
-    List<String> options = new ArrayList<>();
-
-    Configuration config = context.getProject().getConfiguration();
-
-    String javaVersion =
-        config.getPropertyString(CONFIGURATION_BUILDER_JAVA_VERSION, JAVA_VERSION_DEFAULT).trim();
-    options.add(JAVA_COMPILER_FLAG_SOURCE_VERSION);
-    options.add(javaVersion);
-    options.add(JAVA_COMPILER_FLAG_TARGET_VERSION);
-    options.add(javaVersion);
-
-    String extraOptions = config.getPropertyString(CONFIGURATION_BUILDER_JAVA_COMPILEFLAGS);
-    if (extraOptions != null) {
-      String[] optionComponents = extraOptions.trim().split("\\s+");
-      for (String optionComponent : optionComponents) {
-        options.add(optionComponent);
-      }
-    }
-
-    return options;
-  }
-
-  @Override
-  public void getCompilationFiles(File baseSourceDirectory, List<File> files) {
-    files.addAll(fileSupport.collectFiles(baseSourceDirectory, sourceFileFilter, true));
-  }
-
-  @Override
-  public FileFilter getSourceFileFilter() {
-    return sourceFileFilter;
   }
 }

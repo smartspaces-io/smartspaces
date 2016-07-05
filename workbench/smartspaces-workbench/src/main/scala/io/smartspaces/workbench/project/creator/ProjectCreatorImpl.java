@@ -22,7 +22,7 @@ import io.smartspaces.workbench.FreemarkerTemplater;
 import io.smartspaces.workbench.SmartSpacesWorkbench;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectTemplate;
-import io.smartspaces.workbench.project.activity.type.ProjectType;
+import io.smartspaces.workbench.project.ProjectType;
 import io.smartspaces.workbench.project.group.GroupProjectTemplate;
 import io.smartspaces.workbench.project.group.GroupProjectTemplateSpecification;
 

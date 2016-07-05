@@ -28,7 +28,7 @@ import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.util.io.FileCollector;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectContext;
-import io.smartspaces.workbench.project.activity.type.ProjectType;
+import io.smartspaces.workbench.project.ProjectType;
 import io.smartspaces.workbench.project.group.GroupProjectTemplateSpecification;
 import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 

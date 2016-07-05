@@ -17,6 +17,7 @@
 
 package io.smartspaces.workbench.project.java;
 
+import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 
 import java.io.File;
@@ -41,7 +42,10 @@ public interface JvmJarAssembler {
    *          any OSGi info for the build
    * @param context
    *          the context for building a project
+   * @param languageSupport
+   *          the language support for the language of the project
    */
-  void buildJar(File jarDestinationFile, File compilationBuildFolder, JvmProjectExtension extensions,
-      ContainerInfo containerInfo, ProjectTaskContext context);
+  void buildJar(File jarDestinationFile, File compilationBuildFolder,
+      JvmProjectExtension extensions, ContainerInfo containerInfo, ProjectTaskContext context,
+      ProgrammingLanguageSupport languageSupport);
 }

@@ -33,7 +33,6 @@ import io.smartspaces.util.io.CanonicalFileCollector;
 import io.smartspaces.util.io.FileCollector;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
-import io.smartspaces.workbench.project.activity.type.ProjectType;
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.constituent.ContentProjectConstituent;
 import io.smartspaces.workbench.project.constituent.ProjectConstituent;
@@ -183,7 +182,8 @@ public class ProjectTaskContext implements ProjectContext {
     configuration.setValue(ProjectBuilder.CONFIGURATION_PROPERTY_PROJECT_HOME,
         project.getBaseDirectory().getAbsolutePath());
     configuration.setValue(ProjectBuilder.CONFIGURATION_PROPERTY_PROJECT_GENERATED_RESOURCE,
-        fileSupport.newFile(buildDirectory, ProjectType.GENERATED_SOURCE_ROOT).getAbsolutePath());
+        fileSupport.newFile(buildDirectory, ProjectFileLayout.GENERATED_SOURCE_ROOT)
+            .getAbsolutePath());
   }
 
   @Override
@@ -417,7 +417,7 @@ public class ProjectTaskContext implements ProjectContext {
    */
   public void processGeneratedResources(File stagingDirectory) {
     File generatedResources =
-        fileSupport.newFile(getBuildDirectory(), ProjectType.SOURCE_GENERATED_MAIN_RESOURCES);
+        fileSupport.newFile(getBuildDirectory(), ProjectFileLayout.SOURCE_GENERATED_MAIN_RESOURCES);
     if (fileSupport.isDirectory(generatedResources)) {
       fileSupport.copyDirectory(generatedResources, stagingDirectory, true);
     }

@@ -22,8 +22,7 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectConfigurationProperty;
-import io.smartspaces.workbench.project.activity.type.ProjectType;
-import io.smartspaces.workbench.project.java.JvmProjectType;
+import io.smartspaces.workbench.project.ProjectFileLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,8 +43,8 @@ public class ActivityProject extends Project {
   /**
    * Folder where activities are stored.
    */
-  public static final String SRC_MAIN_RESOURCES_ACTIVITY = ProjectType.SOURCE_MAIN_RESOURCES
-      + "/activity";
+  public static final String SRC_MAIN_RESOURCES_ACTIVITY =
+      ProjectFileLayout.SOURCE_MAIN_RESOURCES + "/activity";
 
   /**
    * Activity XML file name.
@@ -201,15 +200,6 @@ public class ActivityProject extends Project {
   }
 
   /**
-   * Get the location of the source directory for activities.
-   *
-   * @return the location of the source directory for activities
-   */
-  public File getActivitySourceDirectory() {
-    return fileSupport.newFile(getBaseDirectory(), JvmProjectType.SOURCE_MAIN_JAVA);
-  }
-
-  /**
    * Get all extra configurations for the activity.
    *
    * @return all extra configurations for the activity
@@ -259,8 +249,8 @@ public class ActivityProject extends Project {
    * @param addConfigurationProperties
    *          the configuration properties for the activity
    */
-  public void addConfigurationProperties(
-      List<ProjectConfigurationProperty> addConfigurationProperties) {
+  public void
+      addConfigurationProperties(List<ProjectConfigurationProperty> addConfigurationProperties) {
     configurationProperties.addAll(addConfigurationProperties);
   }
 

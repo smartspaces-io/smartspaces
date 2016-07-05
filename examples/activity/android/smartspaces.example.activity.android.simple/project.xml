@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" language="android">
+<project type="activity" language="java" platform="android">
     <name>Simple Android Activity Example</name>
     <description>
 A very simple Android-based activity which just logs at INFO level its

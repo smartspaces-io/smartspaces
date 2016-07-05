@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,23 +14,9 @@
  * the License.
  */
 
-package io.smartspaces.workbench.project.java;
-
-import io.smartspaces.workbench.project.ProjectTaskContext;
-
 /**
- * A generator for Javadoc.
- *
+ * Support for the Scala programming language.
+ * 
  * @author Keith M. Hughes
  */
-public interface JavadocGenerator {
-
-  /**
-   * Generate the Javadoc.
-   *
-   * @param context
-   *          the project context
-   */
-  void generate(ProjectTaskContext context);
-
-}
+package io.smartspaces.workbench.language.scala;

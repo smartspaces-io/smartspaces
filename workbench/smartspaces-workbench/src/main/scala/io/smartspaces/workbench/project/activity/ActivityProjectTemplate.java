@@ -19,9 +19,9 @@ package io.smartspaces.workbench.project.activity;
 
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.BaseProjectTemplate;
 import io.smartspaces.workbench.project.creator.ProjectCreationContext;
-import io.smartspaces.workbench.project.java.JvmProjectType;
 
 import java.io.File;
 
@@ -51,8 +51,12 @@ public class ActivityProjectTemplate extends BaseProjectTemplate {
    * @return the source directory for activity sources
    */
   public File getActivitySourceDirectory(ProjectCreationContext context) {
+    ProgrammingLanguageSupport languageSupport =
+        context.getWorkbenchTaskContext().getWorkbench().getProgrammingLanguageRegistry()
+            .getProgrammingLanguageSupport(context.getProject().getLanguage());
+
     return fileSupport.newFile(context.getProject().getBaseDirectory(),
-        JvmProjectType.SOURCE_MAIN_JAVA);
+        languageSupport.getMainSourceDirectory());
   }
 
   /**

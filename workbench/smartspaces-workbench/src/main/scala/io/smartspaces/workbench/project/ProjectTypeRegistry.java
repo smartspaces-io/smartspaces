@@ -15,10 +15,9 @@
  * the License.
  */
 
-package io.smartspaces.workbench.project.activity.type;
+package io.smartspaces.workbench.project;
 
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.activity.ActivityProject;
 import io.smartspaces.workbench.project.library.LibraryProject;
 

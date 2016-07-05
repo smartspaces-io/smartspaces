@@ -15,15 +15,13 @@
  * the License.
  */
 
-package io.smartspaces.workbench.project.activity.type;
+package io.smartspaces.workbench.project;
 
-import io.smartspaces.workbench.project.Project;
-import io.smartspaces.workbench.project.ProjectTemplate;
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;
 
 /**
- * An activity project type.
+ * A project type.
  *
  * <p>
  * This gives the builders, creators, etc for project types.
@@ -31,21 +29,6 @@ import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecificatio
  * @author Keith M. Hughes
  */
 public interface ProjectType {
-
-  /**
-   * Root location for generated source.
-   */
-  String GENERATED_SOURCE_ROOT = "generated-src";
-
-  /**
-   * Source location for the resource source files.
-   */
-  String SOURCE_MAIN_RESOURCES = "src/main/resources";
-
-  /**
-   * Source location for generated resource source files.
-   */
-  String SOURCE_GENERATED_MAIN_RESOURCES = GENERATED_SOURCE_ROOT + "/main/resources";
 
   /**
    * Get the project type name for this project types.
@@ -66,10 +49,13 @@ public interface ProjectType {
 
   /**
    * Get an activity builder for the project type.
+   * 
+   * @param projectTaskContext
+   *          the context for project tasks
    *
    * @return an activity builder
    */
-  ProjectBuilder newBuilder();
+  ProjectBuilder newBuilder(ProjectTaskContext projectTaskContext);
 
   /**
    * Get a new project template for the project type.
@@ -80,8 +66,12 @@ public interface ProjectType {
 
   /**
    * Get the specification for Eclipse project building.
+   * 
+   * @param projectTaskContext
+   *          the context for the project task
    *
    * @return the specification for Eclipse project building
    */
-  EclipseIdeProjectCreatorSpecification getEclipseIdeProjectCreatorSpecification();
+  EclipseIdeProjectCreatorSpecification
+      getEclipseIdeProjectCreatorSpecification(ProjectTaskContext projectTaskContext);
 }

@@ -29,7 +29,7 @@ class SimpleScalaRoutableOutputActivity extends BaseRoutableActivity {
 
   override def onActivityActivate(): Unit = {
     val message: Map[String, Object] = Maps.newHashMap()
-    message.put("message", "yipee! activated!");\
+    message.put("message", "yipee! activated!")
     sendOutputMessage("output1", message)
   }
 

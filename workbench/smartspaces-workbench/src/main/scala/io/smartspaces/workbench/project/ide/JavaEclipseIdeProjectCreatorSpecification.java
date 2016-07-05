@@ -24,7 +24,8 @@ import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectDependency;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.java.JvmProjectExtension;
-import io.smartspaces.workbench.project.java.JvmProjectType;
+import io.smartspaces.workbench.project.java.JvmProjectSupport;
+import io.smartspaces.workbench.project.java.StandardJvmProjectSupport;
 
 import com.google.common.collect.Lists;
 
@@ -95,6 +96,12 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
    * Can be {@code null}.
    */
   private final JvmProjectExtension extensions;
+  
+
+  /**
+   * The project support for this item.
+   */
+  private JvmProjectSupport projectSupport = new StandardJvmProjectSupport();
 
   /**
    * The file support to use.
@@ -141,9 +148,7 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
   @Override
   public void writeAdditionalFiles(Project project, ProjectTaskContext context,
       Map<String, Object> freemarkerContext, FreemarkerTemplater templater) throws Exception {
-    JvmProjectType projectType = context.getProjectType();
-
-    List<Project> dynamicProjects = new ArrayList<>();
+     List<Project> dynamicProjects = new ArrayList<>();
     for (ProjectDependency dependency : project.getDependencies()) {
       if (dependency.isDynamic()) {
         Project dependencyProject =
@@ -155,7 +160,7 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
     }
 
     List<File> projectLibs = new ArrayList<>();
-    projectType.getProjectClasspath(false, context, projectLibs, extensions,
+    projectSupport.getProjectClasspath(false, context, projectLibs, extensions,
         context.getWorkbenchTaskContext());
 
     List<String> sources = Lists.newArrayList(sourcesRequired);

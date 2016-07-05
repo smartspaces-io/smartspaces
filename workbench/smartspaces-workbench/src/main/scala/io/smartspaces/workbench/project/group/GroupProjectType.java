@@ -18,8 +18,9 @@
 package io.smartspaces.workbench.project.group;
 
 import io.smartspaces.workbench.project.Project;
+import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.ProjectTemplate;
-import io.smartspaces.workbench.project.activity.type.ProjectType;
+import io.smartspaces.workbench.project.ProjectType;
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;
 import io.smartspaces.workbench.project.ide.NonJavaEclipseIdeProjectCreatorSpecification;
@@ -43,7 +44,7 @@ public class GroupProjectType implements ProjectType {
   }
 
   @Override
-  public ProjectBuilder newBuilder() {
+  public ProjectBuilder newBuilder(ProjectTaskContext projectTaskContext) {
     return null; // new GroupProjectBuilder();
   }
 
@@ -53,7 +54,8 @@ public class GroupProjectType implements ProjectType {
   }
 
   @Override
-  public EclipseIdeProjectCreatorSpecification getEclipseIdeProjectCreatorSpecification() {
+  public EclipseIdeProjectCreatorSpecification
+      getEclipseIdeProjectCreatorSpecification(ProjectTaskContext projectTaskContext) {
     return new NonJavaEclipseIdeProjectCreatorSpecification();
   }
 }

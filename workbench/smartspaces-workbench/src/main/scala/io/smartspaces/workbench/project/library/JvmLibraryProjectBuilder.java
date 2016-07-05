@@ -20,10 +20,11 @@ package io.smartspaces.workbench.project.library;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
+import io.smartspaces.workbench.project.ProjectFileLayout;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.builder.BaseProjectBuilder;
 import io.smartspaces.workbench.project.java.JvmJarAssembler;
-import io.smartspaces.workbench.project.java.ProgrammingLanguageCompiler;
 import io.smartspaces.workbench.project.java.StandardJvmJarAssembler;
 import io.smartspaces.workbench.project.test.IsolatedClassloaderJavaTestRunner;
 import io.smartspaces.workbench.project.test.JavaTestRunner;
@@ -31,11 +32,11 @@ import io.smartspaces.workbench.project.test.JavaTestRunner;
 import java.io.File;
 
 /**
- * A Java library project builder.
+ * A JVM library project builder.
  *
  * @author Keith M. Hughes
  */
-public class JavaLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject> {
+public class JvmLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject> {
 
   /**
    * File extension to give the build artifact.
@@ -55,9 +56,14 @@ public class JavaLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject
   @Override
   public void build(LibraryProject project, ProjectTaskContext context)
       throws SmartSpacesException {
+
+    ProgrammingLanguageSupport languageSupport =
+        context.getWorkbenchTaskContext().getWorkbench().getProgrammingLanguageRegistry()
+            .getProgrammingLanguageSupport(context.getProject().getLanguage());
+
     File buildDirectory = context.getBuildDirectory();
     File compilationFolder = getOutputDirectory(buildDirectory);
-    
+
     File jarDestinationFile = getBuildDestinationFile(project, buildDirectory, JAR_FILE_EXTENSION);
 
     // The resources go to the compilation folder. They will then be in the
@@ -66,8 +72,8 @@ public class JavaLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject
     context.processResources(compilationFolder);
 
     jarAssembler.buildJar(jarDestinationFile, compilationFolder, null, project.getContainerInfo(),
-        context);
-    runTests(jarDestinationFile, context);
+        context, languageSupport);
+    runTests(jarDestinationFile, context, languageSupport);
     context.addGeneratedArtifact(jarDestinationFile);
   }
 
@@ -78,15 +84,17 @@ public class JavaLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject
    *          the destination file for the built project
    * @param context
    *          the project build context
+   * @param languageSupport
+   *          support for the implementation language
    *
    * @throws SmartSpacesException
    *           the tests failed
    */
-  private void runTests(File jarDestinationFile, ProjectTaskContext context)
-      throws SmartSpacesException {
+  private void runTests(File jarDestinationFile, ProjectTaskContext context,
+      ProgrammingLanguageSupport languageSupport) throws SmartSpacesException {
     JavaTestRunner runner = new IsolatedClassloaderJavaTestRunner();
 
-    runner.runTests(jarDestinationFile, null, context);
+    runner.runTests(jarDestinationFile, null, context, languageSupport);
   }
 
   /**
@@ -99,7 +107,7 @@ public class JavaLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject
    */
   private File getOutputDirectory(File buildDirectory) {
     File outputDirectory =
-        fileSupport.newFile(buildDirectory, ProgrammingLanguageCompiler.BUILD_DIRECTORY_CLASSES_MAIN);
+        fileSupport.newFile(buildDirectory, ProjectFileLayout.BUILD_DIRECTORY_CLASSES_MAIN);
     fileSupport.directoryExists(outputDirectory);
 
     return outputDirectory;

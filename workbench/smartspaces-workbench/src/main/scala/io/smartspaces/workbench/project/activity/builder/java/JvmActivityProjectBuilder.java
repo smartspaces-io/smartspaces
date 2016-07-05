@@ -21,6 +21,8 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
+import io.smartspaces.workbench.project.ProjectFileLayout;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.activity.ActivityProject;
 import io.smartspaces.workbench.project.activity.builder.BaseActivityProjectBuilder;
@@ -28,7 +30,6 @@ import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.java.ContainerInfo;
 import io.smartspaces.workbench.project.java.JvmJarAssembler;
 import io.smartspaces.workbench.project.java.JvmProjectExtension;
-import io.smartspaces.workbench.project.java.ProgrammingLanguageCompiler;
 import io.smartspaces.workbench.project.java.StandardJvmJarAssembler;
 import io.smartspaces.workbench.project.test.IsolatedClassloaderJavaTestRunner;
 import io.smartspaces.workbench.project.test.JavaTestRunner;
@@ -40,7 +41,7 @@ import java.io.File;
  *
  * @author Keith M. Hughes
  */
-public class JavaActivityProjectBuilder extends BaseActivityProjectBuilder {
+public class JvmActivityProjectBuilder extends BaseActivityProjectBuilder {
 
   /**
    * The separator between Java package path elements.
@@ -75,7 +76,7 @@ public class JavaActivityProjectBuilder extends BaseActivityProjectBuilder {
   /**
    * Construct a builder with no extensions.
    */
-  public JavaActivityProjectBuilder() {
+  public JvmActivityProjectBuilder() {
     this(null);
   }
 
@@ -85,7 +86,7 @@ public class JavaActivityProjectBuilder extends BaseActivityProjectBuilder {
    * @param extensions
    *          the extensions to use, can be {@code null}
    */
-  public JavaActivityProjectBuilder(JvmProjectExtension extensions) {
+  public JvmActivityProjectBuilder(JvmProjectExtension extensions) {
     this.extensions = extensions;
   }
 
@@ -101,11 +102,16 @@ public class JavaActivityProjectBuilder extends BaseActivityProjectBuilder {
     ContainerInfo containerInfo = new ContainerInfo();
     addActivityContainerInformation(project, containerInfo);
 
-    jarAssembler.buildJar(jarDestinationFile, compilationDirectory, extensions, containerInfo, context);
+    ProgrammingLanguageSupport languageSupport =
+        context.getWorkbenchTaskContext().getWorkbench().getProgrammingLanguageRegistry()
+            .getProgrammingLanguageSupport(context.getProject().getLanguage());
+
+    jarAssembler.buildJar(jarDestinationFile, compilationDirectory, extensions, containerInfo,
+        context, languageSupport);
 
     checkForActivityClassExistence(project, compilationDirectory);
 
-    runTests(jarDestinationFile, context);
+    runTests(jarDestinationFile, context, languageSupport);
   }
 
   /**
@@ -116,8 +122,8 @@ public class JavaActivityProjectBuilder extends BaseActivityProjectBuilder {
    * @param containerInfo
    *          the container info to modify
    */
-  private void
-      addActivityContainerInformation(ActivityProject project, ContainerInfo containerInfo) {
+  private void addActivityContainerInformation(ActivityProject project,
+      ContainerInfo containerInfo) {
     String activityClass = project.getActivityClass();
     if (activityClass == null || activityClass.trim().isEmpty()) {
       throw new SimpleSmartSpacesException(
@@ -165,15 +171,17 @@ public class JavaActivityProjectBuilder extends BaseActivityProjectBuilder {
    *          the destination file for the built project
    * @param context
    *          the project build context
+   * @param languageSupport
+   *          support for the programming language
    *
    * @throws SmartSpacesException
    *           the tests failed
    */
-  private void runTests(File jarDestinationFile, ProjectTaskContext context)
-      throws SmartSpacesException {
+  private void runTests(File jarDestinationFile, ProjectTaskContext context,
+      ProgrammingLanguageSupport languageSupport) throws SmartSpacesException {
     JavaTestRunner runner = new IsolatedClassloaderJavaTestRunner();
 
-    runner.runTests(jarDestinationFile, extensions, context);
+    runner.runTests(jarDestinationFile, extensions, context, languageSupport);
   }
 
   /**
@@ -186,7 +194,7 @@ public class JavaActivityProjectBuilder extends BaseActivityProjectBuilder {
    */
   private File getCompilationOutputDirectory(File buildDirectory) {
     File outputDirectory =
-        fileSupport.newFile(buildDirectory, ProgrammingLanguageCompiler.BUILD_DIRECTORY_CLASSES_MAIN);
+        fileSupport.newFile(buildDirectory, ProjectFileLayout.BUILD_DIRECTORY_CLASSES_MAIN);
     fileSupport.directoryExists(outputDirectory);
 
     return outputDirectory;

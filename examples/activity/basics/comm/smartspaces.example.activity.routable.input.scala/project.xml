@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" language="java">
+<project type="activity" language="scala">
   <name>Routable Input Scala Example</name>
   <description>
     An example of reading from a route in Scala.

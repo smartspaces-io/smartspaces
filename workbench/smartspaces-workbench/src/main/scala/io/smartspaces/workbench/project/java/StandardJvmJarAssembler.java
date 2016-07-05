@@ -22,6 +22,8 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.resource.Version;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+import io.smartspaces.workbench.language.ProgrammingLanguageCompiler;
+import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectDependency;
 import io.smartspaces.workbench.project.ProjectDependency.ProjectDependencyLinking;
@@ -29,13 +31,11 @@ import io.smartspaces.workbench.project.ProjectDependencyProvider;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.constituent.ContentProjectConstituent;
 import io.smartspaces.workbench.project.java.ContainerInfo.ImportPackage;
-import io.smartspaces.workbench.project.scala.PureScalaProgrammingLanguageCompiler;
 
 import aQute.lib.osgi.Analyzer;
 import aQute.lib.osgi.Constants;
 import aQute.lib.osgi.Jar;
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
 
 import java.io.File;
@@ -92,33 +92,29 @@ public class StandardJvmJarAssembler implements JvmJarAssembler {
   public static final int IO_BUFFER_SIZE = 1024;
 
   /**
-   * The java compiler to use for the project.
-   */
-  private final ProgrammingLanguageCompiler scalaProjectCompiler =
-      new PureScalaProgrammingLanguageCompiler();
-
-  private final ProgrammingLanguageCompiler javaProjectCompiler =
-      new EclipseProgrammingLanguageCompiler();
-
-  /**
    * The file support to use.
    */
   private final FileSupport fileSupport = FileSupportImpl.INSTANCE;
 
+  /**
+   * The project support for this item.
+   */
+  private JvmProjectSupport projectSupport = new StandardJvmProjectSupport();
+
   @Override
   public void buildJar(File jarDestinationFile, File compilationBuildFolder,
-      JvmProjectExtension extensions, ContainerInfo containerInfo, ProjectTaskContext context) {
-    JvmProjectType projectType = context.getProjectType();
+      JvmProjectExtension extensions, ContainerInfo containerInfo, ProjectTaskContext context,
+      ProgrammingLanguageSupport languageSupport) {
 
     List<File> classpath = new ArrayList<>();
-    projectType.getRuntimeClasspath(true, context, classpath, extensions,
+    projectSupport.getRuntimeClasspath(true, context, classpath, extensions,
         context.getWorkbenchTaskContext());
 
     Project project = context.getProject();
     File mainSourceDirectory =
-        fileSupport.newFile(project.getBaseDirectory(), JvmProjectType.SOURCE_MAIN_JAVA);
-    File generatedSourceDirectory =
-        fileSupport.newFile(context.getBuildDirectory(), JvmProjectType.SOURCE_GENERATED_MAIN_JAVA);
+        fileSupport.newFile(project.getBaseDirectory(), languageSupport.getMainSourceDirectory());
+    File generatedSourceDirectory = fileSupport.newFile(context.getBuildDirectory(),
+        languageSupport.getMainGeneratedSourceDirectory());
 
     context.addSourceDirectories(mainSourceDirectory, generatedSourceDirectory);
 
@@ -134,41 +130,15 @@ public class StandardJvmJarAssembler implements JvmJarAssembler {
       context.addSourceDirectories(addedSource);
     }
 
-    List<File> compilationFiles = getCompilationFiles(context, scalaProjectCompiler);
+    List<File> compilationFiles = getCompilationFiles(context, languageSupport);
 
     if (compilationFiles.isEmpty()) {
       throw new SimpleSmartSpacesException("No Scala or Java source files for Scala project");
     }
 
-    List<String> scalaCompilerOptions = scalaProjectCompiler.getCompilerOptions(context);
-
-    context.getLog()
-        .info(String.format("Running the Scala compiler with arguments %s", scalaCompilerOptions));
-
-    scalaProjectCompiler.compile(context, compilationBuildFolder, classpath, compilationFiles,
-        scalaCompilerOptions);
-
-    // The Scala compiler looked at both Scala and Java sources. Keep only the
-    // Java files.
-    List<File> javaSourceFiles =
-        fileSupport.filterFiles(compilationFiles, javaProjectCompiler.getSourceFileFilter());
-
-    if (!javaSourceFiles.isEmpty()) {
-      List<File> javaClassPath = Lists.newArrayList();
-
-      // Classpath needs all compiled Scala classes if any
-      if (compilationFiles.size() > javaSourceFiles.size()) {
-        javaClassPath.add(compilationBuildFolder);
-      }
-      javaClassPath.addAll(classpath);
-
-      List<String> javaCompilerOptions = javaProjectCompiler.getCompilerOptions(context);
-
-      context.getLog()
-          .info(String.format("Running the Java compiler with arguments %s", javaCompilerOptions));
-      javaProjectCompiler.compile(context, compilationBuildFolder, javaClassPath, javaSourceFiles,
-          javaCompilerOptions);
-    }
+    ProgrammingLanguageCompiler compiler = languageSupport.newCompiler();
+    compiler.compile(context, compilationBuildFolder, classpath, compilationFiles,
+        languageSupport.getCompilerOptions(context));
 
     addStaticLinkDependencies(compilationBuildFolder, context);
 
@@ -187,15 +157,15 @@ public class StandardJvmJarAssembler implements JvmJarAssembler {
    * 
    * @param context
    *          the project context
-   * @param projectCompiler
-   *          the project compiler
+   * @param languageSupport
+   *          the language support
    */
   private List<File> getCompilationFiles(ProjectTaskContext context,
-      ProgrammingLanguageCompiler projectCompiler) {
+      ProgrammingLanguageSupport languageSupport) {
     List<File> compilationFiles = new ArrayList<>();
     int currentCount = 0;
     for (File sourceDirectory : context.getSourceDirectories()) {
-      projectCompiler.getCompilationFiles(sourceDirectory, compilationFiles);
+      languageSupport.getCompilationFiles(sourceDirectory, compilationFiles);
 
       int newCount = compilationFiles.size();
       context.getLog().info(String.format("Found %d files for source directory %s",

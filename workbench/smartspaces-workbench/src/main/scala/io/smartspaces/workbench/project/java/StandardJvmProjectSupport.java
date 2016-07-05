@@ -28,7 +28,6 @@ import io.smartspaces.workbench.project.FileProjectDependencyProvider;
 import io.smartspaces.workbench.project.ProjectDependency;
 import io.smartspaces.workbench.project.ProjectDependency.ProjectDependencyLinking;
 import io.smartspaces.workbench.project.ProjectTaskContext;
-import io.smartspaces.workbench.project.activity.type.ProjectType;
 import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 
 import com.google.common.base.Joiner;
@@ -46,20 +45,7 @@ import java.util.Set;
  *
  * @author Keith M. Hughes
  */
-public abstract class JvmProjectType implements ProjectType {
-
-  /**
-   * The configuration name for the project bootstrap classpath.
-   */
-  public static final String CONFIGURATION_NAME_PROJECT_CLASSPATH_BOOTSTRAP =
-      "project.classpath.bootstrap";
-
-  /**
-   * The configuration name for the project additional (non-bootstrap)
-   * classpath.
-   */
-  public static final String CONFIGURATION_NAME_PROJECT_CLASSPATH_ADDITIONS =
-      "project.classpath.additions";
+public class StandardJvmProjectSupport implements JvmProjectSupport  {
 
   /**
    * A joiner for creating classpaths.
@@ -71,52 +57,7 @@ public abstract class JvmProjectType implements ProjectType {
    */
   private FileSupport fileSupport = FileSupportImpl.INSTANCE;
 
-  /**
-   * Source location for the Java source files.
-   */
-  public static final String SOURCE_MAIN_JAVA = "src/main/java";
-
-  /**
-   * Source location for tests.
-   */
-  public static final String SOURCE_MAIN_TESTS = "src/test/java";
-
-  /**
-   * Source location for test resources.
-   */
-  public static final String SOURCE_MAIN_TEST_RESOURCES = "src/test/resources";
-
-  /**
-   * Source location for the generated Java source files.
-   */
-  public static final String SOURCE_GENERATED_MAIN_JAVA =
-      ProjectType.GENERATED_SOURCE_ROOT + "/main/java";
-
-  /**
-   * Source location for generated tests.
-   */
-  public static final String SOURCE_GENERATED_MAIN_TESTS =
-      ProjectType.GENERATED_SOURCE_ROOT + "/test/java";
-
-  /**
-   * The extras component for testing support.
-   */
-  public static final String TESTING_EXTRAS_COMPONENT = "testing";
-
-  /**
-   * Get a classpath that would be used at runtime for the project.
-   *
-   * @param needsDynamicArtifacts
-   *          {@code true} if needs artifacts from the dynamic projects
-   * @param projectTaskContext
-   *          the project build context
-   * @param classpath
-   *          the classpath list to add to
-   * @param extension
-   *          any Java extension, can be {@code null}
-   * @param workbenchTaskContext
-   *          the workbench task context
-   */
+  @Override
   public void getRuntimeClasspath(boolean needsDynamicArtifacts,
       ProjectTaskContext projectTaskContext, List<File> classpath, JvmProjectExtension extension,
       WorkbenchTaskContext workbenchTaskContext) {
@@ -153,6 +94,17 @@ public abstract class JvmProjectType implements ProjectType {
 
     addClasspathConfiguration(classpathAdditions, CONFIGURATION_NAME_PROJECT_CLASSPATH_ADDITIONS,
         projectTaskContext);
+  }
+
+  @Override
+  public void getProjectClasspath(boolean needsDynamicArtifacts,
+      ProjectTaskContext projectTaskContext, List<File> classpath, JvmProjectExtension extension,
+      WorkbenchTaskContext wokbenchTaskContext) {
+    getRuntimeClasspath(needsDynamicArtifacts, projectTaskContext, classpath, extension,
+        wokbenchTaskContext);
+
+    projectTaskContext.getWorkbenchTaskContext().addExtrasControllerExtensionsClasspath(classpath,
+        TESTING_EXTRAS_COMPONENT);
   }
 
   /**
@@ -256,32 +208,5 @@ public abstract class JvmProjectType implements ProjectType {
             dependency.getIdentifyingName(), dependency.getVersion());
       }
     }
-  }
-
-  /**
-   * Get a classpath that would be used as part of the project for the project.
-   *
-   * <p>
-   * This includes runtime classes.
-   *
-   * @param needsDynamicArtifacts
-   *          {@code true} if needs artifacts from the dynamic projects
-   * @param projectTaskContext
-   *          the project build context
-   * @param classpath
-   *          the classpath to add to
-   * @param extension
-   *          any Java extension, can be {@code null}
-   * @param wokbenchTaskContext
-   *          the workbench task context
-   */
-  public void getProjectClasspath(boolean needsDynamicArtifacts,
-      ProjectTaskContext projectTaskContext, List<File> classpath, JvmProjectExtension extension,
-      WorkbenchTaskContext wokbenchTaskContext) {
-    getRuntimeClasspath(needsDynamicArtifacts, projectTaskContext, classpath, extension,
-        wokbenchTaskContext);
-
-    projectTaskContext.getWorkbenchTaskContext().addExtrasControllerExtensionsClasspath(classpath,
-        TESTING_EXTRAS_COMPONENT);
   }
 }

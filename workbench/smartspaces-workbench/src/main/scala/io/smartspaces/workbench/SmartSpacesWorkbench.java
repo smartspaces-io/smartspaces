@@ -17,17 +17,6 @@
 
 package io.smartspaces.workbench;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.logging.ExtendedLog;
@@ -36,14 +25,18 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesFilesystem;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+import io.smartspaces.workbench.language.ProgrammingLanguageRegistry;
+import io.smartspaces.workbench.language.StandardProgrammingLanguageRegistry;
+import io.smartspaces.workbench.language.java.JavaProgrammingLanguageSupport;
+import io.smartspaces.workbench.language.scala.ScalaProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectManager;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.ProjectTaskManager;
+import io.smartspaces.workbench.project.ProjectTypeRegistry;
 import io.smartspaces.workbench.project.StandardProjectManager;
 import io.smartspaces.workbench.project.StandardProjectTaskManager;
-import io.smartspaces.workbench.project.activity.type.ProjectTypeRegistry;
-import io.smartspaces.workbench.project.activity.type.StandardProjectTypeRegistry;
+import io.smartspaces.workbench.project.StandardProjectTypeRegistry;
 import io.smartspaces.workbench.project.creator.ProjectCreationContext;
 import io.smartspaces.workbench.project.creator.ProjectCreator;
 import io.smartspaces.workbench.project.creator.ProjectCreatorImpl;
@@ -54,6 +47,15 @@ import io.smartspaces.workbench.project.jdom.JdomProjectGroupTemplateSpecificati
 import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 import io.smartspaces.workbench.ui.UserInterfaceFactory;
 import io.smartspaces.workbench.ui.editor.swing.PlainSwingUserInterfaceFactory;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A workbench for working with Smart Spaces Activity development.
@@ -85,8 +87,7 @@ public class SmartSpacesWorkbench {
   /**
    * The directory from where the workbench was invoked.
    */
-  public static final String CONFIGURATION_PROPERTY_SMARTSPACES_RUNDIR =
-      "smartspaces.rundir";
+  public static final String CONFIGURATION_PROPERTY_SMARTSPACES_RUNDIR = "smartspaces.rundir";
 
   /**
    * Configuration property defining the workbench home directory.
@@ -167,8 +168,8 @@ public class SmartSpacesWorkbench {
   /**
    * File system for the workbench.
    */
-  private final SmartSpacesFilesystem workbenchFileSystem = new BasicSmartSpacesFilesystem(
-      new File(".").getAbsoluteFile().getParentFile());
+  private final SmartSpacesFilesystem workbenchFileSystem =
+      new BasicSmartSpacesFilesystem(new File(".").getAbsoluteFile().getParentFile());
 
   /**
    * The user interface factory to be used by the workbench.
@@ -206,6 +207,11 @@ public class SmartSpacesWorkbench {
   private File runDirectory;
 
   /**
+   * The registry for programming languages.
+   */
+  private ProgrammingLanguageRegistry programmingLanguageRegistry;
+
+  /**
    * Construct a workbench.
    *
    * @param spaceEnvironment
@@ -220,8 +226,8 @@ public class SmartSpacesWorkbench {
     this.log = spaceEnvironment.getExtendedLog();
 
     workbenchConfig = spaceEnvironment.getSystemConfiguration();
-    workbenchConfig.setValue(CONFIGURATION_PROPERTY_WORKBENCH_HOME, workbenchFileSystem
-        .getInstallDirectory().getAbsolutePath());
+    workbenchConfig.setValue(CONFIGURATION_PROPERTY_WORKBENCH_HOME,
+        workbenchFileSystem.getInstallDirectory().getAbsolutePath());
 
     String runDirPath =
         workbenchConfig.getPropertyString(CONFIGURATION_PROPERTY_SMARTSPACES_RUNDIR);
@@ -238,6 +244,11 @@ public class SmartSpacesWorkbench {
     projectTypeRegistry = new StandardProjectTypeRegistry();
     projectCreator = new ProjectCreatorImpl(this, templater);
     projectTaskManager = new StandardProjectTaskManager(projectTypeRegistry, templater);
+
+    programmingLanguageRegistry = new StandardProgrammingLanguageRegistry();
+    programmingLanguageRegistry
+        .registerProgrammingLanguageSupport(new JavaProgrammingLanguageSupport())
+        .registerProgrammingLanguageSupport(new ScalaProgrammingLanguageSupport());
   }
 
   /**
@@ -371,9 +382,8 @@ public class SmartSpacesWorkbench {
    *          the command line for the workbench
    */
   private void logWorkbenchCommand(List<String> commands) {
-    getLog().info(
-        String.format("Using workbench %s", getSpaceEnvironment().getSystemConfiguration()
-            .getPropertyString(CONFIGURATION_PROPERTY_WORKBENCH_HOME)));
+    getLog().info(String.format("Using workbench %s", getSpaceEnvironment().getSystemConfiguration()
+        .getPropertyString(CONFIGURATION_PROPERTY_WORKBENCH_HOME)));
     getLog().info(String.format("Workbench commands: %s", Joiner.on(" ").join(commands)));
   }
 
@@ -776,5 +786,14 @@ public class SmartSpacesWorkbench {
    */
   public SmartSpacesEnvironment getSpaceEnvironment() {
     return spaceEnvironment;
+  }
+
+  /**
+   * Get the registry for programming language support.
+   * 
+   * @return the programming language registry
+   */
+  public ProgrammingLanguageRegistry getProgrammingLanguageRegistry() {
+    return programmingLanguageRegistry;
   }
 }

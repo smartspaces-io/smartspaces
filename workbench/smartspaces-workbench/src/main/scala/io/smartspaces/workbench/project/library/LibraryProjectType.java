@@ -17,13 +17,15 @@
 
 package io.smartspaces.workbench.project.library;
 
+import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.BaseProjectTemplate;
 import io.smartspaces.workbench.project.Project;
+import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.ProjectTemplate;
+import io.smartspaces.workbench.project.ProjectType;
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;
 import io.smartspaces.workbench.project.ide.JavaEclipseIdeProjectCreatorSpecification;
-import io.smartspaces.workbench.project.java.JvmProjectType;
 
 import com.google.common.collect.Lists;
 
@@ -32,7 +34,7 @@ import com.google.common.collect.Lists;
  *
  * @author Keith M. Hughes
  */
-public class LibraryProjectType extends JvmProjectType {
+public class LibraryProjectType implements ProjectType {
 
   @Override
   public String getProjectTypeName() {
@@ -45,8 +47,8 @@ public class LibraryProjectType extends JvmProjectType {
   }
 
   @Override
-  public ProjectBuilder newBuilder() {
-    return new JavaLibraryProjectBuilder();
+  public ProjectBuilder newBuilder(ProjectTaskContext projectTaskContext) {
+    return new JvmLibraryProjectBuilder();
   }
 
   @Override
@@ -55,9 +57,13 @@ public class LibraryProjectType extends JvmProjectType {
   }
 
   @Override
-  public EclipseIdeProjectCreatorSpecification getEclipseIdeProjectCreatorSpecification() {
+  public EclipseIdeProjectCreatorSpecification getEclipseIdeProjectCreatorSpecification(ProjectTaskContext context) {
+    ProgrammingLanguageSupport languageSupport =
+        context.getWorkbenchTaskContext().getWorkbench().getProgrammingLanguageRegistry()
+            .getProgrammingLanguageSupport(context.getProject().getLanguage());
+
     return new JavaEclipseIdeProjectCreatorSpecification(
-        Lists.newArrayList(JvmProjectType.SOURCE_MAIN_JAVA),
-        Lists.newArrayList(JvmProjectType.SOURCE_MAIN_TESTS));
+        Lists.newArrayList(languageSupport.getMainSourceDirectory()),
+        Lists.newArrayList(languageSupport.getTestSourceDirectory()));
   }
 }

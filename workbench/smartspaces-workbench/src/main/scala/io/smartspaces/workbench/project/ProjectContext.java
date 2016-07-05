@@ -21,7 +21,6 @@ import java.io.File;
 
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.util.io.FileCollector;
-import io.smartspaces.workbench.project.activity.type.ProjectType;
 import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 
 /**

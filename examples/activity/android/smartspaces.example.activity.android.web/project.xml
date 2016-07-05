@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project type="activity" language="android">
+<project type="activity" language="java" platform="android">
     <name>Android webapp</name>
     <description>
 A simple Android activity that starts up the Android web browser and displays a web page.

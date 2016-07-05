@@ -124,6 +124,11 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
   private static final String PROJECT_ATTRIBUTE_NAME_PROJECT_TYPE = "type";
 
   /**
+   * The project attribute for the project platform.
+   */
+  private static final String PROJECT_ATTRIBUTE_NAME_PROJECT_PLATFORM = "platform";
+
+  /**
    * The project attribute for the project language.
    */
   public static final String PROJECT_ATTRIBUTE_NAME_PROJECT_LANGUAGE = "language";
@@ -327,6 +332,8 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
     String projectType = getProjectType(projectElement);
     Project project = getWorkbench().getProjectTypeRegistry().newProject(projectType);
 
+    project.setPlatform(getProjectPlatform(projectElement));
+    
     processPrototypeChain(project, projectNamespace, projectElement);
     configureProjectFromElement(project, projectNamespace, projectElement);
 
@@ -442,6 +449,18 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
    */
   private String getProjectType(Element rootElement) {
     return getRequiredAttributeValue(rootElement, PROJECT_ATTRIBUTE_NAME_PROJECT_TYPE);
+  }
+
+  /**
+   * Get the project platform from the root element.
+   *
+   * @param rootElement
+   *          the root element of the XML doc
+   *
+   * @return the project platform
+   */
+  private String getProjectPlatform(Element rootElement) {
+    return getRequiredAttributeValue(rootElement, PROJECT_ATTRIBUTE_NAME_PROJECT_PLATFORM);
   }
 
   /**

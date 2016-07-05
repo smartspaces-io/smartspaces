@@ -21,18 +21,16 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.workbench.FreemarkerTemplater;
+import io.smartspaces.workbench.language.java.ExternalJavadocGenerator;
+import io.smartspaces.workbench.language.java.JavadocGenerator;
 import io.smartspaces.workbench.project.activity.ActivityProject;
 import io.smartspaces.workbench.project.activity.builder.BaseActivityProjectBuilder;
 import io.smartspaces.workbench.project.activity.packager.ActivityProjectPackager;
 import io.smartspaces.workbench.project.activity.packager.StandardActivityProjectPackager;
-import io.smartspaces.workbench.project.activity.type.ProjectType;
-import io.smartspaces.workbench.project.activity.type.ProjectTypeRegistry;
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreator;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;
 import io.smartspaces.workbench.project.ide.NonJavaEclipseIdeProjectCreatorSpecification;
-import io.smartspaces.workbench.project.java.ExternalJavadocGenerator;
-import io.smartspaces.workbench.project.java.JavadocGenerator;
 import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 
 import java.io.File;
@@ -93,6 +91,7 @@ public class StandardProjectTaskManager implements ProjectTaskManager {
   public ProjectTaskContext newProjectTaskContext(Project project,
       WorkbenchTaskContext workbenchTaskContext) {
     ProjectType type = projectTypeRegistry.getProjectType(project);
+    System.out.println("Project type is " + type);
 
     ProjectTaskContext projectTaskContext =
         new ProjectTaskContext(type, project, workbenchTaskContext);
@@ -301,7 +300,7 @@ public class StandardProjectTaskManager implements ProjectTaskManager {
       ProjectBuilder builder = null;
       ProjectType type = projectTaskContext.getProjectType();
       if (type != null) {
-        builder = type.newBuilder();
+        builder = type.newBuilder(projectTaskContext);
       } else {
         builder = new BaseActivityProjectBuilder();
       }
@@ -528,14 +527,14 @@ public class StandardProjectTaskManager implements ProjectTaskManager {
               .getAbsolutePath()));
 
       EclipseIdeProjectCreatorSpecification spec;
-      ProjectType type = getProjectTaskContext().getProjectType();
+      ProjectType type = projectTaskContext.getProjectType();
       if (!ide.equals(IDE_ECLIPSE)) {
         throw SimpleSmartSpacesException.newFormattedException(
             "Attempt to create a project of non-supported type: '%s'. Only '%s' is supported.",
             ide, IDE_ECLIPSE);
       }
       if (type != null) {
-        spec = type.getEclipseIdeProjectCreatorSpecification();
+        spec = type.getEclipseIdeProjectCreatorSpecification(projectTaskContext);
       } else {
         spec = new NonJavaEclipseIdeProjectCreatorSpecification();
       }

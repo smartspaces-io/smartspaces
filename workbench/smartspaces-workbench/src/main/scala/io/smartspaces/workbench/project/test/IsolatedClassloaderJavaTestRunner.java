@@ -21,12 +21,13 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.Project;
+import io.smartspaces.workbench.project.ProjectFileLayout;
 import io.smartspaces.workbench.project.ProjectTaskContext;
-import io.smartspaces.workbench.project.java.EclipseProgrammingLanguageCompiler;
 import io.smartspaces.workbench.project.java.JvmProjectExtension;
-import io.smartspaces.workbench.project.java.JvmProjectType;
-import io.smartspaces.workbench.project.java.ProgrammingLanguageCompiler;
+import io.smartspaces.workbench.project.java.JvmProjectSupport;
+import io.smartspaces.workbench.project.java.StandardJvmProjectSupport;
 
 import org.apache.commons.logging.Log;
 
@@ -63,72 +64,45 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
   public static final String ISOLATED_TESTRUNNER_METHODNAME = "runTests";
 
   /**
-   * The project compiler.
+   * The project support to use.
    */
-  private final ProgrammingLanguageCompiler projectCompiler = new EclipseProgrammingLanguageCompiler();
+  private final JvmProjectSupport projectSupport = new StandardJvmProjectSupport();
 
   /**
    * File support for class.
    */
   private final FileSupport fileSupport = FileSupportImpl.INSTANCE;
 
-  /**
-   * Build a class path structure based on the given jar destination file and
-   * project.
-   *
-   * @param context
-   *          the project task context
-   * @param extension
-   *          the java project extension
-   * @param additionalFiles
-   *          any number of additional Files to add to the class path
-   * @return a List<File> of all required class path entries
-   */
-  private List<File> getClasspath(ProjectTaskContext context, JvmProjectExtension extension,
-      File... additionalFiles) {
-    List<File> classpath = new ArrayList<>();
-    for (File additionalFile : additionalFiles) {
-      classpath.add(additionalFile);
-    }
-    classpath.add(fileSupport.newFile(context.getProject().getBaseDirectory(),
-        JvmProjectType.SOURCE_MAIN_TEST_RESOURCES));
-
-    JvmProjectType projectType = context.getProjectType();
-    projectType.getProjectClasspath(true, context, classpath, extension,
-        context.getWorkbenchTaskContext());
-
-    return classpath;
-  }
-
   @Override
   public void runTests(File jarDestinationFile, JvmProjectExtension extension,
-      ProjectTaskContext context) throws SmartSpacesException {
+      ProjectTaskContext context, ProgrammingLanguageSupport languageSupport)
+          throws SmartSpacesException {
     List<File> compilationFiles = new ArrayList<>();
 
     Project project = context.getProject();
-    projectCompiler.getCompilationFiles(
-        fileSupport.newFile(project.getBaseDirectory(), JvmProjectType.SOURCE_MAIN_TESTS),
+    languageSupport.getCompilationFiles(
+        fileSupport.newFile(project.getBaseDirectory(), languageSupport.getTestSourceDirectory()),
         compilationFiles);
-    projectCompiler.getCompilationFiles(fileSupport.newFile(context.getBuildDirectory(),
-        JvmProjectType.SOURCE_GENERATED_MAIN_TESTS), compilationFiles);
+    languageSupport.getCompilationFiles(fileSupport.newFile(context.getBuildDirectory(),
+        languageSupport.getTestGeneratedSourceDirectory()), compilationFiles);
 
     if (compilationFiles.isEmpty()) {
       // No tests mean they all succeeded in some weird philosophical sense.
       return;
     }
 
-    context.getLog().info(String.format("Running Java tests for project %s",
+    context.getLog().info(String.format("Running tests for project %s",
         context.getProject().getBaseDirectory().getAbsolutePath()));
 
     List<File> classpath = getClasspath(context, extension, jarDestinationFile);
 
     File compilationFolder = fileSupport.newFile(context.getBuildDirectory(),
-        ProgrammingLanguageCompiler.BUILD_DIRECTORY_CLASSES_TESTS);
+        ProjectFileLayout.BUILD_DIRECTORY_CLASSES_TESTS);
     fileSupport.directoryExists(compilationFolder);
 
-    List<String> compilerOptions = projectCompiler.getCompilerOptions(context);
+    List<String> compilerOptions = languageSupport.getCompilerOptions(context);
 
-    projectCompiler.compile(context, compilationFolder, classpath, compilationFiles,
+    languageSupport.newCompiler().compile(context, compilationFolder, classpath, compilationFiles,
         compilerOptions);
 
     runJavaUnitTests(compilationFolder, jarDestinationFile, extension, context);
@@ -169,6 +143,33 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
         context.getWorkbenchTaskContext().getWorkbench().getBaseClassLoader());
 
     runTestsInIsolation(testCompilationFolder, classLoader, context);
+  }
+
+  /**
+   * Build a class path structure based on the given jar destination file and
+   * project.
+   *
+   * @param context
+   *          the project task context
+   * @param extension
+   *          the java project extension
+   * @param additionalFiles
+   *          any number of additional Files to add to the class path
+   * @return a List<File> of all required class path entries
+   */
+  private List<File> getClasspath(ProjectTaskContext context, JvmProjectExtension extension,
+      File... additionalFiles) {
+    List<File> classpath = new ArrayList<>();
+    for (File additionalFile : additionalFiles) {
+      classpath.add(additionalFile);
+    }
+    classpath.add(fileSupport.newFile(context.getProject().getBaseDirectory(),
+        ProjectFileLayout.SOURCE_TEST_RESOURCES));
+
+    projectSupport.getProjectClasspath(true, context, classpath, extension,
+        context.getWorkbenchTaskContext());
+
+    return classpath;
   }
 
   /**

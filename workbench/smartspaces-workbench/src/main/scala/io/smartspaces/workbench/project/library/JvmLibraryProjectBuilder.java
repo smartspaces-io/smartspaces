@@ -73,7 +73,9 @@ public class JvmLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject>
 
     jarAssembler.buildJar(jarDestinationFile, compilationFolder, null, project.getContainerInfo(),
         context, languageSupport);
+
     runTests(jarDestinationFile, context, languageSupport);
+
     context.addGeneratedArtifact(jarDestinationFile);
   }
 

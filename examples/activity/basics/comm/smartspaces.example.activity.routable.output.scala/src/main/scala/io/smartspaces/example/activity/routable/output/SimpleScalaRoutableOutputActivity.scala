@@ -16,9 +16,8 @@
 
 package io.smartspaces.example.activity.routable.output
 
+import java.util.HashMap
 import java.util.Map
-
-import com.google.common.collect.Maps
 
 import io.smartspaces.activity.impl.route.BaseRoutableActivity
 
@@ -28,13 +27,13 @@ import io.smartspaces.activity.impl.route.BaseRoutableActivity
 class SimpleScalaRoutableOutputActivity extends BaseRoutableActivity {
 
   override def onActivityActivate(): Unit = {
-    val message: Map[String, Object] = Maps.newHashMap()
+    val message: Map[String, Object] = new HashMap[String,Object]()
     message.put("message", "yipee! activated!")
     sendOutputMessage("output1", message)
   }
 
   override def onActivityDeactivate(): Unit = {
-    val message: Map[String, Object] = Maps.newHashMap()
+    val message: Map[String, Object] = new HashMap[String,Object]()
     message.put("message", "bummer! deactivated!")
     sendOutputMessage("output1", message)
   }

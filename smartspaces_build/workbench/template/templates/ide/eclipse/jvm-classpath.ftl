@@ -4,7 +4,9 @@
 <#list srcs as src>
 	<classpathentry kind="src" path="${src}"/>
 </#list>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+<#list launchers as launcher>
+	<classpathentry kind="con" path="${launcher}" />
+</#list>
 
 <#list dynamicProjects as dynamicProject>
     <classpathentry kind="src" path="/${dynamicProject.identifyingName}" exported="true"/>

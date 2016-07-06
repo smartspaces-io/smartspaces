@@ -20,6 +20,8 @@ package io.smartspaces.workbench.project.ide;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.workbench.FreemarkerTemplater;
+import io.smartspaces.workbench.language.java.JavaProgrammingLanguageSupport;
+import io.smartspaces.workbench.language.scala.ScalaProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectDependency;
 import io.smartspaces.workbench.project.ProjectTaskContext;
@@ -35,12 +37,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Specification for Java projects.
+ * Specification for projects that run in a JVM with a classpath.
  *
  * @author Keith M. Hughes
  */
-public class JavaEclipseIdeProjectCreatorSpecification implements
-    EclipseIdeProjectCreatorSpecification {
+public class JvmEclipseIdeProjectCreatorSpecification
+    implements EclipseIdeProjectCreatorSpecification {
 
   /**
    * Freemarker context variable for libraries which are part of the project.
@@ -53,6 +55,11 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
   public static final String FREEMARKER_CONTEXT_SOURCES = "srcs";
 
   /**
+   * Freemarker context variable for launcher containers which are part of the project.
+   */
+  public static final String FREEMARKER_CONTEXT_LAUNCHERS = "launchers";
+
+  /**
    * Freemarker context variable for dynamic projects which are part of the
    * project.
    */
@@ -61,8 +68,7 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
   /**
    * The location of the eclipse classpath template file.
    */
-  public static final String TEMPLATE_FILEPATH_ECLIPSE_CLASSPATH =
-      "ide/eclipse/java-classpath.ftl";
+  public static final String TEMPLATE_FILEPATH_ECLIPSE_CLASSPATH = "ide/eclipse/jvm-classpath.ftl";
 
   /**
    * The name of the Eclipse classpath file.
@@ -78,6 +84,26 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
    * The value for the Java nature for an Eclipse project.
    */
   public static final String ECLIPSE_NATURE_JAVA = "org.eclipse.jdt.core.javanature";
+
+  /**
+   * The value for the Scala builder in Eclipse.
+   */
+  public static final String ECLIPSE_BUILDER_SCALA = "org.scala-ide.sdt.core.scalabuilder";
+
+  /**
+   * The value for the Scalaa nature for an Eclipse project.
+   */
+  public static final String ECLIPSE_NATURE_SCALA = "org.scala-ide.sdt.core.scalanature";
+
+  /**
+   * The launcher container for Java projects.
+   */
+  public static final String ECLIPSE_LAUNCHER_CONTAINER_JAVA ="org.eclipse.jdt.launching.JRE_CONTAINER";
+
+  /**
+   * The launcher container for Java projects.
+   */
+  public static final String ECLIPSE_LAUNCHER_CONTAINER_SCALA ="org.scala-ide.sdt.launching.SCALA_CONTAINER";
 
   /**
    * List of required sources for the project.
@@ -96,7 +122,6 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
    * Can be {@code null}.
    */
   private final JvmProjectExtension extensions;
-  
 
   /**
    * The project support for this item.
@@ -116,7 +141,7 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
    * @param sourcesOptional
    *          optional resources for the project
    */
-  public JavaEclipseIdeProjectCreatorSpecification(List<String> sourcesRequired,
+  public JvmEclipseIdeProjectCreatorSpecification(List<String> sourcesRequired,
       List<String> sourcesOptional) {
     this(sourcesRequired, sourcesOptional, null);
   }
@@ -131,7 +156,7 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
    * @param extensions
    *          the extensions to use, can be {@code null}
    */
-  public JavaEclipseIdeProjectCreatorSpecification(List<String> sourcesRequired,
+  public JvmEclipseIdeProjectCreatorSpecification(List<String> sourcesRequired,
       List<String> sourcesOptional, JvmProjectExtension extensions) {
     this.sourcesRequired = sourcesRequired;
     this.sourcesOptional = sourcesOptional;
@@ -141,14 +166,28 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
   @Override
   public void addSpecificationData(Project project, ProjectTaskContext context,
       Map<String, Object> freemarkerContext) {
-    freemarkerContext.put(ECLIPSE_PROJECT_FIELD_NATURES, Lists.newArrayList(ECLIPSE_NATURE_JAVA));
-    freemarkerContext.put(ECLIPSE_PROJECT_FIELD_BUILDER, ECLIPSE_BUILDER_JAVA);
+    String language = context.getProject().getLanguage();
+    String builderField = null;
+    List<String> naturesField = new ArrayList<>();
+    if (JavaProgrammingLanguageSupport.LANGUAGE_NAME.equals(language)) {
+      builderField = ECLIPSE_BUILDER_JAVA;
+      
+      naturesField.add(ECLIPSE_NATURE_JAVA);
+    } else if (ScalaProgrammingLanguageSupport.LANGUAGE_NAME().equals(language)) {
+      builderField = ECLIPSE_BUILDER_SCALA;
+      
+      naturesField.add(ECLIPSE_NATURE_SCALA);
+      naturesField.add(ECLIPSE_NATURE_JAVA);
+    }
+
+    freemarkerContext.put(ECLIPSE_PROJECT_FIELD_NATURES, naturesField);
+    freemarkerContext.put(ECLIPSE_PROJECT_FIELD_BUILDER, builderField);
   }
 
   @Override
   public void writeAdditionalFiles(Project project, ProjectTaskContext context,
       Map<String, Object> freemarkerContext, FreemarkerTemplater templater) throws Exception {
-     List<Project> dynamicProjects = new ArrayList<>();
+    List<Project> dynamicProjects = new ArrayList<>();
     for (ProjectDependency dependency : project.getDependencies()) {
       if (dependency.isDynamic()) {
         Project dependencyProject =
@@ -165,9 +204,21 @@ public class JavaEclipseIdeProjectCreatorSpecification implements
 
     List<String> sources = Lists.newArrayList(sourcesRequired);
     addNecessaryOptionalSources(project, sources);
+    
+    String language = context.getProject().getLanguage();
+    List<String> launchersField = new ArrayList<>();
+    if (JavaProgrammingLanguageSupport.LANGUAGE_NAME.equals(language)) {
+      launchersField.add(ECLIPSE_LAUNCHER_CONTAINER_JAVA);
+    } else if (ScalaProgrammingLanguageSupport.LANGUAGE_NAME().equals(language)) {
+      launchersField.add(ECLIPSE_LAUNCHER_CONTAINER_SCALA);
+      launchersField.add(ECLIPSE_LAUNCHER_CONTAINER_JAVA);
+    }
+
+    
     freemarkerContext.put(FREEMARKER_CONTEXT_SOURCES, sources);
     freemarkerContext.put(FREEMARKER_CONTEXT_LIBS, projectLibs);
     freemarkerContext.put(FREEMARKER_CONTEXT_DYNAMIC_PROJECTS, dynamicProjects);
+    freemarkerContext.put(FREEMARKER_CONTEXT_LAUNCHERS, launchersField);
 
     templater.writeTemplate(freemarkerContext,
         fileSupport.newFile(project.getBaseDirectory(), FILENAME_CLASSPATH_FILE),

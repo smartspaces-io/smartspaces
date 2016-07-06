@@ -174,7 +174,7 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
 
   /**
    * Run the given tests in the given class loader. This method is somewhat
-   * complicated, since it needs to use reflection to isolate the test runner in
+   * complicated, since it needs to use reflsection to isolate the test runner in
    * a separate class loader that does not derive from the current class.
    *
    * @param testCompilationFolder

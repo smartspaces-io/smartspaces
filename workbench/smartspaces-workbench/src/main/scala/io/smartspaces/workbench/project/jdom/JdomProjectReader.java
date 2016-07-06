@@ -460,7 +460,7 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
    * @return the project platform
    */
   private String getProjectPlatform(Element rootElement) {
-    return getRequiredAttributeValue(rootElement, PROJECT_ATTRIBUTE_NAME_PROJECT_PLATFORM);
+    return getAttributeValue(rootElement, PROJECT_ATTRIBUTE_NAME_PROJECT_PLATFORM, null);
   }
 
   /**

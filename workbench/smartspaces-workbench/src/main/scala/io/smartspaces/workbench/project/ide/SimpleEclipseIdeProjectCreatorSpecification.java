@@ -26,12 +26,12 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 
 /**
- * IDE specification for non-java projects.
+ * IDE specification for projects that are just using Eclipse as an editor.
  *
  * @author Keith M. Hughes
  */
-public class NonJavaEclipseIdeProjectCreatorSpecification implements
-    EclipseIdeProjectCreatorSpecification {
+public class SimpleEclipseIdeProjectCreatorSpecification
+    implements EclipseIdeProjectCreatorSpecification {
 
   /**
    * The Eclipse builder for non-Java only projects.

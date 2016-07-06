@@ -24,7 +24,7 @@ import io.smartspaces.workbench.project.ProjectTemplate;
 import io.smartspaces.workbench.project.ProjectType;
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;
-import io.smartspaces.workbench.project.ide.NonJavaEclipseIdeProjectCreatorSpecification;
+import io.smartspaces.workbench.project.ide.SimpleEclipseIdeProjectCreatorSpecification;
 
 /**
  * A project type for assembly projects.
@@ -56,6 +56,6 @@ public class AssemblyProjectType implements ProjectType {
   @Override
   public EclipseIdeProjectCreatorSpecification
       getEclipseIdeProjectCreatorSpecification(ProjectTaskContext projectTaskContext) {
-    return new NonJavaEclipseIdeProjectCreatorSpecification();
+    return new SimpleEclipseIdeProjectCreatorSpecification();
   }
 }

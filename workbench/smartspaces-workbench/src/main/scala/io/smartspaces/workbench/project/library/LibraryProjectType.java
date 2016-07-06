@@ -25,7 +25,7 @@ import io.smartspaces.workbench.project.ProjectTemplate;
 import io.smartspaces.workbench.project.ProjectType;
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;
-import io.smartspaces.workbench.project.ide.JavaEclipseIdeProjectCreatorSpecification;
+import io.smartspaces.workbench.project.ide.JvmEclipseIdeProjectCreatorSpecification;
 
 import com.google.common.collect.Lists;
 
@@ -62,7 +62,7 @@ public class LibraryProjectType implements ProjectType {
         context.getWorkbenchTaskContext().getWorkbench().getProgrammingLanguageRegistry()
             .getProgrammingLanguageSupport(context.getProject().getLanguage());
 
-    return new JavaEclipseIdeProjectCreatorSpecification(
+    return new JvmEclipseIdeProjectCreatorSpecification(
         Lists.newArrayList(languageSupport.getMainSourceDirectory()),
         Lists.newArrayList(languageSupport.getTestSourceDirectory()));
   }

@@ -30,8 +30,8 @@ import io.smartspaces.workbench.project.activity.builder.java.JvmActivityProject
 import io.smartspaces.workbench.project.activity.type.android.AndroidJvmProjectExtension;
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;
-import io.smartspaces.workbench.project.ide.JavaEclipseIdeProjectCreatorSpecification;
-import io.smartspaces.workbench.project.ide.NonJavaEclipseIdeProjectCreatorSpecification;
+import io.smartspaces.workbench.project.ide.JvmEclipseIdeProjectCreatorSpecification;
+import io.smartspaces.workbench.project.ide.SimpleEclipseIdeProjectCreatorSpecification;
 
 import com.google.common.collect.Lists;
 
@@ -85,18 +85,18 @@ public class ActivityProjectType implements ProjectType {
     if (language == null) {
       // Lists.newArrayList(ProjectFileLayout.SOURCE_MAIN_RESOURCES),
       // Lists.newArrayList(ProjectFileLayout.SOURCE_TEST_RESOURCES)
-      return new NonJavaEclipseIdeProjectCreatorSpecification();
+      return new SimpleEclipseIdeProjectCreatorSpecification();
     } else {
       ProgrammingLanguageSupport languageSupport = projectTaskContext.getWorkbenchTaskContext()
           .getWorkbench().getProgrammingLanguageRegistry()
           .getProgrammingLanguageSupport(projectTaskContext.getProject().getLanguage());
 
       if ("android".equals(project.getPlatform())) {
-        return new JavaEclipseIdeProjectCreatorSpecification(
+        return new JvmEclipseIdeProjectCreatorSpecification(
             Lists.newArrayList(languageSupport.getMainSourceDirectory()),
             Lists.newArrayList(languageSupport.getTestSourceDirectory()), androidExtension);
       } else {
-        return new JavaEclipseIdeProjectCreatorSpecification(
+        return new JvmEclipseIdeProjectCreatorSpecification(
             Lists.newArrayList(languageSupport.getMainSourceDirectory()),
             Lists.newArrayList(languageSupport.getTestSourceDirectory()));
       }

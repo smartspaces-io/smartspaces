@@ -30,7 +30,7 @@ import io.smartspaces.workbench.project.activity.packager.StandardActivityProjec
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreator;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;
-import io.smartspaces.workbench.project.ide.NonJavaEclipseIdeProjectCreatorSpecification;
+import io.smartspaces.workbench.project.ide.SimpleEclipseIdeProjectCreatorSpecification;
 import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 
 import java.io.File;
@@ -91,7 +91,6 @@ public class StandardProjectTaskManager implements ProjectTaskManager {
   public ProjectTaskContext newProjectTaskContext(Project project,
       WorkbenchTaskContext workbenchTaskContext) {
     ProjectType type = projectTypeRegistry.getProjectType(project);
-    System.out.println("Project type is " + type);
 
     ProjectTaskContext projectTaskContext =
         new ProjectTaskContext(type, project, workbenchTaskContext);
@@ -536,7 +535,7 @@ public class StandardProjectTaskManager implements ProjectTaskManager {
       if (type != null) {
         spec = type.getEclipseIdeProjectCreatorSpecification(projectTaskContext);
       } else {
-        spec = new NonJavaEclipseIdeProjectCreatorSpecification();
+        spec = new SimpleEclipseIdeProjectCreatorSpecification();
       }
 
       ideProjectCreator.createProject(project, projectTaskContext, spec);

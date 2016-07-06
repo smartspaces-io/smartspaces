@@ -106,7 +106,7 @@ class ScalaProgrammingLanguageSupport extends ProgrammingLanguageSupport {
   }
 
   override def newCompiler(): ProgrammingLanguageCompiler = {
-    new PureScalaProgrammingLanguageCompiler
+    new CombinationScalaJavaProgrammingLanguageCompiler
   }
 
   override def getMainSourceDirectory(): String = {

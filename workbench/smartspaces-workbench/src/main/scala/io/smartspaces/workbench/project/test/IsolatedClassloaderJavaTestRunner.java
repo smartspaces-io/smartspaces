@@ -21,6 +21,7 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+import io.smartspaces.workbench.language.ProgrammingLanguageCompiler;
 import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectFileLayout;
@@ -96,16 +97,17 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
 
     List<File> classpath = getClasspath(context, extension, jarDestinationFile);
 
-    File compilationFolder = fileSupport.newFile(context.getBuildDirectory(),
+    File buildFolder = fileSupport.newFile(context.getBuildDirectory(),
         ProjectFileLayout.BUILD_DIRECTORY_CLASSES_TESTS);
-    fileSupport.directoryExists(compilationFolder);
+    fileSupport.directoryExists(buildFolder);
 
     List<String> compilerOptions = languageSupport.getCompilerOptions(context);
 
-    languageSupport.newCompiler().compile(context, compilationFolder, classpath, compilationFiles,
+    ProgrammingLanguageCompiler compiler = languageSupport.newCompiler();
+    compiler.compile(context, buildFolder, classpath, compilationFiles,
         compilerOptions);
 
-    runJavaUnitTests(compilationFolder, jarDestinationFile, extension, context);
+    runJavaUnitTests(buildFolder, jarDestinationFile, extension, context);
   }
 
   /**
@@ -174,8 +176,8 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
 
   /**
    * Run the given tests in the given class loader. This method is somewhat
-   * complicated, since it needs to use reflsection to isolate the test runner in
-   * a separate class loader that does not derive from the current class.
+   * complicated, since it needs to use reflsection to isolate the test runner
+   * in a separate class loader that does not derive from the current class.
    *
    * @param testCompilationFolder
    *          the folder containing the test classes

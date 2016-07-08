@@ -37,7 +37,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   /**
    * The root object.
    */
-  private Map<String, ? extends Object> root;
+  private Map<String, Object> root;
 
   /**
    * A stack of objects as we walk the graph.
@@ -57,7 +57,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   /**
    * The current object, if it is a object.
    */
-  private Map<String, ? extends Object> currentObject;
+  private Map<String, Object> currentObject;
 
   /**
    * The current list, if it is a list.
@@ -75,7 +75,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
    * @param root
    *          the root map
    */
-  public StandardDynamicObjectNavigator(Map<String, ? extends Object> root) {
+  public StandardDynamicObjectNavigator(Map<String, Object> root) {
     this.root = root;
     currentType = DynamicObjectType.OBJECT;
     currentObject = root;
@@ -102,7 +102,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   }
 
   @Override
-  public Map<String, ? extends Object> getRoot() {
+  public Map<String, Object> getRoot() {
     return root;
   }
 
@@ -506,7 +506,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
       } else {
         // Have a result name
         if (curObject instanceof Map) {
-          curObject = ((Map<String, ? extends Object>) curObject).get(element);
+          curObject = ((Map<String, Object>) curObject).get(element);
         } else if (curObject instanceof List) {
           throw new DynamicObjectSmartSpacesException("Attempt to use an name index in an array");
         } else if (i < elements.length) {

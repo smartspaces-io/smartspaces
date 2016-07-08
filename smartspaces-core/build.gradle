@@ -27,7 +27,7 @@ dependencies {
   compile 'com.fasterxml.jackson.core:jackson-core:2.6.1'
   compile 'com.fasterxml.jackson.core:jackson-databind:2.6.1'
   compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.6.1'
-    
+  
   compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpcore:4.1') {
     //exclude module: 'com.springsource.org.apache.commons.logging'
   }

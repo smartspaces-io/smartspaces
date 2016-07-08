@@ -210,8 +210,8 @@ public class JvmEclipseIdeProjectCreatorSpecification
     if (JavaProgrammingLanguageSupport.LANGUAGE_NAME.equals(language)) {
       launchersField.add(ECLIPSE_LAUNCHER_CONTAINER_JAVA);
     } else if (ScalaProgrammingLanguageSupport.LANGUAGE_NAME().equals(language)) {
-      launchersField.add(ECLIPSE_LAUNCHER_CONTAINER_SCALA);
       launchersField.add(ECLIPSE_LAUNCHER_CONTAINER_JAVA);
+      launchersField.add(ECLIPSE_LAUNCHER_CONTAINER_SCALA);
     }
 
     

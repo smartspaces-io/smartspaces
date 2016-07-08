@@ -43,7 +43,7 @@ public interface DynamicObject {
    *
    * @return the root object
    */
-  Map<String, ? extends Object> getRoot();
+  Map<String, Object> getRoot();
 
   /**
    * Get the current type of the current navigation point.
@@ -253,7 +253,7 @@ public interface DynamicObject {
    * @throws DynamicObjectSmartSpacesException
    *           the current level was not an object
    */
-  Map<String, ? extends Object> asMap() throws DynamicObjectSmartSpacesException;
+  Map<String, Object> asMap() throws DynamicObjectSmartSpacesException;
 
   /**
    * Is the current level an array?

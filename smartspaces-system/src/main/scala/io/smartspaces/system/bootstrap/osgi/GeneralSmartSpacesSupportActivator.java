@@ -52,6 +52,7 @@ import io.smartspaces.resource.managed.ManagedResources;
 import io.smartspaces.resource.managed.StandardManagedResources;
 import io.smartspaces.service.Service;
 import io.smartspaces.service.ServiceRegistry;
+import io.smartspaces.service.event.observable.StandardEventObservableService;
 import io.smartspaces.system.BasicSmartSpacesFilesystem;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesSystemControl;
@@ -303,6 +304,10 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     spaceEnvironment.setTimeProvider(timeProvider);
     timeProvider.startup();
     managedResources.addResource(timeProvider);
+
+    StandardEventObservableService eventService = new StandardEventObservableService();
+    managedResources.addResource(eventService);
+    spaceEnvironment.getServiceRegistry().registerService(eventService);
 
     setupRosEnvironment(
         systemConfigurationStorageManager.getSystemConfiguration().getCollapsedMap(),

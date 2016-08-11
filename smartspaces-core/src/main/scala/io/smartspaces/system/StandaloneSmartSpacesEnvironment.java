@@ -26,6 +26,7 @@ import io.smartspaces.resource.managed.ManagedResources;
 import io.smartspaces.resource.managed.StandardManagedResources;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.SimpleServiceRegistry;
+import io.smartspaces.service.event.observable.StandardEventObservableService;
 import io.smartspaces.time.SettableTimeProvider;
 import io.smartspaces.time.TimeProvider;
 
@@ -64,6 +65,9 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
     environment.serviceRegistry = new SimpleServiceRegistry(environment);
     environment.timeProvider = new SettableTimeProvider();
     environment.managedResources = new StandardManagedResources(environment.log);
+    StandardEventObservableService eventService = new StandardEventObservableService();
+    environment.managedResources.addResource(eventService);
+	environment.serviceRegistry.registerService(eventService);
     environment.managedResources.startupResources();
 
     return environment;

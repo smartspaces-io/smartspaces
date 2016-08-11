@@ -79,11 +79,6 @@ public class StandardLiveActivityRuntimeComponentFactory
   private WebSocketClientService webSocketClientService;
 
   /**
-   * The SS service for event observables.
-   */
-  private EventObservableService eventObservableService;
-
-  /**
    * Construct a new factory.
    *
    * @param spaceEnvironment
@@ -157,10 +152,6 @@ public class StandardLiveActivityRuntimeComponentFactory
     webSocketClientService = new NettyWebSocketClientService();
     serviceRegistry.registerService(webSocketClientService);
     webSocketClientService.startup();
-
-    eventObservableService = new StandardEventObservableService();
-    serviceRegistry.registerService(eventObservableService);
-    eventObservableService.startup();
   }
 
   @Override
@@ -170,8 +161,5 @@ public class StandardLiveActivityRuntimeComponentFactory
 
     serviceRegistry.unregisterService(webSocketClientService);
     webSocketClientService.shutdown();
-
-    serviceRegistry.unregisterService(eventObservableService);
-    eventObservableService.shutdown();
   }
 }

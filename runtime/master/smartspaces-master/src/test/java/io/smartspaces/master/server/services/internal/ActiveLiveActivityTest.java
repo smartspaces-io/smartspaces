@@ -24,7 +24,7 @@ import io.smartspaces.master.server.services.ActiveLiveActivity;
 import io.smartspaces.master.server.services.ActiveLiveActivityGroup;
 import io.smartspaces.master.server.services.ActiveSpaceController;
 import io.smartspaces.master.server.services.RemoteSpaceControllerClient;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import org.junit.Before;
 import org.junit.Test;

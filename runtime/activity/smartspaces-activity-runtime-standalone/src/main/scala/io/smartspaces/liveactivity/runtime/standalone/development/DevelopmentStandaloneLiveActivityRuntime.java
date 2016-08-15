@@ -58,8 +58,8 @@ import io.smartspaces.system.InternalSmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesFilesystem;
 import io.smartspaces.system.SmartSpacesSystemControl;
-import io.smartspaces.util.concurrency.SequentialEventQueue;
-import io.smartspaces.util.concurrency.SimpleSequentialEventQueue;
+import io.smartspaces.tasks.SequentialTaskQueue;
+import io.smartspaces.tasks.SimpleSequentialTaskQueue;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
@@ -321,9 +321,9 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
       prepareForMultipleActivityRun(activityRuntimeFolder, activitySourceFolder);
     }
 
-    SequentialEventQueue eventQueue =
-        new SimpleSequentialEventQueue(spaceEnvironment, spaceEnvironment.getLog());
-    managedResources.addResource(eventQueue);
+    SequentialTaskQueue taskQueue =
+        new SimpleSequentialTaskQueue(spaceEnvironment, spaceEnvironment.getLog());
+    managedResources.addResource(taskQueue);
 
     LoggingAlertStatusManager alertStatusManager =
         new LoggingAlertStatusManager(spaceEnvironment.getLog());
@@ -356,7 +356,7 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
 
     liveActivityRuntime = new StandardLiveActivityRuntime(runtimeComponentFactory,
         liveActivityRepository, activityInstallationManager, activityLogFactory,
-        configurationManager, liveActivityStorageManager, alertStatusManager, eventQueue,
+        configurationManager, liveActivityStorageManager, alertStatusManager, taskQueue,
         runtimeDebugService, spaceEnvironment);
     liveActivityRuntime.setLiveActivityStatusPublisher(liveActivityStatusPublisher);
     liveActivityRuntime.addRuntimeListener(liveActivityRuntimeListener);

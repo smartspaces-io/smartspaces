@@ -18,7 +18,7 @@
 package io.smartspaces.resource.managed;
 
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.util.events.EventFrequency;
+import io.smartspaces.time.TimeFrequency;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -77,7 +77,7 @@ public class ManagedResourceWithPeriodicTask implements ManagedResource {
    *          the space environment being run under
    */
   public ManagedResourceWithPeriodicTask(ManagedResource resource, Runnable task,
-      EventFrequency frequency, SmartSpacesEnvironment spaceEnvironment) {
+      TimeFrequency frequency, SmartSpacesEnvironment spaceEnvironment) {
     this(resource, task, frequency.getPeriod(), frequency.getUnit(), spaceEnvironment);
   }
 

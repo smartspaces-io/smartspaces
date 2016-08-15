@@ -27,8 +27,8 @@ import io.smartspaces.resource.managed.StandardManagedResources;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.SimpleServiceRegistry;
 import io.smartspaces.service.event.observable.StandardEventObservableService;
-import io.smartspaces.time.SettableTimeProvider;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.SettableTimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.Jdk14Logger;

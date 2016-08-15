@@ -17,6 +17,16 @@
 
 package io.smartspaces.liveactivity.runtime;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
+
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.ActivityControl;
 import io.smartspaces.activity.ActivityFilesystem;
@@ -40,21 +50,11 @@ import io.smartspaces.liveactivity.runtime.monitor.RemoteLiveActivityRuntimeMoni
 import io.smartspaces.liveactivity.runtime.repository.LocalLiveActivityRepository;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesFilesystem;
-import io.smartspaces.util.concurrency.SequentialEventQueue;
+import io.smartspaces.tasks.SequentialTaskQueue;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransition;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransition.TransitionResult;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransitioner;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransitionerCollection;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
 
 /**
  * The standard implementation of a {@link LiveActivityRuntime}.
@@ -115,9 +115,9 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
   private SimpleGoalStateTransitionerCollection<ActivityState, ActivityControl> activityStateTransitioners;
 
   /**
-   * The sequential event queue to be used for controller events.
+   * The sequential task queue to be used for controller tasks.
    */
-  private SequentialEventQueue eventQueue;
+  private SequentialTaskQueue taskQueue;
 
   /**
    * For important alerts worthy of paging, etc.
@@ -183,8 +183,8 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
    *          the storage manager for live activities
    * @param alertStatusManager
    *          the alerting manager for live activities
-   * @param eventQueue
-   *          the event queue to use
+   * @param taskQueue
+   *          the task queue to use
    * @param runtimeDebugService
    *          the remote debug service to use
    * @param spaceEnvironment
@@ -197,7 +197,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
       LiveActivityLogFactory activityLogFactory,
       LiveActivityConfigurationManager configurationManager,
       LiveActivityStorageManager activityStorageManager, AlertStatusManager alertStatusManager,
-      SequentialEventQueue eventQueue, RemoteLiveActivityRuntimeMonitorService runtimeDebugService,
+      SequentialTaskQueue taskQueue, RemoteLiveActivityRuntimeMonitorService runtimeDebugService,
       SmartSpacesEnvironment spaceEnvironment) {
     super(liveActivityRuntimeComponentFactory.newNativeActivityRunnerFactory(),
         liveActivityRuntimeComponentFactory.newActivityComponentFactory(), spaceEnvironment);
@@ -210,7 +210,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
     this.configurationManager = configurationManager;
     this.liveActivityStorageManager = activityStorageManager;
     this.alertStatusManager = alertStatusManager;
-    this.eventQueue = eventQueue;
+    this.taskQueue = taskQueue;
 
     liveActivityRunnerSampler =
         new SimpleLiveActivityRunnerSampler(spaceEnvironment, spaceEnvironment.getLog());
@@ -630,7 +630,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
     // TODO(keith): Android hates garbage collection. This may need an
     // object
     // pool.
-    eventQueue.addEvent(new Runnable() {
+    taskQueue.addTask(new Runnable() {
       @Override
       public void run() {
         handleActivityStateChange(activity, oldStatus, newStatus);
@@ -902,7 +902,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
     // TODO(keith): Android hates garbage collection. This may need an
     // object
     // pool.
-    eventQueue.addEvent(new Runnable() {
+    taskQueue.addTask(new Runnable() {
       @Override
       public void run() {
         activityStateTransitioners.transition(uuid,

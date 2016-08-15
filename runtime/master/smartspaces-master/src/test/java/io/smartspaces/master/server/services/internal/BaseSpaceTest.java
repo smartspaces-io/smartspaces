@@ -34,8 +34,8 @@ import io.smartspaces.master.server.services.ActiveLiveActivity;
 import io.smartspaces.master.server.services.ActiveSpace;
 import io.smartspaces.master.server.services.ActiveSpaceController;
 import io.smartspaces.master.server.services.RemoteSpaceControllerClient;
-import io.smartspaces.time.LocalTimeProvider;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.LocalTimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -24,6 +24,14 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
+import io.smartspaces.system.SmartSpacesEnvironment
+import io.smartspaces.configuration.Configuration
+import io.smartspaces.system.SmartSpacesEnvironment
+import io.smartspaces.configuration.Configuration
+import io.smartspaces.system.SmartSpacesEnvironment
+import io.smartspaces.configuration.Configuration
+import io.smartspaces.system.SmartSpacesEnvironment
+import io.smartspaces.configuration.Configuration
 
 /**
  * An activity for Smart Spaces.

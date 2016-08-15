@@ -33,7 +33,7 @@ import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import java.util.ArrayList;
 import java.util.List;

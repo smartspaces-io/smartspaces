@@ -20,7 +20,7 @@ package io.smartspaces.master.server.services;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.master.server.services.internal.DataBundleState;
 import io.smartspaces.spacecontroller.SpaceControllerState;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import java.util.Date;
 

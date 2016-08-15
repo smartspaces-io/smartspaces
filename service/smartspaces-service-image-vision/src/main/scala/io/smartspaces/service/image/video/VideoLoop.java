@@ -17,11 +17,11 @@
 
 package io.smartspaces.service.image.video;
 
-import io.smartspaces.util.concurrency.CancellableLoop;
-
 import java.util.List;
 
 import com.google.common.collect.Lists;
+
+import io.smartspaces.tasks.CancellableLoopingTask;
 
 /**
  * A loop for capturing video.
@@ -31,7 +31,7 @@ import com.google.common.collect.Lists;
  *
  * @author Keith M. Hughes
  */
-public abstract class VideoLoop<T> extends CancellableLoop {
+public abstract class VideoLoop<T> extends CancellableLoopingTask {
 
   /**
    * A set of processors for the video frames.

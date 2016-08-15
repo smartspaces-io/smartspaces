@@ -34,7 +34,7 @@ import io.smartspaces.domain.system.NamedScript;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.AutomationRepository;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import org.jdom2.Document;
 import org.jdom2.Element;

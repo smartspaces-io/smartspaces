@@ -32,8 +32,8 @@ import io.smartspaces.hardware.driver.Driver;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.resource.managed.ManagedResources;
 import io.smartspaces.resource.managed.StandardManagedResources;
-import io.smartspaces.util.concurrency.ManagedCommands;
-import io.smartspaces.util.concurrency.SimpleManagedCommands;
+import io.smartspaces.tasks.ManagedTasks;
+import io.smartspaces.tasks.SimpleManagedTasks;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
@@ -86,9 +86,9 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
   private ManagedResources managedResources;
 
   /**
-   * The commands which are being managed.
+   * The tasks that are being managed.
    */
-  private SimpleManagedCommands managedCommands;
+  private SimpleManagedTasks managedTasks;
 
   /**
    * File support for use with the activity.
@@ -152,8 +152,8 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
   }
 
   @Override
-  public ManagedCommands getManagedCommands() {
-    return managedCommands;
+  public ManagedTasks getManagedTasks() {
+    return managedTasks;
   }
 
   /**
@@ -219,8 +219,8 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
 
     managedResources = new StandardManagedResources(getLog());
 
-    managedCommands =
-        new SimpleManagedCommands(getSpaceEnvironment().getExecutorService(), getLog());
+    managedTasks =
+        new SimpleManagedTasks(getSpaceEnvironment().getExecutorService(), getLog());
 
     setActivityStatus(ActivityState.STARTUP_ATTEMPT);
 
@@ -272,7 +272,7 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
       componentContext.shutdownAndClearRunningComponents();
       componentContext.endStartupPhase(false);
 
-      managedCommands.shutdownAll();
+      managedTasks.shutdownAll();
       managedResources.shutdownResourcesAndClear();
 
       logException("Could not startup activity", e);
@@ -519,9 +519,9 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
           SHUTDOWN_EVENT_HANDLER_COMPLETION_MAX_SAMPLE_TIME));
     }
 
-    if (managedCommands != null) {
-      managedCommands.shutdownAll();
-      managedCommands = null;
+    if (managedTasks != null) {
+      managedTasks.shutdownAll();
+      managedTasks = null;
     }
 
     try {

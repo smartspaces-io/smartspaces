@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 import io.smartspaces.service.alert.AlertNotifier;
 import io.smartspaces.service.alert.internal.BasicAlertService;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.time.SettableTimeProvider;
+import io.smartspaces.time.provider.SettableTimeProvider;
 
 import org.apache.commons.logging.Log;
 import org.junit.Before;

@@ -16,17 +16,31 @@
 
 dependencies {
   compile project(':service:smartspaces-service-core')
+  compile project(':service:smartspaces-service-action')
   compile project(':smartspaces-system')
 
   compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.quartz:2.1.7_1') {
     exclude group: 'c3p0', module: 'c3p0'
     transitive = false
   }
-
+  
+  compile files("${project.getProperty('smartspaces.dependencies.home')}/scheduling/quartz/quartz-orientdb-1.0.0-alpha1-SNAPSHOT.jar")
+  
   provided "${project.ext.osgiContainerDependency}"
 
-  runtime 'org.slf4j:slf4j-api:1.6.4'
-  runtime 'org.slf4j:slf4j-simple:1.6.4'
+  runtime 'org.slf4j:slf4j-api:1.7.10'
+  runtime 'org.slf4j:slf4j-simple:1.7.10'
+  
+  runtime("org.apache.commons:com.springsource.org.apache.commons.codec:1.4.0")
+  runtime("org.slf4j:slf4j-api:1.7.10")
+
+  runtime('com.orientechnologies:orientdb-core:2.2.7')
+  runtime('com.orientechnologies:orientdb-client:2.2.7')
+  runtime('com.orientechnologies:orientdb-server:2.2.7') {
+    exclude group: 'javax.mail', module: 'mail'
+    transitive = false
+  }
+  //runtime('com.orientechnologies:orientdb-enterprise:2.1.6')
 
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'

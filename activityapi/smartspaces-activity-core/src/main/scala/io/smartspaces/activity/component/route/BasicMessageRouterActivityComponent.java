@@ -25,7 +25,7 @@ import io.smartspaces.messaging.route.RoutableInputMessageListener;
 import io.smartspaces.messaging.route.RouteDescription;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
 import io.smartspaces.messaging.route.StandardMessageRouter;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
 
 import org.apache.commons.logging.Log;

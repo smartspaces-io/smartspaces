@@ -17,13 +17,13 @@
 
 package io.smartspaces.activity;
 
+import java.util.Map;
+
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.annotation.ConfigurationPropertyAnnotationProcessor;
 import io.smartspaces.activity.component.ActivityComponent;
 import io.smartspaces.resource.managed.ManagedResource;
-import io.smartspaces.util.concurrency.ManagedCommands;
-
-import java.util.Map;
+import io.smartspaces.tasks.ManagedTasks;
 
 /**
  * Some extra methods added onto {@link Activity} implementations which are
@@ -254,12 +254,12 @@ public interface SupportedActivity extends Activity {
   void addManagedResource(ManagedResource resource);
 
   /**
-   * Get the collection of managed commands.
+   * Get the collection of managed tasks.
    *
-   * @return the managed commands (will be {@code null} if the activity has not
+   * @return the managed tasks (will be {@code null} if the activity has not
    *         been started, though will be available for any startup callbacks
    */
-  ManagedCommands getManagedCommands();
+  ManagedTasks getManagedTasks();
 
   /**
    * Get the annotation processor for handling configuration parameters.

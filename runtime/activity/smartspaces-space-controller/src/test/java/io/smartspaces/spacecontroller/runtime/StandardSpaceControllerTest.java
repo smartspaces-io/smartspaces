@@ -23,6 +23,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+
+import org.apache.commons.logging.Log;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.ros.concurrent.DefaultScheduledExecutorService;
+
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
@@ -34,20 +45,9 @@ import io.smartspaces.spacecontroller.runtime.configuration.SpaceControllerConfi
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesFilesystem;
 import io.smartspaces.system.SmartSpacesSystemControl;
-import io.smartspaces.time.TimeProvider;
-import io.smartspaces.util.concurrency.ImmediateRunSequentialEventQueue;
+import io.smartspaces.tasks.ImmediateRunSequentialTaskQueue;
+import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.io.FileSupport;
-
-import org.apache.commons.logging.Log;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.ros.concurrent.DefaultScheduledExecutorService;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Unit tests for the {@link StandardSpaceController}.
@@ -118,7 +118,7 @@ public class StandardSpaceControllerTest {
         new StandardSpaceController(spaceControllerActivityInstallManager, null,
             controllerCommunicator, controllerInfoPersister, spaceSystemControl, dataBundleManager,
             spaceControllerConfigurationManager, liveActivityRuntime,
-            new ImmediateRunSequentialEventQueue(), spaceEnvironment);
+            new ImmediateRunSequentialTaskQueue(), spaceEnvironment);
 
     fileSupport = mock(FileSupport.class);
     controller.setFileSupport(fileSupport);

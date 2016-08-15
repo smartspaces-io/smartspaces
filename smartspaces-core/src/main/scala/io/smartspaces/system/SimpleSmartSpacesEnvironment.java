@@ -21,7 +21,7 @@ import io.smartspaces.configuration.Configuration;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.service.ServiceRegistry;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import org.apache.commons.logging.Log;
 

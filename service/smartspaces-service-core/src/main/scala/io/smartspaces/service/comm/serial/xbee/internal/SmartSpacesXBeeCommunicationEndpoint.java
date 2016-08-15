@@ -17,6 +17,13 @@
 
 package io.smartspaces.service.comm.serial.xbee.internal;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.commons.logging.Log;
+
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.xbee.AtLocalRequestXBeeFrame;
 import io.smartspaces.service.comm.serial.xbee.AtRemoteRequestXBeeFrame;
@@ -25,14 +32,7 @@ import io.smartspaces.service.comm.serial.xbee.XBeeAddress16;
 import io.smartspaces.service.comm.serial.xbee.XBeeAddress64;
 import io.smartspaces.service.comm.serial.xbee.XBeeCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.xbee.XBeeResponseListener;
-import io.smartspaces.util.concurrency.CancellableLoop;
-
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.commons.logging.Log;
+import io.smartspaces.tasks.CancellableLoopingTask;
 
 /**
  * A Smart Spaces implementation of an XBee communication endpoint.
@@ -74,7 +74,7 @@ public class SmartSpacesXBeeCommunicationEndpoint implements XBeeCommunicationEn
   /**
    * Loop for reading info from the XBee.
    */
-  private CancellableLoop readerLoop;
+  private CancellableLoopingTask readerLoop;
 
   /**
    * A generator for frame numbers.
@@ -105,7 +105,7 @@ public class SmartSpacesXBeeCommunicationEndpoint implements XBeeCommunicationEn
     log.info(String.format("Starting up XBee connection with serial connection %s", commEndpoint));
     commEndpoint.startup();
 
-    readerLoop = new CancellableLoop() {
+    readerLoop = new CancellableLoopingTask() {
       @Override
       protected void loop() throws InterruptedException {
         readFrame();

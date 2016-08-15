@@ -23,19 +23,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
+
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.activity.ActivityStatus;
 import io.smartspaces.activity.binary.NativeActivityRunnerFactory;
-import io.smartspaces.liveactivity.runtime.InternalLiveActivityFilesystem;
-import io.smartspaces.liveactivity.runtime.LiveActivityRunner;
-import io.smartspaces.liveactivity.runtime.LiveActivityRunnerFactory;
-import io.smartspaces.liveactivity.runtime.LiveActivityRunnerSampler;
-import io.smartspaces.liveactivity.runtime.LiveActivityRuntimeComponentFactory;
-import io.smartspaces.liveactivity.runtime.LiveActivityStatusPublisher;
-import io.smartspaces.liveactivity.runtime.LiveActivityStorageManager;
-import io.smartspaces.liveactivity.runtime.StandardLiveActivityRunner;
-import io.smartspaces.liveactivity.runtime.StandardLiveActivityRuntime;
 import io.smartspaces.liveactivity.runtime.activity.wrapper.ActivityWrapper;
 import io.smartspaces.liveactivity.runtime.alert.AlertStatusManager;
 import io.smartspaces.liveactivity.runtime.configuration.LiveActivityConfiguration;
@@ -49,14 +47,8 @@ import io.smartspaces.liveactivity.runtime.repository.LocalLiveActivityRepositor
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.time.TimeProvider;
-import io.smartspaces.util.concurrency.ImmediateRunSequentialEventQueue;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
+import io.smartspaces.tasks.ImmediateRunSequentialTaskQueue;
+import io.smartspaces.time.provider.TimeProvider;
 
 /**
  * Tests for the {@link StandardLiveActivityRuntime}.
@@ -118,7 +110,7 @@ public class StandardLiveActivityRuntimeTest {
         new StandardLiveActivityRuntime(liveActivityRuntimeComponentFactory,
             liveActivityRepository, liveActivityInstallationManager, liveActivityLogFactory,
             liveActivityConfigurationManager, liveActivityStorageManager, alertStatusManager,
-            new ImmediateRunSequentialEventQueue(), runtimeDebugService, spaceEnvironment);
+            new ImmediateRunSequentialTaskQueue(), runtimeDebugService, spaceEnvironment);
 
     liveActivityRuntime.setAlertStatusManager(alertStatusManager);
     liveActivityRuntime.setLiveActivityRunnerSampler(liveActivityRunnerSampler);

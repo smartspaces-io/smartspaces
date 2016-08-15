@@ -18,7 +18,7 @@
 package io.smartspaces.util.process.restart;
 
 import io.smartspaces.system.StandaloneSmartSpacesEnvironment;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import org.junit.After;
 import org.junit.Before;

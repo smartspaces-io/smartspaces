@@ -29,7 +29,7 @@ import io.smartspaces.messaging.route.ros.MapGenericMessageMessageDecoder;
 import io.smartspaces.messaging.route.ros.MapGenericMessageMessageEncoder;
 import io.smartspaces.messaging.route.ros.RosRouteMessagePublisher;
 import io.smartspaces.messaging.route.ros.RosRouteMessageSubscriber;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
 import io.smartspaces.util.messaging.mqtt.MqttPublishers;
 import io.smartspaces.util.messaging.mqtt.MqttSubscribers;

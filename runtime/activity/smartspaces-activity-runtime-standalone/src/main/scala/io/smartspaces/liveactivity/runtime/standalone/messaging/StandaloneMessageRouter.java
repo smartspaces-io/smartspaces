@@ -34,7 +34,7 @@ import io.smartspaces.messaging.route.RoutableInputMessageListener;
 import io.smartspaces.messaging.route.RouteDescription;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
 import io.smartspaces.messaging.route.RouteMessageSubscriber;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
 
@@ -253,7 +253,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     try {
       router.startup();
 
-      activity.getManagedCommands().submit(new Runnable() {
+      activity.getManagedTasks().submit(new Runnable() {
         @Override
         public void run() {
           receiveLoop();

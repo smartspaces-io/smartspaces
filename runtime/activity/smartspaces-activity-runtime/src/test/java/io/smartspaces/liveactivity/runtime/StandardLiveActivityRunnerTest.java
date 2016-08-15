@@ -28,7 +28,7 @@ import io.smartspaces.liveactivity.runtime.activity.wrapper.ActivityWrapper;
 import io.smartspaces.liveactivity.runtime.configuration.LiveActivityConfiguration;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.time.SettableTimeProvider;
+import io.smartspaces.time.provider.SettableTimeProvider;
 
 import org.junit.Assert;
 import org.junit.Before;

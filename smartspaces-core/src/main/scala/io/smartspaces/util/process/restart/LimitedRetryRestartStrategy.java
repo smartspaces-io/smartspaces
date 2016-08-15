@@ -18,7 +18,7 @@
 package io.smartspaces.util.process.restart;
 
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.SmartSpacesUtilities;
 
 import java.util.concurrent.ScheduledExecutorService;

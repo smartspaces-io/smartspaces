@@ -24,7 +24,7 @@ import io.smartspaces.master.event.MasterEventManager;
 import io.smartspaces.master.server.services.ActiveLiveActivity;
 import io.smartspaces.service.web.server.MultipleConnectionWebServerWebSocketHandlerFactory;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import org.junit.Before;
 import org.junit.Test;

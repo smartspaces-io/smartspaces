@@ -17,6 +17,15 @@
 
 package io.smartspaces.spacecontroller.runtime;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.logging.Log;
+
+import com.google.common.annotations.VisibleForTesting;
+
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.ActivityStatus;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
@@ -40,20 +49,11 @@ import io.smartspaces.spacecontroller.resource.deployment.ContainerResourceDeplo
 import io.smartspaces.spacecontroller.runtime.configuration.SpaceControllerConfigurationManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesSystemControl;
-import io.smartspaces.util.concurrency.SequentialEventQueue;
+import io.smartspaces.tasks.SequentialTaskQueue;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.uuid.JavaUuidGenerator;
 import io.smartspaces.util.uuid.UuidGenerator;
-
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.annotations.VisibleForTesting;
 
 /**
  * A base implementation of {@link SpaceController} which gives basic
@@ -119,9 +119,9 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
   private final SpaceControllerCommunicator spaceControllerCommunicator;
 
   /**
-   * The sequential event queue to be used for controller events.
+   * The sequential task queue to be used for controller tasks.
    */
-  private SequentialEventQueue eventQueue;
+  private SequentialTaskQueue eventQueue;
 
   /**
    * {@code true} if the controller was started up.
@@ -180,8 +180,8 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
    *          configuration manager for the space controller
    * @param liveActivityRuntime
    *          the live activity runtime for the controller
-   * @param eventQueue
-   *          the event queue for the controller
+   * @param taskQueue
+   *          the task queue for the controller
    * @param spaceEnvironment
    *          the space environment to use
    */
@@ -193,7 +193,7 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
       SmartSpacesSystemControl spaceSystemControl,
       SpaceControllerDataBundleManager dataBundleManager,
       SpaceControllerConfigurationManager spaceControllerConfigurationManager,
-      LiveActivityRuntime liveActivityRuntime, SequentialEventQueue eventQueue,
+      LiveActivityRuntime liveActivityRuntime, SequentialTaskQueue taskQueue,
       SmartSpacesEnvironment spaceEnvironment) {
     super(spaceEnvironment);
 
@@ -214,7 +214,7 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
     this.liveActivityRuntime = liveActivityRuntime;
     liveActivityRuntime.setLiveActivityStatusPublisher(this);
 
-    this.eventQueue = eventQueue;
+    this.eventQueue = taskQueue;
   }
 
   @Override
@@ -499,7 +499,7 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
 
   @Override
   public void publishActivityStatus(final String uuid, final ActivityStatus status) {
-    eventQueue.addEvent(new Runnable() {
+    eventQueue.addTask(new Runnable() {
       @Override
       public void run() {
         spaceControllerCommunicator.publishActivityStatus(uuid, status);

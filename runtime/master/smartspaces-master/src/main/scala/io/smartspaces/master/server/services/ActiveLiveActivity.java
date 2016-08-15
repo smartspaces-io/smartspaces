@@ -20,7 +20,7 @@ package io.smartspaces.master.server.services;
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.LiveActivity;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import java.util.Date;
 import java.util.HashSet;

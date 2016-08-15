@@ -17,17 +17,17 @@
 
 package io.smartspaces.hardware.driver.gaming.wilddivine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.hardware.driver.DriverSupport;
 import io.smartspaces.service.comm.usb.UsbCommunicationEndpoint;
 import io.smartspaces.service.comm.usb.UsbCommunicationEndpointService;
 import io.smartspaces.service.comm.usb.internal.libusb4j.Usb4JavaUsbCommunicationEndpointService;
 import io.smartspaces.system.StandaloneSmartSpacesEnvironment;
+import io.smartspaces.tasks.CancellableLoopingTask;
 import io.smartspaces.util.SmartSpacesUtilities;
-import io.smartspaces.util.concurrency.CancellableLoop;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A driver for the Wild Divine Iom biofeedback sensor.
@@ -145,7 +145,7 @@ public class IomDriver extends DriverSupport {
   /**
    * The sensor read loop.
    */
-  private CancellableLoop sensorReadLoop;
+  private CancellableLoopingTask sensorReadLoop;
 
   @Override
   public void startup() {
@@ -167,7 +167,7 @@ public class IomDriver extends DriverSupport {
     readBuffer = endpoint.newBuffer();
     readBufferSize = endpoint.getReadBufferSize();
 
-    sensorReadLoop = new CancellableLoop() {
+    sensorReadLoop = new CancellableLoopingTask() {
 
       @Override
       protected void loop() throws InterruptedException {

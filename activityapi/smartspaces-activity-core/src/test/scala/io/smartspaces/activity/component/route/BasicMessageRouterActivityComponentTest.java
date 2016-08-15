@@ -25,8 +25,8 @@ import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.evaluation.SimpleExpressionEvaluator;
 import io.smartspaces.messaging.route.RoutableInputMessageListener;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.time.SettableTimeProvider;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.SettableTimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import org.apache.commons.logging.Log;
 import org.junit.Before;

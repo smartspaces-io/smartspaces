@@ -18,12 +18,13 @@
 package io.smartspaces.service.scheduler.internal.quartz;
 
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.evaluation.ExecutionContext;
+import io.smartspaces.evaluation.StandardExecutionContext;
+import io.smartspaces.scheduling.quartz.orientdb.OrientDbJobStore;
 import io.smartspaces.service.BaseSupportedService;
+import io.smartspaces.service.action.ActionService;
 import io.smartspaces.service.scheduler.SchedulerService;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+import io.smartspaces.system.SmartSpacesEnvironment;
 
 import org.apache.commons.logging.Log;
 import org.quartz.CronScheduleBuilder;
@@ -36,11 +37,19 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
-import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
-import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.impl.DirectSchedulerFactory;
+import org.quartz.simpl.RAMJobStore;
+import org.quartz.simpl.SimpleThreadPool;
+import org.quartz.spi.JobFactory;
+import org.quartz.spi.TriggerFiredBundle;
+
+import java.lang.reflect.Constructor;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * A {@link SchedulerService} which uses quartz.
@@ -48,6 +57,15 @@ import org.quartz.impl.StdSchedulerFactory;
  * @author Keith M. Hughes
  */
 public class QuartzSchedulerService extends BaseSupportedService implements SchedulerService {
+  private static final String ORIENTDB_URI = "PLOCAL:/var/tmp/quartz";
+  private static final String ORIENTDB_USER = "sooperdooper";
+  private static final String ORIENTDB_PASSWORD = "sooperdooper";
+  private static final String PERSISTED_SCHEDULER_NAME = "SmartSpacesSchedulerPersisted";
+  private static final String PERSISTED_SCHEDULER_INSTANCE_ID =
+      "MainSchedulerNonClusteredPersisted";
+
+  private static final String VOLATILE_SCHEDULER_NAME = "SmartSpacesSchedulerVolatile";
+  private static final String VOLATILE_SCHEDULER_INSTANCE_ID = "MainSchedulerNonClusteredVolatile";
 
   /**
    * JobMap property for the runnable which will run.
@@ -70,9 +88,24 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
   public static final String JOB_MAP_PROPERTY_SPACE_ENVIRONMENT = "spaceEnvironment";
 
   /**
-   * The quartz scheduler.
+   * JobMap property for the action name.
    */
-  private Scheduler scheduler;
+  public static final String JOB_MAP_PROPERTY_ACTION_NAME = "action.name";
+
+  /**
+   * JobMap property for the action source.
+   */
+  public static final String JOB_MAP_PROPERTY_ACTION_SOURCE = "action.source";
+
+  /**
+   * The volatile volatileScheduler.
+   */
+  private Scheduler volatileScheduler;
+
+  /**
+   * The persisted scheduler.
+   */
+  private Scheduler persistedScheduler;
 
   @Override
   public String getName() {
@@ -82,31 +115,50 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
   @Override
   public void startup() {
     try {
+      MyJobFactory jobFactory = new MyJobFactory();
+      
       // TODO(keith): Get Smart Spaces thread pool in here.
-      SchedulerFactory schedulerFactory = new StdSchedulerFactory();
-      scheduler = schedulerFactory.getScheduler();
+      OrientDbJobStore jobStore =
+          new OrientDbJobStore(ORIENTDB_URI, ORIENTDB_USER, ORIENTDB_PASSWORD);
+      SimpleThreadPool threadPool = new SimpleThreadPool(10, Thread.NORM_PRIORITY);
 
-      scheduler.start();
+      DirectSchedulerFactory instance = DirectSchedulerFactory.getInstance();
+
+      instance.createScheduler(PERSISTED_SCHEDULER_NAME, PERSISTED_SCHEDULER_INSTANCE_ID,
+          threadPool, jobStore);
+
+      persistedScheduler = instance.getScheduler(PERSISTED_SCHEDULER_NAME);
+      persistedScheduler.setJobFactory(jobFactory);
+
+      persistedScheduler.start();
+
+      instance.createScheduler(VOLATILE_SCHEDULER_NAME, VOLATILE_SCHEDULER_INSTANCE_ID, threadPool,
+          new RAMJobStore());
+
+      volatileScheduler = instance.getScheduler(VOLATILE_SCHEDULER_NAME);
+      volatileScheduler.setJobFactory(jobFactory);
+
+      volatileScheduler.start();
     } catch (SchedulerException e) {
-      throw new SmartSpacesException("Could not start Smart Spaces scheduler", e);
+      throw new SmartSpacesException("Could not start Smart Spaces volatileScheduler", e);
     }
   }
 
   @Override
   public void shutdown() {
     try {
-      scheduler.shutdown();
+      volatileScheduler.shutdown();
     } catch (SchedulerException e) {
-      throw new SmartSpacesException("Could not shutdown Smart Spaces scheduler", e);
+      throw new SmartSpacesException("Could not shutdown Smart Spaces volatileScheduler", e);
     }
   }
 
   @Override
   public void addSchedulingEntities(Map<String, Object> entities) {
     try {
-      scheduler.getContext().putAll(entities);
+      volatileScheduler.getContext().putAll(entities);
     } catch (SchedulerException e) {
-      throw new SmartSpacesException("Unable to add map of entities to the scheduler", e);
+      throw new SmartSpacesException("Unable to add map of entities to the volatileScheduler", e);
     }
   }
 
@@ -118,26 +170,23 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
       detail.getJobDataMap().put(JOB_MAP_PROPERTY_RUNNABLE, runnable);
       detail.getJobDataMap().put(JOB_MAP_PROPERTY_LOGGER, getSpaceEnvironment().getLog());
 
-      Trigger trigger =
-          TriggerBuilder.newTrigger().withIdentity(TriggerKey.triggerKey(jobName, groupName))
-              .startAt(when).build();
-      scheduler.scheduleJob(detail, trigger);
+      Trigger trigger = TriggerBuilder.newTrigger()
+          .withIdentity(TriggerKey.triggerKey(jobName, groupName)).startAt(when).build();
+      volatileScheduler.scheduleJob(detail, trigger);
 
-      getSpaceEnvironment().getLog().info(
-          String.format("Scheduled job %s:%s for %s\n", groupName, jobName, new SimpleDateFormat(
-              "MM/dd/yyyy@HH:mm:ss").format(when)));
+      getSpaceEnvironment().getLog().info(String.format("Scheduled job %s:%s for %s\n", groupName,
+          jobName, new SimpleDateFormat("MM/dd/yyyy@HH:mm:ss").format(when)));
     } catch (SchedulerException e) {
-      throw new SmartSpacesException(String.format("Unable to schedule job %s:%s", groupName,
-          jobName), e);
+      throw new SmartSpacesException(
+          String.format("Unable to schedule job %s:%s", groupName, jobName), e);
     }
   }
 
   @Override
   public void scheduleScriptWithCron(String jobName, String groupName, String id, String schedule) {
     try {
-      JobDetail detail =
-          JobBuilder.newJob(SimpleScriptSchedulerJob.class).withIdentity(jobName, groupName)
-              .build();
+      JobDetail detail = JobBuilder.newJob(SimpleScriptSchedulerJob.class)
+          .withIdentity(jobName, groupName).build();
       JobDataMap jobDataMap = detail.getJobDataMap();
       jobDataMap.put(JOB_MAP_PROPERTY_SCRIPT_ID, id);
       jobDataMap.put(JOB_MAP_PROPERTY_LOGGER, getSpaceEnvironment().getLog());
@@ -146,15 +195,50 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
           TriggerBuilder.newTrigger().withIdentity(TriggerKey.triggerKey(jobName, groupName))
               .withSchedule(CronScheduleBuilder.cronSchedule(schedule)).build();
 
-      scheduler.scheduleJob(detail, trigger);
+      volatileScheduler.scheduleJob(detail, trigger);
     } catch (Exception e) {
-      throw new SmartSpacesException(String.format("Unable to schedule job %s:%s", groupName,
-          jobName), e);
+      throw new SmartSpacesException(
+          String.format("Unable to schedule job %s:%s", groupName, jobName), e);
     }
   }
 
   /**
-   * The job which the scheduler will run.
+   * The job factory to use for Quartz job creation.
+   * 
+   * @author Keith M. Hughes
+   */
+  public class MyJobFactory implements JobFactory {
+
+    /**
+     * The parameter types for SmartSpacesSchedulerJob subclass constructors.
+     */
+    private final Class<?>[] SMARTSPACES_JOB_CONSTRUCTOR_PARAMETER_TYPES =
+        new Class<?>[] { SmartSpacesEnvironment.class, Log.class };
+
+    @Override
+    public Job newJob(TriggerFiredBundle bundle, Scheduler scheduler) throws SchedulerException {
+      Class<? extends Job> jobClass = bundle.getJobDetail().getJobClass();
+      try {
+        if (SmartSpacesSchedulerJob.class.isAssignableFrom(jobClass)) {
+          Constructor<? extends Job> constructor =
+              jobClass.getConstructor(SMARTSPACES_JOB_CONSTRUCTOR_PARAMETER_TYPES);
+          if (constructor != null) {
+            return constructor.newInstance(getSpaceEnvironment(), getSpaceEnvironment().getLog());
+          } else {
+            throw new SchedulerException(String.format(
+                "SmartSpaces job class %s does not have a proper constructor", jobClass.getName()));
+          }
+        } else {
+          return jobClass.getConstructor().newInstance();
+        }
+      } catch (Exception e) {
+        throw new SchedulerException("Could not instantiate job class " + jobClass, e);
+      }
+    }
+  }
+
+  /**
+   * The job which the volatileScheduler will run.
    *
    * @author Keith M. Hughes
    */
@@ -167,15 +251,15 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
             (Runnable) context.getJobDetail().getJobDataMap().get(JOB_MAP_PROPERTY_RUNNABLE);
         runner.run();
       } catch (Exception e) {
-        ((Log) context.getJobDetail().getJobDataMap().get(JOB_MAP_PROPERTY_LOGGER)).error(
-            "Could not run scheduled job", e);
+        ((Log) context.getJobDetail().getJobDataMap().get(JOB_MAP_PROPERTY_LOGGER))
+            .error("Could not run scheduled job", e);
       }
     }
 
   }
 
   /**
-   * The job which the scheduler will run.
+   * The job which the volatileScheduler will run.
    *
    * @author Keith M. Hughes
    */
@@ -186,11 +270,66 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
       try {
         String scriptId =
             (String) context.getJobDetail().getJobDataMap().get(JOB_MAP_PROPERTY_SCRIPT_ID);
-        ((Log) context.getJobDetail().getJobDataMap().get(JOB_MAP_PROPERTY_LOGGER)).info(String
-            .format("Running script %s", scriptId));
+        ((Log) context.getJobDetail().getJobDataMap().get(JOB_MAP_PROPERTY_LOGGER))
+            .info(String.format("Running script %s", scriptId));
       } catch (Exception e) {
-        ((Log) context.getJobDetail().getJobDataMap().get(JOB_MAP_PROPERTY_LOGGER)).error(
-            "Could not run scheduled job", e);
+        ((Log) context.getJobDetail().getJobDataMap().get(JOB_MAP_PROPERTY_LOGGER))
+            .error("Could not run scheduled job", e);
+      }
+    }
+  }
+
+  public static abstract class SmartSpacesSchedulerJob implements Job {
+
+    /**
+     * The action service.
+     */
+    private SmartSpacesEnvironment spaceEnvironment;
+
+    /**
+     * Logger for the class
+     */
+    private Log log;
+
+    public SmartSpacesSchedulerJob(SmartSpacesEnvironment spaceEnvironment, Log log) {
+      this.spaceEnvironment = spaceEnvironment;
+      this.log = log;
+    }
+
+    protected Log getLog() {
+      return log;
+    }
+
+    protected SmartSpacesEnvironment getSpaceEnvironment() {
+      return spaceEnvironment;
+    }
+  }
+
+  /**
+   * The job which the scheduler will run.
+   *
+   * @author Keith M. Hughes
+   */
+  public static class ActionSchedulerJob extends SmartSpacesSchedulerJob {
+
+    public ActionSchedulerJob(SmartSpacesEnvironment spaceEnvironment, Log log) {
+      super(spaceEnvironment, log);
+    }
+
+    @Override
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+      try {
+        JobDataMap jobDataMap = context.getMergedJobDataMap();
+        ExecutionContext executionContext =
+            new StandardExecutionContext(getSpaceEnvironment(), getLog());
+        executionContext.setValues(jobDataMap);
+
+        ActionService actionService = getSpaceEnvironment().getServiceRegistry()
+            .getRequiredService(ActionService.SERVICE_NAME);
+        actionService.performAction(jobDataMap.getString(JOB_MAP_PROPERTY_ACTION_SOURCE),
+            jobDataMap.getString(JOB_MAP_PROPERTY_ACTION_NAME), executionContext);
+      } catch (Exception e) {
+        getLog().error("Could not run scheduled job", e);
       }
     }
   }

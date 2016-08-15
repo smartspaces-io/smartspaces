@@ -27,7 +27,7 @@ import io.smartspaces.master.server.services.MasterAlertManager;
 import io.smartspaces.master.server.services.internal.StandardMasterAlertManager;
 import io.smartspaces.service.alert.AlertService;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.time.SettableTimeProvider;
+import io.smartspaces.time.provider.SettableTimeProvider;
 
 import java.util.concurrent.ScheduledExecutorService;
 

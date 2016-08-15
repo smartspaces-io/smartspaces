@@ -22,7 +22,7 @@ import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.system.core.configuration.CoreConfiguration;
 import io.smartspaces.system.core.logging.LoggingProvider;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import java.util.concurrent.ScheduledExecutorService;
 

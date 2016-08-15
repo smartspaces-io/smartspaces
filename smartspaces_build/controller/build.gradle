@@ -40,8 +40,8 @@ dependencies {
   
   bootstrap project(":activityapi:smartspaces-interaction")
 
+  bootstrap project(":service:smartspaces-service-action")
   bootstrap project(":service:smartspaces-service-script")
-  bootstrap project(":service:smartspaces-service-scheduler")
   bootstrap project(":service:smartspaces-service-web")
   bootstrap project(":service:smartspaces-service-audio-player")
   bootstrap project(":service:smartspaces-service-speech-synthesis")

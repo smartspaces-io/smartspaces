@@ -19,7 +19,7 @@ package io.smartspaces.system;
 
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.system.core.logging.LoggingProvider;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
 import java.util.concurrent.ScheduledExecutorService;
 

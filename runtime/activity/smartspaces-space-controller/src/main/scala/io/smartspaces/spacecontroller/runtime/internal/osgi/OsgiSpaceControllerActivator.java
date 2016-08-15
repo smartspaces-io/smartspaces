@@ -17,6 +17,8 @@
 
 package io.smartspaces.spacecontroller.runtime.internal.osgi;
 
+import org.ros.osgi.common.RosEnvironment;
+
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.evaluation.ExpressionEvaluatorFactory;
 import io.smartspaces.liveactivity.runtime.LiveActivityRuntimeComponentFactory;
@@ -51,10 +53,8 @@ import io.smartspaces.spacecontroller.ui.internal.osgi.OsgiSpaceControllerShell;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesSystemControl;
 import io.smartspaces.system.resources.ContainerResourceManager;
-import io.smartspaces.util.concurrency.SequentialEventQueue;
-import io.smartspaces.util.concurrency.SimpleSequentialEventQueue;
-
-import org.ros.osgi.common.RosEnvironment;
+import io.smartspaces.tasks.SequentialTaskQueue;
+import io.smartspaces.tasks.SimpleSequentialTaskQueue;
 
 /**
  * An OSGi activator for an Smart Spaces space controller.
@@ -180,9 +180,9 @@ public class OsgiSpaceControllerActivator extends SmartSpacesServiceOsgiBundleAc
         new StandardSpaceControllerConfigurationManager(spaceEnvironment);
     addManagedResource(spaceControllerConfigurationManager);
 
-    SequentialEventQueue eventQueue =
-        new SimpleSequentialEventQueue(spaceEnvironment, spaceEnvironment.getLog());
-    addManagedResource(eventQueue);
+    SequentialTaskQueue taskQueue =
+        new SimpleSequentialTaskQueue(spaceEnvironment, spaceEnvironment.getLog());
+    addManagedResource(taskQueue);
 
     LoggingAlertStatusManager alertStatusManager =
         new LoggingAlertStatusManager(spaceEnvironment.getLog());
@@ -198,7 +198,7 @@ public class OsgiSpaceControllerActivator extends SmartSpacesServiceOsgiBundleAc
         new StandardLiveActivityRuntime(liveActivityRuntimeComponentFactory,
             liveActivityRepository, activityInstallationManager, activityLogFactory,
             liveActivityConfigurationManager, liveActivityStorageManager, alertStatusManager,
-            eventQueue, runtimeDebugService, spaceEnvironment);
+            taskQueue, runtimeDebugService, spaceEnvironment);
     addManagedResource(liveActivityRuntime);
 
     liveActivityRuntime.addRuntimeListener(new OsgiServiceRegistrationLiveActivityRuntimeListener(
@@ -208,7 +208,7 @@ public class OsgiSpaceControllerActivator extends SmartSpacesServiceOsgiBundleAc
         new StandardSpaceController(controllerActivityInstaller,
             containerResourceDeploymentManager, spaceControllerCommunicator,
             new FileSystemSpaceControllerInfoPersister(), spaceSystemControl, dataBundleManager,
-            spaceControllerConfigurationManager, liveActivityRuntime, eventQueue, spaceEnvironment);
+            spaceControllerConfigurationManager, liveActivityRuntime, taskQueue, spaceEnvironment);
     addManagedResource(spaceController);
 
     OsgiSpaceControllerShell controllerShell =

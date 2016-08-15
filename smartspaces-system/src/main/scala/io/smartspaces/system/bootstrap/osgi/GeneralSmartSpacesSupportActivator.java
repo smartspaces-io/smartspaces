@@ -17,31 +17,6 @@
 
 package io.smartspaces.system.bootstrap.osgi;
 
-import java.io.File;
-import java.net.InetAddress;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.logging.Log;
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.framework.wiring.FrameworkWiring;
-import org.ros.address.InetAddressFactory;
-import org.ros.concurrent.DefaultScheduledExecutorService;
-import org.ros.log.RosLogFactory;
-import org.ros.master.uri.MasterUriProvider;
-import org.ros.master.uri.StaticMasterUriProvider;
-import org.ros.master.uri.SwitchableMasterUriProvider;
-import org.ros.osgi.common.RosEnvironment;
-import org.ros.osgi.common.SimpleRosEnvironment;
-
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.FileSystemConfigurationStorageManager;
 import io.smartspaces.configuration.SystemConfigurationStorageManager;
@@ -64,9 +39,34 @@ import io.smartspaces.system.internal.osgi.OsgiContainerResourceManager;
 import io.smartspaces.system.internal.osgi.OsgiSmartSpacesSystemControl;
 import io.smartspaces.system.internal.osgi.RosOsgiSmartSpacesEnvironment;
 import io.smartspaces.system.resources.ContainerResourceManager;
-import io.smartspaces.time.LocalTimeProvider;
-import io.smartspaces.time.NtpTimeProvider;
-import io.smartspaces.time.TimeProvider;
+import io.smartspaces.time.provider.LocalTimeProvider;
+import io.smartspaces.time.provider.NtpTimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
+
+import org.apache.commons.logging.Log;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.framework.wiring.FrameworkWiring;
+import org.ros.address.InetAddressFactory;
+import org.ros.concurrent.DefaultScheduledExecutorService;
+import org.ros.log.RosLogFactory;
+import org.ros.master.uri.MasterUriProvider;
+import org.ros.master.uri.StaticMasterUriProvider;
+import org.ros.master.uri.SwitchableMasterUriProvider;
+import org.ros.osgi.common.RosEnvironment;
+import org.ros.osgi.common.SimpleRosEnvironment;
+
+import java.io.File;
+import java.net.InetAddress;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Activate general services needed by a Smart Spaces container.

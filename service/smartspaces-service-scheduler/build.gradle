@@ -40,7 +40,7 @@ dependencies {
     exclude group: 'javax.mail', module: 'mail'
     transitive = false
   }
-  //runtime('com.orientechnologies:orientdb-enterprise:2.1.6')
+  runtime('com.orientechnologies:orientdb-tools:2.2.7')
 
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'

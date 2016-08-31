@@ -116,6 +116,12 @@ public interface SmartSpacesEnvironment {
   String CONFIGURATION_VALUE_PROVIDER_TIME_DEFAULT = CONFIGURATION_VALUE_PROVIDER_TIME_LOCAL;
 
   /**
+   * Configuration property giving the location of the system's installation
+   * directory.
+   */
+  String CONFIGURATION_SYSTEM_FILESYSTEM_DIR_INSTALL = "system.installdir";
+
+  /**
    * Configuration property giving the location of the system's permanent data
    * directory.
    */
@@ -232,12 +238,13 @@ public interface SmartSpacesEnvironment {
    */
   boolean modifyLogLevel(Log log, String level);
 
-/**
+  /**
    * Release the log and any resources it is using that are unique to itself.
    *
    * <p>
-   * The log should not be used after it is released. This method does nothing if the log was not created with
-   * {@link #getLog(String, String, String) or #getExtendedLog()
+   * The log should not be used after it is released. This method does nothing
+   * if the log was not created with {@link #getLog(String, String, String) or
+   * #getExtendedLog()
    *
    * @param log
    *          the log to release

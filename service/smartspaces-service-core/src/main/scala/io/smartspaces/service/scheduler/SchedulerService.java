@@ -29,56 +29,81 @@ import java.util.Map;
  */
 public interface SchedulerService extends SupportedService {
 
-  /**
-   * The name of the service.
-   */
-  public static final String SERVICE_NAME = "scheduler";
+	/**
+	 * The name of the service.
+	 */
+	public static final String SERVICE_NAME = "scheduler";
 
-  /**
-   * Schedule a runnable for the future.
-   *
-   * @param jobName
-   *          The name of the job.
-   *
-   * @param groupName
-   *          The name of the group the job will run in. Can be {@code null} to
-   *          be in the default group.
-   *
-   * @param runnable
-   *          The runnable to run in the future.
-   *
-   * @param when
-   *          The date when the job should fire.
-   */
-  void schedule(String jobName, String groupName, Runnable runnable, Date when);
+	/**
+	 * Schedule a script using a CRON expression.
+	 *
+	 * @param jobName
+	 *            the name of the job
+	 * @param groupName
+	 *            the name of the group the job will run in, can be {@code null}
+	 *            to be in the default group
+	 * @param id
+	 *            id of the script
+	 * @param schedule
+	 *            the cron schedule when the job should fire
+	 */
+	void scheduleScriptWithCron(String jobName, String groupName, String id, String schedule);
 
-  /**
-   * Schedule a runnable for the future.
-   *
-   * @param jobName
-   *          the name of the job
-   *
-   * @param groupName
-   *          the name of the group the job will run in, can be {@code null} to
-   *          be in the default group
-   *
-   * @param id
-   *          id of the script
-   *
-   * @param schedule
-   *          the cron schedule when the job should fire
-   */
-  void scheduleScriptWithCron(String jobName, String groupName, String id, String schedule);
+	/**
+	 * Schedule an action job for a specific time.
+	 * 
+	 * <p>
+	 * The job will be persisted.
+	 *
+	 * @param jobName
+	 *            the name of the job
+	 * @param groupName
+	 *            the name of the group the job will run in, can be {@code null}
+	 *            to be in the default group
+	 * @param actionSource
+	 *            the name of the action source
+	 * @param actionName
+	 *            the name of the action
+	 * @param data
+	 *            the data for the action
+	 * @param when
+	 *            the date when the job should fire
+	 */
+	void scheduleAction(String jobName, String groupName, String actionSource, String actionName,
+			Map<String, Object> data, Date when);
 
-  /**
-   * Add entities to the scheduler that can be used for scheduled jobs.
-   *
-   * <p>
-   * Entities already registered with a given name will be replaced by new
-   * entities with the same name.
-   *
-   * @param entities
-   *          map of entity names to entities
-   */
-  void addSchedulingEntities(Map<String, Object> entities);
+	/**
+	 * Schedule an action job using a CRON expression.
+	 * 
+	 * <p>
+	 * The job will be persisted.
+	 *
+	 * @param jobName
+	 *            the name of the job
+	 * @param groupName
+	 *            the name of the group the job will run in, can be {@code null}
+	 *            to be in the default group
+	 * @param actionSource
+	 *            the name of the action source
+	 * @param actionName
+	 *            the name of the action
+	 * @param data
+	 *            the data for the action
+	 * @param schedule
+	 *            the cron schedule when the job should fire
+	 */
+	void scheduleActionWithCron(String jobName, String groupName, String actionSource, String actionName,
+			Map<String, Object> data, String schedule);
+
+	/**
+	 * Add entities to the scheduler that can be used for scheduled jobs.
+	 *
+	 * <p>
+	 * Entities already registered with a given name will be replaced by new
+	 * entities with the same name.
+	 *
+	 * @param entities
+	 *            map of entity names to entities
+	 */
+	void addSchedulingEntities(Map<String, Object> entities);
 }

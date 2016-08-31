@@ -50,7 +50,7 @@ public interface ActionService extends SupportedService {
    * Register a new source for actions.
    * 
    * @param sourceName
-   *          the name of the source
+   *          the name of the action source
    * @param sourceVersion
    *          the source of the version
    * @param source
@@ -95,7 +95,7 @@ public interface ActionService extends SupportedService {
    *          the version range for the action source, can be {@code null}
    * @param actionName
    *          the name of the action
-   * @param data
+   * @param context
    *          the context for the action execution
    */
       void performAction(String actionSourceName, VersionRange actionSourceVersionRange,

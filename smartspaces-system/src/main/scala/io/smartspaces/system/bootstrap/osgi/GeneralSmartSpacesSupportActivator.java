@@ -30,6 +30,7 @@ import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.event.observable.StandardEventObservableService;
 import io.smartspaces.system.BasicSmartSpacesFilesystem;
 import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.system.SmartSpacesFilesystem;
 import io.smartspaces.system.SmartSpacesSystemControl;
 import io.smartspaces.system.core.configuration.ConfigurationProvider;
 import io.smartspaces.system.core.configuration.CoreConfiguration;
@@ -483,6 +484,14 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     String hostAddress = convertHostnameToAddress(
         containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_HOSTNAME));
     systemConfiguration.setValue(SmartSpacesEnvironment.CONFIGURATION_HOST_ADDRESS, hostAddress);
+    
+    systemConfiguration.setValue(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_INSTALL,
+            filesystem.getInstallDirectory().getAbsolutePath());
+    systemConfiguration.setValue(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_DATA,
+        filesystem.getDataDirectory().getAbsolutePath());
+    systemConfiguration.setValue(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_TMP,
+        filesystem.getTempDirectory().getAbsolutePath());
+
 
     spaceEnvironment.setSystemConfiguration(systemConfiguration);
   }

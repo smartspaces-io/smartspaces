@@ -24,7 +24,7 @@ dependencies {
     transitive = false
   }
   
-  compile files("${project.getProperty('smartspaces.dependencies.home')}/scheduling/quartz/quartz-orientdb-1.0.0-alpha1-SNAPSHOT.jar")
+  compile files("${project.getProperty('smartspaces.dependencies.home')}/scheduling/quartz/quartz-orientdb-1.0.0-alpha2-SNAPSHOT.jar")
   
   provided "${project.ext.osgiContainerDependency}"
 

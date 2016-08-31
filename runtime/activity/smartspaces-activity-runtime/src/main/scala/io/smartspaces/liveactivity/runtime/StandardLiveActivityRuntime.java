@@ -606,13 +606,6 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
         activityFilesystem.getPermanentDataDirectory().getAbsolutePath());
     configuration.setValue(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_TMP,
         activityFilesystem.getTempDataDirectory().getAbsolutePath());
-
-    // TODO(keith): Move to smartspaces-system during bootstrap
-    SmartSpacesFilesystem filesystem = getSpaceEnvironment().getFilesystem();
-    configuration.setValue(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_DATA,
-        filesystem.getDataDirectory().getAbsolutePath());
-    configuration.setValue(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_TMP,
-        filesystem.getTempDirectory().getAbsolutePath());
   }
 
   /**

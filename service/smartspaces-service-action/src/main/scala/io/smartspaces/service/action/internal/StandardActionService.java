@@ -108,7 +108,7 @@ public class StandardActionService extends BaseSupportedService implements Actio
    * @return the merged data
    */
   private Map<String, ? extends Object> getMergedData(ActionReference actionReference,
-      Map<String, ? extends Object> data) {
+      Map<String, Object> data) {
     Map<String, Object> mergedMap = Maps.newHashMap(actionReference.getData());
     mergedMap.putAll(data);
 

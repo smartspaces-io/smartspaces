@@ -277,7 +277,7 @@ if (project.hasProperty("artifactory")) {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '2.14'
+  gradleVersion = '3.0'
 }
 
 defaultTasks 'install'

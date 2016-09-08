@@ -58,7 +58,7 @@ public interface SchedulerService extends SupportedService {
    * @param jobName
    *          the name of the job
    * @param groupName
-   *          the name of the group the job will run in, can be {@code null} to
+   *          the name of the job group the job will run in, can be {@code null} to
    *          be in the default group
    * @param actionSource
    *          the name of the action source
@@ -69,7 +69,7 @@ public interface SchedulerService extends SupportedService {
    * @param when
    *          the date when the job should fire
    */
-  void scheduleAction(String jobName, String groupName, String actionSource, String actionName,
+  void scheduleAction(String jobName, String jobGroupName, String actionSource, String actionName,
       Map<String, Object> data, Date when);
 
   /**
@@ -81,7 +81,7 @@ public interface SchedulerService extends SupportedService {
    * @param jobName
    *          the name of the job
    * @param groupName
-   *          the name of the group the job will run in, can be {@code null} to
+   *          the name of the job group the job will run in, can be {@code null} to
    *          be in the default group
    * @param actionSource
    *          the name of the action source

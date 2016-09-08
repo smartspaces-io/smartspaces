@@ -19,6 +19,8 @@ package io.smartspaces.service.action;
 import io.smartspaces.evaluation.ExecutionContext;
 
 /**
+ * An action to be performed.
+ * 
  * @author Keith M. Hughes
  */
 public interface Action {

@@ -75,12 +75,12 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
   /**
    * JobMap property for the action name.
    */
-  public static final String JOB_MAP_PROPERTY_ACTION_NAME = "action.name";
+  public static final String JOB_MAP_PROPERTY_ACTION_NAME = "actionName";
 
   /**
    * JobMap property for the action source.
    */
-  public static final String JOB_MAP_PROPERTY_ACTION_SOURCE = "action.source";
+  public static final String JOB_MAP_PROPERTY_ACTION_SOURCE = "actionSource";
 
   /**
    * The volatile scheduler.
@@ -108,6 +108,8 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
       OrientDbJobStore jobStore =
           new OrientDbJobStore(orientDbUri, ORIENTDB_USER, ORIENTDB_PASSWORD);
       jobStore.setExecutorService(getSpaceEnvironment().getExecutorService());
+      jobStore.setExternalClassLoader(getClass().getClassLoader());
+      
 
       SimpleThreadPool threadPool = new SimpleThreadPool(10, Thread.NORM_PRIORITY);
 
@@ -185,7 +187,10 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
       JobDataMap jobDataMap = detail.getJobDataMap();
       jobDataMap.put(JOB_MAP_PROPERTY_ACTION_SOURCE, actionSource);
       jobDataMap.put(JOB_MAP_PROPERTY_ACTION_NAME, actionName);
-      jobDataMap.putAll(data);
+      
+      if (data != null) {
+        jobDataMap.putAll(data);
+      }
 
       Trigger trigger = TriggerBuilder.newTrigger()
           .withIdentity(TriggerKey.triggerKey(jobName, groupName)).startAt(when).build();

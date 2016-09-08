@@ -35,7 +35,7 @@ public final class ActivitySystemConfiguration {
    * Will have the OS added to the end separated by a dot.
    */
   public static final String CONFIGURATION_PREFIX_ACTIVITY_NATIVE_BROWSER_BINARY =
-      "io.smartspaces.activity.external.native.browser.binary";
+      "smartspaces.activity.external.native.browser.binary";
 
   /**
    * Prefix of the name of the configuration property for flags to be handed to
@@ -44,7 +44,7 @@ public final class ActivitySystemConfiguration {
    * start.
    */
   public static final String CONFIGURATION_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_FLAGS =
-      "io.smartspaces.activity.external.native.browser.command.flags";
+      "smartspaces.activity.external.native.browser.command.flags";
 
   /**
    * Prefix of the name of the configuration property for environment variables
@@ -69,7 +69,7 @@ public final class ActivitySystemConfiguration {
    * remove {@code var2}.
    */
   public static final String CONFIGURATION_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_ENVIRONMENT =
-      "io.smartspaces.activity.external.native.browser.command.environment";
+      "smartspaces.activity.external.native.browser.command.environment";
 
   /**
    * Get the native browser to use according to the activity configuration.

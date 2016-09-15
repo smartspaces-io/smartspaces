@@ -18,35 +18,25 @@
 package io.smartspaces.event.trigger;
 
 /**
- * A trigger which can be observed.
- *
+ * A listener for trigger events from triggers with data.
+ * 
+ * @param <D>
+ *          the type of the data handed with the trigger
+ *          
  * @author Keith M. Hughes
+ *
  */
-public interface Trigger {
- 
-  /**
-   * Add a new listener to the trigger.
-   *
-   * @param listener
-   *          the new listener to add
-   */
-  void addListener(TriggerListener listener);
+public interface TriggerWithDataListener<D> {
 
   /**
-   * Remove a listener from the trigger.
+   * Have triggered to a new state.
    *
-   * <p>
-   * Does nothing if the listener wasn't registered with the trigger.
-   *
-   * @param listener
-   *          the listener to remove
+   * @param trigger
+   *          the trigger that triggered
+   * @param newState
+   *          the new state
+   * @param event
+   *          the type of event created by the trigger
    */
-  void removeListener(TriggerListener listener);
-
-  /**
-   * Get the current state of the trigger.
-   *
-   * @return the trigger state
-   */
-  TriggerState getState();
+  void onTrigger(TriggerWithData<D> trigger, TriggerState newState, TriggerEventType event);
 }

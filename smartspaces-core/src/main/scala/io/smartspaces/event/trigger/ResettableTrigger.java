@@ -18,7 +18,7 @@
 package io.smartspaces.event.trigger;
 
 /**
- * A {@link Trigger} which is resettable.
+ * A {@link Trigger} that is resettable.
  *
  * @author Keith M. Hughes
  */

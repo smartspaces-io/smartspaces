@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,18 +19,25 @@ package io.smartspaces.event.trigger;
 
 /**
  * A trigger which can be observed.
+ * 
+ * <p>
+ * The trigger can carry additional data with the trigger event, not just the
+ * value.
  *
+ * @param <D>
+ *          the type of the data
+ * 
  * @author Keith M. Hughes
  */
-public interface Trigger {
- 
+public interface TriggerWithData<D> {
+
   /**
    * Add a new listener to the trigger.
    *
    * @param listener
    *          the new listener to add
    */
-  void addListener(TriggerListener listener);
+  void addListener(TriggerWithDataListener<D> listener);
 
   /**
    * Remove a listener from the trigger.
@@ -41,7 +48,7 @@ public interface Trigger {
    * @param listener
    *          the listener to remove
    */
-  void removeListener(TriggerListener listener);
+  void removeListener(TriggerWithDataListener<D> listener);
 
   /**
    * Get the current state of the trigger.
@@ -49,4 +56,13 @@ public interface Trigger {
    * @return the trigger state
    */
   TriggerState getState();
+  
+
+  /**
+   * Get the current data for the trigger.
+   *
+   * @return the trigger data
+   */
+  D getData();
+
 }

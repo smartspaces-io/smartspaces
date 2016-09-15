@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,35 +18,25 @@
 package io.smartspaces.event.trigger;
 
 /**
- * A trigger which can be observed.
+ * A {@link TriggerWithData} that is resettable.
+ *
+ * @param <D>
+ *          the type of the data
  *
  * @author Keith M. Hughes
  */
-public interface Trigger {
- 
-  /**
-   * Add a new listener to the trigger.
-   *
-   * @param listener
-   *          the new listener to add
-   */
-  void addListener(TriggerListener listener);
+public interface ResettableTriggerWithData<D> extends TriggerWithData<D> {
 
   /**
-   * Remove a listener from the trigger.
+   * Reset the trigger.
    *
    * <p>
-   * Does nothing if the listener wasn't registered with the trigger.
-   *
-   * @param listener
-   *          the listener to remove
+   * If the state changes because of the reset, an event will be published to
+   * the listeners.
+   * 
+   * @param data
+   *          data for the reset event
    */
-  void removeListener(TriggerListener listener);
+  void reset(D data);
 
-  /**
-   * Get the current state of the trigger.
-   *
-   * @return the trigger state
-   */
-  TriggerState getState();
 }

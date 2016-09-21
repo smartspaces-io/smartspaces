@@ -59,12 +59,8 @@ public abstract class BaseSupportedService implements SupportedService {
     this.spaceEnvironment = spaceEnvironment;
   }
 
-  /**
-   * Get the space environment.
-   *
-   * @return the space environment
-   */
-  protected SmartSpacesEnvironment getSpaceEnvironment() {
+  @Override
+  public SmartSpacesEnvironment getSpaceEnvironment() {
     return spaceEnvironment;
   }
 

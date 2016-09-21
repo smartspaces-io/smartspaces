@@ -18,6 +18,7 @@
 package io.smartspaces.service;
 
 import io.smartspaces.resource.managed.ManagedResource;
+import io.smartspaces.system.SmartSpacesEnvironment;
 
 /**
  * A Smart Spaces service which is more fully supported by the framework.
@@ -25,4 +26,11 @@ import io.smartspaces.resource.managed.ManagedResource;
  * @author Keith M. Hughes
  */
 public interface SupportedService extends Service, ManagedResource {
+  
+  /**
+   * Get the space environment for the service.
+   * 
+   * @return the space environment.
+   */
+  SmartSpacesEnvironment getSpaceEnvironment();
 }

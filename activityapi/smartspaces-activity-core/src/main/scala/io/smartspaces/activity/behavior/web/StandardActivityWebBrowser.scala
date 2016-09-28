@@ -1,12 +1,13 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * 
+ * Copyright (C) 2012 Google Inc.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
  * the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -14,20 +15,24 @@
  * the License.
  */
 
-package io.smartspaces.example.activity.routable.input
+package io.smartspaces.activity.behavior.web
 
-import java.util.Map
-
-import io.smartspaces.activity.behavior.routing.StandardActivityRouting
-import io.smartspaces.activity.impl.BaseActivity
+import io.smartspaces.activity.component.web.WebBrowserActivityComponent
 
 /**
- * A simple Smart Spaces Scala-based activity for reading from a route.
+ * An activity behavior for web browser support.
+ *
+ * <p>
+ * This behavior uses the registered {@link WebServerActivityComponent.COMPONENT_NAME} activity component.
+ *
+ * @author Keith M. Hughes
  */
-class SimpleScalaRoutableInputActivity extends BaseActivity with StandardActivityRouting {
+trait StandardActivityWebBrowser extends WebBrowserActivityBehavior {
+  
+  abstract override def commonActivitySetup(): Unit = {
+    super.commonActivitySetup()
 
-  override def onNewInputMessage(channelName: String, message: Map[String, Object]): Unit = {
-    getLog().info("Got message on input channel " + channelName)
-    getLog().info(message)
+    addActivityComponent(WebBrowserActivityComponent.COMPONENT_NAME)
   }
+
 }

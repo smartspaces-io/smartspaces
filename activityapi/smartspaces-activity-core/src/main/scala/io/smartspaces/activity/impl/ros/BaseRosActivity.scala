@@ -15,41 +15,20 @@
  * the License.
  */
 
-package io.smartspaces.activity.impl.ros;
+package io.smartspaces.activity.impl.ros
 
 import io.smartspaces.activity.component.ros.RosActivityComponent;
 import io.smartspaces.activity.impl.BaseActivity;
-import io.smartspaces.activity.ros.RosActivity;
+import io.smartspaces.activity.behavior.ros.RosActivityBehavior;
 
 import org.ros.node.ConnectedNode;
 import org.ros.osgi.common.RosEnvironment;
+import io.smartspaces.activity.behavior.ros.StandardActivityRos
 
 /**
  * Support for ROS Smart Spaces activities.
  *
  * @author Keith M. Hughes
  */
-public abstract class BaseRosActivity extends BaseActivity implements RosActivity {
-
-  /**
-   * The ROS activity component.
-   */
-  private RosActivityComponent rosActivityComponent;
-
-  @Override
-  public void commonActivitySetup() {
-    super.commonActivitySetup();
-
-    rosActivityComponent = addActivityComponent(RosActivityComponent.COMPONENT_NAME);
-  }
-
-  @Override
-  public RosEnvironment getRosEnvironment() {
-    return rosActivityComponent.getRosEnvironment();
-  }
-
-  @Override
-  public ConnectedNode getMainNode() {
-    return rosActivityComponent.getNode();
-  }
+abstract class BaseRosActivity extends BaseActivity with RosActivityBehavior with StandardActivityRos {
 }

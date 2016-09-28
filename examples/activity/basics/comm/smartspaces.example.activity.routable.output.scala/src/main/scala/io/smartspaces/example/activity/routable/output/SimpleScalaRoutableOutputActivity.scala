@@ -19,12 +19,13 @@ package io.smartspaces.example.activity.routable.output
 import java.util.HashMap
 import java.util.Map
 
-import io.smartspaces.activity.impl.route.BaseRoutableActivity
+import io.smartspaces.activity.behavior.routing.StandardActivityRouting
+import io.smartspaces.activity.impl.BaseActivity
 
 /**
  * A simple Smart Spaces Scala-based activity for writing to a route.
  */
-class SimpleScalaRoutableOutputActivity extends BaseRoutableActivity {
+class SimpleScalaRoutableOutputActivity extends BaseActivity with StandardActivityRouting {
 
   override def onActivityActivate(): Unit = {
     val message: Map[String, Object] = new HashMap[String,Object]()

@@ -15,29 +15,30 @@
  * the License.
  */
 
-package io.smartspaces.activity.impl.web;
+package io.smartspaces.activity.behavior.ros
 
-import io.smartspaces.activity.Activity;
-import io.smartspaces.activity.component.web.WebBrowserActivityComponent;
+import org.ros.node.ConnectedNode
+import org.ros.osgi.common.RosEnvironment
+import io.smartspaces.activity.ActivityBehavior
 
 /**
- * An {@link Activity} which starts up a web server with websocket handler and a
- * web browser. The activity can then easily respond to web socket messages.
- *
- * <p>
- * Only 1 web socket client is currently supported.
- *
- * <p>
- * This activity is easily scriptable.
+ * An {@link Activity} which uses ROS.
  *
  * @author Keith M. Hughes
  */
-public class BaseWebActivity extends BaseWebServerActivity {
+trait RosActivityBehavior extends ActivityBehavior {
 
-  @Override
-  public void commonActivitySetup() {
-    super.commonActivitySetup();
+  /**
+   * Get the current ROS Environment being used by this activity.
+   *
+   * @return the ROS environment, can be {@code null}
+   */
+  def getRosEnvironment(): RosEnvironment
 
-    addActivityComponent(WebBrowserActivityComponent.COMPONENT_NAME);
-  }
+  /**
+   * Get the main ROS node for this activity.
+   *
+   * @return the main ROS node
+   */
+  def getMainNode(): ConnectedNode
 }

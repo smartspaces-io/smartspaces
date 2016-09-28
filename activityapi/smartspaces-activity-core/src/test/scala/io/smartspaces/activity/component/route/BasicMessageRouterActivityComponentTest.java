@@ -17,9 +17,9 @@
 
 package io.smartspaces.activity.component.route;
 
+import io.smartspaces.activity.behavior.ros.RosActivityBehavior;
 import io.smartspaces.activity.component.ActivityComponentContext;
 import io.smartspaces.activity.execution.ActivityExecutionContext;
-import io.smartspaces.activity.ros.RosActivity;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.evaluation.SimpleExpressionEvaluator;
@@ -46,7 +46,7 @@ public class BasicMessageRouterActivityComponentTest {
   private RoutableInputMessageListener messageListener;
   private ActivityComponentContext activityComponentContext;
   private Configuration configuration;
-  private RosActivity activity;
+  private RosActivityBehavior activity;
   private SmartSpacesEnvironment spaceEnvironment;
   private TimeProvider timeProvider;
 
@@ -63,7 +63,7 @@ public class BasicMessageRouterActivityComponentTest {
     activityComponentContext = Mockito.mock(ActivityComponentContext.class);
     activityComponentContextInOrder = Mockito.inOrder(activityComponentContext);
 
-    activity = Mockito.mock(RosActivity.class);
+    activity = Mockito.mock(RosActivityBehavior.class);
     Mockito.when(activityComponentContext.getActivity()).thenReturn(activity);
 
     spaceEnvironment = Mockito.mock(SmartSpacesEnvironment.class);

@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,21 +14,28 @@
  * the License.
  */
 
-package io.smartspaces.activity.impl.web;
+package io.smartspaces.activity.behavior.general
 
-import io.smartspaces.activity.component.web.WebBrowserActivityComponent;
+import io.smartspaces.util.data.json.JsonMapper
+import io.smartspaces.util.data.json.StandardJsonMapper
+
+import java.util.Map
 
 /**
- * A web-based Smart Spaces activity that is routable.
- *
- * @author Keith M. Hughes
+ * The standard implementation of JSON support for an activity.
  */
-public abstract class BaseRoutableWebActivity extends BaseRoutableWebServerActivity {
+trait StandardActivityJson extends JsonActivityBehavior {
 
-  @Override
-  public void commonActivitySetup() {
-    super.commonActivitySetup();
+  /**
+   * The JSON mapper.
+   */
+  private val MAPPER: JsonMapper = StandardJsonMapper.INSTANCE
 
-    addActivityComponent(WebBrowserActivityComponent.COMPONENT_NAME);
+  override def jsonStringify(map: Map[String, Object]): String = {
+    return MAPPER.toString(map)
+  }
+
+  override def jsonParse(data: String): Map[String, Object] = {
+    return MAPPER.parseObject(data)
   }
 }

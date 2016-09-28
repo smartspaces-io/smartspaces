@@ -18,6 +18,7 @@
 package io.smartspaces.activity.impl;
 
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.activity.ActivityBehavior;
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.activity.ActivityStatus;
 import io.smartspaces.activity.SupportedActivity;
@@ -47,7 +48,7 @@ import java.util.TreeMap;
  *
  * @author Keith M. Hughes
  */
-public abstract class BaseActivity extends ActivitySupport implements SupportedActivity {
+public abstract class BaseActivity extends ActivitySupport implements SupportedActivity, ActivityBehavior {
 
   /**
    * The maximum amount of time to wait for all handlers to complete, in msecs.
@@ -680,107 +681,47 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
     }
   }
 
-  /**
-   * Perform any common tasks for activity configuration.
-   *
-   * <p>
-   * This method is not normally used by activity developers. This should only
-   * be touched if you know what you are doing.
-   *
-   * @param update
-   *          the update map
-   */
+  @Override
   public void commonActivityConfigurationUpdate(Map<String, String> update) {
     // Default is to do nothing.
   }
 
-  /**
-   * Setup any needed activity components and other startup.
-   *
-   * <p>
-   * This method is not normally used by activity developers, they should
-   * install components in {@link #addActivityComponent(ActivityComponent)}.
-   * This allows a support base class to add in things unknown to the casual
-   * user.
-   */
+  @Override
   public void commonActivitySetup() {
     // Default is do nothing.
   }
 
-  /**
-   * Any common startup tasks.
-   *
-   * <p>
-   * This method is not normally used by activity developers. This should only
-   * be touched if you know what you are doing.
-   */
+  @Override
   public void commonActivityStartup() {
     // Default is do nothing.
   }
 
-  /**
-   * Any common post startup tasks.
-   *
-   * <p>
-   * This method is not normally used by activity developers. This should only
-   * be touched if you know what you are doing.
-   */
+  @Override
   public void commonActivityPostStartup() {
     // Default is do nothing.
   }
 
-  /**
-   * Any common activate tasks.
-   *
-   * <p>
-   * This method is not normally used by activity developers. This should only
-   * be touched if you know what you are doing.
-   */
+  @Override
   public void commonActivityActivate() {
     // Default is do nothing.
   }
 
-  /**
-   * Any common deactivate tasks.
-   *
-   * <p>
-   * This method is not normally used by activity developers. This should only
-   * be touched if you know what you are doing.
-   */
+  @Override
   public void commonActivityDeactivate() {
     // Default is do nothing.
   }
 
-  /**
-   * Any common pre-shutdown tasks.
-   *
-   * <p>
-   * This method is not normally used by activity developers. This should only
-   * be touched if you know what you are doing.
-   */
+  @Override
   public void commonActivityPreShutdown() {
     // Default is do nothing.
   }
 
-  /**
-   * Any common shutdown tasks.
-   *
-   * <p>
-   * This method is not normally used by activity developers. This should only
-   * be touched if you know what you are doing.
-   */
+  @Override
   public void commonActivityShutdown() {
     // Default is do nothing.
   }
 
-  /**
-   * Cleanup any activity in support implementations.
-   *
-   * <p>
-   * This method is not normally used by activity developers, they should clean
-   * up their activity in {@link #onActivityCleanup()}. This allows a support
-   * base class to add in things unknown to the casual user.
-   */
+  @Override
   public void commonActivityCleanup() {
     // Default is do nothing.
   }

@@ -15,32 +15,17 @@
  * the License.
  */
 
-package io.smartspaces.activity.ros;
+package io.smartspaces.activity.impl.web
 
-import io.smartspaces.activity.Activity;
-import io.smartspaces.activity.SupportedActivity;
-
-import org.ros.node.ConnectedNode;
-import org.ros.osgi.common.RosEnvironment;
+import io.smartspaces.activity.impl.BaseActivity
+import io.smartspaces.activity.behavior.routing.StandardActivityRouting
+import io.smartspaces.activity.behavior.web.StandardActivityWebServer
 
 /**
- * An {@link Activity} which uses ROS.
+ * A web server activity which allows for ROS routes.
  *
  * @author Keith M. Hughes
  */
-trait RosActivity extends SupportedActivity {
-
-  /**
-   * Get the current ROS Environment being used by this activity.
-   *
-   * @return the ROS environment, can be {@code null}
-   */
-  def getRosEnvironment(): RosEnvironment
-
-  /**
-   * Get the main ROS node for this activity.
-   *
-   * @return the main ROS node
-   */
-  def getMainNode(): ConnectedNode
+class BaseRoutableWebServerActivity extends BaseActivity
+    with StandardActivityRouting with StandardActivityWebServer {
 }

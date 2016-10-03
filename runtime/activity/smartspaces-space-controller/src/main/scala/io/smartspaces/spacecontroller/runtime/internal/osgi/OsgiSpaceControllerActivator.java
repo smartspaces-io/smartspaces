@@ -128,7 +128,7 @@ public class OsgiSpaceControllerActivator extends SmartSpacesServiceOsgiBundleAc
    */
   private void activateStandardSpaceController() {
     Configuration systemConfiguration = spaceEnvironment.getSystemConfiguration();
-    systemConfiguration.setValue(
+    systemConfiguration.setProperty(
         RemoteLiveActivityRuntimeMonitorService.CONFIGURATION_NAME_MONITOR_ENABLE_DEFAULT,
         CONFIGURATION_VALUE_MONITOR_ENABLE_DEFAULT_CONTROLLER);
 

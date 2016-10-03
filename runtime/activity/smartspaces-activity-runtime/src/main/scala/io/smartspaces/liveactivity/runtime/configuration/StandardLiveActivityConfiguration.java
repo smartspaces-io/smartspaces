@@ -111,18 +111,18 @@ public class StandardLiveActivityConfiguration implements LiveActivityConfigurat
   }
 
   @Override
-  public String findValueLocally(String property) {
-    return temporary.findValue(property);
+  public String findPropertyLocally(String property) {
+    return temporary.findProperty(property);
   }
 
   @Override
-  public void setValue(String property, String value) {
-    temporary.setValue(property, value);
+  public void setProperty(String property, String value) {
+    temporary.setProperty(property, value);
   }
 
   @Override
-  public void setValues(Map<String, String> values) {
-    temporary.setValues(values);
+  public void setProperties(Map<String, String> values) {
+    temporary.setProperties(values);
   }
 
   @Override
@@ -223,8 +223,8 @@ public class StandardLiveActivityConfiguration implements LiveActivityConfigurat
   }
 
   @Override
-  public String findValue(String property) {
-    return temporary.findValue(property);
+  public String findProperty(String property) {
+    return temporary.findProperty(property);
   }
 
   @Override

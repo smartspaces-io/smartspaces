@@ -99,12 +99,12 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
 
   @Override
   public String getPropertyString(String property) {
-    return getValue(property);
+    return getPropertyValue(property);
   }
 
   @Override
   public String getPropertyString(String property, String defaultValue) {
-    String value = getValue(property);
+    String value = getPropertyValue(property);
     if (value != null) {
       return value;
     } else {
@@ -114,7 +114,7 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
 
   @Override
   public String getRequiredPropertyString(String property) {
-    String value = getValue(property);
+    String value = getPropertyValue(property);
     if (value != null) {
       return value;
     } else {
@@ -124,7 +124,7 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
 
   @Override
   public Integer getPropertyInteger(String property, Integer defaultValue) {
-    String value = getValue(property);
+    String value = getPropertyValue(property);
     if (value != null) {
       return Integer.valueOf(value);
     } else {
@@ -139,7 +139,7 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
 
   @Override
   public Long getPropertyLong(String property, Long defaultValue) {
-    String value = getValue(property);
+    String value = getPropertyValue(property);
     if (value != null) {
       return Long.valueOf(value);
     } else {
@@ -154,7 +154,7 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
 
   @Override
   public Double getPropertyDouble(String property, Double defaultValue) {
-    String value = getValue(property);
+    String value = getPropertyValue(property);
     if (value != null) {
       return Double.valueOf(value);
     } else {
@@ -169,7 +169,7 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
 
   @Override
   public Boolean getPropertyBoolean(String property, Boolean defaultValue) {
-    String value = getValue(property);
+    String value = getPropertyValue(property);
     if (value != null) {
       return getBooleanValue(value);
     } else {
@@ -184,7 +184,7 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
 
   @Override
   public List<String> getPropertyStringList(String property, String delineator) {
-    String value = getValue(property);
+    String value = getPropertyValue(property);
     if (value != null) {
       return Lists.newArrayList(value.split(delineator));
     } else {
@@ -194,7 +194,7 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
 
   @Override
   public Set<String> getPropertyStringSet(String property, String delineator) {
-    String value = getValue(property);
+    String value = getPropertyValue(property);
     if (value != null) {
       return Sets.newHashSet(Arrays.asList(value.split(delineator)));
     } else {
@@ -204,7 +204,7 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
 
   @Override
   public <T> T getPropertyJson(String property) {
-    String value = getValue(property);
+    String value = getPropertyValue(property);
     if (value != null) {
       @SuppressWarnings("unchecked")
       T result = (T) MAPPER.parse(value);
@@ -249,8 +249,8 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
    *
    * @return the value of the property, or null if not found
    */
-  private String getValue(String property) {
-    String value = findValue(property);
+  private String getPropertyValue(String property) {
+    String value = findProperty(property);
 
     if (value != null) {
       return expressionEvaluator.evaluateStringExpression(value);
@@ -260,12 +260,12 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
   }
 
   @Override
-  public String findValue(String property) {
+  public String findProperty(String property) {
     String value = null;
 
     Configuration current = this;
     while (current != null) {
-      value = current.findValueLocally(property);
+      value = current.findPropertyLocally(property);
       if (value != null) {
         break;
       }
@@ -276,13 +276,13 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
 
   @Override
   public String lookupVariableValue(String variable) throws EvaluationSmartSpacesException {
-    return getValue(variable);
+    return getPropertyValue(variable);
   }
 
   @Override
-  public void setValues(Map<String, String> values) {
+  public void setProperties(Map<String, String> values) {
     for (Entry<String, String> entry : values.entrySet()) {
-      setValue(entry.getKey(), entry.getValue());
+      setProperty(entry.getKey(), entry.getValue());
     }
   }
 

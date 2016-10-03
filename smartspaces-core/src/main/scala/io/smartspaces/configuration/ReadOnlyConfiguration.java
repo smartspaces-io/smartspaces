@@ -50,8 +50,8 @@ public class ReadOnlyConfiguration implements Configuration {
   }
 
   @Override
-  public String findValue(String property) {
-    return wrapped.findValue(property);
+  public String findProperty(String property) {
+    return wrapped.findProperty(property);
   }
 
   @Override
@@ -136,12 +136,12 @@ public class ReadOnlyConfiguration implements Configuration {
   }
 
   @Override
-  public void setValue(String property, String value) {
+  public void setProperty(String property, String value) {
     throw new SmartSpacesException("Cannot modify configuration");
   }
 
   @Override
-  public void setValues(Map<String, String> values) {
+  public void setProperties(Map<String, String> values) {
     throw new SmartSpacesException("Cannot modify configuration");
   }
 
@@ -156,8 +156,8 @@ public class ReadOnlyConfiguration implements Configuration {
   }
 
   @Override
-  public String findValueLocally(String property) {
-    return wrapped.findValueLocally(property);
+  public String findPropertyLocally(String property) {
+    return wrapped.findPropertyLocally(property);
   }
 
   @Override

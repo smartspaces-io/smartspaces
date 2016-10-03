@@ -89,8 +89,8 @@ public class BasicMessageRouterActivityComponentTest {
    */
   @Test
   public void testHandlerSuccess() {
-    configuration.setValue("space.activity.routes.inputs", "foo");
-    configuration.setValue("space.activity.route.input.foo", "bar");
+    configuration.setProperty("space.activity.routes.inputs", "foo");
+    configuration.setProperty("space.activity.route.input.foo", "bar");
 
     component.setComponentContext(activityComponentContext);
     component.configureComponent(configuration);
@@ -113,8 +113,8 @@ public class BasicMessageRouterActivityComponentTest {
    */
   @Test
   public void testHandlerFailure() {
-    configuration.setValue("space.activity.routes.inputs", "foo");
-    configuration.setValue("space.activity.route.input.foo", "bar");
+    configuration.setProperty("space.activity.routes.inputs", "foo");
+    configuration.setProperty("space.activity.route.input.foo", "bar");
 
     component.setComponentContext(activityComponentContext);
     component.configureComponent(configuration);
@@ -142,8 +142,8 @@ public class BasicMessageRouterActivityComponentTest {
 
   @Test
   public void testHandlerNoRun() {
-    configuration.setValue("space.activity.routes.inputs", "foo");
-    configuration.setValue("space.activity.route.input.foo", "bar");
+    configuration.setProperty("space.activity.routes.inputs", "foo");
+    configuration.setProperty("space.activity.route.input.foo", "bar");
 
     component.setComponentContext(activityComponentContext);
     component.configureComponent(configuration);

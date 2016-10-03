@@ -126,7 +126,7 @@ public class StandardJvmProjectSupport implements JvmProjectSupport  {
     }
 
     String configurationValue = CLASSPATH_JOINER.join(path);
-    projectTaskContext.getProject().getConfiguration().setValue(configurationParameter,
+    projectTaskContext.getProject().getConfiguration().setProperty(configurationParameter,
         configurationValue);
   }
 

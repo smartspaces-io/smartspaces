@@ -146,10 +146,12 @@ public class StandardLiveActivityRuntimeComponentFactory
   @Override
   public void registerCoreServices(ServiceRegistry serviceRegistry) {
     webServerService = new NettyWebServerService();
+    webServerService.setSpaceEnvironment(spaceEnvironment);
     serviceRegistry.registerService(webServerService);
     webServerService.startup();
 
     webSocketClientService = new NettyWebSocketClientService();
+    webSocketClientService.setSpaceEnvironment(spaceEnvironment);
     serviceRegistry.registerService(webSocketClientService);
     webSocketClientService.startup();
   }

@@ -48,7 +48,8 @@ import java.util.TreeMap;
  *
  * @author Keith M. Hughes
  */
-public abstract class BaseActivity extends ActivitySupport implements SupportedActivity, ActivityBehavior {
+public abstract class BaseActivity extends ActivitySupport
+    implements SupportedActivity, ActivityBehavior {
 
   /**
    * The maximum amount of time to wait for all handlers to complete, in msecs.
@@ -220,16 +221,12 @@ public abstract class BaseActivity extends ActivitySupport implements SupportedA
 
     managedResources = new StandardManagedResources(getLog());
 
-    managedTasks =
-        new SimpleManagedTasks(getSpaceEnvironment().getExecutorService(), getLog());
+    managedTasks = new SimpleManagedTasks(getSpaceEnvironment().getExecutorService(), getLog());
 
     setActivityStatus(ActivityState.STARTUP_ATTEMPT);
 
     componentContext.beginStartupPhase();
     try {
-      getConfiguration().setValue(ActivityConfiguration.CONFIGURATION_PROPERTY_ACTIVITY_UUID,
-          getUuid().replace("-", "_"));
-
       callOnActivityPreSetup();
 
       logConfiguration(ACTIVITY_STARTUP_CONFIG_LOG);

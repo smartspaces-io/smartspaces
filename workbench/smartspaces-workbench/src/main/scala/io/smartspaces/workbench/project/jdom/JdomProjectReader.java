@@ -590,7 +590,7 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
           continue;
         }
 
-        configuration.setValue(name, value);
+        configuration.setProperty(name, value);
       }
     }
   }

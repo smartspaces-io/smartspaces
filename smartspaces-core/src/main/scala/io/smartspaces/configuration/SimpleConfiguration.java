@@ -78,12 +78,12 @@ public class SimpleConfiguration extends BaseConfiguration {
   }
 
   @Override
-  public String findValueLocally(String property) {
+  public String findPropertyLocally(String property) {
     return values.get(property);
   }
 
   @Override
-  public void setValue(String property, String value) {
+  public void setProperty(String property, String value) {
     values.put(property, value);
   }
 

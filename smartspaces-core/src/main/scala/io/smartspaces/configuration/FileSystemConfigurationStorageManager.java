@@ -113,7 +113,7 @@ public class FileSystemConfigurationStorageManager implements SystemConfiguratio
       configProperties.load(in);
 
       for (Entry<Object, Object> entry : configProperties.entrySet()) {
-        configuration.setValue(entry.getKey().toString(), entry.getValue().toString());
+        configuration.setProperty(entry.getKey().toString(), entry.getValue().toString());
       }
     } catch (Exception e) {
       log.error("Could not load configuration", e);

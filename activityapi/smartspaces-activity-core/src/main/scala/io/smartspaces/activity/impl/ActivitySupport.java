@@ -152,9 +152,6 @@ public abstract class ActivitySupport implements Activity {
   @Override
   public void setConfiguration(Configuration configuration) {
     this.configuration = configuration;
-
-    setName(configuration
-        .getPropertyString(ActivityConfiguration.CONFIGURATION_PROPERTY_ACTIVITY_NAME));
   }
 
   @Override

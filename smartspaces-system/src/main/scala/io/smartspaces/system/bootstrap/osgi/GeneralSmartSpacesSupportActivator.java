@@ -318,7 +318,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     spaceEnvironment.setValue("environment.ros", rosEnvironment);
 
     // Potentially request the container to permit file control.
-    spaceEnvironment.getSystemConfiguration().setValue(
+    spaceEnvironment.getSystemConfiguration().setProperty(
         SmartSpacesEnvironment.CONFIGURATION_CONTAINER_FILE_CONTROLLABLE,
         Boolean.toString(containerCustomizerProvider.isFileControllable()));
 
@@ -476,20 +476,20 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
     Configuration systemConfiguration = systemConfigurationStorageManager.getSystemConfiguration();
 
-    systemConfiguration.setValues(containerProperties);
+    systemConfiguration.setProperties(containerProperties);
 
-    systemConfiguration.setValue(SmartSpacesEnvironment.CONFIGURATION_SMARTSPACES_VERSION,
+    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_SMARTSPACES_VERSION,
         bundleContext.getProperty(CoreConfiguration.CONFIGURATION_SMARTSPACES_VERSION));
 
     String hostAddress = convertHostnameToAddress(
         containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_HOSTNAME));
-    systemConfiguration.setValue(SmartSpacesEnvironment.CONFIGURATION_HOST_ADDRESS, hostAddress);
+    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_HOST_ADDRESS, hostAddress);
     
-    systemConfiguration.setValue(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_INSTALL,
+    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_INSTALL,
             filesystem.getInstallDirectory().getAbsolutePath());
-    systemConfiguration.setValue(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_DATA,
+    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_DATA,
         filesystem.getDataDirectory().getAbsolutePath());
-    systemConfiguration.setValue(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_TMP,
+    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_TMP,
         filesystem.getTempDirectory().getAbsolutePath());
 
 

@@ -56,7 +56,7 @@ public class StandardConfigurationPropertyAnnotationProcessorTest {
   }
 
   private void setConfigValue(Object value) {
-    configuration.setValue(property, String.valueOf(value));
+    configuration.setProperty(property, String.valueOf(value));
   }
 
   // int
@@ -761,8 +761,8 @@ public class StandardConfigurationPropertyAnnotationProcessorTest {
 
     int superY = 123;
     int subX = 456;
-    configuration.setValue(propertySuperY, "" + superY);
-    configuration.setValue(propertySubX, "" + subX);
+    configuration.setProperty(propertySuperY, "" + superY);
+    configuration.setProperty(propertySubX, "" + subX);
     Sub sub = new Sub();
     injectConfigValues(sub);
     assertEquals(sub.x, subX);
@@ -788,8 +788,8 @@ public class StandardConfigurationPropertyAnnotationProcessorTest {
 
     int superX = 123;
     int subX = 456;
-    configuration.setValue(propertySuperX, "" + superX);
-    configuration.setValue(propertySubX, "" + subX);
+    configuration.setProperty(propertySuperX, "" + superX);
+    configuration.setProperty(propertySubX, "" + subX);
     Sub sub = new Sub();
     injectConfigValues(sub);
     assertEquals(sub.x, subX);
@@ -815,8 +815,8 @@ public class StandardConfigurationPropertyAnnotationProcessorTest {
 
     int superX = 123;
     Double subX = Math.E;
-    configuration.setValue(propertySuperX, "" + superX);
-    configuration.setValue(propertySubX, "" + subX);
+    configuration.setProperty(propertySuperX, "" + superX);
+    configuration.setProperty(propertySubX, "" + subX);
     Sub sub = new Sub();
     injectConfigValues(sub);
 

@@ -53,7 +53,7 @@ public interface Configuration {
    *
    * @return the value of the property, or {@code null} if not found
    */
-  String findValue(String property);
+  String findProperty(String property);
 
   /**
    * Get the value of the property as a string.
@@ -259,7 +259,7 @@ public interface Configuration {
    * @param value
    *          value of the property
    */
-  void setValue(String property, String value);
+  void setProperty(String property, String value);
 
   /**
    * Copy the key/value pairs from the map into the configuration.
@@ -267,7 +267,7 @@ public interface Configuration {
    * @param values
    *          the values to add
    */
-  void setValues(Map<String, String> values);
+  void setProperties(Map<String, String> values);
 
   /**
    * Set the parent of this configuration.
@@ -295,7 +295,7 @@ public interface Configuration {
    *
    * @return the value of the property, or {@code null} if not found
    */
-  String findValueLocally(String property);
+  String findPropertyLocally(String property);
 
   /**
    * See if the current configuration contains the given property.

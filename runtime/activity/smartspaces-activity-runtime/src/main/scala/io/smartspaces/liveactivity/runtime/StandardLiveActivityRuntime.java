@@ -17,16 +17,6 @@
 
 package io.smartspaces.liveactivity.runtime;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
-
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.ActivityControl;
 import io.smartspaces.activity.ActivityFilesystem;
@@ -49,12 +39,20 @@ import io.smartspaces.liveactivity.runtime.logging.LiveActivityLogFactory;
 import io.smartspaces.liveactivity.runtime.monitor.RemoteLiveActivityRuntimeMonitorService;
 import io.smartspaces.liveactivity.runtime.repository.LocalLiveActivityRepository;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.system.SmartSpacesFilesystem;
 import io.smartspaces.tasks.SequentialTaskQueue;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransition;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransition.TransitionResult;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransitioner;
 import io.smartspaces.util.statemachine.simplegoal.SimpleGoalStateTransitionerCollection;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
+import org.apache.commons.logging.Log;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The standard implementation of a {@link LiveActivityRuntime}.
@@ -540,12 +538,15 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
     instance.setActivityRuntime(this);
     instance.setUuid(uuid);
 
+    instance.setName(configuration
+        .getPropertyString(ActivityConfiguration.CONFIGURATION_PROPERTY_ACTIVITY_NAME));
+
     instance.setConfiguration(configuration);
     instance.setActivityFilesystem(activityFilesystem);
     instance.setSpaceEnvironment(getSpaceEnvironment());
     instance.setExecutionContext(executionContext);
 
-    initializeActivityConfiguration(configuration, activityFilesystem);
+    initializeActivityConfiguration(configuration, instance);
 
     onActivityInitialization(instance);
   }
@@ -596,15 +597,19 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
    * @param activityFilesystem
    *          the activities file system
    */
-  private void initializeActivityConfiguration(Configuration configuration,
-      ActivityFilesystem activityFilesystem) {
-    configuration.setValue(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_INSTALL,
+  private void initializeActivityConfiguration(Configuration configuration, Activity activity) {
+
+    configuration.setProperty(ActivityConfiguration.CONFIGURATION_PROPERTY_ACTIVITY_UUID,
+        activity.getUuid().replace("-", "_"));
+
+    ActivityFilesystem activityFilesystem = activity.getActivityFilesystem();
+    configuration.setProperty(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_INSTALL,
         activityFilesystem.getInstallDirectory().getAbsolutePath());
-    configuration.setValue(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_LOG,
+    configuration.setProperty(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_LOG,
         activityFilesystem.getLogDirectory().getAbsolutePath());
-    configuration.setValue(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_DATA,
+    configuration.setProperty(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_DATA,
         activityFilesystem.getPermanentDataDirectory().getAbsolutePath());
-    configuration.setValue(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_TMP,
+    configuration.setProperty(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_TMP,
         activityFilesystem.getTempDataDirectory().getAbsolutePath());
   }
 
@@ -683,7 +688,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
    *         such activity
    */
   @VisibleForTesting
-      LiveActivityRunner getLiveActivityRunnerByUuid(String uuid, boolean create) {
+  LiveActivityRunner getLiveActivityRunnerByUuid(String uuid, boolean create) {
     LiveActivityRunner liveActivityRunner = null;
     synchronized (liveActivityRunners) {
       liveActivityRunner = liveActivityRunners.get(uuid);
@@ -763,7 +768,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
    *          the live activity runner
    */
   @VisibleForTesting
-      void addLiveActivityRunner(String uuid, LiveActivityRunner liveActivityRunner) {
+  void addLiveActivityRunner(String uuid, LiveActivityRunner liveActivityRunner) {
     liveActivityRunners.put(uuid, liveActivityRunner);
   }
 
@@ -1055,7 +1060,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
    *          the alert status manager
    */
   @VisibleForTesting
-      void setAlertStatusManager(AlertStatusManager alertStatusManager) {
+  void setAlertStatusManager(AlertStatusManager alertStatusManager) {
     this.alertStatusManager = alertStatusManager;
   }
 
@@ -1065,7 +1070,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
    * @return the activity listener used by the controller
    */
   @VisibleForTesting
-      ActivityListener getActivityListener() {
+  ActivityListener getActivityListener() {
     return activityListener;
   }
 
@@ -1076,7 +1081,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
    *          the sampler to use
    */
   @VisibleForTesting
-      void setLiveActivityRunnerSampler(LiveActivityRunnerSampler liveActivityRunnerSampler) {
+  void setLiveActivityRunnerSampler(LiveActivityRunnerSampler liveActivityRunnerSampler) {
     this.liveActivityRunnerSampler = liveActivityRunnerSampler;
   }
 

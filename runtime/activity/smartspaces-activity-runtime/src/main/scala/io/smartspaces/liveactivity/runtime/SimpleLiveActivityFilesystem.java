@@ -136,7 +136,7 @@ public class SimpleLiveActivityFilesystem implements InternalLiveActivityFilesys
 
   @Override
   public File getInstallFile(String relative) {
-    return new File(installDirectory, relative);
+    return fileSupport.newFile(installDirectory, relative);
   }
 
   @Override
@@ -151,7 +151,7 @@ public class SimpleLiveActivityFilesystem implements InternalLiveActivityFilesys
 
   @Override
   public File getPermanentDataFile(String relative) {
-    return new File(permanentDataDirectory, relative);
+    return fileSupport.newFile(permanentDataDirectory, relative);
   }
 
   @Override
@@ -166,7 +166,7 @@ public class SimpleLiveActivityFilesystem implements InternalLiveActivityFilesys
 
   @Override
   public File getTempDataFile(String relative) {
-    return new File(tempDataDirectory, relative);
+    return fileSupport.newFile(tempDataDirectory, relative);
   }
 
   @Override

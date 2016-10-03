@@ -226,7 +226,7 @@ public class SmartSpacesWorkbench {
     this.log = spaceEnvironment.getExtendedLog();
 
     workbenchConfig = spaceEnvironment.getSystemConfiguration();
-    workbenchConfig.setValue(CONFIGURATION_PROPERTY_WORKBENCH_HOME,
+    workbenchConfig.setProperty(CONFIGURATION_PROPERTY_WORKBENCH_HOME,
         workbenchFileSystem.getInstallDirectory().getAbsolutePath());
 
     String runDirPath =

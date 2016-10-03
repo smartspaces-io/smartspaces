@@ -69,11 +69,11 @@ public class WebServerActivityResourceConfiguratorTest {
     String initialUrl = "snafu";
     String query = "oorgle";
 
-    configuration.setValue("space.activity.webapp.web.server.port", Integer.toString(testPort));
-    configuration.setValue("space.activity.webapp.content.location", "webapp");
-    configuration.setValue("space.activity.webapp.web.server.websocket.uri", webSocketUri);
-    configuration.setValue("space.activity.webapp.url.initial", initialUrl);
-    configuration.setValue("space.activity.webapp.url.query_string", query);
+    configuration.setProperty("space.activity.webapp.web.server.port", Integer.toString(testPort));
+    configuration.setProperty("space.activity.webapp.content.location", "webapp");
+    configuration.setProperty("space.activity.webapp.web.server.websocket.uri", webSocketUri);
+    configuration.setProperty("space.activity.webapp.url.initial", initialUrl);
+    configuration.setProperty("space.activity.webapp.url.query_string", query);
 
     configurator.configure(null, activity, webServer);
 
@@ -100,12 +100,12 @@ public class WebServerActivityResourceConfiguratorTest {
     String initialUrl = "snafu";
     String query = "oorgle";
 
-    configuration.setValue("space.activity.webapp.web.server.port", Integer.toString(testPort));
-    configuration.setValue("space.activity.webapp.content.location", "webapp");
-    configuration.setValue("space.activity.webapp.web.server.websocket.uri", webSocketUri);
-    configuration.setValue("space.activity.webapp.url.initial", initialUrl);
-    configuration.setValue("space.activity.webapp.url.query_string", query);
-    configuration.setValue("space.activity.webapp.web.server.secure", "true");
+    configuration.setProperty("space.activity.webapp.web.server.port", Integer.toString(testPort));
+    configuration.setProperty("space.activity.webapp.content.location", "webapp");
+    configuration.setProperty("space.activity.webapp.web.server.websocket.uri", webSocketUri);
+    configuration.setProperty("space.activity.webapp.url.initial", initialUrl);
+    configuration.setProperty("space.activity.webapp.url.query_string", query);
+    configuration.setProperty("space.activity.webapp.web.server.secure", "true");
 
     configurator.configure(null, activity, webServer);
 

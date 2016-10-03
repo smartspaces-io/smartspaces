@@ -148,7 +148,7 @@ public class SmartSpacesWorkbenchActivator implements BundleActivator {
     executorService = new DefaultScheduledExecutorService();
     spaceEnvironment.setExecutorService(executorService);
     SimpleConfiguration configuration = SimpleConfiguration.newConfiguration();
-    configuration.setValues(configurationProvider.getInitialConfiguration());
+    configuration.setProperties(configurationProvider.getInitialConfiguration());
 
     spaceEnvironment.setSystemConfiguration(configuration);
   }

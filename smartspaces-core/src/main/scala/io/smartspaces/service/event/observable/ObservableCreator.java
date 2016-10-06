@@ -16,7 +16,7 @@
 
 package io.smartspaces.service.event.observable;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 /**
  * A creator for observables.

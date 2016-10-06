@@ -18,7 +18,7 @@ package io.smartspaces.service.event.observable;
 
 import io.smartspaces.service.BaseSupportedService;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 import java.util.HashMap;
 import java.util.Map;

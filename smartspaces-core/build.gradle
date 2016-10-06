@@ -50,7 +50,7 @@ dependencies {
   
   compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.0.2'
   
-  compile 'io.reactivex:rxjava:1.0.14'
+  compile 'io.reactivex.rxjava2:rxjava:2.0.0-RC3'
 
   compile 'javax.jmdns:jmdns:3.4.1'
 

@@ -17,7 +17,8 @@
 package io.smartspaces.service.event.observable;
 
 import io.smartspaces.service.SupportedService;
-import rx.Observable;
+
+import io.reactivex.Observable;
 
 /**
  * The service for creating event observables and maintaining a global registry

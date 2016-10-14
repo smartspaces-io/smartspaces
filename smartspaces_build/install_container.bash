@@ -40,6 +40,7 @@ if [ "${CONTAINER_TYPE}" == "controller" ]; then
 fi
 
 if [ "${CONTAINER_TYPE}" == "workbench" ]; then
+  ${DO_CMD} rm -fr "${CONTAINER_EXTRAS}/"*
   ${DO_CMD} rm -rf "${CONTAINER_TEMPLATES}/"*
 fi
 

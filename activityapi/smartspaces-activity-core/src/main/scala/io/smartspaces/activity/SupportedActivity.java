@@ -17,13 +17,14 @@
 
 package io.smartspaces.activity;
 
-import java.util.Map;
-
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.annotation.ConfigurationPropertyAnnotationProcessor;
 import io.smartspaces.activity.component.ActivityComponent;
 import io.smartspaces.resource.managed.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResources;
 import io.smartspaces.tasks.ManagedTasks;
+
+import java.util.Map;
 
 /**
  * Some extra methods added onto {@link Activity} implementations which are
@@ -252,6 +253,13 @@ public interface SupportedActivity extends Activity {
    *          the resource to add
    */
   void addManagedResource(ManagedResource resource);
+  
+  /**
+   * Get the managed resource collection for the activity.
+   * 
+   * @return the managed resource collection
+   */
+  ManagedResources getManagedResources();
 
   /**
    * Get the collection of managed tasks.

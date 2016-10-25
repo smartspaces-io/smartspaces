@@ -17,13 +17,14 @@
 
 package io.smartspaces.resource.managed;
 
+import io.smartspaces.SmartSpacesException;
+
+import com.google.common.collect.Lists;
+import org.apache.commons.logging.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.commons.logging.Log;
-
-import io.smartspaces.SmartSpacesException;
 
 /**
  * A standard implementation of {@link ManagedResources}.
@@ -57,12 +58,7 @@ public class StandardManagedResources implements ManagedResources {
     this.log = log;
   }
 
-  /**
-   * Add a new resource to the collection.
-   *
-   * @param resource
-   *          the resource to add
-   */
+  @Override
   public synchronized void addResource(ManagedResource resource) {
     if (started) {
       try {
@@ -76,38 +72,17 @@ public class StandardManagedResources implements ManagedResources {
     resources.add(resource);
   }
 
-  /**
-   * Get a list of the currently managed resources.
-   *
-   * @return list of managed resources
-   */
+ @Override
   public synchronized List<ManagedResource> getResources() {
     return Collections.unmodifiableList(resources);
   }
 
-  /**
-   * Clear all resources from the collection.
-   *
-   * <p>
-   * The collection is cleared. No lifecycle methods are called on the
-   * resources.
-   */
+  @Override
   public synchronized void clear() {
     resources.clear();
   }
 
-  /**
-   * Attempt to startup all resources in the manager.
-   *
-   * <p>
-   * If all resources don't start up, all resources that were started will be
-   * shut down.
-   *
-   * <p>
-   * Do not call {@link #shutdownResources()} or
-   * {@link #shutdownResourcesAndClear()} if an exception is thrown out of this
-   * method.
-   */
+  @Override
   public synchronized void startupResources() {
     List<ManagedResource> startedResources = new ArrayList<>();
 
@@ -126,24 +101,12 @@ public class StandardManagedResources implements ManagedResources {
     started = true;
   }
 
-  /**
-   * Shut down all resources.
-   *
-   * <p>
-   * This will make a best attempt. A shutdown will be attempted on all
-   * resources, even if some throw an exception.
-   */
+  @Override
   public synchronized void shutdownResources() {
     shutdownResources(resources);
   }
 
-  /**
-   * Shut down all resources and clear from the collection.
-   *
-   * <p>
-   * This will make a best attempt. A shutdown will be attempted on all
-   * resources, even if some throw an exception.
-   */
+  @Override
   public synchronized void shutdownResourcesAndClear() {
     shutdownResources();
     clear();
@@ -156,7 +119,7 @@ public class StandardManagedResources implements ManagedResources {
    *          some resources to shut down
    */
   private void shutdownResources(List<ManagedResource> resources) {
-    for (ManagedResource resource : resources) {
+    for (ManagedResource resource : Lists.reverse(resources)) {
       try {
         resource.shutdown();
       } catch (Throwable e) {

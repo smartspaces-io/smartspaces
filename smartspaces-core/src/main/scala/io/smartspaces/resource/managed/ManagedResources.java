@@ -24,7 +24,9 @@ import java.util.List;
  *
  * <p>
  * The collection will start up and shut down the resources when it is started
- * up and shut down. Do not worry about these lifecycle events.
+ * up and shut down. Do not worry about these lifecycle events. The members of
+ * the collection will be started up in the order they are registered and shut
+ * down in reverse order.
  *
  * @author Keith M. Hughes
  */

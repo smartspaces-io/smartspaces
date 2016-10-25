@@ -154,6 +154,11 @@ public abstract class BaseActivity extends ActivitySupport
   }
 
   @Override
+  public ManagedResources getManagedResources() {
+    return managedResources;
+  }
+
+  @Override
   public ManagedTasks getManagedTasks() {
     return managedTasks;
   }

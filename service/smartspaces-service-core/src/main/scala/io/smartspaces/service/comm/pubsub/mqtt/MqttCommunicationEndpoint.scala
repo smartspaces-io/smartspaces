@@ -16,54 +16,60 @@
 
 package io.smartspaces.service.comm.pubsub.mqtt;
 
-import io.smartspaces.resource.managed.ManagedResource;
-import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
+import io.smartspaces.resource.managed.ManagedResource
+import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 
-import org.apache.commons.logging.Log;
+import org.apache.commons.logging.Log
 
 /**
  * An endpoint for MQTT communications.
- * 
+ *
  * @author Keith M. Hughes
  */
-public interface MqttCommunicationEndpoint extends ManagedResource {
-  
-  /**
-   * Get the description of the MQTT broker.
-   * 
-   * @return the description of the MQTT broker
-   */
-  MqttBrokerDescription getMqttBrokerDescription();
-  
-  /**
-   * Get the MQTT client ID.
-   * 
-   * @return the client ID
-   */
-  String getMqttClientId();
+trait MqttCommunicationEndpoint extends ManagedResource {
 
   /**
-   * Add a new subscriber listener.
-   * 
-   * @param listener
-   *          the new listener
-   * 
-   * @return this endpoint
+   * Get the description of the MQTT broker.
+   *
+   * @return the description of the MQTT broker
    */
-  MqttCommunicationEndpoint addSubscriberListener(MqttSubscriberListener listener);
+  def getMqttBrokerDescription(): MqttBrokerDescription
+
+  /**
+   * Get the MQTT client ID.
+   *
+   * @return the client ID
+   */
+  def getMqttClientId(): String
+
+  /**
+   * Add in a connection listener.
+   *
+   * @param listener
+   * 				the listener to add
+   * 
+   * @return the endpoint
+   */
+  def addConnectionListener(listener: MqttConnectionListener): MqttCommunicationEndpoint
 
   /**
    * Subscribe to the given topic.
-   * 
+   *
    * @param topicName
    *          the topic to subscribe to
+   * @param listener
+   * 					the listener for messages on this topic
+   * @param qos
+   * 					the QoS level of the topic
+   * @param autoreconnect
+   *          reconnect automatically if the connection is lost to the broker
    */
-  MqttCommunicationEndpoint subscribe(String topicName);
+  def subscribe(topicName: String, listener: MqttSubscriberListener, qos: Int, autoreconnect: Boolean): MqttCommunicationEndpoint
 
   /**
    * Get the log for the endpoint.
-   * 
+   *
    * @return the log
    */
-  Log getLog();
+  def getLog(): Log
 }

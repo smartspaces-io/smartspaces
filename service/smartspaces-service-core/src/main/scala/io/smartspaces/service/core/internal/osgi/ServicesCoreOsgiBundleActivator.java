@@ -22,6 +22,7 @@ import io.smartspaces.service.comm.network.client.internal.netty.NettyTcpClientN
 import io.smartspaces.service.comm.network.client.internal.netty.NettyUdpClientNetworkCommunicationEndpointService;
 import io.smartspaces.service.comm.network.server.internal.netty.NettyTcpServerNetworkCommunicationEndpointService;
 import io.smartspaces.service.comm.network.server.internal.netty.NettyUdpServerNetworkCommunicationEndpointService;
+import io.smartspaces.service.comm.pubsub.mqtt.paho.PahoMqttCommunicationEndpointService;
 import io.smartspaces.service.comm.serial.xbee.internal.SmartSpacesXBeeCommunicationEndpointService;
 import io.smartspaces.service.control.opensoundcontrol.internal.SmartSpacesOpenSoundControlClientCommunicationEndpointService;
 import io.smartspaces.service.control.opensoundcontrol.internal.SmartSpacesOpenSoundControlServerCommunicationEndpointService;
@@ -46,6 +47,9 @@ public class ServicesCoreOsgiBundleActivator extends SmartSpacesServiceOsgiBundl
     registerNewSmartSpacesService(new NettyTcpServerNetworkCommunicationEndpointService());
 
     registerNewSmartSpacesService(new SmartSpacesOpenSoundControlClientCommunicationEndpointService());
+
     registerNewSmartSpacesService(new SmartSpacesOpenSoundControlServerCommunicationEndpointService());
+
+    registerNewSmartSpacesService(new PahoMqttCommunicationEndpointService());
   }
 }

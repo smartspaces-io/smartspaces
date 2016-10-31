@@ -14,18 +14,18 @@
  * the License.
  */
 
-package io.smartspaces.service.comm.pubsub.mqtt;
+package io.smartspaces.service.comm.pubsub.mqtt
 
 /**
  * A listener for MQTT subscriber events.
- * 
+ *
  * @author Keith M. Hughes
  */
-public interface MqttSubscriberListener {
+trait MqttSubscriberListener {
 
   /**
    * Handle the MQTT message that has come in.
-   * 
+   *
    * @param endpoint
    *          the endpoint that received the message
    * @param topicName
@@ -33,5 +33,5 @@ public interface MqttSubscriberListener {
    * @param payload
    *          the message payload
    */
-  void handleMessage(MqttCommunicationEndpoint endpoint, String topicName, byte[] payload);
+  def handleMessage(endpoint: MqttCommunicationEndpoint, topicName: String, payload: Array[Byte]): Unit
 }

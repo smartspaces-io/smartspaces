@@ -27,16 +27,16 @@ package io.smartspaces.resource.managed
 trait IdempotentManagedResource extends ManagedResource {
 
   /**
-   * {@code true} if the resource has been started.
+   * The state of the resource.
    */
-  private var started = ManagedResourceState.SHUTDOWN
+  protected var resourceState = ManagedResourceState.SHUTDOWN
 
   override def startup(): Unit = {
     this.synchronized {
-      if (started == ManagedResourceState.SHUTDOWN) {
+      if (resourceState == ManagedResourceState.SHUTDOWN) {
         onStartup()
         
-        started = ManagedResourceState.STARTED
+        resourceState = ManagedResourceState.STARTED
       }
     }
   }
@@ -50,10 +50,10 @@ trait IdempotentManagedResource extends ManagedResource {
 
   override def shutdown(): Unit = {
    this.synchronized {
-      if (started == ManagedResourceState.STARTED) {
+      if (resourceState == ManagedResourceState.STARTED) {
         onShutdown()
         
-        started = ManagedResourceState.SHUTDOWN
+        resourceState = ManagedResourceState.SHUTDOWN
       }
     }
   }

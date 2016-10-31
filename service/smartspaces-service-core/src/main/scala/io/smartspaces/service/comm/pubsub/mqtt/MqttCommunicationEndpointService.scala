@@ -14,24 +14,32 @@
  * the License.
  */
 
-package io.smartspaces.service.comm.pubsub.mqtt;
+package io.smartspaces.service.comm.pubsub.mqtt
 
-import io.smartspaces.service.SupportedService;
-import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
+import io.smartspaces.service.SupportedService
+import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 
-import org.apache.commons.logging.Log;
+import org.apache.commons.logging.Log
 
 /**
  * A service for getting MQTT communication endpoints.
  * 
  * @author Keith M. Hughes
  */
-public interface MqttCommunicationEndpointService extends SupportedService {
+object MqttCommunicationEndpointService {
 
   /**
    * Name for the service.
    */
-  String SERVICE_NAME = "comm.pubsub.mqtt";
+  val SERVICE_NAME = "comm.pubsub.mqtt"
+}
+
+/**
+ * A service for getting MQTT communication endpoints.
+ * 
+ * @author Keith M. Hughes
+ */
+trait MqttCommunicationEndpointService extends SupportedService {
 
   /**
    * Construct a new endpoint.
@@ -46,6 +54,6 @@ public interface MqttCommunicationEndpointService extends SupportedService {
    * @return The new endpoint
    */
 
-  MqttCommunicationEndpoint newMqttCommunicationEndpoint(
-      MqttBrokerDescription mqttBrokerDescription, String mqttClientId, Log log);
+   def newMqttCommunicationEndpoint(
+       mqttBrokerDescription: MqttBrokerDescription,  mqttClientId: String, log: Log ): MqttCommunicationEndpoint
 }

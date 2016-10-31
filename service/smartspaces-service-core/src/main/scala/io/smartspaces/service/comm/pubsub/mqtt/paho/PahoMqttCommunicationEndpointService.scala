@@ -25,20 +25,18 @@ import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
 
 /**
  * A service for getting MQTT communication endpoints implemented with Paho.
- * 
+ *
  * @author Keith M. Hughes
  */
-public class PahoMqttCommunicationEndpointService extends BaseSupportedService
-    implements MqttCommunicationEndpointService {
+class PahoMqttCommunicationEndpointService extends BaseSupportedService
+    with MqttCommunicationEndpointService {
 
-  @Override
-  public String getName() {
-    return MqttCommunicationEndpointService.SERVICE_NAME;
+  override def getName(): String = {
+    MqttCommunicationEndpointService.SERVICE_NAME
   }
 
-  @Override
-  public MqttCommunicationEndpoint newMqttCommunicationEndpoint(
-      MqttBrokerDescription mqttBrokerDescription, String mqttClientId, Log log) {
-    return new PahoMqttCommunicationEndpoint(mqttBrokerDescription, mqttClientId, log);
+  override def newMqttCommunicationEndpoint(
+    mqttBrokerDescription: MqttBrokerDescription, mqttClientId: String, log: Log): MqttCommunicationEndpoint = {
+    new PahoMqttCommunicationEndpoint(mqttBrokerDescription, mqttClientId, getSpaceEnvironment.getExecutorService, log)
   }
 }

@@ -66,6 +66,21 @@ public interface DynamicObject {
   String getString(String name) throws DynamicObjectSmartSpacesException;
 
   /**
+   * If the current level is a object, get a string field from the object.
+   *
+   * @param name
+   *          name of the field
+   * @param defaultValue
+   *          the default value if there is nothing for the field
+   *
+   * @return value of the field, or the default value if nothing for the field
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object
+   */
+  String getString(String name, String defaultValue) throws DynamicObjectSmartSpacesException;
+
+  /**
    * If the current level is a object, get a string field from the object. The
    * field is required.
    *
@@ -93,6 +108,71 @@ public interface DynamicObject {
   Integer getInteger(String name) throws DynamicObjectSmartSpacesException;
 
   /**
+   * If the current level is a object, get an integer field from the object.
+   *
+   * @param name
+   *          name of the field
+   *
+   * @return value of the field, or {@code null} if nothing for that key
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object
+   */
+  Integer getInteger(String name, int defaultValue) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * If the current level is a object, get an integer field from the object.
+   *
+   * @param name
+   *          name of the field
+   *
+   * @return value of the field
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object or the field does not exist
+   */
+  Integer getRequiredInteger(String name) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * If the current level is a object, get a long field from the object.
+   *
+   * @param name
+   *          name of the field
+   *
+   * @return value of the field, or {@code null} if nothing for that key
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object
+   */
+  Long getLong(String name) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * If the current level is a object, get an integer field from the object.
+   *
+   * @param name
+   *          name of the field
+   *
+   * @return value of the field, or {the default value if nothing for that key
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object
+   */
+  Long getLong(String name, long defaultValue) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * If the current level is a object, get a long field from the object.
+   *
+   * @param name
+   *          name of the field
+   *
+   * @return value of the field
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object or the field does not exist
+   */
+  Long getRequiredLong(String name) throws DynamicObjectSmartSpacesException;
+
+  /**
    * If the current level is a object, get a double field from the object.
    *
    * @param name
@@ -106,6 +186,32 @@ public interface DynamicObject {
   Double getDouble(String name) throws DynamicObjectSmartSpacesException;
 
   /**
+   * If the current level is a object, get a double field from the object.
+   *
+   * @param name
+   *          name of the field
+   *
+   * @return value of the field, or {@code null} if nothing for that key
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object
+   */
+  Double getDouble(String name, double defaultValue) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * If the current level is a object, get a double field from the object.
+   *
+   * @param name
+   *          name of the field
+   *
+   * @return value of the field
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object or the field does not exist
+   */
+  Double getRequiredDouble(String name) throws DynamicObjectSmartSpacesException;
+
+  /**
    * If the current level is a object, get a boolean field from the object.
    *
    * @param name
@@ -117,6 +223,34 @@ public interface DynamicObject {
    *           not an object
    */
   Boolean getBoolean(String name) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * If the current level is a object, get a boolean field from the object.
+   *
+   * @param name
+   *          name of the field
+   * @param defaultValue
+   *          the default value if there is nothing for the field
+   *
+   * @return value of the field, or the default value if nothing for the field
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object
+   */
+  Boolean getBoolean(String name, boolean defaultValue) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * If the current level is a object, get a booleam field from the object.
+   *
+   * @param name
+   *          name of the field
+   *
+   * @return value of the field
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object or the field does not exist
+   */
+  Boolean getRequiredBoolean(String name) throws DynamicObjectSmartSpacesException;
 
   /**
    * Does the current object contain a property with the given name?

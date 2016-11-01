@@ -34,7 +34,12 @@ public class TimeFrequency {
   /**
    * One minute in milliseconds.
    */
-  public static final double ONE_MINUTE_IN_MILLISECONDS = 60000.0;
+  public static final double ONE_MINUTE_IN_MILLISECONDS = 60.0 * ONE_SECOND_IN_MILLISECONDS;
+
+  /**
+   * One hour in milliseconds.
+   */
+  public static final double ONE_HOUR_IN_MILLISECONDS = 60.0 * ONE_MINUTE_IN_MILLISECONDS;
 
   /**
    * Get a frequency for times per second.
@@ -53,12 +58,25 @@ public class TimeFrequency {
    * Get a frequency for times per minute.
    *
    * @param timesPerMinute
-   *          the times per second desired
+   *          the times per minute desired
    *
-   * @return the frequency in times per second
+   * @return the frequency in times per minute
    */
   public static TimeFrequency timesPerMinute(double timesPerMinute) {
     return new TimeFrequency((long) (ONE_MINUTE_IN_MILLISECONDS / timesPerMinute),
+        TimeUnit.MILLISECONDS);
+  }
+
+  /**
+   * Get a frequency for times per hour.
+   *
+   * @param timesPerMinute
+   *          the times per hour desired
+   *
+   * @return the frequency in times per hour
+   */
+  public static TimeFrequency timesPerHour(double timesPerHour) {
+    return new TimeFrequency((long) (ONE_HOUR_IN_MILLISECONDS / timesPerHour),
         TimeUnit.MILLISECONDS);
   }
 

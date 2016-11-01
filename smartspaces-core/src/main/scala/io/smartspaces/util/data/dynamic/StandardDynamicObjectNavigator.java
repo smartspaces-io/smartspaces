@@ -117,6 +117,12 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   }
 
   @Override
+  public String getString(String propertyName, String defaultValue) {
+    Object value = getObjectProperty(propertyName);
+    return (value != null) ? (String) value : defaultValue;
+  }
+
+  @Override
   public String getRequiredString(String propertyName) throws DynamicObjectSmartSpacesException {
     String value = getString(propertyName);
     if (value != null) {
@@ -133,6 +139,50 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   }
 
   @Override
+  public Integer getInteger(String propertyName, int defaultValue) {
+    Integer value = getInteger(propertyName);
+    return (value != null) ? value : defaultValue;
+  }
+
+  @Override
+  public Integer getRequiredInteger(String propertyName) throws DynamicObjectSmartSpacesException {
+    Integer value = getInteger(propertyName);
+    if (value != null) {
+      return value;
+    } else {
+      throw new DynamicObjectSmartSpacesException(String.format(
+          "No property with name %s at the current level in the dynamic object", propertyName));
+    }
+  }
+
+  @Override
+  public Long getLong(String propertyName) {
+    Object value = getObjectProperty(propertyName);
+    if (value != null) {
+      return ((Number) value).longValue();
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public Long getLong(String propertyName, long defaultValue) {
+    Long value = getLong(propertyName);
+    return (value != null) ? value : defaultValue;
+  }
+
+  @Override
+  public Long getRequiredLong(String propertyName) throws DynamicObjectSmartSpacesException {
+    Long value = getLong(propertyName);
+    if (value != null) {
+      return value;
+    } else {
+      throw new DynamicObjectSmartSpacesException(String.format(
+          "No property with name %s at the current level in the dynamic object", propertyName));
+    }
+  }
+
+  @Override
   public Double getDouble(String propertyName) {
     Object value = getObjectProperty(propertyName);
     if (value != null) {
@@ -143,8 +193,42 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   }
 
   @Override
+  public Double getDouble(String propertyName, double defaultValue) {
+    Double value = getDouble(propertyName);
+    return (value != null) ? value : defaultValue;
+  }
+
+  @Override
+  public Double getRequiredDouble(String propertyName) throws DynamicObjectSmartSpacesException {
+    Double value = getDouble(propertyName);
+    if (value != null) {
+      return value;
+    } else {
+      throw new DynamicObjectSmartSpacesException(String.format(
+          "No property with name %s at the current level in the dynamic object", propertyName));
+    }
+  }
+
+  @Override
   public Boolean getBoolean(String propertyName) {
     return (Boolean) getObjectProperty(propertyName);
+  }
+
+  @Override
+  public Boolean getBoolean(String propertyName, boolean defaultValue) {
+    Object value = getObjectProperty(propertyName);
+    return (value != null) ? (Boolean) value : defaultValue;
+  }
+
+  @Override
+  public Boolean getRequiredBoolean(String propertyName) throws DynamicObjectSmartSpacesException {
+    Boolean value = getBoolean(propertyName);
+    if (value != null) {
+      return value;
+    } else {
+      throw new DynamicObjectSmartSpacesException(String.format(
+          "No property with name %s at the current level in the dynamic object", propertyName));
+    }
   }
 
   @Override
@@ -466,7 +550,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
    * @return the final object
    */
   @SuppressWarnings("unchecked")
-      Object traversePath(String path) {
+  Object traversePath(String path) {
     Object curObject = null;
 
     if (currentType == DynamicObjectType.OBJECT) {

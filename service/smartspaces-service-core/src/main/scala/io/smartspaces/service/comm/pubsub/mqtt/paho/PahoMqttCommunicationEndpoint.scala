@@ -16,13 +16,9 @@
 
 package io.smartspaces.service.comm.pubsub.mqtt.paho
 
-import io.smartspaces.SmartSpacesException
-import io.smartspaces.resource.managed.IdempotentManagedResource
-import io.smartspaces.resource.managed.ManagedResourceState
-import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
-import io.smartspaces.service.comm.pubsub.mqtt.MqttConnectionListener
-import io.smartspaces.service.comm.pubsub.mqtt.MqttSubscriberListener
-import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
+import java.util.concurrent.ScheduledExecutorService
+
+import scala.collection.immutable.List
 
 import org.apache.commons.logging.Log
 import org.eclipse.paho.client.mqttv3.IMqttActionListener
@@ -37,9 +33,14 @@ import org.eclipse.paho.client.mqttv3.MqttException
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 
-import scala.collection.immutable.List
-
-import java.util.concurrent.ScheduledExecutorService
+import io.smartspaces.SmartSpacesException
+import io.smartspaces.resource.managed.IdempotentManagedResource
+import io.smartspaces.resource.managed.ManagedResourceState
+import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
+import io.smartspaces.service.comm.pubsub.mqtt.MqttConnectionListener
+import io.smartspaces.service.comm.pubsub.mqtt.MqttPublisher
+import io.smartspaces.service.comm.pubsub.mqtt.MqttSubscriberListener
+import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 
 /**
  * An MQTT communication endpoint implemented with Paho.
@@ -113,7 +114,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
 
       log.info("Connecting to broker: " + mqttClient.getServerURI())
       log.info(mqttConnectOptions.isAutomaticReconnect())
-      mqttClient.connect(mqttConnectOptions, new IMqttActionListener() {
+      mqttClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
         override def onSuccess(token: IMqttToken): Unit = {
           log.info("MQTT broker connect is successful on token " + token)
         }
@@ -169,7 +170,15 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
 
     this
   }
+  
+  override def createMessagePublisher(mqttTopicName: String, qos: Integer, retain: Boolean): MqttPublisher = {
+    new MqttPublisherShim(mqttTopicName, qos, retain)
+  }
 
+  override def isConnected: Boolean = {
+    mqttClient!= null && mqttClient.isConnected()
+  }
+  
   override def getLog(): Log = {
     log
   }
@@ -183,7 +192,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
   private def brokerConnectSuccessful(reconnect: Boolean): Unit = {
     // Subscribe all subscribers.
     subscribers.foreach { (subscriber) =>
-      if (!reconnect /* || subscriber.autoreconnect */ ) {
+      if (!reconnect || subscriber.autoreconnect) {
         subscriber.subscribe
       }
     }
@@ -250,6 +259,17 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       } catch {
         case e: Throwable => log.error(String.format("Error while handling MQTT message on topic %s", topicName), e)
       }
+    }
+  }
+  
+  /**
+   * An MQTT publisher that interfaces with the Paho client.
+   *
+   * @author Keith M. Hughes
+   */
+  private class MqttPublisherShim(override val mqttTopicName: String, override val qos: Integer, override val retain: Boolean) extends MqttPublisher {
+    override def sendMessage(message: Array[Byte]): Unit = {
+      mqttClient.publish(mqttTopicName, message, qos, retain)
     }
   }
 }

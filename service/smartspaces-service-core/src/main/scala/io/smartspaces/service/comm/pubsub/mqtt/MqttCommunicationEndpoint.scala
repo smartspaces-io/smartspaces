@@ -47,7 +47,7 @@ trait MqttCommunicationEndpoint extends ManagedResource {
    *
    * @param listener
    * 				the listener to add
-   * 
+   *
    * @return the endpoint
    */
   def addConnectionListener(listener: MqttConnectionListener): MqttCommunicationEndpoint
@@ -66,6 +66,25 @@ trait MqttCommunicationEndpoint extends ManagedResource {
    */
   def subscribe(topicName: String, listener: MqttSubscriberListener, qos: Int, autoreconnect: Boolean): MqttCommunicationEndpoint
 
+  /**
+   * Create an MQTT message publisher.
+   *
+   * @param mqttTopicName
+   *       the name of the MQTT topic
+   * @param qos
+   * 				the default Quality of Service for the name
+   * @param retain
+   * 	      {@code true} if messages should be retained by default
+   */
+  def createMessagePublisher(mqttTopicName: String, qos: Integer, retain: Boolean): MqttPublisher
+
+  /**
+   * Is the client connected?
+   * 
+   * @return {@code true} if connected
+   */
+  def isConnected(): Boolean
+  
   /**
    * Get the log for the endpoint.
    *

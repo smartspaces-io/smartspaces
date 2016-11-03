@@ -41,6 +41,15 @@ import io.smartspaces.service.comm.pubsub.mqtt.MqttConnectionListener
 import io.smartspaces.service.comm.pubsub.mqtt.MqttPublisher
 import io.smartspaces.service.comm.pubsub.mqtt.MqttSubscriberListener
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
+import javax.net.ssl.KeyManagerFactory
+import java.security.KeyStore
+import javax.net.ssl.TrustManager
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManagerFactory
+import java.util.Properties
+import java.io.InputStream
+import javax.net.ssl.SSLSocketFactory
+import java.io.FileInputStream
 
 /**
  * An MQTT communication endpoint implemented with Paho.
@@ -75,26 +84,21 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
    */
   private var subscribers: List[MqttSubscriber] = List()
 
-  /**
-   * Will become {@code true} after a first connection.
-   */
-  private var isReconnection = false
-
   override def onStartup(): Unit = {
     try {
       persistence = new MemoryPersistence()
       mqttClient =
-        new MqttAsyncClient(mqttBrokerDescription.getBrokerAddress(), mqttClientId, persistence)
+        new MqttAsyncClient(mqttBrokerDescription.brokerAddress, mqttClientId, persistence)
 
       mqttClient.setCallback(new MqttCallbackExtended() {
         override def connectComplete(reconnect: Boolean, serverURI: String): Unit = {
-          log.error("MQTT connection successful to " + mqttBrokerDescription.getBrokerAddress)
+          log.error("MQTT connection successful to " + mqttBrokerDescription.brokerAddress)
 
           brokerConnectSuccessful(reconnect)
         }
 
         override def connectionLost(cause: Throwable): Unit = {
-          log.error("Lost MQTT connection to " + mqttBrokerDescription.getBrokerAddress, cause)
+          log.error("Lost MQTT connection to " + mqttBrokerDescription.brokerAddress, cause)
 
           brokerConnectLost()
         }
@@ -110,7 +114,14 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       })
 
       mqttConnectOptions.setCleanSession(true)
-      mqttConnectOptions.setAutomaticReconnect(true)
+      mqttConnectOptions.setAutomaticReconnect(mqttBrokerDescription.autoreconnect)
+      if (mqttBrokerDescription.userName.isDefined) {
+        mqttConnectOptions.setUserName(mqttBrokerDescription.userName.get)
+        mqttConnectOptions.setPassword(mqttBrokerDescription.password.get.toCharArray())
+      }
+      if (mqttBrokerDescription.isSsl) {
+        mqttConnectOptions.setSocketFactory(configureSSLSocketFactory(null))
+      }
 
       log.info("Connecting to broker: " + mqttClient.getServerURI())
       log.info(mqttConnectOptions.isAutomaticReconnect())
@@ -170,15 +181,15 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
 
     this
   }
-  
+
   override def createMessagePublisher(mqttTopicName: String, qos: Integer, retain: Boolean): MqttPublisher = {
     new MqttPublisherShim(mqttTopicName, qos, retain)
   }
 
   override def isConnected: Boolean = {
-    mqttClient!= null && mqttClient.isConnected()
+    mqttClient != null && mqttClient.isConnected()
   }
-  
+
   override def getLog(): Log = {
     log
   }
@@ -233,6 +244,37 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
   }
 
   /**
+   * Create an SSL socket factory.
+   *
+   * @param credentials
+   *          the security credentials
+   *
+   * @return the socket factory.
+   *
+   * @throws Exception
+   *           something bad happened
+   */
+  private def configureSSLSocketFactory(credentials: Properties): SSLSocketFactory = {
+    val ks = KeyStore.getInstance("JKS")
+    
+    // TODO(keith) Sort out getting keystore file and password.
+    val jksInputStream = new FileInputStream(credentials.getProperty("keystore.file"))
+    val keystorePassword = credentials.getProperty("keystore.password").toCharArray()
+    ks.load(jksInputStream, keystorePassword)
+
+    val kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
+    kmf.init(ks, keystorePassword)
+
+    val tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+    tmf.init(ks)
+
+    val sc = SSLContext.getInstance("TLS")
+    val trustManagers = tmf.getTrustManagers()
+    sc.init(kmf.getKeyManagers(), trustManagers, null)
+
+    return sc.getSocketFactory()
+  }
+  /**
    * An MQTT subscriber that interfaces with the Paho client.
    *
    * @author Keith M. Hughes
@@ -261,13 +303,14 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       }
     }
   }
-  
+
   /**
    * An MQTT publisher that interfaces with the Paho client.
    *
    * @author Keith M. Hughes
    */
   private class MqttPublisherShim(override val mqttTopicName: String, override val qos: Integer, override val retain: Boolean) extends MqttPublisher {
+
     override def sendMessage(message: Array[Byte]): Unit = {
       mqttClient.publish(mqttTopicName, message, qos, retain)
     }

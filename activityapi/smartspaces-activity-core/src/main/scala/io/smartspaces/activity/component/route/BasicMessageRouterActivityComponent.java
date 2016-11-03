@@ -27,6 +27,7 @@ import io.smartspaces.messaging.route.RouteMessagePublisher;
 import io.smartspaces.messaging.route.StandardMessageRouter;
 import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
+import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription$;
 
 import org.apache.commons.logging.Log;
 
@@ -146,7 +147,7 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
     String mqttBrokerDescriptionString = getComponentContext().getActivity().getConfiguration()
         .getPropertyString(CONFIGURATION_MESSAGING_MQTT_BROKERDESCRIPTION_DEFAULT);
     if (mqttBrokerDescriptionString != null) {
-      return new MqttBrokerDescription(mqttBrokerDescriptionString);
+      return MqttBrokerDescription$.MODULE$.parse(mqttBrokerDescriptionString);
     } else {
       return null;
     }

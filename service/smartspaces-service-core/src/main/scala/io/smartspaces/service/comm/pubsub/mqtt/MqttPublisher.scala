@@ -16,12 +16,14 @@
 
 package io.smartspaces.service.comm.pubsub.mqtt
 
+import io.smartspaces.messaging.MessagePublisher
+
 /**
  * A listener for MQTT subscriber events.
  *
  * @author Keith M. Hughes
  */
-trait MqttPublisher {
+trait MqttPublisher extends MessagePublisher[Array[Byte]] {
   
   /**
    * The MQTT topic.
@@ -37,16 +39,4 @@ trait MqttPublisher {
    * The default retain value for messages.
    */
   val retain: Boolean
-
-  /**
-   * Send a raw message.
-   *
-   * @param message
-   *          the message to send
-   * @param topicName
-   *          the topic the message came in on
-   * @param payload
-   *          the message payload
-   */
-  def sendMessage(message: Array[Byte]): Unit
 }

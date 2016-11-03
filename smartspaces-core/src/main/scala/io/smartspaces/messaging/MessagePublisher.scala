@@ -17,16 +17,12 @@
 
 package io.smartspaces.messaging;
 
-import io.smartspaces.util.data.dynamic.DynamicObject;
-
-import java.util.Map;
-
 /**
  * A route message publisher that sends simple objects.
  *
  * @author Keith M. Hughes
  */
-public interface MessagePublisher {
+trait MessagePublisher[F] {
 
   /**
    * Send a message.
@@ -37,28 +33,5 @@ public interface MessagePublisher {
    * @param message
    *          the message to send
    */
-  void sendMessage(Map<String, Object> message);
-
-  /**
-   * Send an output message from a {@link JsonBuilder}.
-   *
-   * @param message
-   *          the message to send
-   */
-  void sendMessage(DynamicObject message);
-
-  /**
-   * Send an output string message.
-   *
-   * @param message
-   *          the message to send
-   */
-  void sendMessage(String message);
-
-  /**
-   * Get the channel ID for the publisher.
-   * 
-   * @return the channel ID
-   */
-  String getChannelId();
+  def sendMessage(message: F): Unit
 }

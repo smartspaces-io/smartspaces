@@ -99,7 +99,7 @@ public class StandardMqttPublishers<T> implements MqttPublishers<T> {
       try {
         // TODO(keith): Create map of MQTT masters to MqttClientinformation
         // object and have set of topics inside the client info.
-        client = new MqttAsyncClient(mqttBroker.getBrokerAddress(), nodeName, persistence);
+        client = new MqttAsyncClient(mqttBroker.brokerAddress(), nodeName, persistence);
       } catch (MqttException e) {
         log.error(String.format("Failed adding publisher topic %s", topicName), e);
         continue;

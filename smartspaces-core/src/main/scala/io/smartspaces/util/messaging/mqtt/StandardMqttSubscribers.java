@@ -82,7 +82,7 @@ public class StandardMqttSubscribers implements MqttSubscribers {
       try {
         // TODO(keith): Map topics to the particular MQTT client so when
         // transmitting, we get the correct client for that topic.
-        client = new MqttClient(mqttBroker.getBrokerAddress(), nodeName, persistence);
+        client = new MqttClient(mqttBroker.brokerAddress(), nodeName, persistence);
       } catch (MqttException e) {
         log.error(String.format("Failed adding subscriber topic %s", topicName), e);
         continue;

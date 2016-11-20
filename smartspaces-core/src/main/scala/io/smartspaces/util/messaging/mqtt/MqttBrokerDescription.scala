@@ -16,6 +16,11 @@
 
 package io.smartspaces.util.messaging.mqtt
 
+/**
+ * The description of an MQTT broker.
+ *
+ * @author Keith M. Hughes
+ */
 object MqttBrokerDescription {
   
   /**

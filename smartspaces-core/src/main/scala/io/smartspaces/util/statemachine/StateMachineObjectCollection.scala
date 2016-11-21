@@ -14,13 +14,13 @@
  * the License.
  */
 
-package io.smartspaces.util.statemachine;
+package io.smartspaces.util.statemachine
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.SmartSpacesException;
+import io.smartspaces.SimpleSmartSpacesException
+import io.smartspaces.SmartSpacesException
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.Map
+import java.util.concurrent.ConcurrentSkipListMap
 
 /**
  * A collection of state machine objects.
@@ -39,23 +39,23 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * @author Keith M. Hughes
  */
-public class StateMachineObjectCollection<K, S, T, SO extends StateMachineObject<S, T>> {
-
-  /**
-   * The machine doing the transitioning.
-   */
-  private final StateMachine<S, T, SO> machine;
+class StateMachineObjectCollection[K, S, T, SO <: StateMachineObject[S, T]](private val machine: StateMachine[S, T, SO]) {
 
   /**
    * The collection of state machine objects.
    */
-  private final Map<K, SO> objects = new ConcurrentSkipListMap<K, SO>();
+  private val  machineObjects = new ConcurrentSkipListMap[K, SO]()
 
   /**
-   * @param machine
+   * Add in a new object into the collection.
+   *
+   * @param key
+   *          the key for the object
+   * @param object
+   *          the object
    */
-  public StateMachineObjectCollection(StateMachine<S, T, SO> machine) {
-    this.machine = machine;
+  def put(key: K ,  machineObject: SO): Unit = {
+    machineObjects.put(key, machineObject)
   }
 
   /**
@@ -66,21 +66,9 @@ public class StateMachineObjectCollection<K, S, T, SO extends StateMachineObject
    * @param object
    *          the object
    */
-  public void put(K key, SO object) {
-    objects.put(key, object);
-  }
-
-  /**
-   * Add in a new object into the collection.
-   *
-   * @param key
-   *          the key for the object
-   * @param object
-   *          the object
-   */
-  public void put(K key, SO object, S initialState) {
-    put(key, object);
-    setInitialState(initialState, object);
+  def put(key: K, machineObject: SO , initialState: S ): Unit = {
+    put(key, machineObject)
+    setInitialState(initialState, machineObject)
   }
 
   /**
@@ -91,8 +79,8 @@ public class StateMachineObjectCollection<K, S, T, SO extends StateMachineObject
    *
    * @return the object, or {@code null} if none
    */
-  public SO get(K key) {
-    return objects.get(key);
+  def get(key: K): SO = {
+    return machineObjects.get(key)
   }
 
   /**
@@ -106,14 +94,14 @@ public class StateMachineObjectCollection<K, S, T, SO extends StateMachineObject
    * @throws SmartSpacesException
    *           an object with the given key was not found in the collection
    */
-  public void setInitialState(K key, S initialState) throws SmartSpacesException {
-    SO object = objects.get(key);
-    if (object != null) {
-      setInitialState(initialState, object);
+  def setInitialState(key: K ,  initialState: S): Unit = {
+    val machineObject = machineObjects.get(key)
+    if (machineObject != null) {
+      setInitialState(initialState, machineObject)
     } else {
       throw new SimpleSmartSpacesException(String.format(
           "Cannot set initial state %s on object with key %s, object not in the collection",
-          initialState, key));
+          initialState.toString, key.toString))
     }
   }
 
@@ -129,16 +117,16 @@ public class StateMachineObjectCollection<K, S, T, SO extends StateMachineObject
    *           either no object was found with the given key or the transition
    *           failed
    */
-  public void transition(K key, T transition) throws SmartSpacesException {
-    SO object = objects.get(key);
-    if (object != null) {
-      synchronized (object) {
-        machine.transition(object, transition);
+  def transition(key: K ,  transition: T): Unit = {
+    val machineObject = machineObjects.get(key)
+    if (machineObject != null) {
+      machineObject.synchronized {
+        machine.transition(machineObject, transition)
       }
     } else {
-      throw new SimpleSmartSpacesException(String.format(
+      throw SimpleSmartSpacesException.newFormattedException(
           "Cannot transition object with key %s with transition %s, object not in the collection",
-          key, transition));
+          key.toString, transition.toString)
     }
   }
 
@@ -150,9 +138,9 @@ public class StateMachineObjectCollection<K, S, T, SO extends StateMachineObject
    * @param object
    *          the object to get the initial state
    */
-  private void setInitialState(S initialState, SO object) {
-    synchronized (object) {
-      machine.initialState(object, initialState);
+  private def setInitialState( initialState: S, machineObject: SO ): Unit = {
+    machineObject.synchronized  {
+      machine.initialState(machineObject, initialState)
     }
   }
 }

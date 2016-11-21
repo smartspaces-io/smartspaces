@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.util.statemachine;
+package io.smartspaces.util.statemachine
 
 /**
  * A base object for storing state machine state.
@@ -26,20 +26,18 @@ package io.smartspaces.util.statemachine;
  *
  * @author Keith M. Hughes
  */
-public class BaseStateMachineObject<S, T> implements StateMachineObject<S, T> {
+class BaseStateMachineObject[S, T] extends StateMachineObject[S, T] {
 
   /**
    * The current state of the object.
    */
-  private S state;
+  private var state: Option[S] = None
 
-  @Override
-  public S getState() {
-    return state;
+  override def getState(): Option[S] = {
+    return state
   }
 
-  @Override
-  public void setState(S state) {
-    this.state = state;
+  override def setState( state: S): Unit = {
+    this.state = Option(state)
   }
 }

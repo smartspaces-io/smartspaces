@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.util.statemachine;
+package io.smartspaces.util.statemachine
 
 /**
  * An action to be performed during state machine transitions.
@@ -28,13 +28,13 @@ package io.smartspaces.util.statemachine;
  *
  * @author Keith M. Hughes
  */
-public interface StateMachineAction<S, T, SO extends StateMachineObject<S, T>> {
+trait StateMachineAction[S, T, SO <: StateMachineObject[S, T]] {
 
   /**
    * Perform the action.
    *
-   * @param object
+   * @param machineObject
    *          the state machine state object
    */
-  void performAction(SO object);
+  def performAction(machineObject: SO )
 }

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.communications.network
+package io.smartspaces.communications.network.zeroconf
 
 import io.smartspaces.resource.managed.ManagedResource
 
@@ -23,20 +23,36 @@ import io.smartspaces.resource.managed.ManagedResource
  * 
  * @author Keith M. Hughes
  */
-object MdnsService {
+object ZeroconfService {
   
   /**
-   * The service name for the mDNS service
+   * The service name for the Zeroconf service
    */
-  val SERVICE_NAME = "mdns"
+  val SERVICE_NAME = "zeroconf"
 }
 
 /**
- * A service for giving mDNS functionality.
+ * A service for giving Zeroconf functionality.
  * 
  * @author Keith M. Hughes
  */
-trait MdnsService extends ManagedResource {
+trait ZeroconfService extends ManagedResource {
+
+  /**
+   * Register a new service for discovery.
+   * 
+   * @param serviceInfo
+   *       the service to register
+   */
+  def registerService( serviceInfo: ZeroconfServiceInfo): Unit
+
+  /**
+   * Unregister a service for discovery.
+   * 
+   * @param serviceInfo
+   *       the service to unregister
+   */
+  def unregisterService(serviceInfo: ZeroconfServiceInfo): Unit
 
   /**
    * Add in a simple discovery request.

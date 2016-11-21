@@ -14,47 +14,36 @@
  * the License.
  */
 
-package io.smartspaces.util.statemachine;
+package io.smartspaces.util.statemachine
 
-import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SimpleSmartSpacesException
 
 /**
  * A builder for simple, deterministic equality state machines.
  *
  * @author Keith M. Hughes
  */
-public class EqualityTriggerStateMachineBuilder<S, T, SO extends StateMachineObject<S, T>> {
-
-  /**
-   * Create a new builder.
-   *
-   * @return the new builder
-   */
-  public static <S, T, SO extends StateMachineObject<S, T>>
-      EqualityTriggerStateMachineBuilder<S, T, SO> newBuilder() {
-    return new EqualityTriggerStateMachineBuilder<S, T, SO>();
-  }
-
-  /**
-   * The current state being built.
-   */
-  private EqualityTriggerStateMachine<S, T, SO>.InternalStateMachineState currentState;
+class EqualityTriggerStateMachineBuilder[S, T, SO <: StateMachineObject[S, T]] {
 
   /**
    * The machine being built.
    */
-  private EqualityTriggerStateMachine<S, T, SO> machine =
-      new EqualityTriggerStateMachine<S, T, SO>();
+  private val machine =  new EqualityTriggerStateMachine[S, T, SO]()
+
+  /**
+   * The current state being built.
+   */
+  private var currentState: Option[S] = None
 
   /**
    * Build the state machine.
    *
    * @return the state machine
    */
-  public EqualityTriggerStateMachine<S, T, SO> build() {
-    machine.validate();
+  def  build(): EqualityTriggerStateMachine[S, T, SO] = {
+    machine.validate()
 
-    return machine;
+    return machine
   }
 
   /**
@@ -68,10 +57,10 @@ public class EqualityTriggerStateMachineBuilder<S, T, SO extends StateMachineObj
    * @throws SimpleSmartSpacesException
    *           the new state was already part of the state machine
    */
-  public EqualityTriggerStateMachineBuilder<S, T, SO> addState(S state) {
-    currentState = machine.addInternalState(state);
+  def  addState(state: S ): EqualityTriggerStateMachineBuilder[S, T, SO] = {
+    currentState = Option(state)
 
-    return this;
+    return this
   }
 
   /**
@@ -85,13 +74,12 @@ public class EqualityTriggerStateMachineBuilder<S, T, SO extends StateMachineObj
    * @throws SimpleSmartSpacesException
    *           there is no state currently being built
    */
-  public EqualityTriggerStateMachineBuilder<S, T, SO> onEntry(
-      StateMachineAction<S, T, SO> enterAction) {
-    if (currentState != null) {
-      currentState.setEnterAction(enterAction);
-      return this;
+  def onEntry(enterAction: StateMachineAction[S, T, SO]):  EqualityTriggerStateMachineBuilder[S, T, SO] = {
+    if (currentState.isDefined) {
+      machine.getTransitionInternalState(currentState.get).enterAction  = enterAction
+      return this
     } else {
-      throw new SimpleSmartSpacesException("no current state set for the builder");
+      throw new SimpleSmartSpacesException("no current state set for the builder")
     }
   }
 
@@ -106,13 +94,13 @@ public class EqualityTriggerStateMachineBuilder<S, T, SO extends StateMachineObj
    * @throws SimpleSmartSpacesException
    *           there is no state currently being built
    */
-  public EqualityTriggerStateMachineBuilder<S, T, SO>
-      onExit(StateMachineAction<S, T, SO> exitAction) {
-    if (currentState != null) {
-      currentState.setExitAction(exitAction);
-      return this;
+  def onExit(exitAction: StateMachineAction[S, T, SO] ): EqualityTriggerStateMachineBuilder[S, T, SO] = {
+    if (currentState.isDefined) {
+      machine.getTransitionInternalState(currentState.get).exitAction  = exitAction
+      
+      return this
     } else {
-      throw new SimpleSmartSpacesException("no current state set for the builder");
+      throw new SimpleSmartSpacesException("no current state set for the builder")
     }
   }
 
@@ -129,13 +117,13 @@ public class EqualityTriggerStateMachineBuilder<S, T, SO extends StateMachineObj
    * @throws SimpleSmartSpacesException
    *           there is no state currently being built
    */
-  public EqualityTriggerStateMachineBuilder<S, T, SO> transition(T transition, S newState) {
-    if (currentState != null) {
-      currentState.addTransition(transition, newState);
+  def  transition(transition: T ,  newState: S): EqualityTriggerStateMachineBuilder[S, T, SO] = {
+    if (currentState.isDefined) {
+      machine.getTransitionInternalState(currentState.get).addTransition(transition, newState)
 
-      return this;
+      return this
     } else {
-      throw new SimpleSmartSpacesException("no current state set for the builder");
+      throw new SimpleSmartSpacesException("no current state set for the builder")
     }
   }
 }

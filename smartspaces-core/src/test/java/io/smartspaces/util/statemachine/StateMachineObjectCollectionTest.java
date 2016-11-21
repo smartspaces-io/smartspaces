@@ -143,7 +143,7 @@ public class StateMachineObjectCollectionTest {
     }
 
     private void action(String state, String action) {
-      path.add(name + "." + getState() + "." + action);
+      path.add(name + "." + getState().get() + "." + action);
     }
   }
 }

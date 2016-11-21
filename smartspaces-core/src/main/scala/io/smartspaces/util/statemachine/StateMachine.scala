@@ -14,9 +14,9 @@
  * the License.
  */
 
-package io.smartspaces.util.statemachine;
+package io.smartspaces.util.statemachine
 
-import io.smartspaces.SmartSpacesException;
+import io.smartspaces.SmartSpacesException
 
 /**
  * A state machine.
@@ -26,16 +26,16 @@ import io.smartspaces.SmartSpacesException;
  * an object which is moving through the state machine through its series of
  * states. It is an immutable object.
  *
- * @param <S>
+ * @param [S]
  *          the type of the state indicator class
- * @param <T>
+ * @param [T]
  *          the type of the object that specifies the transition
- * @param <SO>
+ * @param [SO]
  *          the class of the state object
  *
  * @author Keith M. Hughes
  */
-public interface StateMachine<S, T, SO extends StateMachineObject<S, T>> {
+trait StateMachine[S, T, SO <: StateMachineObject[S, T]] {
 
   /**
    * Set the initial state for the state object.
@@ -47,7 +47,7 @@ public interface StateMachine<S, T, SO extends StateMachineObject<S, T>> {
    *
    * @throws SmartSpacesException
    */
-  void initialState(SO stateObject, S initialState) throws SmartSpacesException;
+  def initialState(stateObject: SO , initialState: S): Unit
 
   /**
    * Transition the state object from its current state to the next transition.
@@ -59,5 +59,5 @@ public interface StateMachine<S, T, SO extends StateMachineObject<S, T>> {
    *
    * @throws SmartSpacesException
    */
-  void transition(SO stateObject, T nextStateTransition) throws SmartSpacesException;
+  def transition(stateObject: SO ,  nextStateTransition: T): Unit
 }

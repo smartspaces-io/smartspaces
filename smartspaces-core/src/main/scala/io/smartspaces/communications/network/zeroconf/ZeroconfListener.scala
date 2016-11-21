@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Keith M. Hughes.
+ * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,33 +14,28 @@
  * the License.
  */
 
-package io.smartspaces.util.statemachine;
+package io.smartspaces.communications.network.zeroconf
 
 /**
- * An object which represents a state machine state.
- *
- * @param <T>
- *          the type of the state indicator
+ * A listener for {@link ZeroconfService} events.
  *
  * @author Keith M. Hughes
  */
-public interface StateMachineObject<S, T> {
+trait ZeroconfListener {
 
   /**
-   * Get the current state machine state of the object.
+   * A new service has come in.
    *
-   * @return the current state machine state of the object
+   * @param masterInfo
+   *          the service which has been added
    */
-  S getState();
+  def onNewZeroconfService( serviceInfo: ZeroconfServiceInfo): Unit
 
   /**
-   * Set the current state machine state of the object.
+   * A service has been unregistered.
    *
-   * <p>
-   * This should only be called by the {@link StateMachine}.
-   *
-   * @param state
-   *          the new state machine state of the object
+   * @param serviceInfo
+   *          the service which has been unregistered
    */
-  void setState(S state);
+  def onRemoveZeroconfService(masterInfo: ZeroconfServiceInfo ): Unit
 }

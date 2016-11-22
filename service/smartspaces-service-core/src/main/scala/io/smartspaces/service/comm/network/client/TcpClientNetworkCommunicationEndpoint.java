@@ -17,9 +17,10 @@
 
 package io.smartspaces.service.comm.network.client;
 
-import java.net.InetAddress;
-
+import io.smartspaces.messaging.MessageWriter;
 import io.smartspaces.resource.managed.ManagedResource;
+
+import java.net.InetAddress;
 
 /**
  * Communication endpoint for a TCP based client.
@@ -71,6 +72,13 @@ public interface TcpClientNetworkCommunicationEndpoint<T> extends ManagedResourc
    *          the message to send
    */
   void write(T message);
+
+  /**
+   * Get a message writer for this client.
+   * 
+   * @return a message writer
+   */
+  MessageWriter<T> getMessageWriter();
 
   /**
    * Set the connection timeout.

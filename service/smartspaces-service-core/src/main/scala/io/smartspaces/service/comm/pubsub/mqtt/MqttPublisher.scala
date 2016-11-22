@@ -16,14 +16,14 @@
 
 package io.smartspaces.service.comm.pubsub.mqtt
 
-import io.smartspaces.messaging.MessagePublisher
+import io.smartspaces.messaging.MessageWriter
 
 /**
  * A listener for MQTT subscriber events.
  *
  * @author Keith M. Hughes
  */
-trait MqttPublisher extends MessagePublisher[Array[Byte]] {
+trait MqttPublisher extends MessageWriter[Array[Byte]] {
   
   /**
    * The MQTT topic.

@@ -17,21 +17,21 @@
 
 package io.smartspaces.service.comm.network.server.internal.netty;
 
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.service.comm.network.server.TcpServerClientConnection;
 import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpointListener;
 import io.smartspaces.service.comm.network.server.TcpServerRequest;
 
-import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
+import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
@@ -41,7 +41,13 @@ import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
 
-import com.google.common.collect.Lists;
+import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A Netty-based {@link TcpServerNetworkCommunicationEndpoint} using strings for
@@ -49,8 +55,8 @@ import com.google.common.collect.Lists;
  *
  * @author Keith M. Hughes
  */
-public class NettyStringTcpServerNetworkCommunicationEndpoint implements
-    TcpServerNetworkCommunicationEndpoint<String> {
+public class NettyStringTcpServerNetworkCommunicationEndpoint
+    implements TcpServerNetworkCommunicationEndpoint<String> {
 
   /**
    * The delimiters for the incoming string messages.
@@ -75,8 +81,8 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint implements
   /**
    * The listeners to endpoint events.
    */
-  private final List<TcpServerNetworkCommunicationEndpointListener<String>> listeners = Lists
-      .newCopyOnWriteArrayList();
+  private final List<TcpServerNetworkCommunicationEndpointListener<String>> listeners =
+      Lists.newCopyOnWriteArrayList();
 
   /**
    * Executor service for this endpoint.
@@ -87,6 +93,16 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint implements
    * Logger for this endpoint.
    */
   private final Log log;
+
+  /**
+   * The collection of connections.
+   */
+  private final Map<Integer, InternalClientConnection> clientConnections = new HashMap<>();
+
+  /**
+   * Creator of connection IDs.
+   */
+  private final AtomicLong connectionIdFactory = new AtomicLong(System.currentTimeMillis());
 
   /**
    * Construct a new endpoint.
@@ -123,8 +139,8 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint implements
       public ChannelPipeline getPipeline() throws Exception {
         ChannelPipeline pipeline = Channels.pipeline();
 
-        pipeline.addLast("frameDecoder", new DelimiterBasedFrameDecoder(Integer.MAX_VALUE,
-            delimiters));
+        pipeline.addLast("frameDecoder",
+            new DelimiterBasedFrameDecoder(Integer.MAX_VALUE, delimiters));
         pipeline.addLast("stringDecoder", new StringDecoder(charset));
         pipeline.addLast("stringEncoder", new StringEncoder(charset));
         pipeline.addLast("handler", new NettyTcpServerHandler());
@@ -135,11 +151,17 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint implements
 
     // Bind and start to accept incoming connections.
     bootstrap.bind(new InetSocketAddress(serverPort));
+
+    log.info("TCP server started");
   }
 
   @Override
   public void shutdown() {
+    listeners.clear();
+    
     if (bootstrap != null) {
+      closeAllConnections();
+
       bootstrap.shutdown();
       bootstrap = null;
     }
@@ -161,8 +183,53 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint implements
   }
 
   @Override
+  public void writeMessageAllConnections(String message) {
+    for (InternalClientConnection clientConnection : clientConnections.values()) {
+      try {
+        clientConnection.writeMessage(message);
+      } catch (Throwable e) {
+        log.error("Could not write message to connection " + clientConnection, e);
+      }
+    }
+  }
+
+  @Override
+  public void closeAllConnections() {
+    for (InternalClientConnection clientConnection : clientConnections.values()) {
+      try {
+        clientConnection.close();
+      } catch (Throwable e) {
+        log.error("Could not close connection " + clientConnection, e);
+      }
+    }
+  }
+
+  @Override
   public String toString() {
     return "NettyStringTcpServerNetworkCommunicationEndpoint [serverPort=" + serverPort + "]";
+  }
+
+  /**
+   * Handle a new connection.
+   *
+   * @param event
+   *          the event that happened
+   */
+  private void handleNewConnection(ChannelStateEvent event) {
+    String connectionId = newConnectionId();
+    InternalClientConnection connection =
+        new InternalClientConnection(event.getChannel(), connectionId);
+    synchronized (clientConnections) {
+      clientConnections.put(event.getChannel().getId(), connection);
+    }
+
+    for (TcpServerNetworkCommunicationEndpointListener<String> listener : listeners) {
+      try {
+        listener.onNewTcpConnection(this, connection);
+      } catch (Throwable e) {
+        log.error("Error while handing TCP connection", e);
+      }
+    }
   }
 
   /**
@@ -172,11 +239,71 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint implements
    *          the event which happened
    */
   private void handleMessageReceived(MessageEvent event) {
-    NettyStringTcpServerRequest request = new NettyStringTcpServerRequest(event);
+    InternalClientConnection connection = null;
+    synchronized (clientConnections) {
+      connection = clientConnections.get(event.getChannel().getId());
+    }
+
+    NettyStringTcpServerRequest request = new NettyStringTcpServerRequest(event, connection);
 
     for (TcpServerNetworkCommunicationEndpointListener<String> listener : listeners) {
-      listener.onTcpRequest(this, request);
+      try {
+        listener.onTcpRequest(this, request);
+      } catch (Throwable e) {
+        log.error("Error while handing TCP message", e);
+      }
     }
+  }
+
+  /**
+   * Handle a connection that closed.
+   *
+   * @param event
+   *          the event that happened
+   */
+  private void handleClosedConnection(ChannelStateEvent event) {
+    InternalClientConnection connection = null;
+    synchronized (clientConnections) {
+      connection = clientConnections.remove(event.getChannel().getId());
+    }
+
+    // The connection may be removed from the map depending on who closed it.
+    // Don't call the callback if not in the map as this means the server closed
+    // the connection.
+    if (connection != null) {
+      for (TcpServerNetworkCommunicationEndpointListener<String> listener : listeners) {
+        try {
+          listener.onCloseTcpConnection(this, connection);
+        } catch (Throwable e) {
+          log.error("Error while handing TCP connection", e);
+        }
+      }
+    }
+  }
+
+  /**
+   * Close the connection to the client.
+   * 
+   * @param clientConnection
+   *          the connection to close
+   */
+  public void closeClientConnection(InternalClientConnection clientConnection) {
+    Channel channel = clientConnection.getChannel();
+
+    synchronized (clientConnections) {
+      clientConnections.remove(channel.getId());
+    }
+
+    channel.close();
+  }
+
+  /**
+   * Create a new connection ID.
+   *
+   * @return the new connection ID
+   */
+  private String newConnectionId() {
+    return Long.toHexString(connectionIdFactory.getAndAdd(1));
   }
 
   /**
@@ -185,6 +312,16 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint implements
    * @author Keith M. Hughes
    */
   public class NettyTcpServerHandler extends SimpleChannelUpstreamHandler {
+
+    @Override
+    public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+      handleNewConnection(e);
+    }
+
+    @Override
+    public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+      handleClosedConnection(e);
+    }
 
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
@@ -210,13 +347,22 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint implements
     private final MessageEvent event;
 
     /**
+     * The client connection.
+     */
+    private final InternalClientConnection clientConnection;
+
+    /**
      * Construct a new request.
      *
      * @param event
      *          the netty message event
+     * @param clientConnection
+     *          the client connection;
      */
-    public NettyStringTcpServerRequest(MessageEvent event) {
+    public NettyStringTcpServerRequest(MessageEvent event,
+        InternalClientConnection clientConnection) {
       this.event = event;
+      this.clientConnection = clientConnection;
     }
 
     @Override
@@ -231,7 +377,82 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint implements
 
     @Override
     public void writeMessage(String response) {
-      event.getChannel().write(response);
+      clientConnection.writeMessage(response);
+    }
+
+    @Override
+    public TcpServerClientConnection<String> getClientConnection() {
+      return clientConnection;
+    }
+  }
+
+  /**
+   * The client connection.
+   * 
+   * @author Keith M. Hughes
+   */
+  private class InternalClientConnection implements TcpServerClientConnection<String> {
+
+    /**
+     * The channel for the connection.
+     */
+    private Channel channel;
+
+    /**
+     * The ID for the connection.
+     */
+    private String connectionId;
+
+    /**
+     * Construct a new connection.
+     * 
+     * @param channel
+     *          the channel for the connection
+     * @param connectionId
+     *          the ID for the connection
+     */
+    public InternalClientConnection(Channel channel, String connectionId) {
+      this.channel = channel;
+      this.connectionId = connectionId;
+    }
+
+    @Override
+    public String getConnectionId() {
+      return connectionId;
+    }
+
+    @Override
+    public void writeMessage(String message) {
+      if (isOpen()) {
+        channel.write(message);
+      } else {
+        throw new SimpleSmartSpacesException(
+            "Attempt to write on a closed TCP server client connection");
+      }
+    }
+
+    @Override
+    public boolean isOpen() {
+      return channel.isOpen();
+    }
+
+    @Override
+    public void close() {
+      closeClientConnection(this);
+    }
+
+    /**
+     * Get the channel for this connection.
+     * 
+     * @return the channel
+     */
+    public Channel getChannel() {
+      return channel;
+    }
+
+    @Override
+    public String toString() {
+      return "TcpServerClientConnection[clientaddress=" + channel.getRemoteAddress() + "]";
     }
   }
 }

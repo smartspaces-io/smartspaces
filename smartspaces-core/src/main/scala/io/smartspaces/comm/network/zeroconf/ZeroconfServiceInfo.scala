@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.communications.network.zeroconf
+package io.smartspaces.comm.network.zeroconf
 
 /**
  * Service information for zeroconf.

@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2015 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,23 +14,36 @@
  * the License.
  */
 
-package io.smartspaces.messaging;
+package io.smartspaces.service.comm.network.server;
+
+import io.smartspaces.messaging.MessageWriter;
 
 /**
- * A route message publisher that sends simple objects.
+ * A connection for a client to a TCP server.
  *
+ * @param <T>
+ *          the message type
+ * 
  * @author Keith M. Hughes
  */
-trait MessagePublisher[F] {
+public interface TcpServerClientConnection<T> extends MessageWriter<T> {
 
   /**
-   * Send a message.
-   *
-   * <p>
-   * The message will be serialized properly for the channel.
-   *
-   * @param message
-   *          the message to send
+   * Get the connection ID for the connection.
+   * 
+   * @return the connection ID
    */
-  def sendMessage(message: F): Unit
+  String getConnectionId();
+
+  /**
+   * Is the connection open?
+   * 
+   * @return {@code true} if the connection is open
+   */
+  boolean isOpen();
+  
+  /**
+   * Close the connection.
+   */
+  void close();
 }

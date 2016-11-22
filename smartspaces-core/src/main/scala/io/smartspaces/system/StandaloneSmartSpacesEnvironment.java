@@ -24,8 +24,10 @@ import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.resource.managed.ManagedResources;
 import io.smartspaces.resource.managed.StandardManagedResources;
+import io.smartspaces.service.Service;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.SimpleServiceRegistry;
+import io.smartspaces.service.SupportedService;
 import io.smartspaces.service.event.observable.StandardEventObservableService;
 import io.smartspaces.time.provider.SettableTimeProvider;
 import io.smartspaces.time.provider.TimeProvider;
@@ -67,7 +69,7 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
     environment.managedResources = new StandardManagedResources(environment.log);
     StandardEventObservableService eventService = new StandardEventObservableService();
     environment.managedResources.addResource(eventService);
-	environment.serviceRegistry.registerService(eventService);
+    environment.serviceRegistry.registerService(eventService);
     environment.managedResources.startupResources();
 
     return environment;
@@ -240,4 +242,22 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
   public void addManagedResource(ManagedResource resource) {
     managedResources.addResource(resource);
   }
+
+  /**
+   * Register and start a service with the registry.
+   * 
+   * {@code SupportedService}s will be add to the managed resources for the
+   * environment.
+   *
+   * @param service
+   *          the service instance
+   */
+  public void registerAndStartService(Service service) {
+    serviceRegistry.registerService(service);
+
+    if (service instanceof SupportedService) {
+      addManagedResource((SupportedService) service);
+    }
+  }
+
 }

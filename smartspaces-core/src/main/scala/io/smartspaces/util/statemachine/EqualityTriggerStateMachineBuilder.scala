@@ -28,7 +28,7 @@ class EqualityTriggerStateMachineBuilder[S, T, SO <: StateMachineObject[S, T]] {
   /**
    * The machine being built.
    */
-  private val machine =  new EqualityTriggerStateMachine[S, T, SO]()
+  private val machine = new EqualityTriggerStateMachine[S, T, SO]()
 
   /**
    * The current state being built.
@@ -40,7 +40,7 @@ class EqualityTriggerStateMachineBuilder[S, T, SO <: StateMachineObject[S, T]] {
    *
    * @return the state machine
    */
-  def  build(): EqualityTriggerStateMachine[S, T, SO] = {
+  def build(): EqualityTriggerStateMachine[S, T, SO] = {
     machine.validate()
 
     return machine
@@ -57,8 +57,10 @@ class EqualityTriggerStateMachineBuilder[S, T, SO <: StateMachineObject[S, T]] {
    * @throws SimpleSmartSpacesException
    *           the new state was already part of the state machine
    */
-  def  addState(state: S ): EqualityTriggerStateMachineBuilder[S, T, SO] = {
+  def addState(state: S): EqualityTriggerStateMachineBuilder[S, T, SO] = {
     currentState = Option(state)
+    
+    machine.addInternalState(state)
 
     return this
   }
@@ -74,9 +76,9 @@ class EqualityTriggerStateMachineBuilder[S, T, SO <: StateMachineObject[S, T]] {
    * @throws SimpleSmartSpacesException
    *           there is no state currently being built
    */
-  def onEntry(enterAction: StateMachineAction[S, T, SO]):  EqualityTriggerStateMachineBuilder[S, T, SO] = {
+  def onEntry(enterAction: StateMachineAction[S, T, SO]): EqualityTriggerStateMachineBuilder[S, T, SO] = {
     if (currentState.isDefined) {
-      machine.getTransitionInternalState(currentState.get).enterAction  = enterAction
+      machine.getTransitionInternalState(currentState.get).enterAction = enterAction
       return this
     } else {
       throw new SimpleSmartSpacesException("no current state set for the builder")
@@ -94,10 +96,10 @@ class EqualityTriggerStateMachineBuilder[S, T, SO <: StateMachineObject[S, T]] {
    * @throws SimpleSmartSpacesException
    *           there is no state currently being built
    */
-  def onExit(exitAction: StateMachineAction[S, T, SO] ): EqualityTriggerStateMachineBuilder[S, T, SO] = {
+  def onExit(exitAction: StateMachineAction[S, T, SO]): EqualityTriggerStateMachineBuilder[S, T, SO] = {
     if (currentState.isDefined) {
-      machine.getTransitionInternalState(currentState.get).exitAction  = exitAction
-      
+      machine.getTransitionInternalState(currentState.get).exitAction = exitAction
+
       return this
     } else {
       throw new SimpleSmartSpacesException("no current state set for the builder")
@@ -117,7 +119,7 @@ class EqualityTriggerStateMachineBuilder[S, T, SO <: StateMachineObject[S, T]] {
    * @throws SimpleSmartSpacesException
    *           there is no state currently being built
    */
-  def  transition(transition: T ,  newState: S): EqualityTriggerStateMachineBuilder[S, T, SO] = {
+  def transition(transition: T, newState: S): EqualityTriggerStateMachineBuilder[S, T, SO] = {
     if (currentState.isDefined) {
       machine.getTransitionInternalState(currentState.get).addTransition(transition, newState)
 

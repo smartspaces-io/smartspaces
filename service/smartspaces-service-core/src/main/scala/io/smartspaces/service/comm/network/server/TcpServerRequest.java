@@ -51,4 +51,11 @@ public interface TcpServerRequest<T> {
    *          the response
    */
   void writeMessage(T message);
+  
+  /**
+   * Get the client connection for this request.
+   * 
+   * @return the client connection
+   */
+  TcpServerClientConnection<T> getClientConnection();
 }

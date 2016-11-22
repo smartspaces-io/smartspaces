@@ -18,16 +18,11 @@
 package io.smartspaces.service.comm.network.client.internal.netty;
 
 import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.messaging.MessageWriter;
 import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpointListener;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -36,6 +31,7 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
+import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
@@ -45,15 +41,20 @@ import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
 
-import com.google.common.collect.Lists;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A Netty-based {@link TcpClientNetworkCommunicationEndpoint}.
  *
  * @author Keith M. Hughes
  */
-public class NettyStringTcpClientNetworkCommunicationEndpoint implements
-    TcpClientNetworkCommunicationEndpoint<String> {
+public class NettyStringTcpClientNetworkCommunicationEndpoint
+    implements TcpClientNetworkCommunicationEndpoint<String> {
 
   /**
    * Default timeout for connecting to the server, in milliseconds.
@@ -88,8 +89,8 @@ public class NettyStringTcpClientNetworkCommunicationEndpoint implements
   /**
    * The listeners to endpoint events.
    */
-  private final List<TcpClientNetworkCommunicationEndpointListener<String>> listeners = Lists
-      .newCopyOnWriteArrayList();
+  private final List<TcpClientNetworkCommunicationEndpointListener<String>> listeners =
+      Lists.newCopyOnWriteArrayList();
 
   /**
    * Executor service for this endpoint.
@@ -110,6 +111,13 @@ public class NettyStringTcpClientNetworkCommunicationEndpoint implements
    * The channel for communicating with the remote server.
    */
   private Channel remoteChannel;
+
+  private MessageWriter<String> messageWriter = new MessageWriter<String>() {
+    @Override
+    public void writeMessage(String message) {
+      write(message);
+    }
+  };
 
   /**
    * Construct the endpoint.
@@ -150,8 +158,8 @@ public class NettyStringTcpClientNetworkCommunicationEndpoint implements
       public ChannelPipeline getPipeline() throws Exception {
         ChannelPipeline pipeline = Channels.pipeline();
 
-        pipeline.addLast("frameDecoder", new DelimiterBasedFrameDecoder(Integer.MAX_VALUE,
-            delimiters));
+        pipeline.addLast("frameDecoder",
+            new DelimiterBasedFrameDecoder(Integer.MAX_VALUE, delimiters));
         pipeline.addLast("stringDecoder", new StringDecoder(charset));
         pipeline.addLast("stringEncoder", new StringEncoder(charset));
         pipeline.addLast("handler", new NettyTcpClientHandler());
@@ -178,6 +186,8 @@ public class NettyStringTcpClientNetworkCommunicationEndpoint implements
 
   @Override
   public void shutdown() {
+    listeners.clear();
+    
     if (bootstrap != null) {
       bootstrap.shutdown();
       bootstrap = null;
@@ -205,8 +215,18 @@ public class NettyStringTcpClientNetworkCommunicationEndpoint implements
   }
 
   @Override
+  public MessageWriter<String> getMessageWriter() {
+    return messageWriter;
+  }
+
+  @Override
   public void write(String message) {
-    remoteChannel.write(message);
+    if (remoteChannel.isOpen()) {
+      remoteChannel.write(message);
+    } else {
+      throw new SimpleSmartSpacesException(
+          "Attempt to write on a closed TCP client server connection");
+    }
   }
 
   @Override
@@ -226,11 +246,47 @@ public class NettyStringTcpClientNetworkCommunicationEndpoint implements
    * @param event
    *          the event which happened
    */
+  private void handleConnectionSuccessful(ChannelStateEvent event) {
+    for (TcpClientNetworkCommunicationEndpointListener<String> listener : listeners) {
+      try {
+        listener.onTcpClientConnectionSuccess(this);
+      } catch (Throwable e) {
+        log.error("Error handling TCP client successful connection listener", e);
+      }
+    }
+  }
+
+  /**
+   * Handle the message received by the handler.
+   *
+   * @param event
+   *          the event which happened
+   */
+  private void handleConnectionClose(ChannelStateEvent event) {
+    for (TcpClientNetworkCommunicationEndpointListener<String> listener : listeners) {
+      try {
+        listener.onTcpClientConnectionClose(this);
+      } catch (Throwable e) {
+        log.error("Error handling TCP client connection close listener", e);
+      }
+    }
+  }
+
+  /**
+   * Handle the message received by the handler.
+   *
+   * @param event
+   *          the event which happened
+   */
   private void handleMessageReceived(MessageEvent event) {
     String message = (String) event.getMessage();
 
     for (TcpClientNetworkCommunicationEndpointListener<String> listener : listeners) {
-      listener.onTcpResponse(this, message);
+      try {
+        listener.onNewTcpClientMessage(this, message);
+      } catch (Throwable e) {
+        log.error("Error handling TCP client message", e);
+      }
     }
   }
 
@@ -240,6 +296,16 @@ public class NettyStringTcpClientNetworkCommunicationEndpoint implements
    * @author Keith M. Hughes
    */
   public class NettyTcpClientHandler extends SimpleChannelUpstreamHandler {
+
+    @Override
+    public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+      handleConnectionSuccessful(e);
+    }
+
+    @Override
+    public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+      handleConnectionClose(e);
+    }
 
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {

@@ -54,4 +54,17 @@ public interface TcpServerNetworkCommunicationEndpoint<T> extends ManagedResourc
    *          the listener to remove
    */
   void removeListener(TcpServerNetworkCommunicationEndpointListener<T> listener);
+
+  /**
+   * Write a message to all connected clients.
+   * 
+   * @param message
+   *          the message to write
+   */
+  void writeMessageAllConnections(T message);
+
+  /**
+   * Close all connected clients.
+   */
+  void closeAllConnections();
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2015 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,28 +15,23 @@
  * the License.
  */
 
-package io.smartspaces.communications.network.zeroconf
+package io.smartspaces.messaging;
 
 /**
- * A listener for {@link ZeroconfService} events.
+ * A writer of messages.
  *
  * @author Keith M. Hughes
  */
-trait ZeroconfListener {
+trait MessageWriter[F] {
 
   /**
-   * A new service has come in.
+   * Send a message.
    *
-   * @param masterInfo
-   *          the service which has been added
-   */
-  def onNewZeroconfService( serviceInfo: ZeroconfServiceInfo): Unit
-
-  /**
-   * A service has been unregistered.
+   * <p>
+   * The message will be serialized properly for the channel.
    *
-   * @param serviceInfo
-   *          the service which has been unregistered
+   * @param message
+   *          the message to send
    */
-  def onRemoveZeroconfService(masterInfo: ZeroconfServiceInfo ): Unit
+  def writeMessage(message: F): Unit
 }

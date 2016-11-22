@@ -21,10 +21,33 @@ package io.smartspaces.service.comm.network.server;
  * Listener for events from a {@link TcpServerNetworkCommunicationEndpoint].
  *
  * @param <T>
+ *          the message type
  *
  * @author Keith M. Hughes
  */
 public interface TcpServerNetworkCommunicationEndpointListener<T> {
+
+  /**
+   * A new connection to the server has happened.
+   *
+   * @param endpoint
+   *          endpoint the connection came into
+   * @param connection
+   *          the new connection
+   */
+  void onNewTcpConnection(TcpServerNetworkCommunicationEndpoint<T> endpoint,
+      TcpServerClientConnection<T> connection);
+
+  /**
+   * A connection to the server has closed.
+   *
+   * @param endpoint
+   *          endpoint the connection came into
+   * @param connection
+   *          the closed connection
+   */
+  void onCloseTcpConnection(TcpServerNetworkCommunicationEndpoint<T> endpoint,
+      TcpServerClientConnection<T> connection);
 
   /**
    * A request has come in.

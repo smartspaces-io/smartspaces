@@ -15,9 +15,9 @@
  * the License.
  */
 
-package io.smartspaces.communications.network.zeroconf.selector
+package io.smartspaces.comm.network.zeroconf.selector
 
-import io.smartspaces.communications.network.zeroconf.ZeroconfServiceInfo
+import io.smartspaces.comm.network.zeroconf.ZeroconfServiceInfo
 
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit

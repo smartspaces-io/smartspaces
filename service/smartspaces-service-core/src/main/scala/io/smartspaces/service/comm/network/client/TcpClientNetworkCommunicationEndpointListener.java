@@ -18,7 +18,7 @@
 package io.smartspaces.service.comm.network.client;
 
 /**
- * Listener for events from a {@link TcpServerNetworkCommunicationEndpoint].
+ * Listener for events from a {@link TcpClientNetworkCommunicationEndpoint].
  *
  * @param <T>
  *      the type of the response
@@ -26,14 +26,30 @@ package io.smartspaces.service.comm.network.client;
  * @author Keith M. Hughes
  */
 public interface TcpClientNetworkCommunicationEndpointListener<T> {
-
+  
   /**
-   * A request has come in.
+   * The client has made a connection to the server.
    *
    * @param endpoint
-   *          endpoint the request came into
-   * @param response
-   *          the response which has been received
+   *          endpoint hosting the connection
    */
-  void onTcpResponse(TcpClientNetworkCommunicationEndpoint<T> endpoint, T response);
+  void onTcpClientConnectionSuccess(TcpClientNetworkCommunicationEndpoint<T> endpoint);
+  
+  /**
+   * The connection to the server has been closed.
+   *
+   * @param endpoint
+   *          endpoint hosting the connection
+   */
+  void onTcpClientConnectionClose(TcpClientNetworkCommunicationEndpoint<T> endpoint);  
+
+  /**
+   * A message has come in over the TCP connection.
+   *
+   * @param endpoint
+   *          endpoint hosting the connection
+   * @param message
+   *          the message that has been received
+   */
+  void onNewTcpClientMessage(TcpClientNetworkCommunicationEndpoint<T> endpoint, T message);
 }

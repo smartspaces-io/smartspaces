@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,18 +14,28 @@
  * the License.
  */
 
-package io.smartspaces.service.comm.pubsub.mqtt
-
-import org.eclipse.paho.client.mqttv3.MqttTopic
+package io.smartspaces.comm.network.zeroconf
 
 /**
- * A listener for MQTT subscriber events.
+ * A listener for {@link ZeroconfService} events.
  *
  * @author Keith M. Hughes
  */
-class PahoMqttPublisher(override val mqttTopicName: String, override val qos: Integer, override val retain: Boolean, private val mqttTopic: MqttTopic) extends MqttPublisher {
+trait ZeroconfListener {
 
-  override def writeMessage(message: Array[Byte]): Unit = {
-    mqttTopic.publish(message, qos, retain)
-  }
+  /**
+   * A new service has come in.
+   *
+   * @param masterInfo
+   *          the service which has been added
+   */
+  def onNewZeroconfService( serviceInfo: ZeroconfServiceInfo): Unit
+
+  /**
+   * A service has been unregistered.
+   *
+   * @param serviceInfo
+   *          the service which has been unregistered
+   */
+  def onRemoveZeroconfService(masterInfo: ZeroconfServiceInfo ): Unit
 }

@@ -46,6 +46,12 @@ public class LiveActivityDeleteResponse {
 
   /**
    * Construct the status.
+   */
+  public LiveActivityDeleteResponse() {
+  }
+
+  /**
+   * Construct the status.
    *
    * @param uuid
    *          UUID of the live activity
@@ -74,12 +80,32 @@ public class LiveActivityDeleteResponse {
   }
 
   /**
+   * Set the UUID of the live activity.
+   *
+   * @param uuid
+   *          the uuid
+   */
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
+
+  /**
    * Get the status of the deletion.
    *
    * @return the status
    */
   public LiveActivityDeleteStatus getStatus() {
     return status;
+  }
+
+  /**
+   * Set the status of the deletion.
+   *
+   * @param status
+   *          the status
+   */
+  public void setStatus(LiveActivityDeleteStatus status) {
+    this.status = status;
   }
 
   /**
@@ -92,12 +118,32 @@ public class LiveActivityDeleteResponse {
   }
 
   /**
+   * Set the time of the deletion.
+   *
+   * @param timeDeleted
+   *          the time deleted
+   */
+  public void setTimeDeleted(long timeDeleted) {
+    this.timeDeleted = timeDeleted;
+  }
+
+  /**
    * Get the status detail of the deletion.
    *
    * @return the detail, can be {@code null}
    */
   public String getStatusDetail() {
     return statusDetail;
+  }
+
+  /**
+   * Set the status detail of the deletion.
+   *
+   * @param statusDetail
+   *          the detail, can be {@code null}
+   */
+  public void setStatusDetail(String statusDetail) {
+    this.statusDetail = statusDetail;
   }
 
   /**

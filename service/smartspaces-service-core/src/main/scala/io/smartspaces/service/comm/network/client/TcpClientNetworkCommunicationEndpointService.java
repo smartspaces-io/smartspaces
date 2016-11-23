@@ -53,5 +53,24 @@ public interface TcpClientNetworkCommunicationEndpointService extends SupportedS
    * @return the communication endpoint
    */
   TcpClientNetworkCommunicationEndpoint<String> newStringClient(byte[][] delimiters,
+      Charset charset, String remoteHost, int remotePort, Log log);
+
+  /**
+   * Create a new TCP client endpoint.
+   *
+   * @param delimiters
+   *          the delimiters for messages
+   * @param charset
+   *          the character set for the strings
+   * @param remoteHost
+   *          the remote host to attach to
+   * @param remotePort
+   *          port on the remote host to connect to
+   * @param log
+   *          the logger to use
+   *
+   * @return the communication endpoint
+   */
+  TcpClientNetworkCommunicationEndpoint<String> newStringClient(byte[][] delimiters,
       Charset charset, InetAddress remoteHost, int remotePort, Log log);
 }

@@ -27,27 +27,33 @@ public class LiveActivityDeploymentResponse {
   /**
    * Transaction ID for the deployment.
    */
-  private final String transactionId;
+  private String transactionId;
 
   /**
    * UUID of the live activity that was deployed.
    */
-  private final String uuid;
+  private String uuid;
 
   /**
    * Status of the deployment.
    */
-  private final ActivityDeployStatus status;
+  private ActivityDeployStatus status;
 
   /**
    * Status detail of the deployment.
    */
-  private final String statusDetail;
+  private String statusDetail;
 
   /**
    * Time that the activity was deployed.
    */
-  private final long timeDeployed;
+  private long timeDeployed;
+
+  /**
+   * Construct a response.
+   */
+  public LiveActivityDeploymentResponse() {
+  }
 
   /**
    * Construct a response.
@@ -82,12 +88,32 @@ public class LiveActivityDeploymentResponse {
   }
 
   /**
+   * Set the transaction ID for the deployment.
+   *
+   * @param transactionId
+   *          the transaction ID for the deployment
+   */
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
+  /**
    * Get the UUID for the live activity which was deployed.
    *
    * @return the uuid
    */
   public String getUuid() {
     return uuid;
+  }
+
+  /**
+   * Set the UUID for the live activity which was deployed.
+   *
+   * @param uuid
+   *          the uuid
+   */
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
   }
 
   /**
@@ -100,6 +126,16 @@ public class LiveActivityDeploymentResponse {
   }
 
   /**
+   * Set the status of the deployment.
+   *
+   * @param status
+   *          the status
+   */
+  public void setStatus(ActivityDeployStatus status) {
+    this.status = status;
+  }
+
+  /**
    * Get the detail of the deployment status.
    *
    * @return the detail, can be {@code null}
@@ -109,12 +145,32 @@ public class LiveActivityDeploymentResponse {
   }
 
   /**
+   * Set the detail of the deployment status.
+   *
+   * @param statusDetail
+   *          the detail, can be {@code null}
+   */
+  public void setStatusDetail(String statusDetail) {
+    this.statusDetail = statusDetail;
+  }
+
+  /**
    * Get the time of the deployment, according to the remote system.
    *
    * @return the time of the deployment
    */
   public long getTimeDeployed() {
     return timeDeployed;
+  }
+
+  /**
+   * Set the time of the deployment, according to the remote system.
+   *
+   * @param timeDeployed
+   *          the time of the deployment
+   */
+  public void setTimeDeployed(long timeDeployed) {
+    this.timeDeployed = timeDeployed;
   }
 
   /**
@@ -141,8 +197,7 @@ public class LiveActivityDeploymentResponse {
     /**
      * The dependencies could not be committed for the deployment.
      */
-    STATUS_FAILURE_DEPENDENCIES_NOT_COMMITTED(false,
-        "Dependencies for the live activity could not be installed");
+    STATUS_FAILURE_DEPENDENCIES_NOT_COMMITTED(false, "Dependencies for the live activity could not be installed");
 
     /**
      * {@code true} if this is a success message.

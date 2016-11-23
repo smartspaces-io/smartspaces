@@ -17,17 +17,10 @@
 
 package io.smartspaces.container.control.message.activity.ros;
 
-import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse.ActivityDeployStatus;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitRequest;
-import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
-import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse.ContainerResourceDeploymentCommitStatus;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentItem;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
-import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
-import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse.QueryResponseStatus;
 import io.smartspaces.resource.ResourceDependency;
 import io.smartspaces.resource.ResourceDependencyReference;
 import io.smartspaces.resource.Version;
@@ -36,12 +29,9 @@ import io.smartspaces.system.resources.ContainerResourceLocation;
 
 import org.ros.message.MessageFactory;
 import smartspaces_msgs.ContainerResourceCommitRequestMessage;
-import smartspaces_msgs.ContainerResourceCommitResponseMessage;
 import smartspaces_msgs.ContainerResourceQueryItem;
 import smartspaces_msgs.ContainerResourceQueryRequestMessage;
-import smartspaces_msgs.ContainerResourceQueryResponseMessage;
 import smartspaces_msgs.LiveActivityDeployRequestMessage;
-import smartspaces_msgs.LiveActivityDeployResponseMessage;
 import smartspaces_msgs.LocatableResourceDescription;
 
 import java.util.ArrayList;
@@ -99,83 +89,6 @@ public class RosLiveActivityDeploymentMessageTranslator {
   }
 
   /**
-   * Serialize the activity deployment status into the corresponding ROS
-   * message.
-   *
-   * @param deployResponse
-   *          the deployment status
-   * @param rosMessage
-   *          the ROS message
-   */
-  public static void serializeDeploymentResponse(LiveActivityDeploymentResponse deployResponse,
-      LiveActivityDeployResponseMessage rosMessage) {
-    rosMessage.setTransactionId(deployResponse.getTransactionId());
-    rosMessage.setUuid(deployResponse.getUuid());
-    rosMessage.setTimeDeployed(deployResponse.getTimeDeployed());
-
-    String detail = deployResponse.getStatusDetail();
-    if (detail == null) {
-      detail = CONTAINER_LIVE_ACTIVITY_DEPLOYMENT_RESPONSE_DETAIL_NONE;
-    }
-    rosMessage.setStatusDetail(detail);
-
-    switch (deployResponse.getStatus()) {
-      case SUCCESS:
-        rosMessage.setStatus(LiveActivityDeployResponseMessage.STATUS_SUCCESS);
-        break;
-
-      case FAILURE_COPY:
-        rosMessage.setStatus(LiveActivityDeployResponseMessage.STATUS_FAILURE_COPY);
-        break;
-
-      case FAILURE_UNPACK:
-        rosMessage.setStatus(LiveActivityDeployResponseMessage.STATUS_FAILURE_UNPACK);
-        break;
-      default:
-        throw new SimpleSmartSpacesException(String.format("Unhandled status %s for status %s",
-            deployResponse.getStatus().getClass().getName()));
-    }
-  }
-
-  /**
-   * Serialize the activity deployment status into the corresponding ROS
-   * message.
-   *
-   * @param rosMessage
-   *          the ROS message
-   *
-   * @return the deployment response
-   */
-  public static LiveActivityDeploymentResponse deserializeDeploymentResponseMessage(
-      LiveActivityDeployResponseMessage rosMessage) {
-    ActivityDeployStatus status;
-    switch (rosMessage.getStatus()) {
-      case LiveActivityDeployResponseMessage.STATUS_SUCCESS:
-        status = ActivityDeployStatus.SUCCESS;
-        break;
-
-      case LiveActivityDeployResponseMessage.STATUS_FAILURE_COPY:
-        status = ActivityDeployStatus.FAILURE_COPY;
-        break;
-
-      case LiveActivityDeployResponseMessage.STATUS_FAILURE_UNPACK:
-        status = ActivityDeployStatus.FAILURE_UNPACK;
-        break;
-      default:
-        throw new SimpleSmartSpacesException(String.format(
-            "Unknown activity deployment status code %d", rosMessage.getStatus()));
-    }
-
-    String detail = rosMessage.getStatusDetail();
-    if (CONTAINER_LIVE_ACTIVITY_DEPLOYMENT_RESPONSE_DETAIL_NONE.equals(detail)) {
-      detail = null;
-    }
-
-    return new LiveActivityDeploymentResponse(rosMessage.getTransactionId(), rosMessage.getUuid(),
-        status, detail, rosMessage.getTimeDeployed());
-  }
-
-  /**
    * Serialize a resource deployment query.
    *
    * @param query
@@ -220,70 +133,6 @@ public class RosLiveActivityDeploymentMessageTranslator {
           .parseVersionRange(rosItem.getVersionRange())));
     }
     return query;
-  }
-
-  /**
-   * Serialize a resource deployment query response message.
-   *
-   * @param response
-   *          the deployment response
-   * @param rosMessage
-   *          the ROS message
-   */
-  public static void serializeResourceDeploymentQueryResponse(
-      ContainerResourceDeploymentQueryResponse response,
-      ContainerResourceQueryResponseMessage rosMessage) {
-    rosMessage.setTransactionId(response.getTransactionId());
-
-    int status;
-    switch (response.getStatus()) {
-      case SPECIFIC_QUERY_SATISFIED:
-        status = ContainerResourceQueryResponseMessage.STATUS_SPECIFIC_QUERY_SATISFIED;
-        break;
-      case SPECIFIC_QUERY_NOT_SATISFIED:
-        status = ContainerResourceQueryResponseMessage.STATUS_SPECIFIC_QUERY_NOT_SATISFIED;
-        break;
-      case GENERAL_QUERY_RESPONSE:
-        status = ContainerResourceQueryResponseMessage.STATUS_GENERAL_QUERY_RESPONSE;
-        break;
-      default:
-        throw new SimpleSmartSpacesException(String.format("Unhandled status %s for %s",
-            response.getStatus(), response.getStatus().getClass().getName()));
-    }
-
-    rosMessage.setStatus(status);
-  }
-
-  /**
-   * Deserialize a resource deployment response message.
-   *
-   * @param rosMessage
-   *          the ROS message
-   *
-   * @return the response
-   */
-  public static ContainerResourceDeploymentQueryResponse
-      deserializeResourceDeploymentQueryResponse(ContainerResourceQueryResponseMessage rosMessage) {
-    QueryResponseStatus status;
-    switch (rosMessage.getStatus()) {
-      case ContainerResourceQueryResponseMessage.STATUS_SPECIFIC_QUERY_SATISFIED:
-        status = QueryResponseStatus.SPECIFIC_QUERY_SATISFIED;
-        break;
-      case ContainerResourceQueryResponseMessage.STATUS_SPECIFIC_QUERY_NOT_SATISFIED:
-        status = QueryResponseStatus.SPECIFIC_QUERY_NOT_SATISFIED;
-        break;
-      case ContainerResourceQueryResponseMessage.STATUS_GENERAL_QUERY_RESPONSE:
-        status = QueryResponseStatus.GENERAL_QUERY_RESPONSE;
-        break;
-      default:
-        throw new SimpleSmartSpacesException(String.format("Unknown status code %d for %s",
-            rosMessage.getStatus(), rosMessage.getClass().getName()));
-    }
-
-    ContainerResourceDeploymentQueryResponse response =
-        new ContainerResourceDeploymentQueryResponse(rosMessage.getTransactionId(), status);
-
-    return response;
   }
 
   /**
@@ -343,76 +192,5 @@ public class RosLiveActivityDeploymentMessageTranslator {
     }
 
     return request;
-  }
-
-  /**
-   * Serialize a resource deployment query response message.
-   *
-   * @param response
-   *          the deployment response
-   * @param rosMessage
-   *          the ROS message
-   */
-  public static void serializeResourceDeploymentCommitResponse(
-      ContainerResourceDeploymentCommitResponse response,
-      ContainerResourceCommitResponseMessage rosMessage) {
-    rosMessage.setTransactionId(response.getTransactionId());
-
-    int status;
-    switch (response.getStatus()) {
-      case SUCCESS:
-        status = ContainerResourceCommitResponseMessage.STATUS_SUCCESS;
-        break;
-      case FAILURE:
-        status = ContainerResourceCommitResponseMessage.STATUS_FAILURE;
-        break;
-      default:
-        throw new SimpleSmartSpacesException(String.format("Unhandled status %s for %s",
-            response.getStatus(), response.getStatus().getClass().getName()));
-    }
-
-    rosMessage.setStatus(status);
-
-    String detail = response.getDetail();
-    if (detail == null) {
-      detail = CONTAINER_RESOURCE_DEPLOYMENT_COMMIT_RESPONSE_DETAIL_NONE;
-    }
-
-    rosMessage.setDetail(detail);
-  }
-
-  /**
-   * Deserialize a resource deployment commit response message.
-   *
-   * @param rosMessage
-   *          the ROS message
-   *
-   * @return the response
-   */
-  public static
-      ContainerResourceDeploymentCommitResponse
-      deserializeResourceDeploymentCommitResponse(ContainerResourceCommitResponseMessage rosMessage) {
-    ContainerResourceDeploymentCommitStatus status;
-    switch (rosMessage.getStatus()) {
-      case ContainerResourceCommitResponseMessage.STATUS_SUCCESS:
-        status = ContainerResourceDeploymentCommitStatus.SUCCESS;
-        break;
-      case ContainerResourceCommitResponseMessage.STATUS_FAILURE:
-        status = ContainerResourceDeploymentCommitStatus.FAILURE;
-        break;
-      default:
-        throw new SimpleSmartSpacesException(String.format("Unknown status code %d for %s",
-            rosMessage.getStatus(), rosMessage.getClass().getName()));
-    }
-
-    String detail = rosMessage.getDetail();
-    if (CONTAINER_RESOURCE_DEPLOYMENT_COMMIT_RESPONSE_DETAIL_NONE.equals(detail)) {
-      detail = null;
-    }
-
-    ContainerResourceDeploymentCommitResponse response =
-        new ContainerResourceDeploymentCommitResponse(rosMessage.getTransactionId(), status, detail);
-
-    return response;
   }
 }

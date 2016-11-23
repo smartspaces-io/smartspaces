@@ -18,8 +18,8 @@
 package io.smartspaces.master.server.services.internal.ros;
 
 import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.activity.ActivityState;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
 import io.smartspaces.container.control.message.activity.ros.RosLiveActivityDeleteMessageTranslator;
@@ -28,6 +28,9 @@ import io.smartspaces.container.control.message.container.resource.deployment.Co
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
+import io.smartspaces.container.control.newmessage.NewControllerFullStatus;
+import io.smartspaces.container.control.newmessage.NewLiveActivityRuntimeStatus;
+import io.smartspaces.container.control.newmessage.StandardMasterSpaceControllerCodec;
 import io.smartspaces.container.controller.common.ros.RosSpaceControllerSupport;
 import io.smartspaces.controller.client.master.RemoteActivityDeploymentManager;
 import io.smartspaces.domain.basic.ActivityConfiguration;
@@ -41,35 +44,29 @@ import io.smartspaces.master.server.services.RemoteSpaceControllerClientListener
 import io.smartspaces.master.server.services.internal.DataBundleState;
 import io.smartspaces.master.server.services.internal.MasterDataBundleManager;
 import io.smartspaces.master.server.services.internal.RemoteSpaceControllerClientListenerCollection;
+import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpoint;
+import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpointListener;
+import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpointService;
 import io.smartspaces.spacecontroller.SpaceControllerState;
 import io.smartspaces.spacecontroller.SpaceControllerStatus;
+import io.smartspaces.system.SmartSpacesEnvironment;
 
 import com.google.common.collect.Maps;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.ros.message.MessageDeserializer;
 import org.ros.message.MessageFactory;
-import org.ros.message.MessageListener;
 import org.ros.message.MessageSerializationFactory;
 import org.ros.message.MessageSerializer;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.CountDownPublisherListener;
 import org.ros.node.topic.Publisher;
-import org.ros.node.topic.Subscriber;
 import smartspaces_msgs.ConfigurationParameterRequest;
 import smartspaces_msgs.ConfigurationRequest;
 import smartspaces_msgs.ContainerResourceCommitRequestMessage;
-import smartspaces_msgs.ContainerResourceCommitResponseMessage;
 import smartspaces_msgs.ContainerResourceQueryRequestMessage;
-import smartspaces_msgs.ContainerResourceQueryResponseMessage;
-import smartspaces_msgs.ControllerFullStatus;
 import smartspaces_msgs.ControllerRequest;
-import smartspaces_msgs.ControllerStatus;
 import smartspaces_msgs.LiveActivityDeleteRequestMessage;
-import smartspaces_msgs.LiveActivityDeleteResponseMessage;
 import smartspaces_msgs.LiveActivityDeployRequestMessage;
-import smartspaces_msgs.LiveActivityDeployResponseMessage;
 import smartspaces_msgs.LiveActivityRuntimeRequest;
-import smartspaces_msgs.LiveActivityRuntimeStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,8 +93,24 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
   /**
    * Map of controller communicators keyed by the name of the remote ROS node.
    */
-  private final Map<String, SpaceControllerCommunicator> controllerCommunicators = Maps
-      .newHashMap();
+  private final Map<String, SpaceControllerCommunicator> controllerCommunicators =
+      Maps.newHashMap();
+
+  /**
+   * The message codec for controller/master communications.
+   */
+  private StandardMasterSpaceControllerCodec messageCodec =
+      new StandardMasterSpaceControllerCodec();
+
+  /**
+   * The TCP client service for connections to space controllers.
+   */
+  private TcpClientNetworkCommunicationEndpointService tcpClientService;
+
+  /**
+   * The space environment to run under.
+   */
+  private SmartSpacesEnvironment spaceEnvironment;
 
   /**
    * Helps with listeners for activity events.
@@ -130,11 +143,6 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
   private RemoteActivityDeploymentManager remoteActivityDeploymentManager;
 
   /**
-   * Listener for all controller status message updates.
-   */
-  private MessageListener<ControllerStatus> controllerStatusListener;
-
-  /**
    * Logger for the controller.
    */
   private ExtendedLog log;
@@ -145,34 +153,14 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
   private MessageSerializer<LiveActivityRuntimeRequest> liveActivityRuntimeRequestSerializer;
 
   /**
-   * ROS message deserializer for a live activity runtime status.
-   */
-  private MessageDeserializer<LiveActivityRuntimeStatus> liveActivityRuntimeStatusDeserializer;
-
-  /**
    * ROS message serializer for a live activity deployment request.
    */
   private MessageSerializer<LiveActivityDeployRequestMessage> liveActivityDeployRequestSerializer;
 
   /**
-   * ROS message deserializer for a live activity deployment status.
-   */
-  private MessageDeserializer<LiveActivityDeployResponseMessage> liveActivityDeployResponseDeserializer;
-
-  /**
    * ROS message serializer for a live activity delete request.
    */
   private MessageSerializer<LiveActivityDeleteRequestMessage> liveActivityDeleteRequestSerializer;
-
-  /**
-   * ROS message deserializer for a live activity delete status.
-   */
-  private MessageDeserializer<LiveActivityDeleteResponseMessage> liveActivityDeleteResponseDeserializer;
-
-  /**
-   * ROS message deserializer for the full controller status.
-   */
-  private MessageDeserializer<ControllerFullStatus> controllerFullStatusDeserializer;
 
   /**
    * ROS message serializer for the full controller status.
@@ -185,23 +173,16 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
   private MessageSerializer<ContainerResourceQueryRequestMessage> containerResourceQueryRequestSerializer;
 
   /**
-   * ROS message deserializer for the container deployment query response.
-   */
-  private MessageDeserializer<ContainerResourceQueryResponseMessage> containerResourceQueryResponseDeserializer;
-
-  /**
    * ROS message serializer for the container deployment commit request.
    */
   private MessageSerializer<ContainerResourceCommitRequestMessage> containerResourceCommitRequestSerializer;
 
-  /**
-   * ROS message deserializer for the container deployment commit response.
-   */
-  private MessageDeserializer<ContainerResourceCommitResponseMessage> containerResourceCommitResponseDeserializer;
-
   @Override
   public void startup() {
     log.info("Starting up ROS remote controller");
+
+    tcpClientService = spaceEnvironment.getServiceRegistry()
+        .getRequiredService(TcpClientNetworkCommunicationEndpointService.SERVICE_NAME);
 
     remoteControllerClientListeners = new RemoteSpaceControllerClientListenerCollection(log);
 
@@ -213,49 +194,20 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
     liveActivityRuntimeRequestSerializer =
         messageSerializationFactory.newMessageSerializer(LiveActivityRuntimeRequest._TYPE);
 
-    liveActivityRuntimeStatusDeserializer =
-        messageSerializationFactory.newMessageDeserializer(LiveActivityRuntimeStatus._TYPE);
-
     liveActivityDeployRequestSerializer =
         messageSerializationFactory.newMessageSerializer(LiveActivityDeployRequestMessage._TYPE);
-
-    liveActivityDeployResponseDeserializer =
-        messageSerializationFactory.newMessageDeserializer(LiveActivityDeployResponseMessage._TYPE);
 
     liveActivityDeleteRequestSerializer =
         messageSerializationFactory.newMessageSerializer(LiveActivityDeleteRequestMessage._TYPE);
 
-    liveActivityDeleteResponseDeserializer =
-        messageSerializationFactory.newMessageDeserializer(LiveActivityDeleteResponseMessage._TYPE);
-
-    controllerFullStatusDeserializer =
-        messageSerializationFactory.newMessageDeserializer(ControllerFullStatus._TYPE);
-
     configurationRequestSerializer =
         messageSerializationFactory.newMessageSerializer(ConfigurationRequest._TYPE);
 
-    containerResourceQueryRequestSerializer =
-        messageSerializationFactory
-            .newMessageSerializer(ContainerResourceQueryRequestMessage._TYPE);
+    containerResourceQueryRequestSerializer = messageSerializationFactory
+        .newMessageSerializer(ContainerResourceQueryRequestMessage._TYPE);
 
-    containerResourceQueryResponseDeserializer =
-        messageSerializationFactory
-            .newMessageDeserializer(ContainerResourceQueryResponseMessage._TYPE);
-
-    containerResourceCommitRequestSerializer =
-        messageSerializationFactory
-            .newMessageSerializer(ContainerResourceCommitRequestMessage._TYPE);
-
-    containerResourceCommitResponseDeserializer =
-        messageSerializationFactory
-            .newMessageDeserializer(ContainerResourceCommitResponseMessage._TYPE);
-
-    controllerStatusListener = new MessageListener<ControllerStatus>() {
-      @Override
-      public void onNewMessage(ControllerStatus status) {
-        handleRemoteControllerStatusUpdate(status);
-      }
-    };
+    containerResourceCommitRequestSerializer = messageSerializationFactory
+        .newMessageSerializer(ContainerResourceCommitRequestMessage._TYPE);
 
     masterDataBundleManager.startup();
   }
@@ -339,8 +291,8 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
   }
 
   @Override
-  public void
-      deleteLiveActivity(ActiveLiveActivity liveActivity, LiveActivityDeleteRequest request) {
+  public void deleteLiveActivity(ActiveLiveActivity liveActivity,
+      LiveActivityDeleteRequest request) {
     LiveActivityDeleteRequestMessage rosMessage =
         rosMessageFactory.newFromType(LiveActivityDeleteRequestMessage._TYPE);
 
@@ -561,29 +513,36 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
    * @param status
    *          The status update.
    */
-  private void handleRemoteControllerStatusUpdate(ControllerStatus status) {
-    switch (status.getStatus()) {
-      case ControllerStatus.STATUS_CONTROLLER_HEARTBEAT:
-        handleControllerHeartbeat(status);
+  private void handleRemoteControllerStatusUpdate(String statusMessage) {
+    Map<String, Object> statusObject = messageCodec.parseMessage(statusMessage);
+
+    String statusType = (String) statusObject
+        .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE);
+    log.info("Master got controller status type " + statusType);
+    switch (statusType) {
+      case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_HEARTBEAT:
+        handleControllerHeartbeat(statusObject);
 
         break;
 
-      case ControllerStatus.STATUS_CONTROLLER_FULL_STATUS:
+      case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_CONTROLLER_FULL_STATUS:
         // A full status request will also be treated as a heartbeat event
         // since the controller will only respond if it is alive.
-        handleControllerHeartbeat(status);
+        handleControllerHeartbeat(statusObject);
 
-        ControllerFullStatus fullStatus =
-            controllerFullStatusDeserializer.deserialize(status.getPayload());
+        NewControllerFullStatus fullStatus = messageCodec.decodeControllerFullStatus(statusObject);
 
-        List<LiveActivityRuntimeStatus> liveActivityStatuses = fullStatus.getLiveActivityStatuses();
+        List<NewLiveActivityRuntimeStatus> liveActivityStatuses =
+            fullStatus.getLiveActivityStatuses();
         if (log.isInfoEnabled()) {
+          String controllerUuid = (String) statusObject
+              .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID);
           log.info(String.format("Received controller full status %s, %d activities",
-              status.getControllerUuid(), liveActivityStatuses.size()));
+              controllerUuid, liveActivityStatuses.size()));
         }
-        for (LiveActivityRuntimeStatus liveActivityStatus : liveActivityStatuses) {
+        for (NewLiveActivityRuntimeStatus liveActivityStatus : liveActivityStatuses) {
           if (log.isInfoEnabled()) {
-            log.info(String.format("\tActivity %s, %d\n", liveActivityStatus.getUuid(),
+            log.info(String.format("\tActivity %s, %s\n", liveActivityStatus.getUuid(),
                 liveActivityStatus.getStatus()));
           }
           handleRemoteLiveActivityStatusUpdate(liveActivityStatus);
@@ -591,73 +550,92 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
 
         break;
 
-      case ControllerStatus.STATUS_CONTROLLER_LIVE_ACTIVITY_RUNTIME_STATUS:
-        LiveActivityRuntimeStatus liveActivityStatus =
-            liveActivityRuntimeStatusDeserializer.deserialize(status.getPayload());
+      case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_LIVE_ACTIVITY_RUNTIME_STATUS:
+        NewLiveActivityRuntimeStatus liveActivityStatus =
+            messageCodec.decodeLiveActivityRuntimeStatus(statusObject);
         if (log.isDebugEnabled()) {
-          log.debug(String.format("Activity status %s, %d\n", liveActivityStatus.getUuid(),
+          log.debug(String.format("Activity status %s, %s\n", liveActivityStatus.getUuid(),
               liveActivityStatus.getStatus()));
         }
         handleRemoteLiveActivityStatusUpdate(liveActivityStatus);
 
         break;
 
-      case ControllerStatus.STATUS_CONTROLLER_ACTIVITY_INSTALL:
-        LiveActivityDeployResponseMessage deployResponse =
-            liveActivityDeployResponseDeserializer.deserialize(status.getPayload());
+      case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_ACTIVITY_INSTALL:
 
-        LiveActivityDeploymentResponse dstatus =
-            RosLiveActivityDeploymentMessageTranslator
-                .deserializeDeploymentResponseMessage(deployResponse);
-        remoteActivityDeploymentManager.handleLiveDeployResult(dstatus);
-        break;
-
-      case ControllerStatus.STATUS_CONTROLLER_ACTIVITY_DELETE:
-        LiveActivityDeleteResponseMessage deleteResponse =
-            liveActivityDeleteResponseDeserializer.deserialize(status.getPayload());
-
-        remoteControllerClientListeners.signalActivityDelete(deleteResponse.getUuid(),
-            RosLiveActivityDeleteMessageTranslator
-                .deserializeLiveActivityDeleteResponseMessage(deleteResponse));
+        LiveActivityDeploymentResponse deployResponse =
+            messageCodec.decodeLiveActivityDeploymentResponse(statusObject);
+        remoteActivityDeploymentManager.handleLiveDeployResult(deployResponse);
 
         break;
 
-      case ControllerStatus.STATUS_CONTROLLER_DATA_CAPTURE:
-        log.info("Received data capture response " + status.getStatusCode());
-        DataBundleState captureState =
-            SpaceControllerStatus.isSuccessDescription(status.getStatusCode()) ? DataBundleState.CAPTURE_RECEIVED
-                : DataBundleState.CAPTURE_ERROR;
-        remoteControllerClientListeners.signalDataBundleState(status.getControllerUuid(),
-            captureState);
+      case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_ACTIVITY_DELETE:
+        LiveActivityDeleteResponse liveActivityDeleteResponse =
+            messageCodec.decodeLiveActivityDeleteResponse(statusObject);
+        remoteControllerClientListeners.signalActivityDelete(liveActivityDeleteResponse.getUuid(),
+            liveActivityDeleteResponse);
+
         break;
 
-      case ControllerStatus.STATUS_CONTROLLER_DATA_RESTORE:
-        log.info("Received data restore response " + status.getStatusCode());
-        DataBundleState restoreState =
-            SpaceControllerStatus.isSuccessDescription(status.getStatusCode()) ? DataBundleState.RESTORE_RECEIVED
-                : DataBundleState.RESTORE_ERROR;
-        remoteControllerClientListeners.signalDataBundleState(status.getControllerUuid(),
-            restoreState);
+      case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_DATA_CAPTURE:
+        handleControllerStatusDataCapture(statusObject);
         break;
 
-      case ControllerStatus.STATUS_CONTROLLER_CONTAINER_RESOURCE_QUERY:
-        handleContainerResourceQueryResponse(containerResourceQueryResponseDeserializer
-            .deserialize(status.getPayload()));
+      case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_DATA_RESTORE:
+
+        handleControllerStatusDataRestore(statusObject);
         break;
 
-      case ControllerStatus.STATUS_CONTROLLER_CONTAINER_RESOURCE_COMMIT:
-        handleContainerResourceCommitResponse(containerResourceCommitResponseDeserializer
-            .deserialize(status.getPayload()));
+      case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_CONTAINER_RESOURCE_QUERY:
+        handleContainerResourceQueryResponse(statusObject);
         break;
 
-      case ControllerStatus.STATUS_CONTROLLER_SHUTDOWN:
-        handleSpaceControllerShutdown(status);
+      case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_CONTAINER_RESOURCE_COMMIT:
+        handleContainerResourceCommitResponse(statusObject);
+        break;
+
+      case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_SHUTDOWN:
+        handleSpaceControllerShutdown(statusObject);
         break;
 
       default:
-        log.warn(String.format("Unknown status type %d, for controller %s", status.getStatus(),
-            status.getControllerUuid()));
+        log.warn(String.format("Unknown status type %s, for controller %s", statusType, statusObject
+            .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID)));
     }
+  }
+
+  /**
+   * Handle a data restore from a controller status message.
+   * 
+   * @param statusObject
+   *          the controller status object
+   */
+  private void handleControllerStatusDataRestore(Map<String, Object> statusObject) {
+    String statusCode = (String) statusObject
+        .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_CODE);
+    String controllerUuid = (String) statusObject
+        .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID);
+    log.info("Received data restore response " + statusCode);
+    DataBundleState restoreState = SpaceControllerStatus.isSuccessDescription(statusCode)
+        ? DataBundleState.RESTORE_RECEIVED : DataBundleState.RESTORE_ERROR;
+    remoteControllerClientListeners.signalDataBundleState(controllerUuid, restoreState);
+  }
+
+  /**
+   * Handle a data capture from a controller status message.
+   * 
+   * @param statusObject
+   *          the controller status object
+   */
+  private void handleControllerStatusDataCapture(Map<String, Object> statusObject) {
+    String statusCode = (String) statusObject
+        .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_CODE);
+    String controllerUuid = (String) statusObject
+        .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID);
+    log.info("Received data capture response " + statusCode);
+    DataBundleState captureState = SpaceControllerStatus.isSuccessDescription(statusCode)
+        ? DataBundleState.CAPTURE_RECEIVED : DataBundleState.CAPTURE_ERROR;
+    remoteControllerClientListeners.signalDataBundleState(controllerUuid, captureState);
   }
 
   /**
@@ -666,10 +644,11 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
    * @param status
    *          the status message for the heartbeat
    */
-  private void handleControllerHeartbeat(ControllerStatus status) {
+  private void handleControllerHeartbeat(Map<String, Object> status) {
+    String controllerUuid =
+        (String) status.get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID);
     long timestamp = System.currentTimeMillis();
-    remoteControllerClientListeners.signalSpaceControllerHeartbeat(status.getControllerUuid(),
-        timestamp);
+    remoteControllerClientListeners.signalSpaceControllerHeartbeat(controllerUuid, timestamp);
   }
 
   /**
@@ -678,96 +657,23 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
    * @param status
    *          the status update
    */
-  private void handleRemoteLiveActivityStatusUpdate(LiveActivityRuntimeStatus status) {
-    ActivityState newState;
-
-    switch (status.getStatus()) {
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_UNKNOWN:
-        newState = ActivityState.UNKNOWN;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_DOESNT_EXIST:
-        newState = ActivityState.DOESNT_EXIST;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_DEPLOY_FAILURE:
-        newState = ActivityState.DEPLOY_FAILURE;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_READY:
-        newState = ActivityState.READY;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_STARTUP_FAILURE:
-        newState = ActivityState.STARTUP_FAILURE;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_RUNNING:
-        newState = ActivityState.RUNNING;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_ACTIVATE_FAILURE:
-        newState = ActivityState.ACTIVATE_FAILURE;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_ACTIVE:
-        newState = ActivityState.ACTIVE;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_DEACTIVATE_FAILURE:
-        newState = ActivityState.DEACTIVATE_FAILURE;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_SHUTDOWN_FAILURE:
-        newState = ActivityState.SHUTDOWN_FAILURE;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_CRASH:
-        newState = ActivityState.CRASHED;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_STARTUP_ATTEMPT:
-        newState = ActivityState.STARTUP_ATTEMPT;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_DEPLOY_ATTEMPT:
-        newState = ActivityState.DEPLOY_ATTEMPT;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_ACTIVATE_ATTEMPT:
-        newState = ActivityState.ACTIVATE_ATTEMPT;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_DEACTIVATE_ATTEMPT:
-        newState = ActivityState.DEACTIVATE_ATTEMPT;
-        break;
-
-      case LiveActivityRuntimeStatus.STATUS_LIVE_ACTIVITY_SHUTDOWN_ATTEMPT:
-        newState = ActivityState.SHUTDOWN_ATTEMPT;
-        break;
-
-      default:
-        newState = ActivityState.UNKNOWN;
-    }
-
-    remoteControllerClientListeners.signalActivityStateChange(status.getUuid(), newState,
+  private void handleRemoteLiveActivityStatusUpdate(NewLiveActivityRuntimeStatus status) {
+    remoteControllerClientListeners.signalActivityStateChange(status.getUuid(), status.getStatus(),
         status.getStatusDetail());
   }
 
   /**
    * Handle a container resource deployment query response.
    *
-   * @param rosResponse
-   *          the ROS response
+   * @param statusObject
+   *          the status object containing the response
    */
-  private void handleContainerResourceQueryResponse(
-      ContainerResourceQueryResponseMessage rosResponse) {
+  private void handleContainerResourceQueryResponse(Map<String, Object> statusObject) {
     ContainerResourceDeploymentQueryResponse response =
-        RosLiveActivityDeploymentMessageTranslator
-            .deserializeResourceDeploymentQueryResponse(rosResponse);
-    log.info(String.format(
-        "Got resource deployment query response for transaction ID %s with status %s",
-        response.getTransactionId(), response.getStatus()));
+        messageCodec.decodeContainerResourceDeploymentQueryResponse(statusObject);
+    log.info(
+        String.format("Got resource deployment query response for transaction ID %s with status %s",
+            response.getTransactionId(), response.getStatus()));
 
     remoteActivityDeploymentManager.handleResourceDeploymentQueryResponse(response);
   }
@@ -775,14 +681,12 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
   /**
    * Handle a container resource deployment commit response.
    *
-   * @param rosResponse
-   *          the ROS response
+   * @param statusObject
+   *          the status object containing the response
    */
-  private void handleContainerResourceCommitResponse(
-      ContainerResourceCommitResponseMessage rosResponse) {
+  private void handleContainerResourceCommitResponse(Map<String, Object> statusObject) {
     ContainerResourceDeploymentCommitResponse response =
-        RosLiveActivityDeploymentMessageTranslator
-            .deserializeResourceDeploymentCommitResponse(rosResponse);
+        messageCodec.decodeContainerResourceDeploymentCommitResponse(statusObject);
     log.info(String.format(
         "Got resource deployment commit response for transaction ID %s with status %s",
         response.getTransactionId(), response.getStatus()));
@@ -796,8 +700,9 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
    * @param status
    *          the controller status
    */
-  private void handleSpaceControllerShutdown(ControllerStatus status) {
-    remoteControllerClientListeners.signalSpaceControllerShutdown(status.getControllerUuid());
+  private void handleSpaceControllerShutdown(Map<String, Object> statusObject) {
+    remoteControllerClientListeners.signalSpaceControllerShutdown((String) statusObject
+        .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID));
   }
 
   @Override
@@ -837,8 +742,7 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
       if (communicator == null) {
         controller.setState(SpaceControllerState.CONNECT_ATTEMPT);
         communicator = new SpaceControllerCommunicator(controller);
-        communicator
-            .startup(masterRosContext.getMasterNode(), remoteNode, controllerStatusListener);
+        communicator.startup(masterRosContext.getMasterNode(), remoteNode);
         controllerCommunicators.put(remoteNode, communicator);
 
       }
@@ -865,8 +769,8 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
 
     if (communicator != null) {
       communicator.shutdown();
-      log.formatInfo("Communicator for controller %s shutdown and removed", controller
-          .getSpaceController().getUuid());
+      log.formatInfo("Communicator for controller %s shutdown and removed",
+          controller.getSpaceController().getUuid());
     }
   }
 
@@ -878,6 +782,16 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
    */
   public void setMasterRosContext(MasterRosContext masterRosContext) {
     this.masterRosContext = masterRosContext;
+  }
+
+  /**
+   * Set the space environment.
+   * 
+   * @param spaceEnvironment
+   *          the space environment
+   */
+  public void setSpaceEnvironment(SmartSpacesEnvironment spaceEnvironment) {
+    this.spaceEnvironment = spaceEnvironment;
   }
 
   /**
@@ -919,14 +833,14 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
     private Publisher<ControllerRequest> controllerRequestPublisher;
 
     /**
-     * The subscriber for controller status updates.
-     */
-    private Subscriber<ControllerStatus> controllerStatusSubscriber;
-
-    /**
      * Publisher listener for publisher events.
      */
     private CountDownPublisherListener<ControllerRequest> publisherListener;
+
+    /**
+     * The client to the controller.
+     */
+    private TcpClientNetworkCommunicationEndpoint<String> controllerClient;
 
     /**
      * Construct a communicator.
@@ -945,18 +859,38 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
      *          the node which is running the communicator
      * @param remoteNode
      *          the remote node
-     * @param controllerStatusListener
-     *          the listener for controller status messages
      */
-    public void startup(ConnectedNode node, String remoteNode,
-        MessageListener<ControllerStatus> controllerStatusListener) {
+    public void startup(ConnectedNode node, String remoteNode) {
+      controllerClient = tcpClientService.newStringClient(
+          StandardMasterSpaceControllerCodec.DELIMITERS, StandardMasterSpaceControllerCodec.CHARSET,
+          "localhost", StandardMasterSpaceControllerCodec.CONTROLLER_SERVER_PORT, log);
+      controllerClient.addListener(new TcpClientNetworkCommunicationEndpointListener<String>() {
+
+        @Override
+        public void
+            onTcpClientConnectionSuccess(TcpClientNetworkCommunicationEndpoint<String> endpoint) {
+          // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void
+            onTcpClientConnectionClose(TcpClientNetworkCommunicationEndpoint<String> endpoint) {
+          // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onNewTcpClientMessage(TcpClientNetworkCommunicationEndpoint<String> endpoint,
+            String message) {
+          handleRemoteControllerStatusUpdate(message);
+        }
+      });
+      controllerClient.startup();
+
       publisherListener = CountDownPublisherListener.newFromCounts(1, 1, 1, 1, 1);
-      controllerStatusSubscriber =
-          RosSpaceControllerSupport.getControllerStatusSubscriber(node, remoteNode,
-              controllerStatusListener, null);
-      controllerRequestPublisher =
-          RosSpaceControllerSupport.getControllerRequestPublisher(node, remoteNode,
-              publisherListener);
+      controllerRequestPublisher = RosSpaceControllerSupport.getControllerRequestPublisher(node,
+          remoteNode, publisherListener);
 
       remoteControllerClientListeners.signalSpaceControllerConnectAttempt(spaceController);
     }
@@ -965,10 +899,10 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
      * Shut the communicator down.
      */
     public void shutdown() {
+      controllerClient.shutdown();
+
       controllerRequestPublisher.shutdown();
       controllerRequestPublisher = null;
-      controllerStatusSubscriber.shutdown();
-      controllerStatusSubscriber = null;
 
       remoteControllerClientListeners.signalSpaceControllerDisconnectAttempt(spaceController);
     }

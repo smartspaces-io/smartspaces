@@ -18,7 +18,6 @@
 package io.smartspaces.container.controller.common.ros;
 
 import smartspaces_msgs.ControllerRequest;
-import smartspaces_msgs.ControllerStatus;
 
 /**
  * A collection of constants for working with Smart Spaces space
@@ -37,14 +36,4 @@ public class RosSpaceControllerConstants {
    * Topic message type for controller requests.
    */
   public static final String CONTROLLER_REQUEST_MESSAGE_TYPE = ControllerRequest._TYPE;
-
-  /**
-   * Topic name for controller status updates.
-   */
-  public static final String CONTROLLER_STATUS_TOPIC_NAME = "smartspaces/controller/status";
-
-  /**
-   * Topic message type for controller status updates.
-   */
-  public static final String CONTROLLER_STATUS_MESSAGE_TYPE = ControllerStatus._TYPE;
 }

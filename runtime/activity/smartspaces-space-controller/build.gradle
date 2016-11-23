@@ -19,6 +19,7 @@ dependencies {
 
   compile project(':smartspaces-core')
   compile project(':smartspaces-domain')
+  compile project(':service:smartspaces-service-core')
   compile project(':smartspaces-system')
   compile project(':runtime:activity:smartspaces-activity-runtime')
   compile project(':runtime:common:smartspaces-master-controller')

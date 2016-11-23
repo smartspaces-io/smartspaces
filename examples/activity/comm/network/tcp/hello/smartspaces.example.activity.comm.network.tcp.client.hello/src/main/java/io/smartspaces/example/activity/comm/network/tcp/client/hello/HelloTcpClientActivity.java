@@ -81,10 +81,22 @@ public class HelloTcpClientActivity extends BaseActivity {
           communicationEndpointService.newStringClient(MESSAGE_TERMINATORS, Charsets.UTF_8,
               remoteTcpServerHostAddress, remoteTcpServerPort, getLog());
       tcpClient.addListener(new TcpClientNetworkCommunicationEndpointListener<String>() {
+
         @Override
-        public void onTcpResponse(TcpClientNetworkCommunicationEndpoint<String> endpoint,
+        public void
+            onTcpClientConnectionSuccess(TcpClientNetworkCommunicationEndpoint<String> endpoint0) {
+          getLog().info("Successfully connected with TCP server");
+        }
+
+        @Override
+        public void onTcpClientConnectionClose(TcpClientNetworkCommunicationEndpoint<String> endpoint) {
+          getLog().info("Connection with TCP server closed");
+        }
+
+        @Override
+        public void onNewTcpClientMessage(TcpClientNetworkCommunicationEndpoint<String> endpoint,
             String response) {
-          handleTcpResponse(response);
+          handleTcpMessage(response);
         }
       });
       addManagedResource(tcpClient);
@@ -110,7 +122,7 @@ public class HelloTcpClientActivity extends BaseActivity {
    * @param response
    *          the response
    */
-  private void handleTcpResponse(String response) {
+  private void handleTcpMessage(String response) {
     getLog().info(String.format("TCP client got response from server: %s", response));
   }
 }

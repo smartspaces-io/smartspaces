@@ -17,15 +17,10 @@
 
 package io.smartspaces.container.controller.common.ros;
 
-import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Publisher;
 import org.ros.node.topic.PublisherListener;
-import org.ros.node.topic.Subscriber;
-import org.ros.node.topic.SubscriberListener;
-
 import smartspaces_msgs.ControllerRequest;
-import smartspaces_msgs.ControllerStatus;
 
 /**
  * Various support routines for working with Smart Spaces controllers.
@@ -33,31 +28,6 @@ import smartspaces_msgs.ControllerStatus;
  * @author Keith M. Hughes
  */
 public class RosSpaceControllerSupport {
-
-  /**
-   * Get a subscriber for status update messages for controllers.
-   *
-   * @param node
-   *          the node which will host the subscriber
-   * @param remoteNode
-   *          the name of the remote node
-   * @param messageListener
-   *          the message listener for the updates
-   * @param subscriberListener
-   *          listener for subscriber events, can be {@code null}
-   *
-   * @return the subscriber.
-   */
-  public static Subscriber<ControllerStatus> getControllerStatusSubscriber(ConnectedNode node,
-      String remoteNode, MessageListener<ControllerStatus> messageListener,
-      SubscriberListener<ControllerStatus> subscriberListener) {
-    Subscriber<ControllerStatus> newSubscriber =
-        node.newSubscriber("/" + remoteNode + "/"
-            + RosSpaceControllerConstants.CONTROLLER_STATUS_TOPIC_NAME,
-            RosSpaceControllerConstants.CONTROLLER_STATUS_MESSAGE_TYPE);
-    newSubscriber.addMessageListener(messageListener);
-    return newSubscriber;
-  }
 
   /**
    * Get a publisher for controller requests.

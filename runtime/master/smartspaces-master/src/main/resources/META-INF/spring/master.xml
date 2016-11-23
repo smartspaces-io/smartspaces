@@ -147,6 +147,8 @@
 
 		<property name="masterDataBundleManager" ref="smartspaces.master.ros.databundlemanager" />
 
+		<property name="spaceEnvironment" ref="smartspaces.environment" />
+
 		<property name="log" ref="smartspaces.master.logger" />
 	</bean>
 

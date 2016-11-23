@@ -17,12 +17,9 @@
 
 package io.smartspaces.container.control.message.activity.ros;
 
-import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse.LiveActivityDeleteStatus;
+
 import smartspaces_msgs.LiveActivityDeleteRequestMessage;
-import smartspaces_msgs.LiveActivityDeleteResponseMessage;
 
 /**
  * A message translator between ROS messages and the internal messages for live
@@ -37,80 +34,6 @@ public class RosLiveActivityDeleteMessageTranslator {
    * deletion responses if there is no detail.
    */
   public static final String CONTAINER_LIVE_ACTIVITY_DELETE_RESPONSE_DETAIL_NONE = "";
-
-  /**
-   * Serialize a live activity delete response into its ROS counterpart.
-   *
-   * @param liveActivityDeleteResponse
-   *          the delete response
-   * @param rosMessage
-   *          the ROS message
-   */
-  public static void serializeLiveActivityDeleteResponseMessage(
-      LiveActivityDeleteResponse liveActivityDeleteResponse,
-      LiveActivityDeleteResponseMessage rosMessage) {
-    rosMessage.setUuid(liveActivityDeleteResponse.getUuid());
-    rosMessage.setTimeDeleted(liveActivityDeleteResponse.getTimeDeleted());
-
-    switch (liveActivityDeleteResponse.getStatus()) {
-      case SUCCESS:
-        rosMessage.setStatus(LiveActivityDeleteResponseMessage.STATUS_SUCCESS);
-        break;
-
-      case FAILURE:
-        rosMessage.setStatus(LiveActivityDeleteResponseMessage.STATUS_FAILURE);
-        break;
-
-      case DOESNT_EXIST:
-        rosMessage.setStatus(LiveActivityDeleteResponseMessage.STATUS_DOESNT_EXIST);
-        break;
-
-      default:
-        throw SimpleSmartSpacesException.newFormattedException(
-            "Unsupported deletion response status type %s", liveActivityDeleteResponse.getStatus());
-    }
-
-    String statusDetail = liveActivityDeleteResponse.getStatusDetail();
-    if (statusDetail == null) {
-      statusDetail = CONTAINER_LIVE_ACTIVITY_DELETE_RESPONSE_DETAIL_NONE;
-    }
-
-    rosMessage.setStatusDetail(statusDetail);
-  }
-
-  /**
-   * Deserialize the ROS message for a live activity delete response into its
-   * internal counterpart.
-   *
-   * @param rosMessage
-   *          the ROS message
-   *
-   * @return the internal response
-   */
-  public static LiveActivityDeleteResponse deserializeLiveActivityDeleteResponseMessage(
-      LiveActivityDeleteResponseMessage rosMessage) {
-    LiveActivityDeleteStatus liveActivityDeleteStatus;
-    switch (rosMessage.getStatus()) {
-      case LiveActivityDeleteResponseMessage.STATUS_SUCCESS:
-        liveActivityDeleteStatus = LiveActivityDeleteStatus.SUCCESS;
-        break;
-
-      case LiveActivityDeleteResponseMessage.STATUS_DOESNT_EXIST:
-        liveActivityDeleteStatus = LiveActivityDeleteStatus.DOESNT_EXIST;
-        break;
-
-      default:
-        liveActivityDeleteStatus = LiveActivityDeleteStatus.FAILURE;
-    }
-
-    String statusDetail = rosMessage.getStatusDetail();
-    if (CONTAINER_LIVE_ACTIVITY_DELETE_RESPONSE_DETAIL_NONE.equals(statusDetail)) {
-      statusDetail = null;
-    }
-
-    return new LiveActivityDeleteResponse(rosMessage.getUuid(), liveActivityDeleteStatus,
-        rosMessage.getTimeDeleted(), statusDetail);
-  }
 
   /**
    * Deserialize a ROS message for deleting a live activity to its internal

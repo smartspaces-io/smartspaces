@@ -18,6 +18,7 @@
 package io.smartspaces.example.activity.comm.network.tcp.server.hello;
 
 import io.smartspaces.activity.impl.BaseActivity;
+import io.smartspaces.service.comm.network.server.TcpServerClientConnection;
 import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpointListener;
 import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpointService;
@@ -48,16 +49,28 @@ public class HelloTcpServerActivity extends BaseActivity {
   @Override
   public void onActivitySetup() {
     TcpServerNetworkCommunicationEndpointService communicationEndpointService =
-        getSpaceEnvironment().getServiceRegistry().getRequiredService(
-            TcpServerNetworkCommunicationEndpointService.SERVICE_NAME);
+        getSpaceEnvironment().getServiceRegistry()
+            .getRequiredService(TcpServerNetworkCommunicationEndpointService.SERVICE_NAME);
 
     int serverPort =
         getConfiguration().getRequiredPropertyInteger(CONFIGURATION_PROPERTY_TCP_SERVER_PORT);
 
-    TcpServerNetworkCommunicationEndpoint<String> tcpServer =
-        communicationEndpointService.newStringServer(MESSAGE_TERMINATORS, Charsets.UTF_8,
-            serverPort, getLog());
+    TcpServerNetworkCommunicationEndpoint<String> tcpServer = communicationEndpointService
+        .newStringServer(MESSAGE_TERMINATORS, Charsets.UTF_8, serverPort, getLog());
     tcpServer.addListener(new TcpServerNetworkCommunicationEndpointListener<String>() {
+
+      @Override
+      public void onNewTcpConnection(TcpServerNetworkCommunicationEndpoint<String> endpoint,
+          TcpServerClientConnection<String> connection) {
+        getLog().info("Got new client connection with ID " + connection.getConnectionId());
+      }
+
+      @Override
+      public void onCloseTcpConnection(TcpServerNetworkCommunicationEndpoint<String> endpoint,
+          TcpServerClientConnection<String> connection) {
+        getLog().info("Got closed client connection with ID " + connection.getConnectionId());
+      }
+
       @Override
       public void onTcpRequest(TcpServerNetworkCommunicationEndpoint<String> endpoint,
           TcpServerRequest<String> request) {
@@ -75,9 +88,8 @@ public class HelloTcpServerActivity extends BaseActivity {
    */
   private void handleTcpRequest(TcpServerRequest<String> request) {
     String message = request.getMessage();
-    getLog().info(
-        String.format("TCP server got request from client %s: %s", request.getRemoteAddress(),
-            message));
+    getLog().info(String.format("TCP server got request from client %s: %s",
+        request.getRemoteAddress(), message));
 
     String response = "Hey, the server got :" + message;
     request.writeMessage(response);

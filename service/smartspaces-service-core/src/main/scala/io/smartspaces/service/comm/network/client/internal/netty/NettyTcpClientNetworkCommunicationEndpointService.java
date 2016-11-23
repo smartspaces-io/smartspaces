@@ -17,16 +17,18 @@
 
 package io.smartspaces.service.comm.network.client.internal.netty;
 
+import io.smartspaces.SmartSpacesException;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpointService;
 
-import java.net.InetAddress;
-import java.nio.charset.Charset;
-
 import org.apache.commons.logging.Log;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 
 /**
  * A Netty based {@link TcpClientNetworkCommunicationEndpointService}.
@@ -39,6 +41,17 @@ public class NettyTcpClientNetworkCommunicationEndpointService extends BaseSuppo
   @Override
   public String getName() {
     return TcpClientNetworkCommunicationEndpointService.SERVICE_NAME;
+  }
+
+  @Override
+  public TcpClientNetworkCommunicationEndpoint<String> newStringClient(byte[][] delimiters,
+      Charset charset, String remoteHost, int remotePort, Log log) {
+    try {
+      return newStringClient(delimiters, charset, InetAddress.getByName(remoteHost), remotePort,
+          log);
+    } catch (UnknownHostException e) {
+      throw new SmartSpacesException("TCP client server has unknown host " + remoteHost);
+    }
   }
 
   @Override

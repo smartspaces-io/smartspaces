@@ -83,20 +83,14 @@ public interface ActiveSpaceControllerManager {
    *
    * <p>
    * This will be a noop if the controller has never been connected or has been
-   * disconnected.
+   * disconnected. A status can be forced.
    *
    * @param controller
    *          the controller
+   * @param force
+   *            {@code truue} to force status
    */
-  void statusSpaceController(SpaceController controller);
-
-  /**
-   * Force request a status from a controller.
-   *
-   * @param controller
-   *          the controller
-   */
-  void forceStatusSpaceController(SpaceController controller);
+  void statusSpaceController(SpaceController controller, boolean force);
 
   /**
    * Configure a space controller.

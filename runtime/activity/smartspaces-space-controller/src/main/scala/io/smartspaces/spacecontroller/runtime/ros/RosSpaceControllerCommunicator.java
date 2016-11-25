@@ -31,8 +31,8 @@ import io.smartspaces.container.control.message.container.resource.deployment.Co
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
-import io.smartspaces.container.control.newmessage.NewControllerFullStatus;
-import io.smartspaces.container.control.newmessage.NewLiveActivityRuntimeStatus;
+import io.smartspaces.container.control.newmessage.ControllerFullStatus;
+import io.smartspaces.container.control.newmessage.LiveActivityRuntimeStatus;
 import io.smartspaces.container.control.newmessage.StandardMasterSpaceControllerCodec;
 import io.smartspaces.container.controller.common.ros.RosSpaceControllerConstants;
 import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
@@ -40,8 +40,11 @@ import io.smartspaces.liveactivity.runtime.LiveActivityRunner;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
 import io.smartspaces.master.server.remote.client.RemoteMasterServerClient;
 import io.smartspaces.master.server.remote.client.internal.StandardRemoteMasterServerClient;
+import io.smartspaces.service.comm.network.server.TcpServerClientConnection;
 import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpoint;
+import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpointListener;
 import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpointService;
+import io.smartspaces.service.comm.network.server.TcpServerRequest;
 import io.smartspaces.spacecontroller.SpaceControllerStatus;
 import io.smartspaces.spacecontroller.runtime.SpaceControllerCommunicator;
 import io.smartspaces.spacecontroller.runtime.SpaceControllerControl;
@@ -183,14 +186,35 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
     controllerAdminServer = tcpService.newStringServer(
         StandardMasterSpaceControllerCodec.DELIMITERS, StandardMasterSpaceControllerCodec.CHARSET,
         StandardMasterSpaceControllerCodec.CONTROLLER_SERVER_PORT, spaceEnvironment.getLog());
+    controllerAdminServer.addListener(new TcpServerNetworkCommunicationEndpointListener<String>() {
+
+      @Override
+      public void onTcpRequest(TcpServerNetworkCommunicationEndpoint<String> endpoint,
+          TcpServerRequest<String> request) {
+        handleControllerRequest(request.getMessage());
+      }
+
+      @Override
+      public void onNewTcpConnection(TcpServerNetworkCommunicationEndpoint<String> endpoint,
+          TcpServerClientConnection<String> connection) {
+        // TODO Auto-generated method stub
+
+      }
+
+      @Override
+      public void onCloseTcpConnection(TcpServerNetworkCommunicationEndpoint<String> endpoint,
+          TcpServerClientConnection<String> connection) {
+        // TODO Auto-generated method stub
+
+      }
+    });
     controllerAdminServer.startup();
 
-    NodeConfiguration nodeConfiguration =
-        rosEnvironment.getPublicNodeConfigurationWithNodeName();
+    NodeConfiguration nodeConfiguration = rosEnvironment.getPublicNodeConfigurationWithNodeName();
     nodeConfiguration.setNodeName("smartspaces/controller");
 
     node = rosEnvironment.newNode(nodeConfiguration);
- 
+
     controllerRequestSubscriber =
         node.newSubscriber(RosSpaceControllerConstants.CONTROLLER_REQUEST_TOPIC_NAME,
             RosSpaceControllerConstants.CONTROLLER_REQUEST_MESSAGE_TYPE);
@@ -242,7 +266,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
 
   @Override
   public void onShutdown() {
-    npublishControllerStatus(
+    publishControllerStatus(
         StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_SHUTDOWN, null);
     SmartSpacesUtilities.delay(SHUTDOWN_DELAY);
 
@@ -360,6 +384,116 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
   }
 
   /**
+   * Handle a controller control request coming in.
+   *
+   * @param request
+   *          the request
+   */
+  @VisibleForTesting
+  void handleControllerRequest(String request) {
+    spaceEnvironment.getLog().info(request);
+    Map<String, Object> requestObject = messageCodec.parseMessage(request);
+
+    String operation = (String) requestObject
+        .get(StandardMasterSpaceControllerCodec.MESSAGE_CONTROLLER_OPERATION_OPERATION);
+    
+    // TODO(keith): Remove before final checkin.
+    spaceEnvironment.getLog().info("Controller operation from master: " + operation);
+    switch (operation) {
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_STATUS:
+        publishControllerFullStatus();
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_SHUTDOWN_ACTIVITIES:
+        controllerControl.shutdownAllLiveActivities();
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_SHUTDOWN_CONTROLLER:
+        controllerControl.shutdownControllerContainer();
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_DEPLOY_LIVE_ACTIVITY:
+        // handleLiveActivityDeployment(
+        // F
+        // liveActivityDeployRequestDeserializer.deserialize(request.getPayload()));
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_DELETE_LIVE_ACTIVITY:
+        // handleLiveActivityDeletion(
+        // liveActivityDeleteRequestDeserializer.deserialize(request.getPayload()));
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_LIVE_ACTIVITY_RUNTIME_REQUEST:
+        // handleLiveActivityRuntimeRequest(
+        // liveActivityRuntimeRequestDeserializer.deserialize(request.getPayload()));
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_CLEAN_DATA_TMP:
+        controllerControl.cleanControllerTempData();
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_CLEAN_DATA_PERMANENT:
+        controllerControl.cleanControllerPermanentData();
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_CLEAN_DATA_TMP_ACTIVITIES:
+        controllerControl.cleanControllerTempDataAll();
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_CLEAN_DATA_PERMANENT_ACTIVITIES:
+        controllerControl.cleanControllerPermanentDataAll();
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_CAPTURE_DATA:
+        // ControllerDataRequest captureDataRequest =
+        // controllerDataRequestMessageDeserializer.deserialize(request.getPayload());
+        // controllerControl.captureControllerDataBundle(captureDataRequest.getTransferUri());
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_RESTORE_DATA:
+        // ControllerDataRequest restoreDataRequest =
+        // controllerDataRequestMessageDeserializer.deserialize(request.getPayload());
+        // controllerControl.restoreControllerDataBundle(restoreDataRequest.getTransferUri());
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_RESOURCE_QUERY:
+        // ContainerResourceQueryRequestMessage containerResourceQueryRequest =
+        // containerResourceQueryRequestDeserializer.deserialize(request.getPayload());
+        // handleContainerResourceQueryRequest(containerResourceQueryRequest);
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_RESOURCE_COMMIT:
+        // ContainerResourceCommitRequestMessage containerResourceCommitRequest
+        // =
+        // containerResourceCommitRequestDeserializer.deserialize(request.getPayload());
+        // handleContainerResourceCommitRequest(containerResourceCommitRequest);
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_CONFIGURE:
+        // handleControllerConfigurationRequest(
+        // configurationRequestDeserializer.deserialize(request.getPayload()));
+
+        break;
+
+      default:
+        spaceEnvironment.getLog()
+            .error(String.format("Unknown space controller request %s", operation));
+    }
+  }
+
+  /**
    * Handle a container resource deployment query request.
    *
    * @param rosRequest
@@ -380,7 +514,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
             .info(String.format("Resource deployment query with transaction ID %s has status %s",
                 rosRequest.getTransactionId(), queryResponse.getStatus()));
 
-        npublishControllerStatus(
+        publishControllerStatus(
             StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_CONTAINER_RESOURCE_QUERY,
             queryResponse);
         break;
@@ -406,7 +540,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
     ContainerResourceDeploymentCommitResponse commitResponse =
         controllerControl.handleContainerResourceDeploymentCommitRequest(request);
 
-    npublishControllerStatus(
+    publishControllerStatus(
         StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_CONTAINER_RESOURCE_COMMIT,
         commitResponse);
   }
@@ -419,15 +553,15 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
 
     SimpleSpaceController controllerInfo = controllerControl.getControllerInfo();
 
-    NewControllerFullStatus fullStatus = new NewControllerFullStatus();
+    ControllerFullStatus fullStatus = new ControllerFullStatus();
     fullStatus.setName(controllerInfo.getName());
     fullStatus.setDescription(controllerInfo.getDescription());
     fullStatus.setHostId(controllerInfo.getHostId());
 
-    List<NewLiveActivityRuntimeStatus> liveActivityStatuses = new ArrayList<>();
+    List<LiveActivityRuntimeStatus> liveActivityStatuses = new ArrayList<>();
     fullStatus.setLiveActivityStatuses(liveActivityStatuses);
     for (InstalledLiveActivity activity : controllerControl.getAllInstalledLiveActivities()) {
-      NewLiveActivityRuntimeStatus cas = new NewLiveActivityRuntimeStatus();
+      LiveActivityRuntimeStatus cas = new LiveActivityRuntimeStatus();
       liveActivityStatuses.add(cas);
 
       cas.setUuid(activity.getUuid());
@@ -460,7 +594,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
       }
     }
 
-    npublishControllerStatus(
+    publishControllerStatus(
         StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_CONTROLLER_FULL_STATUS,
         fullStatus);
   }
@@ -474,7 +608,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
         ? StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_DATA_CAPTURE
         : StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_DATA_CAPTURE;
 
-    Map<String, Object> statusMsg = messageCodec.encodeBaseStatusMessage(statusType,
+    Map<String, Object> statusMsg = messageCodec.encodeBaseControllerStatusMessage(statusType,
         controllerControl.getControllerInfo().getUuid(), null);
     statusMsg.put(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_CODE,
         statusCode.getDescription());
@@ -500,7 +634,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
     LiveActivityDeploymentResponse activityDeployResponse =
         controllerControl.installLiveActivity(activityDeployRequest);
 
-    npublishControllerStatus(
+    publishControllerStatus(
         StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_ACTIVITY_INSTALL,
         activityDeployResponse);
   }
@@ -518,7 +652,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
     LiveActivityDeleteResponse liveActivityDeleteResponse =
         controllerControl.deleteLiveActivity(liveActivityDeleteRequest);
 
-    npublishControllerStatus(
+    publishControllerStatus(
         StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_ACTIVITY_DELETE,
         liveActivityDeleteResponse);
   }
@@ -631,13 +765,13 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
   @Override
   public void publishActivityStatus(String uuid, ActivityStatus astatus) {
     try {
-      NewLiveActivityRuntimeStatus status = new NewLiveActivityRuntimeStatus();
+      LiveActivityRuntimeStatus status = new LiveActivityRuntimeStatus();
       status.setUuid(uuid);
       status.setStatus(astatus.getState());
 
       status.setStatusDetail(astatus.getCombinedDetail());
 
-      npublishControllerStatus(
+      publishControllerStatus(
           StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_LIVE_ACTIVITY_RUNTIME_STATUS,
           status);
 
@@ -665,11 +799,11 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
    * @param payload
    *          the payload, can be {@code null}
    */
-  private void npublishControllerStatus(String statusType, Object payload) {
+  private void publishControllerStatus(String statusType, Object payload) {
     String controllerUuid = controllerControl.getControllerInfo().getUuid();
 
     Map<String, Object> statusObject =
-        messageCodec.encodeBaseStatusMessage(statusType, controllerUuid, payload);
+        messageCodec.encodeBaseControllerStatusMessage(statusType, controllerUuid, payload);
 
     publishFullyCodedControllerStatus(statusObject);
   }
@@ -727,7 +861,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
      * Construct a heartbeat object.
      */
     public ControllerAdminServerSpaceControllerHeartbeat() {
-      statusObject = messageCodec.encodeBaseStatusMessage(
+      statusObject = messageCodec.encodeBaseControllerStatusMessage(
           StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_HEARTBEAT, null, null);
     }
 

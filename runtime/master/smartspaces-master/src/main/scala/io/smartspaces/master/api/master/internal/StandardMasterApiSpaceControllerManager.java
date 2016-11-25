@@ -429,7 +429,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
   public Map<String, Object> statusFromAllSpaceControllers() {
     for (SpaceController controller : getAllEnabledSpaceControllers()) {
       try {
-        activeSpaceControllerManager.statusSpaceController(controller);
+        activeSpaceControllerManager.statusSpaceController(controller, false);
       } catch (Throwable e) {
         spaceEnvironment.getLog().error(
             String.format("Unable to get the status from controller %s (%s)", controller.getUuid(),
@@ -444,7 +444,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
   public Map<String, Object> forceStatusFromAllSpaceControllers() {
     for (SpaceController controller : getAllEnabledSpaceControllers()) {
       try {
-        activeSpaceControllerManager.forceStatusSpaceController(controller);
+        activeSpaceControllerManager.statusSpaceController(controller, true);
       } catch (Throwable e) {
         spaceEnvironment.getLog().error(
             String.format("Unable to force the status from controller %s (%s)",
@@ -541,7 +541,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
     for (String id : ids) {
       SpaceController controller = spaceControllerRepository.getSpaceControllerByTypedId(id);
       if (controller != null) {
-        activeSpaceControllerManager.statusSpaceController(controller);
+        activeSpaceControllerManager.statusSpaceController(controller, false);
       } else {
         spaceEnvironment.getLog().error(
             String.format("Attempted status of unknown controller %s", id));

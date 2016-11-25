@@ -28,8 +28,8 @@ import io.smartspaces.container.control.message.container.resource.deployment.Co
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
-import io.smartspaces.container.control.newmessage.NewControllerFullStatus;
-import io.smartspaces.container.control.newmessage.NewLiveActivityRuntimeStatus;
+import io.smartspaces.container.control.newmessage.ControllerFullStatus;
+import io.smartspaces.container.control.newmessage.LiveActivityRuntimeStatus;
 import io.smartspaces.container.control.newmessage.StandardMasterSpaceControllerCodec;
 import io.smartspaces.container.controller.common.ros.RosSpaceControllerSupport;
 import io.smartspaces.controller.client.master.RemoteActivityDeploymentManager;
@@ -71,6 +71,7 @@ import smartspaces_msgs.LiveActivityRuntimeRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -236,19 +237,22 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
 
   @Override
   public void requestSpaceControllerShutdown(ActiveSpaceController controller) {
-    sendControllerRequest(controller, ControllerRequest.OPERATION_CONTROLLER_SHUTDOWN_CONTROLLER);
+    sendControllerRequest(controller,
+        StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_SHUTDOWN_CONTROLLER);
 
     // Heartbeat is shut down once controller acknowledges shutdown.
   }
 
   @Override
   public void requestSpaceControllerStatus(ActiveSpaceController controller) {
-    sendControllerRequest(controller, ControllerRequest.OPERATION_CONTROLLER_STATUS);
+    sendControllerRequest(controller,
+        StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_STATUS);
   }
 
   @Override
   public void shutdownSpacecontrollerAllActivities(ActiveSpaceController controller) {
-    sendControllerRequest(controller, ControllerRequest.OPERATION_CONTROLLER_SHUTDOWN_ACTIVITIES);
+    sendControllerRequest(controller,
+        StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_SHUTDOWN_ACTIVITIES);
   }
 
   @Override
@@ -330,24 +334,26 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
 
   @Override
   public void cleanSpaceControllerTempData(ActiveSpaceController controller) {
-    sendControllerRequest(controller, ControllerRequest.OPERATION_CONTROLLER_CLEAN_DATA_TMP);
+    sendControllerRequest(controller,
+        StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_CLEAN_DATA_TMP);
   }
 
   @Override
   public void cleanSpaceControllerPermanentData(ActiveSpaceController controller) {
-    sendControllerRequest(controller, ControllerRequest.OPERATION_CONTROLLER_CLEAN_DATA_PERMANENT);
+    sendControllerRequest(controller,
+        StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_CLEAN_DATA_PERMANENT);
   }
 
   @Override
   public void cleanSpaceControllerActivitiesTempData(ActiveSpaceController controller) {
     sendControllerRequest(controller,
-        ControllerRequest.OPERATION_CONTROLLER_CLEAN_DATA_TMP_ACTIVITIES);
+        StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_CLEAN_DATA_TMP_ACTIVITIES);
   }
 
   @Override
   public void cleanSpaceControllerActivitiesPermanentData(ActiveSpaceController controller) {
     sendControllerRequest(controller,
-        ControllerRequest.OPERATION_CONTROLLER_CLEAN_DATA_PERMANENT_ACTIVITIES);
+        StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_CLEAN_DATA_PERMANENT_ACTIVITIES);
   }
 
   @Override
@@ -478,6 +484,44 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
   }
 
   /**
+   * Send a controller request to a controller.
+   *
+   * <p>
+   * The request is sent asynchronously.
+   *
+   * @param controller
+   *          the controller the request is being sent to
+   * @param operation
+   *          the operation requested
+   */
+  private void sendControllerRequest(ActiveSpaceController controller, String operation) {
+    sendSpaceControllerRequest(controller, operation, null);
+  }
+
+  /**
+   * Send a controller request to a controller.
+   *
+   * <p>
+   * The request is sent asynchronously.
+   *
+   * @param controller
+   *          the controller the request is being sent to
+   * @param operation
+   *          the operation requested
+   * @param payload
+   *          any data to be sent with the request (can be {@code null})
+   */
+  void sendSpaceControllerRequest(ActiveSpaceController controller, String operation,
+      Object payload) {
+    String request = messageCodec
+        .encodeFinalMessage(messageCodec.encodeBaseControllerRequestMessage(operation, payload));
+
+    SpaceControllerCommunicator communicator = getCommunicator(controller, true);
+
+    communicator.sendControllerRequest(request);
+  }
+
+  /**
    * Send an activity runtime request to a controller.
    *
    * <p>
@@ -530,17 +574,16 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
         // since the controller will only respond if it is alive.
         handleControllerHeartbeat(statusObject);
 
-        NewControllerFullStatus fullStatus = messageCodec.decodeControllerFullStatus(statusObject);
+        ControllerFullStatus fullStatus = messageCodec.decodeControllerFullStatus(statusObject);
 
-        List<NewLiveActivityRuntimeStatus> liveActivityStatuses =
-            fullStatus.getLiveActivityStatuses();
+        List<LiveActivityRuntimeStatus> liveActivityStatuses = fullStatus.getLiveActivityStatuses();
         if (log.isInfoEnabled()) {
           String controllerUuid = (String) statusObject
               .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID);
           log.info(String.format("Received controller full status %s, %d activities",
               controllerUuid, liveActivityStatuses.size()));
         }
-        for (NewLiveActivityRuntimeStatus liveActivityStatus : liveActivityStatuses) {
+        for (LiveActivityRuntimeStatus liveActivityStatus : liveActivityStatuses) {
           if (log.isInfoEnabled()) {
             log.info(String.format("\tActivity %s, %s\n", liveActivityStatus.getUuid(),
                 liveActivityStatus.getStatus()));
@@ -551,7 +594,7 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
         break;
 
       case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_LIVE_ACTIVITY_RUNTIME_STATUS:
-        NewLiveActivityRuntimeStatus liveActivityStatus =
+        LiveActivityRuntimeStatus liveActivityStatus =
             messageCodec.decodeLiveActivityRuntimeStatus(statusObject);
         if (log.isDebugEnabled()) {
           log.debug(String.format("Activity status %s, %s\n", liveActivityStatus.getUuid(),
@@ -657,7 +700,7 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
    * @param status
    *          the status update
    */
-  private void handleRemoteLiveActivityStatusUpdate(NewLiveActivityRuntimeStatus status) {
+  private void handleRemoteLiveActivityStatusUpdate(LiveActivityRuntimeStatus status) {
     remoteControllerClientListeners.signalActivityStateChange(status.getUuid(), status.getStatus(),
         status.getStatusDetail());
   }
@@ -736,8 +779,10 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
   private SpaceControllerCommunicator getCommunicator(ActiveSpaceController controller,
       boolean create) {
     String remoteNode = controller.getSpaceController().getHostId();
+    spaceEnvironment.getLog().info("Attempting to get communicator");
     synchronized (controllerCommunicators) {
       SpaceControllerCommunicator communicator = controllerCommunicators.get(remoteNode);
+      spaceEnvironment.getLog().info(communicator);
 
       if (communicator == null) {
         controller.setState(SpaceControllerState.CONNECT_ATTEMPT);
@@ -838,6 +883,11 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
     private CountDownPublisherListener<ControllerRequest> publisherListener;
 
     /**
+     * A latch for connection to the controller admin server.
+     */
+    private CountDownLatch connectionLatch = new CountDownLatch(1);
+
+    /**
      * The client to the controller.
      */
     private TcpClientNetworkCommunicationEndpoint<String> controllerClient;
@@ -869,8 +919,8 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
         @Override
         public void
             onTcpClientConnectionSuccess(TcpClientNetworkCommunicationEndpoint<String> endpoint) {
-          // TODO Auto-generated method stub
-
+          log.info("Controller client connected");
+          connectionLatch.countDown();
         }
 
         @Override
@@ -918,6 +968,29 @@ public class RosRemoteSpaceControllerClient implements RemoteSpaceControllerClie
         if (publisherListener.awaitNewSubscriber(controllerConnectionTimeWait,
             TimeUnit.MILLISECONDS)) {
           controllerRequestPublisher.publish(request);
+        } else {
+          remoteControllerClientListeners.signalSpaceControllerConnectFailed(spaceController,
+              controllerConnectionTimeWait);
+
+          throw SimpleSmartSpacesException.newFormattedException(
+              "No connection to space controller in %d milliseconds", controllerConnectionTimeWait);
+        }
+      } catch (InterruptedException e) {
+        // TODO(keith): Decide what to do.
+        log.warn("Controller request interrupted");
+      }
+    }
+
+    /**
+     * Send a request to a controller.
+     *
+     * @param request
+     *          the request to send
+     */
+    public void sendControllerRequest(String request) {
+      try {
+        if (connectionLatch.await(controllerConnectionTimeWait, TimeUnit.MILLISECONDS)) {
+          controllerClient.write(request);
         } else {
           remoteControllerClientListeners.signalSpaceControllerConnectFailed(spaceController,
               controllerConnectionTimeWait);

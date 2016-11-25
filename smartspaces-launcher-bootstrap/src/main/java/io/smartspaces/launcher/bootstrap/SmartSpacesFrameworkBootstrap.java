@@ -382,6 +382,9 @@ public class SmartSpacesFrameworkBootstrap {
     // TODO(keith): Once Spring is removed, see if this is even necessary.
     bundleStartLevels.put("smartspaces.master.webapp", SmartSpacesStartLevel.STARTUP_LEVEL_LAST);
     bundleStartLevels.put("smartspaces.master", SmartSpacesStartLevel.STARTUP_LEVEL_PENULTIMATE);
+
+    // TODO(keith): Get bundle dependencies so that this isn't necessary.
+    bundleStartLevels.put("smartspaces.spacecontroller", SmartSpacesStartLevel.STARTUP_LEVEL_LAST);
   }
 
   /**

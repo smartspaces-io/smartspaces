@@ -54,8 +54,8 @@ import java.util.Set;
  *
  * @author Keith M. Hughes
  */
-public class StandardActiveSpaceControllerManager implements InternalActiveSpaceControllerManager,
-    RemoteSpaceControllerClientListener {
+public class StandardActiveSpaceControllerManager
+    implements InternalActiveSpaceControllerManager, RemoteSpaceControllerClientListener {
 
   /**
    * All active controllers keyed by their controller's UUID.
@@ -146,8 +146,8 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
     } else if (curState == SpaceControllerState.RUNNING) {
       activeSpaceController.setState(SpaceControllerState.CONNECTION_LOST);
     } else {
-      spaceEnvironment.getExtendedLog().formatWarn(
-          "Attempting to change space controller state in disconnect,"
+      spaceEnvironment.getExtendedLog()
+          .formatWarn("Attempting to change space controller state in disconnect,"
               + " but the state %s does not make sense for an error", curState);
     }
   }
@@ -158,27 +158,17 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
   }
 
   @Override
-  public void statusSpaceController(SpaceController spaceController) {
+  public void statusSpaceController(SpaceController spaceController, boolean force) {
     // To make sure something is listening for the request.
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
 
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting status from space controller %s",
-        activeSpaceController.getDisplayName());
+    spaceEnvironment.getExtendedLog().formatInfo(
+        "Requesting status from space controller %s,  current known state %s",
+        activeSpaceController.getDisplayName(), activeSpaceController.getState());
 
-    if (!SpaceControllerState.UNKNOWN.equals(activeSpaceController.getState())) {
+    if (!SpaceControllerState.UNKNOWN.equals(activeSpaceController.getState()) || force) {
       requestSpaceControllerStatus(activeSpaceController);
     }
-  }
-
-  @Override
-  public void forceStatusSpaceController(SpaceController spaceController) {
-    // To make sure something is listening for the request.
-    ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
-
-    spaceEnvironment.getExtendedLog().formatInfo("Forcing status request from space controller %s",
-        activeSpaceController.getDisplayName());
-
-    requestSpaceControllerStatus(activeSpaceController);
   }
 
   /**
@@ -610,9 +600,9 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
       try {
         remoteSpaceControllerClient.cleanLiveActivityPermanentData(activeLiveActivity);
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog()
-            .formatError(e, "Could not clean live activity permanent data: %s",
-                activeLiveActivity.getDisplayName());
+        spaceEnvironment.getExtendedLog().formatError(e,
+            "Could not clean live activity permanent data: %s",
+            activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
       }
@@ -626,15 +616,15 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
 
   @Override
   public void cleanLiveActivityTempData(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getExtendedLog().formatInfo(
-        "Requesting temp data clean for live activity: %s", activeLiveActivity.getDisplayName());
+    spaceEnvironment.getExtendedLog().formatInfo("Requesting temp data clean for live activity: %s",
+        activeLiveActivity.getDisplayName());
 
     synchronized (activeLiveActivity) {
       try {
         remoteSpaceControllerClient.cleanLiveActivityTempData(activeLiveActivity);
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(
-            "Could not clean live activity temp data: %s", activeLiveActivity.getDisplayName());
+        spaceEnvironment.getExtendedLog().formatError("Could not clean live activity temp data: %s",
+            activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
       }
@@ -782,8 +772,8 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
   @Override
   public void activateActiveActivityGroup(ActiveLiveActivityGroup activeActivityGroup) {
     String groupId = activeActivityGroup.getActivityGroup().getId();
-    spaceEnvironment.getExtendedLog()
-        .formatInfo("requesting activity group %s activation", groupId);
+    spaceEnvironment.getExtendedLog().formatInfo("requesting activity group %s activation",
+        groupId);
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
@@ -1026,9 +1016,8 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
       if (active == null) {
         // Active activity doesn't exist yet.
         SpaceController spaceController = activity.getController();
-        active =
-            new ActiveLiveActivity(getActiveSpaceController(spaceController), activity,
-                remoteSpaceControllerClient, spaceEnvironment.getTimeProvider());
+        active = new ActiveLiveActivity(getActiveSpaceController(spaceController), activity,
+            remoteSpaceControllerClient, spaceEnvironment.getTimeProvider());
         activeLiveActivities.put(activity.getUuid(), active);
         activeLiveActivitiesByController.put(spaceController.getId(), active);
       } else {
@@ -1090,8 +1079,8 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
   }
 
   @Override
-  public void
-      onSpaceControllerConnectFailed(ActiveSpaceController spaceController, long timeToWait) {
+  public void onSpaceControllerConnectFailed(ActiveSpaceController spaceController,
+      long timeToWait) {
     masterEventManager.signalSpaceControllerConnectFailed(spaceController, timeToWait);
   }
 
@@ -1112,8 +1101,8 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
 
       masterEventManager.signalSpaceControllerHeartbeat(spaceController, timestamp);
     } else {
-      spaceEnvironment.getExtendedLog().formatWarn(
-          "Heartbeat from unknown space controller with UUID %s", uuid);
+      spaceEnvironment.getExtendedLog()
+          .formatWarn("Heartbeat from unknown space controller with UUID %s", uuid);
     }
   }
 
@@ -1128,8 +1117,8 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
 
       masterEventManager.signalSpaceControllerStatusChange(spaceController, state);
     } else {
-      spaceEnvironment.getExtendedLog().formatWarn(
-          "Status change for unknown controller with UUID %s", uuid);
+      spaceEnvironment.getExtendedLog()
+          .formatWarn("Status change for unknown controller with UUID %s", uuid);
     }
   }
 
@@ -1154,8 +1143,8 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
             active.getDisplayName(), deployStatusDetail);
       }
 
-      masterEventManager.signalLiveActivityDeploy(active, result, spaceEnvironment
-          .getTimeProvider().getCurrentTime());
+      masterEventManager.signalLiveActivityDeploy(active, result,
+          spaceEnvironment.getTimeProvider().getCurrentTime());
     } else {
       logUnknownLiveActivity(uuid);
     }
@@ -1204,9 +1193,8 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
       String newStateDetail) {
     ActiveLiveActivity activeLiveActivity = getActiveActivityByUuid(uuid);
     if (activeLiveActivity != null) {
-      spaceEnvironment.getExtendedLog().formatInfo(
-          "Remote live activity has reported state %s: %s", newState,
-          activeLiveActivity.getDisplayName());
+      spaceEnvironment.getExtendedLog().formatInfo("Remote live activity has reported state %s: %s",
+          newState, activeLiveActivity.getDisplayName());
 
       updateLiveActivityRuntimeState(activeLiveActivity, newState, newStateDetail);
     } else {
@@ -1222,8 +1210,8 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
    * @param e
    *          the exception that signaled the failure
    */
-  private void updateLiveActivityStateForCommunicationFailure(
-      ActiveLiveActivity activeLiveActivity, Throwable e) {
+  private void updateLiveActivityStateForCommunicationFailure(ActiveLiveActivity activeLiveActivity,
+      Throwable e) {
     updateLiveActivityRuntimeState(activeLiveActivity, ActivityState.UNKNOWN,
         SmartSpacesExceptionUtils.getExceptionDetail(e));
   }
@@ -1260,8 +1248,8 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
     if (spaceController != null) {
       spaceController.setDataBundleState(state);
     } else {
-      spaceEnvironment.getExtendedLog().formatWarn(
-          "Data bundle state change update from unknown controller with UUID %s", uuid);
+      spaceEnvironment.getExtendedLog()
+          .formatWarn("Data bundle state change update from unknown controller with UUID %s", uuid);
     }
   }
 
@@ -1283,8 +1271,8 @@ public class StandardActiveSpaceControllerManager implements InternalActiveSpace
    *          UUID of the unknown activity
    */
   private void logUnknownLiveActivity(String uuid) {
-    spaceEnvironment.getExtendedLog().formatWarn(
-        "Got activity status update for unknown activity %s", uuid);
+    spaceEnvironment.getExtendedLog()
+        .formatWarn("Got activity status update for unknown activity %s", uuid);
   }
 
   /**

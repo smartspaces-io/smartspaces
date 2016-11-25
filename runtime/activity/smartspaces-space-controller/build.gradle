@@ -36,7 +36,7 @@ dependencies {
 jar {
   manifest {
     version = osgiVersion
-    symbolicName = 'smartspaces.controller'
+    symbolicName = 'smartspaces.spacecontroller'
 	
 	instruction 'Bundle-Activator',
 		'io.smartspaces.spacecontroller.runtime.internal.osgi.OsgiSpaceControllerActivator'

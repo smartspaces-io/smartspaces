@@ -29,28 +29,34 @@ public class LiveActivityDeploymentRequest {
   /**
    * The transaction ID for this request.
    */
-  private final String transactionId;
+  private String transactionId;
 
   /**
    * UUID for the activity.
    */
-  private final String uuid;
+  private String uuid;
 
   /**
    * Identifying name for the activity.
    */
-  private final String identifyingName;
+  private String identifyingName;
 
   /**
    * Version of the activity.
    */
-  private final Version version;
+  private Version version;
 
   /**
    * URI for getting the activity.
    */
-  private final String activitySourceUri;
+  private String activitySourceUri;
 
+  /**
+   * Construct a deployment request.
+   */
+  public LiveActivityDeploymentRequest() {
+  }
+  
   /**
    * Construct a deployment request.
    *
@@ -84,12 +90,32 @@ public class LiveActivityDeploymentRequest {
   }
 
   /**
+   * Set the transaction ID for the request.
+   *
+   * @param transactionId
+   *          the transaction ID
+   */
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
+  /**
    * Get the UUID for the live activity being deployed.
    *
    * @return the UUID for the live activity
    */
   public String getUuid() {
     return uuid;
+  }
+
+  /**
+   * Set the UUID for the live activity being deployed.
+   *
+   * @param uuid
+   *          the UUID for the live activity
+   */
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
   }
 
   /**
@@ -102,6 +128,16 @@ public class LiveActivityDeploymentRequest {
   }
 
   /**
+   * Set the identifying name for the live activity being deployed.
+   *
+   * @param identifyingName
+   *          the identifying name for the live activity
+   */
+  public void setIdentifyingName(String identifyingName) {
+    this.identifyingName = identifyingName;
+  }
+
+  /**
    * Get the version of the live activity being deployed.
    *
    * @return the version of the live activity
@@ -111,12 +147,32 @@ public class LiveActivityDeploymentRequest {
   }
 
   /**
+   * Set the version of the live activity being deployed.
+   *
+   * @param version
+   *          the version of the live activity
+   */
+  public void setVersion(Version version) {
+    this.version = version;
+  }
+
+  /**
    * Get the URI for obtaining the activity.
    *
    * @return the URI for obtaining the activity
    */
   public String getActivitySourceUri() {
     return activitySourceUri;
+  }
+
+  /**
+   * Set the URI for obtaining the activity.
+   *
+   * @param activitySourceUri
+   *          the URI for obtaining the activity
+   */
+  public void setActivitySourceUri(String activitySourceUri) {
+    this.activitySourceUri = activitySourceUri;
   }
 
   @Override

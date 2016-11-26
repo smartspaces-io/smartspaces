@@ -27,12 +27,18 @@ public class ResourceDependencyReference implements ResourceDependency {
   /**
    * Name of the resource.
    */
-  private final String name;
+  private String name;
 
   /**
    * Version range for the dependency.
    */
-  private final VersionRange versionRange;
+  private VersionRange versionRange;
+
+  /**
+   * Construct a resource dependency reference.
+   */
+  public ResourceDependencyReference() {
+  }
 
   /**
    * Construct a resource dependency reference.
@@ -52,9 +58,29 @@ public class ResourceDependencyReference implements ResourceDependency {
     return name;
   }
 
+  /**
+   * Set the name of the dependency.
+   * 
+   * @param name
+   *          the name of the dependency
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
   @Override
   public VersionRange getVersionRange() {
     return versionRange;
+  }
+
+  /**
+   * Set the version range of the dependency.
+   * 
+   * @param versionRange
+   *          the version range
+   */
+  public void setVersionRange(VersionRange versionRange) {
+    this.versionRange = versionRange;
   }
 
   @Override

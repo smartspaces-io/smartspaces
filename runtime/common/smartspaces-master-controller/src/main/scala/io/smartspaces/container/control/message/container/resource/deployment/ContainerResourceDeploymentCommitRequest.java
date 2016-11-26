@@ -30,12 +30,18 @@ public class ContainerResourceDeploymentCommitRequest {
   /**
    * The ID for a full deployment transaction.
    */
-  private final String transactionId;
+  private String transactionId;
 
   /**
    * The items which are part of the commit request.
    */
-  private final List<ContainerResourceDeploymentItem> items = new ArrayList<>();
+  private List<ContainerResourceDeploymentItem> items = new ArrayList<>();
+
+  /**
+   * Construct a commit request.
+   */
+  public ContainerResourceDeploymentCommitRequest() {
+  }
 
   /**
    * Construct a commit request.
@@ -57,12 +63,32 @@ public class ContainerResourceDeploymentCommitRequest {
   }
 
   /**
+   * Set the transaction ID for the request.
+   *
+   * @param transactionId
+   *          the transaction ID
+   */
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
+  /**
    * Get all items in the request.
    *
    * @return all items in the request
    */
   public List<ContainerResourceDeploymentItem> getItems() {
     return items;
+  }
+
+  /**
+   * set all items in the request.
+   *
+   * @param items
+   *          all items in the request
+   */
+  public void setItems(List<ContainerResourceDeploymentItem> items) {
+    this.items = items;
   }
 
   /**

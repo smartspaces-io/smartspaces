@@ -30,17 +30,23 @@ public class ContainerResource extends NamedVersionedResource {
   /**
    * The type of the resource.
    */
-  private final ContainerResourceType type;
+  private ContainerResourceType type;
 
   /**
    * Location of the resource in a container.
    */
-  private final ContainerResourceLocation location;
+  private ContainerResourceLocation location;
 
   /**
    * The signature of the resource.
    */
   private String signature;
+
+  /**
+   * Construct a new container resource.
+   */
+  public ContainerResource() {
+  }
 
   /**
    * Construct a new container resource.
@@ -75,12 +81,31 @@ public class ContainerResource extends NamedVersionedResource {
   }
 
   /**
+   * Get the type of the container resource.
+   *
+   * @return the type of the container resource
+   */
+  public void setType(ContainerResourceType type) {
+    this.type = type;
+  }
+
+  /**
    * Get the location of the container resource.
    *
    * @return the location of the container resource
    */
   public ContainerResourceLocation getLocation() {
     return location;
+  }
+
+  /**
+   * Set the location of the container resource.
+   *
+   * @param location
+   *          the location of the container resource
+   */
+  public void setLocation(ContainerResourceLocation location) {
+    this.location = location;
   }
 
   /**

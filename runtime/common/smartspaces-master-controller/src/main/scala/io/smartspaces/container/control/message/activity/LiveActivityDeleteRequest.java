@@ -46,6 +46,12 @@ public class LiveActivityDeleteRequest {
 
   /**
    * Construct the request.
+   */
+  public LiveActivityDeleteRequest() {
+  }
+
+  /**
+   * Construct the request.
    *
    * @param uuid
    *          UUID of the live activity
@@ -74,12 +80,32 @@ public class LiveActivityDeleteRequest {
   }
 
   /**
+   * Set the UUID of the live activity.
+   *
+   * @param uuid
+   *          the uuid
+   */
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
+
+  /**
    * Get the identifying name of the live activity.
    *
    * @return the identifying name
    */
   public String getIdentifyingName() {
     return identifyingName;
+  }
+
+  /**
+   * Set the identifying name of the live activity.
+   *
+   * @param identifyingName
+   *          the identifying name
+   */
+  public void setIdentifyingName(String identifyingName) {
+    this.identifyingName = identifyingName;
   }
 
   /**
@@ -92,11 +118,31 @@ public class LiveActivityDeleteRequest {
   }
 
   /**
+   * Set the version of the activity.
+   *
+   * @param version
+   *          the version
+   */
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  /**
    * Should the deletion be forced.
    *
    * @return {@code true} if the deletion should be forced
    */
   public boolean isForce() {
     return force;
+  }
+
+  /**
+   * Set if the deletion should be forced.
+   *
+   * @param force
+   *          {@code true} if the deletion should be forced
+   */
+  public void setForce(boolean force) {
+    this.force = force;
   }
 }

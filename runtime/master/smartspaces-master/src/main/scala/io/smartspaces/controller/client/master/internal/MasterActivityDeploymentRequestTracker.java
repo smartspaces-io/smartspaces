@@ -27,8 +27,13 @@ import io.smartspaces.resource.Version;
  *
  * @author Keith M. Hughes
  */
-public class MasterActivityDeploymentRequest extends LiveActivityDeploymentRequest {
+public class MasterActivityDeploymentRequestTracker {
 
+  /**
+   * The transaction ID for the deployment.
+   */
+  private final String transactionId;
+  
   /**
    * The live activity being deployed.
    */
@@ -55,6 +60,11 @@ public class MasterActivityDeploymentRequest extends LiveActivityDeploymentReque
   private long lastStatusUpdateTime;
 
   /**
+   * The deployment request.
+   */
+  private final LiveActivityDeploymentRequest deploymentRequest;
+
+  /**
    * Construct a new request.
    *
    * @param liveActivity
@@ -66,22 +76,43 @@ public class MasterActivityDeploymentRequest extends LiveActivityDeploymentReque
    * @param deploymentBeginTime
    *          at what time the deployment started
    */
-  public MasterActivityDeploymentRequest(ActiveLiveActivity liveActivity, String transactionId,
-      String activitySourceUri, long deploymentBeginTime) {
-    super(transactionId, liveActivity.getLiveActivity().getUuid(), liveActivity.getLiveActivity()
-        .getActivity().getIdentifyingName(), Version.parseVersion(liveActivity.getLiveActivity()
-        .getActivity().getVersion()), activitySourceUri);
+  public MasterActivityDeploymentRequestTracker(ActiveLiveActivity liveActivity,
+      String transactionId, String activitySourceUri, long deploymentBeginTime) {
+    deploymentRequest =
+        new LiveActivityDeploymentRequest(transactionId, liveActivity.getLiveActivity().getUuid(),
+            liveActivity.getLiveActivity().getActivity().getIdentifyingName(),
+            Version.parseVersion(liveActivity.getLiveActivity().getActivity().getVersion()),
+            activitySourceUri);
+    this.transactionId = transactionId;
     this.liveActivity = liveActivity;
     this.deploymentBeginTime = deploymentBeginTime;
   }
 
   /**
-   * Get the live activity which is the target of this request.
+   * Get the transaction ID for the request.
+   *
+   * @return the transaction ID
+   */
+  public String getTransactionId() {
+    return transactionId;
+  }
+
+  /**
+   * Get the live activity that is the target of this request.
    *
    * @return the live activity
    */
   public ActiveLiveActivity getLiveActivity() {
     return liveActivity;
+  }
+
+  /**
+   * Get the deployment request for the tracker.
+   * 
+   * @return the deployment request
+   */
+  public LiveActivityDeploymentRequest getDeploymentRequest() {
+    return deploymentRequest;
   }
 
   /**
@@ -112,8 +143,8 @@ public class MasterActivityDeploymentRequest extends LiveActivityDeploymentReque
    * @param resourceDeploymentQuery
    *          the query
    */
-  public void setResourceDeploymentQuery(
-      ContainerResourceDeploymentQueryRequest resourceDeploymentQuery) {
+  public void
+      setResourceDeploymentQuery(ContainerResourceDeploymentQueryRequest resourceDeploymentQuery) {
     this.resourceDeploymentQuery = resourceDeploymentQuery;
   }
 

@@ -18,6 +18,7 @@
 package io.smartspaces.container.control.message.container.resource.deployment;
 
 import io.smartspaces.resource.ResourceDependency;
+import io.smartspaces.resource.ResourceDependencyReference;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,12 +33,18 @@ public class ContainerResourceDeploymentQueryRequest {
   /**
    * ID for the transaction for the deployment request.
    */
-  private final String transactionId;
+  private String transactionId;
 
   /**
    * The queries.
    */
-  private final Set<ResourceDependency> queries = new HashSet<>();
+  private Set<ResourceDependencyReference> queries = new HashSet<>();
+
+  /**
+   * Construct a new query.
+   */
+  public ContainerResourceDeploymentQueryRequest() {
+  }
 
   /**
    * Construct a new query.
@@ -59,12 +66,22 @@ public class ContainerResourceDeploymentQueryRequest {
   }
 
   /**
+   * Set the transaction ID for the query.
+   *
+   * @param transactionId
+   *          the transaction ID
+   */
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
+  /**
    * Add in a new query.
    *
    * @param query
    *          the query to add
    */
-  public void addQuery(ResourceDependency query) {
+  public void addQuery(ResourceDependencyReference query) {
     queries.add(query);
   }
 
@@ -73,7 +90,17 @@ public class ContainerResourceDeploymentQueryRequest {
    *
    * @return the queries
    */
-  public Set<ResourceDependency> getQueries() {
+  public Set<ResourceDependencyReference> getQueries() {
     return queries;
+  }
+
+  /**
+   * Set the queries.
+   *
+   * @param queries
+   *          the queries
+   */
+  public void setQueries(Set<ResourceDependencyReference> queries) {
+    this.queries = queries;
   }
 }

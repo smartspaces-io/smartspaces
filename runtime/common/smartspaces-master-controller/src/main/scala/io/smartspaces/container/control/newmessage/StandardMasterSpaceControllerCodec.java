@@ -17,16 +17,32 @@
 package io.smartspaces.container.control.newmessage;
 
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityRuntimeStatus;
+import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
+import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
+import io.smartspaces.resource.Version;
 import io.smartspaces.util.data.json.JsonSmartSpacesException;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.core.util.VersionUtil;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.base.Charsets;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
@@ -183,20 +199,20 @@ public class StandardMasterSpaceControllerCodec {
   static {
     MAPPER = new ObjectMapper();
     MAPPER.getFactory().enable(JsonGenerator.Feature.ESCAPE_NON_ASCII);
+    MAPPER.registerModule(new SmartSpacesModule());
   }
 
-  public Map<String, Object> encodeBaseControllerRequestMessage(String operation,
-      Object payload) {
+  public Map<String, Object> encodeBaseControllerRequestMessage(String operation, Object payload) {
     Map<String, Object> message = new HashMap<>();
     message.put(MESSAGE_CONTROLLER_OPERATION_OPERATION, operation);
- 
+
     if (payload != null) {
       try {
         @SuppressWarnings("unchecked")
         Map<String, Object> value = MAPPER.convertValue(payload, Map.class);
         message.put(CONTROLLER_MESSAGE_PAYLOAD, value);
       } catch (Throwable e) {
-        throw new JsonSmartSpacesException("Could not parse JSON string", e);
+        throw new JsonSmartSpacesException("Could not encode controller request object", e);
       }
 
     }
@@ -204,8 +220,8 @@ public class StandardMasterSpaceControllerCodec {
     return message;
   }
 
-  public Map<String, Object> encodeBaseControllerStatusMessage(String statusType, String controllerUuid,
-      Object payload) {
+  public Map<String, Object> encodeBaseControllerStatusMessage(String statusType,
+      String controllerUuid, Object payload) {
     Map<String, Object> message = new HashMap<>();
     message.put(CONTROLLER_MESSAGE_CONTROLLER_UUID, controllerUuid);
     message.put(CONTROLLER_MESSAGE_STATUS_TYPE, statusType);
@@ -243,109 +259,72 @@ public class StandardMasterSpaceControllerCodec {
     }
   }
 
-  @SuppressWarnings("unchecked")
   public ControllerFullStatus decodeControllerFullStatus(Map<String, Object> message) {
-    Map<String, Object> payload = (Map<String, Object>) message.get(CONTROLLER_MESSAGE_PAYLOAD);
-
-    if (payload != null) {
-      try {
-        ControllerFullStatus value = MAPPER.convertValue(payload, ControllerFullStatus.class);
-        return value;
-      } catch (Throwable e) {
-        throw new JsonSmartSpacesException("Could not parse JSON string", e);
-      }
-
-    }
-
-    return null;
+    return decodePayload(message, ControllerFullStatus.class);
   }
 
-  @SuppressWarnings("unchecked")
   public LiveActivityRuntimeStatus decodeLiveActivityRuntimeStatus(Map<String, Object> message) {
-    Map<String, Object> payload = (Map<String, Object>) message.get(CONTROLLER_MESSAGE_PAYLOAD);
-
-    if (payload != null) {
-      try {
-        LiveActivityRuntimeStatus value =
-            MAPPER.convertValue(payload, LiveActivityRuntimeStatus.class);
-        return value;
-      } catch (Throwable e) {
-        throw new JsonSmartSpacesException("Could not parse JSON string", e);
-      }
-
-    }
-
-    return null;
+    return decodePayload(message, LiveActivityRuntimeStatus.class);
   }
 
-  @SuppressWarnings("unchecked")
   public ContainerResourceDeploymentQueryResponse
       decodeContainerResourceDeploymentQueryResponse(Map<String, Object> message) {
-    Map<String, Object> payload = (Map<String, Object>) message.get(CONTROLLER_MESSAGE_PAYLOAD);
-
-    if (payload != null) {
-      try {
-        ContainerResourceDeploymentQueryResponse value =
-            MAPPER.convertValue(payload, ContainerResourceDeploymentQueryResponse.class);
-        return value;
-      } catch (Throwable e) {
-        throw new JsonSmartSpacesException("Could not parse JSON string", e);
-      }
-
-    }
-
-    return null;
+    return decodePayload(message, ContainerResourceDeploymentQueryResponse.class);
   }
 
-  @SuppressWarnings("unchecked")
   public ContainerResourceDeploymentCommitResponse
       decodeContainerResourceDeploymentCommitResponse(Map<String, Object> message) {
-    Map<String, Object> payload = (Map<String, Object>) message.get(CONTROLLER_MESSAGE_PAYLOAD);
-
-    if (payload != null) {
-      try {
-        ContainerResourceDeploymentCommitResponse value =
-            MAPPER.convertValue(payload, ContainerResourceDeploymentCommitResponse.class);
-        return value;
-      } catch (Throwable e) {
-        throw new JsonSmartSpacesException("Could not parse JSON string", e);
-      }
-
-    }
-
-    return null;
+    return decodePayload(message, ContainerResourceDeploymentCommitResponse.class);
   }
 
-  @SuppressWarnings("unchecked")
+  public LiveActivityDeploymentRequest
+      decodeLiveActivityDeploymentRequest(Map<String, Object> message) {
+    return decodePayload(message, LiveActivityDeploymentRequest.class);
+  }
+
   public LiveActivityDeploymentResponse
       decodeLiveActivityDeploymentResponse(Map<String, Object> message) {
-    Map<String, Object> payload = (Map<String, Object>) message.get(CONTROLLER_MESSAGE_PAYLOAD);
-
-    if (payload != null) {
-      try {
-        LiveActivityDeploymentResponse value =
-            MAPPER.convertValue(payload, LiveActivityDeploymentResponse.class);
-        return value;
-      } catch (Throwable e) {
-        throw new JsonSmartSpacesException("Could not parse JSON string", e);
-      }
-
-    }
-
-    return null;
+    return decodePayload(message, LiveActivityDeploymentResponse.class);
   }
 
-  @SuppressWarnings("unchecked")
+  public LiveActivityDeleteRequest decodeLiveActivityDeleteRequest(Map<String, Object> message) {
+    return decodePayload(message, LiveActivityDeleteRequest.class);
+  }
+
   public LiveActivityDeleteResponse decodeLiveActivityDeleteResponse(Map<String, Object> message) {
+    return decodePayload(message, LiveActivityDeleteResponse.class);
+  }
+
+  public ContainerResourceDeploymentQueryRequest
+      decodeContainerResourceDeploymentQueryRequest(Map<String, Object> message) {
+    return decodePayload(message, ContainerResourceDeploymentQueryRequest.class);
+  }
+
+  public ContainerResourceDeploymentCommitRequest
+      decodeContainerResourceDeploymentCommitRequest(Map<String, Object> message) {
+    return decodePayload(message, ContainerResourceDeploymentCommitRequest.class);
+  }
+
+  /**
+   * Decode a message payload.
+   * 
+   * @param message
+   *          the message
+   * @param clazz
+   *          the class for the payload
+   * 
+   * @return the decoded payload
+   */
+  @SuppressWarnings("unchecked")
+  private <T> T decodePayload(Map<String, Object> message, Class<T> clazz) {
     Map<String, Object> payload = (Map<String, Object>) message.get(CONTROLLER_MESSAGE_PAYLOAD);
 
     if (payload != null) {
       try {
-        LiveActivityDeleteResponse value =
-            MAPPER.convertValue(payload, LiveActivityDeleteResponse.class);
+        T value = MAPPER.convertValue(payload, clazz);
         return value;
       } catch (Throwable e) {
-        throw new JsonSmartSpacesException("Could not parse JSON string", e);
+        throw new JsonSmartSpacesException("Could not parse command message string", e);
       }
 
     }
@@ -353,4 +332,52 @@ public class StandardMasterSpaceControllerCodec {
     return null;
   }
 
+  /**
+   * Jackson module of additions for SmartSpaces messages.
+   * 
+   * @author Keith M. Hughes
+   */
+  public static class SmartSpacesModule extends SimpleModule {
+    private static final String NAME = "CustomSmartSpacesModule";
+    private static final VersionUtil VERSION_UTIL = new VersionUtil() {
+    };
+
+    public SmartSpacesModule() {
+      super(NAME, VERSION_UTIL.version());
+      addSerializer(Version.class, new VersionSerializer());
+      addDeserializer(Version.class, new VersionDeserializer());
+    }
+  }
+
+  /**
+   * A Jackson serializer for {@link version} classes.
+   * 
+   * @author Keith M. Hughes
+   */
+  public static class VersionSerializer extends JsonSerializer<Version> {
+    @Override
+    public void serialize(Version version, JsonGenerator jGen,
+        SerializerProvider serializerProvider) throws IOException {
+      jGen.writeStartObject();
+      jGen.writeStringField("version", version.toString());
+      jGen.writeEndObject();
+    }
+
+  }
+
+  /**
+   * A Jackson deserializer for {@link version} classes.
+   * 
+   * @author Keith M. Hughes
+   */
+  public static class VersionDeserializer extends JsonDeserializer<Version> {
+    @Override
+    public Version deserialize(JsonParser jsonParser, DeserializationContext serializerProvider)
+        throws IOException {
+      ObjectCodec oc = jsonParser.getCodec();
+      JsonNode node = oc.readTree(jsonParser);
+      return Version.parseVersion(node.get("version").asText());
+    }
+
+  }
 }

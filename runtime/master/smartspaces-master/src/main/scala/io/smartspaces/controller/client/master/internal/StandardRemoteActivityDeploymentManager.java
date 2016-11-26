@@ -80,10 +80,10 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
   private final UuidGenerator transactionIdGenerator = new JavaUuidGenerator();
 
   /**
-   * Mapping of transaction IDs to the deployment requests.
+   * Mapping of transaction IDs to the deployment trackers.
    */
-  private final Map<String, MasterActivityDeploymentRequest> deploymentRequests = Maps
-      .newConcurrentMap();
+  private final Map<String, MasterActivityDeploymentRequestTracker> deploymentTrackers =
+      Maps.newConcurrentMap();
 
   /**
    * The listeners for remote events.
@@ -117,12 +117,11 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
 
     String transactionId = transactionIdGenerator.newUuid();
 
-    MasterActivityDeploymentRequest request =
-        new MasterActivityDeploymentRequest(activeLiveActivity, transactionId,
-            repositoryServer.getResourceUri(
-                ResourceRepositoryStorageManager.RESOURCE_CATEGORY_ACTIVITY,
-                activity.getIdentifyingName(), Version.parseVersion(activity.getVersion())),
-            spaceEnvironment.getTimeProvider().getCurrentTime());
+    MasterActivityDeploymentRequestTracker tracker = new MasterActivityDeploymentRequestTracker(
+        activeLiveActivity, transactionId,
+        repositoryServer.getResourceUri(ResourceRepositoryStorageManager.RESOURCE_CATEGORY_ACTIVITY,
+            activity.getIdentifyingName(), Version.parseVersion(activity.getVersion())),
+        spaceEnvironment.getTimeProvider().getCurrentTime());
 
     List<? extends ActivityDependency> dependencies = activity.getDependencies();
     if (dependencies != null && !dependencies.isEmpty()) {
@@ -133,36 +132,32 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
             new VersionRange(Version.parseVersionIncludeNull(dependency.getMinimumVersion()),
                 Version.parseVersionIncludeNull(dependency.getMaximumVersion()), false)));
       }
-      request.setResourceDeploymentQuery(query);
+      tracker.setResourceDeploymentQuery(query);
     }
 
-    beginDeployment(request);
+    beginDeployment(tracker);
   }
 
   @Override
   public void handleLiveDeployResult(LiveActivityDeploymentResponse response) {
-    MasterActivityDeploymentRequest request = deploymentRequests.get(response.getTransactionId());
+    MasterActivityDeploymentRequestTracker tracker =
+        deploymentTrackers.get(response.getTransactionId());
 
-    if (request != null) {
-      spaceEnvironment.getLog().info(
-          String.format("Got activity deployment status with transaction ID %s",
-              response.getTransactionId()));
+    if (tracker != null) {
+      spaceEnvironment.getLog().info(String.format(
+          "Got activity deployment status with transaction ID %s", response.getTransactionId()));
 
-      if (request.getStatus() == MasterActivityDeploymentRequestStatus.DEPLOYING_ACTIVITY) {
-        finalizeActivityDeployment(request, response);
+      if (tracker.getStatus() == MasterActivityDeploymentRequestStatus.DEPLOYING_ACTIVITY) {
+        finalizeActivityDeployment(tracker, response);
       } else {
-        spaceEnvironment
-            .getLog()
-            .warn(
-                String
-                    .format(
-                        "The activity deployment status with transaction ID %s was in inconsistent state %s: %s",
-                        response.getTransactionId(), response.getStatus(),
-                        response.getStatusDetail()));
+        spaceEnvironment.getLog()
+            .warn(String.format(
+                "The activity deployment status with transaction ID %s was in inconsistent state %s: %s",
+                response.getTransactionId(), response.getStatus(), response.getStatusDetail()));
       }
     } else {
-      spaceEnvironment.getLog().warn(
-          String.format("Got activity deployment status with unknown transaction ID %s",
+      spaceEnvironment.getLog()
+          .warn(String.format("Got activity deployment status with unknown transaction ID %s",
               response.getTransactionId()));
     }
   }
@@ -170,16 +165,16 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
   /**
    * Finalize the activity deployment.
    *
-   * @param request
+   * @param tracker
    *          the deployment request
    * @param response
    *          the response to send
    */
-  private void finalizeActivityDeployment(MasterActivityDeploymentRequest request,
+  private void finalizeActivityDeployment(MasterActivityDeploymentRequestTracker tracker,
       LiveActivityDeploymentResponse response) {
-    updateDeploymentStatus(request, MasterActivityDeploymentRequestStatus.DEPLOYMENT_COMPLETE);
+    updateDeploymentStatus(tracker, MasterActivityDeploymentRequestStatus.DEPLOYMENT_COMPLETE);
 
-    deploymentRequests.remove(response.getTransactionId());
+    deploymentTrackers.remove(response.getTransactionId());
 
     remoteSpaceControllerClientListeners.signalActivityDeployStatus(response.getUuid(), response);
   }
@@ -187,33 +182,31 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
   /**
    * Update the deployment status.
    *
-   * @param request
+   * @param tracker
    *          the request being updated
    * @param status
    *          the new status
    */
-  private void updateDeploymentStatus(MasterActivityDeploymentRequest request,
+  private void updateDeploymentStatus(MasterActivityDeploymentRequestTracker tracker,
       MasterActivityDeploymentRequestStatus status) {
-    request.updateStatus(status, spaceEnvironment.getTimeProvider().getCurrentTime());
+    tracker.updateStatus(status, spaceEnvironment.getTimeProvider().getCurrentTime());
   }
 
   @Override
-  public boolean handleResourceDeploymentQueryResponse(
-      ContainerResourceDeploymentQueryResponse response) {
-    MasterActivityDeploymentRequest request = deploymentRequests.get(response.getTransactionId());
+  public boolean
+      handleResourceDeploymentQueryResponse(ContainerResourceDeploymentQueryResponse response) {
+    MasterActivityDeploymentRequestTracker tracker =
+        deploymentTrackers.get(response.getTransactionId());
 
-    if (request != null) {
-      spaceEnvironment
-          .getLog()
-          .info(
-              String
-                  .format(
-                      "Got resource deployment query response as part of a live activity deployment with transaction ID %s",
-                      response.getTransactionId()));
+    if (tracker != null) {
+      spaceEnvironment.getLog()
+          .info(String.format(
+              "Got resource deployment query response as part of a live activity deployment with transaction ID %s",
+              response.getTransactionId()));
 
       switch (response.getStatus()) {
         case SPECIFIC_QUERY_SATISFIED:
-          deployActivity(request);
+          deployActivity(tracker);
 
           break;
         case SPECIFIC_QUERY_NOT_SATISFIED:
@@ -221,8 +214,8 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
 
           break;
         default:
-          spaceEnvironment.getLog().warn(
-              String.format(
+          spaceEnvironment.getLog()
+              .warn(String.format(
                   "Got resource deployment query response for live activity deployment with "
                       + "transaction ID %s has inconsistent status %s",
                   response.getTransactionId(), response.getStatus()));
@@ -235,35 +228,33 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
   }
 
   @Override
-  public boolean handleResourceDeploymentCommitResponse(
-      ContainerResourceDeploymentCommitResponse response) {
-    MasterActivityDeploymentRequest request = deploymentRequests.get(response.getTransactionId());
+  public boolean
+      handleResourceDeploymentCommitResponse(ContainerResourceDeploymentCommitResponse response) {
+    MasterActivityDeploymentRequestTracker tracker =
+        deploymentTrackers.get(response.getTransactionId());
 
-    if (request != null) {
-      spaceEnvironment
-          .getLog()
-          .info(
-              String
-                  .format(
-                      "Got resource deployment commit response as part of a live activity deployment with transaction ID %s",
-                      response.getTransactionId()));
+    if (tracker != null) {
+      spaceEnvironment.getLog()
+          .info(String.format(
+              "Got resource deployment commit response as part of a live activity deployment with transaction ID %s",
+              response.getTransactionId()));
 
       switch (response.getStatus()) {
         case SUCCESS:
-          deployActivity(request);
+          deployActivity(tracker);
 
           break;
         case FAILURE:
-          finalizeActivityDeployment(
-              request,
-              new LiveActivityDeploymentResponse(request.getTransactionId(), request.getUuid(),
-                  ActivityDeployStatus.STATUS_FAILURE_DEPENDENCIES_NOT_COMMITTED, response
-                      .getDetail(), spaceEnvironment.getTimeProvider().getCurrentTime()));
+          finalizeActivityDeployment(tracker,
+              new LiveActivityDeploymentResponse(tracker.getTransactionId(),
+                  tracker.getDeploymentRequest().getUuid(),
+                  ActivityDeployStatus.STATUS_FAILURE_DEPENDENCIES_NOT_COMMITTED,
+                  response.getDetail(), spaceEnvironment.getTimeProvider().getCurrentTime()));
 
           break;
         default:
-          spaceEnvironment.getLog().warn(
-              String.format(
+          spaceEnvironment.getLog()
+              .warn(String.format(
                   "Got resource deployment commit response for live activity deployment with "
                       + "transaction ID %s has inconsistent status %s",
                   response.getTransactionId(), response.getStatus()));
@@ -278,9 +269,9 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
   @Override
   public void deleteLiveActivity(ActiveLiveActivity activeLiveActivity) {
     LiveActivity liveActivity = activeLiveActivity.getLiveActivity();
-    LiveActivityDeleteRequest request =
-        new LiveActivityDeleteRequest(liveActivity.getUuid(), liveActivity.getActivity()
-            .getIdentifyingName(), liveActivity.getActivity().getVersion(), false);
+    LiveActivityDeleteRequest request = new LiveActivityDeleteRequest(liveActivity.getUuid(),
+        liveActivity.getActivity().getIdentifyingName(), liveActivity.getActivity().getVersion(),
+        false);
 
     remoteSpaceControllerClient.deleteLiveActivity(activeLiveActivity, request);
   }
@@ -288,43 +279,44 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
   /**
    * Begin the deployment of an activity.
    *
-   * @param request
+   * @param tracker
    *          the deployment request
    */
-  private void beginDeployment(MasterActivityDeploymentRequest request) {
-    deploymentRequests.put(request.getTransactionId(), request);
+  private void beginDeployment(MasterActivityDeploymentRequestTracker tracker) {
+    deploymentTrackers.put(tracker.getTransactionId(), tracker);
 
-    ContainerResourceDeploymentQueryRequest query = request.getResourceDeploymentQuery();
+    ContainerResourceDeploymentQueryRequest query = tracker.getResourceDeploymentQuery();
     if (query != null) {
-      if (shouldSendDependencies(request)) {
+      if (shouldSendDependencies(tracker)) {
         Set<NamedVersionedResourceWithData<URI>> dependencyResults =
             containerResourceDeploymentManager.satisfyDependencies(query.getQueries());
 
-        updateDeploymentStatus(request,
+        updateDeploymentStatus(tracker,
             MasterActivityDeploymentRequestStatus.SATISFYING_DEPENDENCIES);
-        containerResourceDeploymentManager.commitResources(request.getTransactionId(), request
-            .getLiveActivity().getActiveController(), dependencyResults);
+        containerResourceDeploymentManager.commitResources(tracker.getTransactionId(),
+            tracker.getLiveActivity().getActiveController(), dependencyResults);
       } else {
         // Has dependencies so must query them.
-        updateDeploymentStatus(request, MasterActivityDeploymentRequestStatus.QUERYING_DEPENDENCIES);
-        remoteSpaceControllerClient.querySpaceControllerResourceDeployment(request
-            .getLiveActivity().getActiveController(), query);
+        updateDeploymentStatus(tracker,
+            MasterActivityDeploymentRequestStatus.QUERYING_DEPENDENCIES);
+        remoteSpaceControllerClient.querySpaceControllerResourceDeployment(
+            tracker.getLiveActivity().getActiveController(), query);
       }
     } else {
       // No dependencies so can start.
-      deployActivity(request);
+      deployActivity(tracker);
     }
   }
 
   /**
    * Should the dependencies be sent regardless?
    *
-   * @param request
+   * @param tracker
    *          the requested deployment
    *
    * @return {@code true} if the dependencies should be sent regardless
    */
-  private boolean shouldSendDependencies(MasterActivityDeploymentRequest request) {
+  private boolean shouldSendDependencies(MasterActivityDeploymentRequestTracker tracker) {
     // TODO(keith): Add something where we look for things like dev qualifiers.
     return alwaysSendDependencies;
   }
@@ -332,12 +324,13 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
   /**
    * Do the actual activity deployment.
    *
-   * @param request
+   * @param tracker
    *          the deployment request
    */
-  private void deployActivity(MasterActivityDeploymentRequest request) {
-    updateDeploymentStatus(request, MasterActivityDeploymentRequestStatus.DEPLOYING_ACTIVITY);
-    remoteSpaceControllerClient.deployLiveActivity(request.getLiveActivity(), request);
+  private void deployActivity(MasterActivityDeploymentRequestTracker tracker) {
+    updateDeploymentStatus(tracker, MasterActivityDeploymentRequestStatus.DEPLOYING_ACTIVITY);
+    remoteSpaceControllerClient.deployLiveActivity(tracker.getLiveActivity(),
+        tracker.getDeploymentRequest());
   }
 
   /**

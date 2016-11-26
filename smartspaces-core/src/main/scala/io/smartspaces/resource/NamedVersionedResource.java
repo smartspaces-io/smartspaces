@@ -27,15 +27,21 @@ public class NamedVersionedResource implements VersionedResource {
   /**
    * The name of the bundle, the symbolic name in OSGi parlance.
    */
-  private final String name;
+  private String name;
 
   /**
    * The version of the bundle.
    */
-  private final Version version;
+  private Version version;
 
   /**
-   * Construct a new bundle id.
+   * Construct a new named versioned resource.
+   */
+  public NamedVersionedResource() {
+  }
+
+  /**
+   * Construct a new named versioned resource.
    *
    * @param name
    *          name of the bundle
@@ -57,6 +63,16 @@ public class NamedVersionedResource implements VersionedResource {
   }
 
   /**
+   * Set the name of the resource.
+   *
+   * @param name
+   *          the name of the resource
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
    * Get the version of the resource.
    *
    * @return the version of the resource
@@ -64,6 +80,16 @@ public class NamedVersionedResource implements VersionedResource {
   @Override
   public Version getVersion() {
     return version;
+  }
+
+  /**
+   * Set the version of the resource.
+   *
+   * @param version
+   *          the version of the resource
+   */
+  public void setVersion(Version version) {
+    this.version = version;
   }
 
   @Override

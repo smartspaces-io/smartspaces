@@ -3,6 +3,8 @@
  */
 package io.smartspaces.container.control.newmessage;
 
+import io.smartspaces.container.control.message.activity.LiveActivityRuntimeStatus;
+
 import java.util.List;
 
 /**

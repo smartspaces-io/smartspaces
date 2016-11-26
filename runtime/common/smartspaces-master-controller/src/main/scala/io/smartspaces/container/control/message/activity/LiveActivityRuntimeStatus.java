@@ -1,4 +1,4 @@
-package io.smartspaces.container.control.newmessage;
+package io.smartspaces.container.control.message.activity;
 
 import io.smartspaces.activity.ActivityState;
 

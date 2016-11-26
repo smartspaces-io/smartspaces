@@ -26,6 +26,7 @@ import io.smartspaces.master.server.services.RemoteSpaceControllerClient;
 import io.smartspaces.resource.NamedVersionedResourceCollection;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.ResourceDependency;
+import io.smartspaces.resource.ResourceDependencyReference;
 import io.smartspaces.resource.repository.ResourceRepositoryServer;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
@@ -90,7 +91,7 @@ public class StandardContainerResourceDeploymentManager implements
 
   @Override
   public Set<NamedVersionedResourceWithData<URI>> satisfyDependencies(
-      Set<ResourceDependency> dependencies) {
+      Set<ResourceDependencyReference> dependencies) {
     Set<NamedVersionedResourceWithData<URI>> results = new HashSet<>();
 
     NamedVersionedResourceCollection<NamedVersionedResourceWithData<URI>> allResources =

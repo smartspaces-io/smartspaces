@@ -27,12 +27,18 @@ public class ContainerResourceDeploymentQueryResponse {
   /**
    * The transaction ID for the response.
    */
-  private final String transactionId;
+  private String transactionId;
 
   /**
    * The status of the response.
    */
-  private final QueryResponseStatus status;
+  private QueryResponseStatus status;
+
+  /**
+   * Construct a response.
+   */
+  public ContainerResourceDeploymentQueryResponse() {
+  }
 
   /**
    * Construct a response.
@@ -42,7 +48,8 @@ public class ContainerResourceDeploymentQueryResponse {
    * @param status
    *          status for the response
    */
-  public ContainerResourceDeploymentQueryResponse(String transactionId, QueryResponseStatus status) {
+  public ContainerResourceDeploymentQueryResponse(String transactionId,
+      QueryResponseStatus status) {
     this.transactionId = transactionId;
     this.status = status;
   }
@@ -57,12 +64,32 @@ public class ContainerResourceDeploymentQueryResponse {
   }
 
   /**
+   * Set the ID of the transaction.
+   *
+   * @param transactionId
+   *          the ID of the transaction
+   */
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
+  /**
    * Get the status for the response.
    *
    * @return the status for the response
    */
   public QueryResponseStatus getStatus() {
     return status;
+  }
+
+  /**
+   * Set the status for the response.
+   *
+   * @param status
+   *          the status for the response
+   */
+  public void setStatus(QueryResponseStatus status) {
+    this.status = status;
   }
 
   /**

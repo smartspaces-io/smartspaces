@@ -37,7 +37,13 @@ public class ContainerResourceDeploymentItem extends ContainerResource {
   /**
    * URI for locating the resource.
    */
-  private final String resourceSourceUri;
+  private String resourceSourceUri;
+
+  /**
+   * Construct a new resource deployment item.
+   */
+  public ContainerResourceDeploymentItem() {
+  }
 
   /**
    * Construct a new resource deployment item.
@@ -67,6 +73,16 @@ public class ContainerResourceDeploymentItem extends ContainerResource {
    */
   public String getResourceSourceUri() {
     return resourceSourceUri;
+  }
+
+  /**
+   * Set the URI for obtaining the resource.
+   *
+   * @param resourceSourceUri
+   *          the URI for obtaining the resource
+   */
+  public void setResourceSourceUri(String resourceSourceUri) {
+    this.resourceSourceUri = resourceSourceUri;
   }
 
   /**

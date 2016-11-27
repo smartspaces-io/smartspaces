@@ -143,8 +143,6 @@
 		class="io.smartspaces.master.server.services.internal.ros.RosRemoteSpaceControllerClient"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="masterRosContext" ref="smartspaces.master.ros.context" />
-
 		<property name="masterDataBundleManager" ref="smartspaces.master.ros.databundlemanager" />
 
 		<property name="spaceEnvironment" ref="smartspaces.environment" />
@@ -157,8 +155,6 @@
 		destroy-method="shutdown" init-method="startup">
 
 		<property name="rosRemoteSpaceControllerClient" ref="smartspaces.controller.remote.client" />
-
-		<property name="masterRosContext" ref="smartspaces.master.ros.context" />
 
 		<property name="repositoryServer" ref="smartspaces.resource.repository.server" />
 

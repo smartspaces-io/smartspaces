@@ -170,7 +170,7 @@ public class OsgiSpaceControllerActivator extends SmartSpacesServiceOsgiBundleAc
         new SmartSpacesEnvironmentLiveActivityLogFactory(spaceEnvironment);
 
     RosSpaceControllerCommunicator spaceControllerCommunicator =
-        new RosSpaceControllerCommunicator(rosEnvironment, spaceEnvironment);
+        new RosSpaceControllerCommunicator(spaceEnvironment);
 
     SpaceControllerDataBundleManager dataBundleManager =
         new StandardSpaceControllerDataBundleManager();

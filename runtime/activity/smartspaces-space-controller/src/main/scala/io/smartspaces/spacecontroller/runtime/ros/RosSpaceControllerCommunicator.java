@@ -21,18 +21,23 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.activity.ActivityStatus;
+import io.smartspaces.container.control.message.StandardMasterSpaceControllerCodec;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityRuntimeRequestOperation;
 import io.smartspaces.container.control.message.activity.LiveActivityRuntimeStatus;
+import io.smartspaces.container.control.message.common.ConfigurationParameterRequest;
+import io.smartspaces.container.control.message.common.ConfigurationRequest;
+import io.smartspaces.container.control.message.common.ConfigurationParameterRequest.ConfigurationParameterRequestOperation;
+import io.smartspaces.container.control.message.activity.LiveActivityRuntimeRequest;
+import io.smartspaces.container.control.message.container.ControllerFullStatus;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
-import io.smartspaces.container.control.newmessage.ControllerFullStatus;
-import io.smartspaces.container.control.newmessage.StandardMasterSpaceControllerCodec;
-import io.smartspaces.container.controller.common.ros.RosSpaceControllerConstants;
+import io.smartspaces.container.control.message.container.resource.deployment.ControllerDataRequest;
 import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
 import io.smartspaces.liveactivity.runtime.LiveActivityRunner;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
@@ -52,18 +57,6 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.SmartSpacesUtilities;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.ros.message.MessageDeserializer;
-import org.ros.message.MessageListener;
-import org.ros.message.MessageSerializationFactory;
-import org.ros.node.ConnectedNode;
-import org.ros.node.NodeConfiguration;
-import org.ros.node.topic.Subscriber;
-import org.ros.osgi.common.RosEnvironment;
-import smartspaces_msgs.ConfigurationParameterRequest;
-import smartspaces_msgs.ConfigurationRequest;
-import smartspaces_msgs.ControllerDataRequest;
-import smartspaces_msgs.ControllerRequest;
-import smartspaces_msgs.LiveActivityRuntimeRequest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,36 +93,6 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
       new StandardMasterSpaceControllerCodec();
 
   /**
-   * The ROS environment this controller is running in.
-   */
-  private RosEnvironment rosEnvironment;
-
-  /**
-   * The node for the controller.
-   */
-  private ConnectedNode node;
-
-  /**
-   * Subscriber for controller requests.
-   */
-  private Subscriber<ControllerRequest> controllerRequestSubscriber;
-
-  /**
-   * ROS message deserializer for live activity runtime requests.
-   */
-  private MessageDeserializer<LiveActivityRuntimeRequest> liveActivityRuntimeRequestDeserializer;
-
-  /**
-   * ROS message deserializer for the configuration requests.
-   */
-  private MessageDeserializer<ConfigurationRequest> configurationRequestDeserializer;
-
-  /**
-   * ROS message deserializer for live activity deletion requests.
-   */
-  private MessageDeserializer<ControllerDataRequest> controllerDataRequestMessageDeserializer;
-
-  /**
    * The space environment for this communicator.
    */
   private SmartSpacesEnvironment spaceEnvironment;
@@ -147,9 +110,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
    * @param spaceEnvironment
    *          space environment
    */
-  public RosSpaceControllerCommunicator(RosEnvironment rosEnvironment,
-      SmartSpacesEnvironment spaceEnvironment) {
-    this.rosEnvironment = rosEnvironment;
+  public RosSpaceControllerCommunicator(SmartSpacesEnvironment spaceEnvironment) {
     this.spaceEnvironment = spaceEnvironment;
   }
 
@@ -183,33 +144,8 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
       }
     });
     controllerAdminServer.startup();
-
-    NodeConfiguration nodeConfiguration = rosEnvironment.getPublicNodeConfigurationWithNodeName();
-    nodeConfiguration.setNodeName("smartspaces/controller");
-
-    node = rosEnvironment.newNode(nodeConfiguration);
-
-    controllerRequestSubscriber =
-        node.newSubscriber(RosSpaceControllerConstants.CONTROLLER_REQUEST_TOPIC_NAME,
-            RosSpaceControllerConstants.CONTROLLER_REQUEST_MESSAGE_TYPE);
-    controllerRequestSubscriber.addMessageListener(new MessageListener<ControllerRequest>() {
-      @Override
-      public void onNewMessage(ControllerRequest request) {
-        handleControllerRequest(request);
-      }
-    });
-
-    MessageSerializationFactory messageSerializationFactory = node.getMessageSerializationFactory();
-    configurationRequestDeserializer =
-        messageSerializationFactory.newMessageDeserializer(ConfigurationRequest._TYPE);
-
-    liveActivityRuntimeRequestDeserializer =
-        messageSerializationFactory.newMessageDeserializer(LiveActivityRuntimeRequest._TYPE);
-
-    controllerDataRequestMessageDeserializer =
-        messageSerializationFactory.newMessageDeserializer(ControllerDataRequest._TYPE);
   }
-
+  
   @Override
   public void registerControllerWithMaster(SimpleSpaceController controllerInfo) {
     // Yes, this is inside of a mostly ROS based class, but the ROS class is
@@ -233,106 +169,11 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
     SmartSpacesUtilities.delay(SHUTDOWN_DELAY);
 
     controllerAdminServer.shutdown();
-
-    if (node != null) {
-      node.shutdown();
-      node = null;
-    }
   }
 
   @Override
   public SpaceControllerHeartbeat newSpaceControllerHeartbeat() {
     return new ControllerAdminServerSpaceControllerHeartbeat();
-  }
-
-  /**
-   * Handle a ROS controller control request coming in.
-   *
-   * @param request
-   *          The ROS request.
-   */
-  @VisibleForTesting
-  void handleControllerRequest(smartspaces_msgs.ControllerRequest request) {
-    switch (request.getOperation()) {
-      case ControllerRequest.OPERATION_CONTROLLER_STATUS:
-        publishControllerFullStatus();
-
-        break;
-
-      case ControllerRequest.OPERATION_CONTROLLER_SHUTDOWN_ACTIVITIES:
-        controllerControl.shutdownAllLiveActivities();
-
-        break;
-
-      case ControllerRequest.OPERATION_CONTROLLER_SHUTDOWN_CONTROLLER:
-        controllerControl.shutdownControllerContainer();
-
-        break;
-
-      case ControllerRequest.OPERATION_CONTROLLER_LIVE_ACTIVITY_RUNTIME_REQUEST:
-        handleLiveActivityRuntimeRequest(
-            liveActivityRuntimeRequestDeserializer.deserialize(request.getPayload()));
-
-        break;
-
-      case ControllerRequest.OPERATION_CONTROLLER_CLEAN_DATA_TMP:
-        controllerControl.cleanControllerTempData();
-
-        break;
-
-      case ControllerRequest.OPERATION_CONTROLLER_CLEAN_DATA_PERMANENT:
-        controllerControl.cleanControllerPermanentData();
-
-        break;
-
-      case ControllerRequest.OPERATION_CONTROLLER_CLEAN_DATA_TMP_ACTIVITIES:
-        controllerControl.cleanControllerTempDataAll();
-
-        break;
-
-      case ControllerRequest.OPERATION_CONTROLLER_CLEAN_DATA_PERMANENT_ACTIVITIES:
-        controllerControl.cleanControllerPermanentDataAll();
-
-        break;
-
-      case ControllerRequest.OPERATION_CONTROLLER_CAPTURE_DATA:
-        ControllerDataRequest captureDataRequest =
-            controllerDataRequestMessageDeserializer.deserialize(request.getPayload());
-        controllerControl.captureControllerDataBundle(captureDataRequest.getTransferUri());
-        break;
-
-      case ControllerRequest.OPERATION_CONTROLLER_RESTORE_DATA:
-        ControllerDataRequest restoreDataRequest =
-            controllerDataRequestMessageDeserializer.deserialize(request.getPayload());
-        controllerControl.restoreControllerDataBundle(restoreDataRequest.getTransferUri());
-        break;
-
-      case ControllerRequest.OPERATION_CONTROLLER_RESOURCE_QUERY:
-        // ContainerResourceQueryRequestMessage
-        // containerResourceQueryRequest =
-        // containerResourceQueryRequestDeserializer.deserialize(request.getPayload());
-        // handleContainerResourceQueryRequest(containerResourceQueryRequest);
-
-        break;
-
-      case ControllerRequest.OPERATION_CONTROLLER_RESOURCE_COMMIT:
-        // ContainerResourceCommitRequestMessage
-        // containerResourceCommitRequest =
-        // containerResourceCommitRequestDeserializer.deserialize(request.getPayload());
-        // handleContainerResourceCommitRequest(containerResourceCommitRequest);
-
-        break;
-
-      case ControllerRequest.OPERATION_CONTROLLER_CONFIGURE:
-        handleControllerConfigurationRequest(
-            configurationRequestDeserializer.deserialize(request.getPayload()));
-
-        break;
-
-      default:
-        spaceEnvironment.getLog()
-            .error(String.format("Unknown ROS controller request %d", request.getOperation()));
-    }
   }
 
   /**
@@ -349,8 +190,6 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
     String operation = (String) requestObject
         .get(StandardMasterSpaceControllerCodec.MESSAGE_CONTROLLER_OPERATION_OPERATION);
 
-    // TODO(keith): Remove before final checkin.
-    spaceEnvironment.getLog().info("Controller operation from master: " + operation);
     switch (operation) {
       case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_STATUS:
         publishControllerFullStatus();
@@ -378,8 +217,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
         break;
 
       case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_LIVE_ACTIVITY_RUNTIME_REQUEST:
-        // handleLiveActivityRuntimeRequest(
-        // liveActivityRuntimeRequestDeserializer.deserialize(request.getPayload()));
+        handleLiveActivityRuntimeRequest(requestObject);
 
         break;
 
@@ -404,15 +242,17 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
         break;
 
       case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_CAPTURE_DATA:
-        // ControllerDataRequest captureDataRequest =
-        // controllerDataRequestMessageDeserializer.deserialize(request.getPayload());
-        // controllerControl.captureControllerDataBundle(captureDataRequest.getTransferUri());
+        ControllerDataRequest captureDataRequest =
+            messageCodec.decodeControllerDataRequest(requestObject);
+        controllerControl.captureControllerDataBundle(captureDataRequest.getTransferUri());
+
         break;
 
       case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_RESTORE_DATA:
-        // ControllerDataRequest restoreDataRequest =
-        // controllerDataRequestMessageDeserializer.deserialize(request.getPayload());
-        // controllerControl.restoreControllerDataBundle(restoreDataRequest.getTransferUri());
+        ControllerDataRequest restoreDataRequest =
+            messageCodec.decodeControllerDataRequest(requestObject);
+        controllerControl.restoreControllerDataBundle(restoreDataRequest.getTransferUri());
+
         break;
 
       case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_RESOURCE_QUERY:
@@ -426,8 +266,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
         break;
 
       case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_CONFIGURE:
-        // handleControllerConfigurationRequest(
-        // configurationRequestDeserializer.deserialize(request.getPayload()));
+        handleControllerConfigurationRequest(requestObject);
 
         break;
 
@@ -541,7 +380,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
     // TODO(keith): This is icky. Needs to go into codec class
     String statusType = SpaceControllerDataOperation.DATA_CAPTURE.equals(type)
         ? StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_DATA_CAPTURE
-        : StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_DATA_CAPTURE;
+        : StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_DATA_RESTORE;
 
     Map<String, Object> statusMsg = messageCodec.encodeBaseControllerStatusMessage(statusType,
         controllerControl.getControllerInfo().getUuid(), null);
@@ -593,62 +432,63 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
   }
 
   /**
-   * Handle a ROS activity control request coming in.
+   * Handle an activity control request coming in.
    *
-   * @param request
-   *          The ROS request.
+   * @param requestObject
+   *          the request object
    */
   @VisibleForTesting
-  void handleLiveActivityRuntimeRequest(final LiveActivityRuntimeRequest request) {
+  void handleLiveActivityRuntimeRequest(Map<String, Object> requestObject) {
+    final LiveActivityRuntimeRequest request =
+        messageCodec.decodeLiveActivityRuntimeRequest(requestObject);
     spaceEnvironment.getExecutorService().submit(new Runnable() {
       @Override
       public void run() {
-        String uuid = request.getLiveActivityUuid();
+        String uuid = request.getUuid();
         switch (request.getOperation()) {
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_STARTUP:
+          case LiveActivityRuntimeRequestOperation.LIVE_ACTIVITY_STARTUP:
             controllerControl.startupLiveActivity(uuid);
 
             break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_ACTIVATE:
+          case LiveActivityRuntimeRequestOperation.LIVE_ACTIVITY_ACTIVATE:
             controllerControl.activateLiveActivity(uuid);
 
             break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_DEACTIVATE:
+          case LiveActivityRuntimeRequestOperation.LIVE_ACTIVITY_DEACTIVATE:
             controllerControl.deactivateLiveActivity(uuid);
 
             break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_SHUTDOWN:
+          case LiveActivityRuntimeRequestOperation.LIVE_ACTIVITY_SHUTDOWN:
             controllerControl.shutdownLiveActivity(uuid);
 
             break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_STATUS:
+          case LiveActivityRuntimeRequestOperation.LIVE_ACTIVITY_STATUS:
             controllerControl.statusLiveActivity(uuid);
 
             break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_CONFIGURE:
-            handleLiveActivityConfigurationRequest(uuid,
-                configurationRequestDeserializer.deserialize(request.getPayload()));
+          case LiveActivityRuntimeRequestOperation.LIVE_ACTIVITY_CONFIGURE:
+            handleLiveActivityConfigurationRequest(uuid, request.getConfigurationRequest());
 
             break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_CLEAN_DATA_PERMANENT:
+          case LiveActivityRuntimeRequestOperation.LIVE_ACTIVITY_CLEAN_DATA_PERMANENT:
             controllerControl.cleanLiveActivityPermanentData(uuid);
 
             break;
 
-          case LiveActivityRuntimeRequest.OPERATION_LIVE_ACTIVITY_CLEAN_DATA_TMP:
+          case LiveActivityRuntimeRequestOperation.LIVE_ACTIVITY_CLEAN_DATA_TMP:
             controllerControl.cleanLiveActivityTmpData(uuid);
 
             break;
 
           default:
             spaceEnvironment.getLog().error(
-                String.format("Unknown ROS activity runtime request %d", request.getOperation()));
+                String.format("Unknown activity runtime request %s", request.getOperation()));
         }
       }
     });
@@ -657,11 +497,13 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
   /**
    * Handle a controller configuration request.
    *
-   * @param configurationRequest
+   * @param requestObject
    *          the configuration request
    */
-  private void handleControllerConfigurationRequest(ConfigurationRequest configurationRequest) {
-    controllerControl.configureController(extractConfigurationUpdate(configurationRequest));
+  private void handleControllerConfigurationRequest(Map<String, Object> requestObject) {
+    ConfigurationRequest request = messageCodec.decodeConfigurationRequest(requestObject);
+
+    controllerControl.configureController(extractConfigurationUpdate(request));
   }
 
   /**
@@ -690,7 +532,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
     Map<String, String> values = new HashMap<>();
 
     for (ConfigurationParameterRequest parameterRequest : configurationRequest.getParameters()) {
-      if (parameterRequest.getOperation() == ConfigurationParameterRequest.OPERATION_ADD) {
+      if (parameterRequest.getOperation() == ConfigurationParameterRequestOperation.ADD) {
         values.put(parameterRequest.getName(), parameterRequest.getValue());
       }
     }
@@ -753,16 +595,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
     controllerAdminServer.writeMessageAllConnections(messageCodec.encodeFinalMessage(statusObject));
   }
 
-  /**
-   * Set the Ros Environment the controller should run in.
-   *
-   * @param rosEnvironment
-   *          the ros environment for this communicator
-   */
-  public void setRosEnvironment(RosEnvironment rosEnvironment) {
-    this.rosEnvironment = rosEnvironment;
-  }
-
+ 
   /**
    * @param controllerControl
    *          the controllerControl to set

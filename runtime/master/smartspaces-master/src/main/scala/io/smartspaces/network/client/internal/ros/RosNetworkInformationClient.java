@@ -17,7 +17,7 @@
 
 package io.smartspaces.network.client.internal.ros;
 
-import io.smartspaces.master.server.services.internal.ros.MasterRosContext;
+import io.smartspaces.master.server.services.internal.comm.MasterRosContext;
 import io.smartspaces.network.NetworkNodeInformation;
 import io.smartspaces.network.NetworkTopicInformation;
 import io.smartspaces.network.client.NetworkInformationClient;

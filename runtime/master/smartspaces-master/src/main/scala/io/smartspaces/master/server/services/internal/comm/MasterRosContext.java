@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.master.server.services.internal.ros;
+package io.smartspaces.master.server.services.internal.comm;
 
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.system.core.configuration.CoreConfiguration;

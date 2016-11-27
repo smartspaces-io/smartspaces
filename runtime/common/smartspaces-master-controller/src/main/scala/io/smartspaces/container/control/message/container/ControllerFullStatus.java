@@ -1,7 +1,7 @@
 /**
  * 
  */
-package io.smartspaces.container.control.newmessage;
+package io.smartspaces.container.control.message.container;
 
 import io.smartspaces.container.control.message.activity.LiveActivityRuntimeStatus;
 

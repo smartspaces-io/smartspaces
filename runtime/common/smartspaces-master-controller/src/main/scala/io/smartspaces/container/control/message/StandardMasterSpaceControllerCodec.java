@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.container.control.newmessage;
+package io.smartspaces.container.control.message;
 
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
@@ -22,10 +22,14 @@ import io.smartspaces.container.control.message.activity.LiveActivityDeleteRespo
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
 import io.smartspaces.container.control.message.activity.LiveActivityRuntimeStatus;
+import io.smartspaces.container.control.message.common.ConfigurationRequest;
+import io.smartspaces.container.control.message.activity.LiveActivityRuntimeRequest;
+import io.smartspaces.container.control.message.container.ControllerFullStatus;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
+import io.smartspaces.container.control.message.container.resource.deployment.ControllerDataRequest;
 import io.smartspaces.resource.Version;
 import io.smartspaces.util.data.json.JsonSmartSpacesException;
 
@@ -303,6 +307,18 @@ public class StandardMasterSpaceControllerCodec {
   public ContainerResourceDeploymentCommitRequest
       decodeContainerResourceDeploymentCommitRequest(Map<String, Object> message) {
     return decodePayload(message, ContainerResourceDeploymentCommitRequest.class);
+  }
+
+  public ControllerDataRequest decodeControllerDataRequest(Map<String, Object> message) {
+    return decodePayload(message, ControllerDataRequest.class);
+  }
+
+  public ConfigurationRequest decodeConfigurationRequest(Map<String, Object> message) {
+    return decodePayload(message, ConfigurationRequest.class);
+  }
+
+  public LiveActivityRuntimeRequest decodeLiveActivityRuntimeRequest(Map<String, Object> message) {
+    return decodePayload(message, LiveActivityRuntimeRequest.class);
   }
 
   /**

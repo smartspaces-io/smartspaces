@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.master.server.services.internal.ros;
+package io.smartspaces.master.server.services.internal.comm;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.system.SmartSpacesEnvironment;
@@ -149,16 +149,16 @@ public class StandardMasterRosContext implements MasterRosContext {
       connectToRosMaster();
     }
 
-    try {
-      if (!startupLatch.await(rosMasterRegistrationTimeout, TimeUnit.MILLISECONDS)) {
-        log.error(String
-            .format(
-                "Could not register the Smart Spaces Master with the ROS Master within %d milliseconds",
-                rosMasterRegistrationTimeout));
-      }
-    } catch (InterruptedException e) {
-      SimpleSmartSpacesException.throwFormattedException("ROS Master Context Startup interrupted");
-    }
+//    try {
+//      if (!startupLatch.await(rosMasterRegistrationTimeout, TimeUnit.MILLISECONDS)) {
+//        log.error(String
+//            .format(
+//                "Could not register the Smart Spaces Master with the ROS Master within %d milliseconds",
+//                rosMasterRegistrationTimeout));
+//      }
+//    } catch (InterruptedException e) {
+//      SimpleSmartSpacesException.throwFormattedException("ROS Master Context Startup interrupted");
+//    }
   }
 
   @Override
@@ -218,10 +218,10 @@ public class StandardMasterRosContext implements MasterRosContext {
    * Connect to the ROS master..
    */
   private void connectToRosMaster() {
-    NodeConfiguration nodeConfiguration = rosEnvironment.getPublicNodeConfigurationWithNodeName();
-    nodeConfiguration.setNodeName(ROS_NODENAME_SMARTSPACES_MASTER);
-
-    rosEnvironment.newNode(nodeConfiguration, Lists.newArrayList(masterNodeListener));
+//    NodeConfiguration nodeConfiguration = rosEnvironment.getPublicNodeConfigurationWithNodeName();
+//    nodeConfiguration.setNodeName(ROS_NODENAME_SMARTSPACES_MASTER);
+//
+//    rosEnvironment.newNode(nodeConfiguration, Lists.newArrayList(masterNodeListener));
   }
 
   /**

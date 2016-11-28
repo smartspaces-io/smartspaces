@@ -20,6 +20,7 @@ package io.smartspaces.system;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
+import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.time.provider.TimeProvider;
 
@@ -73,6 +74,11 @@ public class SimpleSmartSpacesEnvironment implements SmartSpacesEnvironment {
    * Simple value map.
    */
   private Map<String, Object> values = new HashMap<>();
+
+  /**
+   * The container level managed scope.
+   */
+  private ManagedScope containerManagedScope;
 
   @Override
   public Configuration getSystemConfiguration() {
@@ -130,6 +136,11 @@ public class SimpleSmartSpacesEnvironment implements SmartSpacesEnvironment {
   @Override
   public ServiceRegistry getServiceRegistry() {
     return serviceRegistry;
+  }
+
+  @Override
+  public ManagedScope getContainerManagedScope() {
+    return containerManagedScope;
   }
 
   @SuppressWarnings("unchecked")
@@ -202,5 +213,15 @@ public class SimpleSmartSpacesEnvironment implements SmartSpacesEnvironment {
    */
   public void setTimeProvider(TimeProvider timeProvider) {
     this.timeProvider = timeProvider;
+  }
+
+  /**
+   * Set the container managed scope.
+   * 
+   * @param containerManagedScope
+   *          the container managed scope
+   */
+  public void setContainerManagedScope(ManagedScope containerManagedScope) {
+    this.containerManagedScope = containerManagedScope;
   }
 }

@@ -35,7 +35,7 @@ import io.smartspaces.resource.managed.StandardManagedResources;
 import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.scope.StandardManagedScope;
 import io.smartspaces.tasks.ManagedTasks;
-import io.smartspaces.tasks.SimpleManagedTasks;
+import io.smartspaces.tasks.StandardManagedTasks;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
@@ -91,7 +91,7 @@ public abstract class BaseActivity extends ActivitySupport
   /**
    * The tasks that are being managed.
    */
-  private SimpleManagedTasks managedTasks;
+  private StandardManagedTasks managedTasks;
   
   /**
    * The managed scope for the activity.
@@ -237,7 +237,7 @@ public abstract class BaseActivity extends ActivitySupport
 
     managedResources = new StandardManagedResources(getLog());
 
-    managedTasks = new SimpleManagedTasks(getSpaceEnvironment().getExecutorService(), getLog());
+    managedTasks = new StandardManagedTasks(getSpaceEnvironment().getExecutorService(), getLog());
 
     managedScope = new StandardManagedScope(managedResources, managedTasks);
     

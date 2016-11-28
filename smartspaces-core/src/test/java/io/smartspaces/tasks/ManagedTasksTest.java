@@ -43,7 +43,7 @@ public class ManagedTasksTest {
 
   private ScheduledExecutorService executorService;
 
-  private SimpleManagedTasks tasks;
+  private StandardManagedTasks tasks;
 
   private Log log;
 
@@ -53,7 +53,7 @@ public class ManagedTasksTest {
 
     log = Mockito.mock(Log.class);
 
-    tasks = new SimpleManagedTasks(executorService, log);
+    tasks = new StandardManagedTasks(executorService, log);
   }
 
   @After

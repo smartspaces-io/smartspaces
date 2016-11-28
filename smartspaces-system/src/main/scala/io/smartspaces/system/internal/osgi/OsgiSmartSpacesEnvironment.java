@@ -20,6 +20,7 @@ package io.smartspaces.system.internal.osgi;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
+import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.SimpleServiceRegistry;
 import io.smartspaces.system.InternalSmartSpacesEnvironment;
@@ -28,19 +29,18 @@ import io.smartspaces.system.SmartSpacesFilesystem;
 import io.smartspaces.system.core.logging.LoggingProvider;
 import io.smartspaces.time.provider.TimeProvider;
 
+import com.google.common.collect.Maps;
+import org.apache.commons.logging.Log;
+
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.apache.commons.logging.Log;
-
-import com.google.common.collect.Maps;
-
 /**
- * A {@link SmartSpacesEnvironment} which lives in a ROS container.
+ * A {@link SmartSpacesEnvironment} which lives in an OSGi container.
  *
  * @author Keith M. Hughes
  */
-public class RosOsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
+public class OsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
     InternalSmartSpacesEnvironment {
 
   /**
@@ -91,6 +91,12 @@ public class RosOsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
    * The extended logger.
    */
   private ExtendedLog log;
+  
+  /**
+   * The container level managed scope.
+   */
+  private ManagedScope containerManagedScope;
+  
 
   @Override
   public Configuration getSystemConfiguration() {
@@ -150,6 +156,11 @@ public class RosOsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
   }
 
   @Override
+  public ManagedScope getContainerManagedScope() {
+    return containerManagedScope;
+  }
+  
+  @Override
   public <T> T getValue(String valueName) {
     @SuppressWarnings("unchecked")
     T value = (T) values.get(valueName);
@@ -203,5 +214,10 @@ public class RosOsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
     this.loggingProvider = loggingProvider;
 
     log = new StandardExtendedLog(loggingProvider.getLog());
+  }
+  
+  @Override
+  public void setContainerManagedScope(ManagedScope containerManagedScope) {
+    this.containerManagedScope = containerManagedScope;
   }
 }

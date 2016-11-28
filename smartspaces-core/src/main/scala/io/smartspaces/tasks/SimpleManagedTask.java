@@ -41,7 +41,7 @@ public class SimpleManagedTask implements ManagedTask {
   /**
    * The managed tasks this task is part of.
    */
-  private final SimpleManagedTasks managedCommands;
+  private final StandardManagedTasks managedCommands;
 
   /**
    * The future associated with this task.
@@ -68,7 +68,7 @@ public class SimpleManagedTask implements ManagedTask {
    * @param log
    *          the log to use
    */
-  SimpleManagedTask(Runnable task, SimpleManagedTasks managedCommands, boolean repeating,
+  SimpleManagedTask(Runnable task, StandardManagedTasks managedCommands, boolean repeating,
       boolean allowTerminate, Log log) {
     this.task = task;
     this.wrappedTask = new WrappedTask(task, repeating, allowTerminate);

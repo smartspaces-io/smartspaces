@@ -16,26 +16,24 @@
 
 package io.smartspaces.scope
 
-import io.smartspaces.resource.managed.IdempotentManagedResource
-import io.smartspaces.tasks.ManagedTasks
 import io.smartspaces.resource.managed.ManagedResources
-import io.smartspaces.tasks.SimpleManagedTasks
 import io.smartspaces.tasks.InternalManagedTasks
+import io.smartspaces.tasks.ManagedTasks
 
 /**
  * The standard managed scope object.
  *
  * @author Keith M. Hughes
  */
-class StandardManagedScope(override val managedResources: ManagedResources, override val managedTasks: ManagedTasks) extends ManagedScope with IdempotentManagedResource {
+class StandardManagedScope(override val managedResources: ManagedResources, override val managedTasks: ManagedTasks) extends ManagedScope {
 
-  override def onStartup(): Unit = {
+  override def startup(): Unit = {
     managedResources.startupResources()
   }
 
-  override def onShutdown(): Unit = {
+  override def shutdown(): Unit = {
     managedTasks.asInstanceOf[InternalManagedTasks].shutdownAll()
     
-    managedResources.shutdownResources()
+    managedResources.shutdownResourcesAndClear()
   }
 }

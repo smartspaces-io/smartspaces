@@ -24,11 +24,15 @@ import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.resource.managed.ManagedResources;
 import io.smartspaces.resource.managed.StandardManagedResources;
+import io.smartspaces.scope.ManagedScope;
+import io.smartspaces.scope.StandardManagedScope;
 import io.smartspaces.service.Service;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.SimpleServiceRegistry;
 import io.smartspaces.service.SupportedService;
 import io.smartspaces.service.event.observable.StandardEventObservableService;
+import io.smartspaces.tasks.ManagedTasks;
+import io.smartspaces.tasks.StandardManagedTasks;
 import io.smartspaces.time.provider.SettableTimeProvider;
 import io.smartspaces.time.provider.TimeProvider;
 
@@ -67,6 +71,10 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
     environment.serviceRegistry = new SimpleServiceRegistry(environment);
     environment.timeProvider = new SettableTimeProvider();
     environment.managedResources = new StandardManagedResources(environment.log);
+    environment.managedTasks =
+        new StandardManagedTasks(environment.executorService, environment.log);
+    environment.managedScope =
+        new StandardManagedScope(environment.managedResources, environment.managedTasks);
     StandardEventObservableService eventService = new StandardEventObservableService();
     environment.managedResources.addResource(eventService);
     environment.serviceRegistry.registerService(eventService);
@@ -116,6 +124,16 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
   private ManagedResources managedResources;
 
   /**
+   * The managed tasks for this environment.
+   */
+  private ManagedTasks managedTasks;
+
+  /**
+   * The managed scope for this environment.
+   */
+  private ManagedScope managedScope;
+
+  /**
    * Construct a new environment.
    */
   private StandaloneSmartSpacesEnvironment() {
@@ -134,6 +152,11 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
   @Override
   public ScheduledExecutorService getExecutorService() {
     return executorService;
+  }
+
+  @Override
+  public ManagedScope getContainerManagedScope() {
+    return managedScope;
   }
 
   @Override
@@ -199,7 +222,7 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
    * Shutdown the environment.
    */
   public void shutdown() {
-    managedResources.shutdownResourcesAndClear();
+    managedScope.shutdown();
     executorService.shutdown();
   }
 

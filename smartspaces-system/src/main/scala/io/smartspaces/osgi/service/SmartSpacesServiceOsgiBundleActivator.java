@@ -28,7 +28,7 @@ import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.SupportedService;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.tasks.ManagedTasks;
-import io.smartspaces.tasks.SimpleManagedTasks;
+import io.smartspaces.tasks.StandardManagedTasks;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -217,7 +217,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
       managedResources = new StandardManagedResources(spaceEnvironment.getLog());
 
       managedTasks =
-          new SimpleManagedTasks(spaceEnvironment.getExecutorService(), spaceEnvironment.getLog());
+          new StandardManagedTasks(spaceEnvironment.getExecutorService(), spaceEnvironment.getLog());
 
       managedScope = new StandardManagedScope(managedResources, managedTasks);
 

@@ -25,12 +25,13 @@ import io.smartspaces.evaluation.SimpleExpressionEvaluatorFactory;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.resource.managed.ManagedResources;
 import io.smartspaces.resource.managed.StandardManagedResources;
+import io.smartspaces.scope.ManagedScope;
+import io.smartspaces.scope.StandardManagedScope;
 import io.smartspaces.service.Service;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.event.observable.StandardEventObservableService;
 import io.smartspaces.system.BasicSmartSpacesFilesystem;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.system.SmartSpacesFilesystem;
 import io.smartspaces.system.SmartSpacesSystemControl;
 import io.smartspaces.system.core.configuration.ConfigurationProvider;
 import io.smartspaces.system.core.configuration.CoreConfiguration;
@@ -38,8 +39,10 @@ import io.smartspaces.system.core.container.ContainerCustomizerProvider;
 import io.smartspaces.system.core.logging.LoggingProvider;
 import io.smartspaces.system.internal.osgi.OsgiContainerResourceManager;
 import io.smartspaces.system.internal.osgi.OsgiSmartSpacesSystemControl;
-import io.smartspaces.system.internal.osgi.RosOsgiSmartSpacesEnvironment;
+import io.smartspaces.system.internal.osgi.OsgiSmartSpacesEnvironment;
 import io.smartspaces.system.resources.ContainerResourceManager;
+import io.smartspaces.tasks.ManagedTasks;
+import io.smartspaces.tasks.StandardManagedTasks;
 import io.smartspaces.time.provider.LocalTimeProvider;
 import io.smartspaces.time.provider.NtpTimeProvider;
 import io.smartspaces.time.provider.TimeProvider;
@@ -89,7 +92,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
   /**
    * Smart Spaces environment for the container.
    */
-  private RosOsgiSmartSpacesEnvironment spaceEnvironment;
+  private OsgiSmartSpacesEnvironment spaceEnvironment;
 
   /**
    * The Smart Spaces-wide file system.
@@ -170,6 +173,8 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    */
   private static final long NTP_UPDATE_PERIOD_SECONDS = 10L;
 
+  private ManagedScope containerManagedScope;
+
   @Override
   public void start(BundleContext context) throws Exception {
     bundleContext = context;
@@ -181,10 +186,13 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     try {
       getCoreServices();
 
-      // Do not call startupResources on this. Various items needed to be
-      // started up asap to be used.
-      managedResources = new StandardManagedResources(loggingProvider.getLog());
-
+        managedResources = new StandardManagedResources(loggingProvider.getLog());
+      
+      ManagedTasks managedTasks = new StandardManagedTasks(executorService, loggingProvider.getLog());
+      
+      containerManagedScope = new StandardManagedScope(managedResources, managedTasks);
+      containerManagedScope.startup();
+      
       setupSpaceEnvironment(baseInstallDir);
 
       createAdditionalResources();
@@ -196,8 +204,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
               spaceEnvironment.getSystemConfiguration()
                   .getPropertyString(SmartSpacesEnvironment.CONFIGURATION_SMARTSPACES_VERSION)));
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      spaceEnvironment.getLog().error("Could not start up smartspaces system", e);
     }
   }
 
@@ -214,7 +221,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
   @Override
   public void stop(BundleContext context) throws Exception {
-    managedResources.shutdownResourcesAndClear();
+    containerManagedScope.shutdown();
 
     // Remove all OSGi service registrations.
     for (ServiceRegistration<?> registration : serviceRegistrations) {
@@ -292,13 +299,14 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     filesystem.startup();
     managedResources.addResource(filesystem);
 
-    spaceEnvironment = new RosOsgiSmartSpacesEnvironment();
+    spaceEnvironment = new OsgiSmartSpacesEnvironment();
     spaceEnvironment.setExecutorService(executorService);
     spaceEnvironment.setLoggingProvider(loggingProvider);
     spaceEnvironment.setFilesystem(filesystem);
     spaceEnvironment
         .setNetworkType(containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NETWORK_TYPE));
-
+    spaceEnvironment.setContainerManagedScope(containerManagedScope);
+    
     setupSystemConfiguration(bundleContext, containerProperties);
 
     timeProvider = getTimeProvider(containerProperties, loggingProvider.getLog());

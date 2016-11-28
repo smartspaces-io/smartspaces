@@ -24,7 +24,7 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.StandaloneSmartSpacesEnvironment;
 import io.smartspaces.tasks.ManagedTask;
 import io.smartspaces.tasks.ManagedTasks;
-import io.smartspaces.tasks.SimpleManagedTasks;
+import io.smartspaces.tasks.StandardManagedTasks;
 import io.smartspaces.util.SmartSpacesUtilities;
 
 import org.apache.commons.logging.Log;
@@ -75,7 +75,7 @@ public class ManagedTaskSequencer implements Sequencer {
   /**
    * The instance of {@link ManagedTasks} to use for scheduling.
    */
-  private final SimpleManagedTasks managedTasks;
+  private final StandardManagedTasks managedTasks;
 
   /**
    * The logger for the sequencer.
@@ -92,7 +92,7 @@ public class ManagedTaskSequencer implements Sequencer {
    */
   public ManagedTaskSequencer(SmartSpacesEnvironment spaceEnvironment, Log log) {
     this.spaceEnvironment = spaceEnvironment;
-    this.managedTasks = new SimpleManagedTasks(spaceEnvironment.getExecutorService(), log);
+    this.managedTasks = new StandardManagedTasks(spaceEnvironment.getExecutorService(), log);
     this.log = log;
   }
 

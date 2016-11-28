@@ -29,11 +29,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A simple implementation of a collection of managed tasks.
+ * A standard implementation of a collection of managed tasks.
  * 
  * @author Keith M. Hughes
  */
-public class SimpleManagedTasks implements InternalManagedTasks {
+public class StandardManagedTasks implements InternalManagedTasks {
 
   /**
    * All managed tasks in collection.
@@ -58,7 +58,7 @@ public class SimpleManagedTasks implements InternalManagedTasks {
    * @param log
    *          the logger for the task
    */
-  public SimpleManagedTasks(ScheduledExecutorService executorService, Log log) {
+  public StandardManagedTasks(ScheduledExecutorService executorService, Log log) {
     this.executorService = executorService;
     this.log = log;
   }

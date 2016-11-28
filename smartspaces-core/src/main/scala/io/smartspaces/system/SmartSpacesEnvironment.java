@@ -19,6 +19,7 @@ package io.smartspaces.system;
 
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.system.core.configuration.CoreConfiguration;
 import io.smartspaces.system.core.logging.LoggingProvider;
@@ -193,6 +194,17 @@ public interface SmartSpacesEnvironment {
    * @return the executor service to be used for all thread usage
    */
   ScheduledExecutorService getExecutorService();
+
+  /**
+   * Get a managed scope at the container level.
+   * 
+   * <p>
+   * Always try and use as narrowly defined a managed scope as is possible.
+   * Container-level scope should be used as a last resort.
+   * 
+   * @return the container level managed scope
+   */
+  ManagedScope getContainerManagedScope();
 
   /**
    * Get the container log.

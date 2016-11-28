@@ -18,6 +18,7 @@
 package io.smartspaces.system;
 
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.system.core.logging.LoggingProvider;
 import io.smartspaces.time.provider.TimeProvider;
 
@@ -91,4 +92,12 @@ public interface InternalSmartSpacesEnvironment {
    *          the logging provider
    */
   void setLoggingProvider(LoggingProvider loggingProvider);
+
+  /**
+   * Set the container managed scope.
+   *
+   * @param containerManagedScope
+   *          the container managed scope
+   */
+  void setContainerManagedScope(ManagedScope containerManagedScope);
 }

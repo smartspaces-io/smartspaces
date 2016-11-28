@@ -26,13 +26,14 @@ import io.smartspaces.activity.annotation.ConfigurationPropertyAnnotationProcess
 import io.smartspaces.activity.annotation.StandardConfigurationPropertyAnnotationProcessor;
 import io.smartspaces.activity.component.ActivityComponent;
 import io.smartspaces.activity.component.ActivityComponentContext;
-import io.smartspaces.activity.configuration.ActivityConfiguration;
 import io.smartspaces.activity.execution.ActivityMethodInvocation;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.hardware.driver.Driver;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.resource.managed.ManagedResources;
 import io.smartspaces.resource.managed.StandardManagedResources;
+import io.smartspaces.scope.ManagedScope;
+import io.smartspaces.scope.StandardManagedScope;
 import io.smartspaces.tasks.ManagedTasks;
 import io.smartspaces.tasks.SimpleManagedTasks;
 import io.smartspaces.util.io.FileSupport;
@@ -91,6 +92,11 @@ public abstract class BaseActivity extends ActivitySupport
    * The tasks that are being managed.
    */
   private SimpleManagedTasks managedTasks;
+  
+  /**
+   * The managed scope for the activity.
+   */
+  private ManagedScope managedScope;
 
   /**
    * File support for use with the activity.
@@ -163,6 +169,11 @@ public abstract class BaseActivity extends ActivitySupport
     return managedTasks;
   }
 
+  @Override
+  public ManagedScope getActivityManagedScope() {
+    return managedScope;
+  }
+
   /**
    * Add a driver to the activity as a {@link ManagedResource}.
    *
@@ -228,6 +239,8 @@ public abstract class BaseActivity extends ActivitySupport
 
     managedTasks = new SimpleManagedTasks(getSpaceEnvironment().getExecutorService(), getLog());
 
+    managedScope = new StandardManagedScope(managedResources, managedTasks);
+    
     setActivityStatus(ActivityState.STARTUP_ATTEMPT);
 
     componentContext.beginStartupPhase();
@@ -246,7 +259,7 @@ public abstract class BaseActivity extends ActivitySupport
 
       callOnActivitySetup();
 
-      managedResources.startupResources();
+      managedScope.startup();
 
       componentContext.initialStartupComponents();
 

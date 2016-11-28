@@ -17,11 +17,18 @@
 
 package io.smartspaces.osgi.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+import io.smartspaces.resource.Version;
+import io.smartspaces.resource.managed.ManagedResource;
+import io.smartspaces.resource.managed.ManagedResources;
+import io.smartspaces.resource.managed.StandardManagedResources;
+import io.smartspaces.scope.ManagedScope;
+import io.smartspaces.scope.StandardManagedScope;
+import io.smartspaces.service.Service;
+import io.smartspaces.service.ServiceRegistry;
+import io.smartspaces.service.SupportedService;
+import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.tasks.ManagedTasks;
+import io.smartspaces.tasks.SimpleManagedTasks;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
@@ -29,14 +36,11 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 
-import io.smartspaces.resource.Version;
-import io.smartspaces.resource.managed.ManagedResource;
-import io.smartspaces.resource.managed.ManagedResources;
-import io.smartspaces.resource.managed.StandardManagedResources;
-import io.smartspaces.service.Service;
-import io.smartspaces.service.ServiceRegistry;
-import io.smartspaces.service.SupportedService;
-import io.smartspaces.system.SmartSpacesEnvironment;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A base class for creating OSGi BundleActivator subclasses for Smart Spaces
@@ -70,6 +74,16 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
    * A collection of managed resources.
    */
   private ManagedResources managedResources;
+
+  /**
+   * A collection of managed tasks.
+   */
+  private ManagedTasks managedTasks;
+
+  /**
+   * A managed scope for the bundle.
+   */
+  private ManagedScope managedScope;
 
   /**
    * All service trackers we have.
@@ -110,8 +124,8 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
 
     unregisterOsgiServices();
     unregisterSmartSpacesServices();
-    if (managedResources != null) {
-      managedResources.shutdownResourcesAndClear();
+    if (managedScope != null) {
+      managedScope.shutdown();
     }
 
     // Close all the trackers.
@@ -167,6 +181,15 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   }
 
   /**
+   * Get the managed scope for the bundle.
+   * 
+   * @return the managed scope
+   */
+  public ManagedScope getBundleManagedScope() {
+    return managedScope;
+  }
+
+  /**
    * Register a generic OSGi framework service.
    *
    * @param name
@@ -190,12 +213,17 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
         }
       }
 
-      managedResources =
-          new StandardManagedResources(smartspacesEnvironmentTracker.getMyService().getLog());
+      SmartSpacesEnvironment spaceEnvironment = smartspacesEnvironmentTracker.getMyService();
+      managedResources = new StandardManagedResources(spaceEnvironment.getLog());
+
+      managedTasks =
+          new SimpleManagedTasks(spaceEnvironment.getExecutorService(), spaceEnvironment.getLog());
+
+      managedScope = new StandardManagedScope(managedResources, managedTasks);
 
       allRequiredServicesAvailable();
 
-      managedResources.startupResources();
+      managedScope.startup();
     }
   }
 

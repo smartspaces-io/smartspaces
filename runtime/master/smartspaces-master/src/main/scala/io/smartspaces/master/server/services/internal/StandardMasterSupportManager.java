@@ -73,10 +73,16 @@ public class StandardMasterSupportManager implements MasterSupportManager {
   @Override
   public void importMasterDomainModel(String model) {
     spaceEnvironment.getLog().info("Importing master domain model");
-    JdomMasterDomainModelImporter importer = new JdomMasterDomainModelImporter();
+    try {
+      JdomMasterDomainModelImporter importer = new JdomMasterDomainModelImporter();
 
-    importer.importModel(model, activityRepository, spaceControllerRepository,
-        automationRepository, spaceEnvironment.getTimeProvider());
+      importer.importModel(model, activityRepository, spaceControllerRepository,
+          automationRepository, spaceEnvironment.getTimeProvider());
+
+      spaceEnvironment.getLog().info("Master domain model imported successfully");
+    } catch (Exception e) {
+      spaceEnvironment.getLog().error("Error while importing master domain model", e);
+    }
   }
 
   /**

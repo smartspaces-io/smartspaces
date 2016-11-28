@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  * 
  * @author Keith M. Hughes
  */
-public class SimpleManagedTasks implements ManagedTasks {
+public class SimpleManagedTasks implements InternalManagedTasks {
 
   /**
    * All managed tasks in collection.
@@ -155,9 +155,7 @@ public class SimpleManagedTasks implements ManagedTasks {
     return managedTask;
   }
 
-  /**
-   * Shut down all executing tasks or tasks which haven't started yet.
-   */
+  @Override
   public synchronized void shutdownAll() {
     // Copied into an array list so that shutdowns of individual tasks do not
     // cause a concurrent modification

@@ -22,6 +22,7 @@ import io.smartspaces.activity.annotation.ConfigurationPropertyAnnotationProcess
 import io.smartspaces.activity.component.ActivityComponent;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.resource.managed.ManagedResources;
+import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.tasks.ManagedTasks;
 
 import java.util.Map;
@@ -268,6 +269,13 @@ public interface SupportedActivity extends Activity {
    *         been started, though will be available for any startup callbacks
    */
   ManagedTasks getManagedTasks();
+  
+  /**
+   * Get the managed scope for the activity.
+   * 
+   * @return the managed scope for the activity
+   */
+  ManagedScope getActivityManagedScope();
 
   /**
    * Get the annotation processor for handling configuration parameters.

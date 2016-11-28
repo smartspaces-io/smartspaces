@@ -64,6 +64,7 @@ public class StandardMasterSupportManager implements MasterSupportManager {
 
   @Override
   public String getMasterDomainModel() {
+    spaceEnvironment.getLog().info("Exporting master domain model");
     JdomMasterDomainModelCreator creator = new JdomMasterDomainModelCreator();
 
     return creator.newModel(activityRepository, spaceControllerRepository, automationRepository);
@@ -71,6 +72,7 @@ public class StandardMasterSupportManager implements MasterSupportManager {
 
   @Override
   public void importMasterDomainModel(String model) {
+    spaceEnvironment.getLog().info("Importing master domain model");
     JdomMasterDomainModelImporter importer = new JdomMasterDomainModelImporter();
 
     importer.importModel(model, activityRepository, spaceControllerRepository,

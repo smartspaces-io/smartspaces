@@ -42,8 +42,11 @@ public interface SpaceControllerCommunicator {
    *
    * <p>
    * This is a chance for the communicator to do any additional startup
+   *
+   * @param controllerInfo
+   *          the controller info for the controller
    */
-  void onStartup();
+  void onStartup(SimpleSpaceController controllerInfo);
 
   /**
    * The controller is shutting down.

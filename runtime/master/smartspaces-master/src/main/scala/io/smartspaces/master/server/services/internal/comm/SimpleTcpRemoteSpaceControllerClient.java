@@ -37,6 +37,7 @@ import io.smartspaces.container.control.message.container.resource.deployment.Co
 import io.smartspaces.controller.client.master.RemoteActivityDeploymentManager;
 import io.smartspaces.domain.basic.ActivityConfiguration;
 import io.smartspaces.domain.basic.ConfigurationParameter;
+import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.basic.SpaceControllerConfiguration;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.master.server.services.ActiveLiveActivity;
@@ -611,17 +612,16 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
    */
   private SpaceControllerCommunicator getCommunicator(ActiveSpaceController controller,
       boolean create) {
-    String remoteNode = controller.getSpaceController().getHostId();
-    spaceEnvironment.getLog().info("Attempting to get communicator");
+    String controllerHostName = controller.getSpaceController().getHostId();
     synchronized (controllerCommunicators) {
-      SpaceControllerCommunicator communicator = controllerCommunicators.get(remoteNode);
+      SpaceControllerCommunicator communicator = controllerCommunicators.get(controllerHostName);
       spaceEnvironment.getLog().info(communicator);
 
       if (communicator == null) {
         controller.setState(SpaceControllerState.CONNECT_ATTEMPT);
         communicator = new SpaceControllerCommunicator(controller);
-        communicator.startup(remoteNode);
-        controllerCommunicators.put(remoteNode, communicator);
+        communicator.startup();
+        controllerCommunicators.put(controllerHostName, communicator);
 
       }
 
@@ -718,13 +718,14 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
     /**
      * Start the communicator up.
      *
-     * @param remoteNode
+     * @param controllerHostName
      *          the remote node
      */
-    public void startup(String remoteNode) {
+    public void startup() {
+      SpaceController controller = spaceController.getSpaceController();
       controllerClient = tcpClientService.newStringClient(
           StandardMasterSpaceControllerCodec.DELIMITERS, StandardMasterSpaceControllerCodec.CHARSET,
-          "localhost", StandardMasterSpaceControllerCodec.CONTROLLER_SERVER_PORT, log);
+          controller.getHostName(), controller.getHostControlPort(), log);
       controllerClient.addListener(new TcpClientNetworkCommunicationEndpointListener<String>() {
 
         @Override

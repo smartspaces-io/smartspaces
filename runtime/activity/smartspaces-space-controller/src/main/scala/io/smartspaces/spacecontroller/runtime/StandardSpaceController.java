@@ -225,7 +225,7 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
 
     final Log log = getSpaceEnvironment().getLog();
 
-    spaceControllerCommunicator.onStartup();
+    spaceControllerCommunicator.onStartup(getControllerInfo());
 
     controllerHeartbeat = spaceControllerCommunicator.newSpaceControllerHeartbeat();
     controllerHeartbeatControl =

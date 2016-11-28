@@ -69,6 +69,8 @@ public final class SpaceControllerUtils {
     destination.setName(source.getName());
     destination.setDescription(source.getDescription());
     destination.setHostId(source.getHostId());
+    destination.setHostName(source.getHostName());
+    destination.setHostControlPort(source.getHostControlPort());
     destination.setMode(source.getMode());
   }
 }

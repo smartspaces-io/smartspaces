@@ -18,6 +18,7 @@
 package io.smartspaces.spacecontroller.runtime;
 
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.container.control.message.StandardMasterSpaceControllerCodec;
 import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
 import io.smartspaces.spacecontroller.SpaceController;
 import io.smartspaces.system.SmartSpacesEnvironment;
@@ -76,10 +77,15 @@ public abstract class BaseSpaceController implements SpaceController {
     controllerInfo.setUuid(systemConfiguration.getPropertyString(CONFIGURATION_CONTROLLER_UUID));
     controllerInfo
         .setName(systemConfiguration.getPropertyString(CONFIGURATION_CONTROLLER_NAME, ""));
-    controllerInfo.setDescription(systemConfiguration.getPropertyString(
-        CONFIGURATION_CONTROLLER_DESCRIPTION, ""));
-    controllerInfo.setHostId(systemConfiguration
-        .getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_HOSTID));
+    controllerInfo.setDescription(
+        systemConfiguration.getPropertyString(CONFIGURATION_CONTROLLER_DESCRIPTION, ""));
+    controllerInfo.setHostId(
+        systemConfiguration.getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_HOSTID));
+    controllerInfo.setHostName(systemConfiguration
+        .getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_HOSTNAME));
+    controllerInfo.setHostControlPort(systemConfiguration.getPropertyInteger(
+        SpaceController.CONFIGURATION_SMARTSPACES_CONTROLLER_HOST_CONTROL_PORT,
+        StandardMasterSpaceControllerCodec.CONTROLLER_SERVER_PORT));
   }
 
   @Override

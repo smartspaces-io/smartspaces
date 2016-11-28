@@ -46,9 +46,9 @@ import io.smartspaces.spacecontroller.runtime.SpaceControllerActivityInstallatio
 import io.smartspaces.spacecontroller.runtime.SpaceControllerDataBundleManager;
 import io.smartspaces.spacecontroller.runtime.StandardSpaceController;
 import io.smartspaces.spacecontroller.runtime.StandardSpaceControllerDataBundleManager;
+import io.smartspaces.spacecontroller.runtime.comm.SimpleTcpSpaceControllerCommunicator;
 import io.smartspaces.spacecontroller.runtime.configuration.StandardSpaceControllerConfigurationManager;
 import io.smartspaces.spacecontroller.runtime.internal.StandardSpaceControllerActivityInstallationManager;
-import io.smartspaces.spacecontroller.runtime.ros.RosSpaceControllerCommunicator;
 import io.smartspaces.spacecontroller.ui.internal.osgi.OsgiSpaceControllerShell;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesSystemControl;
@@ -169,8 +169,8 @@ public class OsgiSpaceControllerActivator extends SmartSpacesServiceOsgiBundleAc
     SmartSpacesEnvironmentLiveActivityLogFactory activityLogFactory =
         new SmartSpacesEnvironmentLiveActivityLogFactory(spaceEnvironment);
 
-    RosSpaceControllerCommunicator spaceControllerCommunicator =
-        new RosSpaceControllerCommunicator(spaceEnvironment);
+    SimpleTcpSpaceControllerCommunicator spaceControllerCommunicator =
+        new SimpleTcpSpaceControllerCommunicator(spaceEnvironment);
 
     SpaceControllerDataBundleManager dataBundleManager =
         new StandardSpaceControllerDataBundleManager();

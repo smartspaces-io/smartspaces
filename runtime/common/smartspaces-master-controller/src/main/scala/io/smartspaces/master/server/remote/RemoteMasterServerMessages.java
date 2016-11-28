@@ -61,6 +61,16 @@ public class RemoteMasterServerMessages {
   public static final String CONTROLLER_REGISTRATION_HOST_ID = "hostId";
 
   /**
+   * The host name field of the space controller registration.
+   */
+  public static final String CONTROLLER_REGISTRATION_HOST_NAME = "hostName";
+
+  /**
+   * The host control port field of the space controller registration.
+   */
+  public static final String CONTROLLER_REGISTRATION_HOST_CONTROL_PORT = "hostControlPort";
+
+  /**
    * The UUID field of the space controller registration.
    */
   public static final String CONTROLLER_REGISTRATION_UUID = "uuid";

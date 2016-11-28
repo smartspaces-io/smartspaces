@@ -65,6 +65,11 @@ public interface SpaceController extends ManagedResource {
   String CONFIGURATION_SMARTSPACES_CONTROLLER_MODE = "smartspaces.spacecontroller.mode";
 
   /**
+   * Configuration property name for controller mode.
+   */
+  String CONFIGURATION_SMARTSPACES_CONTROLLER_HOST_CONTROL_PORT = "smartspaces.host.control.port";
+
+  /**
    * Get the Smart Spaces environment.
    *
    * @return the space environment

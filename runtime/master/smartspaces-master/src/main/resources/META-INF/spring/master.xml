@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (C) 2016 Keith M. Hughes Copyright (C) 2012 Google Inc. Licensed 
+<!-- Copyright (C) 2016 Keith M. Hughes 
+     Copyright (C) 2012 Google Inc. 
+    Licensed 
 	under the Apache License, Version 2.0 (the "License"); you may not use this 
 	file except in compliance with the License. You may obtain a copy of the 
 	License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by 
@@ -129,7 +131,7 @@
 	<bean id="smartspaces.expression.factory" class="io.smartspaces.expression.OgnlExpressionFactory" />
 
 	<bean id="smartspaces.master.ros.context"
-		class="io.smartspaces.master.server.services.internal.ros.StandardMasterRosContext"
+		class="io.smartspaces.master.server.services.internal.comm.StandardMasterRosContext"
 		destroy-method="shutdown" init-method="startup">
 
 		<property name="rosEnvironment" ref="ros.environment" />
@@ -140,21 +142,21 @@
 	</bean>
 
 	<bean id="smartspaces.controller.remote.client"
-		class="io.smartspaces.master.server.services.internal.ros.RosRemoteSpaceControllerClient"
+		class="io.smartspaces.master.server.services.internal.comm.SimpleTcpRemoteSpaceControllerClient"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="masterDataBundleManager" ref="smartspaces.master.ros.databundlemanager" />
+		<property name="masterDataBundleManager" ref="smartspaces.master.databundlemanager" />
 
 		<property name="spaceEnvironment" ref="smartspaces.environment" />
 
 		<property name="log" ref="smartspaces.master.logger" />
 	</bean>
 
-	<bean id="smartspaces.master.ros.databundlemanager"
-		class="io.smartspaces.master.server.services.internal.ros.RosMasterDataBundleManager"
+	<bean id="smartspaces.master.databundlemanager"
+		class="io.smartspaces.master.server.services.internal.comm.TcpMasterDataBundleManager"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="rosRemoteSpaceControllerClient" ref="smartspaces.controller.remote.client" />
+		<property name="remoteSpaceControllerClient" ref="smartspaces.controller.remote.client" />
 
 		<property name="repositoryServer" ref="smartspaces.resource.repository.server" />
 

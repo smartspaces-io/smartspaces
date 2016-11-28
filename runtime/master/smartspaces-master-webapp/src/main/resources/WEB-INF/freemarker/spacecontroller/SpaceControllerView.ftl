@@ -149,6 +149,14 @@ ${spacecontroller.description?html}
 <td>${spacecontroller.hostId}</td>
 </tr>
 <tr>
+<th>Host Name</th>
+<td>${spacecontroller.hostName}</td>
+</tr>
+<tr>
+<th>Host Control Port</th>
+<td>${spacecontroller.hostControlPort?c}</td>
+</tr>
+<tr>
   <th>Mode</th>
   <td>
     <#if spacecontroller.mode??>

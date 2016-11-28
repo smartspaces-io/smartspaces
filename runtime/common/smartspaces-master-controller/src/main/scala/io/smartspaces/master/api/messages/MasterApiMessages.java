@@ -715,6 +715,18 @@ public class MasterApiMessages {
   public static final String MASTER_API_PARAMETER_NAME_SPACE_CONTROLLER_HOSTID = "hostId";
 
   /**
+   * Parameter name for the host name of a space controller in the Master API
+   * message.
+   */
+  public static final String MASTER_API_PARAMETER_NAME_SPACE_CONTROLLER_HOST_NAME = "hostName";
+
+  /**
+   * Parameter name for the host control port of a space controller in the Master API
+   * message.
+   */
+  public static final String MASTER_API_PARAMETER_NAME_SPACE_CONTROLLER_HOST_CONTROL_PORT = "hostControlPort";
+
+  /**
    * Parameter name for the mode of a space controller in the Master API
    * message.
    */

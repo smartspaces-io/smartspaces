@@ -56,8 +56,8 @@ import java.util.Set;
  *
  * @author Keith M. Hughes
  */
-public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManager implements
-    MasterApiSpaceControllerManager {
+public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManager
+    implements MasterApiSpaceControllerManager {
 
   /**
    * Repository for obtaining controller entities.
@@ -103,8 +103,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
     } catch (Throwable e) {
       spaceEnvironment.getLog().error("Attempt to get activity data failed", e);
 
-      return MasterApiMessageSupport.getFailureResponse(
-          MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+      return MasterApiMessageSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
 
@@ -339,17 +339,15 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
 
       if (MasterApiMessages.MASTER_API_COMMAND_METADATA_REPLACE.equals(command)) {
         @SuppressWarnings("unchecked")
-        Map<String, Object> replacement =
-            (Map<String, Object>) metadataCommand
-                .get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA);
+        Map<String, Object> replacement = (Map<String, Object>) metadataCommand
+            .get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA);
         spaceController.setMetadata(replacement);
       } else if (MasterApiMessages.MASTER_API_COMMAND_METADATA_MODIFY.equals(command)) {
         Map<String, Object> metadata = spaceController.getMetadata();
 
         @SuppressWarnings("unchecked")
-        Map<String, Object> modifications =
-            (Map<String, Object>) metadataCommand
-                .get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA);
+        Map<String, Object> modifications = (Map<String, Object>) metadataCommand
+            .get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA);
         for (Entry<String, Object> entry : modifications.entrySet()) {
           metadata.put(entry.getKey(), entry.getValue());
         }
@@ -378,8 +376,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
     } catch (Throwable e) {
       spaceEnvironment.getLog().error("Could not modify space controller metadata", e);
 
-      return MasterApiMessageSupport.getFailureResponse(
-          MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+      return MasterApiMessageSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
 
@@ -401,9 +399,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.connectSpaceController(controller);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to connect to controller %s (%s)", controller.getUuid(),
-                controller.getName()), e);
+        spaceEnvironment.getLog().error(String.format("Unable to connect to controller %s (%s)",
+            controller.getUuid(), controller.getName()), e);
       }
     }
 
@@ -416,9 +413,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.disconnectSpaceController(controller, false);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to disconnect to controller %s (%s)", controller.getUuid(),
-                controller.getName()), e);
+        spaceEnvironment.getLog().error(String.format("Unable to disconnect to controller %s (%s)",
+            controller.getUuid(), controller.getName()), e);
       }
     }
 
@@ -431,9 +427,9 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.statusSpaceController(controller, false);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to get the status from controller %s (%s)", controller.getUuid(),
-                controller.getName()), e);
+        spaceEnvironment.getLog()
+            .error(String.format("Unable to get the status from controller %s (%s)",
+                controller.getUuid(), controller.getName()), e);
       }
     }
 
@@ -446,8 +442,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.statusSpaceController(controller, true);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to force the status from controller %s (%s)",
+        spaceEnvironment.getLog()
+            .error(String.format("Unable to force the status from controller %s (%s)",
                 controller.getUuid(), controller.getName()), e);
       }
     }
@@ -463,9 +459,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
         try {
           activeSpaceControllerManager.shutdownSpaceController(controller);
         } catch (Throwable e) {
-          spaceEnvironment.getLog().error(
-              String.format("Unable to shut down controller %s (%s)", controller.getUuid(),
-                  controller.getName()), e);
+          spaceEnvironment.getLog().error(String.format("Unable to shut down controller %s (%s)",
+              controller.getUuid(), controller.getName()), e);
         }
       } else {
         spaceEnvironment.getLog().error(String.format("Unknown controller %s", id));
@@ -485,9 +480,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
         try {
           activeSpaceControllerManager.connectSpaceController(controller);
         } catch (Throwable e) {
-          spaceEnvironment.getLog().error(
-              String.format("Unable to shut down controller %s (%s)", controller.getUuid(),
-                  controller.getName()), e);
+          spaceEnvironment.getLog().error(String.format("Unable to shut down controller %s (%s)",
+              controller.getUuid(), controller.getName()), e);
         }
       } else {
         spaceEnvironment.getLog().error(String.format("Unknown controller %s", id));
@@ -507,9 +501,9 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
         try {
           activeSpaceControllerManager.disconnectSpaceController(controller, false);
         } catch (Throwable e) {
-          spaceEnvironment.getLog().error(
-              String.format("Unable to disconnect from controller %s (%s)", controller.getUuid(),
-                  controller.getName()), e);
+          spaceEnvironment.getLog()
+              .error(String.format("Unable to disconnect from controller %s (%s)",
+                  controller.getUuid(), controller.getName()), e);
         }
       } else {
         spaceEnvironment.getLog().error(String.format("Unknown controller %s", id));
@@ -527,9 +521,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.shutdownSpaceController(controller);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to shut down controller %s (%s)", controller.getUuid(),
-                controller.getName()), e);
+        spaceEnvironment.getLog().error(String.format("Unable to shut down controller %s (%s)",
+            controller.getUuid(), controller.getName()), e);
       }
     }
 
@@ -543,8 +536,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       if (controller != null) {
         activeSpaceControllerManager.statusSpaceController(controller, false);
       } else {
-        spaceEnvironment.getLog().error(
-            String.format("Attempted status of unknown controller %s", id));
+        spaceEnvironment.getLog()
+            .error(String.format("Attempted status of unknown controller %s", id));
 
         return getNoSuchSpaceControllerResponse(id);
       }
@@ -571,8 +564,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.cleanSpaceControllerTempData(controller);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to clean temp data from controller %s (%s)",
+        spaceEnvironment.getLog()
+            .error(String.format("Unable to clean temp data from controller %s (%s)",
                 controller.getUuid(), controller.getName()), e);
       }
     }
@@ -598,8 +591,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.cleanSpaceControllerPermanentData(controller);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to clean permanent data from controller %s (%s)",
+        spaceEnvironment.getLog()
+            .error(String.format("Unable to clean permanent data from controller %s (%s)",
                 controller.getUuid(), controller.getName()), e);
       }
     }
@@ -625,8 +618,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.cleanSpaceControllerActivitiesTempData(controller);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to clean all temp data from controller %s (%s)",
+        spaceEnvironment.getLog()
+            .error(String.format("Unable to clean all temp data from controller %s (%s)",
                 controller.getUuid(), controller.getName()), e);
       }
     }
@@ -652,8 +645,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.cleanSpaceControllerActivitiesPermanentData(controller);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to clean all permanent data from controller %s (%s)",
+        spaceEnvironment.getLog()
+            .error(String.format("Unable to clean all permanent data from controller %s (%s)",
                 controller.getUuid(), controller.getName()), e);
       }
     }
@@ -691,9 +684,9 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.captureSpaceControllerDataBundle(controller);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to capture data from controller %s (%s)", controller.getUuid(),
-                controller.getName()), e);
+        spaceEnvironment.getLog()
+            .error(String.format("Unable to capture data from controller %s (%s)",
+                controller.getUuid(), controller.getName()), e);
       }
     }
 
@@ -706,9 +699,9 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.restoreSpaceControllerDataBundle(controller);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to capture data from controller %s (%s)", controller.getUuid(),
-                controller.getName()), e);
+        spaceEnvironment.getLog()
+            .error(String.format("Unable to capture data from controller %s (%s)",
+                controller.getUuid(), controller.getName()), e);
       }
     }
 
@@ -733,8 +726,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.shutdownAllActivities(controller);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to shut down all live activities from controller %s (%s)",
+        spaceEnvironment.getLog()
+            .error(String.format("Unable to shut down all live activities from controller %s (%s)",
                 controller.getUuid(), controller.getName()), e);
       }
     }
@@ -772,8 +765,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.shutdownAllActivities(controller);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(
-            String.format("Unable to deploy all live activities from controller %s (%s)",
+        spaceEnvironment.getLog()
+            .error(String.format("Unable to deploy all live activities from controller %s (%s)",
                 controller.getUuid(), controller.getName()), e);
       }
     }
@@ -1151,8 +1144,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
     } catch (Throwable e) {
       spaceEnvironment.getLog().error("Could not modify activity metadata", e);
 
-      return MasterApiMessageSupport.getFailureResponse(
-          MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+      return MasterApiMessageSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
 
@@ -1239,8 +1232,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
    *
    * @return a list for all live activity Master API status objects
    */
-  private List<Map<String, Object>> generateLiveActivitiesStatusesApiResponse(
-      LiveActivityGroup group) {
+  private List<Map<String, Object>>
+      generateLiveActivitiesStatusesApiResponse(LiveActivityGroup group) {
     List<Map<String, Object>> activities = new ArrayList<>();
 
     for (GroupLiveActivity activity : group.getLiveActivities()) {
@@ -1308,6 +1301,11 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
         controller.getMetadata());
     controllerData.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_SPACE_CONTROLLER_HOSTID,
         controller.getHostId());
+    controllerData.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_SPACE_CONTROLLER_HOST_NAME,
+        controller.getHostName());
+    controllerData.put(
+        MasterApiMessages.MASTER_API_PARAMETER_NAME_SPACE_CONTROLLER_HOST_CONTROL_PORT,
+        controller.getHostControlPort());
 
     SpaceControllerMode mode = controller.getMode();
     if (mode != null) {
@@ -1370,7 +1368,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
    * @param activeControllerManager
    *          the active controller manager
    */
-  public void setActiveSpaceControllerManager(ActiveSpaceControllerManager activeControllerManager) {
+  public void
+      setActiveSpaceControllerManager(ActiveSpaceControllerManager activeControllerManager) {
     this.activeSpaceControllerManager = activeControllerManager;
   }
 

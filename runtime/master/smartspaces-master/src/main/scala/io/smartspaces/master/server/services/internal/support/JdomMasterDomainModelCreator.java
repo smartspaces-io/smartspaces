@@ -129,6 +129,10 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
             new Element(ELEMENT_NAME_DESCRIPTION).addContent(new CDATA(controller.getDescription())))
         .addContent(
             new Element(ELEMENT_NAME_SPACE_CONTROLLER_HOST_ID).addContent(controller.getHostId()))
+        .addContent(
+            new Element(ELEMENT_NAME_SPACE_CONTROLLER_HOST_NAME).addContent(controller.getHostName()))
+        .addContent(
+            new Element(ELEMENT_NAME_SPACE_CONTROLLER_HOST_CONTROL_PORT).addContent(Integer.toString(controller.getHostControlPort())))
         .addContent(new Element(ELEMENT_NAME_UUID).addContent(controller.getUuid()))
         .addContent(newMetadataElement(controller.getMetadata()));
 
@@ -169,8 +173,9 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
               new Element(ELEMENT_NAME_SPACE_CONTROLLER_CONFIGURATION_INDIVIDUAL_PARAMETER);
           parametersElement.addContent(parameterElement);
 
-          parameterElement.setAttribute(
-              ATTRIBUTE_NAME_SPACE_CONTROLLER_CONFIGURATION_PARAMETER_NAME, parameter.getName())
+          parameterElement
+              .setAttribute(ATTRIBUTE_NAME_SPACE_CONTROLLER_CONFIGURATION_PARAMETER_NAME,
+                  parameter.getName())
               .addContent(new CDATA(parameter.getValue()));
         }
       }
@@ -206,11 +211,9 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
   private Element newActivityEntry(Activity activity) {
     Element activityElement = new Element(ELEMENT_NAME_INDIVIDUAL_ACTIVITY);
 
-    activityElement
-        .setAttribute(ATTRIBUTE_NAME_ID, activity.getId())
-        .addContent(
-            new Element(ELEMENT_NAME_ACTIVITY_IDENTIFYING_NAME).addContent(activity
-                .getIdentifyingName()))
+    activityElement.setAttribute(ATTRIBUTE_NAME_ID, activity.getId())
+        .addContent(new Element(ELEMENT_NAME_ACTIVITY_IDENTIFYING_NAME)
+            .addContent(activity.getIdentifyingName()))
         .addContent(new Element(ELEMENT_NAME_ACTIVITY_VERSION).addContent(activity.getVersion()))
         .addContent(new Element(ELEMENT_NAME_NAME).addContent(activity.getName()))
         .addContent(
@@ -231,8 +234,8 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
 
     String bundleContentHash = activity.getBundleContentHash();
     if (bundleContentHash != null) {
-      activityElement.addContent(new Element(ELEMENT_NAME_ACTIVITY_BUNDLE_CONTENT_HASH)
-          .addContent(bundleContentHash));
+      activityElement.addContent(
+          new Element(ELEMENT_NAME_ACTIVITY_BUNDLE_CONTENT_HASH).addContent(bundleContentHash));
     }
 
     addActivityDependencies(activity, activityElement);
@@ -258,18 +261,14 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
         activityDependenciesElement.addContent(dependencyElement);
 
         dependencyElement
-            .addContent(
-                new Element(ELEMENT_NAME_ACTIVITY_DEPENDENCY_NAME).addContent(dependency
-                    .getIdentifyingName()))
-            .addContent(
-                new Element(ELEMENT_NAME_ACTIVITY_DEPENDENCY_VERSION_MINIMUM).addContent(dependency
-                    .getMinimumVersion()))
-            .addContent(
-                new Element(ELEMENT_NAME_ACTIVITY_DEPENDENCY_VERSION_MAXIMUM).addContent(dependency
-                    .getMaximumVersion()))
-            .addContent(
-                new Element(ELEMENT_NAME_ACTIVITY_DEPENDENCY_REQUIRED).addContent(dependency
-                    .isRequired() ? VALUE_TRUE : VALUE_FALSE));
+            .addContent(new Element(ELEMENT_NAME_ACTIVITY_DEPENDENCY_NAME)
+                .addContent(dependency.getIdentifyingName()))
+            .addContent(new Element(ELEMENT_NAME_ACTIVITY_DEPENDENCY_VERSION_MINIMUM)
+                .addContent(dependency.getMinimumVersion()))
+            .addContent(new Element(ELEMENT_NAME_ACTIVITY_DEPENDENCY_VERSION_MAXIMUM)
+                .addContent(dependency.getMaximumVersion()))
+            .addContent(new Element(ELEMENT_NAME_ACTIVITY_DEPENDENCY_REQUIRED)
+                .addContent(dependency.isRequired() ? VALUE_TRUE : VALUE_FALSE));
       }
     }
   }
@@ -303,19 +302,15 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
   private Element newLiveActivityEntry(LiveActivity liveActivity) {
     Element liveActivityElement = new Element(ELEMENT_NAME_INDIVIDUAL_LIVE_ACTIVITY);
 
-    liveActivityElement
-        .setAttribute(ATTRIBUTE_NAME_ID, liveActivity.getId())
+    liveActivityElement.setAttribute(ATTRIBUTE_NAME_ID, liveActivity.getId())
         .addContent(new Element(ELEMENT_NAME_UUID).addContent(liveActivity.getUuid()))
         .addContent(new Element(ELEMENT_NAME_NAME).addContent(liveActivity.getName()))
-        .addContent(
-            new Element(ELEMENT_NAME_DESCRIPTION).addContent(new CDATA(liveActivity
-                .getDescription())))
-        .addContent(
-            new Element(ELEMENT_NAME_LIVE_ACTIVITY_CONTROLLER).setAttribute(ATTRIBUTE_NAME_ID,
-                liveActivity.getController().getId()))
-        .addContent(
-            new Element(ELEMENT_NAME_LIVE_ACTIVITY_ACTIVITY).setAttribute(ATTRIBUTE_NAME_ID,
-                liveActivity.getActivity().getId()))
+        .addContent(new Element(ELEMENT_NAME_DESCRIPTION)
+            .addContent(new CDATA(liveActivity.getDescription())))
+        .addContent(new Element(ELEMENT_NAME_LIVE_ACTIVITY_CONTROLLER)
+            .setAttribute(ATTRIBUTE_NAME_ID, liveActivity.getController().getId()))
+        .addContent(new Element(ELEMENT_NAME_LIVE_ACTIVITY_ACTIVITY).setAttribute(ATTRIBUTE_NAME_ID,
+            liveActivity.getActivity().getId()))
         .addContent(newMetadataElement(liveActivity.getMetadata()));
 
     addActivityConfiguration(liveActivityElement, liveActivity.getConfiguration());
@@ -390,8 +385,7 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
   private Element newLiveActivityGroupEntry(LiveActivityGroup group) {
     Element groupElement = new Element(ELEMENT_NAME_INDIVIDUAL_LIVE_ACTIVITY_GROUP);
 
-    groupElement
-        .setAttribute(ATTRIBUTE_NAME_ID, group.getId())
+    groupElement.setAttribute(ATTRIBUTE_NAME_ID, group.getId())
         .addContent(new Element(ELEMENT_NAME_NAME).addContent(new CDATA(group.getName())))
         .addContent(
             new Element(ELEMENT_NAME_DESCRIPTION).addContent(new CDATA(group.getDescription())))
@@ -422,9 +416,10 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
             new Element(ELEMENT_NAME_LIVE_ACTIVITY_GROUP_INDIVIDUAL_GROUP_LIVE_ACTIVITY);
         activitiesElement.addContent(activityElement);
 
-        activityElement.setAttribute(ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_ID,
-            activity.getActivity().getId()).setAttribute(
-            ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_DEPENDENCY, activity.getDependency().name());
+        activityElement
+            .setAttribute(ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_ID, activity.getActivity().getId())
+            .setAttribute(ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_DEPENDENCY,
+                activity.getDependency().name());
 
       }
     }
@@ -486,8 +481,7 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
   private Element newSpaceEntry(Space space) {
     Element spaceElement = new Element(ELEMENT_NAME_INDIVIDUAL_SPACE);
 
-    spaceElement
-        .setAttribute(ATTRIBUTE_NAME_ID, space.getId())
+    spaceElement.setAttribute(ATTRIBUTE_NAME_ID, space.getId())
         .addContent(new Element(ELEMENT_NAME_NAME).addContent(new CDATA(space.getName())))
         .addContent(
             new Element(ELEMENT_NAME_DESCRIPTION).addContent(new CDATA(space.getDescription())))
@@ -568,15 +562,14 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
   private Element newNamedScriptEntry(NamedScript script) {
     Element scriptElement = new Element(ELEMENT_NAME_INDIVIDUAL_NAMED_SCRIPT);
 
-    scriptElement
-        .setAttribute(ATTRIBUTE_NAME_ID, script.getId())
+    scriptElement.setAttribute(ATTRIBUTE_NAME_ID, script.getId())
         .addContent(new Element(ELEMENT_NAME_NAME).addContent(new CDATA(script.getName())))
         .addContent(
             new Element(ELEMENT_NAME_DESCRIPTION).addContent(new CDATA(script.getDescription())))
         .addContent(
             new Element(ELEMENT_NAME_NAMED_SCRIPT_LANGUAGE).addContent(script.getLanguage()))
-        .addContent(
-            new Element(ELEMENT_NAME_NAMED_SCRIPT_CONTENT).addContent(new CDATA(script.getContent())))
+        .addContent(new Element(ELEMENT_NAME_NAMED_SCRIPT_CONTENT)
+            .addContent(new CDATA(script.getContent())))
         .addContent(newMetadataElement(script.getMetadata()));
 
     Element scheduleElement =
@@ -600,9 +593,9 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
     Element metadataElement = new Element(ELEMENT_NAME_METADATA);
 
     for (Entry<String, Object> entry : metadata.entrySet()) {
-      metadataElement.addContent(new Element(ELEMENT_NAME_METADATA_ITEM).setAttribute(
-          ATTRIBUTE_NAME_METADATA_ITEM_NAME, entry.getKey()).addContent(
-          new CDATA(entry.getValue().toString())));
+      metadataElement.addContent(new Element(ELEMENT_NAME_METADATA_ITEM)
+          .setAttribute(ATTRIBUTE_NAME_METADATA_ITEM_NAME, entry.getKey())
+          .addContent(new CDATA(entry.getValue().toString())));
     }
 
     return metadataElement;

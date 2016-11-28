@@ -103,9 +103,9 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
     Element rootElement = readDescription(model);
 
     if (!ELEMENT_NAME_DESCRIPTION_ROOT_ELEMENT.equals(rootElement.getName())) {
-      throw new SimpleSmartSpacesException(String.format(
-          "The description file doesn't have root element %s",
-          ELEMENT_NAME_DESCRIPTION_ROOT_ELEMENT));
+      throw new SimpleSmartSpacesException(
+          String.format("The description file doesn't have root element %s",
+              ELEMENT_NAME_DESCRIPTION_ROOT_ELEMENT));
     }
 
     getSpaceControllers(rootElement, controllerRepository);
@@ -155,11 +155,16 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
     String name = controllerElement.getChildTextTrim(ELEMENT_NAME_NAME);
     String description = controllerElement.getChildTextTrim(ELEMENT_NAME_DESCRIPTION);
     String hostId = controllerElement.getChildTextTrim(ELEMENT_NAME_SPACE_CONTROLLER_HOST_ID);
+    String hostName = controllerElement.getChildTextTrim(ELEMENT_NAME_SPACE_CONTROLLER_HOST_NAME);
+    int hostControlPort = Integer.parseInt(
+        controllerElement.getChildTextTrim(ELEMENT_NAME_SPACE_CONTROLLER_HOST_CONTROL_PORT));
 
     controller.setUuid(uuid);
     controller.setName(name);
     controller.setDescription(description);
     controller.setHostId(hostId);
+    controller.setHostName(hostName);
+    controller.setHostControlPort(hostControlPort);
 
     SpaceControllerMode controllerMode = SpaceControllerMode.ENABLED;
     String mode = controllerElement.getChildTextTrim(ELEMENT_NAME_SPACE_CONTROLLER_MODE);
@@ -202,21 +207,18 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
     if (configurationElement != null) {
       SpaceControllerConfiguration configuration =
           spaceControllerRepository.newSpaceControllerConfiguration();
-      Element parametersElement =
-          configurationElement
-              .getChild(ELEMENT_NAME_SPACE_CONTROLLER_CONFIGURATION_ROOT_PARAMETERS);
+      Element parametersElement = configurationElement
+          .getChild(ELEMENT_NAME_SPACE_CONTROLLER_CONFIGURATION_ROOT_PARAMETERS);
       if (parametersElement != null) {
         @SuppressWarnings("unchecked")
-        List<Element> parameterElements =
-            parametersElement
-                .getChildren(ELEMENT_NAME_SPACE_CONTROLLER_CONFIGURATION_INDIVIDUAL_PARAMETER);
+        List<Element> parameterElements = parametersElement
+            .getChildren(ELEMENT_NAME_SPACE_CONTROLLER_CONFIGURATION_INDIVIDUAL_PARAMETER);
         for (Element parameterElement : parameterElements) {
           ConfigurationParameter parameter =
               spaceControllerRepository.newSpaceControllerConfigurationParameter();
 
-          String name =
-              parameterElement
-                  .getAttributeValue(ATTRIBUTE_NAME_SPACE_CONTROLLER_CONFIGURATION_PARAMETER_NAME);
+          String name = parameterElement
+              .getAttributeValue(ATTRIBUTE_NAME_SPACE_CONTROLLER_CONFIGURATION_PARAMETER_NAME);
           String value = parameterElement.getText();
 
           parameter.setName(name);
@@ -455,9 +457,8 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
         for (Element parameterElement : parameterElements) {
           ConfigurationParameter parameter = activityRepository.newActivityConfigurationParameter();
 
-          String name =
-              parameterElement
-                  .getAttributeValue(ATTRIBUTE_NAME_ACTIVITY_CONFIGURATION_PARAMETER_NAME);
+          String name = parameterElement
+              .getAttributeValue(ATTRIBUTE_NAME_ACTIVITY_CONFIGURATION_PARAMETER_NAME);
           String value = parameterElement.getText();
 
           parameter.setName(name);
@@ -537,16 +538,14 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
         groupElement.getChild(ELEMENT_NAME_LIVE_ACTIVITY_GROUP_ROOT_GROUP_LIVE_ACTIVITIES);
     if (groupLiveActivitiesElement != null) {
       @SuppressWarnings("unchecked")
-      List<Element> groupLiveActivityElements =
-          groupLiveActivitiesElement
-              .getChildren(ELEMENT_NAME_LIVE_ACTIVITY_GROUP_INDIVIDUAL_GROUP_LIVE_ACTIVITY);
+      List<Element> groupLiveActivityElements = groupLiveActivitiesElement
+          .getChildren(ELEMENT_NAME_LIVE_ACTIVITY_GROUP_INDIVIDUAL_GROUP_LIVE_ACTIVITY);
 
       for (Element groupLiveActivityElement : groupLiveActivityElements) {
         String myLiveActivityId =
             groupLiveActivityElement.getAttributeValue(ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_ID);
-        String myDependency =
-            groupLiveActivityElement
-                .getAttributeValue(ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_DEPENDENCY);
+        String myDependency = groupLiveActivityElement
+            .getAttributeValue(ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_DEPENDENCY);
 
         LiveActivity activity = liveActivities.get(myLiveActivityId);
         GroupLiveActivityDependency dependency = GroupLiveActivityDependency.valueOf(myDependency);
@@ -707,8 +706,8 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
     if (scheduleElement != null) {
       script.setSchedule(scheduleElement.getTextTrim());
 
-      script.setScheduled(VALUE_TRUE.equalsIgnoreCase(scheduleElement
-          .getAttributeValue(ATTRIBUTE_NAME_NAMED_SCRIPT_SCHEDULE_SCHEDULED)));
+      script.setScheduled(VALUE_TRUE.equalsIgnoreCase(
+          scheduleElement.getAttributeValue(ATTRIBUTE_NAME_NAMED_SCRIPT_SCHEDULE_SCHEDULED)));
     }
 
     Map<String, Object> metadata = getMetadata(scriptElement.getChild(ELEMENT_NAME_METADATA));

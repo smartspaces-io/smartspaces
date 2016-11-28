@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.spacecontroller.runtime.ros;
+package io.smartspaces.spacecontroller.runtime.comm;
 
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.Activity;
@@ -64,11 +64,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An {@link SpaceControllerCommunicator} using ROS for communication.
+ * An {@link SpaceControllerCommunicator} using TCP for communication.
  *
  * @author Keith M. Hughes
  */
-public class RosSpaceControllerCommunicator implements SpaceControllerCommunicator {
+public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerCommunicator {
 
   /**
    * The amount of time between sending a shutdown message and closing the
@@ -105,22 +105,20 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
   /**
    * Create a new space controller communicator.
    *
-   * @param rosEnvironment
-   *          ROS environment
    * @param spaceEnvironment
    *          space environment
    */
-  public RosSpaceControllerCommunicator(SmartSpacesEnvironment spaceEnvironment) {
+  public SimpleTcpSpaceControllerCommunicator(SmartSpacesEnvironment spaceEnvironment) {
     this.spaceEnvironment = spaceEnvironment;
   }
 
   @Override
-  public void onStartup() {
+  public void onStartup(SimpleSpaceController controllerInfo) {
     TcpServerNetworkCommunicationEndpointService tcpService = spaceEnvironment.getServiceRegistry()
         .getRequiredService(TcpServerNetworkCommunicationEndpointService.SERVICE_NAME);
     controllerAdminServer = tcpService.newStringServer(
         StandardMasterSpaceControllerCodec.DELIMITERS, StandardMasterSpaceControllerCodec.CHARSET,
-        StandardMasterSpaceControllerCodec.CONTROLLER_SERVER_PORT, spaceEnvironment.getLog());
+        controllerInfo.getHostControlPort(), spaceEnvironment.getLog());
     controllerAdminServer.addListener(new TcpServerNetworkCommunicationEndpointListener<String>() {
 
       @Override
@@ -145,7 +143,7 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
     });
     controllerAdminServer.startup();
   }
-  
+
   @Override
   public void registerControllerWithMaster(SimpleSpaceController controllerInfo) {
     // Yes, this is inside of a mostly ROS based class, but the ROS class is
@@ -595,7 +593,6 @@ public class RosSpaceControllerCommunicator implements SpaceControllerCommunicat
     controllerAdminServer.writeMessageAllConnections(messageCodec.encodeFinalMessage(statusObject));
   }
 
- 
   /**
    * @param controllerControl
    *          the controllerControl to set

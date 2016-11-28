@@ -107,6 +107,10 @@ public class StandardRemoteMasterServer implements RemoteMasterServer {
     controller.setDescription((String) data
         .get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_DESCRIPTION));
     controller.setHostId(hostId);
+    controller.setHostName((String) data
+        .get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_NAME));
+    controller.setHostControlPort((Integer) data
+        .get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_CONTROL_PORT));
 
     signalControllerRegistration(controller);
   }

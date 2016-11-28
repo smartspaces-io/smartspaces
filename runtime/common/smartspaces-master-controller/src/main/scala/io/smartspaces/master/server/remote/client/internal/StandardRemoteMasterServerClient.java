@@ -88,13 +88,11 @@ public class StandardRemoteMasterServerClient implements RemoteMasterServerClien
     httpClient = new HttpClientHttpContentCopier(HTTP_CLIENT_NUMBER_CONNECTIONS);
     httpClient.startup();
 
-    masterHostname =
-        spaceEnvironment.getSystemConfiguration().getRequiredPropertyString(
-            RemoteMasterServerMessages.CONFIGURATION_MASTER_HOST);
-    masterCommunicationPort =
-        spaceEnvironment.getSystemConfiguration().getPropertyInteger(
-            RemoteMasterServerMessages.CONFIGURATION_MASTER_COMMUNICATION_PORT,
-            RemoteMasterServerMessages.CONFIGURATION_MASTER_COMMUNICATION_PORT_DEFAULT);
+    masterHostname = spaceEnvironment.getSystemConfiguration()
+        .getRequiredPropertyString(RemoteMasterServerMessages.CONFIGURATION_MASTER_HOST);
+    masterCommunicationPort = spaceEnvironment.getSystemConfiguration().getPropertyInteger(
+        RemoteMasterServerMessages.CONFIGURATION_MASTER_COMMUNICATION_PORT,
+        RemoteMasterServerMessages.CONFIGURATION_MASTER_COMMUNICATION_PORT_DEFAULT);
   }
 
   @Override
@@ -113,6 +111,10 @@ public class StandardRemoteMasterServerClient implements RemoteMasterServerClien
           controller.getUuid());
       registrationData.put(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_ID,
           controller.getHostId());
+      registrationData.put(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_NAME,
+          controller.getHostName());
+      registrationData.put(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_CONTROL_PORT,
+          controller.getHostControlPort());
       registrationData.put(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_NAME,
           controller.getName());
       registrationData.put(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_DESCRIPTION,

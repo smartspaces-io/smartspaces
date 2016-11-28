@@ -29,95 +29,141 @@ import java.util.Map;
  */
 public interface SpaceController extends PersistedObject, Serializable {
 
-  /**
-   * @return the hostId
-   */
-  String getHostId();
+	/**
+	 * Get the host ID.
+	 * 
+	 * @return the hostId
+	 */
+	String getHostId();
 
-  /**
-   * @param hostId
-   *          the hostId to set
-   */
-  void setHostId(String hostId);
+	/**
+	 * Set the host ID.
+	 * 
+	 * @param hostId
+	 *            the hostId to set
+	 */
+	void setHostId(String hostId);
 
-  /**
-   * @return the uuid
-   */
-  String getUuid();
+	/**
+	 * Get the host name.
+	 * 
+	 * @return the host name
+	 */
+	String getHostName();
 
-  /**
-   * @param uuid
-   *          the uuid to set
-   */
-  void setUuid(String uuid);
+	/**
+	 * Set the host name.
+	 * 
+	 * @param hostName
+	 *            the host name to set
+	 */
+	void setHostName(String hostName);
 
-  /**
-   * @return the name
-   */
-  String getName();
+	/**
+	 * Get the port on the host for control.
+	 * 
+	 * @return the host control port
+	 */
+	int getHostControlPort();
 
-  /**
-   * @param name
-   *          the name to set
-   */
-  void setName(String name);
+	/**
+	 * Set the port on the host for control.
+	 * 
+	 * @param hostControlPort
+	 *            the host control port
+	 */
+	void setHostControlPort(int hostControlPort);
 
-  /**
-   * @return the description
-   */
-  String getDescription();
+	/**
+	 * Get the UUID.
+	 * 
+	 * @return the uuid
+	 */
+	String getUuid();
 
-  /**
-   * @param description
-   *          the description to set
-   */
-  void setDescription(String description);
+	/**
+	 * Set the UUID.
+	 * 
+	 * @param uuid
+	 *            the uuid to set
+	 */
+	void setUuid(String uuid);
 
-  /**
-   * Set the metadata for the space controller.
-   *
-   * <p>
-   * This removes the old metadata completely.
-   *
-   * @param metadata
-   *          the metadata for the space controller (can be {@link null}
-   */
-  void setMetadata(Map<String, Object> metadata);
+	/**
+	 * Get the name.
+	 * 
+	 * @return the name
+	 */
+	String getName();
 
-  /**
-   * Get the metadata for the space controller.
-   *
-   * @return the space controller's meta data
-   */
-  Map<String, Object> getMetadata();
+	/**
+	 * Set the name.
+	 * 
+	 * @param name
+	 *            the name to set
+	 */
+	void setName(String name);
 
-  /**
-   * Get the controller configuration.
-   *
-   * @return can be {@code null}
-   */
-  SpaceControllerConfiguration getConfiguration();
+	/**
+	 * Get the description.
+	 * 
+	 * @return the description
+	 */
+	String getDescription();
 
-  /**
-   * Set the controller configuration.
-   *
-   * @param configuration
-   *          the configuration, can be {@code null}
-   */
-  void setConfiguration(SpaceControllerConfiguration configuration);
+	/**
+	 * Set the description.
+	 * 
+	 * @param description
+	 *            the description to set
+	 */
+	void setDescription(String description);
 
-  /**
-   * Set the mode for this controller.
-   *
-   * @param mode
-   *          mode to set
-   */
-  void setMode(SpaceControllerMode mode);
+	/**
+	 * Set the metadata for the space controller.
+	 *
+	 * <p>
+	 * This removes the old metadata completely.
+	 *
+	 * @param metadata
+	 *            the metadata for the space controller (can be {@link null}
+	 */
+	void setMetadata(Map<String, Object> metadata);
 
-  /**
-   * Get the mode for this controller.
-   *
-   * @return mode of controller
-   */
-  SpaceControllerMode getMode();
+	/**
+	 * Get the metadata for the space controller.
+	 *
+	 * @return the space controller's meta data
+	 */
+	Map<String, Object> getMetadata();
+
+	/**
+	 * Get the controller configuration.
+	 *
+	 * @return the configuration, can be {@code null}
+	 */
+	SpaceControllerConfiguration getConfiguration();
+
+	/**
+	 * Set the controller configuration.
+	 *
+	 * @param configuration
+	 *            the configuration, can be {@code null}
+	 */
+	void setConfiguration(SpaceControllerConfiguration configuration);
+
+	/**
+	 * Set the mode for this controller.
+	 *
+	 * @param mode
+	 *            mode to set
+	 */
+	void setMode(SpaceControllerMode mode);
+
+	/**
+	 * Get the mode for this controller.
+	 *
+	 * @return mode of controller
+	 */
+	SpaceControllerMode getMode();
 }

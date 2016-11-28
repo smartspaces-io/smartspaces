@@ -111,7 +111,8 @@ public class StandardSpaceControllerTest {
     systemConfiguration.setProperty(SpaceController.CONFIGURATION_CONTROLLER_NAME, "testcontroller");
     systemConfiguration.setProperty(SpaceController.CONFIGURATION_CONTROLLER_DESCRIPTION, "yipee");
     systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_HOSTID, "gloop");
-    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_CONTAINER_FILE_CONTROLLABLE,
+    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_HOSTNAME, "zorp");
+   systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_CONTAINER_FILE_CONTROLLABLE,
         "false");
 
     controller =

@@ -50,6 +50,22 @@
   </tr>
 
   <tr>
+    <th>Host Name</th>
+    <td>
+      <@spring.formInput path="spacecontroller.hostName" />
+      <@spring.showErrors '<br>', 'fieldError' />
+    </td>
+  </tr>
+
+  <tr>
+    <th>Host Control Port</th>
+    <td>
+      <@spring.formInput path="spacecontroller.hostControlPort" />
+      <@spring.showErrors '<br>', 'fieldError' />
+    </td>
+  </tr>
+
+  <tr>
     <th>Mode</th>
     <td>
       <@spring.formSingleSelect "spacecontroller.mode", modes, "" />

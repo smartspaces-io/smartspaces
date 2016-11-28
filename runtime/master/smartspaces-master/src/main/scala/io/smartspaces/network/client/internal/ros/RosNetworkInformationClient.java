@@ -43,12 +43,12 @@ import java.util.Set;
  * @author Keith M. Hughes
  */
 public class RosNetworkInformationClient implements NetworkInformationClient {
-
+  
   /**
-   * ROS context for the master.
+   * The Master ROS context.
    */
   private MasterRosContext masterRosContext;
-
+  
   /**
    * Client for getting information about the state of the network from the
    * master.
@@ -106,9 +106,9 @@ public class RosNetworkInformationClient implements NetworkInformationClient {
 
   @Override
   public void startup() {
-    masterStateClient =
-        new MasterStateClient(masterRosContext.getMasterNode(), masterRosContext
-            .getRosEnvironment().getMasterUri());
+//    masterStateClient =
+//        new MasterStateClient(masterRosContext.getMasterNode(), masterRosContext
+//            .getRosEnvironment().getMasterUri());
   }
 
   @Override

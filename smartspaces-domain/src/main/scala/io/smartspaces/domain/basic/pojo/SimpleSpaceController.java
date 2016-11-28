@@ -43,6 +43,17 @@ public class SimpleSpaceController extends SimpleObject implements SpaceControll
   private String hostId;
 
   /**
+   * The domain name of the host. This should be usable to find the host in the
+   * network.
+   */
+  private String hostName;
+
+  /**
+   * The port on the host for control.
+   */
+  private int hostControlPort;
+
+  /**
    * UUID of the controller.
    */
   private String uuid;
@@ -80,6 +91,26 @@ public class SimpleSpaceController extends SimpleObject implements SpaceControll
   @Override
   public void setHostId(String hostId) {
     this.hostId = hostId;
+  }
+
+  @Override
+  public String getHostName() {
+    return hostName;
+  }
+
+  @Override
+  public void setHostName(String hostName) {
+    this.hostName = hostName;
+  }
+
+  @Override
+  public int getHostControlPort() {
+    return hostControlPort;
+  }
+
+  @Override
+  public void setHostControlPort(int hostControlPort) {
+    this.hostControlPort = hostControlPort;
   }
 
   @Override
@@ -140,5 +171,13 @@ public class SimpleSpaceController extends SimpleObject implements SpaceControll
   @Override
   public void setMode(SpaceControllerMode mode) {
     this.mode = mode;
+  }
+
+  @Override
+  public String toString() {
+    return "SimpleSpaceController [hostId=" + hostId + ", hostName=" + hostName
+        + ", hostControlPort=" + hostControlPort + ", uuid=" + uuid + ", name=" + name
+        + ", description=" + description + ", mode=" + mode + ", configuration=" + configuration
+        + ", metadata=" + metadata + "]";
   }
 }

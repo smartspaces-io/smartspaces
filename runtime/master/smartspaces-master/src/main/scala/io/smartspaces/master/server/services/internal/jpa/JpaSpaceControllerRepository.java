@@ -92,6 +92,8 @@ public class JpaSpaceControllerRepository extends BaseSpaceControllerRepository 
     controller.setName(template.getName());
     controller.setDescription(template.getDescription());
     controller.setHostId(template.getHostId());
+    controller.setHostName(template.getHostName());
+    controller.setHostControlPort(template.getHostControlPort());
 
     return controller;
   }

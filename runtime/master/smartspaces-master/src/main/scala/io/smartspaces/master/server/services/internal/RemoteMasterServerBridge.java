@@ -92,9 +92,11 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
     String registeringUuid = registeringController.getUuid();
     if (log.isInfoEnabled()) {
       log.formatInfo("Controller %s was unrecognized. Creating new record.", registeringUuid);
-      log.formatInfo("\tName: %s\n\tDescription: %s\n\tHost ID: %s",
+      log.formatInfo(
+          "\tName: %s\n\tDescription: %s\n\tHost ID: %s\n\tHost Name: %s\n\tHost Control Port: %d",
           registeringController.getName(), registeringController.getDescription(),
-          registeringController.getHostId());
+          registeringController.getHostId(), registeringController.getHostName(),
+          registeringController.getHostControlPort());
     }
 
     checkSpaceControllerInfo(registeringController);
@@ -123,6 +125,8 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
     if (shouldRecordBeUpdated(registeringController, existingController)) {
       String registeringHostId = registeringController.getHostId();
       String registeringName = registeringController.getName();
+      String registeringHostName = registeringController.getHostName();
+      int registeringHostControlPort = registeringController.getHostControlPort();
       log.formatInfo(
           "Changing space controller data: Old Name: %s\tNew Name: %s\tOld Host ID: %s\tNew Host ID: %s",
           existingController.getName(), registeringName, existingController.getHostId(),
@@ -130,6 +134,9 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
 
       existingController.setHostId(registeringHostId);
       existingController.setName(registeringName);
+      existingController.setHostId(registeringHostId);
+      existingController.setHostName(registeringHostName);
+      existingController.setHostControlPort(registeringHostControlPort);
 
       spaceControllerRepository.saveSpaceController(existingController);
     }
@@ -162,9 +169,8 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
    */
   private void checkSpaceControllerInfo(SpaceController registeringController)
       throws SmartSpacesException {
-    StringBuilder errorBuilder =
-        spaceControllerInformationValidator
-            .checkControllerInfoForErrors(registeringController, log);
+    StringBuilder errorBuilder = spaceControllerInformationValidator
+        .checkControllerInfoForErrors(registeringController, log);
     if (errorBuilder.length() != 0) {
       throw new SimpleSmartSpacesException(errorBuilder.toString());
     }

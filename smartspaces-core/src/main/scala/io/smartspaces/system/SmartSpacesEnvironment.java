@@ -19,11 +19,9 @@ package io.smartspaces.system;
 
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.resource.managed.ManagedResources;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.system.core.configuration.CoreConfiguration;
 import io.smartspaces.system.core.logging.LoggingProvider;
-import io.smartspaces.tasks.ManagedTasks;
 import io.smartspaces.time.provider.TimeProvider;
 
 import org.apache.commons.logging.Log;

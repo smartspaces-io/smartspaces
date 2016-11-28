@@ -71,6 +71,11 @@ public class JpaSpaceController implements SpaceController {
   public static final int HOSTID_COLUMN_LENGTH = 512;
 
   /**
+   * Column length to use for the host name.
+   */
+  public static final int HOST_NAME_COLUMN_LENGTH = 512;
+
+  /**
    * Column length to use for the uuid.
    */
   public static final int UUID_COLUMN_LENGTH = 64;
@@ -103,6 +108,18 @@ public class JpaSpaceController implements SpaceController {
    */
   @Column(nullable = false, length = HOSTID_COLUMN_LENGTH)
   private String hostId;
+
+  /**
+   * The host. This should be usable to find the host in the network.
+   */
+  @Column(nullable = false, length = HOST_NAME_COLUMN_LENGTH)
+  private String hostName;
+
+  /**
+   * The host control port.
+   */
+  @Column(nullable = false)
+  private int hostControlPort;
 
   /**
    * UUID of the controller.
@@ -163,6 +180,26 @@ public class JpaSpaceController implements SpaceController {
   @Override
   public void setHostId(String hostId) {
     this.hostId = hostId;
+  }
+
+  @Override
+  public String getHostName() {
+    return hostName;
+  }
+
+  @Override
+  public void setHostName(String hostName) {
+    this.hostName = hostName;
+  }
+
+  @Override
+  public int getHostControlPort() {
+    return hostControlPort;
+  }
+
+  @Override
+  public void setHostControlPort(int hostControlPort) {
+    this.hostControlPort = hostControlPort;
   }
 
   @Override

@@ -90,6 +90,16 @@ public interface MasterDomainDescription {
   String ELEMENT_NAME_SPACE_CONTROLLER_HOST_ID = "host-id";
 
   /**
+   * The XML element name for a space controller host name.
+   */
+  String ELEMENT_NAME_SPACE_CONTROLLER_HOST_NAME = "host-name";
+
+  /**
+   * The XML element name for a space controller host control port.
+   */
+  String ELEMENT_NAME_SPACE_CONTROLLER_HOST_CONTROL_PORT = "host-control-port";
+
+  /**
    * The XML element name for a space controller mode.
    */
   String ELEMENT_NAME_SPACE_CONTROLLER_MODE = "mode";

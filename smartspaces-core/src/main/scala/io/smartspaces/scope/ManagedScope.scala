@@ -22,16 +22,20 @@ import io.smartspaces.tasks.ManagedTasks
 
 /**
  * A managed scope that controls resources and tasks as a unit.
- * 
+ *
+ * <p>
+ * Managed resources will be started when the scope is started. Both resources and tasks will be shut down
+ * when the scope is shut down.
+ *
  * @author Keith M. Hughes
  */
 trait ManagedScope extends ManagedResource {
-  
+
   /**
    * The collection of managed tasks for the scope.
    */
   val managedTasks: ManagedTasks
-  
+
   /**
    * The collection of managed resources for the scope.
    */

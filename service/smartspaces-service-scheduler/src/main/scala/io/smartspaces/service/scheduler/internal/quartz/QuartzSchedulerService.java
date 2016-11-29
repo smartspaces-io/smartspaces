@@ -20,12 +20,14 @@ package io.smartspaces.service.scheduler.internal.quartz;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.evaluation.ExecutionContext;
 import io.smartspaces.evaluation.StandardExecutionContext;
+import io.smartspaces.resource.managed.BaseManagedResource;
 import io.smartspaces.scheduling.quartz.orientdb.OrientDbJobStore;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.action.ActionService;
 import io.smartspaces.service.scheduler.SchedulerService;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
+import com.orientechnologies.orient.core.Orient;
 import org.apache.commons.logging.Log;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
@@ -130,6 +132,15 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
       volatileScheduler.setJobFactory(jobFactory);
 
       volatileScheduler.start();
+      
+      // Make sure when SmartSpaces shuts down that orientDB is shut down.
+      // Other code may be using OrientDB so we want this at container shutdown.
+      getSpaceEnvironment().getContainerManagedScope().managedResources().addResource(new BaseManagedResource() {
+		@Override
+		public void shutdown() {
+			Orient.instance().shutdown();
+		}
+      });
     } catch (SchedulerException e) {
       throw new SmartSpacesException("Could not start Smart Spaces volatileScheduler", e);
     }

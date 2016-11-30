@@ -94,6 +94,14 @@ public interface SchedulerService extends SupportedService {
    */
   void scheduleActionWithCron(String jobName, String groupName, String actionSource,
       String actionName, Map<String, Object> data, String schedule);
+  
+  /**
+   * Remove all jobs in the given job group.
+   * 
+   * @param jobGroupName
+   * 		the name for the job group.
+   */
+  void removeJobGroup(String jobGroupName);
 
   /**
    * Add entities to the scheduler that can be used for scheduled jobs.

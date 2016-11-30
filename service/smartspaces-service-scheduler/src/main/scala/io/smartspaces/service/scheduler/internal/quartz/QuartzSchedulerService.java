@@ -37,12 +37,14 @@ import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.impl.DirectSchedulerFactory;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.simpl.RAMJobStore;
 import org.quartz.simpl.SimpleThreadPool;
 import org.quartz.spi.JobFactory;
@@ -52,6 +54,7 @@ import java.lang.reflect.Constructor;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A {@link SchedulerService} which uses quartz.
@@ -111,7 +114,6 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
           new OrientDbJobStore(orientDbUri, ORIENTDB_USER, ORIENTDB_PASSWORD);
       jobStore.setExecutorService(getSpaceEnvironment().getExecutorService());
       jobStore.setExternalClassLoader(getClass().getClassLoader());
-      
 
       SimpleThreadPool threadPool = new SimpleThreadPool(10, Thread.NORM_PRIORITY);
 
@@ -132,15 +134,19 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
       volatileScheduler.setJobFactory(jobFactory);
 
       volatileScheduler.start();
-      
+
       // Make sure when SmartSpaces shuts down that orientDB is shut down.
-      // Other code may be using OrientDB so we want this at container shutdown.
-      getSpaceEnvironment().getContainerManagedScope().managedResources().addResource(new BaseManagedResource() {
-		@Override
-		public void shutdown() {
-			Orient.instance().shutdown();
-		}
-      });
+      // Other code may be using OrientDB so we want this at container
+      // shutdown.
+      getSpaceEnvironment().getContainerManagedScope().managedResources()
+          .addResource(new BaseManagedResource() {
+            @Override
+            public void shutdown() {
+              Orient.instance().shutdown();
+            }
+          });
+
+      getSpaceEnvironment().getLog().info("Quartz scheduling service started");
     } catch (SchedulerException e) {
       throw new SmartSpacesException("Could not start Smart Spaces volatileScheduler", e);
     }
@@ -198,7 +204,7 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
       JobDataMap jobDataMap = detail.getJobDataMap();
       jobDataMap.put(JOB_MAP_PROPERTY_ACTION_SOURCE, actionSource);
       jobDataMap.put(JOB_MAP_PROPERTY_ACTION_NAME, actionName);
-      
+
       if (data != null) {
         jobDataMap.putAll(data);
       }
@@ -220,8 +226,8 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
   public void scheduleActionWithCron(String jobName, String groupName, String actionSource,
       String actionName, Map<String, Object> data, String schedule) {
     try {
-      JobDetail detail = JobBuilder.newJob(ActionSchedulerJob.class)
-          .withIdentity(jobName, groupName).build();
+      JobDetail detail =
+          JobBuilder.newJob(ActionSchedulerJob.class).withIdentity(jobName, groupName).build();
       JobDataMap jobDataMap = detail.getJobDataMap();
       jobDataMap.put(JOB_MAP_PROPERTY_ACTION_SOURCE, actionSource);
       jobDataMap.put(JOB_MAP_PROPERTY_ACTION_NAME, actionName);
@@ -232,12 +238,25 @@ public class QuartzSchedulerService extends BaseSupportedService implements Sche
               .withSchedule(CronScheduleBuilder.cronSchedule(schedule)).build();
 
       persistedScheduler.scheduleJob(detail, trigger);
-      
-      getSpaceEnvironment().getLog().info(
-          String.format("Scheduled job %s:%s with cron %s", groupName, jobName, schedule));
+
+      getSpaceEnvironment().getLog()
+          .info(String.format("Scheduled job %s:%s with cron %s", groupName, jobName, schedule));
     } catch (Exception e) {
       throw new SmartSpacesException(
           String.format("Unable to schedule job %s:%s", groupName, jobName), e);
+    }
+  }
+
+  @Override
+  public void removeJobGroup(String jobGroupName) {
+    try {
+      Set<JobKey> jobs = persistedScheduler.getJobKeys(GroupMatcher.jobGroupEquals(jobGroupName));
+      for (JobKey job : jobs) {
+        persistedScheduler.deleteJob(job);
+      }
+    } catch (SchedulerException e) {
+      throw new SmartSpacesException(
+          String.format("Unable to remove job group %s jobs", jobGroupName), e);
     }
   }
 

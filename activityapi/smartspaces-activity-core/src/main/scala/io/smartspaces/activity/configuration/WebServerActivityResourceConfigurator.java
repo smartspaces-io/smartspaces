@@ -23,6 +23,8 @@ import io.smartspaces.activity.ActivityResourceConfigurator;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.util.io.FileSupport;
+import io.smartspaces.util.io.FileSupportImpl;
 
 import java.io.File;
 
@@ -31,8 +33,8 @@ import java.io.File;
  *
  * @author Keith M. Hughes
  */
-public class WebServerActivityResourceConfigurator implements
-    ActivityResourceConfigurator<WebServer> {
+public class WebServerActivityResourceConfigurator
+    implements ActivityResourceConfigurator<WebServer> {
 
   /**
    * Configuration property suffix giving the port the web server should be
@@ -131,6 +133,11 @@ public class WebServerActivityResourceConfigurator implements
    */
   private boolean crossOriginAllowed;
 
+  /**
+   * The file support for the configurator.
+   */
+  private FileSupport fileSupport = FileSupportImpl.INSTANCE;
+
   @Override
   public void configure(String resourceName, Activity activity, WebServer webServer) {
     resourceName = resourceName != null ? resourceName.trim() : "";
@@ -140,32 +147,26 @@ public class WebServerActivityResourceConfigurator implements
 
     Configuration configuration = activity.getConfiguration();
 
-    webSocketUriPrefix =
-        configuration.getPropertyString(configurationPrefix
-            + CONFIGURATION_SUFFIX_WEBAPP_WEB_SERVER_WEBSOCKET_URI);
+    webSocketUriPrefix = configuration.getPropertyString(
+        configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_WEB_SERVER_WEBSOCKET_URI);
 
-    webServerPort =
-        configuration.getPropertyInteger(configurationPrefix
-            + CONFIGURATION_SUFFIX_WEBAPP_WEB_SERVER_PORT, WEB_SERVER_PORT_DEFAULT);
+    webServerPort = configuration.getPropertyInteger(
+        configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_WEB_SERVER_PORT, WEB_SERVER_PORT_DEFAULT);
     webServer.setPort(webServerPort);
 
-    String serverName =
-        (resourceName.isEmpty()) ? String.format("%sWebServer", activity.getName()) : String
-            .format("%s_%s_WebServer", activity.getName(), resourceName);
+    String serverName = (resourceName.isEmpty()) ? String.format("%sWebServer", activity.getName())
+        : String.format("%s_%s_WebServer", activity.getName(), resourceName);
     webServer.setServerName(serverName);
 
-    boolean secure =
-        configuration.getPropertyBoolean(configurationPrefix
-            + CONFIGURATION_SUFFIX_WEBAPP_WEB_SERVER_SECURE, false);
+    boolean secure = configuration.getPropertyBoolean(
+        configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_WEB_SERVER_SECURE, false);
     webServer.setSecureServer(secure);
 
     if (secure) {
-      String certificatePath =
-          configuration.getPropertyString(configurationPrefix
-              + CONFIGURATION_SUFFIX_WEBAPP_SSL_CERTIFICATE);
-      String privateKeyPath =
-          configuration.getPropertyString(configurationPrefix
-              + CONFIGURATION_SUFFIX_WEBAPP_SSL_PRIVATE_KEY);
+      String certificatePath = configuration
+          .getPropertyString(configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_SSL_CERTIFICATE);
+      String privateKeyPath = configuration
+          .getPropertyString(configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_SSL_PRIVATE_KEY);
 
       boolean hasCertificatePath = certificatePath != null && !certificatePath.trim().isEmpty();
       boolean hasPrivateKeyPath = privateKeyPath != null && !privateKeyPath.trim().isEmpty();
@@ -179,49 +180,41 @@ public class WebServerActivityResourceConfigurator implements
       }
     }
 
-    boolean debugMode =
-        configuration
-            .getPropertyBoolean(WebActivityConfiguration.CONFIGURATION_WEBAPP_DEBUG, false);
+    boolean debugMode = configuration
+        .getPropertyBoolean(WebActivityConfiguration.CONFIGURATION_WEBAPP_DEBUG, false);
     webServer.setDebugMode(debugMode);
 
-    crossOriginAllowed =
-        configuration.getPropertyBoolean(configurationPrefix
-            + CONFIGURATION_SUFFIX_WEBAPP_ENABLE_CROSS_ORIGIN,
-            WEB_SERVER_DEFAULT_ENABLE_CROSS_ORIGIN);
+    crossOriginAllowed = configuration.getPropertyBoolean(
+        configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_ENABLE_CROSS_ORIGIN,
+        WEB_SERVER_DEFAULT_ENABLE_CROSS_ORIGIN);
 
-    String webServerHost =
-        configuration.getPropertyString(SmartSpacesEnvironment.CONFIGURATION_HOST_ADDRESS,
-            WEB_SERVER_DEFAULT_HOST);
+    String webServerHost = configuration.getPropertyString(
+        SmartSpacesEnvironment.CONFIGURATION_HOST_ADDRESS, WEB_SERVER_DEFAULT_HOST);
 
     webContentPath = "/" + activity.getName();
     webBaseUrl = ((secure) ? "https" : "http") + "://" + webServerHost + ":" + webServerPort;
     webContentUrl = webBaseUrl + webContentPath;
 
     StringBuilder webInitialPageBuilder = new StringBuilder();
-    webInitialPageBuilder
-        .append(webContentUrl)
-        .append(WebActivityConfiguration.WEB_PATH_SEPARATOR)
-        .append(
-            configuration.getPropertyString(configurationPrefix
-                + WebActivityConfiguration.CONFIGURATION_SUFFIX_INITIAL_PAGE,
-                WebActivityConfiguration.DEFAULT_INITIAL_PAGE));
+    webInitialPageBuilder.append(webContentUrl).append(WebActivityConfiguration.WEB_PATH_SEPARATOR)
+        .append(configuration.getPropertyString(
+            configurationPrefix + WebActivityConfiguration.CONFIGURATION_SUFFIX_INITIAL_PAGE,
+            WebActivityConfiguration.DEFAULT_INITIAL_PAGE));
 
-    String queryString =
-        configuration.getPropertyString(configurationPrefix
-            + WebActivityConfiguration.CONFIGURATION_SUFFIX_INITIAL_URL_QUERY_STRING);
+    String queryString = configuration.getPropertyString(configurationPrefix
+        + WebActivityConfiguration.CONFIGURATION_SUFFIX_INITIAL_URL_QUERY_STRING);
     if (queryString != null) {
-      webInitialPageBuilder.append(WebActivityConfiguration.WEB_QUERY_STRING_SEPARATOR).append(
-          queryString.trim());
+      webInitialPageBuilder.append(WebActivityConfiguration.WEB_QUERY_STRING_SEPARATOR)
+          .append(queryString.trim());
     }
 
     webInitialPage = webInitialPageBuilder.toString();
 
-    String contentLocation =
-        configuration.getPropertyString(configurationPrefix
-            + CONFIGURATION_SUFFIX_WEBAPP_CONTENT_LOCATION);
+    String contentLocation = configuration
+        .getPropertyString(configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_CONTENT_LOCATION);
     if (contentLocation != null) {
-      webContentBaseDir =
-          new File(activity.getActivityFilesystem().getInstallDirectory(), contentLocation);
+      webContentBaseDir = fileSupport
+          .resolveFile(activity.getActivityFilesystem().getInstallDirectory(), contentLocation);
 
       webServer.addStaticContentHandler(webContentPath, webContentBaseDir);
     }

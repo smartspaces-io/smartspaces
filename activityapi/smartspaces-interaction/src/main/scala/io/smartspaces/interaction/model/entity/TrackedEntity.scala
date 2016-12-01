@@ -15,29 +15,36 @@
  * the License.
  */
 
-package io.smartspaces.interaction.model.entity;
+package io.smartspaces.interaction.model.entity
 
 /**
- * An entity that has a position.
+ * A positional entity which is being tracked.
  *
  * @param <T>
- *          type of the location
+ *          the location type
  *
  * @author Keith M. Hughes
  */
-public interface PositionableEntity<T> {
+trait TrackedEntity[T] extends PositionableEntity[T] {
 
   /**
-   * Get the identity of the entity.
+   * Is the entity new?
    *
-   * @return the identity of the entity
+   * @return {@code true} if the entity is new
    */
-  String getId();
+  def isNew(): Boolean
 
   /**
-   * Get the position of the entity.
+   * Is the entity visible?
    *
-   * @return the position
+   * @return {@code true} if the entity is visible
    */
-  T getPosition();
+  def isVisible(): Boolean
+
+  /**
+   * Is the entity lost, that is no longer being tracked?
+   *
+   * @return {@code true} if the entity is lost
+   */
+  def isLost(): Boolean
 }

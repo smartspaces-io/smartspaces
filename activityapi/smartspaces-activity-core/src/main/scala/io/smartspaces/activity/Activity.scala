@@ -17,21 +17,12 @@
 
 package io.smartspaces.activity;
 
-import io.smartspaces.activity.execution.ActivityExecutionContext;
-import io.smartspaces.configuration.Configuration;
-import io.smartspaces.system.SmartSpacesEnvironment;
+import java.util.Map
 
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import io.smartspaces.system.SmartSpacesEnvironment
+import io.smartspaces.activity.execution.ActivityExecutionContext
 import io.smartspaces.configuration.Configuration
+import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.system.SmartSpacesEnvironment
-import io.smartspaces.configuration.Configuration
-import io.smartspaces.system.SmartSpacesEnvironment
-import io.smartspaces.configuration.Configuration
-import io.smartspaces.system.SmartSpacesEnvironment
-import io.smartspaces.configuration.Configuration
 
 /**
  * An activity for Smart Spaces.
@@ -122,14 +113,14 @@ trait Activity extends ActivityControl {
    * @param log
    *          logger to use
    */
-  def setLog(log: Log): Unit
+  def setLog(log: ExtendedLog): Unit
 
   /**
    * Get the activity's logger.
    *
    * @return log
    */
-  def getLog(): Log
+  def getLog(): ExtendedLog
 
   /**
    * Get the name of the activity.

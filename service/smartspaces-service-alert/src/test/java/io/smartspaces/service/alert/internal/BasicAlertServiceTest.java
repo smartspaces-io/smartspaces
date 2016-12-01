@@ -18,15 +18,15 @@
 package io.smartspaces.service.alert.internal;
 
 import static org.mockito.Mockito.when;
-import io.smartspaces.service.alert.AlertNotifier;
-import io.smartspaces.service.alert.internal.BasicAlertService;
-import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.time.provider.SettableTimeProvider;
 
-import org.apache.commons.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.alert.AlertNotifier;
+import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.time.provider.SettableTimeProvider;
 
 /**
  * Unit tests for the {@link BasicAlertService}
@@ -45,7 +45,7 @@ public class BasicAlertServiceTest {
 
   private AlertNotifier notifier2;
 
-  private Log log;
+  private ExtendedLog log;
 
   @Before
   public void setup() {
@@ -53,7 +53,7 @@ public class BasicAlertServiceTest {
     timeProvider = new SettableTimeProvider();
     when(spaceEnvironment.getTimeProvider()).thenReturn(timeProvider);
 
-    log = Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
     when(spaceEnvironment.getLog()).thenReturn(log);
 
     notifier1 = Mockito.mock(AlertNotifier.class);

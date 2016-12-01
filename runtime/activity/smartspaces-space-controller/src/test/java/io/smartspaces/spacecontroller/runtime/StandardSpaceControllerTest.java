@@ -23,22 +23,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
-
-import org.apache.commons.logging.Log;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.ros.concurrent.DefaultScheduledExecutorService;
-
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
 import io.smartspaces.liveactivity.runtime.LiveActivityRuntime;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.spacecontroller.SpaceController;
 import io.smartspaces.spacecontroller.runtime.configuration.SpaceControllerConfigurationManager;
@@ -48,6 +38,16 @@ import io.smartspaces.system.SmartSpacesSystemControl;
 import io.smartspaces.tasks.ImmediateRunSequentialTaskQueue;
 import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.io.FileSupport;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.ros.concurrent.DefaultScheduledExecutorService;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Unit tests for the {@link StandardSpaceController}.
@@ -75,11 +75,11 @@ public class StandardSpaceControllerTest {
 
   private FileSupport fileSupport;
 
-  private Log log;
+  private ExtendedLog log;
 
   @Before
   public void setup() {
-    log = mock(Log.class);
+    log = mock(ExtendedLog.class);
 
     executorService = new DefaultScheduledExecutorService();
 

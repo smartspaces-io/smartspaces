@@ -32,6 +32,8 @@ import io.smartspaces.time.provider.TimeProvider;
 import com.google.common.collect.Maps;
 import org.apache.commons.logging.Log;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -40,8 +42,8 @@ import java.util.concurrent.ScheduledExecutorService;
  *
  * @author Keith M. Hughes
  */
-public class OsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
-    InternalSmartSpacesEnvironment {
+public class OsgiSmartSpacesEnvironment
+    implements SmartSpacesEnvironment, InternalSmartSpacesEnvironment {
 
   /**
    * The system configuration.
@@ -62,8 +64,8 @@ public class OsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
    * Network type for the container.
    *
    * <p>
-   * This allows distinguishing between different Smart Spaces networks,
-   * e.g. localdev, prod, fredbot.
+   * This allows distinguishing between different Smart Spaces networks, e.g.
+   * localdev, prod, fredbot.
    */
   private String networkType;
 
@@ -91,12 +93,16 @@ public class OsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
    * The extended logger.
    */
   private ExtendedLog log;
-  
+
   /**
    * The container level managed scope.
    */
   private ManagedScope containerManagedScope;
-  
+
+  /**
+   * The loggers keyed by log name.
+   */
+  private Map<String, StandardExtendedLog> logs = new HashMap<>();
 
   @Override
   public Configuration getSystemConfiguration() {
@@ -119,30 +125,33 @@ public class OsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
   }
 
   @Override
-  public Log getLog() {
+  public ExtendedLog getLog() {
     return log;
   }
 
   @Override
-  public ExtendedLog getExtendedLog() {
-    return log;
-  }
-
-  @Override
-  public Log getLog(String logName, String level, String filename) {
+  public ExtendedLog getLog(String logName, String level, String filename) {
     // TODO(keith): make this generate extended logs, though they will need to
     // be in a map.
-    return loggingProvider.getLog(logName, level, filename);
+    StandardExtendedLog log = logs.get(logName);
+    if (log == null) {
+      log = new StandardExtendedLog(logName, loggingProvider.getLog(logName, level, filename));
+      logs.put(logName, log);
+    }
+    return log;
   }
 
   @Override
-  public boolean modifyLogLevel(Log log, String level) {
-    return loggingProvider.modifyLogLevel(log, level);
+  public boolean modifyLogLevel(ExtendedLog log, String level) {
+    StandardExtendedLog slog = (StandardExtendedLog) log;
+    return loggingProvider.modifyLogLevel(slog.getDelegate(), level);
   }
 
   @Override
-  public void releaseLog(Log log) {
-    loggingProvider.releaseLog(log);
+  public void releaseLog(ExtendedLog log) {
+    StandardExtendedLog slog = (StandardExtendedLog) log;
+    logs.remove(slog.getLogName());
+    loggingProvider.releaseLog(slog.getDelegate());
   }
 
   @Override
@@ -159,7 +168,7 @@ public class OsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
   public ManagedScope getContainerManagedScope() {
     return containerManagedScope;
   }
-  
+
   @Override
   public <T> T getValue(String valueName) {
     @SuppressWarnings("unchecked")
@@ -213,9 +222,9 @@ public class OsgiSmartSpacesEnvironment implements SmartSpacesEnvironment,
   public void setLoggingProvider(LoggingProvider loggingProvider) {
     this.loggingProvider = loggingProvider;
 
-    log = new StandardExtendedLog(loggingProvider.getLog());
+    log = new StandardExtendedLog("container", loggingProvider.getLog());
   }
-  
+
   @Override
   public void setContainerManagedScope(ManagedScope containerManagedScope) {
     this.containerManagedScope = containerManagedScope;

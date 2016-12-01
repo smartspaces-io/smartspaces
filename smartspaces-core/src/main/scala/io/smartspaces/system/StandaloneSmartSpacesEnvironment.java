@@ -67,7 +67,7 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
 
     environment.systemConfiguration = SimpleConfiguration.newConfiguration();
     environment.executorService = Executors.newScheduledThreadPool(NUM_THREADS_IN_POOL);
-    environment.log = new StandardExtendedLog(new Jdk14Logger("test.smartspaces"));
+    environment.log = new StandardExtendedLog("container", new Jdk14Logger("test.smartspaces"));
     environment.serviceRegistry = new SimpleServiceRegistry(environment);
     environment.timeProvider = new SettableTimeProvider();
     environment.managedResources = new StandardManagedResources(environment.log);
@@ -160,29 +160,24 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
   }
 
   @Override
-  public Log getLog() {
+  public ExtendedLog getLog() {
     return log;
   }
 
   @Override
-  public ExtendedLog getExtendedLog() {
-    return log;
-  }
-
-  @Override
-  public Log getLog(String logName, String level, String filename) {
+  public ExtendedLog getLog(String logName, String level, String filename) {
     // for now just return the system log
     return log;
   }
 
   @Override
-  public boolean modifyLogLevel(Log log, String level) {
+  public boolean modifyLogLevel(ExtendedLog log, String level) {
     // Not for now
     return false;
   }
 
   @Override
-  public void releaseLog(Log log) {
+  public void releaseLog(ExtendedLog log) {
     // Nothing to do
   }
 
@@ -234,16 +229,6 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
    */
   public void setFilesystem(SmartSpacesFilesystem filesystem) {
     this.filesystem = filesystem;
-  }
-
-  /**
-   * Set the logger to use.
-   *
-   * @param log
-   *          the logger to use
-   */
-  public void setLog(Log log) {
-    this.log = new StandardExtendedLog(log);
   }
 
   /**

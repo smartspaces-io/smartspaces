@@ -17,6 +17,12 @@
 
 package io.smartspaces.liveactivity.runtime;
 
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
+
+import com.google.common.annotations.VisibleForTesting;
+
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.ActivityState;
@@ -24,14 +30,7 @@ import io.smartspaces.activity.ActivityStatus;
 import io.smartspaces.liveactivity.runtime.activity.wrapper.ActivityWrapper;
 import io.smartspaces.liveactivity.runtime.configuration.LiveActivityConfiguration;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
-
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.annotations.VisibleForTesting;
+import io.smartspaces.logging.ExtendedLog;
 
 /**
  * A runner for a Live Activity.
@@ -83,7 +82,7 @@ public class StandardLiveActivityRunner implements LiveActivityRunner {
   /**
    * The logger for the activity.
    */
-  private Log activityLog;
+  private ExtendedLog activityLog;
 
   /**
    * The activity being run.
@@ -132,7 +131,8 @@ public class StandardLiveActivityRunner implements LiveActivityRunner {
   public StandardLiveActivityRunner(InstalledLiveActivity installedActivity,
       ActivityWrapper activityWrapper, InternalLiveActivityFilesystem activityFilesystem,
       LiveActivityConfiguration configuration,
-      LiveActivityRunnerListener liveActivityRunnerListener, LiveActivityRuntime liveActivityRuntime) {
+      LiveActivityRunnerListener liveActivityRunnerListener,
+      LiveActivityRuntime liveActivityRuntime) {
     this.uuid = installedActivity.getUuid();
     this.installedActivity = installedActivity;
     this.activityWrapper = activityWrapper;
@@ -175,26 +175,28 @@ public class StandardLiveActivityRunner implements LiveActivityRunner {
             configuration.load();
             instance = activityWrapper.newInstance();
 
-            activityLog =
-                liveActivityRuntime.getActivityLog(installedActivity, configuration,
-                    activityFilesystem);
+            activityLog = liveActivityRuntime.getActivityLog(installedActivity, configuration,
+                activityFilesystem);
             liveActivityRuntime.initializeActivityInstance(installedActivity, activityFilesystem,
                 instance, configuration, activityLog, activityWrapper.newExecutionContext());
 
             instance.startup();
 
-            // Instances notify status changes through their event listeners, so
+            // Instances notify status changes through their event
+            // listeners, so
             // the startup notification is already
             // handled. .
 
-            // If not running, we want to punt on having an instance as the
+            // If not running, we want to punt on having an instance
+            // as the
             // runner only holds onto an instance reference
             // if it successfully starts.
             if (!instance.getActivityStatus().getState().isRunning()) {
               instance = null;
             }
           } catch (Throwable e) {
-            setActivityStatusUnprotected(new ActivityStatus(ActivityState.STARTUP_FAILURE, null, e));
+            setActivityStatusUnprotected(
+                new ActivityStatus(ActivityState.STARTUP_FAILURE, null, e));
 
             if (instance != null) {
               try {
@@ -207,7 +209,8 @@ public class StandardLiveActivityRunner implements LiveActivityRunner {
             }
           }
 
-          // If no instance is referenced, then something bad happened.
+          // If no instance is referenced, then something bad
+          // happened.
           if (instance == null) {
             cleanupResources();
           }
@@ -235,7 +238,8 @@ public class StandardLiveActivityRunner implements LiveActivityRunner {
 
             instance = null;
           } catch (Throwable e) {
-            setActivityStatusUnprotected(new ActivityStatus(ActivityState.SHUTDOWN_FAILURE, null, e));
+            setActivityStatusUnprotected(
+                new ActivityStatus(ActivityState.SHUTDOWN_FAILURE, null, e));
           }
 
           cleanupResources();
@@ -258,11 +262,12 @@ public class StandardLiveActivityRunner implements LiveActivityRunner {
           try {
             instance.activate();
           } catch (Throwable e) {
-            setActivityStatusUnprotected(new ActivityStatus(ActivityState.ACTIVATE_FAILURE, null, e));
+            setActivityStatusUnprotected(
+                new ActivityStatus(ActivityState.ACTIVATE_FAILURE, null, e));
           }
         } else {
-          throw new SimpleSmartSpacesException(String.format(
-              "Attempt to activate activity %s which is not started", uuid));
+          throw new SimpleSmartSpacesException(
+              String.format("Attempt to activate activity %s which is not started", uuid));
         }
       } finally {
         releaseInstanceLock();
@@ -278,12 +283,12 @@ public class StandardLiveActivityRunner implements LiveActivityRunner {
           try {
             instance.deactivate();
           } catch (Throwable e) {
-            setActivityStatusUnprotected(new ActivityStatus(ActivityState.DEACTIVATE_FAILURE, null,
-                e));
+            setActivityStatusUnprotected(
+                new ActivityStatus(ActivityState.DEACTIVATE_FAILURE, null, e));
           }
         } else {
-          throw new SimpleSmartSpacesException(String.format(
-              "Attempt to deactivate activity %s which is not started", uuid));
+          throw new SimpleSmartSpacesException(
+              String.format("Attempt to deactivate activity %s which is not started", uuid));
         }
       } finally {
         releaseInstanceLock();
@@ -400,7 +405,8 @@ public class StandardLiveActivityRunner implements LiveActivityRunner {
   private void setActivityStatusUnprotected(ActivityStatus status) {
     cachedActivityStatus = status;
     if (instance != null) {
-      // Setting the status on the instance will trigger sending activity events
+      // Setting the status on the instance will trigger sending activity
+      // events
       // to all activity listeners.
       instance.setActivityStatus(status);
     } else {
@@ -441,25 +447,24 @@ public class StandardLiveActivityRunner implements LiveActivityRunner {
     try {
       long time = liveActivityRuntime.getSpaceEnvironment().getTimeProvider().getCurrentTime();
       while (!instanceLock.tryLock(INSTANCE_LOCK_WAIT_TIME, TimeUnit.MILLISECONDS)) {
-        liveActivityRuntime
-            .getSpaceEnvironment()
-            .getLog()
-            .warn(
-                String.format("A wait on the activity instance lock for %s has been blocked for"
-                    + " %d milliseconds as the instance is in %s", uuid, (liveActivityRuntime
-                    .getSpaceEnvironment().getTimeProvider().getCurrentTime() - time),
-                    instanceLockState));
+        liveActivityRuntime.getSpaceEnvironment().getLog().warn(String.format(
+            "A wait on the activity instance lock for %s has been blocked for"
+                + " %d milliseconds as the instance is in %s",
+            uuid,
+            (liveActivityRuntime.getSpaceEnvironment().getTimeProvider().getCurrentTime() - time),
+            instanceLockState));
       }
 
       // Check if the current thread has entered more than once.
       if (instanceLock.getHoldCount() > 1) {
-        // Locks are tested outside of the finally block that unlocks them so
+        // Locks are tested outside of the finally block that unlocks
+        // them so
         // this needs to be unlocked to get the hold count back down.
         instanceLock.unlock();
 
-        throw new SimpleSmartSpacesException(String.format(
-            "Nested calls to instanceLock protected methods in %s for activity %s",
-            StandardLiveActivityRunner.class.getName(), uuid));
+        throw new SimpleSmartSpacesException(
+            String.format("Nested calls to instanceLock protected methods in %s for activity %s",
+                StandardLiveActivityRunner.class.getName(), uuid));
       }
 
       instanceLockState = newInstanceLockState;

@@ -22,7 +22,7 @@ import io.smartspaces.container.control.message.activity.LiveActivityDeploymentR
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.SpaceController;
-import io.smartspaces.master.api.master.internal.StandardMasterApiActivityManager;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.event.MasterEventManager;
 import io.smartspaces.master.server.services.ActiveLiveActivity;
@@ -30,14 +30,13 @@ import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * test the {@link StandardMasterApiActivityManager}.
@@ -50,14 +49,14 @@ public class StandardMasterApiActivityManagerTest {
   private SpaceControllerRepository spaceControllerRepository;
   private MasterEventManager masterEventManager;
   private SmartSpacesEnvironment spaceEnvironment;
-  private Log log;
+  private ExtendedLog log;
 
   @Before
   public void setup() {
 
     spaceEnvironment = Mockito.mock(SmartSpacesEnvironment.class);
 
-    log = Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
     Mockito.when(spaceEnvironment.getLog()).thenReturn(log);
 
     activityRepository = Mockito.mock(ActivityRepository.class);

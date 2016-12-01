@@ -19,11 +19,10 @@ package io.smartspaces.liveactivity.runtime.logging;
 
 import io.smartspaces.activity.ActivityFilesystem;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A {@link LiveActivityLogFactory} which uses the
@@ -64,7 +63,7 @@ public class SmartSpacesEnvironmentLiveActivityLogFactory implements LiveActivit
   }
 
   @Override
-  public Log createLogger(InstalledLiveActivity installedActivity, String level,
+  public ExtendedLog createLogger(InstalledLiveActivity installedActivity, String level,
       ActivityFilesystem activityFilesystem) {
     return spaceEnvironment.getLog(ACTIVITY_LOG_PREFIX + "." + installedActivity.getUuid(), level,
         fileSupport.newFile(activityFilesystem.getLogDirectory(), ACTIVITY_LOG_FILENAME)
@@ -72,7 +71,7 @@ public class SmartSpacesEnvironmentLiveActivityLogFactory implements LiveActivit
   }
 
   @Override
-  public void releaseLog(Log activityLog) {
+  public void releaseLog(ExtendedLog activityLog) {
     spaceEnvironment.releaseLog(activityLog);
   }
 }

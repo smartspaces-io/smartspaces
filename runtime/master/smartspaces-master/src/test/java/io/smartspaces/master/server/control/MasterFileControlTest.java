@@ -21,13 +21,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.master.api.master.MasterApiAutomationManager;
 import io.smartspaces.master.api.master.MasterApiSpaceControllerManager;
-import io.smartspaces.master.server.control.MasterFileControl;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesSystemControl;
 
-import org.apache.commons.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,11 +48,11 @@ public class MasterFileControlTest {
 
   private MasterFileControl fileControl;
 
-  private Log log;
+  private ExtendedLog log;
 
   @Before
   public void setup() {
-    log = mock(Log.class);
+    log = mock(ExtendedLog.class);
     spaceEnvironment = mock(SmartSpacesEnvironment.class);
     when(spaceEnvironment.getLog()).thenReturn(log);
 

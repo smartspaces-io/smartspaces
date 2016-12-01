@@ -15,25 +15,29 @@
  * the License.
  */
 
-package io.smartspaces.interaction.model.entity;
+package io.smartspaces.interaction.detection
 
-import java.util.List;
+import java.util.Collection
 
 /**
- * A listener for tracked entity events.
+ * A listener for events which are detected.
  *
- * @param <T>
- *          the location type for the tracked entities
+ * @param <EventSource>
+ *          the type for the event source
+ * @param <EventData>
+ *          the type for the detection event data
  *
  * @author Keith M. Hughes
  */
-public interface TrackedEntityListener<T> {
+trait DetectionEventListener[EventSource, EventData] {
 
   /**
-   * Handle an update of the state of a collection of tracked entities.
+   * A new detection event has happened.
    *
-   * @param entities
-   *          the entities
+   * @param source
+   *          source of the event detection
+   * @param events
+   *          the list of event data
    */
-  void onTrackedEntityUpdate(List<TrackedEntity<T>> entities);
+  def onNewDetectionEvent(source: EventSource, events: Collection[EventData]): Unit
 }

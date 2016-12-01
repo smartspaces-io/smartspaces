@@ -84,7 +84,7 @@ public class StandardRemoteLiveActivityRuntimeMonitorService implements
     boolean enabled =
         systemConfiguration.getPropertyBoolean(CONFIGURATION_NAME_MONITOR_ENABLE, enabledDefault);
     if (!enabled) {
-      spaceEnvironment.getExtendedLog().warn("Live activity runtime monitor server disabled");
+      spaceEnvironment.getLog().warn("Live activity runtime monitor server disabled");
       return;
     }
 
@@ -97,7 +97,7 @@ public class StandardRemoteLiveActivityRuntimeMonitorService implements
 
       webServer.startup();
 
-      spaceEnvironment.getExtendedLog().info(
+      spaceEnvironment.getLog().info(
           "Live activity runtime monitor server running on port " + webServer.getPort());
 
       addBasePlugins();
@@ -121,7 +121,7 @@ public class StandardRemoteLiveActivityRuntimeMonitorService implements
    *          the message to print
    */
   private void handleWebServerStartupError(Throwable e, String message) {
-    spaceEnvironment.getExtendedLog().formatError(e, message);
+    spaceEnvironment.getLog().formatError(e, message);
     webServer = null;
   }
 
@@ -187,7 +187,7 @@ public class StandardRemoteLiveActivityRuntimeMonitorService implements
     } catch (Throwable e) {
       liveActivityRuntime
           .getSpaceEnvironment()
-          .getExtendedLog()
+          .getLog()
           .formatError(e, "Could not start up live activity monitor plugin %s",
               plugin.getUrlPrefix());
     }
@@ -210,7 +210,7 @@ public class StandardRemoteLiveActivityRuntimeMonitorService implements
 
   @Override
   public ExtendedLog getLog() {
-    return liveActivityRuntime.getSpaceEnvironment().getExtendedLog();
+    return liveActivityRuntime.getSpaceEnvironment().getLog();
   }
 
   @Override

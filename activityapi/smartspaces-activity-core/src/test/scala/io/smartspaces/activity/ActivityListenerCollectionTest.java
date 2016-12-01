@@ -17,7 +17,8 @@
 
 package io.smartspaces.activity;
 
-import org.apache.commons.logging.Log;
+import io.smartspaces.logging.ExtendedLog;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -31,11 +32,11 @@ public class ActivityListenerCollectionTest {
   private Activity activity;
   private ActivityListenerCollection listeners;
 
-  private Log log;
+  private ExtendedLog log;
 
   @Before
   public void setup() {
-    log = Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
 
     activity = Mockito.mock(Activity.class);
     Mockito.when(activity.getLog()).thenReturn(log);

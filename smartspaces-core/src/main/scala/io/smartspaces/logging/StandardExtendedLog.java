@@ -29,6 +29,11 @@ import org.apache.commons.logging.Log;
 public class StandardExtendedLog implements ExtendedLog {
 
   /**
+   * The name of the logger.
+   */
+  private String logName;
+
+  /**
    * The logging delegate.
    */
   private Log delegate;
@@ -39,7 +44,8 @@ public class StandardExtendedLog implements ExtendedLog {
    * @param delegate
    *          the logging delegate
    */
-  public StandardExtendedLog(Log delegate) {
+  public StandardExtendedLog(String logName, Log delegate) {
+    this.logName = logName;
     this.delegate = delegate;
   }
 
@@ -209,5 +215,23 @@ public class StandardExtendedLog implements ExtendedLog {
     if (throwable != null) {
       delegate.fatal(SmartSpacesExceptionUtils.getExceptionDetail(throwable));
     }
+  }
+
+  /**
+   * Get the name of the log.
+   * 
+   * @return the name
+   */
+  public String getLogName() {
+    return logName;
+  }
+
+  /**
+   * Get the logger that is delegated to.
+   * 
+   * @return the logging delegate
+   */
+  public Log getDelegate() {
+    return delegate;
   }
 }

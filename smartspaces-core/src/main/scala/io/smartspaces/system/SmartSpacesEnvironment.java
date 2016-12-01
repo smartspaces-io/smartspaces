@@ -25,8 +25,6 @@ import io.smartspaces.system.core.configuration.CoreConfiguration;
 import io.smartspaces.system.core.logging.LoggingProvider;
 import io.smartspaces.time.provider.TimeProvider;
 
-import org.apache.commons.logging.Log;
-
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
@@ -211,14 +209,7 @@ public interface SmartSpacesEnvironment {
    *
    * @return the container's log
    */
-  Log getLog();
-
-  /**
-   * Get the extended container log.
-   *
-   * @return the container's extended log
-   */
-  ExtendedLog getExtendedLog();
+  ExtendedLog getLog();
 
   /**
    * Get a named log at the given level with optional filename of an additional
@@ -233,7 +224,7 @@ public interface SmartSpacesEnvironment {
    *
    * @return the requested named log
    */
-  Log getLog(String logName, String level, String filename);
+  ExtendedLog getLog(String logName, String level, String filename);
 
   /**
    * Modify the log level.
@@ -248,7 +239,7 @@ public interface SmartSpacesEnvironment {
    *
    * @return {@code true} if able to modify the log.
    */
-  boolean modifyLogLevel(Log log, String level);
+  boolean modifyLogLevel(ExtendedLog log, String level);
 
   /**
    * Release the log and any resources it is using that are unique to itself.
@@ -256,12 +247,12 @@ public interface SmartSpacesEnvironment {
    * <p>
    * The log should not be used after it is released. This method does nothing
    * if the log was not created with {@link #getLog(String, String, String) or
-   * #getExtendedLog()
+   * #getLog()
    *
    * @param log
    *          the log to release
    */
-  void releaseLog(Log log);
+  void releaseLog(ExtendedLog log);
 
   /**
    * Get the network type for the Smart Spaces container.

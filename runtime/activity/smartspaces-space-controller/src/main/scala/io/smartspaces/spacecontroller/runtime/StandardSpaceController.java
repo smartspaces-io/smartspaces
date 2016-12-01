@@ -261,7 +261,7 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
         new SpaceControllerInformationValidator();
     StringBuilder errorBuilder =
         spaceControllerInformationValidator.checkControllerInfoForErrors(spaceControllerInfo,
-            getSpaceEnvironment().getExtendedLog());
+            getSpaceEnvironment().getLog());
     if (errorBuilder.length() != 0) {
       // DO NOT LIKE THIS BUT HOW TO SHUT THE CONTAINER DOWN WITHOUT TONS OF
       // STARTUP ERRORS.

@@ -137,7 +137,7 @@ public class StandardContainerResourceDeploymentManager implements
           resourceSignatureCalculator.getResourceSignature(resource.getData());
       if (resourceSignature == null) {
         resourceSignature = ContainerResourceDeploymentItem.RESOURCE_SIGNATURE_NONE;
-        spaceEnvironment.getExtendedLog().formatWarn(
+        spaceEnvironment.getLog().formatWarn(
             "Could not calulate resource signature for resource URI %s",
             resource.getData().toString());
       }

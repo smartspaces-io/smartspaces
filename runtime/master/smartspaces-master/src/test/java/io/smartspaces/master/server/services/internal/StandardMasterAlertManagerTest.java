@@ -18,24 +18,24 @@
 package io.smartspaces.master.server.services.internal;
 
 import static org.mockito.Mockito.when;
+
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.master.event.MasterEventManager;
 import io.smartspaces.master.server.services.ActiveSpaceController;
 import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
 import io.smartspaces.master.server.services.MasterAlertManager;
-import io.smartspaces.master.server.services.internal.StandardMasterAlertManager;
 import io.smartspaces.service.alert.AlertService;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.provider.SettableTimeProvider;
 
-import java.util.concurrent.ScheduledExecutorService;
-
-import org.apache.commons.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Unit tests for {@link StandardMasterAlertManager}.
@@ -58,7 +58,7 @@ public class StandardMasterAlertManagerTest {
 
   private ScheduledExecutorService executorService;
 
-  private Log log;
+  private ExtendedLog log;
 
   @Before
   public void setup() {
@@ -69,7 +69,7 @@ public class StandardMasterAlertManagerTest {
     executorService = Mockito.mock(ScheduledExecutorService.class);
     when(spaceEnvironment.getExecutorService()).thenReturn(executorService);
 
-    log = Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
     when(spaceEnvironment.getLog()).thenReturn(log);
 
     masterEventManager = Mockito.mock(MasterEventManager.class);

@@ -19,9 +19,9 @@ package io.smartspaces.activity.component.web;
 
 import io.smartspaces.activity.SupportedActivity;
 import io.smartspaces.activity.component.ActivityComponentContext;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.web.server.WebServerWebSocketHandler;
 
-import org.apache.commons.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -40,7 +40,7 @@ public class BasicWebServerActivityComponentTest {
   private BasicWebServerActivityComponent.MyWebServerWebSocketHandler handler;
   private InOrder activityComponentContextInOrder;
   private SupportedActivity activity;
-  private Log log;
+  private ExtendedLog log;
 
   @Before
   public void setup() {
@@ -53,7 +53,7 @@ public class BasicWebServerActivityComponentTest {
     activity = Mockito.mock(SupportedActivity.class);
     Mockito.when(activityComponentContext.getActivity()).thenReturn(activity);
 
-    log = Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
     Mockito.when(activity.getLog()).thenReturn(log);
 
     handler =

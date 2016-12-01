@@ -25,9 +25,9 @@ import io.smartspaces.activity.ActivityListenerCollection;
 import io.smartspaces.activity.ActivityRuntime;
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.activity.ActivityStatus;
-import io.smartspaces.activity.configuration.ActivityConfiguration;
 import io.smartspaces.activity.execution.ActivityExecutionContext;
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
 import org.apache.commons.logging.Log;
@@ -87,7 +87,7 @@ public abstract class ActivitySupport implements Activity {
   /**
    * The activity specific logger.
    */
-  private Log log;
+  private ExtendedLog log;
 
   @Override
   public SmartSpacesEnvironment getSpaceEnvironment() {
@@ -130,12 +130,12 @@ public abstract class ActivitySupport implements Activity {
   }
 
   @Override
-  public void setLog(Log log) {
+  public void setLog(ExtendedLog log) {
     this.log = log;
   }
 
   @Override
-  public Log getLog() {
+  public ExtendedLog getLog() {
     if (log != null) {
       return log;
     } else {

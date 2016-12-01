@@ -107,7 +107,7 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void connectSpaceController(SpaceController spaceController) {
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
-    spaceEnvironment.getExtendedLog().formatInfo("Connecting to space controller %s",
+    spaceEnvironment.getLog().formatInfo("Connecting to space controller %s",
         activeSpaceController.getDisplayName());
 
     remoteSpaceControllerClient.connectToSpaceController(activeSpaceController);
@@ -116,7 +116,7 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void disconnectSpaceController(SpaceController spaceController, boolean fromError) {
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
-    spaceEnvironment.getExtendedLog().formatInfo("Disconnecting from space controller %s",
+    spaceEnvironment.getLog().formatInfo("Disconnecting from space controller %s",
         activeSpaceController.getDisplayName());
 
     remoteSpaceControllerClient.disconnectFromSpaceController(activeSpaceController);
@@ -146,7 +146,7 @@ public class StandardActiveSpaceControllerManager
     } else if (curState == SpaceControllerState.RUNNING) {
       activeSpaceController.setState(SpaceControllerState.CONNECTION_LOST);
     } else {
-      spaceEnvironment.getExtendedLog()
+      spaceEnvironment.getLog()
           .formatWarn("Attempting to change space controller state in disconnect,"
               + " but the state %s does not make sense for an error", curState);
     }
@@ -162,7 +162,7 @@ public class StandardActiveSpaceControllerManager
     // To make sure something is listening for the request.
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
 
-    spaceEnvironment.getExtendedLog().formatInfo(
+    spaceEnvironment.getLog().formatInfo(
         "Requesting status from space controller %s,  current known state %s",
         activeSpaceController.getDisplayName(), activeSpaceController.getState());
 
@@ -181,7 +181,7 @@ public class StandardActiveSpaceControllerManager
     try {
       remoteSpaceControllerClient.requestSpaceControllerStatus(activeSpaceController);
     } catch (Throwable e) {
-      spaceEnvironment.getExtendedLog().formatError(e, "Could not get space controller status: %s",
+      spaceEnvironment.getLog().formatError(e, "Could not get space controller status: %s",
           activeSpaceController.getDisplayName());
 
       // Communication failures from space controllers are handled by other
@@ -194,13 +194,13 @@ public class StandardActiveSpaceControllerManager
     // To make sure something is listening for the request.
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
 
-    spaceEnvironment.getExtendedLog().formatInfo("Setting configuration of space controller %s",
+    spaceEnvironment.getLog().formatInfo("Setting configuration of space controller %s",
         activeSpaceController.getDisplayName());
 
     try {
       remoteSpaceControllerClient.configureSpaceController(activeSpaceController);
     } catch (Throwable e) {
-      spaceEnvironment.getExtendedLog().formatError(e, "Could not configure space controller: %s",
+      spaceEnvironment.getLog().formatError(e, "Could not configure space controller: %s",
           activeSpaceController.getDisplayName());
 
       // Communication failures from space controllers are handled by other
@@ -213,14 +213,14 @@ public class StandardActiveSpaceControllerManager
     // To make sure something is listening for the request.
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
 
-    spaceEnvironment.getExtendedLog().formatInfo(
+    spaceEnvironment.getLog().formatInfo(
         "Requesting space controller temp data clean from space controller %s",
         activeSpaceController.getDisplayName());
 
     try {
       remoteSpaceControllerClient.cleanSpaceControllerTempData(activeSpaceController);
     } catch (Throwable e) {
-      spaceEnvironment.getExtendedLog().formatError(e,
+      spaceEnvironment.getLog().formatError(e,
           "Could not clean space controller temp data: %s", activeSpaceController.getDisplayName());
 
       // Communication failures from space controllers are handled by other
@@ -234,14 +234,14 @@ public class StandardActiveSpaceControllerManager
     // To make sure something is listening for the request.
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
 
-    spaceEnvironment.getExtendedLog().formatInfo(
+    spaceEnvironment.getLog().formatInfo(
         "Requesting space controller permanent data clean from space controller %s",
         activeSpaceController.getDisplayName());
 
     try {
       remoteSpaceControllerClient.cleanSpaceControllerPermanentData(activeSpaceController);
     } catch (Throwable e) {
-      spaceEnvironment.getExtendedLog().formatError(e,
+      spaceEnvironment.getLog().formatError(e,
           "Could not clean space controller permanent data: %s",
           activeSpaceController.getDisplayName());
 
@@ -256,14 +256,14 @@ public class StandardActiveSpaceControllerManager
     // To make sure something is listening for the request.
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
 
-    spaceEnvironment.getExtendedLog().formatInfo(
+    spaceEnvironment.getLog().formatInfo(
         "Requesting all live activity temp data clean from space controller %s",
         activeSpaceController.getDisplayName());
 
     try {
       remoteSpaceControllerClient.cleanSpaceControllerActivitiesTempData(activeSpaceController);
     } catch (Throwable e) {
-      spaceEnvironment.getExtendedLog().formatError(e,
+      spaceEnvironment.getLog().formatError(e,
           "Could not clean space controller live activity temp data: %s",
           activeSpaceController.getDisplayName());
 
@@ -278,7 +278,7 @@ public class StandardActiveSpaceControllerManager
     // To make sure something is listening for the request.
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
 
-    spaceEnvironment.getExtendedLog().formatInfo(
+    spaceEnvironment.getLog().formatInfo(
         "Requesting all activities permanent data clean from space controller %s",
         activeSpaceController.getDisplayName());
 
@@ -286,7 +286,7 @@ public class StandardActiveSpaceControllerManager
       remoteSpaceControllerClient
           .cleanSpaceControllerActivitiesPermanentData(activeSpaceController);
     } catch (Throwable e) {
-      spaceEnvironment.getExtendedLog().formatError(e,
+      spaceEnvironment.getLog().formatError(e,
           "Could not clean space controller live activity permanentdata : %s",
           activeSpaceController.getDisplayName());
 
@@ -299,14 +299,14 @@ public class StandardActiveSpaceControllerManager
   public void captureSpaceControllerDataBundle(SpaceController spaceController) {
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
 
-    spaceEnvironment.getExtendedLog().formatInfo("Capturing data bundle for space controller %s",
+    spaceEnvironment.getLog().formatInfo("Capturing data bundle for space controller %s",
         activeSpaceController.getDisplayName());
 
     activeSpaceController.setDataBundleState(DataBundleState.CAPTURE_REQUESTED);
     try {
       remoteSpaceControllerClient.captureSpaceControllerDataBundle(activeSpaceController);
     } catch (Throwable e) {
-      spaceEnvironment.getExtendedLog().formatError(e,
+      spaceEnvironment.getLog().formatError(e,
           "Could not capture space controller's data bundle: %s",
           activeSpaceController.getDisplayName());
 
@@ -320,14 +320,14 @@ public class StandardActiveSpaceControllerManager
 
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
 
-    spaceEnvironment.getExtendedLog().formatInfo("Restoring data bundle for space controller %s",
+    spaceEnvironment.getLog().formatInfo("Restoring data bundle for space controller %s",
         activeSpaceController.getDisplayName());
 
     activeSpaceController.setDataBundleState(DataBundleState.RESTORE_REQUESTED);
     try {
       remoteSpaceControllerClient.restoreSpaceControllerDataBundle(activeSpaceController);
     } catch (Throwable e) {
-      spaceEnvironment.getExtendedLog().formatError(e,
+      spaceEnvironment.getLog().formatError(e,
           "Could not restore space controller data bundle: %s",
           activeSpaceController.getDisplayName());
 
@@ -340,7 +340,7 @@ public class StandardActiveSpaceControllerManager
   public void shutdownSpaceController(SpaceController spaceController) {
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
 
-    spaceEnvironment.getExtendedLog().formatInfo("Shutting down space controller %s",
+    spaceEnvironment.getLog().formatInfo("Shutting down space controller %s",
         activeSpaceController.getDisplayName());
 
     try {
@@ -353,7 +353,7 @@ public class StandardActiveSpaceControllerManager
 
       cleanLiveActivityStateModels(spaceController);
     } catch (Throwable e) {
-      spaceEnvironment.getExtendedLog().formatError(e, "Could not shut down space controller: %s",
+      spaceEnvironment.getLog().formatError(e, "Could not shut down space controller: %s",
           activeSpaceController.getDisplayName());
 
       // Communication failures from space controllers are handled by other
@@ -366,7 +366,7 @@ public class StandardActiveSpaceControllerManager
     // The async results will signal all active apps.
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
 
-    spaceEnvironment.getExtendedLog().formatInfo("Shutting down all apps on space controller %s",
+    spaceEnvironment.getLog().formatInfo("Shutting down all apps on space controller %s",
         activeSpaceController.getDisplayName());
 
     try {
@@ -374,7 +374,7 @@ public class StandardActiveSpaceControllerManager
 
       cleanLiveActivityStateModels(spaceController);
     } catch (Throwable e) {
-      spaceEnvironment.getExtendedLog().formatError(e,
+      spaceEnvironment.getLog().formatError(e,
           "Could not shut down all activities on space controller: %s",
           activeSpaceController.getDisplayName());
 
@@ -405,7 +405,7 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void deployActiveLiveActivity(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getExtendedLog().formatInfo(
+    spaceEnvironment.getLog().formatInfo(
         "Deploying live activity to space controller %s: %s",
         activeLiveActivity.getActiveController().getDisplayName(),
         activeLiveActivity.getDisplayName());
@@ -418,7 +418,7 @@ public class StandardActiveSpaceControllerManager
       activeLiveActivity.setDeployState(ActivityState.DEPLOY_FAILURE,
           SmartSpacesExceptionUtils.getExceptionDetail(e));
 
-      spaceEnvironment.getExtendedLog().formatError(e,
+      spaceEnvironment.getLog().formatError(e,
           "could not deploy live activity to space controller %s: %s",
           activeLiveActivity.getActiveController().getDisplayName(),
           activeLiveActivity.getDisplayName());
@@ -432,7 +432,7 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void deleteActiveLiveActivity(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getExtendedLog().formatInfo(
+    spaceEnvironment.getLog().formatInfo(
         "Deleting live activity from space controller %s: %s",
         activeLiveActivity.getActiveController().getDisplayName(),
         activeLiveActivity.getDisplayName());
@@ -443,7 +443,7 @@ public class StandardActiveSpaceControllerManager
       try {
         remoteActivityDeploymentManager.deleteLiveActivity(activeLiveActivity);
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(e,
+        spaceEnvironment.getLog().formatError(e,
             "Could not delete live activity from space controller: %s",
             activeLiveActivity.getDisplayName());
 
@@ -460,14 +460,14 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void configureActiveLiveActivity(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting live activity configuration: %s",
+    spaceEnvironment.getLog().formatInfo("Requesting live activity configuration: %s",
         activeLiveActivity.getDisplayName());
 
     synchronized (activeLiveActivity) {
       try {
         remoteSpaceControllerClient.fullConfigureLiveActivity(activeLiveActivity);
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(e,
+        spaceEnvironment.getLog().formatError(e,
             "A live activity has failed to configure: %s", activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
@@ -482,14 +482,14 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void startupActiveActivity(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting live activity startup: %s",
+    spaceEnvironment.getLog().formatInfo("Requesting live activity startup: %s",
         activeLiveActivity.getDisplayName());
 
     synchronized (activeLiveActivity) {
       try {
         activeLiveActivity.startup();
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(e,
+        spaceEnvironment.getLog().formatError(e,
             "A live activity has failed to star up: %s", activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
@@ -504,14 +504,14 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void activateActiveActivity(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting live activity activation: %s",
+    spaceEnvironment.getLog().formatInfo("Requesting live activity activation: %s",
         activeLiveActivity.getDisplayName());
 
     synchronized (activeLiveActivity) {
       try {
         activeLiveActivity.activate();
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError("A live activity has failed to activate: %s",
+        spaceEnvironment.getLog().formatError("A live activity has failed to activate: %s",
             activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
@@ -526,14 +526,14 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void deactivateActiveActivity(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting live activity deactivation: %s",
+    spaceEnvironment.getLog().formatInfo("Requesting live activity deactivation: %s",
         activeLiveActivity.getDisplayName());
 
     synchronized (activeLiveActivity) {
       try {
         activeLiveActivity.deactivate();
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(e,
+        spaceEnvironment.getLog().formatError(e,
             "A live activity has failed to deactivate: %s", activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
@@ -548,14 +548,14 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void shutdownActiveActivity(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting live activity shutdown: %s",
+    spaceEnvironment.getLog().formatInfo("Requesting live activity shutdown: %s",
         activeLiveActivity.getDisplayName());
 
     synchronized (activeLiveActivity) {
       try {
         activeLiveActivity.shutdown();
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(e,
+        spaceEnvironment.getLog().formatError(e,
             "A live activity has failed to shut down: %s", activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
@@ -570,14 +570,14 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void statusActiveLiveActivity(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting live activity status: %s",
+    spaceEnvironment.getLog().formatInfo("Requesting live activity status: %s",
         activeLiveActivity.getDisplayName());
 
     synchronized (activeLiveActivity) {
       try {
         activeLiveActivity.status();
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError("A live activity has failed to activate: %s",
+        spaceEnvironment.getLog().formatError("A live activity has failed to activate: %s",
             activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
@@ -592,7 +592,7 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void cleanLiveActivityPermanentData(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getExtendedLog().formatInfo(
+    spaceEnvironment.getLog().formatInfo(
         "Requesting permanent data clean for live activity: %s",
         activeLiveActivity.getDisplayName());
 
@@ -600,7 +600,7 @@ public class StandardActiveSpaceControllerManager
       try {
         remoteSpaceControllerClient.cleanLiveActivityPermanentData(activeLiveActivity);
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(e,
+        spaceEnvironment.getLog().formatError(e,
             "Could not clean live activity permanent data: %s",
             activeLiveActivity.getDisplayName());
 
@@ -616,14 +616,14 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void cleanLiveActivityTempData(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting temp data clean for live activity: %s",
+    spaceEnvironment.getLog().formatInfo("Requesting temp data clean for live activity: %s",
         activeLiveActivity.getDisplayName());
 
     synchronized (activeLiveActivity) {
       try {
         remoteSpaceControllerClient.cleanLiveActivityTempData(activeLiveActivity);
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError("Could not clean live activity temp data: %s",
+        spaceEnvironment.getLog().formatError("Could not clean live activity temp data: %s",
             activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
@@ -644,7 +644,7 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void deployActiveLiveActivityGroupChecked(ActiveLiveActivityGroup activeActivityGroup,
       Set<ActiveLiveActivity> deployedLiveActivities) {
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting activity group %s deployment",
+    spaceEnvironment.getLog().formatInfo("Requesting activity group %s deployment",
         activeActivityGroup.getActivityGroup().getId());
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
@@ -653,7 +653,7 @@ public class StandardActiveSpaceControllerManager
       try {
         attemptDeployActiveActivityFromGroup(activeLiveActivity, deployedLiveActivities);
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(e,
+        spaceEnvironment.getLog().formatError(e,
             "Error while deploying live activity %s as part of live activity group %s",
             activeLiveActivity.getDisplayName(), activeActivityGroup.getActivityGroup().getId());
       }
@@ -697,7 +697,7 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void configureActiveLiveActivityGroupChecked(ActiveLiveActivityGroup activeActivityGroup,
       Set<ActiveLiveActivity> configuredLiveActivities) {
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting activity group %s configure",
+    spaceEnvironment.getLog().formatInfo("Requesting activity group %s configure",
         activeActivityGroup.getActivityGroup().getId());
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
@@ -706,7 +706,7 @@ public class StandardActiveSpaceControllerManager
       try {
         attemptConfigureActiveActivityFromGroup(activeLiveActivity, configuredLiveActivities);
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(e,
+        spaceEnvironment.getLog().formatError(e,
             "Error while configuring live activity %s as part of live activity group %s",
             activeLiveActivity.getDisplayName(), activeActivityGroup.getActivityGroup().getId());
       }
@@ -745,19 +745,19 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void startupActiveActivityGroup(ActiveLiveActivityGroup activeActivityGroup) {
     String groupId = activeActivityGroup.getActivityGroup().getId();
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting activity group %s startup", groupId);
+    spaceEnvironment.getLog().formatInfo("Requesting activity group %s startup", groupId);
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
       ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getActivity());
 
-      spaceEnvironment.getExtendedLog().formatInfo("Starting up live activity %s from group %s",
+      spaceEnvironment.getLog().formatInfo("Starting up live activity %s from group %s",
           activeLiveActivity.getDisplayName(), groupId);
 
       try {
         activeLiveActivity.startupFromLiveActivityGroup(activeActivityGroup);
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(e,
+        spaceEnvironment.getLog().formatError(e,
             "Error while starting up live activity %s as part of live activity group %s",
             activeLiveActivity.getDisplayName(), activeActivityGroup.getActivityGroup().getId());
       }
@@ -772,20 +772,20 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void activateActiveActivityGroup(ActiveLiveActivityGroup activeActivityGroup) {
     String groupId = activeActivityGroup.getActivityGroup().getId();
-    spaceEnvironment.getExtendedLog().formatInfo("requesting activity group %s activation",
+    spaceEnvironment.getLog().formatInfo("requesting activity group %s activation",
         groupId);
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
       ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getActivity());
 
-      spaceEnvironment.getExtendedLog().formatInfo("Activating live activity %s from group %s",
+      spaceEnvironment.getLog().formatInfo("Activating live activity %s from group %s",
           activeLiveActivity.getDisplayName(), groupId);
 
       try {
         activeLiveActivity.activateFromLiveActivityGroup(activeActivityGroup);
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(e,
+        spaceEnvironment.getLog().formatError(e,
             "Error while activating live activity %s as part of live activity group %s",
             activeLiveActivity.getDisplayName(), groupId);
       }
@@ -800,20 +800,20 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void deactivateActiveActivityGroup(ActiveLiveActivityGroup activeActivityGroup) {
     String groupId = activeActivityGroup.getActivityGroup().getId();
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting activity group %s deactivation",
+    spaceEnvironment.getLog().formatInfo("Requesting activity group %s deactivation",
         groupId);
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
       ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getActivity());
 
-      spaceEnvironment.getExtendedLog().formatInfo("Deactivating live activity %s from group %s",
+      spaceEnvironment.getLog().formatInfo("Deactivating live activity %s from group %s",
           activeLiveActivity.getDisplayName(), groupId);
 
       try {
         activeLiveActivity.deactivateFromLiveActivityGroup(activeActivityGroup);
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(e,
+        spaceEnvironment.getLog().formatError(e,
             "Error while deactivating live activity %s as part of live activity group %s",
             activeLiveActivity.getDisplayName(), groupId);
       }
@@ -828,19 +828,19 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void shutdownActiveActivityGroup(ActiveLiveActivityGroup activeActivityGroup) {
     String groupId = activeActivityGroup.getActivityGroup().getId();
-    spaceEnvironment.getExtendedLog().formatInfo("Requesting activity group %s shutdown", groupId);
+    spaceEnvironment.getLog().formatInfo("Requesting activity group %s shutdown", groupId);
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
       ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getActivity());
 
-      spaceEnvironment.getExtendedLog().formatInfo("Shut down live activity %s from group %s",
+      spaceEnvironment.getLog().formatInfo("Shut down live activity %s from group %s",
           activeLiveActivity.getDisplayName(), groupId);
 
       try {
         activeLiveActivity.shutdownFromLiveActivityGroup(activeActivityGroup);
       } catch (Throwable e) {
-        spaceEnvironment.getExtendedLog().formatError(e,
+        spaceEnvironment.getLog().formatError(e,
             "Error while shutting down live activity %s as part of live activity group %s",
             activeLiveActivity.getDisplayName(), groupId);
       }
@@ -1095,13 +1095,13 @@ public class StandardActiveSpaceControllerManager
     if (spaceController != null) {
       spaceController.setState(SpaceControllerState.RUNNING);
       if (spaceEnvironment.getLog().isDebugEnabled()) {
-        spaceEnvironment.getExtendedLog().formatDebug("Got heartbeat from %s",
+        spaceEnvironment.getLog().formatDebug("Got heartbeat from %s",
             spaceController.getDisplayName());
       }
 
       masterEventManager.signalSpaceControllerHeartbeat(spaceController, timestamp);
     } else {
-      spaceEnvironment.getExtendedLog()
+      spaceEnvironment.getLog()
           .formatWarn("Heartbeat from unknown space controller with UUID %s", uuid);
     }
   }
@@ -1112,12 +1112,12 @@ public class StandardActiveSpaceControllerManager
     if (spaceController != null) {
       spaceController.setState(state);
 
-      spaceEnvironment.getExtendedLog().formatDebug("Got space controller status update %s to %s",
+      spaceEnvironment.getLog().formatDebug("Got space controller status update %s to %s",
           spaceController.getDisplayName(), state);
 
       masterEventManager.signalSpaceControllerStatusChange(spaceController, state);
     } else {
-      spaceEnvironment.getExtendedLog()
+      spaceEnvironment.getLog()
           .formatWarn("Status change for unknown controller with UUID %s", uuid);
     }
   }
@@ -1132,14 +1132,14 @@ public class StandardActiveSpaceControllerManager
         // error or something that is currently being shown.
         active.setDeployState(ActivityState.READY);
 
-        spaceEnvironment.getExtendedLog().formatInfo("Live activity deployed successfully: %s",
+        spaceEnvironment.getLog().formatInfo("Live activity deployed successfully: %s",
             active.getDisplayName());
       } else {
         String deployStatusDetail =
             String.format("%s: %s", result.getStatus().getDescription(), result.getStatusDetail());
         active.setDeployState(ActivityState.DEPLOY_FAILURE, deployStatusDetail);
 
-        spaceEnvironment.getExtendedLog().formatError("Live activity %s deployment failed: %s",
+        spaceEnvironment.getLog().formatError("Live activity %s deployment failed: %s",
             active.getDisplayName(), deployStatusDetail);
       }
 
@@ -1162,7 +1162,7 @@ public class StandardActiveSpaceControllerManager
           active.setRuntimeState(ActivityState.UNKNOWN, null);
           active.getLiveActivity().setLastDeployDate(null);
 
-          spaceEnvironment.getExtendedLog().formatInfo("Live activity deleted successfully: %s",
+          spaceEnvironment.getLog().formatInfo("Live activity deleted successfully: %s",
               active.getDisplayName());
 
           break;
@@ -1171,14 +1171,14 @@ public class StandardActiveSpaceControllerManager
           active.setDeployState(ActivityState.DOESNT_EXIST);
           active.setRuntimeState(ActivityState.DOESNT_EXIST, null);
 
-          spaceEnvironment.getExtendedLog().formatWarn(
+          spaceEnvironment.getLog().formatWarn(
               "Live activity deletion attempt failed because it isn't on the controller: %s",
               active.getDisplayName());
 
           break;
 
         default:
-          spaceEnvironment.getExtendedLog().formatError("Live activity delete failed: %s",
+          spaceEnvironment.getLog().formatError("Live activity delete failed: %s",
               active.getDisplayName(), result.getStatusDetail());
       }
 
@@ -1193,7 +1193,7 @@ public class StandardActiveSpaceControllerManager
       String newStateDetail) {
     ActiveLiveActivity activeLiveActivity = getActiveActivityByUuid(uuid);
     if (activeLiveActivity != null) {
-      spaceEnvironment.getExtendedLog().formatInfo("Remote live activity has reported state %s: %s",
+      spaceEnvironment.getLog().formatInfo("Remote live activity has reported state %s: %s",
           newState, activeLiveActivity.getDisplayName());
 
       updateLiveActivityRuntimeState(activeLiveActivity, newState, newStateDetail);
@@ -1248,7 +1248,7 @@ public class StandardActiveSpaceControllerManager
     if (spaceController != null) {
       spaceController.setDataBundleState(state);
     } else {
-      spaceEnvironment.getExtendedLog()
+      spaceEnvironment.getLog()
           .formatWarn("Data bundle state change update from unknown controller with UUID %s", uuid);
     }
   }
@@ -1259,7 +1259,7 @@ public class StandardActiveSpaceControllerManager
     if (spaceController != null) {
       masterEventManager.signalSpaceControllerShutdown(spaceController);
     } else {
-      spaceEnvironment.getExtendedLog().formatWarn("Shutdown from unknown controller with UUID %s",
+      spaceEnvironment.getLog().formatWarn("Shutdown from unknown controller with UUID %s",
           uuid);
     }
   }
@@ -1271,7 +1271,7 @@ public class StandardActiveSpaceControllerManager
    *          UUID of the unknown activity
    */
   private void logUnknownLiveActivity(String uuid) {
-    spaceEnvironment.getExtendedLog()
+    spaceEnvironment.getLog()
         .formatWarn("Got activity status update for unknown activity %s", uuid);
   }
 

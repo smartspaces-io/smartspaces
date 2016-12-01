@@ -19,20 +19,19 @@ package io.smartspaces.master.server.ui.internal;
 
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.SpaceController;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.master.api.master.internal.StandardMasterApiSpaceControllerManager;
 import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
-import java.util.List;
-
-import org.apache.commons.logging.Log;
+import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.google.common.collect.Lists;
+import java.util.List;
 
 /**
  * Do some tests of the {@link StandardMasterApiSpaceControllerManager}.
@@ -46,13 +45,13 @@ public class StandardMasterApiControllerManagerTest {
   private ActivityRepository activityRepository;
   private ActiveSpaceControllerManager activeSpaceControllerManager;
   private SmartSpacesEnvironment spaceEnvironment;
-  private Log log;
+  private ExtendedLog log;
 
   @Before
   public void setup() {
     spaceEnvironment = Mockito.mock(SmartSpacesEnvironment.class);
 
-    log = Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
     Mockito.when(spaceEnvironment.getLog()).thenReturn(log);
 
     controllerRepository = Mockito.mock(SpaceControllerRepository.class);

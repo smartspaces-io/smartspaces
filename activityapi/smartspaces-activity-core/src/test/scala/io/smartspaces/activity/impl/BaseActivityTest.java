@@ -20,6 +20,7 @@ package io.smartspaces.activity.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.ActivityListener;
 import io.smartspaces.activity.ActivityRuntime;
@@ -31,15 +32,12 @@ import io.smartspaces.activity.component.BaseActivityComponent;
 import io.smartspaces.activity.execution.ActivityExecutionContext;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.provider.TimeProvider;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
-
-import org.apache.commons.logging.Log;
+import com.google.common.collect.ImmutableList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +45,9 @@ import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.ros.concurrent.DefaultScheduledExecutorService;
 
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Tests for the {@link BaseActivity}.
@@ -64,7 +64,7 @@ public class BaseActivityTest {
 
   private ScheduledExecutorService executorService;
 
-  private Log log;
+  private ExtendedLog log;
 
   private ActivityRuntime activityRuntime;
 
@@ -97,7 +97,7 @@ public class BaseActivityTest {
     Mockito.when(timeProvider.getCurrentTime()).thenReturn(CURRENT_MOCK_TIME);
     Mockito.when(spaceEnvironment.getExecutorService()).thenReturn(executorService);
 
-    log = Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
     activityRuntime = Mockito.mock(ActivityRuntime.class);
     configuration = new SimpleConfiguration(null);
     executionContext = Mockito.mock(ActivityExecutionContext.class);

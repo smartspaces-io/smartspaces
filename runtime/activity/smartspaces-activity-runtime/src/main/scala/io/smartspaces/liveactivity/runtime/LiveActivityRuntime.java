@@ -17,18 +17,17 @@
 
 package io.smartspaces.liveactivity.runtime;
 
+import java.util.List;
+import java.util.Map;
+
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.ActivityFilesystem;
 import io.smartspaces.activity.ActivityRuntime;
 import io.smartspaces.activity.execution.ActivityExecutionContext;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.resource.managed.ManagedResource;
-
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A runtime that can run live activities.
@@ -68,7 +67,7 @@ public interface LiveActivityRuntime extends ActivityRuntime, ManagedResource {
    *
    * @return logger for this activity and configuration
    */
-  Log getActivityLog(InstalledLiveActivity activity, Configuration configuration,
+  ExtendedLog getActivityLog(InstalledLiveActivity activity, Configuration configuration,
       ActivityFilesystem activityFilesystem);
 
   /**
@@ -77,7 +76,7 @@ public interface LiveActivityRuntime extends ActivityRuntime, ManagedResource {
    * @param activityLog
    *          a logger for an activity
    */
-  void releaseActivityLog(Log activityLog);
+  void releaseActivityLog(ExtendedLog activityLog);
 
   /**
    * Start up all activities in the controller that aren't currently started.
@@ -175,7 +174,7 @@ public interface LiveActivityRuntime extends ActivityRuntime, ManagedResource {
    */
   void initializeActivityInstance(InstalledLiveActivity installedActivity,
       ActivityFilesystem activityFilesystem, Activity instance, Configuration configuration,
-      Log activityLog, ActivityExecutionContext executionContext);
+      ExtendedLog activityLog, ActivityExecutionContext executionContext);
 
   /**
    * Clean the temp data folder for a given activity.

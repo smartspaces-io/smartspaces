@@ -23,6 +23,7 @@ import io.smartspaces.activity.execution.ActivityExecutionContext;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.evaluation.SimpleExpressionEvaluator;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.messaging.route.RoutableInputMessageListener;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.provider.SettableTimeProvider;
@@ -52,7 +53,7 @@ public class BasicMessageRouterActivityComponentTest {
 
   private InOrder activityComponentContextInOrder;
 
-  private Log log;
+  private ExtendedLog log;
 
   private ActivityExecutionContext executionContext;
 
@@ -75,7 +76,7 @@ public class BasicMessageRouterActivityComponentTest {
     executionContext = Mockito.mock(ActivityExecutionContext.class);
     Mockito.when(activity.getExecutionContext()).thenReturn(executionContext);
 
-    log = Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
     Mockito.when(activity.getLog()).thenReturn(log);
 
     configuration = new SimpleConfiguration(new SimpleExpressionEvaluator());

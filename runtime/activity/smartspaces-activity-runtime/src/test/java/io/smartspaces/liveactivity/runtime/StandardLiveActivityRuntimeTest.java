@@ -100,7 +100,7 @@ public class StandardLiveActivityRuntimeTest {
 
     spaceEnvironment = mock(SmartSpacesEnvironment.class);
     when(spaceEnvironment.getLog()).thenReturn(log);
-    when(spaceEnvironment.getExtendedLog()).thenReturn(log);
+    when(spaceEnvironment.getLog()).thenReturn(log);
     when(spaceEnvironment.getTimeProvider()).thenReturn(timeProvider);
 
     serviceRegistry = mock(ServiceRegistry.class);

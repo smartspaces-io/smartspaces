@@ -117,7 +117,7 @@ class StandardLightweightActivityRuntime(val spaceEnvironment: SmartSpacesEnviro
    * Handle all activity state changes.
    */
   private def handleActivityStatusChange(activity: Activity, oldStatus: ActivityStatus, newStatus: ActivityStatus): Unit = {
-    spaceEnvironment.getExtendedLog.formatInfo("Activity %s has transitioned from state %s to state %s", activity.getUuid(), oldStatus, newStatus)
+    spaceEnvironment.getLog.formatInfo("Activity %s has transitioned from state %s to state %s", activity.getUuid(), oldStatus, newStatus)
   }
 
 }

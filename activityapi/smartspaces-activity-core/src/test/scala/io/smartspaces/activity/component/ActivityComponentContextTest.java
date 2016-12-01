@@ -19,22 +19,21 @@ package io.smartspaces.activity.component;
 
 import io.smartspaces.activity.SupportedActivity;
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.util.SmartSpacesUtilities;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.commons.logging.Log;
+import com.google.common.collect.Lists;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.google.common.collect.Lists;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Unit tests for {@link ActivityComponentContext}
@@ -51,7 +50,7 @@ public class ActivityComponentContextTest {
 
   private ExecutorService executor;
 
-  private Log log;
+  private ExtendedLog log;
 
   private Configuration activityConfiguration;
 
@@ -64,7 +63,7 @@ public class ActivityComponentContextTest {
     activityConfiguration = Mockito.mock(Configuration.class);
     Mockito.when(activity.getConfiguration()).thenReturn(activityConfiguration);
 
-    log = Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
     Mockito.when(activity.getLog()).thenReturn(log);
 
     componentFactory = Mockito.mock(ActivityComponentFactory.class);

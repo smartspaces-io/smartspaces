@@ -17,23 +17,18 @@
 
 package io.smartspaces.liveactivity.runtime;
 
-import io.smartspaces.liveactivity.runtime.InternalLiveActivityFilesystem;
-import io.smartspaces.liveactivity.runtime.LiveActivityRunner;
-import io.smartspaces.liveactivity.runtime.LiveActivityRunnerListener;
-import io.smartspaces.liveactivity.runtime.LiveActivityRuntime;
-import io.smartspaces.liveactivity.runtime.StandardLiveActivityRunnerFactory;
-import io.smartspaces.liveactivity.runtime.activity.wrapper.ActivityWrapper;
-import io.smartspaces.liveactivity.runtime.activity.wrapper.ActivityWrapperFactory;
-import io.smartspaces.liveactivity.runtime.configuration.LiveActivityConfiguration;
-import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
-import io.smartspaces.resource.Version;
-import io.smartspaces.system.SmartSpacesEnvironment;
-
-import org.apache.commons.logging.Log;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import io.smartspaces.liveactivity.runtime.activity.wrapper.ActivityWrapper;
+import io.smartspaces.liveactivity.runtime.activity.wrapper.ActivityWrapperFactory;
+import io.smartspaces.liveactivity.runtime.configuration.LiveActivityConfiguration;
+import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.resource.Version;
+import io.smartspaces.system.SmartSpacesEnvironment;
 
 /**
  * Tests for the {@link StandardLiveActivityRunnerFactory}.
@@ -49,11 +44,11 @@ public class StandardLiveActivityRunnerFactoryTest {
   private InternalLiveActivityFilesystem filesystem;
   private InstalledLiveActivity liveActivity;
   private SmartSpacesEnvironment spaceEnvironment;
-  private Log log;
+  private ExtendedLog log;
 
   @Before
   public void setup() {
-    log = Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
     spaceEnvironment = Mockito.mock(SmartSpacesEnvironment.class);
 
     Mockito.when(spaceEnvironment.getLog()).thenReturn(log);

@@ -80,7 +80,7 @@ public class StandardActiveSpaceControllerManagerTest extends BaseSpaceTest {
     Mockito.when(spaceEnvironment.getTimeProvider()).thenReturn(timeProvider);
 
     log = Mockito.mock(ExtendedLog.class);
-    Mockito.when(spaceEnvironment.getExtendedLog()).thenReturn(log);
+    Mockito.when(spaceEnvironment.getLog()).thenReturn(log);
 
     remoteControllerClient = Mockito.mock(RemoteSpaceControllerClient.class);
 

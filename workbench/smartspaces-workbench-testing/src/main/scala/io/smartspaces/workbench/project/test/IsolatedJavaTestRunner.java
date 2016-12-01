@@ -87,7 +87,7 @@ public class IsolatedJavaTestRunner {
    *
    * @return {@code true} if all tests succeeded
    */
-  private boolean runJunitTests(List<Class<?>> testClasses, final Log log) {
+  private boolean runJunitTests(List<Class<?>> testClasses, Log log) {
     JUnitCore junit = new JUnitCore();
 
     junit.addListener(new RunListener() {

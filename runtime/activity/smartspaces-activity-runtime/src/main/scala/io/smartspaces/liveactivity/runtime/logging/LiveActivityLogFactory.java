@@ -19,8 +19,7 @@ package io.smartspaces.liveactivity.runtime.logging;
 
 import io.smartspaces.activity.ActivityFilesystem;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
-
-import org.apache.commons.logging.Log;
+import io.smartspaces.logging.ExtendedLog;
 
 /**
  * A factory for loggers for activities.
@@ -41,7 +40,7 @@ public interface LiveActivityLogFactory {
    *
    * @return a fully configured logger at the requested level
    */
-  Log createLogger(InstalledLiveActivity installedActivity, String level,
+  ExtendedLog createLogger(InstalledLiveActivity installedActivity, String level,
       ActivityFilesystem activityFilesystem);
 
   /**
@@ -50,5 +49,5 @@ public interface LiveActivityLogFactory {
    * @param activityLog
    *          the activity log to release
    */
-  void releaseLog(Log activityLog);
+  void releaseLog(ExtendedLog activityLog);
 }

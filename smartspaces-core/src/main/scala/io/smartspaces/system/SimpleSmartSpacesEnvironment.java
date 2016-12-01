@@ -96,29 +96,24 @@ public class SimpleSmartSpacesEnvironment implements SmartSpacesEnvironment {
   }
 
   @Override
-  public Log getLog() {
+  public ExtendedLog getLog() {
     return log;
   }
 
   @Override
-  public ExtendedLog getExtendedLog() {
-    return log;
-  }
-
-  @Override
-  public Log getLog(String logName, String level, String filename) {
+  public ExtendedLog getLog(String logName, String level, String filename) {
     // for now just return the system log
     return log;
   }
 
   @Override
-  public boolean modifyLogLevel(Log log, String level) {
+  public boolean modifyLogLevel(ExtendedLog log, String level) {
     // Not for now
     return false;
   }
 
   @Override
-  public void releaseLog(Log log) {
+  public void releaseLog(ExtendedLog log) {
     // Nothing to do.
   }
 
@@ -182,7 +177,7 @@ public class SimpleSmartSpacesEnvironment implements SmartSpacesEnvironment {
    *          the log to set
    */
   public void setLog(Log log) {
-    this.log = new StandardExtendedLog(log);
+    this.log = new StandardExtendedLog("simple", log);
   }
 
   /**

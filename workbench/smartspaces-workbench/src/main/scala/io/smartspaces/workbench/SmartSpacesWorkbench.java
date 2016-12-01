@@ -223,7 +223,7 @@ public class SmartSpacesWorkbench {
       ClassLoader baseClassLoader) {
     this.spaceEnvironment = spaceEnvironment;
     this.baseClassLoader = baseClassLoader;
-    this.log = spaceEnvironment.getExtendedLog();
+    this.log = spaceEnvironment.getLog();
 
     workbenchConfig = spaceEnvironment.getSystemConfiguration();
     workbenchConfig.setProperty(CONFIGURATION_PROPERTY_WORKBENCH_HOME,

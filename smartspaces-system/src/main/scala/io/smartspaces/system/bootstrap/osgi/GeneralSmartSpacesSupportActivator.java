@@ -214,7 +214,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
   private void createAdditionalResources() {
     containerResourceManager = new OsgiContainerResourceManager(bundleContext,
         bundleContext.getBundle(0).adapt(FrameworkWiring.class), filesystem,
-        configurationProvider.getConfigFolder(), spaceEnvironment.getExtendedLog());
+        configurationProvider.getConfigFolder(), spaceEnvironment.getLog());
     containerResourceManager.startup();
     managedResources.addResource(containerResourceManager);
   }

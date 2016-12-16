@@ -28,7 +28,7 @@ import io.smartspaces.master.server.services.SpaceControllerRepository;
 import io.smartspaces.service.script.FileScriptSource;
 import io.smartspaces.service.script.ScriptService;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.system.SmartSpacesSystemControl;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 
 import org.apache.felix.service.command.CommandProcessor;
 import org.apache.felix.service.command.CommandSession;
@@ -101,7 +101,7 @@ public class OsgiMasterShell {
         "addLiveActivity", "deployLiveActivity", "startupLiveActivity", "activateLiveActivity",
         "deactivateLiveActivity", "shutdownLiveActivity", "deleteLiveActivity", "listGroups",
         "addGroup", "deployGroup", "startupGroup", "activateGroup", "deactivateGroup",
-        "shutdownGroup", "deleteGroup", "script", "shutdown" });
+        "shutdownGroup", "deleteGroup", "script", "shutdown", "softRestart", "hardRestart" });
     bundleContext.registerService(getClass().getName(), this, dict);
   }
 
@@ -122,6 +122,32 @@ public class OsgiMasterShell {
   public void shutdown(CommandSession session, String[] args) {
     System.out.println("Shutting down");
     spaceSystemControl.shutdown();
+  }
+
+  /**
+   * A shell command to soft restart Smart Spaces.
+   *
+   * @param session
+   *          the command session
+   * @param args
+   *          the args for the command
+   */
+  public void softRestart(CommandSession session, String[] args) {
+    System.out.println("Soft restarting");
+    spaceSystemControl.softRestart();;
+  }
+
+  /**
+   * A shell command to hard restart Smart Spaces.
+   *
+   * @param session
+   *          the command session
+   * @param args
+   *          the args for the command
+   */
+  public void hardRestart(CommandSession session, String[] args) {
+    System.out.println("Hard restarting");
+    spaceSystemControl.hardRestart();;
   }
 
   /**

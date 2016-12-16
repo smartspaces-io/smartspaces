@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.system;
+package io.smartspaces.system.core.container;
 
 /**
  * Control of the overall Smart Spaces container.
@@ -25,7 +25,17 @@ package io.smartspaces.system;
 public interface SmartSpacesSystemControl {
 
   /**
-   * Shutdown the system.
+   * Shutdown the system completely.
    */
   void shutdown();
+  
+  /**
+   * Restart the base container but not the full process.
+   */
+  void softRestart();
+  
+  /**
+   * Restart the full process.
+   */
+  void hardRestart();
 }

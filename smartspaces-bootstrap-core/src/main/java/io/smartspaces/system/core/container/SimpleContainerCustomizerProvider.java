@@ -37,7 +37,7 @@ public class SimpleContainerCustomizerProvider implements ContainerCustomizerPro
   /**
    * The services from the container.
    */
-  private final Map<String, Object> services = new HashMap<String, Object>();
+  private final Map<String, Object> services = new HashMap<>();
 
   /**
    * {@code true} if the container is controllable from files.

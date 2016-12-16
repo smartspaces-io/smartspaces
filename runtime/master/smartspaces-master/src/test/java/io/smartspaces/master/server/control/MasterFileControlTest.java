@@ -26,7 +26,7 @@ import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.master.api.master.MasterApiAutomationManager;
 import io.smartspaces.master.api.master.MasterApiSpaceControllerManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.system.SmartSpacesSystemControl;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -75,6 +75,26 @@ public class MasterFileControlTest {
     fileControl.handleCommand(MasterFileControl.COMMAND_SHUTDOWN);
 
     verify(spaceSystemControl, times(1)).shutdown();
+  }
+
+  /**
+   * Make sure soft restart is called on control if a soft restart command is received.
+   */
+  @Test
+  public void testSoftRestartCall() {
+    fileControl.handleCommand(MasterFileControl.COMMAND_RESTART_SOFT);
+
+    verify(spaceSystemControl, times(1)).softRestart();;
+  }
+
+  /**
+   * Make sure hard restart is called on control if a hard restart command is received.
+   */
+  @Test
+  public void testHardRestartCall() {
+    fileControl.handleCommand(MasterFileControl.COMMAND_RESTART_HARD);
+
+    verify(spaceSystemControl, times(1)).hardRestart();;
   }
 
   /**

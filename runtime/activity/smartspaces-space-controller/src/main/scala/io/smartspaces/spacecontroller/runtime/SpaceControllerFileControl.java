@@ -19,7 +19,7 @@ package io.smartspaces.spacecontroller.runtime;
 
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.system.SmartSpacesSystemControl;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 import io.smartspaces.util.io.directorywatcher.DirectoryWatcher;
 import io.smartspaces.util.io.directorywatcher.DirectoryWatcherListener;
 import io.smartspaces.util.io.directorywatcher.SimpleDirectoryWatcher;
@@ -54,6 +54,16 @@ public class SpaceControllerFileControl implements DirectoryWatcherListener, Man
    * The command for shutting the entire container down.
    */
   public static final String COMMAND_SHUTDOWN = "shutdown";
+
+  /**
+   * The command for soft restarting the container.
+   */
+  public static final String COMMAND_RESTART_SOFT = "restart-soft";
+
+  /**
+   * The command for hard restarting the container.
+   */
+  public static final String COMMAND_RESTART_HARD = "restart-hard";
 
   /**
    * The space environment to run in.
@@ -143,6 +153,10 @@ public class SpaceControllerFileControl implements DirectoryWatcherListener, Man
   void handleCommand(String command) {
     if (COMMAND_SHUTDOWN.equalsIgnoreCase(command)) {
       spaceSystemControl.shutdown();
+    } else if (COMMAND_RESTART_HARD.equalsIgnoreCase(command)) {
+      spaceSystemControl.hardRestart();
+    } else if (COMMAND_RESTART_SOFT.equalsIgnoreCase(command)) {
+      spaceSystemControl.softRestart();
     } else {
       spaceEnvironment.getLog().warn(
           String.format("Unknown command to controller file control %s", command));

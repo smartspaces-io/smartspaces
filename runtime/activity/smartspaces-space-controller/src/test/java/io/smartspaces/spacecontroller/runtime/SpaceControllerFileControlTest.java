@@ -17,10 +17,8 @@
 
 package io.smartspaces.spacecontroller.runtime;
 
-import io.smartspaces.spacecontroller.runtime.SpaceControllerControl;
-import io.smartspaces.spacecontroller.runtime.SpaceControllerFileControl;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.system.SmartSpacesSystemControl;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -59,5 +57,25 @@ public class SpaceControllerFileControlTest {
     fileControl.handleCommand(SpaceControllerFileControl.COMMAND_SHUTDOWN);
 
     Mockito.verify(spaceSystemControl, Mockito.times(1)).shutdown();
+  }
+
+  /**
+   * Make sure soft restart is called on control if a soft restart command is received.
+   */
+  @Test
+  public void testSoftRestartCall() {
+    fileControl.handleCommand(SpaceControllerFileControl.COMMAND_RESTART_SOFT);
+
+    Mockito.verify(spaceSystemControl, Mockito.times(1)).softRestart();
+  }
+
+  /**
+   * Make sure hard restart is called on control if a hard restart command is received.
+   */
+  @Test
+  public void testHardRestartCall() {
+    fileControl.handleCommand(SpaceControllerFileControl.COMMAND_RESTART_HARD);
+
+    Mockito.verify(spaceSystemControl, Mockito.times(1)).hardRestart();
   }
 }

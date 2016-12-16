@@ -32,13 +32,12 @@ import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.event.observable.StandardEventObservableService;
 import io.smartspaces.system.BasicSmartSpacesFilesystem;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.system.SmartSpacesSystemControl;
 import io.smartspaces.system.core.configuration.ConfigurationProvider;
 import io.smartspaces.system.core.configuration.CoreConfiguration;
 import io.smartspaces.system.core.container.ContainerCustomizerProvider;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 import io.smartspaces.system.core.logging.LoggingProvider;
 import io.smartspaces.system.internal.osgi.OsgiContainerResourceManager;
-import io.smartspaces.system.internal.osgi.OsgiSmartSpacesSystemControl;
 import io.smartspaces.system.internal.osgi.OsgiSmartSpacesEnvironment;
 import io.smartspaces.system.resources.ContainerResourceManager;
 import io.smartspaces.tasks.ManagedTasks;
@@ -117,7 +116,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
   /**
    * The system control for Smart Spaces.
    */
-  private OsgiSmartSpacesSystemControl systemControl;
+  private SmartSpacesSystemControl systemControl;
 
   /**
    * The ROS Master URI provider in use.
@@ -186,13 +185,14 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     try {
       getCoreServices();
 
-        managedResources = new StandardManagedResources(loggingProvider.getLog());
-      
-      ManagedTasks managedTasks = new StandardManagedTasks(executorService, loggingProvider.getLog());
-      
+      managedResources = new StandardManagedResources(loggingProvider.getLog());
+
+      ManagedTasks managedTasks =
+          new StandardManagedTasks(executorService, loggingProvider.getLog());
+
       containerManagedScope = new StandardManagedScope(managedResources, managedTasks);
       containerManagedScope.startup();
-      
+
       setupSpaceEnvironment(baseInstallDir);
 
       createAdditionalResources();
@@ -254,6 +254,10 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
         bundleContext.getServiceReference(ContainerCustomizerProvider.class);
     containerCustomizerProvider =
         bundleContext.getService(containerCustomizerProviderServiceReference);
+
+    ServiceReference<SmartSpacesSystemControl> systemControlReference =
+        bundleContext.getServiceReference(SmartSpacesSystemControl.class);
+    systemControl = bundleContext.getService(systemControlReference);
   }
 
   /**
@@ -266,7 +270,6 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
         systemConfigurationStorageManager);
     registerOsgiService(SmartSpacesEnvironment.class.getName(), spaceEnvironment);
     registerOsgiService(RosEnvironment.class.getName(), rosEnvironment);
-    registerOsgiService(SmartSpacesSystemControl.class.getName(), systemControl);
     registerOsgiService(SwitchableMasterUriProvider.class.getName(), masterUriProvider);
   }
 
@@ -291,8 +294,6 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
   private void setupSpaceEnvironment(File baseInstallDir) {
     Map<String, String> containerProperties = configurationProvider.getInitialConfiguration();
 
-    systemControl = new OsgiSmartSpacesSystemControl(bundleContext);
-
     executorService = new DefaultScheduledExecutorService();
 
     filesystem = new BasicSmartSpacesFilesystem(baseInstallDir);
@@ -306,7 +307,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     spaceEnvironment
         .setNetworkType(containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NETWORK_TYPE));
     spaceEnvironment.setContainerManagedScope(containerManagedScope);
-    
+
     setupSystemConfiguration(bundleContext, containerProperties);
 
     timeProvider = getTimeProvider(containerProperties, loggingProvider.getLog());
@@ -492,14 +493,14 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     String hostAddress = convertHostnameToAddress(
         containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_HOSTNAME));
     systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_HOST_ADDRESS, hostAddress);
-    
-    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_INSTALL,
-            filesystem.getInstallDirectory().getAbsolutePath());
+
+    systemConfiguration.setProperty(
+        SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_INSTALL,
+        filesystem.getInstallDirectory().getAbsolutePath());
     systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_DATA,
         filesystem.getDataDirectory().getAbsolutePath());
     systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_TMP,
         filesystem.getTempDirectory().getAbsolutePath());
-
 
     spaceEnvironment.setSystemConfiguration(systemConfiguration);
   }

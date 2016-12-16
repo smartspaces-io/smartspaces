@@ -14,7 +14,7 @@ Prerequisites
 
 Before you can install Smart Spaces on your computer, you should make sure you have Java installed first.
 
-Smart Spaces requires at least Java 1.6.
+Smart Spaces requires at least Java 1.7.
 
 Installing a Local Master
 -------------
@@ -47,7 +47,7 @@ To test if your installation happened correctly, open up a command shell and go 
 
 ::
 
-  bin/startup
+  bin/smartspaces
 
 You should see a bunch of text scroll by as the master starts up. When you see no more text going by, go to a web browser and go to
 
@@ -56,6 +56,10 @@ You should see a bunch of text scroll by as the master starts up. When you see n
   http://localhost:8080/smartspaces
 
 If everything installed correctly you should be seeing the Master Web Interface in your browser.
+
+You can shutdown the master by typing the command ``shutdown`` into the command shell where you
+started running the master. You can also type ``^D`` where the ``^`` means the Control key on
+your keyboard.
 
 Installing a Local Controller
 -----------------------------
@@ -92,7 +96,7 @@ Once there, type the command
 
 ::
 
-  bin/startup
+  bin/smartspaces
 
 You should see a bunch of text scroll by as the controller starts up.
 
@@ -115,6 +119,10 @@ Interface you should see it say that the controller is in the running state.
 
 .. image:: images/NewController.png
 
+
+You can shutdown the controller by typing the command ``shutdown`` into the command shell where you
+started running the controller. You can also type ``^D`` where the ``^`` means the Control key on
+your keyboard.
 
 Manually Configuring a Controller
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

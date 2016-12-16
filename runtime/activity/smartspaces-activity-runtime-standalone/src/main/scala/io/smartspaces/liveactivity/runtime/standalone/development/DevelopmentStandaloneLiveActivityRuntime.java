@@ -17,14 +17,6 @@
 
 package io.smartspaces.liveactivity.runtime.standalone.development;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Future;
-
-import org.apache.commons.logging.Log;
-
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.activity.ActivityStatus;
@@ -57,11 +49,19 @@ import io.smartspaces.system.DevelopmentStandaloneSmartSpacesFilesystem;
 import io.smartspaces.system.InternalSmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesFilesystem;
-import io.smartspaces.system.SmartSpacesSystemControl;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 import io.smartspaces.tasks.SequentialTaskQueue;
 import io.smartspaces.tasks.SimpleSequentialTaskQueue;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+
+import org.apache.commons.logging.Log;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * A standalone runner for activities that takes the activities from a

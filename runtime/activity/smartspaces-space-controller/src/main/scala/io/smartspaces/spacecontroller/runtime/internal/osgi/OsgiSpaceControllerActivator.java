@@ -17,8 +17,6 @@
 
 package io.smartspaces.spacecontroller.runtime.internal.osgi;
 
-import org.ros.osgi.common.RosEnvironment;
-
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.evaluation.ExpressionEvaluatorFactory;
 import io.smartspaces.liveactivity.runtime.LiveActivityRuntimeComponentFactory;
@@ -51,10 +49,12 @@ import io.smartspaces.spacecontroller.runtime.configuration.StandardSpaceControl
 import io.smartspaces.spacecontroller.runtime.internal.StandardSpaceControllerActivityInstallationManager;
 import io.smartspaces.spacecontroller.ui.internal.osgi.OsgiSpaceControllerShell;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.system.SmartSpacesSystemControl;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 import io.smartspaces.system.resources.ContainerResourceManager;
 import io.smartspaces.tasks.SequentialTaskQueue;
 import io.smartspaces.tasks.SimpleSequentialTaskQueue;
+
+import org.ros.osgi.common.RosEnvironment;
 
 /**
  * An OSGi activator for an Smart Spaces space controller.

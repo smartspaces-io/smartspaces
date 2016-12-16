@@ -30,6 +30,7 @@ want. Hopefully peeling that onion won’t bring too many tears to your eyes.
    historyanddesignphilosophy
    installing
    firstactivity
+   running
    articles/basics
    exampleactivities
    workbench1

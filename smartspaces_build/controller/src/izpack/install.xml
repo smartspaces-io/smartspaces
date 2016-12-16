@@ -95,12 +95,8 @@
       <file src="smartspaces-launcher-@{app.version}.jar" targetdir="$INSTALL_PATH"
         override="true" />
 
-      <parsable targetfile="$INSTALL_PATH/bin/ssstartup" type="shell" />
-      <executable targetfile="$INSTALL_PATH/bin/ssstartup" stage="never" />
-      <parsable targetfile="$INSTALL_PATH/bin/ssshutdown" type="shell" />
-      <executable targetfile="$INSTALL_PATH/bin/ssshutdown" stage="never" />
-      <parsable targetfile="$INSTALL_PATH/bin/ssharshshutdown" type="shell" />
-      <executable targetfile="$INSTALL_PATH/bin/ssharshshutdown" stage="never" />
+      <parsable targetfile="$INSTALL_PATH/bin/smartspaces" type="shell" />
+      <executable targetfile="$INSTALL_PATH/bin/smartspaces" stage="never" />
 
       <parsable targetfile="$INSTALL_PATH/config/system/log4j.properties" />
       <parsable targetfile="$INSTALL_PATH/config/container.conf" type="shell" />

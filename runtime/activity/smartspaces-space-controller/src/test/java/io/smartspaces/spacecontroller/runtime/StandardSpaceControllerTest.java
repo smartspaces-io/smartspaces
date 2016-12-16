@@ -34,7 +34,7 @@ import io.smartspaces.spacecontroller.SpaceController;
 import io.smartspaces.spacecontroller.runtime.configuration.SpaceControllerConfigurationManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesFilesystem;
-import io.smartspaces.system.SmartSpacesSystemControl;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 import io.smartspaces.tasks.ImmediateRunSequentialTaskQueue;
 import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.io.FileSupport;

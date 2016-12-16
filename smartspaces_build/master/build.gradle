@@ -96,7 +96,7 @@ task copyNeededComponents(dependsOn: [
 
 task copyContainerDependenciesLauncher(type: Copy) {
   into "${project.ext.containerBuildTarget}"
-  from configurations.launcher - configurations.system
+  from configurations.launcher
 }
 
 task copyContainerDependenciesBootstrap(type: Copy) {
@@ -106,7 +106,7 @@ task copyContainerDependenciesBootstrap(type: Copy) {
 
 task copyContainerDependenciesSystemJava(type: Copy) {
   into "${project.ext.containerBuildTarget}/${project.ext.smartSpacesContainerSystemJava}"
-  from configurations.system
+  from configurations.system - configurations.launcher
 }
 
 task assembleContainers(dependsOn: [

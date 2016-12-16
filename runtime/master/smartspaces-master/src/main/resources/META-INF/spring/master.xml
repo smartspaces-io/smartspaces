@@ -522,6 +522,6 @@
 		availability="mandatory" interface="io.smartspaces.system.SmartSpacesEnvironment" />
 
 	<osgi:reference id="smartspaces.systemctl" availability="mandatory"
-		interface="io.smartspaces.system.SmartSpacesSystemControl" />
+		interface="io.smartspaces.system.core.container.SmartSpacesSystemControl" />
 
 </beans>

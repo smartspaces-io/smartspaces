@@ -17,7 +17,8 @@
 
 buildscript {
   repositories {
-    if (project.hasProperty("artifactory")) {
+/*
+if (project.hasProperty("artifactory")) {
       maven {
         url "${artifactory_contextUrl}/plugins-release"
         credentials {
@@ -26,7 +27,8 @@ buildscript {
         }
       }
     }
-    jcenter()
+*/
+jcenter()
     mavenCentral()
   }
 
@@ -83,7 +85,8 @@ allprojects {
       ':smartspaces_build:workbench'
     ]
 
-    systemJavaProjects = [
+    nonOsgiJvmProjects = [
+      ':smartspaces-launcher',
       ':smartspaces-bootstrap-core',
       ':smartspaces-launcher-bootstrap'
     ]
@@ -104,6 +107,10 @@ allprojects {
       androidSdkJar = "$androidPlatformHome/android.jar"
     }
 
+    mavenVersion = smartSpacesVersionQualifier ? 
+        smartSpacesVersion + "-" + smartSpacesVersionQualifier :
+        smartSpacesVersion
+
     osgiVersion = smartSpacesVersionQualifier ? 
         smartSpacesVersion + "." + smartSpacesVersionQualifier :
         smartSpacesVersion
@@ -118,8 +125,8 @@ allprojects {
     osgiContainerDependency = 'org.apache.felix:org.apache.felix.framework:5.4.0'
   }
 
-  group = 'smartspaces'
-  version = osgiVersion
+  group = 'io.smartspaces'
+  version = mavenVersion
 
   tasks.withType(JavaCompile) { 
     sourceCompatibility = "1.7"
@@ -140,10 +147,6 @@ subprojects {
 
     artifacts {
       archives jar
-    }
-
-    if (project.hasProperty("artifactory")) {
-      apply plugin: 'com.jfrog.artifactory'
     }
 
     if (name != 'smartspaces-bootstrap-core') {
@@ -220,7 +223,7 @@ subprojects {
     eclipse.classpath.plusConfigurations += [configurations.extrasCompile]
     eclipse.classpath.plusConfigurations += [configurations.extrasSupportCompile]
 
-    if (!ext.systemJavaProjects.contains(path)) {
+    if (!ext.nonOsgiJvmProjects.contains(path)) {
       dependencies {
         compile 'org.scala-lang:scala-library:2.11.8'
       }
@@ -231,6 +234,20 @@ subprojects {
     }
 
     install.dependsOn build
+
+
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        repository(url: "${nexusUrl}/repository/smartspaces-io-release/") {
+          authentication(userName: nexusUsername, password: nexusPassword)
+        }
+        snapshotRepository(url: "${nexusUrl}/repository/smartspaces-io-snapshot/") {
+          authentication(userName: nexusUsername, password: nexusPassword)
+        }
+      }
+    }
+  }
   }
 
   repositories {
@@ -242,36 +259,12 @@ subprojects {
     maven {
       url 'http://repo.spring.io/libs-release-remote'
     }
+    jcenter()
     maven {
       url 'http://repository.pentaho.org/artifactory/repo/'
     }
-  }
-}
-
-if (project.hasProperty("artifactory")) {
-  artifactory {
-    //The base Artifactory URL if not overridden by the publisher/resolver
-    contextUrl = "${artifactory_contextUrl}"
-    publish {
-      repository {
-        repoKey = 'libs-release-local'
-        username = "${artifactory_user}"
-        password = "${artifactory_password}"
-        maven = true
-      }
-      defaults {
-        publishConfigs('archives')
-        publishArtifacts = true
-        publishPom = true
-      }
-    }
-    resolve {
-      repository {
-        repoKey = 'libs-release'
-        username = "${artifactory_user}"
-        password = "${artifactory_password}"
-        maven = true
-      }
+    maven {
+      url "https://repos.inhabitech.com:8082/repository/smartspaces-io"
     }
   }
 }

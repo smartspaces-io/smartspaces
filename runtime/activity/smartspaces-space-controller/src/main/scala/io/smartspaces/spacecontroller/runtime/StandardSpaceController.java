@@ -17,15 +17,6 @@
 
 package io.smartspaces.spacecontroller.runtime;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.annotations.VisibleForTesting;
-
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.ActivityStatus;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
@@ -48,12 +39,20 @@ import io.smartspaces.spacecontroller.SpaceControllerStatus;
 import io.smartspaces.spacecontroller.resource.deployment.ContainerResourceDeploymentManager;
 import io.smartspaces.spacecontroller.runtime.configuration.SpaceControllerConfigurationManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.system.SmartSpacesSystemControl;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 import io.smartspaces.tasks.SequentialTaskQueue;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.uuid.JavaUuidGenerator;
 import io.smartspaces.util.uuid.UuidGenerator;
+
+import com.google.common.annotations.VisibleForTesting;
+import org.apache.commons.logging.Log;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A base implementation of {@link SpaceController} which gives basic

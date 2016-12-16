@@ -41,7 +41,7 @@ public interface ContainerCustomizerProvider {
    * Get services supplied by the container.
    *
    * <p>
-   * These are not using the Service interface because of how classpaths and IS
+   * These are not using the Service interface because of how classpaths and SmartSpaces
    * components are being started.
    *
    * @return a map of services with the key being the service name and the value

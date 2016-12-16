@@ -23,7 +23,7 @@ import io.smartspaces.master.api.master.MasterApiSpaceControllerManager;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.resource.repository.ActivityRepositoryManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.system.SmartSpacesSystemControl;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 import io.smartspaces.util.io.directorywatcher.DirectoryWatcher;
 import io.smartspaces.util.io.directorywatcher.DirectoryWatcherListener;
 import io.smartspaces.util.io.directorywatcher.SimpleDirectoryWatcher;
@@ -59,6 +59,16 @@ public class MasterFileControl implements DirectoryWatcherListener {
    * The command for shutting the entire container down.
    */
   public static final String COMMAND_SHUTDOWN = "shutdown";
+
+  /**
+   * The command for soft restarting the container.
+   */
+  public static final String COMMAND_RESTART_SOFT = "restart-soft";
+
+  /**
+   * The command for hard restarting the container.
+   */
+  public static final String COMMAND_RESTART_HARD = "restart-hard";
 
   /**
    * The command for forcing the calculation of all activity hashes.
@@ -217,6 +227,10 @@ public class MasterFileControl implements DirectoryWatcherListener {
     try {
       if (COMMAND_SHUTDOWN.equalsIgnoreCase(command)) {
         spaceSystemControl.shutdown();
+      } else if (COMMAND_RESTART_HARD.equalsIgnoreCase(command)) {
+        spaceSystemControl.hardRestart();;
+      } else if (COMMAND_RESTART_SOFT.equalsIgnoreCase(command)) {
+        spaceSystemControl.softRestart();
       } else if (COMMAND_CALCULATE_ACTIVITY_HASHES.equalsIgnoreCase(command)) {
         calculateActivityHashes();
       } else if (COMMAND_SPACE_CONTROLLERS_SHUTDOWN_ALL.equalsIgnoreCase(command)) {

@@ -154,7 +154,7 @@ Once there, type the following command.
 
 ::
 
-  bin/isworkbench.bash create activity java me.activity.first
+  bin/ssworkbench.bash create activity java me.activity.first
 
 This will create a new directory ``me.activity.first``, containing a ``project.xml`` file and also the
 requisite Java source files. The project file contains a number of fields, such as description and version,
@@ -165,7 +165,7 @@ Project specifications can also be specified by directly specifying a project sp
 
 ::
 
-  bin/isworkbench.bash create spec \
+  bin/ssworkbench.bash create spec \
     templates/activity/generic/java/simple/java_activity_spec.xml me.activity.first
 
 Building the Activity
@@ -178,7 +178,7 @@ build your project is
 
 ::
 
-  bin/isworkbench.bash me.activity.first build
+  bin/ssworkbench.bash me.activity.first build
 
 This will put a file called ``me.activity.first-0.0.1.zip`` in the
 ``me.activity.first/build`` directory.
@@ -197,7 +197,7 @@ create the IDE project is
 
 ::
 
-  bin/isworkbench.bash me.activity.first ide eclipse
+  bin/ssworkbench.bash me.activity.first ide eclipse
 
 This will build an Eclipse project which you can then import into Eclipse.
 

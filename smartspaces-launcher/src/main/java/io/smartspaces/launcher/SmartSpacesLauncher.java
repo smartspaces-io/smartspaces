@@ -17,6 +17,8 @@
 
 package io.smartspaces.launcher;
 
+import io.smartspaces.launcher.base.SmartSpacesReturnCodes;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -147,11 +149,28 @@ public class SmartSpacesLauncher {
     Collections.addAll(argList, args);
     processLauncherCommandArgs(argList);
     if (writePid()) {
-      createClassLoader();
-      boostrap(argList);
+
+      prepareAndLaunch(argList);
     } else {
       System.err.format("SmartSpaces component already running. Lock found on %s\n",
           pidFile.getAbsolutePath());
+    }
+  }
+
+  /**
+   * Prepare and launch Smart Spaces.
+   *
+   * @param args
+   *          the command line arguments
+   */
+  private void prepareAndLaunch(List<String> argList) {
+    while (true) {
+      createClassLoader();
+      int returnCode = boostrap(argList);
+      
+      if (returnCode != SmartSpacesReturnCodes.RETURN_CODE_RESTART_SOFT) {
+        System.exit(returnCode);
+      }
     }
   }
 
@@ -285,18 +304,25 @@ public class SmartSpacesLauncher {
    *
    * @param argList
    *          the command line arguments
+   * 
+   * @return the return code for the Java process, see
+   *         {@link SmartSpacesReturnCodes}
    */
-  private void boostrap(List<String> argList) {
+  private int boostrap(List<String> argList) {
     try {
       Class<?> bootstrapClass = classLoader.loadClass(CLASSNAME_SMARTSPACES_FRAMEWORK_BOOTSTRAP);
 
       Object bootstrapInstance = bootstrapClass.newInstance();
 
       Method boostrapMethod = bootstrapClass.getMethod("boot", List.class);
-      boostrapMethod.invoke(bootstrapInstance, argList);
+      Object returnValue = boostrapMethod.invoke(bootstrapInstance, argList);
+
+      return ((Integer) returnValue);
     } catch (Exception e) {
       System.err.println("Could not create bootstrapper");
       e.printStackTrace(System.err);
+
+      return SmartSpacesReturnCodes.RETURN_CODE_FAILURE;
     }
   }
 

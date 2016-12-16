@@ -16,6 +16,8 @@
 
 dependencies {
   compile project(':smartspaces-bootstrap-core')
+  compile project(':smartspaces-launcher')
+  
   compile 'org.apache.felix:org.apache.felix.framework:5.0.0'
 
   compile 'org.apache.log4j:com.springsource.org.apache.log4j:1.2.16'

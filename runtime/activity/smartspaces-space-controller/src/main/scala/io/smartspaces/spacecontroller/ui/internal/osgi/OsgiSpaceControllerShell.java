@@ -20,7 +20,7 @@ package io.smartspaces.spacecontroller.ui.internal.osgi;
 import io.smartspaces.liveactivity.runtime.repository.LocalLiveActivityRepository;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.spacecontroller.SpaceController;
-import io.smartspaces.system.SmartSpacesSystemControl;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 
 import org.osgi.framework.BundleContext;
 

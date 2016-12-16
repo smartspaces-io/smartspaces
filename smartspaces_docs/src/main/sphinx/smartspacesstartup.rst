@@ -12,10 +12,10 @@ Smart Spaces Space Controller.
 Starting Up a Container
 =======================
 
-The best way to start a container is to use the ``bin/ssstartup`` command found in the installation
+The best way to start a container is to use the ``bin/smartspaces`` command found in the installation
 directory for the container.
 
-The ``ssstartup`` script starts by figuring out in exactly which directory the container is installed.
+The ``smartspaces`` script starts by figuring out in exactly which directory the container is installed.
 It then changes the directory for the operating system process which is running the container to that installation
 directory.
 
@@ -179,7 +179,7 @@ starts up.
 Normally, the Smart Spaces Controller container will launch and start a Standard Space Controller instance.
 However, this behavior can be controlled with the ``smartspaces.controller.mode`` variable, and setting it
 to something other than ``standard`` will result in no default controller instance being started, e.g., by specifying
-``-Dsmartspaces.controller.mode=none`` on the ``ssstartup`` command line.
+``-Dsmartspaces.controller.mode=none`` on the ``smartspaces`` command line.
 
 Core Services
 -------------

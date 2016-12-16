@@ -79,7 +79,7 @@ task copyContainerDependenciesExtrasTesting(type: Copy) {
 
 task copyContainerDependenciesLauncher(type: Copy) {
   into "${project.ext.containerBuildTarget}"
-  from configurations.launcher - configurations.system
+  from configurations.launcher
 }
 
 task copyContainerDependenciesBootstrap(type: Copy) {

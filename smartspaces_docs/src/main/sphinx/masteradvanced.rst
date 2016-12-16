@@ -34,6 +34,11 @@ of the Master by files which are added to it.
 Creating a file called `shutdown` in this folder will shut the master
 down softly.
 
+Creating a file called `restart-soft` in this folder will shut the master down softly and
+start the framework up again. For those familiar with processes, the process will be left
+running, only the OSGi framework will be restarted using the exact same environment that was
+there when the mater was first started. This can be useful
+
 Creating a file called `space-controllers-shutdown-all` will shut down all Space Controllers
 the Master knows about.
 

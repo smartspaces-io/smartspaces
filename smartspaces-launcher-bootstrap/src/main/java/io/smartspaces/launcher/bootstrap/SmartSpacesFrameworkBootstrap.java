@@ -17,13 +17,26 @@
 
 package io.smartspaces.launcher.bootstrap;
 
+import io.smartspaces.launcher.base.SmartSpacesReturnCodes;
 import io.smartspaces.system.core.configuration.ConfigurationProvider;
 import io.smartspaces.system.core.configuration.CoreConfiguration;
 import io.smartspaces.system.core.container.ContainerCustomizerProvider;
 import io.smartspaces.system.core.container.ContainerFilesystemLayout;
 import io.smartspaces.system.core.container.SimpleContainerCustomizerProvider;
 import io.smartspaces.system.core.container.SmartSpacesStartLevel;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 import io.smartspaces.system.core.logging.LoggingProvider;
+
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleException;
+import org.osgi.framework.Constants;
+import org.osgi.framework.SynchronousBundleListener;
+import org.osgi.framework.launch.Framework;
+import org.osgi.framework.launch.FrameworkFactory;
+import org.osgi.framework.startlevel.BundleStartLevel;
+import org.osgi.framework.startlevel.FrameworkStartLevel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -43,17 +56,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
-
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.Constants;
-import org.osgi.framework.SynchronousBundleListener;
-import org.osgi.framework.launch.Framework;
-import org.osgi.framework.launch.FrameworkFactory;
-import org.osgi.framework.startlevel.BundleStartLevel;
-import org.osgi.framework.startlevel.FrameworkStartLevel;
 
 /**
  * The boostrapper for Smart Spaces.
@@ -135,10 +137,16 @@ public class SmartSpacesFrameworkBootstrap {
    * These packages are critical, IS is crippled without them which is why they
    * are here in the code.
    */
-  public static final String[] PACKAGES_SYSTEM_EXTERNAL = new String[] {
-      "org.apache.commons.logging; version=1.1.1",
-      "org.apache.commons.logging.impl; version=1.1.1", "javax.transaction; version=1.1.0",
-      "javax.transaction.xa; version=1.1.0", "javax.transaction", "javax.transaction.xa" };
+  public static final String[] PACKAGES_SYSTEM_EXTERNAL =
+      new String[] { "org.apache.commons.logging; version=1.1.1",
+          "org.apache.commons.logging.impl; version=1.1.1", "javax.transaction; version=1.1.0",
+          "javax.transaction.xa; version=1.1.0", "javax.transaction", "javax.transaction.xa" };
+
+  /**
+   * The interface describing the container system control.
+   */
+  public static final Class<SmartSpacesSystemControl> CONTAINER_SYSTEM_CONTROL_INTERFACE =
+      SmartSpacesSystemControl.class;
 
   /**
    * The interface describing the container customizer provider.
@@ -161,10 +169,10 @@ public class SmartSpacesFrameworkBootstrap {
    * Packages loaded from the Smart Spaces system folder that are part of Smart
    * Spaces.
    */
-  public static final String[] PACKAGES_SYSTEM_SMARTSPACES = new String[] {
-      LOGGING_PROVIDER_INTERFACE.getPackage().getName(),
-      CONFIGURATION_PROVIDER_INTERFACE.getPackage().getName(),
-      CONTAINER_COSTUMIZER_PROVIDER_INTERFACE.getPackage().getName() };
+  public static final String[] PACKAGES_SYSTEM_SMARTSPACES =
+      new String[] { LOGGING_PROVIDER_INTERFACE.getPackage().getName(),
+          CONFIGURATION_PROVIDER_INTERFACE.getPackage().getName(),
+          CONTAINER_COSTUMIZER_PROVIDER_INTERFACE.getPackage().getName() };
 
   /**
    * The Jar Manifest property that gives the Smart Spaces version.
@@ -297,6 +305,11 @@ public class SmartSpacesFrameworkBootstrap {
   private File configFolder;
 
   /**
+   * The system control for the container.
+   */
+  private SmartSpacesSystemControl systemControl;
+
+  /**
    * The OSGi bundle context for the OSGi framework bundle.
    */
   private BundleContext rootBundleContext;
@@ -307,12 +320,22 @@ public class SmartSpacesFrameworkBootstrap {
   private FrameworkStartLevel frameworkStartLevel;
 
   /**
+   * The shutdown option for the container.
+   * 
+   * <p>
+   * Set to the default value in case the container is exited from the OSGi shell.
+   */
+  private int shutdownReturnCode = SmartSpacesReturnCodes.RETURN_CODE_SUCCESS;
+
+  /**
    * Boot the framework.
    *
    * @param args
    *          the arguments to be passed to the bootstrap
+   *          
+   * @return the return code for the Java process, see {@link SmartSpacesReturnCodes}
    */
-  public void boot(List<String> args) {
+  public int boot(List<String> args) {
 
     baseInstallFolder = new File(".").getAbsoluteFile().getParentFile();
 
@@ -326,44 +349,47 @@ public class SmartSpacesFrameworkBootstrap {
 
     initializeBundleStartLevels();
 
-    getBootstrapBundleJars(new File(baseInstallFolder,
-        ContainerFilesystemLayout.FOLDER_SYSTEM_BOOTSTRAP));
-
-    try {
-      setupShutdownHandler();
-
-      setupExceptionHandler();
-
-      loadStartupFolder();
-      loadExtraBootstrapFolders();
-
-      createCoreServices(args);
-
-      if (initialBundles.isEmpty()) {
-        throw new RuntimeException("No bootstrap bundles to install.");
+    systemControl = new SmartSpacesSystemControl() {
+      @Override
+      public void softRestart() {
+        shutdownReturnCode = SmartSpacesReturnCodes.RETURN_CODE_RESTART_SOFT;
+        stopContainer();
       }
 
-      File environmentFolder =
-          new File(configFolder, ContainerFilesystemLayout.FOLDER_CONFIG_ENVIRONMENT);
-      ExtensionsReader extensionsReader = new ExtensionsReader(loggingProvider.getLog());
-      extensionsReader.processExtensionFiles(environmentFolder);
+      @Override
+      public void shutdown() {
+        shutdownReturnCode = SmartSpacesReturnCodes.RETURN_CODE_SUCCESS;
+        stopContainer();
+      }
 
-      createFramework(extensionsReader);
+      @Override
+      public void hardRestart() {
+        shutdownReturnCode = SmartSpacesReturnCodes.RETURN_CODE_RESTART_HARD;
+        stopContainer();
+      }
 
-      registerCoreServices();
+      /**
+       * Fully stop the container.
+       */
+      private void stopContainer() {
+        try {
+          rootBundleContext.getBundle(0).stop();
+        } catch (BundleException e) {
+          e.printStackTrace();
+        }
+      }
+    };
 
-      loadLibraries(extensionsReader.getLoadLibraries());
-      loadClasses(extensionsReader.getLoadClasses());
+    setupExceptionHandler();
 
-      addContainerPathBundles(extensionsReader.getContainerPath());
+    File bootstrapBundleFolder =
+        new File(baseInstallFolder, ContainerFilesystemLayout.FOLDER_SYSTEM_BOOTSTRAP);
 
-      framework.start();
+    try {
+        
+        bootAndRunFramework(args, bootstrapBundleFolder);
 
-      startBundles();
-      frameworkStartLevel.setStartLevel(SmartSpacesStartLevel.STARTUP_LEVEL_LAST.getStartLevel());
-
-      framework.waitForStop(0);
-      System.exit(0);
+      return shutdownReturnCode;
     } catch (Throwable ex) {
       if (loggingProvider != null && loggingProvider.getLog() != null) {
         loggingProvider.getLog().error("Error starting framework", ex);
@@ -371,8 +397,57 @@ public class SmartSpacesFrameworkBootstrap {
         System.err.println("Error starting framework");
         ex.printStackTrace();
       }
-      System.exit(1);
+      return SmartSpacesReturnCodes.RETURN_CODE_FAILURE;
     }
+  }
+
+  /**
+   * Boot and run the framework.
+   * 
+   * <p>
+   * This method will return when the OSGi framework shuts down.
+   * 
+   * @param args
+   *          the command line args
+   * @param bootstrapBundleFolder
+   *          the folder that contains the bootstrap bundles
+   * 
+   * @throws Exception
+   *           something bad happened while the framework was setting up
+   */
+  private void bootAndRunFramework(List<String> args, File bootstrapBundleFolder) throws Exception {
+    getBootstrapBundleJars(bootstrapBundleFolder);
+    setupShutdownHandler();
+
+    loadStartupFolder();
+    loadExtraBootstrapFolders();
+
+    createCoreServices(args);
+
+    if (initialBundles.isEmpty()) {
+      throw new RuntimeException("No bootstrap bundles to install.");
+    }
+
+    File environmentFolder =
+        new File(configFolder, ContainerFilesystemLayout.FOLDER_CONFIG_ENVIRONMENT);
+    ExtensionsReader extensionsReader = new ExtensionsReader(loggingProvider.getLog());
+    extensionsReader.processExtensionFiles(environmentFolder);
+
+    createFramework(extensionsReader);
+
+    registerCoreServices();
+
+    loadLibraries(extensionsReader.getLoadLibraries());
+    loadClasses(extensionsReader.getLoadClasses());
+
+    addContainerPathBundles(extensionsReader.getContainerPath());
+
+    framework.start();
+
+    startBundles();
+    frameworkStartLevel.setStartLevel(SmartSpacesStartLevel.STARTUP_LEVEL_LAST.getStartLevel());
+
+    framework.waitForStop(0);
   }
 
   /**
@@ -449,8 +524,8 @@ public class SmartSpacesFrameworkBootstrap {
     Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
       @Override
       public void uncaughtException(Thread t, Throwable e) {
-        loggingProvider.getLog().error(
-            String.format("Caught previously uncaught exception from thread %s", t), e);
+        loggingProvider.getLog()
+            .error(String.format("Caught previously uncaught exception from thread %s", t), e);
       }
     });
   }
@@ -467,9 +542,8 @@ public class SmartSpacesFrameworkBootstrap {
     // Calculate the proper home directory for this install of Smart
     // Spaces.
     String isHomeEnvPath = System.getenv(SMARTSPACES_HOME_ENVIRONMENT_KEY);
-    File isHomeDir =
-        isHomeEnvPath != null ? new File(isHomeEnvPath) : new File(baseInstallFolder,
-            SMARTSPACES_HOME_DEFAULT_DIR);
+    File isHomeDir = isHomeEnvPath != null ? new File(isHomeEnvPath)
+        : new File(baseInstallFolder, SMARTSPACES_HOME_DEFAULT_DIR);
     configurationProvider.put(CoreConfiguration.CONFIGURATION_SMARTSPACES_HOME,
         isHomeDir.getAbsolutePath());
 
@@ -482,8 +556,8 @@ public class SmartSpacesFrameworkBootstrap {
     } else if (platformOs.startsWith(SYSTEM_PROPERTY_OS_PREFIX_WINDOWS)) {
       platformOs = CoreConfiguration.CONFIGURATION_VALUE_PLATFORM_OS_WINDOWS;
     } else {
-      loggingProvider.getLog().warn(
-          String.format(
+      loggingProvider.getLog()
+          .warn(String.format(
               "Unsupported operating system: %s. Native applications will not function properly.",
               platformOs));
       platformOs = CoreConfiguration.CONFIGURATION_VALUE_PLATFORM_OS_UNKNOWN;
@@ -513,8 +587,7 @@ public class SmartSpacesFrameworkBootstrap {
     for (String arg : args) {
       if (arg.startsWith(COMMAND_LINE_VALUE_DEFINITION_PREFIX)) {
         String[] parts = arg.split(COMMAND_LINE_VALUE_DEFINITION_SPLIT, 2);
-        configurationProvider.put(
-            parts[0].substring(COMMAND_LINE_VALUE_DEFINITION_PREFIX.length()),
+        configurationProvider.put(parts[0].substring(COMMAND_LINE_VALUE_DEFINITION_PREFIX.length()),
             parts.length > 1 ? parts[1] : "");
       } else {
         newArgs.add(arg);
@@ -576,6 +649,7 @@ public class SmartSpacesFrameworkBootstrap {
         configurationProvider, null);
     rootBundleContext.registerService(CONTAINER_COSTUMIZER_PROVIDER_INTERFACE.getName(),
         containerCustomizerProvider, null);
+    rootBundleContext.registerService(CONTAINER_SYSTEM_CONTROL_INTERFACE, systemControl, null);
   }
 
   /**
@@ -643,9 +717,8 @@ public class SmartSpacesFrameworkBootstrap {
    *          triggering exception
    */
   private void logBadBundle(String bundleUri, Exception e) {
-    loggingProvider.getLog().error(
-        String.format("Bundle %s is not an OSGi bundle, skipping during Smart Spaces startup",
-            bundleUri), e);
+    loggingProvider.getLog().error(String.format(
+        "Bundle %s is not an OSGi bundle, skipping during Smart Spaces startup", bundleUri), e);
   }
 
   /**
@@ -658,8 +731,8 @@ public class SmartSpacesFrameworkBootstrap {
     try {
       bundle.start();
     } catch (Exception e) {
-      loggingProvider.getLog().error(
-          String.format("Error while starting bundle %s", bundle.getLocation()), e);
+      loggingProvider.getLog()
+          .error(String.format("Error while starting bundle %s", bundle.getLocation()), e);
     }
   }
 
@@ -721,16 +794,16 @@ public class SmartSpacesFrameworkBootstrap {
     framework.init();
     rootBundleContext = framework.getBundleContext();
 
-    if (CONFIG_PROPERTY_VALUE_STARTUP_LOGGING.equals(frameworkConfig
-        .get(CONFIG_PROPERTY_STARTUP_LOGGING))) {
+    if (CONFIG_PROPERTY_VALUE_STARTUP_LOGGING
+        .equals(frameworkConfig.get(CONFIG_PROPERTY_STARTUP_LOGGING))) {
       rootBundleContext.addBundleListener(new SynchronousBundleListener() {
         @Override
         public void bundleChanged(BundleEvent event) {
           try {
             if (event.getType() == BundleEvent.STARTED) {
               Bundle bundle = event.getBundle();
-              loggingProvider.getLog().info(
-                  String.format("Bundle %s:%s started with start level %d",
+              loggingProvider.getLog()
+                  .info(String.format("Bundle %s:%s started with start level %d",
                       bundle.getSymbolicName(), bundle.getVersion(),
                       bundle.adapt(BundleStartLevel.class).getStartLevel()));
             }
@@ -818,8 +891,8 @@ public class SmartSpacesFrameworkBootstrap {
         Object obj = clazz.newInstance();
         rootBundleContext.registerService(obj.getClass().getName(), obj, null);
       } catch (Exception e) {
-        loggingProvider.getLog()
-            .error(String.format("Error while creating class %s", className), e);
+        loggingProvider.getLog().error(String.format("Error while creating class %s", className),
+            e);
       }
     }
   }
@@ -837,8 +910,8 @@ public class SmartSpacesFrameworkBootstrap {
       if (bundleFile.isFile()) {
         initialBundles.add(bundleFile);
       } else {
-        loggingProvider.getLog().warn(
-            String.format("Container path file %s is not a file", containerBundlePath));
+        loggingProvider.getLog()
+            .warn(String.format("Container path file %s is not a file", containerBundlePath));
       }
     }
   }
@@ -962,11 +1035,11 @@ public class SmartSpacesFrameworkBootstrap {
           if (line.startsWith(DELEGATIONS_CONF_FILE_COMMENT)) {
             continue;
           } else if (line.startsWith(ExtensionsReader.EXTENSION_FILE_KEYWORD_PACKAGE)) {
-            extraSystemPackages.add(line.substring(
-                ExtensionsReader.EXTENSION_FILE_KEYWORD_PACKAGE.length()).trim());
+            extraSystemPackages.add(
+                line.substring(ExtensionsReader.EXTENSION_FILE_KEYWORD_PACKAGE.length()).trim());
           } else if (line.startsWith(ExtensionsReader.EXTENSION_FILE_KEYWORD_PACKAGE_BOOT)) {
-            bootDelegationPackages.add(line.substring(
-                ExtensionsReader.EXTENSION_FILE_KEYWORD_PACKAGE_BOOT.length()).trim());
+            bootDelegationPackages.add(line
+                .substring(ExtensionsReader.EXTENSION_FILE_KEYWORD_PACKAGE_BOOT.length()).trim());
           } else {
             // The default is to be a boot delegation package
             bootDelegationPackages.add(line);
@@ -975,9 +1048,8 @@ public class SmartSpacesFrameworkBootstrap {
       }
 
     } catch (Exception e) {
-      loggingProvider.getLog().error(
-          String.format("Error file processing delegations file %s",
-              delegationFile.getAbsolutePath()), e);
+      loggingProvider.getLog().error(String.format("Error file processing delegations file %s",
+          delegationFile.getAbsolutePath()), e);
     } finally {
       if (reader != null) {
         try {

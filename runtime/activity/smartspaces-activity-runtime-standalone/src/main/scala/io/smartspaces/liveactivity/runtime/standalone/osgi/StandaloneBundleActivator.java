@@ -25,7 +25,7 @@ import io.smartspaces.liveactivity.runtime.standalone.development.DevelopmentSta
 import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.spacecontroller.SpaceController;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.system.SmartSpacesSystemControl;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 import io.smartspaces.system.resources.ContainerResourceManager;
 
 import org.apache.commons.logging.Log;

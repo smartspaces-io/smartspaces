@@ -132,7 +132,7 @@ task copyNeededComponents(dependsOn: [
 
 task copyContainerDependenciesLauncher(type: Copy) {
   into "${project.ext.containerBuildTarget}"
-  from configurations.launcher - configurations.system
+  from configurations.launcher
 }
 
 task copyContainerDependenciesBootstrap(type: Copy) {

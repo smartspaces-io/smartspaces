@@ -76,7 +76,7 @@ public class StandaloneBundleActivator extends SmartSpacesServiceOsgiBundleActiv
 
   @Override
   protected void allRequiredServicesAvailable() {
-    spaceEnvironment = getsmartspacesEnvironmentTracker().getMyService();
+    spaceEnvironment = getSmartspacesEnvironment();
 
     getLog().info("Standalone are go!");
 

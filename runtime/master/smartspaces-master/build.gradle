@@ -20,6 +20,7 @@ dependencies {
   compile project(':smartspaces-core')
   compile project(':smartspaces-system')
   compile project(':runtime:common:smartspaces-master-controller')
+
   compile project(':runtime:master:smartspaces-database')
   compile project(':service:smartspaces-service-alert')
   compile project(':service:smartspaces-service-script')
@@ -84,8 +85,6 @@ dependencies {
     exclude group: 'org.easymock'
   }
   
-  //compile('io.moquette:moquette-broker:0.9-SNAPSHOT')
-  
   //compile 'org.sat4j:org.sat4j.core:2.3.1'
   //compile 'org.sat4j:org.sat4j.pb:2.3.1'
 
@@ -123,6 +122,7 @@ compileScala.doLast {
 		resource: 'org/apache/openjpa/ant/antlib.xml',
 		classpath: references.foo
 	)
+	
 	
 	// Can also put a fileset inside { } instead of specifying classes in
 	// persistence.xml.

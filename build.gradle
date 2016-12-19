@@ -28,7 +28,7 @@ if (project.hasProperty("artifactory")) {
       }
     }
 */
-jcenter()
+    jcenter()
     mavenCentral()
   }
 
@@ -75,6 +75,7 @@ allprojects {
       ':runtime:common',
       ':runtime:master',
       ':runtime:activity',
+      ':runtime:infrastructure',
       ':activityapi',
       ':workbench',
       ':service',

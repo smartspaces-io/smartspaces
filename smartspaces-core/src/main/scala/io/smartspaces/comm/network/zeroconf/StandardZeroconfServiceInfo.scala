@@ -25,7 +25,7 @@ package io.smartspaces.comm.network.zeroconf
  *
  * @author Keith M. Hughes
  */
-class StandardZeroconfServiceInfo(val serviceType: String,val name: String, val subtype: String , val hostName:  String,
+class StandardZeroconfServiceInfo(val serviceType: String, val name: String, val subtype: String , val hostName:  String,
       val port: Int, val priority: Int,  val weight: Int)  extends ZeroconfServiceInfo {
 
   override def hashCode(): Int = {

@@ -26,6 +26,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
@@ -39,6 +40,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * An {@link RestWebClient} which uses Apache HttpClient.
@@ -46,6 +50,20 @@ import java.nio.charset.Charset;
  * @author Keith M. Hughes
  */
 public class HttpClientRestWebClient implements RestWebClient {
+
+  public static void main(String[] args) {
+    HttpClientRestWebClient client = new HttpClientRestWebClient();
+    client.startup();
+
+    Map<String, String> authHeaders = new HashMap<>();
+    authHeaders.put("Content-Type", "application/json");
+
+    String authContent =
+        "{\"grant_type\":\"password\", \"client_id\":\"bbfa4b1f12894473b5f24025e2d55290\", \"email\":\"keith@inhabitech.com\",\"password\":\"mu113#!\"}";
+    String result = client.performPost("https://api.stacklighting.com/v0/oauth2/token", authContent,
+        authHeaders);
+    System.out.println(result);
+  }
 
   /**
    * The default number of total connections.
@@ -138,6 +156,36 @@ public class HttpClientRestWebClient implements RestWebClient {
     try {
       HttpPut request = new HttpPut(sourceUri);
       request.setEntity(new StringEntity(putContent, charset.name()));
+
+      performer.performRequest(request);
+
+      return performer.getResponse();
+    } catch (UnsupportedEncodingException e) {
+      throw new SimpleSmartSpacesException(String.format(
+          "REST call to %s failed. Character set %s not supported", sourceUri, charset.name()));
+    }
+  }
+
+  @Override
+  public String performPost(String sourceUri, String postContent, Map<String, String> headers)
+      throws SmartSpacesException {
+    return performPost(sourceUri, postContent, Charsets.UTF_8, headers);
+  }
+
+  @Override
+  public String performPost(String sourceUri, String postContent, Charset charset,
+      Map<String, String> headers) throws SmartSpacesException {
+    StringRestPerformer performer = new StringRestPerformer(charset);
+
+    try {
+      HttpPost request = new HttpPost(sourceUri);
+      request.setEntity(new StringEntity(postContent, charset.name()));
+
+      if (headers != null) {
+        for (Entry<String, String> entry : headers.entrySet()) {
+          request.setHeader(entry.getKey(), entry.getValue());
+        }
+      }
 
       performer.performRequest(request);
 

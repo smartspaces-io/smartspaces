@@ -233,22 +233,28 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   protected abstract void allRequiredServicesAvailable();
 
   /**
-   * Register a new service with IS.
+   * Register a new service with Smart Spaces.
+   * 
+   * <p>
+   * The service will be injected with the space environment and then will
+   * be started if a {@link SupportedService}.
    *
    * @param service
    *          the service to be registered
    */
   public void registerNewSmartSpacesService(Service service) {
+    SmartSpacesEnvironment spaceEnvironment = smartspacesEnvironmentTracker.getMyService();
     try {
-      smartspacesEnvironmentTracker.getMyService().getServiceRegistry().registerService(service);
+      spaceEnvironment.getServiceRegistry().registerService(service);
 
+      service.setSpaceEnvironment(spaceEnvironment);
       if (SupportedService.class.isAssignableFrom(service.getClass())) {
         ((SupportedService) service).startup();
       }
 
       registeredServices.add(service);
     } catch (Exception e) {
-      smartspacesEnvironmentTracker.getMyService().getLog()
+      spaceEnvironment.getLog()
           .error(String.format("Error while starting up service %s", service.getName()), e);
     }
   }
@@ -309,11 +315,20 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   }
 
   /**
+   * Get the Smart Spaces environment.
+   *
+   * @return the environment
+   */
+  public SmartSpacesEnvironment getSmartspacesEnvironment() {
+    return smartspacesEnvironmentTracker.getMyService();
+  }
+
+  /**
    * Get the service tracker for the Smart Spaces environment.
    *
    * @return the service tracker
    */
-  public MyServiceTracker<SmartSpacesEnvironment> getsmartspacesEnvironmentTracker() {
+  public MyServiceTracker<SmartSpacesEnvironment> getSmartspacesEnvironmentTracker() {
     return smartspacesEnvironmentTracker;
   }
 

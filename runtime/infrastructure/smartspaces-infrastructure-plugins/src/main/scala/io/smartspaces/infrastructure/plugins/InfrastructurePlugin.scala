@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2015 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,22 +14,21 @@
  * the License.
  */
 
-package io.smartspaces.master.communication;
+package io.smartspaces.infrastructure.plugins
 
-import io.smartspaces.resource.managed.ManagedResource;
-import io.smartspaces.service.web.server.WebServer;
+import io.smartspaces.resource.managed.ManagedResource
 
 /**
- * The manager for master communications.
- *
+ * A plugin for Smart Spaces Infrastructure plugin.
+ * 
  * @author Keith M. Hughes
  */
-public interface MasterCommunicationManager extends ManagedResource {
-
+trait InfrastructurePlugin extends ManagedResource {
+  
   /**
-   * Get the master web server.
-   *
-   * @return the master web server
+   * The name of the plugin.
    */
-  WebServer getWebServer();
+  val name: String
 }
+
+

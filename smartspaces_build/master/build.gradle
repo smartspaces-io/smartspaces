@@ -35,7 +35,8 @@ dependencies {
   bootstrap project(":service:smartspaces-service-scheduler")
   bootstrap project(":service:smartspaces-service-action")
   bootstrap project(":service:smartspaces-service-alert-notifier-mail")
-
+  bootstrap project(":runtime:infrastructure:smartspaces-infrastructure-plugins")
+  
   bootstrap project(":runtime:master:smartspaces-master-webapp")
 
   bootstrap 'org.apache.felix:org.apache.felix.gogo.shell:0.10.0'

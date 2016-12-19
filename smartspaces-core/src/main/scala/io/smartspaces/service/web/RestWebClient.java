@@ -20,6 +20,7 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.resource.managed.ManagedResource;
 
 import java.nio.charset.Charset;
+import java.util.Map;
 
 /**
  * Copy content from an HTTP URL to a file.
@@ -70,13 +71,15 @@ public interface RestWebClient extends ManagedResource {
   String performGet(String sourceUri, Charset charset) throws SmartSpacesException;
 
   /**
-   * See {@link #performGet(String, Charset)}.
+   * See {@link #performPut(String, String, Charset)}.
    *
    * <p>
    * The charset will be UTF-8.
    *
    * @param sourceUri
    *          the URI to copy the content from
+   * @param putContent
+   *          the content to post
    *
    * @return the content
    *
@@ -86,7 +89,7 @@ public interface RestWebClient extends ManagedResource {
   String performPut(String sourceUri, String putContent) throws SmartSpacesException;
 
   /**
-   * Get the content of the source URI and return as a string.
+   * Put the content of the source URI and return as a string.
    *
    * <p>
    * This method blocks until the transfer is complete or it fails.
@@ -98,7 +101,7 @@ public interface RestWebClient extends ManagedResource {
    * @param sourceUri
    *          the URI to copy the content from
    * @param putContent
-   *          the content to put to the remote
+   *          the content to put
    * @param charset
    *          the charset the content will be in
    * 
@@ -108,6 +111,53 @@ public interface RestWebClient extends ManagedResource {
    *           if transfer was not successful
    */
   String performPut(String sourceUri, String putContent, Charset charset)
+      throws SmartSpacesException;
+
+  /**
+   * See {@link #performPost(String, String, Charset)}.
+   *
+   * <p>
+   * The charset will be UTF-8.
+   *
+   * @param sourceUri
+   *          the URI to copy the content from
+   * @param postContent
+   *          the content to post to the remote
+   * @param headers
+   *          a map of headers for the request, can be {@code null}
+   *
+   * @return the content
+   *
+   * @throws SmartSpacesException
+   *           if transfer was not successful
+   */
+  String performPost(String sourceUri, String postContent, Map<String,String> headers) throws SmartSpacesException;
+
+  /**
+   * Post the content to the source URI and return as a string.
+   *
+   * <p>
+   * This method blocks until the transfer is complete or it fails.
+   *
+   * <p>
+   * This method will fail if there are not enough connections available and
+   * blocking until a connection becomes ready is not enabled.
+   *
+   * @param sourceUri
+   *          the URI to copy the content from
+   * @param postContent
+   *          the content to post to the remote
+   * @param charset
+   *          the charset the content will be in
+   * @param headers
+   *          a map of headers for the request, can be {@code null}
+   * 
+   * @return the content
+   *
+   * @throws SmartSpacesException
+   *           if transfer was not successful
+   */
+  String performPost(String sourceUri, String postContent, Charset charset, Map<String,String> headers)
       throws SmartSpacesException;
 
   /**

@@ -107,7 +107,7 @@ public class OsgiSpaceControllerActivator extends SmartSpacesServiceOsgiBundleAc
 
   @Override
   protected void allRequiredServicesAvailable() {
-    spaceEnvironment = getsmartspacesEnvironmentTracker().getMyService();
+    spaceEnvironment = getSmartspacesEnvironment();
 
     String controllerMode =
         spaceEnvironment.getSystemConfiguration().getPropertyString(

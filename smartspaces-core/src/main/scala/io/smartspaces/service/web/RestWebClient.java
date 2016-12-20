@@ -33,20 +33,22 @@ import java.util.Map;
 public interface RestWebClient extends ManagedResource {
 
   /**
-   * See {@link #performGet(String, Charset)}.
+   * See {@link #performGet(String, Charset, Map)}.
    *
    * <p>
    * The charset will be UTF-8.
    *
    * @param sourceUri
    *          the URI to copy the content from
+   * @param headers
+   *          a map of headers for the request, can be {@code null}
    *
    * @return the content
    *
    * @throws SmartSpacesException
    *           if transfer was not successful
    */
-  String performGet(String sourceUri) throws SmartSpacesException;
+  String performGet(String sourceUri, Map<String,String> headers) throws SmartSpacesException;
 
   /**
    * Get the content of the source URI and return as a string.
@@ -62,16 +64,18 @@ public interface RestWebClient extends ManagedResource {
    *          the URI to copy the content from
    * @param charset
    *          the charset the content will be in
+   * @param headers
+   *          a map of headers for the request, can be {@code null}
    *
    * @return the content
    *
    * @throws SmartSpacesException
    *           if transfer was not successful
    */
-  String performGet(String sourceUri, Charset charset) throws SmartSpacesException;
+  String performGet(String sourceUri, Charset charset, Map<String,String> headers) throws SmartSpacesException;
 
   /**
-   * See {@link #performPut(String, String, Charset)}.
+   * See {@link #performPut(String, String, Charset, Map)}.
    *
    * <p>
    * The charset will be UTF-8.
@@ -80,13 +84,15 @@ public interface RestWebClient extends ManagedResource {
    *          the URI to copy the content from
    * @param putContent
    *          the content to post
+   * @param headers
+   *          a map of headers for the request, can be {@code null}
    *
    * @return the content
    *
    * @throws SmartSpacesException
    *           if transfer was not successful
    */
-  String performPut(String sourceUri, String putContent) throws SmartSpacesException;
+  String performPut(String sourceUri, String putContent, Map<String,String> headers) throws SmartSpacesException;
 
   /**
    * Put the content of the source URI and return as a string.
@@ -104,13 +110,15 @@ public interface RestWebClient extends ManagedResource {
    *          the content to put
    * @param charset
    *          the charset the content will be in
+   * @param headers
+   *          a map of headers for the request, can be {@code null}
    * 
    * @return the content
    *
    * @throws SmartSpacesException
    *           if transfer was not successful
    */
-  String performPut(String sourceUri, String putContent, Charset charset)
+  String performPut(String sourceUri, String putContent, Charset charset, Map<String,String> headers)
       throws SmartSpacesException;
 
   /**

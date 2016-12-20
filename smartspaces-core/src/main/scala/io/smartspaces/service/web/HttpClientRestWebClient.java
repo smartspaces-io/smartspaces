@@ -20,29 +20,44 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 
 import com.google.common.base.Charsets;
-import com.google.common.io.Closeables;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.config.SocketConfig;
+import org.apache.http.conn.DnsResolver;
+import org.apache.http.conn.HttpConnectionFactory;
+import org.apache.http.conn.ManagedHttpClientConnection;
+import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultHttpResponseParserFactory;
+import org.apache.http.impl.conn.ManagedHttpClientConnectionFactory;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.conn.SystemDefaultDnsResolver;
+import org.apache.http.impl.io.DefaultHttpRequestWriterFactory;
+import org.apache.http.io.HttpMessageParserFactory;
+import org.apache.http.io.HttpMessageWriterFactory;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.net.ssl.SSLContext;
 
 /**
  * An {@link RestWebClient} which uses Apache HttpClient.
@@ -51,39 +66,15 @@ import java.util.Map.Entry;
  */
 public class HttpClientRestWebClient implements RestWebClient {
 
-  public static void main(String[] args) {
-    HttpClientRestWebClient client = new HttpClientRestWebClient();
-    client.startup();
-
-    Map<String, String> authHeaders = new HashMap<>();
-    authHeaders.put("Content-Type", "application/json");
-
-    String authContent =
-        "{\"grant_type\":\"password\", \"client_id\":\"bbfa4b1f12894473b5f24025e2d55290\", \"email\":\"keith@inhabitech.com\",\"password\":\"mu113#!\"}";
-    String result = client.performPost("https://api.stacklighting.com/v0/oauth2/token", authContent,
-        authHeaders);
-    System.out.println(result);
-  }
-
   /**
    * The default number of total connections.
    */
   public static final int TOTAL_CONNECTIONS_ALLOWED_DEFAULT = 20;
 
   /**
-   * Number of bytes in the copy buffer.
-   */
-  private static final int BUFFER_SIZE = 4096;
-
-  /**
    * The HTTPClient instance which does the actual transfer.
    */
-  private HttpClient httpClient;
-
-  /**
-   * Connection manager for the client.
-   */
-  private ThreadSafeClientConnManager httpConnectionManager;
+  private CloseableHttpClient httpClient;
 
   /**
    * The total number of connections allowed.
@@ -110,59 +101,100 @@ public class HttpClientRestWebClient implements RestWebClient {
 
   @Override
   public void startup() {
-    httpConnectionManager = new ThreadSafeClientConnManager();
-    httpConnectionManager.setDefaultMaxPerRoute(totalConnectionsAllowed);
-    httpConnectionManager.setMaxTotal(totalConnectionsAllowed);
+    HttpMessageParserFactory<HttpResponse> responseParserFactory =
+        new DefaultHttpResponseParserFactory();
 
-    httpClient = new DefaultHttpClient(httpConnectionManager);
+    HttpMessageWriterFactory<HttpRequest> requestWriterFactory =
+        new DefaultHttpRequestWriterFactory();
+
+    HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory =
+        new ManagedHttpClientConnectionFactory(requestWriterFactory, responseParserFactory);
+
+    SSLContext sslcontext = SSLContexts.createSystemDefault();
+
+    // Create a registry of custom connection socket factories for supported
+    // protocol schemes.
+    Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
+        .<ConnectionSocketFactory>create().register("http", PlainConnectionSocketFactory.INSTANCE)
+        .register("https", new SSLConnectionSocketFactory(sslcontext)).build();
+
+    // Use custom DNS resolver to override the system DNS resolution.
+    DnsResolver dnsResolver = new SystemDefaultDnsResolver();
+
+    // Create a connection manager with custom configuration.
+    PoolingHttpClientConnectionManager connManager =
+        new PoolingHttpClientConnectionManager(socketFactoryRegistry, connFactory, dnsResolver);
+
+    // Create socket configuration
+    SocketConfig socketConfig = SocketConfig.custom().setTcpNoDelay(true).build();
+    // Configure the connection manager to use socket configuration either
+    // by default or for a specific host.
+    connManager.setDefaultSocketConfig(socketConfig);
+
+    // Validate connections after 1 sec of inactivity
+    connManager.setValidateAfterInactivity(1000);
+    connManager.setMaxTotal(totalConnectionsAllowed);
+
+    httpClient = HttpClients.custom().setConnectionManager(connManager).build();
   }
 
   @Override
   public void shutdown() {
-    if (httpConnectionManager != null) {
-      httpConnectionManager.shutdown();
+    if (httpClient != null) {
+      try {
+        httpClient.close();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
 
-      httpConnectionManager = null;
       httpClient = null;
     }
   }
 
   @Override
-  public String performGet(String sourceUri) throws SmartSpacesException {
-    return performGet(sourceUri, Charsets.UTF_8);
-  }
-
-  @Override
-  public String performGet(String sourceUri, Charset charset) throws SmartSpacesException {
-    StringRestPerformer performer = new StringRestPerformer(charset);
-
-    HttpUriRequest request = new HttpGet(sourceUri);
-
-    performer.performRequest(request);
-
-    return performer.getResponse();
-  }
-
-  @Override
-  public String performPut(String sourceUri, String putContent) throws SmartSpacesException {
-    return performPut(sourceUri, putContent, Charsets.UTF_8);
-  }
-
-  @Override
-  public String performPut(String sourceUri, String putContent, Charset charset)
+  public String performGet(String sourceUri, Map<String, String> headers)
       throws SmartSpacesException {
-    StringRestPerformer performer = new StringRestPerformer(charset);
+    return performGet(sourceUri, Charsets.UTF_8, headers);
+  }
+
+  @Override
+  public String performGet(String sourceUri, Charset charset, Map<String, String> headers)
+      throws SmartSpacesException {
+    try {
+      HttpGet request = new HttpGet(sourceUri);
+
+      placeHeadersInRequest(headers, request);
+
+      ResponseHandler<String> responseHandler = newResponseHandler(charset);
+
+      return httpClient.execute(request, responseHandler);
+    } catch (Exception e) {
+      throw new SimpleSmartSpacesException(String.format("REST call to %s failed.", sourceUri), e);
+    }
+  }
+
+  @Override
+  public String performPut(String sourceUri, String putContent, Map<String, String> headers)
+      throws SmartSpacesException {
+    return performPut(sourceUri, putContent, Charsets.UTF_8, headers);
+  }
+
+  @Override
+  public String performPut(String sourceUri, String putContent, Charset charset,
+      Map<String, String> headers) throws SmartSpacesException {
 
     try {
       HttpPut request = new HttpPut(sourceUri);
       request.setEntity(new StringEntity(putContent, charset.name()));
 
-      performer.performRequest(request);
+      placeHeadersInRequest(headers, request);
 
-      return performer.getResponse();
-    } catch (UnsupportedEncodingException e) {
-      throw new SimpleSmartSpacesException(String.format(
-          "REST call to %s failed. Character set %s not supported", sourceUri, charset.name()));
+      ResponseHandler<String> responseHandler = newResponseHandler(charset);
+
+      return httpClient.execute(request, responseHandler);
+    } catch (Exception e) {
+      throw new SimpleSmartSpacesException(String.format("REST call to %s failed.", sourceUri), e);
     }
   }
 
@@ -175,24 +207,18 @@ public class HttpClientRestWebClient implements RestWebClient {
   @Override
   public String performPost(String sourceUri, String postContent, Charset charset,
       Map<String, String> headers) throws SmartSpacesException {
-    StringRestPerformer performer = new StringRestPerformer(charset);
 
     try {
       HttpPost request = new HttpPost(sourceUri);
       request.setEntity(new StringEntity(postContent, charset.name()));
 
-      if (headers != null) {
-        for (Entry<String, String> entry : headers.entrySet()) {
-          request.setHeader(entry.getKey(), entry.getValue());
-        }
-      }
+      placeHeadersInRequest(headers, request);
 
-      performer.performRequest(request);
+      ResponseHandler<String> responseHandler = newResponseHandler(charset);
 
-      return performer.getResponse();
-    } catch (UnsupportedEncodingException e) {
-      throw new SimpleSmartSpacesException(String.format(
-          "REST call to %s failed. Character set %s not supported", sourceUri, charset.name()));
+      return httpClient.execute(request, responseHandler);
+    } catch (Exception e) {
+      throw new SimpleSmartSpacesException(String.format("REST call to %s failed.", sourceUri), e);
     }
   }
 
@@ -202,161 +228,44 @@ public class HttpClientRestWebClient implements RestWebClient {
   }
 
   /**
-   * A REST performer that gets String output.
-   *
-   * @author Keith M. Hughes
+   * Place all headers into the request.
+   * 
+   * @param headers
+   *          the headers, can be {@code null}
+   * @param request
+   *          the request
    */
-  private class StringRestPerformer extends RestPerformer {
-
-    /**
-     * Output stream for the performer.
-     */
-    private ByteArrayOutputStream outputStream;
-
-    /**
-     * The charset for the bytes being read.
-     */
-    private Charset charset;
-
-    /**
-     * Construct a string performer.
-     *
-     * @param charset
-     *          the charset the string is expected in
-     */
-    public StringRestPerformer(Charset charset) {
-      this.charset = charset;
-    }
-
-    /**
-     * Get the string from the result in the required charset.
-     *
-     * @return the content of the result
-     */
-    public String getResponse() {
-      return new String(outputStream.toByteArray(), charset);
-    }
-
-    @Override
-    protected OutputStream getOutputStream() throws IOException {
-      outputStream = new ByteArrayOutputStream();
-
-      return outputStream;
-    }
-
-    @Override
-    protected String getDestinationDescription() {
-      return "string result";
+  private void placeHeadersInRequest(Map<String, String> headers, HttpUriRequest request) {
+    if (headers != null) {
+      for (Entry<String, String> entry : headers.entrySet()) {
+        request.setHeader(entry.getKey(), entry.getValue());
+      }
     }
   }
 
   /**
-   * The performer for HTTP responses. Subclasses decide the ultimate
-   * destination.
-   *
-   * @author Keith M. Hughes
+   * Create a new response handler.
+   * 
+   * @param charset
+   *          the charset for the response
+   * 
+   * @return the response handler
    */
-  private abstract class RestPerformer {
-
-    /**
-     * Create the output stream needed for the performer.
-     *
-     * @return the output steam to write to
-     *
-     * @throws IOException
-     *           an exception happened when obtaining the stream
-     */
-    protected abstract OutputStream getOutputStream() throws IOException;
-
-    /**
-     * Get a description of the destination for error reporting.
-     *
-     * @return a description of the destination for error reporting
-     */
-    protected abstract String getDestinationDescription();
-
-    /**
-     * Get the remote content from the source URI using an HTTP GET.
-     *
-     * @param sourceUri
-     *          the URI for the source content
-     */
-    public void performRequest(HttpUriRequest request) {
-      HttpEntity entity = null;
-      try {
-        HttpResponse response = httpClient.execute(request);
-
-        entity = response.getEntity();
-
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode == HttpStatus.SC_OK) {
-          if (entity != null) {
-            InputStream in = entity.getContent();
-            try {
-              transferFile(in);
-
-              in.close();
-              in = null;
-            } catch (IOException e) {
-              throw new SmartSpacesException(
-                  String.format("Exception during REST call %s", request.getURI()), e);
-            } finally {
-              Closeables.closeQuietly(in);
-            }
-          }
+  private ResponseHandler<String> newResponseHandler(Charset charset) {
+    ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
+      @Override
+      public String handleResponse(final HttpResponse response)
+          throws ClientProtocolException, IOException {
+        int status = response.getStatusLine().getStatusCode();
+        if (status >= 200 && status < 300) {
+          HttpEntity entity = response.getEntity();
+          return entity != null ? EntityUtils.toString(entity, charset) : null;
         } else {
-          throw new SimpleSmartSpacesException(
-              String.format("Server returned bad status code %d for REST call to URI %s",
-                  statusCode, request.getURI()));
-        }
-      } catch (SmartSpacesException e) {
-        throw e;
-      } catch (Exception e) {
-        throw new SmartSpacesException(
-            String.format("Could not read REST URI %s", request.getURI()), e);
-      } finally {
-        if (entity != null) {
-          try {
-            EntityUtils.consume(entity);
-          } catch (IOException e) {
-            throw new SmartSpacesException(String
-                .format("Could not consume entity content for REST call %s", request.getURI()), e);
-          }
+          throw new ClientProtocolException("Unexpected response status: " + status);
         }
       }
-    }
-
-    /**
-     * Transfer the content from the HTTP input stream to the destination file.
-     *
-     * @param in
-     *          the HTTP result
-     *
-     * @throws IOException
-     *           something bad happened during IO operations
-     */
-    private void transferFile(InputStream in) throws IOException {
-      OutputStream out = null;
-      try {
-        out = getOutputStream();
-
-        byte[] buffer = new byte[BUFFER_SIZE];
-
-        int len;
-        while ((len = in.read(buffer)) > 0) {
-          out.write(buffer, 0, len);
-        }
-
-        out.flush();
-
-        out.close();
-        out = null;
-      } finally {
-        if (out != null) {
-          out.close();
-        }
-      }
-    }
-
+    };
+    return responseHandler;
   }
+
 }

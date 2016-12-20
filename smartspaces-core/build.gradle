@@ -28,10 +28,12 @@ dependencies {
   compile 'com.fasterxml.jackson.core:jackson-databind:2.6.1'
   compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.6.1'
   
-  compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpcore:4.1') {
+  compile('org.apache.httpcomponents:httpcore-osgi:4.4.5') {
+	  transitive=false
     //exclude module: 'com.springsource.org.apache.commons.logging'
   }
-  compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpclient:4.1.1') {
+  compile('org.apache.httpcomponents:httpclient-osgi:4.5.1') {
+	  transitive=false
     //exclude module: 'com.springsource.org.apache.commons.logging'
   }
   compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpmime:4.1.1') { exclude module: 'com.springsource.org.apache.httpcomponents.httpcore' }

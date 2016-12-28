@@ -18,7 +18,7 @@ dependencies {
   compile project(':smartspaces-core')
   compile project(':smartspaces-domain')
 
-  compile 'org.apache.felix:org.apache.felix.framework:5.0.0'
+  compile "${project.ext.osgiContainerDependency}"
   
   compile 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.jdom:2.0.6_1'
   

@@ -17,7 +17,7 @@
 dependencies {
   compile project(':smartspaces-core')
 
-  compile 'org.apache.felix:org.apache.felix.framework:5.0.0'
+  compile "${project.ext.osgiContainerDependency}"
   compile 'org.apache.derby:derby:10.8.2.2'
 
   testCompile 'junit:junit:4.8.2'

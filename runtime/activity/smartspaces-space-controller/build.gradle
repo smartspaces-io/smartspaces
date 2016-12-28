@@ -24,13 +24,13 @@ dependencies {
   compile project(':runtime:activity:smartspaces-activity-runtime')
   compile project(':runtime:common:smartspaces-master-controller')
   
-  runtime 'org.apache.felix:org.apache.felix.configadmin:1.2.8'
+  runtime 'org.apache.felix:org.apache.felix.configadmin:1.8.12'
                   
   provided "${project.ext.osgiContainerDependency}"
   
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
-  testCompile 'org.apache.felix:org.apache.felix.framework:5.0.0'
+  testCompile "${project.ext.osgiContainerDependency}"
 }
 
 jar {

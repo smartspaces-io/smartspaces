@@ -123,7 +123,7 @@ allprojects {
     }
 
     // Define which OSGi framrwork is being used.
-    osgiContainerDependency = 'org.apache.felix:org.apache.felix.framework:5.4.0'
+    osgiContainerDependency = 'org.apache.felix:org.apache.felix.framework:5.6.1'
   }
 
   group = 'io.smartspaces'

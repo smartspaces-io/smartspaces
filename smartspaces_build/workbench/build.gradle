@@ -16,7 +16,7 @@
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
-apply plugin: 'izpack'
+apply plugin: 'com.bmuschko.izpack'
 
 ext { containerType = "workbench" }
 
@@ -28,7 +28,7 @@ configurations {
 }
 
 dependencies {
-  izpack 'org.codehaus.izpack:izpack-standalone-compiler:4.3.5'
+  izpack 'org.codehaus.izpack:izpack-ant:5.0.10'
 
   bootstrap project(":workbench:smartspaces-workbench")
 

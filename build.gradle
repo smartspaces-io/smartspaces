@@ -33,11 +33,8 @@ if (project.hasProperty("artifactory")) {
   }
 
   dependencies {
-    classpath 'org.gradle.api.plugins:gradle-izpack-plugin:0.2.3'
+    classpath 'com.bmuschko:gradle-izpack-plugin:2.1'
     classpath 'org.gradle.api.plugins:gradle-android-plugin:1.2.1'
-    if (project.hasProperty("artifactory")) {
-      classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.0.0'
-    }
   }
 }
 

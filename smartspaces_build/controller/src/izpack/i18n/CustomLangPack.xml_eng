@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<izpack:langpack 
+    version="5.0"
+    xmlns:izpack="http://izpack.org/schema/langpack"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://izpack.org/schema/langpack http://izpack.org/schema/5.0/izpack-langpack-5.0.xsd">
+  <str id="static.main.title" txt="Smart Spaces Space Controller Configuration" />
+  <str id="input.smartspaces.host" txt="Hostname:" />
+  <str id="input.smartspaces.host.invalid" txt="Controller hostname invalid. It must be a domain name or an IP address." />
+
+  <str id="input.smartspaces.hostid" txt="Host ID:" />
+  <str id="input.smartspaces.hostid.invalid" txt="The Host ID is invalid. It must consist only of letters and numbers and start with a letter." />
+
+  <str id="input.smartspaces.network.type" txt="Network Type:" />
+  <str id="input.smartspaces.network.type.invalid" txt="Network type invalid. It must be a letter followed any number of letters or numbers." />
+
+  <str id="static.smartspaces.spacecontroller.uuid"
+      txt="This value is obtained by creating a space controller entry on the Smart Spaces master." />
+  <str id="input.smartspaces.spacecontroller.uuid" txt="UUID:" />
+  <str id="input.smartspaces.spacecontroller.uuid.invalid" txt="UUIDs must be of the form 92ebdb6d-9494-4660-96c8-803e1f127250." />
+
+  <str id="input.smartspaces.spacecontroller.name" txt="Space Controller Name:" />
+  <str id="input.smartspaces.spacecontroller.name.invalid" txt="A space controller name is required." />
+  <str id="input.smartspaces.spacecontroller.description" txt="Space Controller Description: " />
+
+  <str id="input.smartspaces.master.host" txt="Master Hostname:" />
+  <str id="input.smartspaces.master.host.invalid" txt="Master hostname invalid. It must be a domain name or an IP address." />
+
+  <str id="static.advanced.title" txt="Advanced Controller Configuration" />
+  <str id="static.advanced.info" txt="These values should only be changed if you know what you are doing."/>
+
+  <str id="input.smartspaces.master.communication.port" txt="Master Communication Port:" />
+  <str id="input.smartspaces.master.communication.port.invalid" txt="Invalid Master Communication port. It must be a maximum 5 digit number." />
+
+  <str id="input.smartspaces.master.ros.port" txt="Master ROS Port:" />
+  <str id="input.smartspaces.master.ros.port.invalid" txt="Invalid Master ROS port. It must be a maximum 5 digit number." />
+
+  <str id="input.smartspaces.spacecontroller.manualconfig" txt="Manually configure the space controller" />
+
+</izpack:langpack>

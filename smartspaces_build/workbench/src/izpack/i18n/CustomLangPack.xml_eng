@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<izpack:langpack version="5.0"
+    xmlns:izpack="http://izpack.org/schema/langpack"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://izpack.org/schema/langpack http://izpack.org/schema/5.0/izpack-langpack-5.0.xsd">
+  <str id="static.main.title" txt="Smart Spaces Workbench Configuration" />
+
+  <str id="input.smartspaces.controller.basedir" txt="Base Directory of a local Smart Spaces Controller:" />
+
+  <str id="UserInputPanel.dir.nodirectory.message"   txt="You must select a valid directory."/>
+  <str id="UserInputPanel.dir.nodirectory.caption"   txt="No Directory Selected"/>
+  <str id="UserInputPanel.dir.notdirectory.message"   txt="The directory you have chosen
+            either does not exist or is not valid." />
+  <str id="UserInputPanel.dir.notdirectory.caption"   txt="Invalid Directory" />
+</izpack:langpack>

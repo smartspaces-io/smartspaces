@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
 
-<installation version="1.0">
+<izpack:installation 
+    version="5.0"
+    xmlns:izpack="http://izpack.org/schema/installation"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://izpack.org/schema/installation http://izpack.org/schema/5.0/izpack-installation-5.0.xsd">
+
   <!-- The info section. The meaning of the tags should be natural ... -->
   <info>
     <appname>@{app.name}</appname>
@@ -39,7 +44,8 @@
     <res id="HTMLInfoPanel.info" src="Readme.html" parse="yes" />
     <res id="LicencePanel.licence" src="LICENSE.txt" />
     <res id="userInputSpec.xml" src="user_input_spec.xml" parse="yes" type="xml" />
-    <res id="userInputLang.xml_eng" src="userInputLang.xml_eng" />
+
+    <res id="CustomLangPack.xml_eng" src="i18n/CustomLangPack.xml_eng" />
   </resources>
 
   <!-- The panels section. We indicate here which panels we want to use. The order will be respected. -->
@@ -48,8 +54,8 @@
     <panel classname="CheckedHelloPanel" id="hellopanel" />
     <panel classname="HTMLInfoPanel" id="infopanel" encoding="ISO-8859-1" />
     <panel classname="LicencePanel" />
-    <panel classname="UserInputPanel" id="userinputpanel.order.0" />
-    <panel classname="UserInputPanel" id="userinputpanel.order.1" />
+    <panel classname="UserInputPanel" id="0" />
+    <panel classname="UserInputPanel" id="1" />
     <panel classname="TargetPanel" />
     <panel classname="PacksPanel" />
     <panel classname="InstallPanel" />
@@ -65,17 +71,18 @@
       <file src="LICENSE.txt" targetdir="$INSTALL_PATH" override="true" />
       <file src="LICENSE.thirdparties.txt" targetdir="$INSTALL_PATH" override="true" />
       <file src="NOTICE.txt" targetdir="$INSTALL_PATH" override="true" />
-
-      <file src="bin" targetdir="$INSTALL_PATH" override="true" />
-      <file src="config" targetdir="$INSTALL_PATH" />
-      <file src="database" targetdir="$INSTALL_PATH" />
-      <file src="logs" targetdir="$INSTALL_PATH" />
-      <file src="bootstrap" targetdir="$INSTALL_PATH" override="true" />
-      <file src="lib" targetdir="$INSTALL_PATH" override="true" />
-      <file src="master" targetdir="$INSTALL_PATH" />
       <file src="smartspaces-launcher-@{app.version}.jar" targetdir="$INSTALL_PATH"
         override="true" />
 
+      <fileset dir="bin" targetdir="$INSTALL_PATH/bin" override="true" />
+      <fileset dir="config" targetdir="$INSTALL_PATH/config" />
+      <fileset dir="database" targetdir="$INSTALL_PATH/database" />
+      <fileset dir="logs" targetdir="$INSTALL_PATH/logs" />
+      <fileset dir="bootstrap" targetdir="$INSTALL_PATH/bootstrap" override="true" />
+      <fileset dir="lib" targetdir="$INSTALL_PATH/lib" override="true" />
+      <fileset dir="master" targetdir="$INSTALL_PATH/master" />
+
+      <!--  Using shell type for non-shell files for the variable substitution syntax -->
       <parsable targetfile="$INSTALL_PATH/bin/smartspaces" type="shell" />
       <executable targetfile="$INSTALL_PATH/bin/smartspaces" stage="never" />
 
@@ -86,4 +93,4 @@
     </pack>
   </packs>
 
-</installation>
+</izpack:installation>

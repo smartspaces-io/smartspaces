@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
 
-<userInput>
-  <panel order="0">
+<izpack:userinput 
+    version="5.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:izpack="http://izpack.org/schema/userinput" 
+    xsi:schemaLocation="http://izpack.org/schema/userinput http://izpack.org/schema/5.0/izpack-userinput-5.0.xsd">
+  <panel id="0">
     <field type="title" id="static.main.title" />
 
     <field type="text" variable="smartspaces.host">
       <spec id="input.smartspaces.host" size="25" set="localhost" />
-      <validator class="com.izforge.izpack.util.RegularExpressionValidator" id="input.smartspaces.host.invalid">
+      <validator class="com.izforge.izpack.panels.userinput.validator.RegularExpressionValidator" id="input.smartspaces.host.invalid">
         <param name="pattern"
           value="^(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])|(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$" />
       </validator>
@@ -16,7 +20,7 @@
 
     <field type="text" variable="smartspaces.hostid">
       <spec id="input.smartspaces.hostid" size="25" set="smartspacesmaster" />
-      <validator class="com.izforge.izpack.util.RegularExpressionValidator" id="input.smartspaces.hostid.invalid">
+      <validator class="com.izforge.izpack.panels.userinput.validator.RegularExpressionValidator" id="input.smartspaces.hostid.invalid">
         <param name="pattern" value="[a-zA-Z][a-zA-Z0-9]*" />
       </validator>
     </field>
@@ -25,13 +29,13 @@
 
     <field type="text" variable="smartspaces.network.type">
       <spec id="input.smartspaces.network.type" size="25" set="localdev" />
-      <validator class="com.izforge.izpack.util.RegularExpressionValidator" id="input.smartspaces.network.type.invalid">
+      <validator class="com.izforge.izpack.panels.userinput.validator.RegularExpressionValidator" id="input.smartspaces.network.type.invalid">
         <param name="pattern" value="[a-zA-Z][a-zA-Z0-9]*" />
       </validator>
     </field>
   </panel>
 
-  <panel order="1">
+  <panel id="1">
     <field type="title" id="static.advanced.title" />
 
     <field type="staticText" id="static.advanced.info" />
@@ -42,15 +46,15 @@
     
     <field type="text" variable="smartspaces.master.communication.port">
       <spec id="input.smartspaces.master.communication.port" size="25" set="8090" />
-      <validator class="com.izforge.izpack.util.RegularExpressionValidator" id="input.smartspaces.master.communication.port.invalid">
+      <validator class="com.izforge.izpack.panels.userinput.validator.RegularExpressionValidator" id="input.smartspaces.master.communication.port.invalid">
         <param name="pattern" value="[0-9]{1,5}" />
       </validator>
     </field>
     <field type="text" variable="smartspaces.master.ros.port">
       <spec id="input.smartspaces.master.ros.port" size="25" set="11311" />
-      <validator class="com.izforge.izpack.util.RegularExpressionValidator" id="input.smartspaces.master.ros.port.invalid">
+      <validator class="com.izforge.izpack.panels.userinput.validator.RegularExpressionValidator" id="input.smartspaces.master.ros.port.invalid">
         <param name="pattern" value="[0-9]{1,5}" />
       </validator>
     </field>
   </panel>
-</userInput>
+</izpack:userinput>

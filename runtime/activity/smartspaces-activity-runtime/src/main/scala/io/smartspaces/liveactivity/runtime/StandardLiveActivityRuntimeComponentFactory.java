@@ -37,8 +37,8 @@ import io.smartspaces.liveactivity.runtime.activity.wrapper.internal.smartspaces
 import io.smartspaces.liveactivity.runtime.activity.wrapper.internal.smartspaces.StandardLiveActivityBundleLoader;
 import io.smartspaces.liveactivity.runtime.activity.wrapper.internal.web.WebActivityWrapperFactory;
 import io.smartspaces.service.ServiceRegistry;
-import io.smartspaces.service.event.observable.EventObservableService;
-import io.smartspaces.service.event.observable.StandardEventObservableService;
+import io.smartspaces.service.comm.network.zeroconf.StandardZeroconfService;
+import io.smartspaces.service.comm.network.zeroconf.ZeroconfService;
 import io.smartspaces.service.web.client.WebSocketClientService;
 import io.smartspaces.service.web.client.internal.netty.NettyWebSocketClientService;
 import io.smartspaces.service.web.server.WebServerService;
@@ -77,6 +77,11 @@ public class StandardLiveActivityRuntimeComponentFactory
    * The SS service for web socket clients.
    */
   private WebSocketClientService webSocketClientService;
+
+  /**
+   * The SS service for zeroconf.
+   */
+  private ZeroconfService zeroconfService;
 
   /**
    * Construct a new factory.
@@ -146,22 +151,19 @@ public class StandardLiveActivityRuntimeComponentFactory
   @Override
   public void registerCoreServices(ServiceRegistry serviceRegistry) {
     webServerService = new NettyWebServerService();
-    webServerService.setSpaceEnvironment(spaceEnvironment);
-    serviceRegistry.registerService(webServerService);
-    webServerService.startup();
+    serviceRegistry.startupAndRegisterService(webServerService);
 
     webSocketClientService = new NettyWebSocketClientService();
-    webSocketClientService.setSpaceEnvironment(spaceEnvironment);
-    serviceRegistry.registerService(webSocketClientService);
-    webSocketClientService.startup();
+    serviceRegistry.startupAndRegisterService(webSocketClientService);
+    
+	zeroconfService = new StandardZeroconfService();
+    serviceRegistry.startupAndRegisterService(zeroconfService);
   }
 
   @Override
   public void unregisterCoreServices(ServiceRegistry serviceRegistry) {
-    serviceRegistry.unregisterService(webServerService);
-    webServerService.shutdown();
-
-    serviceRegistry.unregisterService(webSocketClientService);
-    webSocketClientService.shutdown();
+    serviceRegistry.shutdownAndUnregisterService(webServerService);
+    serviceRegistry.shutdownAndUnregisterService(webSocketClientService);
+    serviceRegistry.shutdownAndUnregisterService(zeroconfService);
   }
 }

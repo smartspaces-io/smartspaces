@@ -24,10 +24,13 @@ import io.smartspaces.system.SmartSpacesEnvironment
 import io.moquette.server.Server
 import io.moquette.server.config.IConfig
 import io.moquette.BrokerConstants
-import io.smartspaces.comm.network.zeroconf.ZeroconfService
-import io.smartspaces.comm.network.zeroconf.ZeroconfServiceInfo
-import io.smartspaces.comm.network.zeroconf.StandardZeroconfServiceInfo
+import io.smartspaces.service.comm.network.zeroconf.ZeroconfService
+import io.smartspaces.service.comm.network.zeroconf.ZeroconfServiceInfo
+import io.smartspaces.service.comm.network.zeroconf.StandardZeroconfServiceInfo
 import io.smartspaces.util.io.FileSupportImpl
+import io.smartspaces.service.ServiceNotification
+import io.moquette.server.config.IResourceLoader
+import io.moquette.server.config.ClasspathResourceLoader
 
 /**
  * An infrastructure plugin to start up a Moquette MQTT broker.
@@ -46,6 +49,19 @@ class MoquetteInfrastructurePlugin(val spaceEnvironment: SmartSpacesEnvironment)
    */
   val name = "mqtt.broker"
   
+  /**
+   * The zeroconf service type for the MQTT broker.
+   */
+  val zeroconfServiceType = "_mqtt._tcp.local."
+  
+  /**
+   * The zeroconf service name for the MQTT broker.
+   */
+  val zeroconfName = "mqtt"
+
+  /**
+   * The file support to use.
+   */
   val fileSupport = FileSupportImpl.INSTANCE
 
   override def onStartup(): Unit = {
@@ -63,8 +79,11 @@ class MoquetteInfrastructurePlugin(val spaceEnvironment: SmartSpacesEnvironment)
     val host = config.getProperty(BrokerConstants.HOST_PROPERTY_NAME)
     val port = config.getProperty(BrokerConstants.PORT_PROPERTY_NAME)
 
-    val zeroconfService: ZeroconfService = spaceEnvironment.getServiceRegistry.getRequiredService(ZeroconfService.SERVICE_NAME)
-    zeroconfService.registerService(new StandardZeroconfServiceInfo("_mqtt._tcp.local", "mqtt", null, host, Integer.parseInt(port), 0, 0))
+    spaceEnvironment.getServiceRegistry.addServiceNotificationListener(ZeroconfService.SERVICE_NAME, new ServiceNotification[ZeroconfService]() {
+      override def onServiceAvailable(zeroconfService: ZeroconfService): Unit = {
+        zeroconfService.registerService(new StandardZeroconfServiceInfo(zeroconfServiceType, zeroconfName, null, host, Integer.parseInt(port), 0, 0))
+      }
+    })
   }
 
   override def onShutdown(): Unit = {
@@ -84,6 +103,11 @@ class SmartSpacesMoquetteConfig(val smartSpacesConfig: Configuration) extends IC
    * to Moquette.
    */
   val MOQUETTE_PROPERTY_PREFIX = "mqtt.moquette."
+  
+  /**
+   * The resource loader for the config.
+   */
+  val resourceLoader = new ClasspathResourceLoader()
 
   override def setProperty(name: String, value: String): Unit = {
     smartSpacesConfig.setProperty(MOQUETTE_PROPERTY_PREFIX + name, value)
@@ -95,5 +119,9 @@ class SmartSpacesMoquetteConfig(val smartSpacesConfig: Configuration) extends IC
 
   override def getProperty(name: String, defaultValue: String): String = {
     smartSpacesConfig.getPropertyString(MOQUETTE_PROPERTY_PREFIX + name, defaultValue)
+  }
+  
+  override def getResourceLoader(): IResourceLoader = {
+    resourceLoader
   }
 }

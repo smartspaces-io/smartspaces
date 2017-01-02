@@ -21,7 +21,7 @@ import io.smartspaces.activity.ActivityState;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.master.api.master.internal.StandardMasterWebsocketManager;
 import io.smartspaces.master.event.MasterEventManager;
-import io.smartspaces.master.server.services.ActiveLiveActivity;
+import io.smartspaces.master.server.services.model.ActiveLiveActivity;
 import io.smartspaces.service.web.server.MultipleConnectionWebServerWebSocketHandlerFactory;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.provider.TimeProvider;

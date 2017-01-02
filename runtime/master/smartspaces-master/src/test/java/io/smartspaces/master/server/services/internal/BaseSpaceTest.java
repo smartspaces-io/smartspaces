@@ -30,10 +30,10 @@ import io.smartspaces.domain.basic.pojo.SimpleLiveActivityGroup;
 import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
 import io.smartspaces.domain.space.Space;
 import io.smartspaces.domain.space.pojo.SimpleSpace;
-import io.smartspaces.master.server.services.ActiveLiveActivity;
-import io.smartspaces.master.server.services.ActiveSpace;
-import io.smartspaces.master.server.services.ActiveSpaceController;
 import io.smartspaces.master.server.services.RemoteSpaceControllerClient;
+import io.smartspaces.master.server.services.model.ActiveLiveActivity;
+import io.smartspaces.master.server.services.model.ActiveSpace;
+import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.time.provider.LocalTimeProvider;
 import io.smartspaces.time.provider.TimeProvider;
 

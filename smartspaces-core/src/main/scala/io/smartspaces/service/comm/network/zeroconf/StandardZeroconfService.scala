@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.comm.network.zeroconf
+package io.smartspaces.service.comm.network.zeroconf
 
 import java.io.IOException
 import java.net.Inet4Address
@@ -34,7 +34,7 @@ import javax.jmdns.ServiceListener
 import javax.jmdns.ServiceInfo
 
 /*
- * The standard implementation of the mDNS service.
+ * The standard implementation of the mDNS (Zeroconf) service.
  *
  * @author Keith M. Hughes
  */
@@ -55,7 +55,9 @@ class StandardZeroconfService extends BaseSupportedService with ZeroconfService 
       jmdns.requestServiceInfo(event.getType(), event.getName(), 1)
     }
 
-    override def serviceRemoved(event: ServiceEvent): Unit = {}
+    override def serviceRemoved(event: ServiceEvent): Unit = {
+      handleServiceRemoved(event)
+    }
 
     override def serviceResolved(event: ServiceEvent): Unit = {
       handleServiceAdded(event)
@@ -63,15 +65,22 @@ class StandardZeroconfService extends BaseSupportedService with ZeroconfService 
   }
 
   /**
-   * The simple callbacks for service lookups.
+   * The listeners for service lookups.
+   *
+   * <p>
+   * TODO(keith): Must become a multimap.
    */
-  val simpleServiceCallbacks = new ConcurrentHashMap[String, (String, Int) => Unit]()
+  val simpleServiceListeners = new ConcurrentHashMap[String, ZeroconfServiceNotificationListener]()
 
   var ipAddress: String = null
 
   override def onStartup(): Unit = {
-    ipAddress = getIpAddress()
-    jmdns = JmDNS.create(InetAddress.getByName(ipAddress))
+    try {
+      ipAddress = getIpAddress()
+      jmdns = JmDNS.create(InetAddress.getByName(ipAddress))
+    } catch {
+      case e: Throwable => getSpaceEnvironment.getLog.error("Could not start Zeroconf service", e)
+    }
   }
 
   override def onShutdown(): Unit = {
@@ -90,6 +99,8 @@ class StandardZeroconfService extends BaseSupportedService with ZeroconfService 
   override def registerService(serviceInfo: ZeroconfServiceInfo): Unit = {
     try {
       jmdns.registerService(toJmdnsServiceInfo(serviceInfo))
+
+      getSpaceEnvironment.getLog.formatInfo("Registered zeroconf service type %s at port %s", serviceInfo.serviceType, serviceInfo.port.toString())
     } catch {
       case e: Exception => throw new SmartSpacesException("Unable to register new service with Zeroconf", e)
     }
@@ -99,25 +110,48 @@ class StandardZeroconfService extends BaseSupportedService with ZeroconfService 
     jmdns.unregisterService(toJmdnsServiceInfo(serviceInfo))
   }
 
-  override def addSimpleDiscovery(serviceName: String, callback: (String, Int) => Unit): Unit = {
-    simpleServiceCallbacks.put(serviceName, callback)
+  override def addSimpleDiscovery(serviceName: String, listener: ZeroconfServiceNotificationListener): Unit = {
+    simpleServiceListeners.put(serviceName, listener)
 
     jmdns.addServiceListener(serviceName, serviceListener)
+
+    getSpaceEnvironment.getLog.info(s"Added zeroconf service discovery for ${serviceName}")
   }
 
   private def handleServiceAdded(event: ServiceEvent): Unit = {
-    val simpleServiceCallback = simpleServiceCallbacks.get(event.getType)
-    if (simpleServiceCallback != null) {
+    getSpaceEnvironment.getLog.info(s"Got zeroconf service added event ${event.getType}")
+    val simpleServiceListener = simpleServiceListeners.get(event.getType)
+    if (simpleServiceListener != null) {
       try {
         val services = jmdns.list(event.getType)
         val hostname = services(0).getHostAddresses()(0)
         val port = services(0).getPort
 
-        simpleServiceCallback(hostname, port)
+        val info = event.getInfo
+        val serviceInfo = new StandardZeroconfServiceInfo(info.getType, info.getName, info.getSubtype, info.getHostAddress,
+          info.getPort, info.getPriority, info.getWeight)
+
+        simpleServiceListener.zeroconfServiceAdded(serviceInfo)
       } catch {
-        case e: Exception => getSpaceEnvironment.getLog.error("Error while handing zeroconf service callback.", e)
+        case e: Throwable => getSpaceEnvironment.getLog.error("Error while handing zeroconf service callback.", e)
       }
     }
+  }
+
+  private def handleServiceRemoved(event: ServiceEvent): Unit = {
+    getSpaceEnvironment.getLog.info(s"Got zeroconf service removed event ${event.getType}")
+    val simpleServiceCallback = simpleServiceListeners.get(event.getType)
+    //    if (simpleServiceCallback != null) {
+    //      try {
+    //        val services = jmdns.list(event.getType)
+    //        val hostname = services(0).getHostAddresses()(0)
+    //        val port = services(0).getPort
+    //
+    //        simpleServiceCallback(hostname, port)
+    //      } catch {
+    //        case e: Throwable => getSpaceEnvironment.getLog.error("Error while handing zeroconf service callback.", e)
+    //      }
+    //    }
   }
 
   def getIpAddress(): String = {

@@ -21,8 +21,8 @@ import io.smartspaces.activity.ActivityState;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
 import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.master.server.services.ActiveSpaceController;
 import io.smartspaces.master.server.services.RemoteSpaceControllerClientListener;
+import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.spacecontroller.SpaceControllerState;
 
 import java.util.List;

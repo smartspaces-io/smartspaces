@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,41 +14,30 @@
  * the License.
  */
 
-package io.smartspaces.master.server.services;
-
-import io.smartspaces.domain.space.Space;
+package io.smartspaces.service
 
 /**
- * A {@link Space} which is now active in the system.
+ * Notify that a service has become available.
  *
  * @author Keith M. Hughes
  */
-public class ActiveSpace {
+abstract class ServiceNotification[T <: Service] {
 
   /**
-   * The space which is instantiated.
+   * The service is now available.
+   * 
+   * <p>
+   * This is called by the service registry.
+   * 
+   * @param service
+   *      the service
    */
-  private Space space;
-
-  public ActiveSpace(Space space) {
-    this.space = space;
+  def notifyServiceAvailable(service: Service): Unit = {
+    onServiceAvailable(service.asInstanceOf[T])
   }
 
   /**
-   * Get the space this is representing.
-   *
-   * @return the space
+   * The service is now available.
    */
-  public Space getSpace() {
-    return space;
-  }
-
-  /**
-   * @param space
-   *          the space to set
-   */
-  public void updateSpace(Space space) {
-    this.space = space;
-  }
-
+  def onServiceAvailable(service: T): Unit
 }

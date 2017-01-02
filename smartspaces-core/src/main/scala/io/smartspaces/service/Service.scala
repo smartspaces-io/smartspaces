@@ -15,45 +15,37 @@
  * the License.
  */
 
-package io.smartspaces.service;
+package io.smartspaces.service
 
-import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.resource.managed.ManagedResource
 
-import java.util.Map;
+import java.util.Map
 
 /**
  * A Smart Spaces service.
  *
  * @author Keith M. Hughes
  */
-public interface Service {
+trait Service extends ManagedResource {
 
   /**
    * Get the name of the service.
    *
    * @return the name of the service
    */
-  String getName();
+  def getName(): String
 
   /**
    * Get the metadata for the service.
    *
    * @return the metadata
    */
-  Map<String, Object> getMetadata();
+  def getMetadata(): Map[String, Object]
 
   /**
    * Get the service description for this service.
    *
    * @return the service description for this service
    */
-  ServiceDescription getServiceDescription();
-
-  /**
-   * Set the space environment for the service.
-   *
-   * @param spaceEnvironment
-   *          the environment to use
-   */
-  void setSpaceEnvironment(SmartSpacesEnvironment spaceEnvironment);
+  def getServiceDescription(): ServiceDescription
 }

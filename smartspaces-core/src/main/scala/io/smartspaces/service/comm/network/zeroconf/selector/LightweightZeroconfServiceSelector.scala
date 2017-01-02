@@ -15,10 +15,10 @@
  * the License.
  */
 
-package io.smartspaces.comm.network.zeroconf.selector
+package io.smartspaces.service.comm.network.zeroconf.selector
 
 import io.smartspaces.SmartSpacesException
-import io.smartspaces.comm.network.zeroconf.ZeroconfServiceInfo
+import io.smartspaces.service.comm.network.zeroconf.ZeroconfServiceInfo
 
 import scala.collection.JavaConversions._
 

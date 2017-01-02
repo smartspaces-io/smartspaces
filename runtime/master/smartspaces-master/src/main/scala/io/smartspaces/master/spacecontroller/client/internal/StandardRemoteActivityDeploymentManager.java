@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.controller.client.master.internal;
+package io.smartspaces.master.spacecontroller.client.internal;
 
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
@@ -23,14 +23,14 @@ import io.smartspaces.container.control.message.activity.LiveActivityDeploymentR
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
-import io.smartspaces.controller.client.master.RemoteActivityDeploymentManager;
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.ActivityDependency;
 import io.smartspaces.domain.basic.LiveActivity;
-import io.smartspaces.master.server.services.ActiveLiveActivity;
 import io.smartspaces.master.server.services.ContainerResourceDeploymentManager;
 import io.smartspaces.master.server.services.RemoteSpaceControllerClient;
 import io.smartspaces.master.server.services.internal.RemoteSpaceControllerClientListenerCollection;
+import io.smartspaces.master.server.services.model.ActiveLiveActivity;
+import io.smartspaces.master.spacecontroller.client.RemoteActivityDeploymentManager;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.ResourceDependencyReference;
 import io.smartspaces.resource.Version;

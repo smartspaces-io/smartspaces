@@ -19,7 +19,7 @@ package io.smartspaces.master.server.services.internal;
 
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.common.ResourceRepositoryUploadChannel;
-import io.smartspaces.master.server.services.ActiveSpaceController;
+import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.resource.Version;
 import io.smartspaces.resource.repository.ResourceRepositoryServer;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;

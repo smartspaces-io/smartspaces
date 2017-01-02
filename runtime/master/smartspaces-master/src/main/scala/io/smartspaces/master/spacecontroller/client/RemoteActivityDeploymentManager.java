@@ -15,12 +15,12 @@
  * the License.
  */
 
-package io.smartspaces.controller.client.master;
+package io.smartspaces.master.spacecontroller.client;
 
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
-import io.smartspaces.master.server.services.ActiveLiveActivity;
+import io.smartspaces.master.server.services.model.ActiveLiveActivity;
 import io.smartspaces.resource.managed.ManagedResource;
 
 /**

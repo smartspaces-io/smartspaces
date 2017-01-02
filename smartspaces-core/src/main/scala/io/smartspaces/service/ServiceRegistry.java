@@ -18,6 +18,8 @@
 package io.smartspaces.service;
 
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.resource.managed.ManagedResource;
+import io.smartspaces.scope.ManagedScope;
 
 import java.util.Set;
 
@@ -37,6 +39,17 @@ public interface ServiceRegistry {
   void registerService(Service service);
 
   /**
+   * Start up a service and register it with the registry.
+   * 
+   * <p>
+   * All dependencies will be supplied, e.g. the space environment.
+   *
+   * @param service
+   *          the service instance
+   */
+  void startupAndRegisterService(Service service);
+
+  /**
    * Unregister a service with the registry.
    *
    * <p>
@@ -46,6 +59,17 @@ public interface ServiceRegistry {
    *          the service to unregister
    */
   void unregisterService(Service service);
+
+  /**
+   * Shutdown and unregister a service with the registry.
+   *
+   * <p>
+   * Does nothing if the service wasn't registered.
+   *
+   * @param service
+   *          the service to unregister
+   */
+  void shutdownAndUnregisterService(Service service);
 
   /**
    * Get all the service descriptions for all registered services.
@@ -81,4 +105,16 @@ public interface ServiceRegistry {
    *           no service with the given name was found
    */
   <T extends Service> T getRequiredService(String name) throws SmartSpacesException;
+
+  /**
+   * Add in a listener for service notifications.
+   * 
+   * <p>
+   * If the service is already registered, this will be called immediately.
+   * 
+   * @param notificationListener
+   *          the listener to add
+   */
+  void addServiceNotificationListener(String serviceName,
+      ServiceNotification<?> notificationListener);
 }

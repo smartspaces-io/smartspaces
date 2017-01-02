@@ -20,8 +20,8 @@ package io.smartspaces.master.event;
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
-import io.smartspaces.master.server.services.ActiveLiveActivity;
-import io.smartspaces.master.server.services.ActiveSpaceController;
+import io.smartspaces.master.server.services.model.ActiveLiveActivity;
+import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.spacecontroller.SpaceControllerState;
 
 import java.util.List;

@@ -76,6 +76,16 @@ public interface SmartSpacesEnvironment {
   String CONFIGURATION_HOST_ADDRESS = "smartspaces.host.address";
 
   /**
+   * Configuration property giving whether the system autoconfigures.
+   */
+  String CONFIGURATION_AUTOCONFIGURE = "smartspaces.autoconfigure";
+
+  /**
+   * Configuration property giving whether the system autoconfigures.
+   */
+  boolean CONFIGURATION_VALUE_DEFAULT_AUTOCONFIGURE = true;
+
+  /**
    * Configuration property which will be {@code true} if the container should
    * be file controllable.
    *

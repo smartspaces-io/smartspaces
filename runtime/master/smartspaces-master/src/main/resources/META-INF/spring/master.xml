@@ -152,6 +152,12 @@
 		<property name="log" ref="smartspaces.master.logger" />
 	</bean>
 
+	<bean id="smartspaces.manager.service" class="io.smartspaces.master.server.services.internal.StandardMasterServiceManager"
+		destroy-method="shutdown" init-method="startup">
+
+		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	</bean>
+
 	<bean id="smartspaces.master.databundlemanager"
 		class="io.smartspaces.master.server.services.internal.comm.TcpMasterDataBundleManager"
 		destroy-method="shutdown" init-method="startup">
@@ -215,7 +221,7 @@
 	</bean>
 
 	<bean id="io.smartspaces.activity.deployer.remote"
-		class="io.smartspaces.controller.client.master.internal.StandardRemoteActivityDeploymentManager"
+		class="io.smartspaces.master.spacecontroller.client.internal.StandardRemoteActivityDeploymentManager"
 		destroy-method="shutdown" init-method="startup">
 		<property name="remoteSpaceControllerClient" ref="smartspaces.controller.remote.client" />
 		<property name="containerResourceDeploymentManager" ref="smartspaces.resource.deployment.manager" />

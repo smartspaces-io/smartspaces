@@ -21,8 +21,10 @@ import io.smartspaces.container.control.message.activity.LiveActivityDeleteReque
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
-import io.smartspaces.controller.client.master.RemoteActivityDeploymentManager;
 import io.smartspaces.master.server.services.internal.RemoteSpaceControllerClientListenerCollection;
+import io.smartspaces.master.server.services.model.ActiveLiveActivity;
+import io.smartspaces.master.server.services.model.ActiveSpaceController;
+import io.smartspaces.master.spacecontroller.client.RemoteActivityDeploymentManager;
 import io.smartspaces.resource.managed.ManagedResource;
 
 /**

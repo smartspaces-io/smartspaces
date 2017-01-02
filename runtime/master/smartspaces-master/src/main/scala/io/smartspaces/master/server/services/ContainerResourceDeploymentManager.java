@@ -17,6 +17,7 @@
 
 package io.smartspaces.master.server.services;
 
+import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.ResourceDependencyReference;
 import io.smartspaces.resource.managed.ManagedResource;

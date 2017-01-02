@@ -21,6 +21,7 @@ import io.smartspaces.activity.ActivityState;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
 import io.smartspaces.master.server.services.internal.DataBundleState;
+import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.spacecontroller.SpaceControllerState;
 
 /**

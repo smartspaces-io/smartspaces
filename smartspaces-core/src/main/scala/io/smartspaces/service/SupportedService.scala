@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2013 Google Inc.
+ * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,34 +15,29 @@
  * the License.
  */
 
-package io.smartspaces.controller.client.master.internal;
+package io.smartspaces.service
+
+import io.smartspaces.system.SmartSpacesEnvironment
 
 /**
- * Status of a master deployment request.
+ * A Smart Spaces service which is more fully supported by the framework.
  *
  * @author Keith M. Hughes
  */
-public enum MasterActivityDeploymentRequestStatus {
+trait SupportedService extends Service {
+  
+  /**
+   * Get the space environment for the service.
+   * 
+   * @return the space environment.
+   */
+  def getSpaceEnvironment(): SmartSpacesEnvironment 
 
   /**
-   * Querying for dependencies.
+   * Set the space environment for the service.
+   *
+   * @param spaceEnvironment
+   *          the environment to use
    */
-  QUERYING_DEPENDENCIES,
-
-  /**
-   * Attempting to satisfy dependencies.
-   */
-  SATISFYING_DEPENDENCIES,
-
-  /**
-   * Deploying the activity.
-   */
-  DEPLOYING_ACTIVITY,
-
-  /**
-   * Deploying the activity is complete, though not clear if successful or not
-   * successful.
-   */
-  DEPLOYMENT_COMPLETE
-
+  def setSpaceEnvironment(spaceEnvironment: SmartSpacesEnvironment): Unit
 }

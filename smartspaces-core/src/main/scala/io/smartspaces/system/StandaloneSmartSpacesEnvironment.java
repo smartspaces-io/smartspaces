@@ -76,8 +76,7 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
     environment.managedScope =
         new StandardManagedScope(environment.managedResources, environment.managedTasks);
     StandardEventObservableService eventService = new StandardEventObservableService();
-    environment.managedResources.addResource(eventService);
-    environment.serviceRegistry.registerService(eventService);
+    environment.registerAndStartService(eventService);
     environment.managedResources.startupResources();
 
     return environment;
@@ -261,11 +260,6 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
    *          the service instance
    */
   public void registerAndStartService(Service service) {
-    serviceRegistry.registerService(service);
-
-    if (service instanceof SupportedService) {
-      addManagedResource((SupportedService) service);
-    }
+    serviceRegistry.startupAndRegisterService(service);
   }
-
 }

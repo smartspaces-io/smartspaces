@@ -59,7 +59,7 @@ public class StandardManagedResources implements ManagedResources {
   }
 
   @Override
-  public synchronized void addResource(ManagedResource resource) {
+  public void addResource(ManagedResource resource) {
     if (started) {
       try {
         // Will only add if starts up properly
@@ -68,11 +68,16 @@ public class StandardManagedResources implements ManagedResources {
         throw new SmartSpacesException("Could not start up managed resource", e);
       }
     }
+    
+    addStartedResource(resource);
+  }
 
+  @Override
+  public synchronized void addStartedResource(ManagedResource resource) {
     resources.add(resource);
   }
 
- @Override
+  @Override
   public synchronized List<ManagedResource> getResources() {
     return Collections.unmodifiableList(resources);
   }

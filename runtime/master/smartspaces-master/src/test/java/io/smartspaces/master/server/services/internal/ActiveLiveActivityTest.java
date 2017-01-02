@@ -20,10 +20,10 @@ package io.smartspaces.master.server.services.internal;
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
-import io.smartspaces.master.server.services.ActiveLiveActivity;
-import io.smartspaces.master.server.services.ActiveLiveActivityGroup;
-import io.smartspaces.master.server.services.ActiveSpaceController;
 import io.smartspaces.master.server.services.RemoteSpaceControllerClient;
+import io.smartspaces.master.server.services.model.ActiveLiveActivity;
+import io.smartspaces.master.server.services.model.ActiveLiveActivityGroup;
+import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.time.provider.TimeProvider;
 
 import org.junit.Before;

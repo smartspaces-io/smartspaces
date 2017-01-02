@@ -20,8 +20,8 @@ package io.smartspaces.master.server.services.internal.comm;
 import io.smartspaces.container.control.message.StandardMasterSpaceControllerCodec;
 import io.smartspaces.container.control.message.container.resource.deployment.ControllerDataRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ControllerDataRequest.ControllerDataRequestTransferType;
-import io.smartspaces.master.server.services.ActiveSpaceController;
 import io.smartspaces.master.server.services.internal.StandardMasterDataBundleManager;
+import io.smartspaces.master.server.services.model.ActiveSpaceController;
 
 /**
  * TCP-based implementation of a master data bundle manager.

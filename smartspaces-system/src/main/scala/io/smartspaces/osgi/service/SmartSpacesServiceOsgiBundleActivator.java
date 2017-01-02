@@ -25,7 +25,6 @@ import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.scope.StandardManagedScope;
 import io.smartspaces.service.Service;
 import io.smartspaces.service.ServiceRegistry;
-import io.smartspaces.service.SupportedService;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.tasks.ManagedTasks;
 import io.smartspaces.tasks.StandardManagedTasks;
@@ -159,10 +158,10 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
     ServiceRegistry serviceRegistry =
         smartspacesEnvironmentTracker.getMyService().getServiceRegistry();
     for (Service service : registeredServices) {
-      serviceRegistry.unregisterService(service);
-
-      if (SupportedService.class.isAssignableFrom(service.getClass())) {
-        ((SupportedService) service).shutdown();
+      try {
+        serviceRegistry.shutdownAndUnregisterService(service);
+      } catch (Throwable e) {
+        getSmartspacesEnvironment().getLog().error("Could not shut service down", e);
       }
     }
     registeredServices.clear();
@@ -216,8 +215,8 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
       SmartSpacesEnvironment spaceEnvironment = smartspacesEnvironmentTracker.getMyService();
       managedResources = new StandardManagedResources(spaceEnvironment.getLog());
 
-      managedTasks =
-          new StandardManagedTasks(spaceEnvironment.getExecutorService(), spaceEnvironment.getLog());
+      managedTasks = new StandardManagedTasks(spaceEnvironment.getExecutorService(),
+          spaceEnvironment.getLog());
 
       managedScope = new StandardManagedScope(managedResources, managedTasks);
 
@@ -236,8 +235,8 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
    * Register a new service with Smart Spaces.
    * 
    * <p>
-   * The service will be injected with the space environment and then will
-   * be started if a {@link SupportedService}.
+   * The service will be injected with the space environment and then will be
+   * started if a {@link SupportedService}.
    *
    * @param service
    *          the service to be registered
@@ -245,12 +244,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   public void registerNewSmartSpacesService(Service service) {
     SmartSpacesEnvironment spaceEnvironment = smartspacesEnvironmentTracker.getMyService();
     try {
-      spaceEnvironment.getServiceRegistry().registerService(service);
-
-      service.setSpaceEnvironment(spaceEnvironment);
-      if (SupportedService.class.isAssignableFrom(service.getClass())) {
-        ((SupportedService) service).startup();
-      }
+      spaceEnvironment.getServiceRegistry().startupAndRegisterService(service);
 
       registeredServices.add(service);
     } catch (Exception e) {

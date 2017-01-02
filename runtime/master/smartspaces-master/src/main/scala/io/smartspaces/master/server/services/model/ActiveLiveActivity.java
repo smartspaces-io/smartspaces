@@ -15,11 +15,12 @@
  * the License.
  */
 
-package io.smartspaces.master.server.services;
+package io.smartspaces.master.server.services.model;
 
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.LiveActivity;
+import io.smartspaces.master.server.services.RemoteSpaceControllerClient;
 import io.smartspaces.time.provider.TimeProvider;
 
 import java.util.Date;

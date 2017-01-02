@@ -23,7 +23,7 @@ import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.space.Space;
 import io.smartspaces.domain.system.NamedScript;
-import io.smartspaces.master.server.services.ActiveSpaceController;
+import io.smartspaces.master.server.services.model.ActiveSpaceController;
 
 import java.util.Comparator;
 

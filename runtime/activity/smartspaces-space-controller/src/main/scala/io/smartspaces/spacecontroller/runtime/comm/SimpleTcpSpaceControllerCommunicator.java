@@ -102,6 +102,8 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
    */
   private TcpServerNetworkCommunicationEndpoint<String> controllerAdminServer;
 
+  private RemoteMasterServerClient masterServerClient;
+
   /**
    * Create a new space controller communicator.
    *
@@ -142,22 +144,14 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
       }
     });
     controllerAdminServer.startup();
+
+    masterServerClient = new StandardRemoteMasterServerClient(spaceEnvironment);
+    masterServerClient.startup();
   }
 
   @Override
   public void registerControllerWithMaster(SimpleSpaceController controllerInfo) {
-    // Yes, this is inside of a mostly ROS based class, but the ROS class is
-    // going away to use the new comm system and
-    // this code will be in here then anyway. So is confusing, but is the
-    // final home, so is here now.
-    RemoteMasterServerClient masterServerClient =
-        new StandardRemoteMasterServerClient(spaceEnvironment);
-    masterServerClient.startup();
-    try {
-      masterServerClient.registerSpaceController(controllerInfo);
-    } finally {
-      masterServerClient.shutdown();
-    }
+    masterServerClient.registerSpaceController(controllerInfo);
   }
 
   @Override
@@ -165,6 +159,8 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
     publishControllerStatus(
         StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_SHUTDOWN, null);
     SmartSpacesUtilities.delay(SHUTDOWN_DELAY);
+    
+    masterServerClient.shutdown();
 
     controllerAdminServer.shutdown();
   }

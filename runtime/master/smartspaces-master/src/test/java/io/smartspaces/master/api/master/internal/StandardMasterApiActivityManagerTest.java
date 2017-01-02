@@ -25,9 +25,9 @@ import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.event.MasterEventManager;
-import io.smartspaces.master.server.services.ActiveLiveActivity;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
+import io.smartspaces.master.server.services.model.ActiveLiveActivity;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
 import org.junit.Before;

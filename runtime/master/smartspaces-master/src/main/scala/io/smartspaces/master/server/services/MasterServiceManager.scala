@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2016 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,28 +14,15 @@
  * the License.
  */
 
-package io.smartspaces.comm.network.zeroconf
+package io.smartspaces.master.server.services
+
+import io.smartspaces.resource.managed.ManagedResource
 
 /**
- * A listener for {@link ZeroconfService} events.
- *
+ * The manager for controlling master Smart Spaces services.
+ * 
  * @author Keith M. Hughes
  */
-trait ZeroconfListener {
-
-  /**
-   * A new service has come in.
-   *
-   * @param masterInfo
-   *          the service which has been added
-   */
-  def onNewZeroconfService( serviceInfo: ZeroconfServiceInfo): Unit
-
-  /**
-   * A service has been unregistered.
-   *
-   * @param serviceInfo
-   *          the service which has been unregistered
-   */
-  def onRemoveZeroconfService(masterInfo: ZeroconfServiceInfo ): Unit
+trait MasterServiceManager extends ManagedResource {
+  
 }

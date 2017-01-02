@@ -21,8 +21,10 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,6 +39,11 @@ public class SimpleServiceRegistry implements ServiceRegistry {
    * All services in the registry.
    */
   private Map<String, ServiceEntry> services = new HashMap<>();
+
+  /**
+   * The mapping of names to service notifications.
+   */
+  private Map<String, List<ServiceNotification<?>>> serviceNotifications = new HashMap<>();
 
   /**
    * The space environment for services.
@@ -54,23 +61,95 @@ public class SimpleServiceRegistry implements ServiceRegistry {
   }
 
   @Override
-  public synchronized void registerService(Service service) {
+  public void registerService(Service service) {
 
-    // TODO(keith): Support multiple services with the same name of the
-    // service.
-    services.put(service.getName(), new ServiceEntry(service, service.getMetadata()));
+    List<ServiceNotification<?>> notifications = null;
 
-    service.setSpaceEnvironment(spaceEnvironment);
+    String serviceName = service.getName();
+    synchronized (this) {
+      // TODO(keith): Support multiple services with the same name of the
+      // service.
+      if (!services.containsKey(serviceName)) {
+        services.put(serviceName, new ServiceEntry(service, service.getMetadata()));
+        spaceEnvironment.getLog().formatInfo("Service registered with name %s", serviceName);
 
-    spaceEnvironment.getLog().info(
-        String.format("Service registered with name %s", service.getName()));
+        notifications = serviceNotifications.get(serviceName);
+      } else {
+        spaceEnvironment.getLog().formatWarn(
+            "Service already registered with name %s. New registration dropped", serviceName);
+      }
+    }
+
+    if (notifications != null) {
+      for (ServiceNotification<?> notification : notifications) {
+        notifyAboutService(service, notification);
+      }
+    }
+  }
+
+  /**
+   * Notify that a service is available to a notification listener.
+   * 
+   * @param service
+   *          the service
+   * @param notification
+   *          the listener
+   */
+  private void notifyAboutService(Service service, ServiceNotification<?> notification) {
+    try {
+      notification.notifyServiceAvailable(service);
+    } catch (Throwable e) {
+      spaceEnvironment.getLog().formatWarn(e, "Service with name %s notification failed",
+          service.getName());
+    }
+  }
+
+  @Override
+  public void startupAndRegisterService(Service service) {
+    if (SupportedService.class.isAssignableFrom(service.getClass())) {
+      ((SupportedService) service).setSpaceEnvironment(spaceEnvironment);
+    }
+
+    service.startup();
+
+    registerService(service);
+  }
+
+  @Override
+  public void addServiceNotificationListener(String serviceName,
+      ServiceNotification<?> notificationListener) {
+    ServiceEntry entry = null;
+
+    synchronized (this) {
+      entry = services.get(serviceName);
+      if (entry == null) {
+        List<ServiceNotification<?>> notifications = serviceNotifications.get(serviceName);
+        if (notifications == null) {
+          notifications = new ArrayList<>();
+          serviceNotifications.put(serviceName, notifications);
+        }
+
+        notifications.add(notificationListener);
+      }
+    }
+
+    if (entry != null) {
+      notifyAboutService(entry.getService(), notificationListener);
+    }
   }
 
   @Override
   public synchronized void unregisterService(Service service) {
-    spaceEnvironment.getLog().info(
-        String.format("Service unregistering with name %s", service.getName()));
+    spaceEnvironment.getLog()
+        .info(String.format("Service unregistering with name %s", service.getName()));
     services.remove(service.getName());
+  }
+
+  @Override
+  public void shutdownAndUnregisterService(Service service) {
+    unregisterService(service);
+
+    service.shutdown();
   }
 
   @Override
@@ -101,11 +180,8 @@ public class SimpleServiceRegistry implements ServiceRegistry {
   @Override
   public synchronized <T extends Service> T getRequiredService(String name)
       throws SmartSpacesException {
-    ServiceEntry entry = services.get(name);
-    if (entry != null) {
-      @SuppressWarnings("unchecked")
-      T service = (T) entry.getService();
-
+    T service = getService(name);
+    if (service != null) {
       return service;
     } else {
       throw new SimpleSmartSpacesException(String.format("No service found with name %s", name));

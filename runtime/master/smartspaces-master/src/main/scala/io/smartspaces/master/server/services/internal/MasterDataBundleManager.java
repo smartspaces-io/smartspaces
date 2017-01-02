@@ -17,7 +17,7 @@
 
 package io.smartspaces.master.server.services.internal;
 
-import io.smartspaces.master.server.services.ActiveSpaceController;
+import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.resource.managed.ManagedResource;
 
 /**

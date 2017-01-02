@@ -24,7 +24,6 @@ import io.smartspaces.container.control.message.activity.LiveActivityDeleteRespo
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse.LiveActivityDeleteStatus;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse.ActivityDeployStatus;
-import io.smartspaces.controller.client.master.RemoteActivityDeploymentManager;
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
@@ -35,9 +34,10 @@ import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
 import io.smartspaces.domain.space.Space;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.master.event.MasterEventManager;
-import io.smartspaces.master.server.services.ActiveLiveActivity;
-import io.smartspaces.master.server.services.ActiveSpaceController;
 import io.smartspaces.master.server.services.RemoteSpaceControllerClient;
+import io.smartspaces.master.server.services.model.ActiveLiveActivity;
+import io.smartspaces.master.server.services.model.ActiveSpaceController;
+import io.smartspaces.master.spacecontroller.client.RemoteActivityDeploymentManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.provider.TimeProvider;
 

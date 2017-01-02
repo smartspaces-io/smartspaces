@@ -39,10 +39,10 @@ import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.event.BaseMasterEventListener;
 import io.smartspaces.master.event.MasterEventListener;
 import io.smartspaces.master.event.MasterEventManager;
-import io.smartspaces.master.server.services.ActiveLiveActivity;
 import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
+import io.smartspaces.master.server.services.model.ActiveLiveActivity;
 import io.smartspaces.resource.repository.ActivityRepositoryManager;
 
 import com.google.common.annotations.VisibleForTesting;

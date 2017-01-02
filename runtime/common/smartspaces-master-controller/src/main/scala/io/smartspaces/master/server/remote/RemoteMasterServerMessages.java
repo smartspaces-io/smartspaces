@@ -18,6 +18,8 @@
 package io.smartspaces.master.server.remote;
 
 /**
+ * Useful constants for messages between the master and a space controller.
+ * 
  * @author Keith M. Hughes
  */
 public class RemoteMasterServerMessages {
@@ -108,4 +110,9 @@ public class RemoteMasterServerMessages {
    * communications.
    */
   public static final int CONFIGURATION_MASTER_COMMUNICATION_PORT_DEFAULT = 8090;
+  
+  /**
+   * The zeroconf service type for the master control server.
+   */
+  public static final String ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE = "_smartspaces-master-control._tcp.local.";
 }

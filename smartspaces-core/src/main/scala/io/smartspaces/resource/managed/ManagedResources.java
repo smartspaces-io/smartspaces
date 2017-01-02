@@ -17,6 +17,8 @@
 
 package io.smartspaces.resource.managed;
 
+import io.smartspaces.SmartSpacesException;
+
 import java.util.List;
 
 /**
@@ -34,11 +36,24 @@ public interface ManagedResources {
 
   /**
    * Add a new resource to the collection.
+   * 
+   * <p>
+   * If {@link #startupResources()} has already been called, the resource
+   * will be immediately started and will only be added to the collection if it starts
+   * properly.
    *
    * @param resource
    *          the resource to add
    */
-  void addResource(ManagedResource resource);
+  void addResource(ManagedResource resource) throws SmartSpacesException;
+
+  /**
+   * Add a resource that has already been started to the collection.
+   *
+   * @param resource
+   *          the resource to add
+   */
+  void addStartedResource(ManagedResource resource);
 
   /**
    * Get a list of the currently managed resources.

@@ -14,9 +14,9 @@
  * the License.
  */
 
-package io.smartspaces.comm.network.zeroconf
+package io.smartspaces.service.comm.network.zeroconf
 
-import io.smartspaces.resource.managed.ManagedResource
+import io.smartspaces.service.SupportedService
 
 /**
  * A service for giving mDNS functionality.
@@ -36,7 +36,7 @@ object ZeroconfService {
  * 
  * @author Keith M. Hughes
  */
-trait ZeroconfService extends ManagedResource {
+trait ZeroconfService extends SupportedService {
 
   /**
    * Register a new service for discovery.
@@ -59,8 +59,8 @@ trait ZeroconfService extends ManagedResource {
    *
    * @param serviceName
    *         the name of the service to be found
-   * @param callback
-   *        the callback to call when the the service is discovered
+   * @param listener
+   *        the callback to call when the the service is discovered or removed
    */
-  def addSimpleDiscovery(serviceName: String, callback: (String, Int) => Unit): Unit
+  def addSimpleDiscovery(serviceName: String, listener: ZeroconfServiceNotificationListener): Unit
 }

@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.master.server.services;
+package io.smartspaces.master.server.services.model;
 
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.master.server.services.internal.DataBundleState;

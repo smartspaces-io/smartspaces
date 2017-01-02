@@ -18,9 +18,9 @@
 package io.smartspaces.master.server.services.internal;
 
 import io.smartspaces.domain.basic.LiveActivityGroup;
-import io.smartspaces.master.server.services.ActiveLiveActivity;
-import io.smartspaces.master.server.services.ActiveLiveActivityGroup;
 import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
+import io.smartspaces.master.server.services.model.ActiveLiveActivity;
+import io.smartspaces.master.server.services.model.ActiveLiveActivityGroup;
 
 import java.util.Set;
 

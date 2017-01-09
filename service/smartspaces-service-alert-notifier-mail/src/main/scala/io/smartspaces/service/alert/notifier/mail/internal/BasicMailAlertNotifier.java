@@ -37,32 +37,32 @@ public class BasicMailAlertNotifier extends BaseSupportedService implements Aler
   /**
    * Configuration property prefix for all mail alert notifier properties.
    */
-  public static final String CONFIGURATION_PREFIX_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL =
+  public static final String CONFIGURATION_NAME_PREFIX_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL =
       "io.smartspaces.service.alert.notifier.mail.";
 
   /**
    * Configuration property for a space-separated list of email addresses for
    * alert notifications.
    */
-  public static final String CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_TO =
-      CONFIGURATION_PREFIX_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL + "to";
+  public static final String CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_TO =
+      CONFIGURATION_NAME_PREFIX_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL + "to";
 
   /**
    * Configuration property for the from email address for alert notifications.
    */
-  public static final String CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_FROM =
-      CONFIGURATION_PREFIX_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL + "from";
+  public static final String CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_FROM =
+      CONFIGURATION_NAME_PREFIX_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL + "from";
 
   /**
    * Configuration property for the subject for emails for alert notifications.
    */
-  public static final String CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_SUBJECT =
-      CONFIGURATION_PREFIX_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL + "subject";
+  public static final String CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_SUBJECT =
+      CONFIGURATION_NAME_PREFIX_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL + "subject";
 
   /**
    * The name of the service.
    */
-  public static final String NAME = "alert.notifier.email";
+  public static final String SERVICE_NAME = "alert.notifier.email";
 
   /**
    * Service for alerting.
@@ -89,7 +89,7 @@ public class BasicMailAlertNotifier extends BaseSupportedService implements Aler
 
   @Override
   public String getName() {
-    return NAME;
+    return SERVICE_NAME;
   }
 
   @Override
@@ -144,7 +144,7 @@ public class BasicMailAlertNotifier extends BaseSupportedService implements Aler
    */
   private void addToAddresses(String alertType, ComposableMailMessage mail, Configuration config) {
     String tos =
-        getConfigValue(CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_TO, alertType,
+        getConfigValue(CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_TO, alertType,
             config);
 
     for (String to : tos.trim().split("\\s+")) {
@@ -164,7 +164,7 @@ public class BasicMailAlertNotifier extends BaseSupportedService implements Aler
    */
   private void addFromAddress(String alertType, ComposableMailMessage mail, Configuration config) {
     mail.setFromAddress(getConfigValue(
-        CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_FROM, alertType, config));
+        CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_FROM, alertType, config));
   }
 
   /**
@@ -179,7 +179,7 @@ public class BasicMailAlertNotifier extends BaseSupportedService implements Aler
    */
   private void addSubject(String alertType, ComposableMailMessage mail, Configuration config) {
     mail.setSubject(getConfigValue(
-        CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_SUBJECT, alertType, config));
+        CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_SUBJECT, alertType, config));
   }
 
   /**

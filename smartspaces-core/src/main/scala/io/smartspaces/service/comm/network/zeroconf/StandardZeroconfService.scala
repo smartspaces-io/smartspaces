@@ -32,6 +32,7 @@ import javax.jmdns.JmDNS
 import javax.jmdns.ServiceEvent
 import javax.jmdns.ServiceListener
 import javax.jmdns.ServiceInfo
+import io.smartspaces.system.SmartSpacesEnvironment
 
 /*
  * The standard implementation of the mDNS (Zeroconf) service.
@@ -76,7 +77,9 @@ class StandardZeroconfService extends BaseSupportedService with ZeroconfService 
 
   override def onStartup(): Unit = {
     try {
-      ipAddress = getIpAddress()
+      ipAddress = getSpaceEnvironment.getSystemConfiguration.getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS)
+      getSpaceEnvironment.getLog.info(s"Starting up zeroconf at address ${ipAddress}")
+      
       jmdns = JmDNS.create(InetAddress.getByName(ipAddress))
     } catch {
       case e: Throwable => getSpaceEnvironment.getLog.error("Could not start Zeroconf service", e)
@@ -152,26 +155,6 @@ class StandardZeroconfService extends BaseSupportedService with ZeroconfService 
     //        case e: Throwable => getSpaceEnvironment.getLog.error("Error while handing zeroconf service callback.", e)
     //      }
     //    }
-  }
-
-  def getIpAddress(): String = {
-    val interfacesToIgnore = Set("docker0", "wlan0")
-    try {
-      val foo =
-        NetworkInterface.getNetworkInterfaces.foreach { (intf) =>
-          if (!intf.isLoopback() && !interfacesToIgnore.contains(intf.getName())) {
-            intf.getInetAddresses.foreach { (address) =>
-              if (address.isInstanceOf[Inet4Address]) {
-                return address.getHostAddress()
-              }
-            }
-          }
-        }
-    } catch {
-      case e: SocketException => getSpaceEnvironment.getLog.error(" (error retrieving network interface list)", e)
-    }
-
-    throw new SmartSpacesException("Cannot obtain an IP address for the zeroconf service")
   }
 
   /**

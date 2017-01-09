@@ -48,38 +48,38 @@ public interface RosEnvironment {
   /**
    * Name the ROS node will have as its base name.
    */
-  String CONFIGURATION_ROS_NODE_NAME = "org.ros.node.name";
+  String CONFIGURATION_NAME_ROS_NODE_NAME = "org.ros.node.name";
 
   /**
    * The host this node is running on. Can either be a resolvable domain name or
    * an IP address.
    */
-  String CONFIGURATION_ROS_HOST = "org.ros.host";
+  String CONFIGURATION_NAME_ROS_HOST = "org.ros.host";
 
   /**
    * URI of the ROS Master.
    */
-  String CONFIGURATION_ROS_MASTER_URI = "org.ros.master.uri";
+  String CONFIGURATION_NAME_ROS_MASTER_URI = "org.ros.master.uri";
 
   /**
    * Configuration property giving the ROS container type.
    */
-  String CONFIGURATION_ROS_CONTAINER_TYPE = "org.ros.container.type";
+  String CONFIGURATION_NAME_ROS_CONTAINER_TYPE = "org.ros.container.type";
 
   /**
    * Configuration property value for the master ROS container type.
    */
-  String CONFIGURATION_ROS_CONTAINER_TYPE_MASTER = "master";
+  String CONFIGURATION_VALUE_ROS_CONTAINER_TYPE_MASTER = "master";
 
   /**
    * Configuration property value for the node ROS container type.
    */
-  String CONFIGURATION_ROS_CONTAINER_TYPE_NODE = "node";
+  String CONFIGURATION_VALUE_ROS_CONTAINER_TYPE_NODE = "node";
 
   /**
    * Configuration property giving the ROS network type, e.g. prod, dev, local.
    */
-  String CONFIGURATION_ROS_NETWORK_TYPE = "org.ros.network.type";
+  String CONFIGURATION_NAME_ROS_NETWORK_TYPE = "org.ros.network.type";
 
   /**
    * Get the node configuration to be used as a public node for this

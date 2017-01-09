@@ -76,7 +76,7 @@ public class SmartSpacesLauncher {
   /**
    * The subdirectory which contains the system files.
    */
-  private static final String SPACES_LIB_SYSTEM_JAVA = "lib/system/java";
+  private static final String SPACES_LIB_SYSTEM_JVM = "lib/system/java";
 
   /**
    * The subdirectory which contains the environment files relative to the
@@ -167,7 +167,7 @@ public class SmartSpacesLauncher {
     while (true) {
       createClassLoader();
       int returnCode = boostrap(argList);
-      
+
       if (returnCode != SmartSpacesReturnCodes.RETURN_CODE_RESTART_SOFT) {
         System.exit(returnCode);
       }
@@ -212,7 +212,7 @@ public class SmartSpacesLauncher {
    *          the classpath list
    */
   private void collectSystemLibClasspath(List<URL> classpath) {
-    File systemDirectory = new File(SPACES_LIB_SYSTEM_JAVA);
+    File systemDirectory = new File(SPACES_LIB_SYSTEM_JVM);
 
     File[] files = systemDirectory.listFiles();
     if (files != null) {
@@ -344,6 +344,7 @@ public class SmartSpacesLauncher {
 
     try {
       RandomAccessFile pidRaf = new RandomAccessFile(pidFile, "rw");
+
       FileLock fl = pidRaf.getChannel().tryLock(0, Long.MAX_VALUE, false);
 
       if (fl != null) {

@@ -41,7 +41,7 @@ public class SmartSpacesNativeActivityWrapper extends BaseActivityWrapper {
   /**
    * Configuration property giving the Java class.
    */
-  public static final String CONFIGURATION_APPLICATION_JAVA_CLASS = "space.activity.java.class";
+  public static final String CONFIGURATION_NAME_ACTIVITY_JAVA_CLASS = "space.activity.java.class";
 
   /**
    * The installed live activity that this is the wrapper for.
@@ -96,7 +96,7 @@ public class SmartSpacesNativeActivityWrapper extends BaseActivityWrapper {
     activityBundle = bundleLoader.loadLiveActivityBundle(liveActivity, executableFile);
 
     String className =
-        configuration.getRequiredPropertyString(CONFIGURATION_APPLICATION_JAVA_CLASS);
+        configuration.getRequiredPropertyString(CONFIGURATION_NAME_ACTIVITY_JAVA_CLASS);
 
     try {
       Class<?> activityClass = activityBundle.loadClass(className);
@@ -136,6 +136,6 @@ public class SmartSpacesNativeActivityWrapper extends BaseActivityWrapper {
       Configuration configuration) {
     return new File(activityFilesystem.getInstallDirectory(),
         configuration
-            .getRequiredPropertyString(ActivityConfiguration.CONFIGURATION_ACTIVITY_EXECUTABLE));
+            .getRequiredPropertyString(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_EXECUTABLE));
   }
 }

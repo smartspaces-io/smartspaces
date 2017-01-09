@@ -111,7 +111,7 @@ public class OsgiSpaceControllerActivator extends SmartSpacesServiceOsgiBundleAc
 
     String controllerMode =
         spaceEnvironment.getSystemConfiguration().getPropertyString(
-            SpaceController.CONFIGURATION_SMARTSPACES_CONTROLLER_MODE,
+            SpaceController.CONFIGURATION_NAME_CONTROLLER_MODE,
             SpaceController.CONFIGURATION_VALUE_STANDARD_CONTROLLER_MODE);
     if (SpaceController.CONFIGURATION_VALUE_STANDARD_CONTROLLER_MODE.equals(controllerMode)) {
       activateStandardSpaceController();

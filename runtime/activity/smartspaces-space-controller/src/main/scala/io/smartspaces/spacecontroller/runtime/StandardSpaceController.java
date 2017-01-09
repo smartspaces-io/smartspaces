@@ -522,7 +522,7 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
   private void startupControllerControl() {
     boolean startupFileControl =
         getSpaceEnvironment().getSystemConfiguration().getRequiredPropertyBoolean(
-            SmartSpacesEnvironment.CONFIGURATION_CONTAINER_FILE_CONTROLLABLE);
+            SmartSpacesEnvironment.CONFIGURATION_NAME_CONTAINER_FILE_CONTROLLABLE);
     if (startupFileControl) {
       fileControl = new SpaceControllerFileControl(this, spaceSystemControl, getSpaceEnvironment());
       fileControl.startup();

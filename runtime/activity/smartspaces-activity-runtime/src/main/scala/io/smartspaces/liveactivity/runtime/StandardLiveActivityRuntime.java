@@ -539,7 +539,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
     instance.setUuid(uuid);
 
     instance.setName(configuration
-        .getPropertyString(ActivityConfiguration.CONFIGURATION_PROPERTY_ACTIVITY_NAME));
+        .getPropertyString(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_NAME));
 
     instance.setConfiguration(configuration);
     instance.setActivityFilesystem(activityFilesystem);
@@ -579,7 +579,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
   public ExtendedLog getActivityLog(InstalledLiveActivity installedActivity, Configuration configuration,
       ActivityFilesystem activityFilesystem) {
     return activityLogFactory.createLogger(installedActivity,
-        configuration.getPropertyString(ActivityConfiguration.CONFIGURATION_PROPERTY_LOG_LEVEL,
+        configuration.getPropertyString(ActivityConfiguration.CONFIGURATION_NAME_LOG_LEVEL,
             SmartSpacesEnvironment.LOG_LEVEL_ERROR),
         activityFilesystem);
   }
@@ -599,17 +599,17 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
    */
   private void initializeActivityConfiguration(Configuration configuration, Activity activity) {
 
-    configuration.setProperty(ActivityConfiguration.CONFIGURATION_PROPERTY_ACTIVITY_UUID,
+    configuration.setProperty(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_UUID,
         activity.getUuid().replace("-", "_"));
 
     ActivityFilesystem activityFilesystem = activity.getActivityFilesystem();
-    configuration.setProperty(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_INSTALL,
+    configuration.setProperty(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_FILESYSTEM_DIR_INSTALL,
         activityFilesystem.getInstallDirectory().getAbsolutePath());
-    configuration.setProperty(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_LOG,
+    configuration.setProperty(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_FILESYSTEM_DIR_LOG,
         activityFilesystem.getLogDirectory().getAbsolutePath());
-    configuration.setProperty(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_DATA,
+    configuration.setProperty(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_FILESYSTEM_DIR_DATA,
         activityFilesystem.getPermanentDataDirectory().getAbsolutePath());
-    configuration.setProperty(ActivityConfiguration.CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_TMP,
+    configuration.setProperty(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_FILESYSTEM_DIR_TMP,
         activityFilesystem.getTempDataDirectory().getAbsolutePath());
   }
 

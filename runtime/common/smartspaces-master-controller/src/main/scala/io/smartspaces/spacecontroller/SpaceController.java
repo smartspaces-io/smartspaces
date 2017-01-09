@@ -42,17 +42,17 @@ public interface SpaceController extends ManagedResource {
   /**
    * Configuration property giving the UUID of the controller.
    */
-  String CONFIGURATION_CONTROLLER_UUID = "smartspaces.spacecontroller.uuid";
+  String CONFIGURATION_NAME_CONTROLLER_UUID = "smartspaces.spacecontroller.uuid";
 
   /**
    * Configuration property giving the name of the controller.
    */
-  String CONFIGURATION_CONTROLLER_NAME = "smartspaces.spacecontroller.name";
+  String CONFIGURATION_NAME_CONTROLLER_NAME = "smartspaces.spacecontroller.name";
 
   /**
    * Configuration property giving the description of the controller.
    */
-  String CONFIGURATION_CONTROLLER_DESCRIPTION = "smartspaces.spacecontroller.description";
+  String CONFIGURATION_NAME_CONTROLLER_DESCRIPTION = "smartspaces.spacecontroller.description";
 
   /**
    * Specification for standard controller mode.
@@ -62,12 +62,12 @@ public interface SpaceController extends ManagedResource {
   /**
    * Configuration property name for controller mode.
    */
-  String CONFIGURATION_SMARTSPACES_CONTROLLER_MODE = "smartspaces.spacecontroller.mode";
+  String CONFIGURATION_NAME_CONTROLLER_MODE = "smartspaces.spacecontroller.mode";
 
   /**
    * Configuration property name for controller mode.
    */
-  String CONFIGURATION_SMARTSPACES_CONTROLLER_HOST_CONTROL_PORT = "smartspaces.host.control.port";
+  String CONFIGURATION_NAME_CONTROLLER_HOST_CONTROL_PORT = "smartspaces.host.control.port";
 
   /**
    * Get the Smart Spaces environment.

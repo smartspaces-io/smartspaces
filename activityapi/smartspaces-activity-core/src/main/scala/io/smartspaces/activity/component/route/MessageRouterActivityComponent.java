@@ -68,33 +68,33 @@ public interface MessageRouterActivityComponent extends ActivityComponent {
   /**
    * Configuration property for listing of input routes.
    */
-  String CONFIGURATION_ROUTES_INPUTS = "space.activity.routes.inputs";
+  String CONFIGURATION_NAME_ROUTES_INPUTS = "space.activity.routes.inputs";
 
   /**
    * Configuration name prefix for route inputs.
    */
-  String CONFIGURATION_ROUTE_INPUT_TOPIC_PREFIX = "space.activity.route.input.";
+  String CONFIGURATION_NAME_PREFIX_ROUTE_INPUT_TOPIC = "space.activity.route.input.";
 
   /**
    * Configuration property for listing of input routes.
    */
-  String CONFIGURATION_ROUTES_OUTPUTS = "space.activity.routes.outputs";
+  String CONFIGURATION_NAME_ROUTES_OUTPUTS = "space.activity.routes.outputs";
 
   /**
    * Configuration name prefix for route outputs.
    */
-  String CONFIGURATION_ROUTE_OUTPUT_TOPIC_PREFIX = "space.activity.route.output.";
+  String CONFIGURATION_NAME_PREFIX_ROUTE_OUTPUT_TOPIC = "space.activity.route.output.";
 
   /**
    * Configuration property to set the route protocol default.
    */
-  String CONFIGURATION_ROUTE_PROTOCOL_DEFAULT = "space.activity.route.protocol.default";
+  String CONFIGURATION_NAME_ROUTE_PROTOCOL_DEFAULT = "space.activity.route.protocol.default";
 
   /**
    * Configuration property value for the default MQTT broker description.
    */
   // TODO(keith): Move this somewhere more reasonable.
-  String CONFIGURATION_MESSAGING_MQTT_BROKERDESCRIPTION_DEFAULT =
+  String CONFIGURATION_NAME_MESSAGING_MQTT_BROKERDESCRIPTION_DEFAULT =
       "smartspaces.messaging.mqtt.brokerdescription.default";
 
   /**

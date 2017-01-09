@@ -76,7 +76,7 @@ public abstract class BaseActivityWrapperFactory implements ActivityWrapperFacto
       ActivityFilesystem activityFilesystem, Configuration configuration) {
     return new File(activityFilesystem.getInstallDirectory(),
         configuration
-            .getRequiredPropertyString(ActivityConfiguration.CONFIGURATION_ACTIVITY_EXECUTABLE));
+            .getRequiredPropertyString(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_EXECUTABLE));
   }
 
   /**
@@ -98,7 +98,7 @@ public abstract class BaseActivityWrapperFactory implements ActivityWrapperFacto
       ActivityFilesystem activityFilesystem, Configuration configuration, String extension) {
     return new File(activityFilesystem.getInstallDirectory(),
         configuration
-            .getRequiredPropertyString(ActivityConfiguration.CONFIGURATION_ACTIVITY_EXECUTABLE)
+            .getRequiredPropertyString(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_EXECUTABLE)
             + "." + extension);
   }
 }

@@ -90,11 +90,11 @@ public class SmartSpacesNativeActivityWrapperTest {
 
     when(
         configuration
-            .getRequiredPropertyString(ActivityConfiguration.CONFIGURATION_ACTIVITY_EXECUTABLE))
+            .getRequiredPropertyString(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_EXECUTABLE))
         .thenReturn(executable1);
     when(
         configuration
-            .getRequiredPropertyString(SmartSpacesNativeActivityWrapper.CONFIGURATION_APPLICATION_JAVA_CLASS))
+            .getRequiredPropertyString(SmartSpacesNativeActivityWrapper.CONFIGURATION_NAME_ACTIVITY_JAVA_CLASS))
         .thenReturn(className);
 
     Class expectedActivityClass = Activity1.class;

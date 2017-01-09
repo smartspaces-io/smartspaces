@@ -323,7 +323,8 @@ public class SmartSpacesFrameworkBootstrap {
    * The shutdown option for the container.
    * 
    * <p>
-   * Set to the default value in case the container is exited from the OSGi shell.
+   * Set to the default value in case the container is exited from the OSGi
+   * shell.
    */
   private int shutdownReturnCode = SmartSpacesReturnCodes.RETURN_CODE_SUCCESS;
 
@@ -332,8 +333,9 @@ public class SmartSpacesFrameworkBootstrap {
    *
    * @param args
    *          the arguments to be passed to the bootstrap
-   *          
-   * @return the return code for the Java process, see {@link SmartSpacesReturnCodes}
+   * 
+   * @return the return code for the Java process, see
+   *         {@link SmartSpacesReturnCodes}
    */
   public int boot(List<String> args) {
 
@@ -386,8 +388,8 @@ public class SmartSpacesFrameworkBootstrap {
         new File(baseInstallFolder, ContainerFilesystemLayout.FOLDER_SYSTEM_BOOTSTRAP);
 
     try {
-        
-        bootAndRunFramework(args, bootstrapBundleFolder);
+
+      bootAndRunFramework(args, bootstrapBundleFolder);
 
       return shutdownReturnCode;
     } catch (Throwable ex) {
@@ -544,7 +546,7 @@ public class SmartSpacesFrameworkBootstrap {
     String isHomeEnvPath = System.getenv(SMARTSPACES_HOME_ENVIRONMENT_KEY);
     File isHomeDir = isHomeEnvPath != null ? new File(isHomeEnvPath)
         : new File(baseInstallFolder, SMARTSPACES_HOME_DEFAULT_DIR);
-    configurationProvider.put(CoreConfiguration.CONFIGURATION_SMARTSPACES_HOME,
+    configurationProvider.put(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_HOME,
         isHomeDir.getAbsolutePath());
 
     String platformOs = System.getProperty(SYSTEM_PROPERTY_OS_NAME);
@@ -563,8 +565,8 @@ public class SmartSpacesFrameworkBootstrap {
       platformOs = CoreConfiguration.CONFIGURATION_VALUE_PLATFORM_OS_UNKNOWN;
     }
 
-    configurationProvider.put(CoreConfiguration.CONFIGURATION_SMARTSPACES_PLATFORM_OS, platformOs);
-    configurationProvider.put(CoreConfiguration.CONFIGURATION_PLATFORM_FILE_SEPARATOR,
+    configurationProvider.put(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_PLATFORM_OS, platformOs);
+    configurationProvider.put(CoreConfiguration.CONFIGURATION_NAME_PLATFORM_FILE_SEPARATOR,
         File.separator);
   }
 
@@ -611,9 +613,11 @@ public class SmartSpacesFrameworkBootstrap {
     configurationProvider =
         new FileConfigurationProvider(baseInstallFolder, configFolder, loggingProvider.getLog());
 
-    // The order is important, as it determines which source of configuration
+    // The order is important, as it determines which source of
+    // configuration
     // parameters overrides the other sources.
-    // Configuration sources that are invoked later override those that are done
+    // Configuration sources that are invoked later override those that are
+    // done
     // sooner. The order is:
     // 1) automatic configuration
     // 2) file configuration
@@ -756,7 +760,8 @@ public class SmartSpacesFrameworkBootstrap {
     // are not automatically exposed through the OSGi bundle classloaders.
     List<String> bootDelegationPackages = new ArrayList<String>();
 
-    // Extra system packages are not found in the boot classloader but need to
+    // Extra system packages are not found in the boot classloader but need
+    // to
     // be exported by the system bundle
     // classloader.
     List<String> extraSystemPackages = new ArrayList<String>();
@@ -772,13 +777,13 @@ public class SmartSpacesFrameworkBootstrap {
     extraSystemPackages.addAll(extensionsReader.getPackages());
     configureExtraSystemPackages(frameworkConfig, extraSystemPackages);
 
-    frameworkConfig.put(CoreConfiguration.CONFIGURATION_SMARTSPACES_BASE_INSTALL_DIR,
+    frameworkConfig.put(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_BASE_INSTALL_DIR,
         baseInstallFolder.getAbsolutePath());
 
-    frameworkConfig.put(CoreConfiguration.CONFIGURATION_SMARTSPACES_RUNTIME_DIR,
+    frameworkConfig.put(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_RUNTIME_DIR,
         runtimeFolder.getAbsolutePath());
 
-    frameworkConfig.put(CoreConfiguration.CONFIGURATION_SMARTSPACES_VERSION,
+    frameworkConfig.put(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_VERSION,
         getSmartSpacesVersion());
 
     frameworkConfig.putAll(configurationProvider.getInitialConfiguration());
@@ -926,8 +931,7 @@ public class SmartSpacesFrameworkBootstrap {
       public void run() {
         try {
           if (framework != null) {
-            framework.stop();
-            framework.waitForStop(0);
+            systemControl.shutdown();
           }
         } catch (Exception ex) {
           loggingProvider.getLog().error("Error stopping framework", ex);
@@ -1067,7 +1071,8 @@ public class SmartSpacesFrameworkBootstrap {
    * @return The smart spaces version
    */
   private String getSmartSpacesVersion() {
-    // This little lovely line gives us the name of the jar that gave the class
+    // This little lovely line gives us the name of the jar that gave the
+    // class
     // we are looking at.
     String classContainer =
         getClass().getProtectionDomain().getCodeSource().getLocation().toString();

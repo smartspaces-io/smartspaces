@@ -27,7 +27,7 @@ public interface WebActivityConfiguration {
   /**
    * Prefix for web app configuration properties.
    */
-  String CONFIGURATION_PREFIX_WEBAPP = "space.activity.webapp";
+  String CONFIGURATION_NAME_PREFIX_WEBAPP = "space.activity.webapp";
 
   /**
    * Configuration property giving the initial page of the web activity.
@@ -36,7 +36,7 @@ public interface WebActivityConfiguration {
    * If there is no content location, this should be a fully qualified URL.
    * Otherwise it can be relative to the web server component content location.
    */
-  String CONFIGURATION_SUFFIX_INITIAL_PAGE = ".url.initial";
+  String CONFIGURATION_NAME_SUFFIX_INITIAL_PAGE = ".url.initial";
 
   /**
    * Default page to use when none specified in configuration.
@@ -47,12 +47,12 @@ public interface WebActivityConfiguration {
    * Configuration property of any query string parameter which should be added
    * to the URL given to the web browser.
    */
-  String CONFIGURATION_SUFFIX_INITIAL_URL_QUERY_STRING = ".url.query_string";
+  String CONFIGURATION_NAME_SUFFIX_INITIAL_URL_QUERY_STRING = ".url.query_string";
 
   /**
    * Configuration param for specifying debug mode.
    */
-  String CONFIGURATION_WEBAPP_DEBUG = "space.activity.webapp.debug";
+  String CONFIGURATION_NAME_WEBAPP_DEBUG = "space.activity.webapp.debug";
 
   /**
    * Separator for web path elements.

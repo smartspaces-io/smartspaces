@@ -62,9 +62,12 @@ import org.ros.osgi.common.RosEnvironment;
 import org.ros.osgi.common.SimpleRosEnvironment;
 
 import java.io.File;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -178,8 +181,8 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
   public void start(BundleContext context) throws Exception {
     bundleContext = context;
 
-    String baseInstallDirProperty =
-        bundleContext.getProperty(CoreConfiguration.CONFIGURATION_SMARTSPACES_BASE_INSTALL_DIR);
+    String baseInstallDirProperty = bundleContext
+        .getProperty(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_BASE_INSTALL_DIR);
     File baseInstallDir = new File(baseInstallDirProperty);
 
     try {
@@ -201,8 +204,8 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
       spaceEnvironment.getLog()
           .info(String.format("Base system startup. Smart Spaces Version %s",
-              spaceEnvironment.getSystemConfiguration()
-                  .getPropertyString(SmartSpacesEnvironment.CONFIGURATION_SMARTSPACES_VERSION)));
+              spaceEnvironment.getSystemConfiguration().getPropertyString(
+                  SmartSpacesEnvironment.CONFIGURATION_NAME_SMARTSPACES_VERSION)));
     } catch (Exception e) {
       spaceEnvironment.getLog().error("Could not start up smartspaces system", e);
     }
@@ -304,8 +307,8 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     spaceEnvironment.setExecutorService(executorService);
     spaceEnvironment.setLoggingProvider(loggingProvider);
     spaceEnvironment.setFilesystem(filesystem);
-    spaceEnvironment
-        .setNetworkType(containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NETWORK_TYPE));
+    spaceEnvironment.setNetworkType(
+        containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NAME_NETWORK_TYPE));
     spaceEnvironment.setContainerManagedScope(containerManagedScope);
 
     setupSystemConfiguration(bundleContext, containerProperties);
@@ -328,7 +331,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
     // Potentially request the container to permit file control.
     spaceEnvironment.getSystemConfiguration().setProperty(
-        SmartSpacesEnvironment.CONFIGURATION_CONTAINER_FILE_CONTROLLABLE,
+        SmartSpacesEnvironment.CONFIGURATION_NAME_CONTAINER_FILE_CONTROLLABLE,
         Boolean.toString(containerCustomizerProvider.isFileControllable()));
 
     customizeContainer();
@@ -345,14 +348,15 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    * @return the time provider to use
    */
   public TimeProvider getTimeProvider(Map<String, String> containerProperties, Log log) {
-    String provider = containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_PROVIDER_TIME);
+    String provider =
+        containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NAME_PROVIDER_TIME);
     if (provider == null) {
       provider = SmartSpacesEnvironment.CONFIGURATION_VALUE_PROVIDER_TIME_DEFAULT;
     }
 
     if (SmartSpacesEnvironment.CONFIGURATION_VALUE_PROVIDER_TIME_NTP.equals(provider)) {
       String host =
-          containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_PROVIDER_TIME_NTP_URL);
+          containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NAME_PROVIDER_TIME_NTP_URL);
       if (host != null) {
         InetAddress ntpAddress = InetAddressFactory.newFromHostString(host);
         // TODO(keith): Make sure got valid address. Also, move copy of
@@ -362,7 +366,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
       } else {
         log.warn(String.format(
             "Could not find host for NTP time provider. No value for configuration %s",
-            SmartSpacesEnvironment.CONFIGURATION_PROVIDER_TIME_NTP_URL));
+            SmartSpacesEnvironment.CONFIGURATION_NAME_PROVIDER_TIME_NTP_URL));
 
         return new LocalTimeProvider();
       }
@@ -397,16 +401,16 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     rosEnvironment = new SimpleRosEnvironment();
     rosEnvironment.setExecutorService(executorService);
     rosEnvironment.setLog(spaceEnvironment.getLog());
-    rosEnvironment.setMaster(SmartSpacesEnvironment.CONFIGURATION_CONTAINER_TYPE_MASTER
-        .equals(containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_CONTAINER_TYPE)));
-    rosEnvironment
-        .setNetworkType(containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NETWORK_TYPE));
+    rosEnvironment.setMaster(SmartSpacesEnvironment.CONFIGURATION_VALUE_CONTAINER_TYPE_MASTER
+        .equals(containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NAME_CONTAINER_TYPE)));
+    rosEnvironment.setNetworkType(
+        containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NAME_NETWORK_TYPE));
 
     for (Entry<String, String> entry : containerProperties.entrySet()) {
       rosEnvironment.setProperty(entry.getKey(), entry.getValue());
     }
 
-    configureRosFromsmartspaces(containerProperties);
+    configureRosFromSmartspaces(containerProperties);
 
     // Want to start Smart Spaces with no master URI unless there was
     // one in the config properties.
@@ -442,22 +446,22 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    * @param containerProperties
    *          the properties from the container configuration
    */
-  private void configureRosFromsmartspaces(Map<String, String> containerProperties) {
-    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_ROS_NODE_NAME,
+  private void configureRosFromSmartspaces(Map<String, String> containerProperties) {
+    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_NAME_ROS_NODE_NAME,
         RosEnvironment.ROS_NAME_SEPARATOR
-            + containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_HOSTID));
-    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_ROS_NETWORK_TYPE,
+            + containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NAME_HOSTID));
+    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_NAME_ROS_NETWORK_TYPE,
         spaceEnvironment.getNetworkType());
-    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_ROS_CONTAINER_TYPE,
+    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_NAME_ROS_CONTAINER_TYPE,
         spaceEnvironment.getSystemConfiguration()
-            .getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_CONTAINER_TYPE));
-    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_ROS_HOST,
+            .getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_CONTAINER_TYPE));
+    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_NAME_ROS_HOST,
         spaceEnvironment.getSystemConfiguration()
-            .getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_HOSTNAME));
+            .getPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_NAME));
 
     // This call is so that the ROS URI gets evaluated.
-    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_ROS_MASTER_URI, spaceEnvironment
-        .getSystemConfiguration().getPropertyString(RosEnvironment.CONFIGURATION_ROS_MASTER_URI));
+    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_NAME_ROS_MASTER_URI, spaceEnvironment
+        .getSystemConfiguration().getPropertyString(RosEnvironment.CONFIGURATION_NAME_ROS_MASTER_URI));
   }
 
   /**
@@ -487,38 +491,76 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
     systemConfiguration.setProperties(containerProperties);
 
-    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_SMARTSPACES_VERSION,
-        bundleContext.getProperty(CoreConfiguration.CONFIGURATION_SMARTSPACES_VERSION));
+    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_NAME_SMARTSPACES_VERSION,
+        bundleContext.getProperty(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_VERSION));
 
-    String hostAddress = convertHostnameToAddress(
-        containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_HOSTNAME));
-    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_HOST_ADDRESS, hostAddress);
+    String hostAddress = getHostAddress(systemConfiguration);
+    if (hostAddress != null) {
+      systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS,
+          hostAddress);
+    }
 
     systemConfiguration.setProperty(
-        SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_INSTALL,
+        SmartSpacesEnvironment.CONFIGURATION_NAME_SYSTEM_FILESYSTEM_DIR_INSTALL,
         filesystem.getInstallDirectory().getAbsolutePath());
-    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_DATA,
+    systemConfiguration.setProperty(
+        SmartSpacesEnvironment.CONFIGURATION_NAME_SYSTEM_FILESYSTEM_DIR_DATA,
         filesystem.getDataDirectory().getAbsolutePath());
-    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_SYSTEM_FILESYSTEM_DIR_TMP,
+    systemConfiguration.setProperty(
+        SmartSpacesEnvironment.CONFIGURATION_NAME_SYSTEM_FILESYSTEM_DIR_TMP,
         filesystem.getTempDirectory().getAbsolutePath());
 
     spaceEnvironment.setSystemConfiguration(systemConfiguration);
   }
 
   /**
-   * Convert the given hostname to an IP address.
+   * Get the IP address for the system.
    *
-   * @param hostname
-   *          hostname to convert
+   * @param systemConfiguration
+   *          The system configuration
    *
    * @return host IP address
    */
-  private String convertHostnameToAddress(String hostname) {
+  private String getHostAddress(Configuration systemConfiguration) {
     try {
-      InetAddress address = InetAddress.getByName(hostname);
-      return address.getHostAddress();
+      String hostname = systemConfiguration
+          .getPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_NAME);
+      if (hostname != null) {
+        InetAddress address = InetAddress.getByName(hostname);
+        return address.getHostAddress();
+      }
+
+      String hostInterface = systemConfiguration
+          .getPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_INTERFACE);
+      if (hostInterface != null) {
+        NetworkInterface networkInterface = NetworkInterface.getByName(hostInterface);
+        if (networkInterface != null) {
+          for (InetAddress inetAddress : Collections.list(networkInterface.getInetAddresses())) {
+            if (inetAddress instanceof Inet4Address) {
+              return inetAddress.getHostAddress();
+            }
+          }
+         } else {
+           spaceEnvironment.getLog().formatWarn(
+               "No network interface with name %s from configuration %s", hostInterface,
+               SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_INTERFACE);
+
+         }
+      }
+      
+      // See if a single network interface. If so, we will use it.
+      List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+      if (interfaces.size() == 1) {
+        for (InetAddress inetAddress : Collections.list(interfaces.get(0).getInetAddresses())) {
+          if (inetAddress instanceof Inet4Address) {
+            return inetAddress.getHostAddress();
+          }
+        }
+      }
+
+      return null;
     } catch (Exception e) {
-      spaceEnvironment.getLog().error("Could not convert hostname to IP address", e);
+      spaceEnvironment.getLog().error("Could not obtain IP address", e);
       return UNKNOWN_HOST_ADDRESS;
     }
   }

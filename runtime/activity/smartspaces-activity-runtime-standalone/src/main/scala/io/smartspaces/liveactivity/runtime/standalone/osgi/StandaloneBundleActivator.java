@@ -87,7 +87,7 @@ public class StandaloneBundleActivator extends SmartSpacesServiceOsgiBundleActiv
 
     String controllerMode =
         systemConfiguration.getPropertyString(
-            SpaceController.CONFIGURATION_SMARTSPACES_CONTROLLER_MODE, null);
+            SpaceController.CONFIGURATION_NAME_CONTROLLER_MODE, null);
     if (!DevelopmentStandaloneLiveActivityRuntime.CONFIGURATION_VALUE_CONTROLLER_MODE_STANDALONE
         .equals(controllerMode)) {
       getLog().info("Not activating standalone space controller, mode is " + controllerMode);

@@ -62,7 +62,7 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
    * TODO(keith): Eventually deprecate these and have only 1 set of parameters
    * but will require changing all masters.
    */
-  public static final String CONFIGURATION_REPOSITORY_ACTIVITY_LOCATION =
+  public static final String CONFIGURATION_NAME_REPOSITORY_ACTIVITY_LOCATION =
       "smartspaces.repository.activities.location";
 
   /**
@@ -73,7 +73,7 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
    * but will require changing all masters. This one will just be
    * smartspaces.repository.staging.location.
    */
-  public static final String CONFIGURATION_REPOSITORY_STAGING_LOCATION =
+  public static final String CONFIGURATION_NAME_REPOSITORY_STAGING_LOCATION =
       "smartspaces.repository.activities.staging.location";
 
   /**
@@ -83,7 +83,7 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
    * TODO(keith): Eventually deprecate these and have only 1 set of parameters
    * but will require changing all masters.
    */
-  public static final String DEFAULT_REPOSITORY_ACTIVITY_STAGING_LOCATION =
+  public static final String CONFIGURATION_VALUE_DEFAULT_REPOSITORY_ACTIVITY_STAGING_LOCATION =
       "master/repository/smartspaces/activitystaging";
 
   /**
@@ -93,7 +93,7 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
    * TODO(keith): Eventually deprecate these and have only 1 set of parameters
    * but will require changing all masters.
    */
-  public static final String DEFAULT_REPOSITORY_ACTIVITY_LOCATION =
+  public static final String CONFIGURATION_VALUE_DEFAULT_REPOSITORY_ACTIVITY_LOCATION =
       "master/repository/smartspaces/activities";
 
   /**
@@ -103,19 +103,19 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
    * TODO(keith): Eventually deprecate these and have only 1 set of parameters
    * but will require changing all masters.
    */
-  public static final String CONFIGURATION_REPOSITORY_BUNDLE_RESOURCE_LOCATION =
+  public static final String CONFIGURATION_NAME_REPOSITORY_BUNDLE_RESOURCE_LOCATION =
       "smartspaces.repository.resources.bundles.location";
 
   /**
    * Default value for the location of the data repository.
    */
-  public static final String DEFAULT_REPOSITORY_DATA_LOCATION =
+  public static final String CONFIGURATION_VALUE_DEFAULT_REPOSITORY_DATA_LOCATION =
       "master/repository/smartspaces/data";
 
   /**
    * Default value for the location of the resources repository.
    */
-  public static final String DEFAULT_REPOSITORY_BUNDLE_RESOURCE_LOCATION =
+  public static final String CONFIGURATION_VALUE_DEFAULT_REPOSITORY_BUNDLE_RESOURCE_LOCATION =
       "master/repository/smartspaces/resources/bundles";
 
   /**
@@ -193,25 +193,25 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
 
     stagingDirectory =
         new File(baseInstallDir,
-            systemConfiguration.getPropertyString(CONFIGURATION_REPOSITORY_STAGING_LOCATION,
-                DEFAULT_REPOSITORY_ACTIVITY_STAGING_LOCATION));
+            systemConfiguration.getPropertyString(CONFIGURATION_NAME_REPOSITORY_STAGING_LOCATION,
+                CONFIGURATION_VALUE_DEFAULT_REPOSITORY_ACTIVITY_STAGING_LOCATION));
     ensureWriteableDirectory("staging", stagingDirectory);
 
     // TODO(keith): Check repository base same way as above.
     activityRepositoryPath =
-        systemConfiguration.getPropertyString(CONFIGURATION_REPOSITORY_ACTIVITY_LOCATION,
-            DEFAULT_REPOSITORY_ACTIVITY_LOCATION);
+        systemConfiguration.getPropertyString(CONFIGURATION_NAME_REPOSITORY_ACTIVITY_LOCATION,
+            CONFIGURATION_VALUE_DEFAULT_REPOSITORY_ACTIVITY_LOCATION);
     activityRepositoryBaseLocation = new File(baseInstallDir, activityRepositoryPath);
     ensureWriteableDirectory("activity", activityRepositoryBaseLocation);
 
     // TODO(peringknife): Check repository base same way as above.
-    String dataRepositoryPath = DEFAULT_REPOSITORY_DATA_LOCATION;
+    String dataRepositoryPath = CONFIGURATION_VALUE_DEFAULT_REPOSITORY_DATA_LOCATION;
     dataRepositoryBaseLocation = new File(baseInstallDir, dataRepositoryPath);
     ensureWriteableDirectory("data", dataRepositoryBaseLocation);
 
     bundleResourceRepositoryPath =
-        systemConfiguration.getPropertyString(CONFIGURATION_REPOSITORY_BUNDLE_RESOURCE_LOCATION,
-            DEFAULT_REPOSITORY_BUNDLE_RESOURCE_LOCATION);
+        systemConfiguration.getPropertyString(CONFIGURATION_NAME_REPOSITORY_BUNDLE_RESOURCE_LOCATION,
+            CONFIGURATION_VALUE_DEFAULT_REPOSITORY_BUNDLE_RESOURCE_LOCATION);
     resourceRepositoryBaseLocation = new File(baseInstallDir, bundleResourceRepositoryPath);
     ensureWriteableDirectory("bundle resource", resourceRepositoryBaseLocation);
   }

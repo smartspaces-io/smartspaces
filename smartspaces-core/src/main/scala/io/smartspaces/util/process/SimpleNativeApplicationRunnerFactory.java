@@ -68,7 +68,7 @@ public class SimpleNativeApplicationRunnerFactory implements NativeApplicationRu
   public NativeApplicationRunner newPlatformNativeApplicationRunner(Log log) {
     String os =
         spaceEnvironment.getSystemConfiguration().getRequiredPropertyString(
-            CoreConfiguration.CONFIGURATION_SMARTSPACES_PLATFORM_OS);
+            CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_PLATFORM_OS);
 
     if (CoreConfiguration.CONFIGURATION_VALUE_PLATFORM_OS_LINUX.equals(os)) {
       return new LinuxNativeApplicationRunner(runnerParser, spaceEnvironment, log);

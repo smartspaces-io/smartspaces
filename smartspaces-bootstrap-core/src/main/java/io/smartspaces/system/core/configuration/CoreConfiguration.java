@@ -27,19 +27,19 @@ public interface CoreConfiguration {
   /**
    * Configuration property containing the Smart Spaces version.
    */
-  String CONFIGURATION_SMARTSPACES_VERSION = "smartspaces.version";
+  String CONFIGURATION_NAME_SMARTSPACES_VERSION = "smartspaces.version";
 
   /**
    * Property containing the Smart Spaces root directory. This will be an
    * absolute path.
    */
-  String CONFIGURATION_SMARTSPACES_BASE_INSTALL_DIR = "smartspaces.rootdir";
+  String CONFIGURATION_NAME_SMARTSPACES_BASE_INSTALL_DIR = "smartspaces.rootdir";
 
   /**
    * Property containing the Smart Spaces runtime location. This will be an
    * absolute path.
    */
-  String CONFIGURATION_SMARTSPACES_RUNTIME_DIR = "smartspaces.runtime";
+  String CONFIGURATION_NAME_SMARTSPACES_RUNTIME_DIR = "smartspaces.runtime";
 
   /**
    * Property containing the Smart Spaces home directory.
@@ -48,12 +48,12 @@ public interface CoreConfiguration {
    * This directory is the directory that will contain one or more Smart Spaces
    * containers, such as a master and a controller.
    */
-  String CONFIGURATION_SMARTSPACES_HOME = "smartspaces.home";
+  String CONFIGURATION_NAME_SMARTSPACES_HOME = "smartspaces.home";
 
   /**
    * The operating system Smart Spaces is running on.
    */
-  String CONFIGURATION_SMARTSPACES_PLATFORM_OS = "smartspaces.platform.os";
+  String CONFIGURATION_NAME_SMARTSPACES_PLATFORM_OS = "smartspaces.platform.os";
 
   /**
    * The value of the smartspaces configuration property value when it is Linux.
@@ -79,7 +79,7 @@ public interface CoreConfiguration {
   /**
    * The platform-specific file separator character.
    */
-  String CONFIGURATION_PLATFORM_FILE_SEPARATOR = "platform.file.separator";
+  String CONFIGURATION_NAME_PLATFORM_FILE_SEPARATOR = "platform.file.separator";
 
   /**
    * The value for any boolean configurations that should be true.

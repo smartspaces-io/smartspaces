@@ -179,9 +179,9 @@ public class ProjectTaskContext implements ProjectContext {
    */
   private void prepareProjectConfiguration() {
     Configuration configuration = project.getConfiguration();
-    configuration.setProperty(ProjectBuilder.CONFIGURATION_PROPERTY_PROJECT_HOME,
+    configuration.setProperty(ProjectBuilder.CONFIGURATION_NAME_PROJECT_HOME,
         project.getBaseDirectory().getAbsolutePath());
-    configuration.setProperty(ProjectBuilder.CONFIGURATION_PROPERTY_PROJECT_GENERATED_RESOURCE,
+    configuration.setProperty(ProjectBuilder.CONFIGURATION_NAME_PROJECT_GENERATED_RESOURCE,
         fileSupport.newFile(buildDirectory, ProjectFileLayout.GENERATED_SOURCE_ROOT)
             .getAbsolutePath());
   }

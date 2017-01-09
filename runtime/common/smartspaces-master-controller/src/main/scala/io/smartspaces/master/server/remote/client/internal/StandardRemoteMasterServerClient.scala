@@ -87,7 +87,7 @@ class StandardRemoteMasterServerClient(spaceEnvironment: SmartSpacesEnvironment)
 
     val config = spaceEnvironment.getSystemConfiguration
 
-    if (config.getPropertyBoolean(SmartSpacesEnvironment.CONFIGURATION_AUTOCONFIGURE, SmartSpacesEnvironment.CONFIGURATION_VALUE_DEFAULT_AUTOCONFIGURE)) {
+    if (config.getPropertyBoolean(SmartSpacesEnvironment.CONFIGURATION_NAME_AUTOCONFIGURE, SmartSpacesEnvironment.CONFIGURATION_VALUE_DEFAULT_AUTOCONFIGURE)) {
       val zeroconfService: ZeroconfService = spaceEnvironment.getServiceRegistry().getService(ZeroconfService.SERVICE_NAME)
       zeroconfService.addSimpleDiscovery(RemoteMasterServerMessages.ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE, new BaseZeroconfNotificationListener {
 
@@ -102,10 +102,10 @@ class StandardRemoteMasterServerClient(spaceEnvironment: SmartSpacesEnvironment)
         }
       })
     } else {
-      masterHostname = config.getRequiredPropertyString(RemoteMasterServerMessages.CONFIGURATION_MASTER_HOST)
+      masterHostname = config.getRequiredPropertyString(RemoteMasterServerMessages.CONFIGURATION_NAME_MASTER_HOST)
       masterCommunicationPort = config.getPropertyInteger(
-        RemoteMasterServerMessages.CONFIGURATION_MASTER_COMMUNICATION_PORT,
-        RemoteMasterServerMessages.CONFIGURATION_MASTER_COMMUNICATION_PORT_DEFAULT)
+        RemoteMasterServerMessages.CONFIGURATION_NAME_MASTER_COMMUNICATION_PORT,
+        RemoteMasterServerMessages.CONFIGURATION_VALUE_DEFAULT_MASTER_COMMUNICATION_PORT)
     }
   }
 

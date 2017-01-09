@@ -74,17 +74,17 @@ public abstract class BaseSpaceController implements SpaceController {
   private void obtainControllerInfo() {
     Configuration systemConfiguration = getSpaceEnvironment().getSystemConfiguration();
 
-    controllerInfo.setUuid(systemConfiguration.getPropertyString(CONFIGURATION_CONTROLLER_UUID));
+    controllerInfo.setUuid(systemConfiguration.getPropertyString(CONFIGURATION_NAME_CONTROLLER_UUID));
     controllerInfo
-        .setName(systemConfiguration.getPropertyString(CONFIGURATION_CONTROLLER_NAME, ""));
+        .setName(systemConfiguration.getPropertyString(CONFIGURATION_NAME_CONTROLLER_NAME, ""));
     controllerInfo.setDescription(
-        systemConfiguration.getPropertyString(CONFIGURATION_CONTROLLER_DESCRIPTION, ""));
+        systemConfiguration.getPropertyString(CONFIGURATION_NAME_CONTROLLER_DESCRIPTION, ""));
     controllerInfo.setHostId(
-        systemConfiguration.getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_HOSTID));
+        systemConfiguration.getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOSTID));
     controllerInfo.setHostName(systemConfiguration
-        .getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_HOSTNAME));
+        .getPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_NAME));
     controllerInfo.setHostControlPort(systemConfiguration.getPropertyInteger(
-        SpaceController.CONFIGURATION_SMARTSPACES_CONTROLLER_HOST_CONTROL_PORT,
+        SpaceController.CONFIGURATION_NAME_CONTROLLER_HOST_CONTROL_PORT,
         StandardMasterSpaceControllerCodec.CONTROLLER_SERVER_PORT));
   }
 

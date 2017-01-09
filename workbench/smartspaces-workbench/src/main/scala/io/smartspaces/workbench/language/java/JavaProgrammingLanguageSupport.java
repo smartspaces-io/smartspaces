@@ -73,13 +73,13 @@ public class JavaProgrammingLanguageSupport implements ProgrammingLanguageSuppor
   /**
    * Configuration property for adding options to the JavaC compiler.
    */
-  public static final String CONFIGURATION_BUILDER_JAVA_COMPILEFLAGS =
+  public static final String CONFIGURATION_NAME_BUILDER_JAVA_COMPILEFLAGS =
       "smartspaces.workbench.builder.java.compileflags";
 
   /**
    * Configuration property for adding options to the JavaC compiler.
    */
-  public static final String CONFIGURATION_BUILDER_JAVA_VERSION =
+  public static final String CONFIGURATION_NAME_BUILDER_JAVA_VERSION =
       "smartspaces.workbench.builder.java.version";
 
   /**
@@ -127,13 +127,13 @@ public class JavaProgrammingLanguageSupport implements ProgrammingLanguageSuppor
     Configuration config = context.getProject().getConfiguration();
 
     String javaVersion =
-        config.getPropertyString(CONFIGURATION_BUILDER_JAVA_VERSION, JAVA_VERSION_DEFAULT).trim();
+        config.getPropertyString(CONFIGURATION_NAME_BUILDER_JAVA_VERSION, JAVA_VERSION_DEFAULT).trim();
     options.add(JAVA_COMPILER_FLAG_SOURCE_VERSION);
     options.add(javaVersion);
     options.add(JAVA_COMPILER_FLAG_TARGET_VERSION);
     options.add(javaVersion);
 
-    String extraOptions = config.getPropertyString(CONFIGURATION_BUILDER_JAVA_COMPILEFLAGS);
+    String extraOptions = config.getPropertyString(CONFIGURATION_NAME_BUILDER_JAVA_COMPILEFLAGS);
     if (extraOptions != null) {
       String[] optionComponents = extraOptions.trim().split("\\s+");
       for (String optionComponent : optionComponents) {

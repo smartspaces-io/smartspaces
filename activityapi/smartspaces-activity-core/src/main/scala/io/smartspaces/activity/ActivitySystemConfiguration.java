@@ -34,7 +34,7 @@ public final class ActivitySystemConfiguration {
    *
    * Will have the OS added to the end separated by a dot.
    */
-  public static final String CONFIGURATION_PREFIX_ACTIVITY_NATIVE_BROWSER_BINARY =
+  public static final String CONFIGURATION_NAME_PREFIX_ACTIVITY_NATIVE_BROWSER_BINARY =
       "smartspaces.activity.external.native.browser.binary";
 
   /**
@@ -43,7 +43,7 @@ public final class ActivitySystemConfiguration {
    * {@link java.text.MessageFormat} to format, {@code 0} is the URL to open to
    * start.
    */
-  public static final String CONFIGURATION_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_FLAGS =
+  public static final String CONFIGURATION_NAME_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_FLAGS =
       "smartspaces.activity.external.native.browser.command.flags";
 
   /**
@@ -68,7 +68,7 @@ public final class ActivitySystemConfiguration {
    * will set {@code var1} to {@code val1}, {@code var2} to {@code val2}, and
    * remove {@code var2}.
    */
-  public static final String CONFIGURATION_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_ENVIRONMENT =
+  public static final String CONFIGURATION_NAME_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_ENVIRONMENT =
       "smartspaces.activity.external.native.browser.command.environment";
 
   /**
@@ -82,10 +82,10 @@ public final class ActivitySystemConfiguration {
   public static String getActivityNativeBrowserBinary(Configuration configuration) {
     String os =
         configuration
-            .getRequiredPropertyString(CoreConfiguration.CONFIGURATION_SMARTSPACES_PLATFORM_OS);
+            .getRequiredPropertyString(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_PLATFORM_OS);
 
     return configuration
-        .getRequiredPropertyString(CONFIGURATION_PREFIX_ACTIVITY_NATIVE_BROWSER_BINARY + "." + os);
+        .getRequiredPropertyString(CONFIGURATION_NAME_PREFIX_ACTIVITY_NATIVE_BROWSER_BINARY + "." + os);
   }
 
   /**
@@ -104,18 +104,18 @@ public final class ActivitySystemConfiguration {
       boolean debug) {
 
     String simpleVersion =
-        configuration.getPropertyString(CONFIGURATION_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_FLAGS);
+        configuration.getPropertyString(CONFIGURATION_NAME_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_FLAGS);
     if (simpleVersion != null) {
       return simpleVersion;
     }
 
     String os =
         configuration
-            .getRequiredPropertyString(CoreConfiguration.CONFIGURATION_SMARTSPACES_PLATFORM_OS);
+            .getRequiredPropertyString(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_PLATFORM_OS);
     if (debug) {
       String debugVersion =
           configuration
-              .getPropertyString(CONFIGURATION_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_FLAGS + "."
+              .getPropertyString(CONFIGURATION_NAME_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_FLAGS + "."
                   + "debug" + "." + os);
       if (debugVersion != null) {
         return debugVersion;
@@ -123,7 +123,7 @@ public final class ActivitySystemConfiguration {
     }
 
     return configuration
-        .getRequiredPropertyString(CONFIGURATION_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_FLAGS + "."
+        .getRequiredPropertyString(CONFIGURATION_NAME_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_FLAGS + "."
             + os);
   }
 
@@ -141,17 +141,17 @@ public final class ActivitySystemConfiguration {
 
     String simpleVersion =
         configuration
-            .getPropertyString(CONFIGURATION_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_ENVIRONMENT);
+            .getPropertyString(CONFIGURATION_NAME_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_ENVIRONMENT);
     if (simpleVersion != null) {
       return simpleVersion;
     }
 
     String os =
         configuration
-            .getRequiredPropertyString(CoreConfiguration.CONFIGURATION_SMARTSPACES_PLATFORM_OS);
+            .getRequiredPropertyString(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_PLATFORM_OS);
 
     return configuration
-        .getPropertyString(CONFIGURATION_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_ENVIRONMENT + "."
+        .getPropertyString(CONFIGURATION_NAME_PREFIX_ACTIVITY_NATIVE_BROWSER_COMMAND_ENVIRONMENT + "."
             + os);
   }
 

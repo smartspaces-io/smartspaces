@@ -107,12 +107,12 @@ public class StandardSpaceControllerTest {
     serviceRegistry = mock(ServiceRegistry.class);
     when(spaceEnvironment.getServiceRegistry()).thenReturn(serviceRegistry);
 
-    systemConfiguration.setProperty(SpaceController.CONFIGURATION_CONTROLLER_UUID, "abc123");
-    systemConfiguration.setProperty(SpaceController.CONFIGURATION_CONTROLLER_NAME, "testcontroller");
-    systemConfiguration.setProperty(SpaceController.CONFIGURATION_CONTROLLER_DESCRIPTION, "yipee");
-    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_HOSTID, "gloop");
-    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_HOSTNAME, "zorp");
-   systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_CONTAINER_FILE_CONTROLLABLE,
+    systemConfiguration.setProperty(SpaceController.CONFIGURATION_NAME_CONTROLLER_UUID, "abc123");
+    systemConfiguration.setProperty(SpaceController.CONFIGURATION_NAME_CONTROLLER_NAME, "testcontroller");
+    systemConfiguration.setProperty(SpaceController.CONFIGURATION_NAME_CONTROLLER_DESCRIPTION, "yipee");
+    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_NAME_HOSTID, "gloop");
+    systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_NAME, "zorp");
+   systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_NAME_CONTAINER_FILE_CONTROLLABLE,
         "false");
 
     controller =

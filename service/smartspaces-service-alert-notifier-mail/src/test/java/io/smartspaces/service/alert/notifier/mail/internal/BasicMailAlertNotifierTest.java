@@ -91,19 +91,19 @@ public class BasicMailAlertNotifierTest {
     Mockito
         .when(
             configuration
-                .getPropertyString(BasicMailAlertNotifier.CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_FROM))
+                .getPropertyString(BasicMailAlertNotifier.CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_FROM))
         .thenReturn(fromAddress);
     String toAddress = "dudley.doright@gmail.com";
     Mockito
         .when(
             configuration
-                .getPropertyString(BasicMailAlertNotifier.CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_TO))
+                .getPropertyString(BasicMailAlertNotifier.CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_TO))
         .thenReturn(toAddress);
     String subject = "But Nell...";
     Mockito
         .when(
             configuration
-                .getPropertyString(BasicMailAlertNotifier.CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_SUBJECT))
+                .getPropertyString(BasicMailAlertNotifier.CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_SUBJECT))
         .thenReturn(subject);
 
     String alertType = "kiwi";
@@ -138,20 +138,20 @@ public class BasicMailAlertNotifierTest {
     Mockito
         .when(
             configuration
-                .getPropertyString(BasicMailAlertNotifier.CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_FROM
+                .getPropertyString(BasicMailAlertNotifier.CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_FROM
                     + "." + alertType)).thenReturn(fromAddress);
     String toAddress1 = "bugs.bunny@gmail.com";
     String toAddress2 = "road.runner@gmail.com";
     Mockito
         .when(
             configuration
-                .getPropertyString(BasicMailAlertNotifier.CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_TO
+                .getPropertyString(BasicMailAlertNotifier.CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_TO
                     + "." + alertType)).thenReturn("  " + toAddress1 + "     " + toAddress2);
     String subject = "Wascally wabbit...";
     Mockito
         .when(
             configuration
-                .getPropertyString(BasicMailAlertNotifier.CONFIGURATION_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_SUBJECT
+                .getPropertyString(BasicMailAlertNotifier.CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_SUBJECT
                     + "." + alertType)).thenReturn(subject);
 
     ArgumentCaptor<MailMessage> argument = ArgumentCaptor.forClass(MailMessage.class);

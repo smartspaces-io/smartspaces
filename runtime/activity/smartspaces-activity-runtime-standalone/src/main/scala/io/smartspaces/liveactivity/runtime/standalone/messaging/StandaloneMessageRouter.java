@@ -557,7 +557,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
       // router. Eventually change
       // to a more generic route name config parameter.
       return getComponentContext().getActivity().getConfiguration()
-          .getPropertyString(RosActivityComponent.CONFIGURATION_ACTIVITY_ROS_NODE_NAME);
+          .getPropertyString(RosActivityComponent.CONFIGURATION_NAME_ACTIVITY_ROS_NODE_NAME);
     }
 
     @Override

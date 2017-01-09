@@ -227,7 +227,7 @@ public class StandardLiveActivityRunnerFactory implements LiveActivityRunnerFact
   @Override
   public String getConfiguredType(Configuration configuration) {
     return configuration
-        .getRequiredPropertyString(ActivityConfiguration.CONFIGURATION_ACTIVITY_TYPE);
+        .getRequiredPropertyString(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_TYPE);
   }
 
   @Override

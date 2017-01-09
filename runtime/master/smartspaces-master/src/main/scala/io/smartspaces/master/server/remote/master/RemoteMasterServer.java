@@ -17,6 +17,8 @@
 
 package io.smartspaces.master.server.remote.master;
 
+import io.smartspaces.resource.managed.ManagedResource;
+
 /**
  * A remote master server.
  *
@@ -26,17 +28,7 @@ package io.smartspaces.master.server.remote.master;
  *
  * @author Keith M. Hughes
  */
-public interface RemoteMasterServer {
-
-  /**
-   * Start the server up.
-   */
-  void startup();
-
-  /**
-   * Shut the server down.
-   */
-  void shutdown();
+public interface RemoteMasterServer extends ManagedResource {
 
   /**
    * Add a new listener to the server.

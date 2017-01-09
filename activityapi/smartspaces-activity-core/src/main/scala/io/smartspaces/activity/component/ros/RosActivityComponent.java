@@ -39,14 +39,14 @@ public interface RosActivityComponent extends ActivityComponent {
    * Configuration property for specifying the Smart Spaces ROS node name
    * for the activity.
    */
-  String CONFIGURATION_ACTIVITY_ROS_NODE_NAME = "space.activity.ros.node.name";
+  String CONFIGURATION_NAME_ACTIVITY_ROS_NODE_NAME = "space.activity.ros.node.name";
 
   /**
    * Get the ROS node name for the activity.
    *
    * <p>
    * This method can be overwritten by a subclass. Default it to read the
-   * configuration property {@link #CONFIGURATION_ACTIVITY_ROS_NODE_NAME}.
+   * configuration property {@link #CONFIGURATION_NAME_ACTIVITY_ROS_NODE_NAME}.
    *
    * @return the ROS node name for the activity
    */

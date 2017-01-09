@@ -34,17 +34,17 @@ public interface ProjectBuilder<T extends Project> {
   /**
    * Configuration property defining the project home directory.
    */
-  String CONFIGURATION_PROPERTY_PROJECT_HOME = "project.home";
+  String CONFIGURATION_NAME_PROJECT_HOME = "project.home";
 
   /**
    * Configuration property defining the project generated source directory.
    */
-  String CONFIGURATION_PROPERTY_PROJECT_GENERATED_SOURCE = "project.source.generated";
+  String CONFIGURATION_NAME_PROJECT_GENERATED_SOURCE = "project.source.generated";
 
   /**
    * Configuration property defining the project generated source directory.
    */
-  String CONFIGURATION_PROPERTY_PROJECT_GENERATED_RESOURCE = "project.resource.generated";
+  String CONFIGURATION_NAME_PROJECT_GENERATED_RESOURCE = "project.resource.generated";
 
   /**
    * Build the given project.

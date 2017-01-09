@@ -223,7 +223,7 @@ public abstract class BaseLiveActivityRuntimeMonitorPlugin implements
       throws IOException {
     String controllerName =
         monitorService.getLiveActivityRuntime().getSpaceEnvironment().getSystemConfiguration()
-            .getPropertyString(SpaceController.CONFIGURATION_CONTROLLER_NAME);
+            .getPropertyString(SpaceController.CONFIGURATION_NAME_CONTROLLER_NAME);
     outputStream
         .write(String
             .format(

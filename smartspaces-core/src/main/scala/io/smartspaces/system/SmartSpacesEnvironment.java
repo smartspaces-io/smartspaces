@@ -37,48 +37,53 @@ public interface SmartSpacesEnvironment {
   /**
    * Configuration property containing Smart Spaces version.
    */
-  String CONFIGURATION_SMARTSPACES_VERSION = CoreConfiguration.CONFIGURATION_SMARTSPACES_VERSION;
+  String CONFIGURATION_NAME_SMARTSPACES_VERSION = CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_VERSION;
 
   /**
    * Configuration property giving the Smart Spaces container type.
    */
-  String CONFIGURATION_CONTAINER_TYPE = "smartspaces.container.type";
+  String CONFIGURATION_NAME_CONTAINER_TYPE = "smartspaces.container.type";
 
   /**
    * Configuration property value for the master Smart Spaces container type.
    */
-  String CONFIGURATION_CONTAINER_TYPE_MASTER = "master";
+  String CONFIGURATION_VALUE_CONTAINER_TYPE_MASTER = "master";
 
   /**
    * Configuration property value for the controller Smart Spaces container
    * type.
    */
-  String CONFIGURATION_CONTAINER_TYPE_CONTROLLER = "controller";
+  String CONFIGURATION_VALUE_CONTAINER_TYPE_CONTROLLER = "controller";
 
   /**
    * Configuration property giving the Smart Spaces type, e.g. prod, dev, local.
    */
-  String CONFIGURATION_NETWORK_TYPE = "smartspaces.network.type";
+  String CONFIGURATION_NAME_NETWORK_TYPE = "smartspaces.network.type";
 
   /**
    * Configuration property giving the host ID for the system.
    */
-  String CONFIGURATION_HOSTID = "smartspaces.hostid";
+  String CONFIGURATION_NAME_HOSTID = "smartspaces.hostid";
 
   /**
    * Configuration property giving the hostname for the system.
    */
-  String CONFIGURATION_HOSTNAME = "smartspaces.host";
+  String CONFIGURATION_NAME_HOST_NAME = "smartspaces.host";
+
+  /**
+   * Configuration property giving the host network interface for the system.
+   */
+  String CONFIGURATION_NAME_HOST_INTERFACE = "smartspaces.host.interface";
 
   /**
    * Configuration property giving the host address for the system.
    */
-  String CONFIGURATION_HOST_ADDRESS = "smartspaces.host.address";
+  String CONFIGURATION_NAME_HOST_ADDRESS = "smartspaces.host.address";
 
   /**
    * Configuration property giving whether the system autoconfigures.
    */
-  String CONFIGURATION_AUTOCONFIGURE = "smartspaces.autoconfigure";
+  String CONFIGURATION_NAME_AUTOCONFIGURE = "smartspaces.autoconfigure";
 
   /**
    * Configuration property giving whether the system autoconfigures.
@@ -93,12 +98,12 @@ public interface SmartSpacesEnvironment {
    * This is a suggestion, the container may not be file controllable. This is
    * used to request that the controller be file controllable.
    */
-  String CONFIGURATION_CONTAINER_FILE_CONTROLLABLE = "smartspaces.container.control.file";
+  String CONFIGURATION_NAME_CONTAINER_FILE_CONTROLLABLE = "smartspaces.container.control.file";
 
   /**
    * Configuration property which says what the time provider should be.
    */
-  String CONFIGURATION_PROVIDER_TIME = "smartspaces.provider.time";
+  String CONFIGURATION_NAME_PROVIDER_TIME = "smartspaces.provider.time";
 
   /**
    * Configuration property value which says what the time provider should be
@@ -116,7 +121,7 @@ public interface SmartSpacesEnvironment {
    * Configuration property which says what the URL of the NTP time provider
    * should be.
    */
-  String CONFIGURATION_PROVIDER_TIME_NTP_URL = "smartspaces.provider.time.ntp.url";
+  String CONFIGURATION_NAME_PROVIDER_TIME_NTP_URL = "smartspaces.provider.time.ntp.url";
 
   /**
    * Configuration property value which says what the default time provider
@@ -128,19 +133,19 @@ public interface SmartSpacesEnvironment {
    * Configuration property giving the location of the system's installation
    * directory.
    */
-  String CONFIGURATION_SYSTEM_FILESYSTEM_DIR_INSTALL = "system.installdir";
+  String CONFIGURATION_NAME_SYSTEM_FILESYSTEM_DIR_INSTALL = "system.installdir";
 
   /**
    * Configuration property giving the location of the system's permanent data
    * directory.
    */
-  String CONFIGURATION_SYSTEM_FILESYSTEM_DIR_DATA = "system.datadir";
+  String CONFIGURATION_NAME_SYSTEM_FILESYSTEM_DIR_DATA = "system.datadir";
 
   /**
    * Configuration property giving the location of the system's temp data
    * directory.
    */
-  String CONFIGURATION_SYSTEM_FILESYSTEM_DIR_TMP = "system.tmpdir";
+  String CONFIGURATION_NAME_SYSTEM_FILESYSTEM_DIR_TMP = "system.tmpdir";
 
   /**
    * The log level for warnings and above.

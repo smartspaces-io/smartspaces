@@ -88,14 +88,14 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
 
     StringBuilder routeErrors = new StringBuilder();
 
-    defaultRouteProtocol = configuration.getPropertyString(CONFIGURATION_ROUTE_PROTOCOL_DEFAULT,
+    defaultRouteProtocol = configuration.getPropertyString(CONFIGURATION_NAME_ROUTE_PROTOCOL_DEFAULT,
         MessageRouter.DEFAULT_ROUTE_PROTOCOL_DEFAULT);
 
-    String inputChannelIds = configuration.getPropertyString(CONFIGURATION_ROUTES_INPUTS);
+    String inputChannelIds = configuration.getPropertyString(CONFIGURATION_NAME_ROUTES_INPUTS);
     if (inputChannelIds != null) {
       inputChannelIds = inputChannelIds.trim();
       for (String channelId : inputChannelIds.split(CONFIGURATION_VALUES_SEPARATOR)) {
-        String propertyName = CONFIGURATION_ROUTE_INPUT_TOPIC_PREFIX + channelId;
+        String propertyName = CONFIGURATION_NAME_PREFIX_ROUTE_INPUT_TOPIC + channelId;
         String topicNames = configuration.getPropertyString(propertyName);
         if (topicNames != null && !topicNames.trim().isEmpty()) {
           SetMultimap<String, String> protocolToTopicName =
@@ -125,11 +125,11 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
       }
     }
 
-    String outputChannelIds = configuration.getPropertyString(CONFIGURATION_ROUTES_OUTPUTS);
+    String outputChannelIds = configuration.getPropertyString(CONFIGURATION_NAME_ROUTES_OUTPUTS);
     if (outputChannelIds != null) {
       outputChannelIds = outputChannelIds.trim();
       for (String channelId : outputChannelIds.split(CONFIGURATION_VALUES_SEPARATOR)) {
-        String propertyName = CONFIGURATION_ROUTE_OUTPUT_TOPIC_PREFIX + channelId;
+        String propertyName = CONFIGURATION_NAME_PREFIX_ROUTE_OUTPUT_TOPIC + channelId;
         String topicNames = configuration.getPropertyString(propertyName);
         if (topicNames != null && !topicNames.trim().isEmpty()) {
           SetMultimap<String, String> protocolToTopicName =
@@ -167,7 +167,7 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
         && (outputChannelIds == null || outputChannelIds.isEmpty())) {
       throw new SimpleSmartSpacesException(
           String.format("Router has no routes. Define either %s or %s in your configuration",
-              CONFIGURATION_ROUTES_INPUTS, CONFIGURATION_ROUTES_OUTPUTS));
+              CONFIGURATION_NAME_ROUTES_INPUTS, CONFIGURATION_NAME_ROUTES_OUTPUTS));
     }
   }
 

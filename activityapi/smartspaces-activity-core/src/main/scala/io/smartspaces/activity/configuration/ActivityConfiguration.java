@@ -26,55 +26,55 @@ public class ActivityConfiguration {
   /**
    * The configuration property which gives the name of the activity.
    */
-  public static String CONFIGURATION_PROPERTY_ACTIVITY_NAME = "space.activity.name";
+  public static String CONFIGURATION_NAME_ACTIVITY_NAME = "space.activity.name";
 
   /**
    * The configuration property which gives the log level of the activity.
    */
-  public static String CONFIGURATION_PROPERTY_LOG_LEVEL = "space.activity.log.level";
+  public static String CONFIGURATION_NAME_LOG_LEVEL = "space.activity.log.level";
 
   /**
    * The configuration property with gives the activity UUID.
    */
-  public static String CONFIGURATION_PROPERTY_ACTIVITY_UUID = "space.activity.uuid";
+  public static String CONFIGURATION_NAME_ACTIVITY_UUID = "space.activity.uuid";
 
   /**
    * Configuration property giving the location of the activity executable
    * relative to the activity installation directory.
    */
-  public static final String CONFIGURATION_ACTIVITY_EXECUTABLE = "space.activity.executable";
+  public static final String CONFIGURATION_NAME_ACTIVITY_EXECUTABLE = "space.activity.executable";
 
   /**
    * Configuration property giving the flags that a native activity would use to
    * launch.
    */
-  public static final String CONFIGURATION_ACTIVITY_EXECUTABLE_FLAGS =
+  public static final String CONFIGURATION_NAME_ACTIVITY_EXECUTABLE_FLAGS =
       "space.activity.executable.flags";
 
   /**
    * Configuration property which will give the activity type.
    */
-  public static final String CONFIGURATION_ACTIVITY_TYPE = "space.activity.type";
+  public static final String CONFIGURATION_NAME_ACTIVITY_TYPE = "space.activity.type";
 
   /**
    * Configuration property which will give the activity's installation
    * directory.
    */
-  public static final String CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_INSTALL = "activity.installdir";
+  public static final String CONFIGURATION_NAME_ACTIVITY_FILESYSTEM_DIR_INSTALL = "activity.installdir";
 
   /**
    * Configuration property which will give the activity's log directory.
    */
-  public static final String CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_LOG = "activity.logdir";
+  public static final String CONFIGURATION_NAME_ACTIVITY_FILESYSTEM_DIR_LOG = "activity.logdir";
 
   /**
    * Configuration property which will give the activity's permanent data
    * directory.
    */
-  public static final String CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_DATA = "activity.datadir";
+  public static final String CONFIGURATION_NAME_ACTIVITY_FILESYSTEM_DIR_DATA = "activity.datadir";
 
   /**
    * Configuration property which will give the activity's temp data directory.
    */
-  public static final String CONFIGURATION_ACTIVITY_FILESYSTEM_DIR_TMP = "activity.tmpdir";
+  public static final String CONFIGURATION_NAME_ACTIVITY_FILESYSTEM_DIR_TMP = "activity.tmpdir";
 }

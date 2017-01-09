@@ -41,7 +41,7 @@ public class ScriptActivityWrapperFactory extends BaseActivityWrapperFactory {
   /**
    * Configuration property giving the scripting language.
    */
-  public static final String CONFIGURATION_APPLICATION_SCRIPT_LANGUAGE =
+  public static final String CONFIGURATION_NAME_ACTIVITY_SCRIPT_LANGUAGE =
       "space.activity.script.language";
 
   /**

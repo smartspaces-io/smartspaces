@@ -145,7 +145,7 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
    */
   private MqttBrokerDescription getMqttBrokerDescription() {
     String mqttBrokerDescriptionString = getComponentContext().getActivity().getConfiguration()
-        .getPropertyString(CONFIGURATION_MESSAGING_MQTT_BROKERDESCRIPTION_DEFAULT);
+        .getPropertyString(CONFIGURATION_NAME_MESSAGING_MQTT_BROKERDESCRIPTION_DEFAULT);
     if (mqttBrokerDescriptionString != null) {
       return MqttBrokerDescription$.MODULE$.parse(mqttBrokerDescriptionString);
     } else {

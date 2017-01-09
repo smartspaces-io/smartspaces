@@ -33,7 +33,7 @@ public class NativeActivity extends BaseActivity {
   @Override
   public void commonActivitySetup() {
     addActivityComponent(new BasicNativeActivityComponent(
-        ActivityConfiguration.CONFIGURATION_ACTIVITY_EXECUTABLE,
-        ActivityConfiguration.CONFIGURATION_ACTIVITY_EXECUTABLE_FLAGS));
+        ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_EXECUTABLE,
+        ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_EXECUTABLE_FLAGS));
   }
 }

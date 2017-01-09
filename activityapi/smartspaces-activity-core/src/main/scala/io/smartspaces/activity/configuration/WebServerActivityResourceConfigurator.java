@@ -40,58 +40,58 @@ public class WebServerActivityResourceConfigurator
    * Configuration property suffix giving the port the web server should be
    * started on.
    */
-  public static final String CONFIGURATION_SUFFIX_WEBAPP_WEB_SERVER_PORT = ".web.server.port";
+  public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_WEB_SERVER_PORT = ".web.server.port";
 
   /**
    * Configuration property suffix giving the websocket URI for the web server
    * on.
    */
-  public static final String CONFIGURATION_SUFFIX_WEBAPP_WEB_SERVER_WEBSOCKET_URI =
+  public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_WEB_SERVER_WEBSOCKET_URI =
       ".web.server.websocket.uri";
 
   /**
    * Configuration property suffix giving location of the webapp content.
    * Relative paths give relative to app install directory.
    */
-  public static final String CONFIGURATION_SUFFIX_WEBAPP_CONTENT_LOCATION = ".content.location";
+  public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_CONTENT_LOCATION = ".content.location";
 
   /**
    * Configuration property suffix for enabling cross origin content.
    */
-  public static final String CONFIGURATION_SUFFIX_WEBAPP_ENABLE_CROSS_ORIGIN =
+  public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_ENABLE_CROSS_ORIGIN =
       ".enable.cross.origin";
 
   /**
    * Configuration property suffix for whether the server is secure or not.
    */
-  public static final String CONFIGURATION_SUFFIX_WEBAPP_WEB_SERVER_SECURE = ".web.server.secure";
+  public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_WEB_SERVER_SECURE = ".web.server.secure";
 
   /**
    * Configuration property suffix for obtaining the file path for the SSL
    * certificate file.
    */
-  public static final String CONFIGURATION_SUFFIX_WEBAPP_SSL_CERTIFICATE = ".ssl.certificate";
+  public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_SSL_CERTIFICATE = ".ssl.certificate";
 
   /**
    * Configuration property suffix for obtaining the file path for the SSL
    * private key.
    */
-  public static final String CONFIGURATION_SUFFIX_WEBAPP_SSL_PRIVATE_KEY = ".ssl.privatekey";
+  public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_SSL_PRIVATE_KEY = ".ssl.privatekey";
 
   /**
    * Default port to give to the web server.
    */
-  public static final int WEB_SERVER_PORT_DEFAULT = 9000;
+  public static final int CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_PORT = 9000;
 
   /**
    * Host identifier to use if not specified in configuration.
    */
-  public static final String WEB_SERVER_DEFAULT_HOST = "localhost";
+  public static final String CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_HOST = "localhost";
 
   /**
    * Cross-origin enable if not specified in configuration.
    */
-  public static final boolean WEB_SERVER_DEFAULT_ENABLE_CROSS_ORIGIN = true;
+  public static final boolean CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_ENABLE_CROSS_ORIGIN = true;
 
   /**
    * The base URL that this web server works with (hostname and port).
@@ -142,16 +142,16 @@ public class WebServerActivityResourceConfigurator
   public void configure(String resourceName, Activity activity, WebServer webServer) {
     resourceName = resourceName != null ? resourceName.trim() : "";
     String configurationPrefix =
-        resourceName.isEmpty() ? WebActivityConfiguration.CONFIGURATION_PREFIX_WEBAPP
-            : WebActivityConfiguration.CONFIGURATION_PREFIX_WEBAPP + "." + resourceName;
+        resourceName.isEmpty() ? WebActivityConfiguration.CONFIGURATION_NAME_PREFIX_WEBAPP
+            : WebActivityConfiguration.CONFIGURATION_NAME_PREFIX_WEBAPP + "." + resourceName;
 
     Configuration configuration = activity.getConfiguration();
 
     webSocketUriPrefix = configuration.getPropertyString(
-        configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_WEB_SERVER_WEBSOCKET_URI);
+        configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_WEB_SERVER_WEBSOCKET_URI);
 
     webServerPort = configuration.getPropertyInteger(
-        configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_WEB_SERVER_PORT, WEB_SERVER_PORT_DEFAULT);
+        configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_WEB_SERVER_PORT, CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_PORT);
     webServer.setPort(webServerPort);
 
     String serverName = (resourceName.isEmpty()) ? String.format("%sWebServer", activity.getName())
@@ -159,14 +159,14 @@ public class WebServerActivityResourceConfigurator
     webServer.setServerName(serverName);
 
     boolean secure = configuration.getPropertyBoolean(
-        configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_WEB_SERVER_SECURE, false);
+        configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_WEB_SERVER_SECURE, false);
     webServer.setSecureServer(secure);
 
     if (secure) {
       String certificatePath = configuration
-          .getPropertyString(configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_SSL_CERTIFICATE);
+          .getPropertyString(configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_SSL_CERTIFICATE);
       String privateKeyPath = configuration
-          .getPropertyString(configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_SSL_PRIVATE_KEY);
+          .getPropertyString(configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_SSL_PRIVATE_KEY);
 
       boolean hasCertificatePath = certificatePath != null && !certificatePath.trim().isEmpty();
       boolean hasPrivateKeyPath = privateKeyPath != null && !privateKeyPath.trim().isEmpty();
@@ -181,15 +181,15 @@ public class WebServerActivityResourceConfigurator
     }
 
     boolean debugMode = configuration
-        .getPropertyBoolean(WebActivityConfiguration.CONFIGURATION_WEBAPP_DEBUG, false);
+        .getPropertyBoolean(WebActivityConfiguration.CONFIGURATION_NAME_WEBAPP_DEBUG, false);
     webServer.setDebugMode(debugMode);
 
     crossOriginAllowed = configuration.getPropertyBoolean(
-        configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_ENABLE_CROSS_ORIGIN,
-        WEB_SERVER_DEFAULT_ENABLE_CROSS_ORIGIN);
+        configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_ENABLE_CROSS_ORIGIN,
+        CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_ENABLE_CROSS_ORIGIN);
 
     String webServerHost = configuration.getPropertyString(
-        SmartSpacesEnvironment.CONFIGURATION_HOST_ADDRESS, WEB_SERVER_DEFAULT_HOST);
+        SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS, CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_HOST);
 
     webContentPath = "/" + activity.getName();
     webBaseUrl = ((secure) ? "https" : "http") + "://" + webServerHost + ":" + webServerPort;
@@ -198,11 +198,11 @@ public class WebServerActivityResourceConfigurator
     StringBuilder webInitialPageBuilder = new StringBuilder();
     webInitialPageBuilder.append(webContentUrl).append(WebActivityConfiguration.WEB_PATH_SEPARATOR)
         .append(configuration.getPropertyString(
-            configurationPrefix + WebActivityConfiguration.CONFIGURATION_SUFFIX_INITIAL_PAGE,
+            configurationPrefix + WebActivityConfiguration.CONFIGURATION_NAME_SUFFIX_INITIAL_PAGE,
             WebActivityConfiguration.DEFAULT_INITIAL_PAGE));
 
     String queryString = configuration.getPropertyString(configurationPrefix
-        + WebActivityConfiguration.CONFIGURATION_SUFFIX_INITIAL_URL_QUERY_STRING);
+        + WebActivityConfiguration.CONFIGURATION_NAME_SUFFIX_INITIAL_URL_QUERY_STRING);
     if (queryString != null) {
       webInitialPageBuilder.append(WebActivityConfiguration.WEB_QUERY_STRING_SEPARATOR)
           .append(queryString.trim());
@@ -211,7 +211,7 @@ public class WebServerActivityResourceConfigurator
     webInitialPage = webInitialPageBuilder.toString();
 
     String contentLocation = configuration
-        .getPropertyString(configurationPrefix + CONFIGURATION_SUFFIX_WEBAPP_CONTENT_LOCATION);
+        .getPropertyString(configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_CONTENT_LOCATION);
     if (contentLocation != null) {
       webContentBaseDir = fileSupport
           .resolveFile(activity.getActivityFilesystem().getInstallDirectory(), contentLocation);

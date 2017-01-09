@@ -57,8 +57,8 @@ class StandardMasterCommunicationManager extends MasterCommunicationManager with
   override def onStartup(): Unit = {
     val port =
       spaceEnvironment.getSystemConfiguration().getPropertyInteger(
-        RemoteMasterServerMessages.CONFIGURATION_MASTER_COMMUNICATION_PORT,
-        RemoteMasterServerMessages.CONFIGURATION_MASTER_COMMUNICATION_PORT_DEFAULT)
+        RemoteMasterServerMessages.CONFIGURATION_NAME_MASTER_COMMUNICATION_PORT,
+        RemoteMasterServerMessages.CONFIGURATION_VALUE_DEFAULT_MASTER_COMMUNICATION_PORT)
 
     webServer =
       new NettyWebServer(spaceEnvironment.getExecutorService, spaceEnvironment.getLog)

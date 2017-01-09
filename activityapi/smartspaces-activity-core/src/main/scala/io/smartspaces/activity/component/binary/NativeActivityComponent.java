@@ -39,13 +39,13 @@ public interface NativeActivityComponent extends ActivityComponent {
    * Configuration property giving the location of the application executable
    * relative to the application installation directory.
    */
-  String CONFIGURATION_ACTIVITY_EXECUTABLE = "space.activity.component.native.executable";
+  String CONFIGURATION_NAME_ACTIVITY_EXECUTABLE = "space.activity.component.native.executable";
 
   /**
    * Configuration property giving the flags that a native application would use
    * to launch.
    */
-  String CONFIGURATION_ACTIVITY_EXECUTABLE_FLAGS =
+  String CONFIGURATION_NAME_ACTIVITY_EXECUTABLE_FLAGS =
       "space.activity.component.native.executable.flags";
 
   /**
@@ -70,7 +70,7 @@ public interface NativeActivityComponent extends ActivityComponent {
    * will set {@code var1} to {@code val1}, {@code var2} to {@code val2}, and
    * remove {@code var2}.
    */
-  String CONFIGURATION_ACTIVITY_EXECUTABLE_ENVIRONMENT =
+  String CONFIGURATION_NAME_ACTIVITY_EXECUTABLE_ENVIRONMENT =
       "space.activity.component.native.executable.environment";
 
   /**

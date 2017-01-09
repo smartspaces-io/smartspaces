@@ -17,6 +17,8 @@
 
 package io.smartspaces.master.resource.deployment;
 
+import io.smartspaces.resource.managed.ManagedResource;
+
 import java.util.Set;
 
 /**
@@ -24,31 +26,21 @@ import java.util.Set;
  *
  * @author Keith M. Hughes
  */
-public interface RemoteRepositoryMaster {
+public interface RemoteRepositoryMaster extends ManagedResource {
 
   /**
-   * Configuration parameter giving the port for the ROS deployment server.
+   * Configuration parameter giving the port for the deployment server.
    */
-  String CONFIGURATION_ROS_DEPLOYMENT_SERVER_PORT = "org.ros.deployment.server.port";
+  String CONFIGURATION_NAME_DEPLOYMENT_SERVER_PORT = "smartspaces.deployment.server.port";
 
   /**
    * The default value for the server port for the ROS deployment server.
    */
-  int CONFIGURATION_DEFAULT_ROS_DEPLOYMENT_SERVER_PORT = 8085;
-
-  /**
-   * Start up the master.
-   */
-  void startup();
-
-  /**
-   * Shut down the master.
-   */
-  void shutdown();
+  int CONFIGURATION_VALUE_DEFAULT_DEPLOYMENT_SERVER_PORT = 8085;
 
   /**
    * Take a collection of bundles and create URIs appropriate for accessing them
-   * from this master.
+   * from this master. 
    *
    * @param bundles
    *          the bundles requested
@@ -56,5 +48,4 @@ public interface RemoteRepositoryMaster {
    * @return the bundles rewritten to be URIs
    */
   Set<String> getBundleUris(Set<String> bundles);
-
 }

@@ -35,17 +35,17 @@ public interface MailSenderService extends SupportedService {
   /**
    * Configuration property for SMTP host smart spaces should use.
    */
-  String CONFIGURATION_MAIL_SMTP_HOST = "smartspaces.service.mail.sender.smtp.host";
+  String CONFIGURATION_NAME_MAIL_SMTP_HOST = "smartspaces.service.mail.sender.smtp.host";
 
   /**
    * Configuration property for SMTP host port smart spaces should use.
    */
-  String CONFIGURATION_MAIL_SMTP_PORT = "smartspaces.service.mail.sender.smtp.port";
+  String CONFIGURATION_NAME_MAIL_SMTP_PORT = "smartspaces.service.mail.sender.smtp.port";
 
   /**
-   * The default value for the {@link #CONFIGURATION_MAIL_SMTP_PORT} parameter.
+   * The default value for the {@link #CONFIGURATION_NAME_MAIL_SMTP_PORT} parameter.
    */
-  String CONFIGURATION_DEFAULT_MAIL_SMTP_PORT = "25";
+  String CONFIGURATION_VALUE_DEFAULT_MAIL_SMTP_PORT = "25";
 
   /**
    * Send a mail message.

@@ -73,7 +73,7 @@ public abstract class BaseWebBrowserActivityComponent extends BaseActivityCompon
     StringBuilder initialUrlBuilder = new StringBuilder();
 
     String configurationInitialPage =
-        configuration.getRequiredPropertyString(CONFIGURATION_INITIAL_PAGE);
+        configuration.getRequiredPropertyString(CONFIGURATION_NAME_INITIAL_PAGE);
 
     configurationInitialPage = configurationInitialPage.trim();
     if (isDisallowedPrefix(configurationInitialPage)) {
@@ -90,7 +90,7 @@ public abstract class BaseWebBrowserActivityComponent extends BaseActivityCompon
           .append(WebActivityConfiguration.WEB_PATH_SEPARATOR).append(configurationInitialPage);
     }
 
-    String queryString = configuration.getPropertyString(CONFIGURATION_INITIAL_URL_QUERY_STRING);
+    String queryString = configuration.getPropertyString(CONFIGURATION_NAME_INITIAL_URL_QUERY_STRING);
     if (queryString != null) {
       initialUrlBuilder.append(WebActivityConfiguration.WEB_QUERY_STRING_SEPARATOR).append(
           queryString);
@@ -98,9 +98,9 @@ public abstract class BaseWebBrowserActivityComponent extends BaseActivityCompon
 
     initialUrl = initialUrlBuilder.toString();
 
-    browserDebug = configuration.getPropertyBoolean(CONFIGURATION_BROWSER_DEBUG, false);
+    browserDebug = configuration.getPropertyBoolean(CONFIGURATION_NAME_BROWSER_DEBUG, false);
 
-    browserStartup = configuration.getPropertyBoolean(CONFIGURATION_BROWSER_STARTUP, true);
+    browserStartup = configuration.getPropertyBoolean(CONFIGURATION_NAME_BROWSER_STARTUP, true);
   }
 
   /**

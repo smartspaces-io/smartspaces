@@ -94,37 +94,37 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
   /**
    * Config parameter for the instance suffix.
    */
-  public static final String CONFIGURATION_SMARTSPACES_STANDALONE_INSTANCE =
+  public static final String CONFIGURATION_NAME_SMARTSPACES_STANDALONE_INSTANCE =
       "smartspaces.standalone.instance";
 
   /**
    * Config parameter for whether this run is for a single activity or a group.
    * {@code true} if this is a single activity run.
    */
-  public static final String CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE =
+  public static final String CONFIGURATION_NAME_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE =
       "smartspaces.standalone.activity.single";
 
   /**
    * Config parameter for whether this run is for a single activity or a group.
    */
-  public static final boolean CONFIGURATION_DEFAULT_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE = false;
+  public static final boolean CONFIGURATION_VALUE_DEFAULT_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE = false;
 
   /**
    * Config parameter for activity runtime.
    */
-  public static final String CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_RUNTIME =
+  public static final String CONFIGURATION_NAME_SMARTSPACES_STANDALONE_ACTIVITY_RUNTIME =
       "smartspaces.standalone.activity.runtime";
 
   /**
    * Config parameter for activity source.
    */
-  public static final String CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_SOURCE =
+  public static final String CONFIGURATION_NAME_SMARTSPACES_STANDALONE_ACTIVITY_SOURCE =
       "smartspaces.standalone.activity.source";
 
   /**
    * Config parameter for router type.
    */
-  public static final String CONFIGURATION_SMARTSPACES_STANDALONE_ROUTER_TYPE =
+  public static final String CONFIGURATION_NAME_SMARTSPACES_STANDALONE_ROUTER_TYPE =
       "smartspaces.standalone.router.type";
 
   /**
@@ -145,25 +145,25 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
   /**
    * Configuration property for receive message playback file.
    */
-  public static final String CONFIGURATION_PROPERTY_SPACE_TEST_MESSAGES_RECV =
+  public static final String CONFIGURATION_NAME_SPACE_TEST_MESSAGES_RECV =
       "space.test.messages.recv";
 
   /**
    * Configuration property for send message playback file.
    */
-  public static final String CONFIGURATION_PROPERTY_SPACE_TEST_MESSAGES_SEND =
+  public static final String CONFIGURATION_NAME_SPACE_TEST_MESSAGES_SEND =
       "space.test.messages.send";
 
   /**
    * Configuration property for check message file.
    */
-  public static final String CONFIGURATION_PROPERTY_SPACE_TEST_MESSAGES_CHECK =
+  public static final String CONFIGURATION_NAME_SPACE_TEST_MESSAGES_CHECK =
       "space.test.messages.check";
 
   /**
    * Configuration property for filter message file.
    */
-  public static final String CONFIGURATION_PROPERTY_SPACE_TEST_MESSAGES_FILTER =
+  public static final String CONFIGURATION_NAME_SPACE_TEST_MESSAGES_FILTER =
       "space.test.messages.filter";
 
   /**
@@ -275,16 +275,16 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
     systemConfiguration = spaceEnvironment.getSystemConfiguration();
 
     boolean isSingleActivity =
-        systemConfiguration.getPropertyBoolean(CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE,
-            CONFIGURATION_DEFAULT_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE);
+        systemConfiguration.getPropertyBoolean(CONFIGURATION_NAME_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE,
+            CONFIGURATION_VALUE_DEFAULT_SMARTSPACES_STANDALONE_ACTIVITY_SINGLE);
 
     String instanceSuffixValue =
-        systemConfiguration.getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_INSTANCE, "");
+        systemConfiguration.getPropertyString(CONFIGURATION_NAME_SMARTSPACES_STANDALONE_INSTANCE, "");
     setInstanceSuffix(instanceSuffixValue);
 
     File activityRuntimeFolder = null;
     String activityRuntimeFolderPath = systemConfiguration
-        .getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_RUNTIME);
+        .getPropertyString(CONFIGURATION_NAME_SMARTSPACES_STANDALONE_ACTIVITY_RUNTIME);
     if (activityRuntimeFolderPath != null) {
       getLog().info("activityRuntimePath is " + activityRuntimeFolderPath);
       activityRuntimeFolder = fileSupport.newFile(activityRuntimeFolderPath);
@@ -303,12 +303,12 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
     internalSpaceEnvironment.setFilesystem(newFileSystem);
 
     String activitySourceFolderPath =
-        systemConfiguration.getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_ACTIVITY_SOURCE);
+        systemConfiguration.getPropertyString(CONFIGURATION_NAME_SMARTSPACES_STANDALONE_ACTIVITY_SOURCE);
     getLog().info("activitySourcePath is " + activitySourceFolderPath);
     File activitySourceFolder = fileSupport.newFile(activitySourceFolderPath);
 
     String standaloneRouterType =
-        systemConfiguration.getPropertyString(CONFIGURATION_SMARTSPACES_STANDALONE_ROUTER_TYPE);
+        systemConfiguration.getPropertyString(CONFIGURATION_NAME_SMARTSPACES_STANDALONE_ROUTER_TYPE);
     if (standaloneRouterType != null) {
       getLog().info("configuring to use router type " + standaloneRouterType);
       setUseStandaloneRouter(
@@ -559,13 +559,13 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
    */
   public void startPlayback() {
     String traceRecvPath =
-        systemConfiguration.getPropertyString(CONFIGURATION_PROPERTY_SPACE_TEST_MESSAGES_RECV);
+        systemConfiguration.getPropertyString(CONFIGURATION_NAME_SPACE_TEST_MESSAGES_RECV);
     if (traceRecvPath != null) {
       cecRouter.playback(traceRecvPath, false);
     }
 
     String traceSendPath =
-        systemConfiguration.getPropertyString(CONFIGURATION_PROPERTY_SPACE_TEST_MESSAGES_SEND);
+        systemConfiguration.getPropertyString(CONFIGURATION_NAME_SPACE_TEST_MESSAGES_SEND);
     if (traceSendPath != null) {
       cecRouter.playback(traceSendPath, true);
     }
@@ -576,13 +576,13 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
    */
   public void startupActivities() {
     String traceCheckPath =
-        systemConfiguration.getPropertyString(CONFIGURATION_PROPERTY_SPACE_TEST_MESSAGES_CHECK);
+        systemConfiguration.getPropertyString(CONFIGURATION_NAME_SPACE_TEST_MESSAGES_CHECK);
     if (traceCheckPath != null) {
       cecRouter.checkStart(traceCheckPath);
     }
 
     String traceFilterPath =
-        systemConfiguration.getPropertyString(CONFIGURATION_PROPERTY_SPACE_TEST_MESSAGES_FILTER);
+        systemConfiguration.getPropertyString(CONFIGURATION_NAME_SPACE_TEST_MESSAGES_FILTER);
     if (traceFilterPath != null) {
       cecRouter.setTraceFilter(traceFilterPath);
     }

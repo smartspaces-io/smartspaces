@@ -18,7 +18,6 @@
 package io.smartspaces.activity.impl.route;
 
 import io.smartspaces.activity.Activity;
-import io.smartspaces.activity.impl.ros.BaseRosActivity;
 import io.smartspaces.messaging.bridge.MessageBridge;
 import io.smartspaces.messaging.bridge.MessageBridgeFactory;
 import io.smartspaces.messaging.bridge.ros.RosMessageBridgeFactory;
@@ -33,7 +32,7 @@ import java.io.File;
  *
  * @author Keith M. Hughes
  */
-public class TopicBridgeRoutableActivity extends BaseRosActivity {
+public class TopicBridgeRoutableActivity extends BaseRoutableActivity {
 
   /**
    * Configuration property which gives the locations of the bridge
@@ -42,7 +41,7 @@ public class TopicBridgeRoutableActivity extends BaseRosActivity {
    * <p>
    * Relative files are relative to the app install directory.
    */
-  public static final String CONFIGURATION_BRIDGE_TOPIC_FILE = "space.bridge.topic";
+  public static final String CONFIGURATION_NAME_BRIDGE_TOPIC_FILE = "space.bridge.topic";
 
   /**
    * The bridge between two topics.
@@ -59,8 +58,8 @@ public class TopicBridgeRoutableActivity extends BaseRosActivity {
     MessageBridgeFactory messageBridgeFactory = new RosMessageBridgeFactory(getMainNode());
 
     File confFile =
-        new File(getActivityFilesystem().getInstallDirectory(), getConfiguration()
-            .getRequiredPropertyString(CONFIGURATION_BRIDGE_TOPIC_FILE));
+        fileSupport.newFile(getActivityFilesystem().getInstallDirectory(), getConfiguration()
+            .getRequiredPropertyString(CONFIGURATION_NAME_BRIDGE_TOPIC_FILE));
 
     topicMessageBridge =
         messageBridgeFactory.newMessageBridge(fileSupport.readFile(confFile), getLog());

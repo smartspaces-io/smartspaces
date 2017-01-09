@@ -105,6 +105,17 @@
       <!--  Using shell type for non-shell files for the variable substitution syntax -->
       <parsable targetfile="$INSTALL_PATH/bin/smartspaces" type="shell" />
       <executable targetfile="$INSTALL_PATH/bin/smartspaces" stage="never" />
+      <parsable targetfile="$INSTALL_PATH/bin/start" type="shell" />
+      <executable targetfile="$INSTALL_PATH/bin/start" stage="never" />
+      <parsable targetfile="$INSTALL_PATH/bin/start.bat" type="shell" />
+      <executable targetfile="$INSTALL_PATH/bin/start.bat" stage="never" />
+      <parsable targetfile="$INSTALL_PATH/bin/stop" type="shell" />
+      <executable targetfile="$INSTALL_PATH/bin/stop" stage="never" />
+      <parsable targetfile="$INSTALL_PATH/bin/stop.bat" type="shell" />
+      <executable targetfile="$INSTALL_PATH/bin/stop.bat" stage="never" />
+      <parsable targetfile="$INSTALL_PATH/bin/smartspaces-controller-service" type="shell" />
+      <executable targetfile="$INSTALL_PATH/bin/smartspaces-controller-service" stage="never" />
+      <parsable targetfile="$INSTALL_PATH/bin/smartspaces-controller.service" type="shell" />
 
       <parsable targetfile="$INSTALL_PATH/config/system/log4j.properties" />
       <parsable targetfile="$INSTALL_PATH/config/container.conf" type="shell" />

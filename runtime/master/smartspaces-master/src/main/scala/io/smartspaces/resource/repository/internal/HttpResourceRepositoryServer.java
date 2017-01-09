@@ -51,20 +51,20 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
   /**
    * Default port for the HTTP server which serves activities during deployment.
    */
-  public static final String CONFIGURATION_PROPERTY_ACTIVITY_RESPOSITORY_SERVER_PORT =
+  public static final String CONFIGURATION_NAME_ACTIVITY_RESPOSITORY_SERVER_PORT =
       "smartspaces.repository.activities.server.port";
 
   /**
    * Default port for the HTTP server which serves activities during deployment.
    */
-  public static final int ACTIVITY_RESPOSITORY_SERVER_PORT_DEFAULT = 10000;
+  public static final int CONFIGURATION_VALUE_DEFAULT_ACTIVITY_RESPOSITORY_SERVER_PORT = 10000;
 
   /**
    * The internal name given to the web server being used for the activity
    * repository.
    */
   private static final String ACTIVITY_REPOSITORY_SERVER_NAME =
-      "SMARTSPACES_activity_repository";
+      "smartspaces_activity_repository";
 
   /**
    * Parameter key for the UUID field.
@@ -115,8 +115,8 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
   public void startup() {
     repositoryPort =
         spaceEnvironment.getSystemConfiguration().getPropertyInteger(
-            CONFIGURATION_PROPERTY_ACTIVITY_RESPOSITORY_SERVER_PORT,
-            ACTIVITY_RESPOSITORY_SERVER_PORT_DEFAULT);
+            CONFIGURATION_NAME_ACTIVITY_RESPOSITORY_SERVER_PORT,
+            CONFIGURATION_VALUE_DEFAULT_ACTIVITY_RESPOSITORY_SERVER_PORT);
     repositoryServer =
         new NettyWebServer(spaceEnvironment.getExecutorService(),
             spaceEnvironment.getExecutorService(), spaceEnvironment.getLog());
@@ -144,7 +144,7 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
     repositoryBaseUrl =
         "http://"
             + spaceEnvironment.getSystemConfiguration().getRequiredPropertyString(
-                SmartSpacesEnvironment.CONFIGURATION_HOSTNAME) + ":" + repositoryServer.getPort()
+                SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS) + ":" + repositoryServer.getPort()
             + webappPath;
 
     spaceEnvironment.getLog().info(

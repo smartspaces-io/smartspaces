@@ -121,7 +121,7 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager 
     data.put(
         MasterApiMessages.MASTER_API_PARAMETER_NAME_SMART_SPACES_VERSION,
         spaceEnvironment.getSystemConfiguration().getPropertyString(
-            SmartSpacesEnvironment.CONFIGURATION_SMARTSPACES_VERSION,
+            SmartSpacesEnvironment.CONFIGURATION_NAME_SMARTSPACES_VERSION,
             MasterApiMessages.MASTER_API_PARAMETER_VALUE_SMART_SPACES_VERSION_UNKNOWN));
 
     return MasterApiMessageSupport.getSuccessResponse(data);

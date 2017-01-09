@@ -66,7 +66,7 @@ public class BasicRosActivityComponent extends BaseActivityComponent implements
     rosEnvironment =
         componentContext.getActivity().getSpaceEnvironment().getValue("environment.ros");
 
-    rosNodeName = configuration.getRequiredPropertyString(CONFIGURATION_ACTIVITY_ROS_NODE_NAME);
+    rosNodeName = configuration.getRequiredPropertyString(CONFIGURATION_NAME_ACTIVITY_ROS_NODE_NAME);
     try {
       nodeConfiguration = rosEnvironment.getPublicNodeConfigurationWithNodeName();
       nodeConfiguration.setLog(componentContext.getActivity().getLog());
@@ -74,7 +74,7 @@ public class BasicRosActivityComponent extends BaseActivityComponent implements
     } catch (Exception e) {
       throw new SimpleSmartSpacesException(String.format(
           "While processing node '%s' from configuration '%s'", rosNodeName,
-          CONFIGURATION_ACTIVITY_ROS_NODE_NAME), e);
+          CONFIGURATION_NAME_ACTIVITY_ROS_NODE_NAME), e);
     }
   }
 

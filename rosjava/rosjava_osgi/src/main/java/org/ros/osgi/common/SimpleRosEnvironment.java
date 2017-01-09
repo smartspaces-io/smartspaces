@@ -126,7 +126,7 @@ public class SimpleRosEnvironment implements RosEnvironment {
    */
   public void startup() {
     // Get the URI of the master.
-    String masterUri = getProperty(CONFIGURATION_ROS_MASTER_URI);
+    String masterUri = getProperty(CONFIGURATION_NAME_ROS_MASTER_URI);
     if (masterUri != null) {
       try {
         setMasterUri(new URI(masterUri));
@@ -137,16 +137,16 @@ public class SimpleRosEnvironment implements RosEnvironment {
     }
 
     // Set the host running the node.
-    String host = getProperty(CONFIGURATION_ROS_HOST);
+    String host = getProperty(CONFIGURATION_NAME_ROS_HOST);
     if (host != null)
       setHost(host);
 
     // Set the name of the node.
-    String nodeName = getProperty(CONFIGURATION_ROS_NODE_NAME);
+    String nodeName = getProperty(CONFIGURATION_NAME_ROS_NODE_NAME);
     if (nodeName != null)
       setNodeName(nodeName);
 
-    String networkType = getProperty(CONFIGURATION_ROS_NETWORK_TYPE);
+    String networkType = getProperty(CONFIGURATION_NAME_ROS_NETWORK_TYPE);
     if (networkType != null)
       setNetworkType(networkType);
 

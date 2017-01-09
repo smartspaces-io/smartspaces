@@ -37,13 +37,13 @@ public class SimpleLiveActivityStorageManager implements LiveActivityStorageMana
    * Configuration property giving the location of the base activity
    * installation directory.
    */
-  public static final String CONFIGURATION_CONTROLLER_APPLICATION_INSTALLATION_DIRECTORY =
+  public static final String CONFIGURATION_NAME_CONTROLLER_ACTIVITY_INSTALLATION_DIRECTORY =
       "io.smartspaces.spacecontroller.activity.installation.directory";
 
   /**
    * The default folder for installing activities.
    */
-  public static final String CONFIGURATION_DEFAULT_CONTROLLER_APPLICATIONS_INSTALLATION_DIRECTORY =
+  public static final String CONFIGURATION_VALUE_DEFAULT_CONTROLLER_ACTIVITY_INSTALLATION_DIRECTORY =
       "controller/activities/installed";
 
   /**
@@ -77,8 +77,8 @@ public class SimpleLiveActivityStorageManager implements LiveActivityStorageMana
     activityBaseDirectory =
         new File(spaceEnvironment.getFilesystem().getInstallDirectory(),
             systemConfiguration.getPropertyString(
-                CONFIGURATION_CONTROLLER_APPLICATION_INSTALLATION_DIRECTORY,
-                CONFIGURATION_DEFAULT_CONTROLLER_APPLICATIONS_INSTALLATION_DIRECTORY));
+                CONFIGURATION_NAME_CONTROLLER_ACTIVITY_INSTALLATION_DIRECTORY,
+                CONFIGURATION_VALUE_DEFAULT_CONTROLLER_ACTIVITY_INSTALLATION_DIRECTORY));
   }
 
   @Override

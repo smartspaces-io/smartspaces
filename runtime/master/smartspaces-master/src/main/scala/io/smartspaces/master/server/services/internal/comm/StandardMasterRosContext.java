@@ -143,7 +143,7 @@ public class StandardMasterRosContext implements MasterRosContext {
 
     if (CONFIGURATION_VALUE_MASTER_ENABLE_TRUE.equals(spaceEnvironment.getSystemConfiguration()
         .getPropertyString(CONFIGURATION_NAME_ROS_MASTER_ENABLE,
-            CONFIGURATION_DEFAULT_ROS_MASTER_ENABLE))) {
+            CONFIGURATION_VALUE_DEFAULT_ROS_MASTER_ENABLE))) {
       startupRosMasterController();
     } else {
       connectToRosMaster();

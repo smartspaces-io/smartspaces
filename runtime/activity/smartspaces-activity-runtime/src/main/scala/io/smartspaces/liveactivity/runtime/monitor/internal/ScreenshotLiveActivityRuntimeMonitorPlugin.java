@@ -84,7 +84,7 @@ public class ScreenshotLiveActivityRuntimeMonitorPlugin extends
   /**
    * The amount of time to wait for a screenshot to finish, in milliseconds.
    */
-  private static final int CONFIGURATION_DEFAULT_SCREENSHOT_DELAY = 5000;
+  private static final int CONFIGURATION_VALUE_DEFAULT_SCREENSHOT_DELAY = 5000;
 
   /**
    * The date time format for the timestamp placed in the output filename.
@@ -101,13 +101,13 @@ public class ScreenshotLiveActivityRuntimeMonitorPlugin extends
    * Configuration property giving the location of the application executable
    * relative to the application installation directory.
    */
-  public static final String CONFIGURATION_SCREENSHOT_EXECUTABLE_PREFIX =
+  public static final String CONFIGURATION_NAME_PREFIX_SCREENSHOT_EXECUTABLE =
       "space.activityruntime.monitor.screenshot.executable.";
 
   /**
    * Configuration property for how long to wait when taking a screenshot.
    */
-  public static final String CONFIGURATION_SCREENSHOT_DELAY =
+  public static final String CONFIGURATION_NAME_SCREENSHOT_DELAY =
       "space.activityruntime.screenshot.delay";
 
   /**
@@ -193,19 +193,19 @@ public class ScreenshotLiveActivityRuntimeMonitorPlugin extends
 
     String platformOs =
         configuration
-            .getPropertyString(CoreConfiguration.CONFIGURATION_SMARTSPACES_PLATFORM_OS);
+            .getPropertyString(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_PLATFORM_OS);
     String screenShotExecutableDefault =
         fileSupport.newFile(
             getMonitorService().getLiveActivityRuntime().getSpaceEnvironment().getFilesystem()
                 .getLibraryDirectory(LIBRARY_NATIVE_FOLDER),
             SCREENSHOT_EXECUTABLE_PREFIX_DEFAULT + platformOs).getAbsolutePath();
     screenshotExecutable =
-        configuration.getPropertyString(CONFIGURATION_SCREENSHOT_EXECUTABLE_PREFIX + platformOs,
+        configuration.getPropertyString(CONFIGURATION_NAME_PREFIX_SCREENSHOT_EXECUTABLE + platformOs,
             screenShotExecutableDefault);
 
     screenshotSleepTime =
-        configuration.getPropertyInteger(CONFIGURATION_SCREENSHOT_DELAY,
-            CONFIGURATION_DEFAULT_SCREENSHOT_DELAY);
+        configuration.getPropertyInteger(CONFIGURATION_NAME_SCREENSHOT_DELAY,
+            CONFIGURATION_VALUE_DEFAULT_SCREENSHOT_DELAY);
 
     if (screenshotExecutable != null) {
       File executableFile = fileSupport.newFile(screenshotExecutable);

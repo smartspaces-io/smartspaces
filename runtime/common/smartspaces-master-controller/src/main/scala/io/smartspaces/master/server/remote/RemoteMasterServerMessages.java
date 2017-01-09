@@ -96,20 +96,20 @@ public class RemoteMasterServerMessages {
    * Configuration property for the network host of the master.
    *
    */
-  public static final String CONFIGURATION_MASTER_HOST = "smartspaces.master.host";
+  public static final String CONFIGURATION_NAME_MASTER_HOST = "smartspaces.master.host";
 
   /**
    * Configuration property for the network port for master communications.
    *
    */
-  public static final String CONFIGURATION_MASTER_COMMUNICATION_PORT =
+  public static final String CONFIGURATION_NAME_MASTER_COMMUNICATION_PORT =
       "smartspaces.master.communication.port";
 
   /**
    * Default value for configuration property for the network port for master
    * communications.
    */
-  public static final int CONFIGURATION_MASTER_COMMUNICATION_PORT_DEFAULT = 8090;
+  public static final int CONFIGURATION_VALUE_DEFAULT_MASTER_COMMUNICATION_PORT = 8090;
   
   /**
    * The zeroconf service type for the master control server.

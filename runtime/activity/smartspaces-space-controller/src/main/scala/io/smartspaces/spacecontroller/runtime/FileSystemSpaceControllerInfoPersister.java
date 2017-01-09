@@ -35,11 +35,11 @@ public class FileSystemSpaceControllerInfoPersister implements SpaceControllerIn
   @Override
   public void persist(SpaceController controllerInfo, SmartSpacesEnvironment spaceEnvironment) {
     Properties props = new Properties();
-    props.put(io.smartspaces.spacecontroller.SpaceController.CONFIGURATION_CONTROLLER_UUID,
+    props.put(io.smartspaces.spacecontroller.SpaceController.CONFIGURATION_NAME_CONTROLLER_UUID,
         controllerInfo.getUuid());
-    props.put(io.smartspaces.spacecontroller.SpaceController.CONFIGURATION_CONTROLLER_NAME,
+    props.put(io.smartspaces.spacecontroller.SpaceController.CONFIGURATION_NAME_CONTROLLER_NAME,
         controllerInfo.getName());
-    props.put(io.smartspaces.spacecontroller.SpaceController.CONFIGURATION_CONTROLLER_DESCRIPTION,
+    props.put(io.smartspaces.spacecontroller.SpaceController.CONFIGURATION_NAME_CONTROLLER_DESCRIPTION,
         controllerInfo.getDescription());
 
     File controllerInfoFile =

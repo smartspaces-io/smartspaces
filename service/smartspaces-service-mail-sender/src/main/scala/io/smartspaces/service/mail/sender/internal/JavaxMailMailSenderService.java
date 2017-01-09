@@ -72,11 +72,11 @@ public class JavaxMailMailSenderService extends BaseSupportedService implements 
     // Setup mail server
     String smtpHost =
         getSpaceEnvironment().getSystemConfiguration().getPropertyString(
-            CONFIGURATION_MAIL_SMTP_HOST);
+            CONFIGURATION_NAME_MAIL_SMTP_HOST);
     if (smtpHost != null) {
       props.put(PROPERTY_MAIL_SMTP_HOST, smtpHost);
       props.put(PROPERTY_MAIL_SMTP_PORT, getSpaceEnvironment().getSystemConfiguration()
-          .getPropertyString(CONFIGURATION_MAIL_SMTP_PORT, CONFIGURATION_DEFAULT_MAIL_SMTP_PORT));
+          .getPropertyString(CONFIGURATION_NAME_MAIL_SMTP_PORT, CONFIGURATION_VALUE_DEFAULT_MAIL_SMTP_PORT));
 
       mailerSession = Session.getDefaultInstance(props, null);
     } else {

@@ -114,7 +114,7 @@ public class StandardMasterRosContextTest {
     Mockito.when(
         systemConfiguration.getPropertyString(
             MasterRosContext.CONFIGURATION_NAME_ROS_MASTER_ENABLE,
-            MasterRosContext.CONFIGURATION_DEFAULT_ROS_MASTER_ENABLE)).thenReturn(
+            MasterRosContext.CONFIGURATION_VALUE_DEFAULT_ROS_MASTER_ENABLE)).thenReturn(
         MasterRosContext.CONFIGURATION_VALUE_MASTER_ENABLE_TRUE);
 
     context.startup();
@@ -138,7 +138,7 @@ public class StandardMasterRosContextTest {
     Mockito.when(
         systemConfiguration.getPropertyString(
             MasterRosContext.CONFIGURATION_NAME_ROS_MASTER_ENABLE,
-            MasterRosContext.CONFIGURATION_DEFAULT_ROS_MASTER_ENABLE)).thenReturn(
+            MasterRosContext.CONFIGURATION_VALUE_DEFAULT_ROS_MASTER_ENABLE)).thenReturn(
         MasterRosContext.CONFIGURATION_VALUE_MASTER_ENABLE_TRUE);
 
     context.startup();
@@ -163,7 +163,7 @@ public class StandardMasterRosContextTest {
     Mockito.when(
         systemConfiguration.getPropertyString(
             MasterRosContext.CONFIGURATION_NAME_ROS_MASTER_ENABLE,
-            MasterRosContext.CONFIGURATION_DEFAULT_ROS_MASTER_ENABLE)).thenReturn(
+            MasterRosContext.CONFIGURATION_VALUE_DEFAULT_ROS_MASTER_ENABLE)).thenReturn(
         MasterRosContext.CONFIGURATION_VALUE_MASTER_ENABLE_FALSE);
 
     context.startup();
@@ -187,7 +187,7 @@ public class StandardMasterRosContextTest {
     Mockito.when(
         systemConfiguration.getPropertyString(
             MasterRosContext.CONFIGURATION_NAME_ROS_MASTER_ENABLE,
-            MasterRosContext.CONFIGURATION_DEFAULT_ROS_MASTER_ENABLE)).thenReturn(
+            MasterRosContext.CONFIGURATION_VALUE_DEFAULT_ROS_MASTER_ENABLE)).thenReturn(
         MasterRosContext.CONFIGURATION_VALUE_MASTER_ENABLE_FALSE);
 
     context.startup();

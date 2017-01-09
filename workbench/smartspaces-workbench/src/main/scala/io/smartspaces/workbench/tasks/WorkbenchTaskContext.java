@@ -87,21 +87,21 @@ public class WorkbenchTaskContext {
   /**
    * Configuration property giving the project path for the workbench.
    */
-  public static final String CONFIGURATION_SMARTSPACES_WORKBENCH_PROJECT_PATH =
+  public static final String CONFIGURATION_NAME_SMARTSPACES_WORKBENCH_PROJECT_PATH =
       "smartspaces.workbench.project.path";
 
   /**
    * Configuration property giving the location of the controller the workbench
    * is using.
    */
-  public static final String CONFIGURATION_CONTROLLER_BASEDIR =
+  public static final String CONFIGURATION_NAME_CONTROLLER_BASEDIR =
       "smartspaces.controller.basedir";
 
   /**
    * Configuration property giving the location of the master the workbench is
    * using.
    */
-  public static final String CONFIGURATION_MASTER_BASEDIR = "smartspaces.master.basedir";
+  public static final String CONFIGURATION_NAME_MASTER_BASEDIR = "smartspaces.master.basedir";
 
   /**
    * A file filter for detecting directories.
@@ -409,7 +409,7 @@ public class WorkbenchTaskContext {
     if (!javaSystemDirectory.isDirectory()) {
       throw new SimpleSmartSpacesException(String.format(
           "Controller directory %s configured by %s does not appear to be valid.",
-          controllerDirectory, CONFIGURATION_CONTROLLER_BASEDIR));
+          controllerDirectory, CONFIGURATION_NAME_CONTROLLER_BASEDIR));
     }
 
     classpath.addAll(fileSupport.collectFiles(javaSystemDirectory, JAR_FILE_FILTER, false));
@@ -445,14 +445,14 @@ public class WorkbenchTaskContext {
    * @return the controller directory
    */
   public File getControllerDirectory() {
-    String controllerPath = workbenchConfig.getPropertyString(CONFIGURATION_CONTROLLER_BASEDIR);
+    String controllerPath = workbenchConfig.getPropertyString(CONFIGURATION_NAME_CONTROLLER_BASEDIR);
     File controllerDirectory = fileSupport.newFile(controllerPath);
     if (controllerDirectory.isAbsolute()) {
       return controllerDirectory;
     }
     File homeDir =
         fileSupport.newFile(workbenchConfig
-            .getPropertyString(CoreConfiguration.CONFIGURATION_SMARTSPACES_HOME));
+            .getPropertyString(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_HOME));
     return fileSupport.newFile(homeDir, controllerPath);
   }
 
@@ -552,7 +552,7 @@ public class WorkbenchTaskContext {
       ProjectManager projectManager = workbench.getProjectManager();
       List<String> projectPaths =
           workbenchConfig.getPropertyStringList(
-              CONFIGURATION_SMARTSPACES_WORKBENCH_PROJECT_PATH, File.pathSeparator);
+              CONFIGURATION_NAME_SMARTSPACES_WORKBENCH_PROJECT_PATH, File.pathSeparator);
       if (projectPaths != null) {
         for (String projectPath : projectPaths) {
           File projectPathBaseDir = fileSupport.newFile(projectPath);

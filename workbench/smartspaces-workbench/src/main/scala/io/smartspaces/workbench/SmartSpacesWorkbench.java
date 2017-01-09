@@ -87,12 +87,12 @@ public class SmartSpacesWorkbench {
   /**
    * The directory from where the workbench was invoked.
    */
-  public static final String CONFIGURATION_PROPERTY_SMARTSPACES_RUNDIR = "smartspaces.rundir";
+  public static final String CONFIGURATION_NAME_SMARTSPACES_RUNDIR = "smartspaces.rundir";
 
   /**
    * Configuration property defining the workbench home directory.
    */
-  public static final String CONFIGURATION_PROPERTY_WORKBENCH_HOME = "workbench.home";
+  public static final String CONFIGURATION_NAME_WORKBENCH_HOME = "workbench.home";
 
   /**
    * Command to recursively walk over a set of directories looking for the IS
@@ -226,11 +226,11 @@ public class SmartSpacesWorkbench {
     this.log = spaceEnvironment.getLog();
 
     workbenchConfig = spaceEnvironment.getSystemConfiguration();
-    workbenchConfig.setProperty(CONFIGURATION_PROPERTY_WORKBENCH_HOME,
+    workbenchConfig.setProperty(CONFIGURATION_NAME_WORKBENCH_HOME,
         workbenchFileSystem.getInstallDirectory().getAbsolutePath());
 
     String runDirPath =
-        workbenchConfig.getPropertyString(CONFIGURATION_PROPERTY_SMARTSPACES_RUNDIR);
+        workbenchConfig.getPropertyString(CONFIGURATION_NAME_SMARTSPACES_RUNDIR);
     if (runDirPath != null) {
       runDirectory = new File(runDirPath);
     } else {
@@ -383,7 +383,7 @@ public class SmartSpacesWorkbench {
    */
   private void logWorkbenchCommand(List<String> commands) {
     getLog().info(String.format("Using workbench %s", getSpaceEnvironment().getSystemConfiguration()
-        .getPropertyString(CONFIGURATION_PROPERTY_WORKBENCH_HOME)));
+        .getPropertyString(CONFIGURATION_NAME_WORKBENCH_HOME)));
     getLog().info(String.format("Workbench commands: %s", Joiner.on(" ").join(commands)));
   }
 

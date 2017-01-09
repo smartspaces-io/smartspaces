@@ -39,28 +39,28 @@ public interface WebBrowserActivityComponent extends ActivityComponent {
    * If there is no content location, this should be a fully qualified URL.
    * Otherwise it can be relative to the web activity content location root.
    */
-  String CONFIGURATION_INITIAL_PAGE = WebActivityConfiguration.CONFIGURATION_PREFIX_WEBAPP
-      + WebActivityConfiguration.CONFIGURATION_SUFFIX_INITIAL_PAGE;
+  String CONFIGURATION_NAME_INITIAL_PAGE = WebActivityConfiguration.CONFIGURATION_NAME_PREFIX_WEBAPP
+      + WebActivityConfiguration.CONFIGURATION_NAME_SUFFIX_INITIAL_PAGE;
 
   /**
    * Configuration property of any query string parameter which should be added
    * to the URL given to the web browser.
    */
-  String CONFIGURATION_INITIAL_URL_QUERY_STRING =
-      WebActivityConfiguration.CONFIGURATION_PREFIX_WEBAPP
-          + WebActivityConfiguration.CONFIGURATION_SUFFIX_INITIAL_URL_QUERY_STRING;
+  String CONFIGURATION_NAME_INITIAL_URL_QUERY_STRING =
+      WebActivityConfiguration.CONFIGURATION_NAME_PREFIX_WEBAPP
+          + WebActivityConfiguration.CONFIGURATION_NAME_SUFFIX_INITIAL_URL_QUERY_STRING;
 
   /**
    * Configuration property saying whether the browser should be started in
    * debug mode or not.
    */
-  String CONFIGURATION_BROWSER_DEBUG = "space.activity.webapp.browser.debug";
+  String CONFIGURATION_NAME_BROWSER_DEBUG = "space.activity.webapp.browser.debug";
 
   /**
    * Configuration property saying whether the browser should be started up when
    * the app starts up.
    */
-  String CONFIGURATION_BROWSER_STARTUP = "space.activity.webapp.browser.startup";
+  String CONFIGURATION_NAME_BROWSER_STARTUP = "space.activity.webapp.browser.startup";
 
   /**
    * Set the base URL that the browser will connect to.

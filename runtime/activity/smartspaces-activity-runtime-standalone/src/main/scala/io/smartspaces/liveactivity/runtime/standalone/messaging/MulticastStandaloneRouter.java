@@ -44,7 +44,7 @@ public class MulticastStandaloneRouter implements StandaloneRouter {
   /**
    * Configuration parameter for the receive buffer size.
    */
-  static final String CONFIGURATION_MULTICAST_RECEIVE_BUFFER_SIZE =
+  static final String CONFIGURATION_NAME_MULTICAST_RECEIVE_BUFFER_SIZE =
       "standalone.multicast.receive.buffer.size";
 
   /**
@@ -90,7 +90,7 @@ public class MulticastStandaloneRouter implements StandaloneRouter {
    */
   public MulticastStandaloneRouter(Configuration configuration) {
     int receiveBufferSize =
-        configuration.getPropertyInteger(CONFIGURATION_MULTICAST_RECEIVE_BUFFER_SIZE,
+        configuration.getPropertyInteger(CONFIGURATION_NAME_MULTICAST_RECEIVE_BUFFER_SIZE,
             DEFAULT_RECEIVE_BUFFER_SIZE);
     receiveBuf = new byte[receiveBufferSize];
     datagramPacket = new DatagramPacket(receiveBuf, receiveBuf.length);

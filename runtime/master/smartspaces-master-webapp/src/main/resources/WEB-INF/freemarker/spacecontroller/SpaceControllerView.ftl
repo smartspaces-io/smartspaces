@@ -150,7 +150,13 @@ ${spacecontroller.description?html}
 </tr>
 <tr>
 <th>Host Name</th>
-<td>${spacecontroller.hostName}</td>
+<td>
+<#if spacecontroller.hostName?has_content>
+  ${spacecontroller.hostName}
+<#else>
+  <i>Unspecified</i>
+</#if>
+</td>
 </tr>
 <tr>
 <th>Host Control Port</th>

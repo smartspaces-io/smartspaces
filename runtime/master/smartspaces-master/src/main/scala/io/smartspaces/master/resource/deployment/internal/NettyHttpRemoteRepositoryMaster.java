@@ -18,13 +18,10 @@
 package io.smartspaces.master.resource.deployment.internal;
 
 import static org.jboss.netty.channel.Channels.pipeline;
+
 import io.smartspaces.master.resource.deployment.FeatureRepository;
 import io.smartspaces.master.resource.deployment.RemoteRepositoryMaster;
-
-import java.net.InetSocketAddress;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ScheduledExecutorService;
+import io.smartspaces.system.SmartSpacesEnvironment;
 
 import org.apache.commons.logging.Log;
 import org.jboss.netty.bootstrap.ServerBootstrap;
@@ -40,19 +37,22 @@ import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 import org.ros.osgi.common.RosEnvironment;
 
+import java.net.InetSocketAddress;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
+
 /**
- * A ROS repository which uses the OSGi HTTP service
- *
- * TODO(keith): Change over to netty
+ * A repository master which uses Netty.
  *
  * @author Keith M. Hughes
  */
 public class NettyHttpRemoteRepositoryMaster implements RemoteRepositoryMaster {
 
   /**
-   * ROS Environment the repository is running in.
+   * Space Environment the repository is running in.
    */
-  private RosEnvironment rosEnvironment;
+  private SmartSpacesEnvironment spaceEnvironment;
 
   /**
    * The prefix to put on URLs for accessing the repository.
@@ -117,17 +117,12 @@ public class NettyHttpRemoteRepositoryMaster implements RemoteRepositoryMaster {
 
   @Override
   public void startup() {
-    serverName = "ROSDeploymentServer";
+    serverName = "DeploymentServer";
 
-    String repositoryPort = rosEnvironment.getProperty(CONFIGURATION_ROS_DEPLOYMENT_SERVER_PORT);
-    if (repositoryPort != null) {
-      port = Integer.parseInt(repositoryPort);
-    } else {
-      port = CONFIGURATION_DEFAULT_ROS_DEPLOYMENT_SERVER_PORT;
-    }
+    port = spaceEnvironment.getSystemConfiguration().getPropertyInteger(CONFIGURATION_NAME_DEPLOYMENT_SERVER_PORT, CONFIGURATION_VALUE_DEFAULT_DEPLOYMENT_SERVER_PORT);
 
-    executorService = rosEnvironment.getExecutorService();
-    log = rosEnvironment.getLog();
+    executorService = spaceEnvironment.getExecutorService();
+    log = spaceEnvironment.getLog();
 
     allChannels = new DefaultChannelGroup(serverName);
 
@@ -200,23 +195,13 @@ public class NettyHttpRemoteRepositoryMaster implements RemoteRepositoryMaster {
   }
 
   /**
-   * Set the ROS Environment the server should run in.
+   * Set the Space Environment the server should run in.
    *
    * @param rosEnvironment
    *          the ROS environment to be used
    */
-  public void setRosEnvironment(RosEnvironment rosEnvironment) {
-    this.rosEnvironment = rosEnvironment;
-  }
-
-  /**
-   * Remove the ROS Environment the server should run in.
-   *
-   * @param rosEnvironment
-   *          the ROS environment which was used
-   */
-  public void unsetRosEnvironment(RosEnvironment rosEnvironment) {
-    this.rosEnvironment = null;
+  public void setSpaceEnvironment(SmartSpacesEnvironment spaceEnvironment) {
+    this.spaceEnvironment = spaceEnvironment;
   }
 
   /**
@@ -229,7 +214,7 @@ public class NettyHttpRemoteRepositoryMaster implements RemoteRepositoryMaster {
     this.featureRepository = featureRepository;
   }
 
-  /**
+  /**s
    * Remove the feature repository the server should run with.
    *
    * @param featureRepository

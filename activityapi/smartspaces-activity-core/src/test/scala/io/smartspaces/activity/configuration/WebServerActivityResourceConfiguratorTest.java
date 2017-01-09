@@ -64,7 +64,7 @@ public class WebServerActivityResourceConfiguratorTest {
    */
   @Test
   public void testConfigure() {
-    int testPort = WebServerActivityResourceConfigurator.WEB_SERVER_PORT_DEFAULT + 100;
+    int testPort = WebServerActivityResourceConfigurator.CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_PORT + 100;
     String webSocketUri = "foo/bar/bletch";
     String initialUrl = "snafu";
     String query = "oorgle";
@@ -95,7 +95,7 @@ public class WebServerActivityResourceConfiguratorTest {
    */
   @Test
   public void testHttpsConfigure() {
-    int testPort = WebServerActivityResourceConfigurator.WEB_SERVER_PORT_DEFAULT + 100;
+    int testPort = WebServerActivityResourceConfigurator.CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_PORT + 100;
     String webSocketUri = "foo/bar/bletch";
     String initialUrl = "snafu";
     String query = "oorgle";

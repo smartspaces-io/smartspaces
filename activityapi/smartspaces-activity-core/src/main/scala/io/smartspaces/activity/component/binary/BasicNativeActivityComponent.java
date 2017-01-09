@@ -51,17 +51,17 @@ public class BasicNativeActivityComponent extends BaseActivityComponent implemen
   /**
    * The name of the configuration flag for getting the path to the executable.
    */
-  private String executablePathProperty = CONFIGURATION_ACTIVITY_EXECUTABLE;
+  private String executablePathProperty = CONFIGURATION_NAME_ACTIVITY_EXECUTABLE;
 
   /**
    * The name of the configuration flag for getting the executable flags.
    */
-  private String executableFlagsProperty = CONFIGURATION_ACTIVITY_EXECUTABLE_FLAGS;
+  private String executableFlagsProperty = CONFIGURATION_NAME_ACTIVITY_EXECUTABLE_FLAGS;
 
   /**
    * The name of the configuration flag for getting the executable environment.
    */
-  private String executableEnvironmentProperty = CONFIGURATION_ACTIVITY_EXECUTABLE_ENVIRONMENT;
+  private String executableEnvironmentProperty = CONFIGURATION_NAME_ACTIVITY_EXECUTABLE_ENVIRONMENT;
 
   /**
    * The restart strategy to use when the runner is finally created.
@@ -80,8 +80,8 @@ public class BasicNativeActivityComponent extends BaseActivityComponent implemen
 
   /**
    * Create the component which uses the properties
-   * {@link #CONFIGURATION_ACTIVITY_EXECUTABLE} and
-   * {@link #CONFIGURATION_ACTIVITY_EXECUTABLE_FLAGS} for execution path, flags,
+   * {@link #CONFIGURATION_NAME_ACTIVITY_EXECUTABLE} and
+   * {@link #CONFIGURATION_NAME_ACTIVITY_EXECUTABLE_FLAGS} for execution path, flags,
    * and environment.
    */
   public BasicNativeActivityComponent() {
@@ -137,7 +137,7 @@ public class BasicNativeActivityComponent extends BaseActivityComponent implemen
             .getSpaceEnvironment()
             .getSystemConfiguration()
             .getRequiredPropertyString(
-                CoreConfiguration.CONFIGURATION_SMARTSPACES_PLATFORM_OS);
+                CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_PLATFORM_OS);
 
     String activityPath =
         configuration.getRequiredPropertyString(executablePathProperty + "." + os);

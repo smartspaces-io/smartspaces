@@ -69,7 +69,6 @@ class MoquetteInfrastructurePlugin(val spaceEnvironment: SmartSpacesEnvironment)
 
     val storageFilePath = config.getProperty(BrokerConstants.PERSISTENT_STORE_PROPERTY_NAME)
     val storageFile = fileSupport.newFile(storageFilePath)
-    spaceEnvironment.getLog.warn(storageFile.getParentFile)
     fileSupport.directoryExists(storageFile.getParentFile)
 
     mqttBroker = new Server()

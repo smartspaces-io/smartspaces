@@ -174,7 +174,10 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    * Update period for NTP.
    */
   private static final long NTP_UPDATE_PERIOD_SECONDS = 10L;
-
+  
+  /**
+   * The managed scope for the entire container.
+   */
   private ManagedScope containerManagedScope;
 
   @Override
@@ -295,6 +298,8 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    *          the base directory where Smart Spaces is installed
    */
   private void setupSpaceEnvironment(File baseInstallDir) {
+    Log log = loggingProvider.getLog();
+    
     Map<String, String> containerProperties = configurationProvider.getInitialConfiguration();
 
     executorService = new DefaultScheduledExecutorService();
@@ -311,7 +316,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
         containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NAME_NETWORK_TYPE));
     spaceEnvironment.setContainerManagedScope(containerManagedScope);
 
-    setupSystemConfiguration(bundleContext, containerProperties);
+    setupSystemConfiguration(bundleContext, containerProperties, log);
 
     timeProvider = getTimeProvider(containerProperties, loggingProvider.getLog());
     spaceEnvironment.setTimeProvider(timeProvider);
@@ -460,8 +465,9 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
             .getPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_NAME));
 
     // This call is so that the ROS URI gets evaluated.
-    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_NAME_ROS_MASTER_URI, spaceEnvironment
-        .getSystemConfiguration().getPropertyString(RosEnvironment.CONFIGURATION_NAME_ROS_MASTER_URI));
+    rosEnvironment.setProperty(RosEnvironment.CONFIGURATION_NAME_ROS_MASTER_URI,
+        spaceEnvironment.getSystemConfiguration()
+            .getPropertyString(RosEnvironment.CONFIGURATION_NAME_ROS_MASTER_URI));
   }
 
   /**
@@ -471,9 +477,11 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    *          bundle context to use
    * @param containerProperties
    *          properties for the container
+   * @param log
+   *          the logger to use
    */
   private void setupSystemConfiguration(BundleContext context,
-      Map<String, String> containerProperties) {
+      Map<String, String> containerProperties, Log log) {
     expressionEvaluatorFactory = new SimpleExpressionEvaluatorFactory();
 
     FileSystemConfigurationStorageManager fileSystemConfigurationStorageManager =
@@ -496,8 +504,11 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
     String hostAddress = getHostAddress(systemConfiguration);
     if (hostAddress != null) {
+      log.info(String.format("Using container host address %s", hostAddress));
       systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS,
           hostAddress);
+    } else {
+      log.warn("Could not determine container host address.");
     }
 
     systemConfiguration.setProperty(
@@ -533,6 +544,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
       String hostInterface = systemConfiguration
           .getPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_INTERFACE);
       if (hostInterface != null) {
+        spaceEnvironment.getLog().formatInfo("Using network interface with name %s", hostInterface);
         NetworkInterface networkInterface = NetworkInterface.getByName(hostInterface);
         if (networkInterface != null) {
           for (InetAddress inetAddress : Collections.list(networkInterface.getInetAddresses())) {
@@ -540,14 +552,14 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
               return inetAddress.getHostAddress();
             }
           }
-         } else {
-           spaceEnvironment.getLog().formatWarn(
-               "No network interface with name %s from configuration %s", hostInterface,
-               SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_INTERFACE);
+        } else {
+          spaceEnvironment.getLog().formatWarn(
+              "No network interface with name %s from configuration %s", hostInterface,
+              SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_INTERFACE);
 
-         }
+        }
       }
-      
+
       // See if a single network interface. If so, we will use it.
       List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
       if (interfaces.size() == 1) {

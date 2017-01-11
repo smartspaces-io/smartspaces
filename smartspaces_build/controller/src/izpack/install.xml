@@ -71,6 +71,7 @@
     <panel classname="CheckedHelloPanel" id="hellopanel" />
     <panel classname="HTMLInfoPanel" id="infopanel" encoding="ISO-8859-1" />
     <panel classname="LicencePanel" />
+    <panel classname="UserInputPanel" id="autoconfigure" />
     <panel classname="UserInputPanel" id="0" />
     <panel classname="UserInputPanel" id="1" condition="manualconfig" />
     <panel classname="UserInputPanel" id="2" condition="!manualconfig" />

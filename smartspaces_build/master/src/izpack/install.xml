@@ -54,8 +54,9 @@
     <panel classname="CheckedHelloPanel" id="hellopanel" />
     <panel classname="HTMLInfoPanel" id="infopanel" encoding="ISO-8859-1" />
     <panel classname="LicencePanel" />
-    <panel classname="UserInputPanel" id="0" />
-    <panel classname="UserInputPanel" id="1" />
+    <panel classname="UserInputPanel" id="autoconfigure" />
+    <panel classname="UserInputPanel" id="network" />
+    <panel classname="UserInputPanel" id="ports" />
     <panel classname="TargetPanel" />
     <panel classname="PacksPanel" />
     <panel classname="InstallPanel" />
@@ -93,6 +94,9 @@
       <executable targetfile="$INSTALL_PATH/bin/stop" stage="never" />
       <parsable targetfile="$INSTALL_PATH/bin/stop.bat" type="shell" />
       <executable targetfile="$INSTALL_PATH/bin/stop.bat" stage="never" />
+      <parsable targetfile="$INSTALL_PATH/bin/smartspaces-master-service" type="shell" />
+      <executable targetfile="$INSTALL_PATH/bin/smartspaces-master-service" stage="never" />
+      <parsable targetfile="$INSTALL_PATH/bin/smartspaces-master.service" type="shell" />
 
       <parsable targetfile="$INSTALL_PATH/config/system/log4j.properties" type="shell" />
       <parsable targetfile="$INSTALL_PATH/config/container.conf" type="shell" />

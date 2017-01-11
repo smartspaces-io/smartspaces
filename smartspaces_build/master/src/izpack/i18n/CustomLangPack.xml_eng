@@ -24,4 +24,6 @@
 
   <str id="input.smartspaces.master.ros.port" txt="Master ROS Port:" />
   <str id="input.smartspaces.master.ros.port.invalid" txt="Invalid Master ROS port. It must be a maximum 5 digit number." />
+
+  <str id="input.smartspaces.autoconfigure" txt="Auto configure the SmartSpaces network" />
 </izpack:langpack>

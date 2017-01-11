@@ -37,24 +37,10 @@ public interface MasterRosContext extends ManagedResource {
   String CONFIGURATION_NAME_ROS_MASTER_ENABLE = "smartspaces.master.ros.master.enable";
 
   /**
-   * Configuration property value for
-   * {@link #CONFIGURATION_NAME_ROS_MASTER_ENABLE} for having Smart Spaces
-   * create it's own ROS master.
-   */
-  String CONFIGURATION_VALUE_MASTER_ENABLE_TRUE = CoreConfiguration.CONFIGURATION_VALUE_TRUE;
-
-  /**
-   * Configuration property value for
-   * {@link #CONFIGURATION_NAME_ROS_MASTER_ENABLE} for having Smart Spaces
-   * not create it's own ROS master.
-   */
-  String CONFIGURATION_VALUE_MASTER_ENABLE_FALSE = CoreConfiguration.CONFIGURATION_VALUE_FALSE;
-
-  /**
    * Configuration property default value for having Smart Spaces create
    * it's own ROS master.
    */
-  String CONFIGURATION_VALUE_DEFAULT_ROS_MASTER_ENABLE = CONFIGURATION_VALUE_MASTER_ENABLE_TRUE;
+  boolean CONFIGURATION_VALUE_DEFAULT_ROS_MASTER_ENABLE = false;
 
   /**
    * The ROS node name for the master.

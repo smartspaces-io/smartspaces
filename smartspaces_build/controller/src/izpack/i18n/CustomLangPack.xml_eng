@@ -31,11 +31,13 @@
   <str id="static.advanced.info" txt="These values should only be changed if you know what you are doing."/>
 
   <str id="input.smartspaces.master.communication.port" txt="Master Communication Port:" />
-  <str id="input.smartspaces.master.communication.port.invalid" txt="Invalid Master Communication port. It must be a maximum 5 digit number." />
+  <str id="input.smartspaces.master.communication.port.invalid" txt="Invalid Master Communication po rt. It must be a maximum 5 digit number." />
 
   <str id="input.smartspaces.master.ros.port" txt="Master ROS Port:" />
   <str id="input.smartspaces.master.ros.port.invalid" txt="Invalid Master ROS port. It must be a maximum 5 digit number." />
 
   <str id="input.smartspaces.spacecontroller.manualconfig" txt="Manually configure the space controller" />
+
+  <str id="input.smartspaces.autoconfigure" txt="Auto configure the SmartSpaces network" />
 
 </izpack:langpack>

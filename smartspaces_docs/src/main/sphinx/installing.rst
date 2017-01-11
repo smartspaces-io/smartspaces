@@ -26,10 +26,11 @@ Installing a master is pretty easy. You will run an installer activity, and fina
 Installing the Master
 ~~~~~~~~~~~~~~~~~~~~~
 
-If you are using a windowing system, find the icon for the Smart Spaces Master installer and double click on it.
-The installer is a Java jar file.
+If you are using a graphical user interface system, find the icon for the Smart Spaces Master
+installer and double click on it. The installer is a Java jar file.
 
-If you are using a command line interface for your operating system, use the command
+If you are using a command line interface for your operating system, but still have a graphical
+user interface, use the command
 
 ::
 
@@ -37,6 +38,12 @@ If you are using a command line interface for your operating system, use the com
 
 
 where ``x.y.z`` is the version of the Smart Spaces Master you are installing.
+
+If  you want to install without using the graphical installer, use the command
+
+::
+
+  java -jar smartspaces-master-installer-x.y.z.jar -console
 
 For now just accept all of the default settings by clicking Next on the configuration page.
 
@@ -71,18 +78,27 @@ You can also manually configure the controller, though there usually isn't a goo
 Installing the Controller
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you are using a windowing system, find the icon for the Smart Spaces Controller installer and double click on it.
-The installer is a Java jar file.
 
-If you are using a command line interface for your operating system, use the command
+If you are using a graphical user interface system, find the icon for the Smart Spaces Space Controller
+installer and double click on it. The installer is a Java jar file.
+
+If you are using a command line interface for your operating system, but still have a graphical
+user interface, use the command
 
 ::
 
   java -jar smartspaces-controller-installer-x.y.z.jar
 
-where ``x.y.z`` is the version of the Smart Spaces Controller you are installing.
 
-If you are auto-configuring the controller, make sure you don't check the manual configuration checkbox.
+where ``x.y.z`` is the version of the Smart Spaces Master you are installing.
+
+If  you want to install without using the graphical installer, use the command
+
+::
+
+  java -jar smartspaces-controller-installer-x.y.z.jar -console
+
+For now just accept all of the default settings by clicking Next on the configuration page.
 
 If you want your setup to match the pictures we will have in this manual, please name your controller 
 ``controller1``.
@@ -177,3 +193,115 @@ of each master, controller, and workbench, where *x.y.z* was the version
 of the launcher that was there before the update.
 
 Once you have done this, you can upgrade the same way you install.
+
+
+
+Advanced Installation
+=====================
+
+It is possible to start SmartSpaces masters and controllers on system boot.
+
+SmartSpaces has support for both the systemd service or SystemV init tools.
+
+Using systemd Installation
+--------------------------
+
+Suppose you have installed the master in ``/opt/smartspaces/master``.
+
+To enable the master, use the following command.
+
+
+::
+
+  $ sudo systemctl enable /opt/smartspaces/master/bin/smartspaces-master.service
+
+The master will now start on reboot.
+
+Suppose you have installed the controller in ``/opt/smartspaces/controller``.
+
+To enable the controller, use the following command.
+
+
+::
+
+  $ sudo systemctl enable /opt/smartspaces/controller/bin/smartspaces-controller.service
+
+The controller will now start on reboot.
+
+You can check the status of a container with, for example, the command
+
+::
+
+  $ sudo systemctl status smartspaces-master.service
+
+You can stop a container with, for example, the command
+
+::
+
+  $ sudo systemctl stop smartspaces-master.service
+
+You can restart a stopped container with, for example, the command
+
+::
+
+  $ sudo systemctl start smartspaces-master.service
+
+To remove a container, use the following command.
+
+
+::
+
+  $ sudo systemctl disable smartspaces-controller.service
+
+Using SystemV Init Tools Installation
+--------------------------
+
+Suppose you have installed the master in ``/opt/smartspaces/master``.
+
+To enable the master, use the following command.
+
+
+::
+
+  $ sudo ln -s /opt/smartspaces/master/bin/smartspaces-master-service /etc/init.d
+  $ sudo update-rc.d smartspaces-master-service defaults
+
+The master will now start on reboot.
+
+Suppose you have installed the controller in ``/opt/smartspaces/controller``.
+
+To enable the controller, use the following command.
+
+
+::
+
+  $ sudo ln -s /opt/smartspaces/controller/bin/smartspaces-controller-service /etc/init.d
+  $ sudo update-rc.d smartspaces-controller-service defaults
+
+The controller will now start on reboot.
+
+You can check the status of a container with, for example, the command
+
+::
+
+  $ sudo /etc/init.d/smartspaces-master-service status
+
+You can stop a container with, for example, the command
+
+::
+
+  $ sudo /etc/init.d/smartspaces-master-service stop
+
+You can restart a stopped container with, for example, the command
+
+::
+
+  $ sudo /etc/init.d/smartspaces-master-service start
+
+To remove a container, use the following command.
+
+
+::
+
+  $ sudo update-rc.d -f smartspaces-master-service remove
+  $ sudo rm /etc/init.d/smartspaces-master-service

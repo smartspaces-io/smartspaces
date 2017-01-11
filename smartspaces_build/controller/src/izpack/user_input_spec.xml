@@ -5,6 +5,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xmlns:izpack="http://izpack.org/schema/userinput" 
     xsi:schemaLocation="http://izpack.org/schema/userinput http://izpack.org/schema/5.0/izpack-userinput-5.0.xsd">
+  <panel id="autoconfigure">
+    <field type="title" id="static.main.title" />
+
+    <field type="check" align="left" variable="smartspaces.autoconfigure">
+      <spec id="input.smartspaces.autoconfigure" true="true" false="false" />
+    </field>
+  </panel>
+
   <panel id="0">
     <field type="title" id="static.main.title" />
 

@@ -93,8 +93,9 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
 
   @Override
   protected void onConfigureComponent(Configuration configuration) {
-    rosActivityComponent =
-        componentContext.getRequiredActivityComponent(RosActivityComponent.COMPONENT_NAME);
+	// TODO(keith): Make this lazily evaluated.
+    //rosActivityComponent =
+    //    componentContext.getRequiredActivityComponent(RosActivityComponent.COMPONENT_NAME);
   }
 
   @Override
@@ -104,8 +105,8 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
 
     messageRouter = new StandardMessageRouter(new BasicMessageRouterProtectedHandlerContext(),
         timeProvider, log);
-    messageRouter.setNodeName(rosActivityComponent.getNodeName());
-    messageRouter.setRosNode(rosActivityComponent.getNode());
+    // messageRouter.setNodeName(rosActivityComponent.getNodeName());
+    // messageRouter.setRosNode(rosActivityComponent.getNode());
     messageRouter.setRoutableInputMessageListener(messageListener);
     messageRouter.setMqttBrokerDescriptionDefault(getMqttBrokerDescription());
   }
@@ -119,7 +120,7 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
   public void shutdownComponent() {
     running = false;
 
-    log.info("Shutting down ROS message router activity component");
+    log.info("Shutting down message router activity component");
 
     TimeProvider timeProvider =
         getComponentContext().getActivity().getSpaceEnvironment().getTimeProvider();
@@ -128,8 +129,8 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
     messageRouter.clearAllChannelTopics();
 
     if (log.isInfoEnabled()) {
-      log.info(String.format("ROS message router activity component shut down in %d msecs",
-          System.currentTimeMillis() - timeStart));
+      log.info(String.format("Message router activity component shut down in %d msecs",
+          timeProvider.getCurrentTime() - timeStart));
     }
   }
 

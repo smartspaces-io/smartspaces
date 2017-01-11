@@ -141,28 +141,17 @@ public class StandardMasterRosContext implements MasterRosContext {
 
     startupLatch = new CountDownLatch(1);
 
-    if (CONFIGURATION_VALUE_MASTER_ENABLE_TRUE.equals(spaceEnvironment.getSystemConfiguration()
-        .getPropertyString(CONFIGURATION_NAME_ROS_MASTER_ENABLE,
-            CONFIGURATION_VALUE_DEFAULT_ROS_MASTER_ENABLE))) {
+    if (spaceEnvironment.getSystemConfiguration().getPropertyBoolean(
+        CONFIGURATION_NAME_ROS_MASTER_ENABLE, CONFIGURATION_VALUE_DEFAULT_ROS_MASTER_ENABLE)) {
       startupRosMasterController();
-    } else {
-      connectToRosMaster();
     }
 
-//    try {
-//      if (!startupLatch.await(rosMasterRegistrationTimeout, TimeUnit.MILLISECONDS)) {
-//        log.error(String
-//            .format(
-//                "Could not register the Smart Spaces Master with the ROS Master within %d milliseconds",
-//                rosMasterRegistrationTimeout));
-//      }
-//    } catch (InterruptedException e) {
-//      SimpleSmartSpacesException.throwFormattedException("ROS Master Context Startup interrupted");
-//    }
+    log.info("The Smart Spaces Master ROS context is started up");
   }
 
   @Override
   public void shutdown() {
+    log.info("Shutting down the Smart Spaces Master ROS context");
     if (masterNode != null) {
       masterNode.shutdown();
     }
@@ -196,13 +185,15 @@ public class StandardMasterRosContext implements MasterRosContext {
    * Start the ROS master.
    */
   private void startupRosMasterController() {
+    log.info("Starting up the Smart Spaces internal ROS Master");
+    
     rosMasterController = rosMasterControllerFactory.newInternalController();
     rosMasterController.setRosEnvironment(rosEnvironment);
 
     rosMasterController.addListener(new RosMasterControllerListener() {
       @Override
       public void onRosMasterStartup() {
-        connectToRosMaster();
+        // connectToRosMaster();
       }
 
       @Override
@@ -212,16 +203,6 @@ public class StandardMasterRosContext implements MasterRosContext {
     });
 
     rosMasterController.startup();
-  }
-
-  /**
-   * Connect to the ROS master..
-   */
-  private void connectToRosMaster() {
-//    NodeConfiguration nodeConfiguration = rosEnvironment.getPublicNodeConfigurationWithNodeName();
-//    nodeConfiguration.setNodeName(ROS_NODENAME_SMARTSPACES_MASTER);
-//
-//    rosEnvironment.newNode(nodeConfiguration, Lists.newArrayList(masterNodeListener));
   }
 
   /**

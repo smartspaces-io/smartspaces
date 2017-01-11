@@ -31,7 +31,7 @@ public interface MessageRouter extends IncomingRouteMessageHandler {
   /**
    * The default value for the route protocol default.
    */
-  String DEFAULT_ROUTE_PROTOCOL_DEFAULT = "ros";
+  String DEFAULT_ROUTE_PROTOCOL_DEFAULT = "mqtt";
 
   /**
    * Set the message listener for the component.

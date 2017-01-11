@@ -34,5 +34,5 @@ ExecReload=%{INSTALL_PATH}/bin/smartspaces-controller-service restart
 ExecStop=%{INSTALL_PATH}/bin/smartspaces-controller-service stop
 
 [Install]
-Alias=smartspaces
+#Alias=smartspaces-controller
 WantedBy=default.target

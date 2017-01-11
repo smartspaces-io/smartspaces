@@ -50,7 +50,8 @@ public interface MessageRouterActivityComponent extends ActivityComponent {
   /**
    * Dependencies for the component.
    */
-  List<String> BASE_COMPONENT_DEPENDENCIES = ImmutableList.of(RosActivityComponent.COMPONENT_NAME);
+  List<String> BASE_COMPONENT_DEPENDENCIES = ImmutableList.of();
+  //List<String> BASE_COMPONENT_DEPENDENCIES = ImmutableList.of(RosActivityComponent.COMPONENT_NAME);
 
   /**
    * Set the message listener for the component.

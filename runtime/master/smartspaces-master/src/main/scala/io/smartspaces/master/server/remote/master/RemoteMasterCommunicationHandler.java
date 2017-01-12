@@ -17,7 +17,7 @@
 
 package io.smartspaces.master.server.remote.master;
 
-import io.smartspaces.resource.managed.ManagedResource;
+import io.smartspaces.master.communication.MasterCommunicationHandler;
 
 /**
  * A remote master server.
@@ -28,7 +28,7 @@ import io.smartspaces.resource.managed.ManagedResource;
  *
  * @author Keith M. Hughes
  */
-public interface RemoteMasterServer extends ManagedResource {
+public interface RemoteMasterCommunicationHandler extends MasterCommunicationHandler {
 
   /**
    * Add a new listener to the server.

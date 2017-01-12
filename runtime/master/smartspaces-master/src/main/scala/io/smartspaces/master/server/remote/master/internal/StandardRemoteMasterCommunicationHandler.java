@@ -23,27 +23,30 @@ import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.master.communication.MasterCommunicationManager;
 import io.smartspaces.master.server.remote.RemoteMasterServerMessages;
-import io.smartspaces.master.server.remote.master.RemoteMasterServer;
+import io.smartspaces.master.server.remote.master.RemoteMasterCommunicationHandler;
 import io.smartspaces.master.server.remote.master.RemoteMasterServerListener;
 import io.smartspaces.service.web.HttpResponseCode;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
+import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
 
+import com.google.common.collect.Lists;
+
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Lists;
-
 /**
- * A {@link RemoteMasterServer} using a web server.
+ * A {@link RemoteMasterCommunicationHandler} using a web server.
  *
  * @author Keith M. Hughes
  */
-public class StandardRemoteMasterServer implements RemoteMasterServer {
+public class StandardRemoteMasterCommunicationHandler implements RemoteMasterCommunicationHandler {
 
   /**
    * The JSON mapper to use for the server.
@@ -51,14 +54,14 @@ public class StandardRemoteMasterServer implements RemoteMasterServer {
   private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
 
   /**
+   * The space environment.
+   */
+  private SmartSpacesEnvironment spaceEnvironment;
+
+  /**
    * Logger for the controller.
    */
   private ExtendedLog log;
-
-  /**
-   * The master communication manager.
-   */
-  private MasterCommunicationManager masterCommunicationManager;
 
   /**
    * All listeners for master server events.
@@ -66,17 +69,10 @@ public class StandardRemoteMasterServer implements RemoteMasterServer {
   private List<RemoteMasterServerListener> listeners = Lists.newCopyOnWriteArrayList();
 
   @Override
-  public void startup() {
-    // TODO(keith): Make a web socket connection when the master/controller
-    // comms move from ROS.
+  public void register(MasterCommunicationManager masterCommunicationManager) {
     masterCommunicationManager.getWebServer().addDynamicContentHandler(
         RemoteMasterServerMessages.URI_PREFIX_MASTER_SPACECONTROLLER, true,
         new MyHttpDynamicRequestHandler());
-  }
-
-  @Override
-  public void shutdown() {
-    // Nothing to do for now
   }
 
   @Override
@@ -90,29 +86,35 @@ public class StandardRemoteMasterServer implements RemoteMasterServer {
   }
 
   /**
-   * A controller registration has come in.
+   * Register a space controller.
    *
+   * @param spaceControllerRemoteAddress
+   *          the remote address of the space controller
    * @param data
    *          the registration data
    */
-  private void handleControllerRegistration(Map<String, Object> data) {
-    String uuid = (String) data.get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_UUID);
-    String hostId = (String) data.get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_ID);
-
-    log.formatInfo("Controller %s (Host ID %s) is online.", uuid, hostId);
-
+  private void registerSpaceController(SocketAddress spaceControllerRemoteAddress,
+      Map<String, Object> data) {
     SpaceController controller = new SimpleSpaceController();
-    controller.setUuid(uuid);
+    controller.setUuid((String) data.get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_UUID));
     controller.setName((String) data.get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_NAME));
-    controller.setDescription((String) data
-        .get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_DESCRIPTION));
-    controller.setHostId(hostId);
-    controller.setHostName((String) data
-        .get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_NAME));
-    controller.setHostControlPort((Integer) data
-        .get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_CONTROL_PORT));
+    controller.setDescription(
+        (String) data.get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_DESCRIPTION));
+    controller
+        .setHostId((String) data.get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_ID));
+    String hostName =
+        (String) data.get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_NAME);
+    if (hostName == null) {
+      hostName = ((InetSocketAddress) spaceControllerRemoteAddress).getHostString();
+    }
+    controller.setHostName(hostName);
+    controller.setHostControlPort(
+        (Integer) data.get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_CONTROL_PORT));
 
-    signalControllerRegistration(controller);
+    log.formatInfo("Controller %s (Host ID: %s, Host: %s:%d) is online.", controller.getUuid(),
+        controller.getHostId(), controller.getHostName(), controller.getHostControlPort());
+
+    signalSpaceControllerRegistration(controller);
   }
 
   /**
@@ -121,20 +123,31 @@ public class StandardRemoteMasterServer implements RemoteMasterServer {
    * @param controller
    *          information about the controller
    */
-  private void signalControllerRegistration(SpaceController controller) {
-    for (RemoteMasterServerListener listener : listeners) {
-      listener.onControllerRegistration(controller);
-    }
+  private void signalSpaceControllerRegistration(SpaceController controller) {
+    spaceEnvironment.getExecutorService().submit(new Runnable() {
+
+      @Override
+      public void run() {
+        log.info(listeners);
+        for (RemoteMasterServerListener listener : listeners) {
+          try {
+            listener.onSpaceControllerRegistration(controller);
+          } catch (Throwable e) {
+            log.error("Exception while signaling space controller registration", e);
+          }
+        }
+      }
+    });
   }
 
   /**
-   * Set the master communication manager.
-   *
-   * @param masterCommunicationManager
-   *          the master communication manager
+   * Set the space environment.
+   * 
+   * @param spaceEnvironment
+   *          the space environment
    */
-  public void setMasterCommunicationManager(MasterCommunicationManager masterCommunicationManager) {
-    this.masterCommunicationManager = masterCommunicationManager;
+  public void setSpaceEnvironment(SmartSpacesEnvironment spaceEnvironment) {
+    this.spaceEnvironment = spaceEnvironment;
   }
 
   /**
@@ -157,17 +170,17 @@ public class StandardRemoteMasterServer implements RemoteMasterServer {
 
     @Override
     public void handle(HttpRequest request, HttpResponse response) {
-      String methodName =
-          request.getUri().getPath()
-              .substring(RemoteMasterServerMessages.URI_PREFIX_MASTER_SPACECONTROLLER.length());
+      log.formatInfo("Got registration from %s", request.getRemoteAddress());
+      String methodName = request.getUri().getPath()
+          .substring(RemoteMasterServerMessages.URI_PREFIX_MASTER_SPACECONTROLLER.length());
       if (methodName.equals(RemoteMasterServerMessages.MASTER_SPACE_CONTROLLER_METHOD_REGISTER)) {
-        handleRegister(request, response);
+        handleSpaceControllerRegistration(request, response);
       } else {
         log.formatWarn("Received unknown remote master server method name %s", methodName);
         response.setResponseCode(HttpResponseCode.NOT_FOUND);
         try {
-          response.getOutputStream().write(
-              RemoteMasterServerMessages.MASTER_METHOD_RESPONSE_FAILURE.getBytes());
+          response.getOutputStream()
+              .write(RemoteMasterServerMessages.MASTER_METHOD_RESPONSE_FAILURE.getBytes());
         } catch (IOException e) {
           throw SmartSpacesException.newFormattedException(e,
               "Could not write failure response for remote master server request %s",
@@ -184,23 +197,22 @@ public class StandardRemoteMasterServer implements RemoteMasterServer {
      * @param response
      *          the http response
      */
-    private void handleRegister(HttpRequest request, HttpResponse response) {
+    private void handleSpaceControllerRegistration(HttpRequest request, HttpResponse response) {
       try {
-        String data =
-            request.getUriQueryParameters().get(
-                RemoteMasterServerMessages.MASTER_METHOD_FIELD_CONTROLLER_REGISTRATION_DATA);
+        String data = request.getUriQueryParameters()
+            .get(RemoteMasterServerMessages.MASTER_METHOD_FIELD_CONTROLLER_REGISTRATION_DATA);
         if (data != null) {
           Map<String, Object> registrationData = MAPPER.parseObject(data);
-          handleControllerRegistration(registrationData);
+          registerSpaceController(request.getRemoteAddress(), registrationData);
         }
         response.setContentType(RemoteMasterServerMessages.REMOTE_MASTER_RESPONSE_CONTENT_TYPE);
-        response.getOutputStream().write(
-            RemoteMasterServerMessages.CONTROLLER_REGISTRATION_SUCCESS.getBytes());
+        response.getOutputStream()
+            .write(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_SUCCESS.getBytes());
       } catch (Throwable e) {
         response.setResponseCode(HttpResponseCode.INTERNAL_SERVER_ERROR);
         try {
-          response.getOutputStream().write(
-              RemoteMasterServerMessages.CONTROLLER_REGISTRATION_FAILURE.getBytes());
+          response.getOutputStream()
+              .write(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_FAILURE.getBytes());
         } catch (IOException e1) {
           throw SmartSpacesException.newFormattedException(e,
               "Could not write failure response for controller registration %s", request.getUri());
@@ -209,6 +221,18 @@ public class StandardRemoteMasterServer implements RemoteMasterServer {
         throw SmartSpacesException.newFormattedException(e,
             "Could not process controller registration %s", request.getUri());
       }
+    }
+  }
+
+  /**
+   * Set a group of listeners to the handler.
+   * 
+   * @param listeners
+   *          the listeners
+   */
+  public void setListeners(List<RemoteMasterServerListener> listeners) {
+    for (RemoteMasterServerListener listener : listeners) {
+      addListener(listener);
     }
   }
 }

@@ -22,12 +22,14 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.container.data.SpaceControllerInformationValidator;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.master.server.remote.master.RemoteMasterServer;
+import io.smartspaces.master.server.remote.master.RemoteMasterCommunicationHandler;
 import io.smartspaces.master.server.remote.master.RemoteMasterServerListener;
+import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
+import io.smartspaces.system.SmartSpacesEnvironment;
 
 /**
- * A bridge between the {@link RemoteMasterServer} and the master.
+ * A bridge between the {@link RemoteMasterCommunicationHandler} and the master.
  *
  * @author Keith M. Hughes
  */
@@ -39,9 +41,14 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
   private SpaceControllerRepository spaceControllerRepository;
 
   /**
-   * The remote master server this is bridging.
+   * The active space controller manager.
    */
-  private RemoteMasterServer remoteMasterServer;
+  private ActiveSpaceControllerManager activeSpaceControllerManager;
+
+  /**
+   * The space environment to use.
+   */
+  private SmartSpacesEnvironment spaceEnvironment;
 
   /**
    * The logger for this bridge.
@@ -54,28 +61,33 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
   private SpaceControllerInformationValidator spaceControllerInformationValidator =
       new SpaceControllerInformationValidator();
 
-  /**
-   * Start the bridge up.
-   */
-  public void startup() {
-    remoteMasterServer.addListener(this);
-  }
-
-  /**
-   * Shut the bridge down.
-   */
-  public void shutdown() {
-    remoteMasterServer.removeListener(this);
-  }
-
   @Override
-  public void onControllerRegistration(SpaceController registeringController) {
-    SpaceController existingController =
+  public void onSpaceControllerRegistration(SpaceController registeringController) {
+    SpaceController spaceController =
         spaceControllerRepository.getSpaceControllerByUuid(registeringController.getUuid());
-    if (existingController == null) {
-      handleNeverBeforeSeenSpaceController(registeringController);
+    if (spaceController == null) {
+      spaceController = handleNeverBeforeSeenSpaceController(registeringController);
     } else {
-      handleExistingSpaceController(registeringController, existingController);
+      spaceController = handleExistingSpaceController(registeringController, spaceController);
+    }
+
+    potentiallyConnectToSpaceController(spaceController);
+  }
+
+  /**
+   * Potentially connect to the space controller.
+   * 
+   * @param spaceController
+   *          the space controller
+   */
+  private void potentiallyConnectToSpaceController(SpaceController spaceController) {
+    if (spaceEnvironment.getSystemConfiguration().getPropertyBoolean(
+        SmartSpacesEnvironment.CONFIGURATION_NAME_AUTOCONFIGURE,
+        SmartSpacesEnvironment.CONFIGURATION_VALUE_DEFAULT_AUTOCONFIGURE)) {
+      log.formatInfo("Autoconnecting to spacecontroller %s", spaceController.getUuid());
+      activeSpaceControllerManager.connectSpaceController(spaceController);
+    } else {
+      log.formatInfo("No autoconnecting to spacecontroller %s", spaceController.getUuid());
     }
   }
 
@@ -84,8 +96,11 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
    *
    * @param registeringController
    *          the information about the registering controller
+   * 
+   * @return the space controller placed in the repository
    */
-  private void handleNeverBeforeSeenSpaceController(SpaceController registeringController) {
+  private SpaceController
+      handleNeverBeforeSeenSpaceController(SpaceController registeringController) {
     // If it is a new controller, an instance must be created and stored in the
     // space controller repository.
 
@@ -104,7 +119,7 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
     SpaceController newController =
         spaceControllerRepository.newSpaceController(registeringUuid, registeringController);
 
-    spaceControllerRepository.saveSpaceController(newController);
+    return spaceControllerRepository.saveSpaceController(newController);
   }
 
   /**
@@ -115,12 +130,13 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
    * @param existingController
    *          the existing controller pulled from the space controller
    *          repository
+   * 
+   * @return the finalcontroller
    */
-  private void handleExistingSpaceController(SpaceController registeringController,
+  private SpaceController handleExistingSpaceController(SpaceController registeringController,
       SpaceController existingController) {
-    // if the space controller exists, check to see if the host ID has changed.
-    // if it has, update the controller from
-    // the repository.
+    // if the space controller exists, check to see if enough has changed to
+    // warrant updating the controller from the repository.
 
     if (shouldRecordBeUpdated(registeringController, existingController)) {
       String registeringHostId = registeringController.getHostId();
@@ -138,7 +154,9 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
       existingController.setHostName(registeringHostName);
       existingController.setHostControlPort(registeringHostControlPort);
 
-      spaceControllerRepository.saveSpaceController(existingController);
+      return spaceControllerRepository.saveSpaceController(existingController);
+    } else {
+      return existingController;
     }
   }
 
@@ -154,8 +172,28 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
    */
   private boolean shouldRecordBeUpdated(SpaceController registeringController,
       SpaceController existingController) {
-    return !existingController.getHostId().equals(registeringController.getHostId())
-        || !existingController.getName().equals(registeringController.getName());
+    return !compareField(existingController.getHostName(), registeringController.getHostName())
+        || existingController.getHostControlPort() != registeringController.getHostControlPort()
+        || !compareField(existingController.getName(), registeringController.getName())
+        || !compareField(existingController.getHostId(), registeringController.getHostId());
+  }
+
+  /**
+   * Compare 2 string fields that handles {@code null} correctly.
+   * 
+   * @param s1
+   *          the first field
+   * @param s2
+   *          the second field
+   * 
+   * @return {@ code true} if the fields are equal
+   */
+  private boolean compareField(String s1, String s2) {
+    if (s1 != null) {
+      return s1.equals(s2);
+    } else {
+      return s2 == null;
+    }
   }
 
   /**
@@ -177,24 +215,41 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
   }
 
   /**
+   * Set the space controller repository.
+   * 
    * @param spaceControllerRepository
-   *          the controllerRepository to set
+   *          the repository to use
    */
   public void setSpaceControllerRepository(SpaceControllerRepository spaceControllerRepository) {
     this.spaceControllerRepository = spaceControllerRepository;
   }
 
   /**
-   * @param remoteMasterServer
-   *          the remoteMasterServer to set
+   * Set the space environment.
+   * 
+   * @param spaceEnvironment
+   *          the environment to us
    */
-  public void setRemoteMasterServer(RemoteMasterServer remoteMasterServer) {
-    this.remoteMasterServer = remoteMasterServer;
+  public void setSpaceEnvironment(SmartSpacesEnvironment spaceEnvironment) {
+    this.spaceEnvironment = spaceEnvironment;
   }
 
   /**
+   * Set the active space controller manager.
+   * 
+   * @param activeSpaceControllerManagere
+   *          the manager to use
+   */
+  public void
+      setActiveSpaceControllerManager(ActiveSpaceControllerManager activeSpaceControllerManager) {
+    this.activeSpaceControllerManager = activeSpaceControllerManager;
+  }
+
+  /**
+   * Set the log.
+   * 
    * @param log
-   *          the log to set
+   *          the log to use
    */
   public void setLog(ExtendedLog log) {
     this.log = log;

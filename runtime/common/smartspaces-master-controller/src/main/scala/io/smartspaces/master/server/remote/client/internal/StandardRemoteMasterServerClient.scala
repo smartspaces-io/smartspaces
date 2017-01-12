@@ -97,7 +97,7 @@ class StandardRemoteMasterServerClient(spaceEnvironment: SmartSpacesEnvironment)
         }
 
         override def zeroconfServiceRemoved(serviceInfo: ZeroconfServiceInfo): Unit = {
-          // TODO(keith): Erase master info so get a dirty notification when the master comes back up.
+          handleMasterInfoDisappear(serviceInfo)
           spaceEnvironment.getLog.info(s"Lost master zeroconf at ${serviceInfo.hostName()}:${serviceInfo.port()}")
         }
       })
@@ -130,8 +130,19 @@ class StandardRemoteMasterServerClient(spaceEnvironment: SmartSpacesEnvironment)
     // TODO(keith): Mark registration dirty if there is a change of the master host or port
     masterHostname = serviceInfo.hostName()
     masterCommunicationPort = serviceInfo.port()
+    
+    newControllerInfo = true
 
     possiblySendSpaceControllerRegistration
+  }
+
+  /**
+   * The zeroconf service has been notified of the master vanishing. Update information and decide
+   * whether or not to send the registration.
+   */
+  private def handleMasterInfoDisappear(serviceInfo: ZeroconfServiceInfo): Unit = {
+    masterHostname = null
+    masterCommunicationPort = -1
   }
 
   /**

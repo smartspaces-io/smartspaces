@@ -105,7 +105,8 @@ public class NettyHttpDynamicGetRequestHandlerHandler implements NettyHttpGetReq
   @Override
   public void handleWebRequest(ChannelHandlerContext ctx, HttpRequest req,
       Set<HttpCookie> cookiesToAdd) throws IOException {
-    NettyHttpRequest request = new NettyHttpRequest(req, parentHandler.getWebServer().getLog());
+    NettyHttpRequest request = new NettyHttpRequest(req, ctx.getChannel().getRemoteAddress(),
+        parentHandler.getWebServer().getLog());
     NettyHttpResponse response = new NettyHttpResponse(ctx, extraHttpContentHeaders);
     response.addCookies(cookiesToAdd);
 
@@ -113,9 +114,8 @@ public class NettyHttpDynamicGetRequestHandlerHandler implements NettyHttpGetReq
     try {
       requestHandler.handle(request, response);
 
-      res =
-          new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.valueOf(response
-              .getResponseCode()));
+      res = new DefaultHttpResponse(HttpVersion.HTTP_1_1,
+          HttpResponseStatus.valueOf(response.getResponseCode()));
       res.setContent(response.getChannelBuffer());
 
       String contentType = response.getContentType();
@@ -129,11 +129,8 @@ public class NettyHttpDynamicGetRequestHandlerHandler implements NettyHttpGetReq
       parentHandler.getWebServer().getLog()
           .debug(String.format("Dynamic content handler for %s completed", uriPrefix));
     } catch (Exception e) {
-      parentHandler
-          .getWebServer()
-          .getLog()
-          .error(String.format("Error while handling dynamic web server request %s", req.getUri()),
-              e);
+      parentHandler.getWebServer().getLog().error(
+          String.format("Error while handling dynamic web server request %s", req.getUri()), e);
 
       parentHandler.sendError(ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR);
     }

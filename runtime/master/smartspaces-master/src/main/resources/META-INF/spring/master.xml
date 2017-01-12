@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright (C) 2016 Keith M. Hughes 
-     Copyright (C) 2012 Google Inc. 
+     Copyright (C) 2012 Google Inc. '
     Licensed 
 	under the Apache License, Version 2.0 (the "License"); you may not use this 
 	file except in compliance with the License. You may obtain a copy of the 
@@ -179,11 +179,16 @@
 	</bean>
 
 	<bean id="smartspaces.master.server"
-		class="io.smartspaces.master.server.remote.master.internal.StandardRemoteMasterServer"
-		destroy-method="shutdown" init-method="startup">
-		<property name="masterCommunicationManager" ref="smartspaces.master.communication.manager" />
-
+		class="io.smartspaces.master.server.remote.master.internal.StandardRemoteMasterCommunicationHandler">
 		<property name="log" ref="smartspaces.master.logger" />
+
+		<property name="spaceEnvironment" ref="smartspaces.environment" />
+		
+		<property name="listeners">
+		  <list>
+		    <ref bean="smartspaces.master.server.bridge" />
+		  </list>
+		</property>
 	</bean>
 
 	<bean id="smartspaces.resource.repository.storage"
@@ -233,6 +238,12 @@
 	<bean id="smartspaces.master.communication.manager"
 		class="io.smartspaces.master.communication.internal.StandardMasterCommunicationManager"
 		destroy-method="shutdown" init-method="startup">
+		
+		<property name="handlers">
+		  <list>
+		    <ref bean="smartspaces.master.server" />
+		  </list>
+		</property>
 		<property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
@@ -400,12 +411,13 @@
 		<property name="target">
 
 			<bean
-				class="io.smartspaces.master.server.services.internal.RemoteMasterServerBridge"
-				destroy-method="shutdown" init-method="startup">
+				class="io.smartspaces.master.server.services.internal.RemoteMasterServerBridge">
 
 				<property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
 
-				<property name="remoteMasterServer" ref="smartspaces.master.server" />
+				<property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
+
+		        <property name="spaceEnvironment" ref="smartspaces.environment" />
 
 				<property name="log" ref="smartspaces.master.logger" />
 			</bean>

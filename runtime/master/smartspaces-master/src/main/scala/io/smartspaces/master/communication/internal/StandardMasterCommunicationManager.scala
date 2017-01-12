@@ -26,6 +26,11 @@ import io.smartspaces.resource.managed.IdempotentManagedResource
 import io.smartspaces.service.ServiceNotification
 import io.smartspaces.service.comm.network.zeroconf.ZeroconfService
 import io.smartspaces.service.comm.network.zeroconf.StandardZeroconfServiceInfo
+import io.smartspaces.master.communication.MasterCommunicationHandler
+
+import java.util.List
+
+import scala.collection.JavaConversions._
 
 /**
  * The standard manager for master communications.
@@ -43,6 +48,11 @@ class StandardMasterCommunicationManager extends MasterCommunicationManager with
    * The web server hosting the web socket connection.
    */
   private var webServer: WebServer = null
+  
+  /**
+   * The master communication handlers.
+   */
+  private var handlers: List[MasterCommunicationHandler] = null
 
   /**
    * The zeroconf service name for the master control.
@@ -55,6 +65,7 @@ class StandardMasterCommunicationManager extends MasterCommunicationManager with
   private var spaceEnvironment: SmartSpacesEnvironment = null
 
   override def onStartup(): Unit = {
+    val host = spaceEnvironment.getSystemConfiguration.getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS)
     val port =
       spaceEnvironment.getSystemConfiguration().getPropertyInteger(
         RemoteMasterServerMessages.CONFIGURATION_NAME_MASTER_COMMUNICATION_PORT,
@@ -66,8 +77,11 @@ class StandardMasterCommunicationManager extends MasterCommunicationManager with
     webServer.setPort(port)
 
     webServer.startup()
+    
+    if (handlers != null) {
+      handlers.foreach { handler => handler.register(this) }
+    }
 
-    var host = "localhost"
     spaceEnvironment.getServiceRegistry.addServiceNotificationListener(ZeroconfService.SERVICE_NAME, new ServiceNotification[ZeroconfService]() {
       override def onServiceAvailable(zeroconfService: ZeroconfService): Unit = {
         zeroconfService.registerService(new StandardZeroconfServiceInfo(RemoteMasterServerMessages.ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE, zeroconfName, null, host, port, 0, 0))
@@ -82,6 +96,20 @@ class StandardMasterCommunicationManager extends MasterCommunicationManager with
 
   override def getWebServer(): WebServer = {
     return webServer
+  }
+  
+  override def registerHander(handler: MasterCommunicationHandler): Unit = {
+    handler.register(this)
+  }
+
+  /**
+   * Set the handlers.
+   *
+   * @param handlers
+   *          the handlers
+   */
+  def setHandlers(handlers: List[MasterCommunicationHandler]): Unit = {
+    this.handlers = handlers
   }
 
   /**

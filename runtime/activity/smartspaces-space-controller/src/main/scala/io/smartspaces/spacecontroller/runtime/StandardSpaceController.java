@@ -243,9 +243,9 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
 
     startupControllerControl();
 
-    startupAutostartActivities();
-
     spaceControllerCommunicator.registerControllerWithMaster(getControllerInfo());
+
+    startupAutostartActivities();
 
     startedUp = true;
   }

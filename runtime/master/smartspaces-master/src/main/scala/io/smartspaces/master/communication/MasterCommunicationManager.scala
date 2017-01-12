@@ -32,5 +32,13 @@ trait MasterCommunicationManager extends ManagedResource {
    *
    * @return the master web server
    */
-   def getWebServer(): WebServer
+  def getWebServer(): WebServer
+
+  /**
+   * Register a handler with the manager.
+   *
+   * @param handler
+   *        the handler to register
+   */
+  def registerHander(handler: MasterCommunicationHandler): Unit
 }

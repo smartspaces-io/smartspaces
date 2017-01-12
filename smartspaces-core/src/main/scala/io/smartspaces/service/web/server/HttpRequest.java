@@ -17,14 +17,14 @@
 
 package io.smartspaces.service.web.server;
 
+import com.google.common.collect.Multimap;
+import org.apache.commons.logging.Log;
+
 import java.net.HttpCookie;
+import java.net.SocketAddress;
 import java.net.URI;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.collect.Multimap;
 
 /**
  * An HTTP request coming into the server.
@@ -32,6 +32,13 @@ import com.google.common.collect.Multimap;
  * @author Keith M. Hughes
  */
 public interface HttpRequest {
+  
+  /**
+   * Get the remote address for the request.
+   * 
+   * @return the remote address for the request
+   */
+  SocketAddress getRemoteAddress();
 
   /**
    * Get the URI of the request.

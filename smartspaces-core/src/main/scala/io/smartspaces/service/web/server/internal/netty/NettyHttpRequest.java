@@ -30,6 +30,7 @@ import org.jboss.netty.handler.codec.http.Cookie;
 import org.jboss.netty.handler.codec.http.CookieDecoder;
 
 import java.net.HttpCookie;
+import java.net.SocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
@@ -54,6 +55,11 @@ public class NettyHttpRequest implements HttpRequest {
   private org.jboss.netty.handler.codec.http.HttpRequest request;
 
   /**
+   * The remote address for the sender of the HTTP request.
+   */
+  private SocketAddress remoteAddress;
+
+  /**
    * The logger for this request.
    */
   private Log log;
@@ -68,13 +74,22 @@ public class NettyHttpRequest implements HttpRequest {
    *
    * @param request
    *          the Netty HTTP request
+   * @param remoteAddress
+   *          the remote address for the request
    * @param log
    *          the logger for the request
    */
-  public NettyHttpRequest(org.jboss.netty.handler.codec.http.HttpRequest request, Log log) {
+  public NettyHttpRequest(org.jboss.netty.handler.codec.http.HttpRequest request,
+      SocketAddress remoteAddress, Log log) {
     this.request = request;
+    this.remoteAddress = remoteAddress;
     this.log = log;
     headers = null;
+  }
+  
+  @Override
+  public SocketAddress getRemoteAddress() {
+    return remoteAddress;
   }
 
   @Override

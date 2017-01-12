@@ -286,7 +286,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
     // see if it is properly authorized, if authorization is requested.
     HttpAuthResponse response = null;
     if (authProvider != null) {
-      response = authProvider.authorizeRequest(new NettyHttpRequest(req, getWebServer().getLog()));
+      response = authProvider.authorizeRequest(new NettyHttpRequest(req, ctx.getChannel().getRemoteAddress(), getWebServer().getLog()));
       if ((response == null) || !response.authSuccessful()) {
         if ((response == null) || response.redirectUrl() != null) {
           sendHttpResponse(ctx, req, createRedirect(response.redirectUrl()), false, false);

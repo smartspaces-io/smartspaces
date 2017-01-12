@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,21 +14,20 @@
  * the License.
  */
 
-package io.smartspaces.master.server.remote.master;
-
-import io.smartspaces.domain.basic.SpaceController;
+package io.smartspaces.master.communication
 
 /**
- * A listener for events in the {@link RemoteMasterCommunicationHandler}.
- *
+ * A handler for communications through the [[@link MasterCommunicationManager]].
+ * 
  * @author Keith M. Hughes
  */
-public interface RemoteMasterServerListener {
-
+trait MasterCommunicationHandler {
+  
   /**
-   * A controller has registered itself with the server.
-   *
-   * @param controller
+   * Register the handler with the manager.
+   * 
+   * @param manager
+   *          the manager the handler is being registered with
    */
-  void onSpaceControllerRegistration(SpaceController controller);
+  def register(manager: MasterCommunicationManager): Unit
 }

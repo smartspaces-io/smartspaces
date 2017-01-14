@@ -20,9 +20,9 @@ package io.smartspaces.liveactivity.runtime.standalone.messaging;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.SupportedActivity;
-import io.smartspaces.activity.component.ros.RosActivityComponent;
-import io.smartspaces.activity.component.route.BaseMessageRouterActivityComponent;
-import io.smartspaces.activity.component.route.MessageRouterActivityComponent;
+import io.smartspaces.activity.component.comm.ros.RosActivityComponent;
+import io.smartspaces.activity.component.comm.route.BaseMessageRouterActivityComponent;
+import io.smartspaces.activity.component.comm.route.MessageRouterActivityComponent;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.liveactivity.runtime.standalone.development.DevelopmentStandaloneLiveActivityRuntime;
 import io.smartspaces.liveactivity.runtime.standalone.messaging.MessageUtils.MessageMap;
@@ -557,7 +557,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
       // router. Eventually change
       // to a more generic route name config parameter.
       return getComponentContext().getActivity().getConfiguration()
-          .getPropertyString(RosActivityComponent.CONFIGURATION_NAME_ACTIVITY_ROS_NODE_NAME);
+          .getPropertyString(RosActivityComponent.CONFIGURATION_NAME_ACTIVITY_PUBSUB_NODE_NAME);
     }
 
     @Override

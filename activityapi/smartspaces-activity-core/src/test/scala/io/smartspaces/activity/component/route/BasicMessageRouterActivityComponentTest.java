@@ -17,8 +17,9 @@
 
 package io.smartspaces.activity.component.route;
 
-import io.smartspaces.activity.behavior.ros.RosActivityBehavior;
+import io.smartspaces.activity.behavior.comm.ros.RosActivityBehavior;
 import io.smartspaces.activity.component.ActivityComponentContext;
+import io.smartspaces.activity.component.comm.route.BasicMessageRouterActivityComponent;
 import io.smartspaces.activity.execution.ActivityExecutionContext;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;

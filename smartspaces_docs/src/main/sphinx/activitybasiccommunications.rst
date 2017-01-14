@@ -30,11 +30,11 @@ Route Basics
 ==========
 
 
-The basic Smart Spaces communication system uses ROS for Activity to Activity and Master
-to Controller communication. ROS uses the concept of Global Topics, which you can think of
+The basic Smart Spaces communication system uses pub/sub for Activity to Activity communication. 
+The types of pub/sub supported by SmartSpaces uses the concept of Global Topics, which you can think of
 as a globally defined mailbox that anyone can write to and anyone can read from, as long as they
 have the name of the topic.
-``/example/routable/channel1`` is the global ROS Topic that many of the example routable
+``/example/routable/channel1`` is the global pub/sub Topic that many of the example routable
 Activities in the Workbench can write to or read from. Every Activity that wants to use
 the route to communicate must use the same name for the global topic.
 
@@ -44,7 +44,7 @@ and visa versa. In the examples found in the Workbench you can see one example w
 on the route and another which only reads from the route.
 
 Routes are used in Activities by giving them a name which is local to the Activity. If the
-Activity wants to write to a route, it uses this local name, also called a Channel. This name
+Activity wants to write to a route, it uses this local name, also called a Channel ID. This name
 is different than the global topic name.
 
 A lot of words... what does it all mean???
@@ -73,17 +73,17 @@ writes to the same route. The Activity has the following configuration parameter
 
 Notice that the configuration property ``space.activity.route.input.input1`` has the same
 value as the configuration property ``space.activity.route.output.output1``. This means that
-writing to channel ``output1`` in Activity
+writing to Channel ID ``output1`` in Activity
 ``smartspaces.example.activity.routable.output``
-will show up on channel ``input1`` in Activity
+will show up on Channel ID ``input1`` in Activity
 ``smartspaces.example.activity.routable.input``.
 
-``input1`` and ``output1`` are examples of the local name part of a route. These names, once
+``input1`` and ``output1`` are examples of Channel IDs, the local name part of a route. These names, once
 again, are local to an Activity, and can be anything the activity wants it to be. Even names
 like ``saxophone``, ``foo``, and ``television`` would be fine. Of course you should pick names
 that actually mean something for what the route is used for.
 
-The property ``space.activity.routes.inputs`` would contain the local names of all route channels
+The property ``space.activity.routes.inputs`` would contain the Channel IDs of all route channels
 the activity will read from. Every channel to be read from will be listed in this property,
 with each name separated by whitespace (i.e. spaces, tabs). For example
 
@@ -96,12 +96,12 @@ with each name separated by whitespace (i.e. spaces, tabs). For example
 would create input channels named ``foo``, ``bar``, and ``bletch``.
 
 For each named input channel, there must be a corresponding property whose name
-starts with ``space.activity.route.input``. For example, in the example above, we have an
+starts with ``space.activity.route.input.``. For example, in the example above, we have an
 input route named ``input1``, so we must have a property with the name
 ``space.activity.route.input.input1``. The value of this property would be the name of the
 global topic for the route.
 
-Multiple global topics can be listed as the value for the ``space.activity.route.input`` property, once
+Multiple global topics can be listed as the value for the ``space.activity.route.output`` property, once
 again separated by whitespace. This means the channel will listen on all topics listed at the same
 time.
 
@@ -114,7 +114,7 @@ Similarly
 would create output channels named ``foo``, ``bar``, and ``bletch``.
 
 For each named output channel, there must be a corresponding property whose name
-starts with ``space.activity.route.output``. For example, in the example above, we have an
+starts with ``space.activity.route.output.``. For example, in the example above, we have an
 output route named ``output1``, so we must have a property with the name
 ``space.activity.route.output.output1``. The value of this property would be the name of the
 global topic for the route.
@@ -130,7 +130,7 @@ time. For example,
 
 configures channel ``foo`` to write on both topics ``/my/topic`` and ``/my/other/topic``.
 
-Any Activity which uses ROS communication, remember that routes are implemented using ROS
+Any Activity that uses ROS communication, remember that routes are implemented using ROS
 communication, must have the ``space.activity.ros.node.name`` configuration property defined.
 This name should be unique for your space, and one way to do that is to make it
 a relative name, meaning don't start it with a ``/``. Names which start with a ``/`` are
@@ -141,13 +141,13 @@ Picking Which Pub/Sub System to Use
 ===================================
 
 As stated earlier, SmartSpaces supports both ROS and MQTT for routes. The default technology 
-used is ROS. For example, if output topics are defined as
+used is MQTT. For example, if output topics are defined as
 
 +----------------------------------+---------------------------+
 | space.activity.routes.output.foo | /my/topic /my/other/topic |
 +----------------------------------+---------------------------+
 
-both topics ``/my/topic`` and ``/my/other/topic`` will be ROS topics. 
+both topics ``/my/topic`` and ``/my/other/topic`` will be MQTT topics. 
 
 You can configure the default technology by setting the configuration parameter 
 `space.activity.route.protocol.default`. If it has the value ``ros``, the default technology 
@@ -209,8 +209,8 @@ from. Use the first argument to decide which route the message came from.
     }
 
 To write to a route, create a map of name/value pairs and call the ``sendOutputMessage`` method.
-The first argument will be the name of the output channel you want to write to, the second argument
-will be the map of name/value pairs to send.
+The first argument will be the output Channel ID for the channel you want to write to,
+the second argument will be the map of name/value pairs to send.
 
 .. code-block:: java
 

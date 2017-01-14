@@ -18,7 +18,7 @@
     </executable>
 
     <configuration>
-      <property name="space.activity.ros.node.name">
+      <property name="space.activity.pubsub.node.name">
         <value>
           example/routable/output
         </value>

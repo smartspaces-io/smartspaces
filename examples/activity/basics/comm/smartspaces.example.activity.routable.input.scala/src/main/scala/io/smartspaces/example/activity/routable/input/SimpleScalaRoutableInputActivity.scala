@@ -18,7 +18,7 @@ package io.smartspaces.example.activity.routable.input
 
 import java.util.Map
 
-import io.smartspaces.activity.behavior.routing.StandardActivityRouting
+import io.smartspaces.activity.behavior.comm.route.StandardActivityRouting
 import io.smartspaces.activity.impl.BaseActivity
 
 /**

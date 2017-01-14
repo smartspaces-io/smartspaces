@@ -15,12 +15,12 @@
  * the License.
  */
 
-package io.smartspaces.activity.behavior.ros
+package io.smartspaces.activity.behavior.comm.ros
 
 import org.ros.node.ConnectedNode
 import org.ros.osgi.common.RosEnvironment
-import io.smartspaces.activity.component.ros.RosActivityComponent
-import io.smartspaces.activity.component.ros.RosActivityComponent
+import io.smartspaces.activity.component.comm.ros.RosActivityComponent
+import io.smartspaces.activity.component.comm.ros.RosActivityComponent
 
 /**
  * An activity behavior for ROS support.

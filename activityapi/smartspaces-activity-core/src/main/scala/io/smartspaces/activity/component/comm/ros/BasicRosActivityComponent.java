@@ -15,11 +15,12 @@
  * the License.
  */
 
-package io.smartspaces.activity.component.ros;
+package io.smartspaces.activity.component.comm.ros;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.component.ActivityComponent;
 import io.smartspaces.activity.component.BaseActivityComponent;
+import io.smartspaces.activity.component.comm.PubSubActivityComponent;
 import io.smartspaces.configuration.Configuration;
 
 import org.ros.node.ConnectedNode;
@@ -66,7 +67,7 @@ public class BasicRosActivityComponent extends BaseActivityComponent implements
     rosEnvironment =
         componentContext.getActivity().getSpaceEnvironment().getValue("environment.ros");
 
-    rosNodeName = configuration.getRequiredPropertyString(CONFIGURATION_NAME_ACTIVITY_ROS_NODE_NAME);
+    rosNodeName = configuration.getRequiredPropertyString(PubSubActivityComponent.CONFIGURATION_NAME_ACTIVITY_PUBSUB_NODE_NAME);
     try {
       nodeConfiguration = rosEnvironment.getPublicNodeConfigurationWithNodeName();
       nodeConfiguration.setLog(componentContext.getActivity().getLog());
@@ -74,7 +75,7 @@ public class BasicRosActivityComponent extends BaseActivityComponent implements
     } catch (Exception e) {
       throw new SimpleSmartSpacesException(String.format(
           "While processing node '%s' from configuration '%s'", rosNodeName,
-          CONFIGURATION_NAME_ACTIVITY_ROS_NODE_NAME), e);
+          PubSubActivityComponent.CONFIGURATION_NAME_ACTIVITY_PUBSUB_NODE_NAME), e);
     }
   }
 

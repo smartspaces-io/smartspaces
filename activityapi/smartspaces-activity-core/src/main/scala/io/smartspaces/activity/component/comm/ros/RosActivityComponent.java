@@ -15,9 +15,10 @@
  * the License.
  */
 
-package io.smartspaces.activity.component.ros;
+package io.smartspaces.activity.component.comm.ros;
 
 import io.smartspaces.activity.component.ActivityComponent;
+import io.smartspaces.activity.component.comm.PubSubActivityComponent;
 
 import org.ros.node.ConnectedNode;
 import org.ros.node.NodeConfiguration;
@@ -28,7 +29,7 @@ import org.ros.osgi.common.RosEnvironment;
  *
  * @author Keith M. Hughes
  */
-public interface RosActivityComponent extends ActivityComponent {
+public interface RosActivityComponent extends PubSubActivityComponent {
 
   /**
    * Name of the component.
@@ -36,17 +37,11 @@ public interface RosActivityComponent extends ActivityComponent {
   String COMPONENT_NAME = "comm.ros";
 
   /**
-   * Configuration property for specifying the Smart Spaces ROS node name
-   * for the activity.
-   */
-  String CONFIGURATION_NAME_ACTIVITY_ROS_NODE_NAME = "space.activity.ros.node.name";
-
-  /**
    * Get the ROS node name for the activity.
    *
    * <p>
    * This method can be overwritten by a subclass. Default it to read the
-   * configuration property {@link #CONFIGURATION_NAME_ACTIVITY_ROS_NODE_NAME}.
+   * configuration property {@link #CONFIGURATION_NAME_ACTIVITY_PUBSUB_NODE_NAME}.
    *
    * @return the ROS node name for the activity
    */

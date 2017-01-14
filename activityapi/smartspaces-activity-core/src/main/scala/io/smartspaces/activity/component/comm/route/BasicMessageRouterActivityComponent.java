@@ -15,9 +15,10 @@
  * the License.
  */
 
-package io.smartspaces.activity.component.route;
+package io.smartspaces.activity.component.comm.route;
 
-import io.smartspaces.activity.component.ros.RosActivityComponent;
+import io.smartspaces.activity.component.comm.PubSubActivityComponent;
+import io.smartspaces.activity.component.comm.ros.RosActivityComponent;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.handler.ProtectedHandlerContext;
 import io.smartspaces.messaging.route.MessageRouter;
@@ -25,6 +26,7 @@ import io.smartspaces.messaging.route.RoutableInputMessageListener;
 import io.smartspaces.messaging.route.RouteDescription;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
 import io.smartspaces.messaging.route.StandardMessageRouter;
+import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription$;
@@ -105,7 +107,9 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
 
     messageRouter = new StandardMessageRouter(new BasicMessageRouterProtectedHandlerContext(),
         timeProvider, log);
-    // messageRouter.setNodeName(rosActivityComponent.getNodeName());
+    Configuration configuration = componentContext.getActivity().getConfiguration();
+	messageRouter.setHostId(configuration.getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOSTID));
+	messageRouter.setNodeName(configuration.getRequiredPropertyString(PubSubActivityComponent.CONFIGURATION_NAME_ACTIVITY_PUBSUB_NODE_NAME));
     // messageRouter.setRosNode(rosActivityComponent.getNode());
     messageRouter.setRoutableInputMessageListener(messageListener);
     messageRouter.setMqttBrokerDescriptionDefault(getMqttBrokerDescription());

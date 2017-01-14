@@ -15,11 +15,11 @@
  * the License.
  */
 
-package io.smartspaces.activity.behavior.routing
+package io.smartspaces.activity.behavior.comm.route
 
 import java.util.Map
-import io.smartspaces.activity.component.route.MessageRouterActivityComponent
-import io.smartspaces.activity.behavior.ros.StandardActivityRos
+import io.smartspaces.activity.component.comm.route.MessageRouterActivityComponent
+import io.smartspaces.activity.behavior.comm.ros.StandardActivityRos
 import io.smartspaces.messaging.route.RoutableInputMessageListener
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
 import io.smartspaces.util.data.json.JsonMapper
@@ -34,7 +34,7 @@ import io.smartspaces.activity.behavior.general.StandardActivityJson
  *
  * @author Keith M. Hughes
  */
-trait StandardActivityRouting extends StandardActivityRos with StandardActivityJson with RoutingActivityBehavior {
+trait StandardActivityRouting extends /* StandardActivityRos with */ StandardActivityJson with RoutingActivityBehavior {
 
   /**
    * The JSON mapper.

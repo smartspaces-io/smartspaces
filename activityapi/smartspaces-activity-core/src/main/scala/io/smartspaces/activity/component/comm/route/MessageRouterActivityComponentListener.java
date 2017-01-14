@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.activity.component.route;
+package io.smartspaces.activity.component.comm.route;
 
 /**
  * A listener for events from a {@link MessageRouterActivityComponent}.

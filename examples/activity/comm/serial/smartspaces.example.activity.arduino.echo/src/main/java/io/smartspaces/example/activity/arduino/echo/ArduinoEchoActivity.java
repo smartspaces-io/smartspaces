@@ -17,13 +17,13 @@
 
 package io.smartspaces.example.activity.arduino.echo;
 
+import java.util.Random;
+
 import io.smartspaces.activity.impl.BaseActivity;
+import io.smartspaces.resource.managed.ManagedResourceWithTask;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpointService;
-import io.smartspaces.util.concurrency.CancellableLoop;
-import io.smartspaces.util.resource.ManagedResourceWithTask;
-
-import java.util.Random;
+import io.smartspaces.tasks.CancellableLoopingTask;
 
 /**
  * A Smart Spaces Java-based activity which writes bytes on a serial connection
@@ -69,7 +69,7 @@ public class ArduinoEchoActivity extends BaseActivity {
 
     serialEndpoint = communicationEndpointService.newSerialEndpoint(portName);
 
-    addManagedResource(new ManagedResourceWithTask(serialEndpoint, new CancellableLoop() {
+    addManagedResource(new ManagedResourceWithTask(serialEndpoint, new CancellableLoopingTask() {
       @Override
       protected void loop() throws InterruptedException {
         readStream();

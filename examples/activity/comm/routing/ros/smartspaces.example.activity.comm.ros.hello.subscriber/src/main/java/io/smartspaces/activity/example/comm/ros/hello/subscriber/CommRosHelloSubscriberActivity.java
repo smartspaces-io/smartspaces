@@ -17,12 +17,11 @@
 
 package io.smartspaces.activity.example.comm.ros.hello.subscriber;
 
-import io.smartspaces.activity.component.ros.RosActivityComponent;
+import io.smartspaces.activity.component.comm.ros.RosActivityComponent;
 import io.smartspaces.activity.impl.BaseActivity;
 
 import org.ros.message.MessageListener;
 import org.ros.node.topic.Subscriber;
-
 import std_msgs.ColorRGBA;
 
 /**

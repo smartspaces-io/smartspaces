@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,30 +14,25 @@
  * the License.
  */
 
-package io.smartspaces.activity.behavior.ros
+package io.smartspaces.activity.component.comm;
 
-import org.ros.node.ConnectedNode
-import org.ros.osgi.common.RosEnvironment
-import io.smartspaces.activity.ActivityBehavior
+import io.smartspaces.activity.component.ActivityComponent;
 
 /**
- * An {@link Activity} which uses ROS.
+ * An {@link ActivityComponent} that gives pubsub functionality.
  *
  * @author Keith M. Hughes
  */
-trait RosActivityBehavior extends ActivityBehavior {
+public interface PubSubActivityComponent extends ActivityComponent {
 
   /**
-   * Get the current ROS Environment being used by this activity.
-   *
-   * @return the ROS environment, can be {@code null}
+   * Configuration property for specifying the Smart Spaces ROS node name
+   * for the activity.
    */
-  def getRosEnvironment(): RosEnvironment
-
+  String CONFIGURATION_NAME_ACTIVITY_PUBSUB_NODE_NAME = "space.activity.pubsub.node.name";
+  
   /**
-   * Get the main ROS node for this activity.
-   *
-   * @return the main ROS node
+   * The separator for topic components.
    */
-  def getMainNode(): ConnectedNode
+  String TOPIC_COMPONENT_SEPARATOR = "/";
 }

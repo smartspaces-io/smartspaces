@@ -18,7 +18,7 @@
 package io.smartspaces.activity.example.externalproxy.internal;
 
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.activity.impl.web.BaseRoutableRosWebActivity;
+import io.smartspaces.activity.impl.web.BaseRoutableWebActivity;
 import io.smartspaces.service.web.WebSocketHandler;
 import io.smartspaces.service.web.client.WebSocketClient;
 import io.smartspaces.service.web.client.WebSocketClientService;
@@ -43,7 +43,7 @@ import java.util.Map;
  *
  * @author Keith M. Hughes
  */
-public class ExternalProxyInternalExampleActivity extends BaseRoutableRosWebActivity {
+public class ExternalProxyInternalExampleActivity extends BaseRoutableWebActivity {
 
   /**
    * Configuration property for the host where the external proxy resides.
@@ -94,7 +94,7 @@ public class ExternalProxyInternalExampleActivity extends BaseRoutableRosWebActi
           @SuppressWarnings("unchecked")
           Map<String, Object> data = (Map<String, Object>) d;
 
-          sendOutputJson("output1", data);
+          sendOutputMessage("output1", data);
         }
       }, getSpaceEnvironment().getExecutorService(), getLog());
 

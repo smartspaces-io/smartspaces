@@ -138,7 +138,7 @@ public class OpenSoundControlServerExampleActivity extends BaseActivity {
       final FilePlayableAudioTrack track = soundIdToTrack.get(trackToPlay);
       if (track != null) {
         // Run in another thread so that we don't block the OSC server.
-        getManagedCommands().submit(new Runnable() {
+        getManagedTasks().submit(new Runnable() {
           @Override
           public void run() {
             audioPlayer.start(track);

@@ -122,7 +122,7 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
 
   @Override
   public void startup() {
-    log.info("Starting up ROS remote controller");
+    log.info("Starting up remote space controller client");
 
     tcpClientService = spaceEnvironment.getServiceRegistry()
         .getRequiredService(TcpClientNetworkCommunicationEndpointService.SERVICE_NAME);
@@ -354,7 +354,6 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
    */
   void sendSpaceControllerRequest(ActiveSpaceController controller, String operation,
       Object payload) {
-    System.out.println(payload);
     String request = messageCodec
         .encodeFinalMessage(messageCodec.encodeBaseControllerRequestMessage(operation, payload));
 

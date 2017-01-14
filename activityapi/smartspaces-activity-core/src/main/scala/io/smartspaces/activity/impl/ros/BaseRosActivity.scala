@@ -17,13 +17,9 @@
 
 package io.smartspaces.activity.impl.ros
 
-import io.smartspaces.activity.component.ros.RosActivityComponent;
-import io.smartspaces.activity.impl.BaseActivity;
-import io.smartspaces.activity.behavior.ros.RosActivityBehavior;
-
-import org.ros.node.ConnectedNode;
-import org.ros.osgi.common.RosEnvironment;
-import io.smartspaces.activity.behavior.ros.StandardActivityRos
+import io.smartspaces.activity.behavior.comm.ros.RosActivityBehavior
+import io.smartspaces.activity.behavior.comm.ros.StandardActivityRos
+import io.smartspaces.activity.impl.BaseActivity
 
 /**
  * Support for ROS Smart Spaces activities.

@@ -26,7 +26,7 @@
         </description>
       </property>
 
-      <property name="space.activity.ros.node.name">
+      <property name="space.activity.pubsub.node.name">
         <value>example/serial/analog</value>
       </property>
       <property name="space.activity.routes.outputs" value="signal" />

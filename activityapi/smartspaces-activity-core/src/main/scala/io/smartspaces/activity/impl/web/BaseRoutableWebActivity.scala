@@ -17,11 +17,10 @@
 
 package io.smartspaces.activity.impl.web
 
-import io.smartspaces.activity.component.web.WebBrowserActivityComponent;
+import io.smartspaces.activity.behavior.comm.route.StandardActivityRouting
+import io.smartspaces.activity.behavior.web.StandardActivityWebBrowser
 import io.smartspaces.activity.behavior.web.StandardActivityWebServer
 import io.smartspaces.activity.impl.BaseActivity
-import io.smartspaces.activity.behavior.routing.StandardActivityRouting
-import io.smartspaces.activity.behavior.web.StandardActivityWebBrowser
 
 /**
  * A web-based Smart Spaces activity that is routable.

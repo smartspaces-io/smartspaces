@@ -55,7 +55,8 @@ public class TopicBridgeRoutableActivity extends BaseRoutableActivity {
 
   @Override
   public void commonActivitySetup() {
-    MessageBridgeFactory messageBridgeFactory = new RosMessageBridgeFactory(getMainNode());
+	// TODO(keith): Make this work with the generalized routing
+    MessageBridgeFactory messageBridgeFactory = new RosMessageBridgeFactory(/* getMainNode() */ null);
 
     File confFile =
         fileSupport.newFile(getActivityFilesystem().getInstallDirectory(), getConfiguration()

@@ -18,6 +18,7 @@ package io.smartspaces.messaging.route;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.activity.component.comm.PubSubActivityComponent;
 import io.smartspaces.handler.ProtectedHandlerContext;
 import io.smartspaces.messaging.codec.MapByteArrayCodec;
 import io.smartspaces.messaging.codec.MessageCodec;
@@ -134,6 +135,11 @@ public class StandardMessageRouter implements MessageRouter {
    */
   private Map<String, RouteDescription> outputRouteDescriptions = new HashMap<>();
 
+  /**
+   * Host ID of the container.
+   */
+  private String hostId;
+  
   /**
    * The node name of the router.
    */
@@ -276,7 +282,13 @@ public class StandardMessageRouter implements MessageRouter {
               }
             });
       } else if ("mqtt".equals(routeProtocol)) {
-        MqttSubscribers subscribers = new StandardMqttSubscribers(nodeName, log);
+    	// If the node name doesn't start with the component separator, add in the host ID.
+    	String mqttNodeName = nodeName;
+    	if (!nodeName.startsWith(PubSubActivityComponent.TOPIC_COMPONENT_SEPARATOR)) {
+    	  mqttNodeName = hostId + PubSubActivityComponent.TOPIC_COMPONENT_SEPARATOR + nodeName;
+    	}
+    	
+        MqttSubscribers subscribers = new StandardMqttSubscribers(mqttNodeName, log);
 
         final MqttRouteMessageSubscriber mqttRouteMessageSubscriber =
             new MqttRouteMessageSubscriber(channelId, subscribers, mqttMessageCodec);
@@ -404,6 +416,16 @@ public class StandardMessageRouter implements MessageRouter {
       output.shutdown();
     }
     outputPublishers.clear();
+  }
+
+  /**
+   * Set the host ID for the router.
+   * 
+   * @param hostId
+   *          the host ID
+   */
+  public void setHostId(String hostId) {
+	this.hostId = hostId;
   }
 
   /**

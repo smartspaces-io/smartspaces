@@ -20,7 +20,7 @@ package io.smartspaces.liveactivity.runtime.standalone.development;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.activity.ActivityStatus;
-import io.smartspaces.activity.component.route.MessageRouterActivityComponent;
+import io.smartspaces.activity.component.comm.route.MessageRouterActivityComponent;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.evaluation.ExpressionEvaluatorFactory;
 import io.smartspaces.evaluation.SimpleExpressionEvaluatorFactory;

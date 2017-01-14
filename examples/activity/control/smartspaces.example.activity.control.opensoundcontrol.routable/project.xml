@@ -20,7 +20,7 @@
     <configuration>
       <property name="space.activity.log.level" value="info" />
       
-      <property name="space.activity.ros.node.name" required="true">
+      <property name="space.activity.pubsub.node.name" required="true">
         <value>example/routable/input/osc</value>
       </property>
       <property name="space.activity.routes.inputs" value="signal" required="true" />

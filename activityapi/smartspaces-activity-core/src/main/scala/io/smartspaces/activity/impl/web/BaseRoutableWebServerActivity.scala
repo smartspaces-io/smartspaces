@@ -18,7 +18,7 @@
 package io.smartspaces.activity.impl.web
 
 import io.smartspaces.activity.impl.BaseActivity
-import io.smartspaces.activity.behavior.routing.StandardActivityRouting
+import io.smartspaces.activity.behavior.comm.route.StandardActivityRouting
 import io.smartspaces.activity.behavior.web.StandardActivityWebServer
 
 /**

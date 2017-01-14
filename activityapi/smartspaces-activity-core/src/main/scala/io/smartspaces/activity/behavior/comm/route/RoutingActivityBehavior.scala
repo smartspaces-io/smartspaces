@@ -15,12 +15,12 @@
  * the License.
  */
 
-package io.smartspaces.activity.behavior.routing
+package io.smartspaces.activity.behavior.comm.route
 
+import io.smartspaces.activity.behavior.comm.ros.RosActivityBehavior
 import io.smartspaces.activity.behavior.general.JsonActivityBehavior
-import io.smartspaces.activity.behavior.ros.RosActivityBehavior
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
-import io.smartspaces.activity.component.route.MessageRouterActivityComponent
+import io.smartspaces.activity.component.comm.route.MessageRouterActivityComponent
 import java.util.Map
 
 /**
@@ -28,7 +28,7 @@ import java.util.Map
  * 
  * @author Keith M. Hughes
  */
-trait RoutingActivityBehavior extends RosActivityBehavior with JsonActivityBehavior {
+trait RoutingActivityBehavior extends JsonActivityBehavior /* with RosActivityBehvior */ {
 
   /**
    * A new message is coming in.

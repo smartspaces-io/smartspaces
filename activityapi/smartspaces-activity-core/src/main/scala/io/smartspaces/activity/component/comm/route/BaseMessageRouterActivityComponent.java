@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package io.smartspaces.activity.component.route;
+package io.smartspaces.activity.component.comm.route;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
@@ -90,7 +90,7 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
 
     defaultRouteProtocol = configuration.getPropertyString(CONFIGURATION_NAME_ROUTE_PROTOCOL_DEFAULT,
         MessageRouter.DEFAULT_ROUTE_PROTOCOL_DEFAULT);
-
+    componentContext.getActivity().getLog().info("Default route protocol is " + defaultRouteProtocol);
     String inputChannelIds = configuration.getPropertyString(CONFIGURATION_NAME_ROUTES_INPUTS);
     if (inputChannelIds != null) {
       inputChannelIds = inputChannelIds.trim();

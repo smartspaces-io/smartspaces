@@ -15,11 +15,10 @@
  * the License.
  */
 
-package io.smartspaces.activity.component.route;
+package io.smartspaces.activity.component.comm.route;
 
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.activity.component.ActivityComponent;
-import io.smartspaces.activity.component.ros.RosActivityComponent;
+import io.smartspaces.activity.component.comm.PubSubActivityComponent;
 import io.smartspaces.messaging.route.MessageRouter;
 import io.smartspaces.messaging.route.RoutableInputMessageListener;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
@@ -35,7 +34,7 @@ import java.util.Set;
  *
  * @author Keith M. Hughes
  */
-public interface MessageRouterActivityComponent extends ActivityComponent {
+public interface MessageRouterActivityComponent extends PubSubActivityComponent {
 
   /**
    * Name of the component.

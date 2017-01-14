@@ -18,7 +18,7 @@
     </class>
 
     <configuration>
-      <property name="space.activity.ros.node.name" required="true">
+      <property name="space.activity.pubsub.node.name" required="true">
         <value>example/ros/hello</value>
         <description>
           The ROS node name to be used for this activity.

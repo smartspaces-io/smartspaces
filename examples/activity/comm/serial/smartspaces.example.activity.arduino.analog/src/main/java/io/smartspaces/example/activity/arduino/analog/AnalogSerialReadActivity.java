@@ -22,10 +22,10 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 
 import io.smartspaces.activity.impl.route.BaseRoutableActivity;
+import io.smartspaces.resource.managed.ManagedResourceWithTask;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpointService;
-import io.smartspaces.util.concurrency.CancellableLoop;
-import io.smartspaces.util.resource.ManagedResourceWithTask;
+import io.smartspaces.tasks.CancellableLoopingTask;
 
 /**
  * A Smart Spaces Java-based activity which communicates with an Arduino sketch
@@ -136,7 +136,7 @@ public class AnalogSerialReadActivity extends BaseRoutableActivity {
    *
    * @author Keith M. Hughes
    */
-  private class SerialReadTask extends CancellableLoop {
+  private class SerialReadTask extends CancellableLoopingTask {
     /**
      * Buffer for serial messages.
      */

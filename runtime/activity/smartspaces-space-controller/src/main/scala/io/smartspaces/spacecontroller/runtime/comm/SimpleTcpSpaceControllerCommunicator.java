@@ -178,7 +178,6 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
    */
   @VisibleForTesting
   void handleControllerRequest(String request) {
-    spaceEnvironment.getLog().info(request);
     Map<String, Object> requestObject = messageCodec.parseMessage(request);
 
     String operation = (String) requestObject

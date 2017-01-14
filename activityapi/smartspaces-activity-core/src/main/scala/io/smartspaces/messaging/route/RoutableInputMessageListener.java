@@ -17,7 +17,7 @@
 
 package io.smartspaces.messaging.route;
 
-import io.smartspaces.activity.component.route.MessageRouterActivityComponent;
+import io.smartspaces.activity.component.comm.route.MessageRouterActivityComponent;
 
 import java.util.Map;
 

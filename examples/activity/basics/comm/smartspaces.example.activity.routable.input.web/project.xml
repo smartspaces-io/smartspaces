@@ -19,7 +19,7 @@
     </class>
 
     <configuration>
-      <property name="space.activity.ros.node.name">
+      <property name="space.activity.pubsub.node.name">
         <value>example/routable/input/web
         </value>
       </property>

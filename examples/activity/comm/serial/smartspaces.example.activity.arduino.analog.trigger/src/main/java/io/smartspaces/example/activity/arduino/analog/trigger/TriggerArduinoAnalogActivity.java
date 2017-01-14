@@ -22,15 +22,15 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 
 import io.smartspaces.activity.impl.route.BaseRoutableActivity;
-import io.smartspaces.event.trigger.SimpleThresholdTrigger;
+import io.smartspaces.event.trigger.SimpleHysteresisThresholdValueTrigger;
 import io.smartspaces.event.trigger.Trigger;
 import io.smartspaces.event.trigger.TriggerEventType;
 import io.smartspaces.event.trigger.TriggerListener;
 import io.smartspaces.event.trigger.TriggerState;
+import io.smartspaces.resource.managed.ManagedResourceWithTask;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpointService;
-import io.smartspaces.util.concurrency.CancellableLoop;
-import io.smartspaces.util.resource.ManagedResourceWithTask;
+import io.smartspaces.tasks.CancellableLoopingTask;
 
 /**
  * A Smart Spaces Java-based activity which communicates with an Arduino sketch
@@ -98,7 +98,7 @@ public class TriggerArduinoAnalogActivity extends BaseRoutableActivity {
    * A threshold trigger to detect when the trigger has gotten to a certain
    * value.
    */
-  private SimpleThresholdTrigger trigger;
+  private SimpleHysteresisThresholdValueTrigger trigger;
 
   @Override
   public void onActivitySetup() {
@@ -112,7 +112,7 @@ public class TriggerArduinoAnalogActivity extends BaseRoutableActivity {
 
     arduinoEndpoint = communicationEndpointService.newSerialEndpoint(portName);
 
-    addManagedResource(new ManagedResourceWithTask(arduinoEndpoint, new CancellableLoop() {
+    addManagedResource(new ManagedResourceWithTask(arduinoEndpoint, new CancellableLoopingTask() {
       byte[] buffer = new byte[MESSAGE_LENGTH];
 
       @Override
@@ -126,7 +126,7 @@ public class TriggerArduinoAnalogActivity extends BaseRoutableActivity {
       }
     }, getSpaceEnvironment()));
 
-    trigger = new SimpleThresholdTrigger();
+    trigger = new SimpleHysteresisThresholdValueTrigger();
     trigger.addListener(new TriggerListener() {
 
       @Override
@@ -142,7 +142,7 @@ public class TriggerArduinoAnalogActivity extends BaseRoutableActivity {
     int threshold =
         getConfiguration().getPropertyInteger(CONFIGURATION_PROPERTY_TRIGGER_THRESHOLD, 220);
     int fuzz = getConfiguration().getPropertyInteger(CONFIGURATION_PROPERTY_TRIGGER_FUZZ, 20);
-    trigger.setThreshold(threshold).setHysteresis(fuzz);
+    trigger.setThresholdsWithOffset(threshold, fuzz);
   }
 
   @Override

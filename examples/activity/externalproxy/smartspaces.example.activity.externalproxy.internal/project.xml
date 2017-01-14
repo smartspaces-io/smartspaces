@@ -1,10 +1,31 @@
 <?xml version="1.0"?>
 <project type="activity" language="java">
-    <name>External Proxy Internal  Activity Example</name>
-    <description>
+  <name>External Proxy Internal  Activity Example</name>
+  <description>
 This example shows a bar code for an external facing web application. When scanned by a mobile device, the mobile device's orientation will be sent to this activity.
-    </description>
+  </description>
 
-    <identifyingName>smartspaces.example.activity.externalproxy.internal</identifyingName>
-    <version>1.0.0</version>
+  <identifyingName>smartspaces.example.activity.externalproxy.internal</identifyingName>
+  <version>1.0.0</version>
+
+  <activity type="smartspaces_native">
+    <name>smartspacesExampleActivityExternalProxy</name>
+    <class>
+      io.smartspaces.activity.example.externalproxy.internal.ExternalProxyInternalExampleActivity
+    </class>
+    
+    <configuration>
+      <property name="space.activity.pubsub.node.name" value="example/externalproxy/output" />
+      <property name="space.activity.routes.outputs" value="output1" />
+      <property name="space.activity.routes.output.output1" value="/example/routable/point3d" />
+
+      <property name="space.activity.webapp.content.location" value="webapp" />
+      <property name="space.activity.webapp.url.initial" value="index.html" />
+      <property name="space.activity.webapp.url.query_string" value="test" />
+      <property name="space.activity.webapp.browser.debug" value="true" />
+
+      <property name="space.activity.log.level" value="info" />
+    </configuration>
+
+  </activity>
 </project>

@@ -19,7 +19,7 @@ dependencies {
   compile project(':smartspaces-core')
   compile project(':smartspaces-system')
   
-  compile('io.moquette:moquette-broker:0.9-SNAPSHOT')
+  compile('io.moquette:moquette-broker:0.10-SNAPSHOT')
 
   provided "${project.ext.osgiContainerDependency}"
 }

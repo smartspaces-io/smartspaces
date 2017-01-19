@@ -50,6 +50,7 @@ import java.util.Properties
 import java.io.InputStream
 import javax.net.ssl.SSLSocketFactory
 import java.io.FileInputStream
+import io.smartspaces.util.net.SslUtils
 
 /**
  * An MQTT communication endpoint implemented with Paho.
@@ -120,7 +121,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
         mqttConnectOptions.setPassword(mqttBrokerDescription.password.get.toCharArray())
       }
       if (mqttBrokerDescription.isSsl) {
-        mqttConnectOptions.setSocketFactory(configureSSLSocketFactory(null))
+        mqttConnectOptions.setSocketFactory(configureSSLSocketFactory())
       }
 
       log.info("Connecting to broker: " + mqttClient.getServerURI())
@@ -254,52 +255,40 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
    * @throws Exception
    *           something bad happened
    */
-  private def configureSSLSocketFactory(credentials: Properties): SSLSocketFactory = {
-    val ks = KeyStore.getInstance("JKS")
-    
-    // TODO(keith) Sort out getting keystore file and password.
-    val jksInputStream = new FileInputStream(credentials.getProperty("keystore.file"))
-    val keystorePassword = credentials.getProperty("keystore.password").toCharArray()
-    ks.load(jksInputStream, keystorePassword)
-
-    val kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
-    kmf.init(ks, keystorePassword)
-
-    val tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-    tmf.init(ks)
-
-    val sc = SSLContext.getInstance("TLS")
-    val trustManagers = tmf.getTrustManagers()
-    sc.init(kmf.getKeyManagers(), trustManagers, null)
-
-    return sc.getSocketFactory()
+  private def configureSSLSocketFactory(): SSLSocketFactory = {
+    if (mqttBrokerDescription.keystorePath.isDefined) {
+      return SslUtils.configureSslSocketFactory(mqttBrokerDescription.keystorePath.get, mqttBrokerDescription.keystorePassword.get)
+    } else {
+      return SslUtils.configureSSLSocketFactory(mqttBrokerDescription.caCertPath.get, mqttBrokerDescription.clientCertPath.get, mqttBrokerDescription.clientKeyPath.get)
+    }
   }
+  
   /**
    * An MQTT subscriber that interfaces with the Paho client.
    *
    * @author Keith M. Hughes
    */
-  private class MqttSubscriber(val topicName: String, val listener: MqttSubscriberListener, val qos: Int, val autoreconnect: Boolean) extends IMqttMessageListener {
+  private class MqttSubscriber(val subscribedTopicName: String, val listener: MqttSubscriberListener, val qos: Int, val autoreconnect: Boolean) extends IMqttMessageListener {
 
     /**
      * Subscribe the subscriber to the broker.
      */
     def subscribe(): Unit = {
-      log.info("Subscribing to MQTT topic " + topicName)
+      log.info("Subscribing to MQTT topic " + subscribedTopicName)
 
       try {
-        mqttClient.subscribe(topicName, qos, this)
+        mqttClient.subscribe(subscribedTopicName, qos, this)
       } catch {
         case e: MqttException => throw SmartSpacesException.newFormattedException(e, "Could not subscribe to MQTT topic %s",
-          topicName)
+          subscribedTopicName)
       }
     }
 
-    override def messageArrived(topic: String, message: MqttMessage): Unit = {
+    override def messageArrived(incomingTopicName: String, message: MqttMessage): Unit = {
       try {
-        listener.handleMessage(PahoMqttCommunicationEndpoint.this, topicName, message.getPayload())
+        listener.handleMessage(PahoMqttCommunicationEndpoint.this, incomingTopicName, message.getPayload())
       } catch {
-        case e: Throwable => log.error(String.format("Error while handling MQTT message on topic %s", topicName), e)
+        case e: Throwable => log.error(String.format("Error while handling MQTT message on topic %s", subscribedTopicName), e)
       }
     }
   }

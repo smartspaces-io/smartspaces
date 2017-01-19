@@ -60,6 +60,31 @@ class MqttBrokerDescription(val brokerHost: String, val brokerPort: Integer, val
   var password: Option[String] = None
   
   /**
+   * File path to the keystore if using SSL.
+   */
+  var keystorePath: Option[String] = None
+   
+  /**
+   * Password for the keystore if using SSL.
+   */
+  var keystorePassword: Option[String] = None
+  
+  /**
+   * File path to the certificate authority cert if using client certificate SSL.
+   */
+  var caCertPath: Option[String] = None
+   
+  /**
+   * File path to the client cert if using client certificate SSL.
+   */
+  var clientCertPath: Option[String] = None
+  
+  /**
+   * File path to the client private key if using client certificate SSL.
+   */
+  var clientKeyPath: Option[String] = None
+
+  /**
    * {@code true} if should reautoconnect back to the broker.
    */
   var autoreconnect = false

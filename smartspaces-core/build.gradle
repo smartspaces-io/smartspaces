@@ -55,6 +55,9 @@ dependencies {
   compile 'io.reactivex.rxjava2:rxjava:2.0.1'
 
   compile 'javax.jmdns:jmdns:3.4.1'
+  
+  compile 'org.bouncycastle:bcprov-jdk15on:1.56'
+  compile 'org.bouncycastle:bcpkix-jdk15on:1.56'
 
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
@@ -89,6 +92,7 @@ jar {
         'io.smartspaces.system.bootstrap.osgi;resolution:="optional"',
         'com.google.common;resolution:="optional"',
         'rx;resolution:="optional"',
+        'org.bouncycastle;resolution:="optional"',
         '*'
   }
 }

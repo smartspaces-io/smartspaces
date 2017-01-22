@@ -1,0 +1,179 @@
+#!/bin/sh
+#
+# This file adapted for SmartSpaces from the similar file in the
+# Apache Karaf project.
+#
+#    Licensed to the Apache Software Foundation (ASF) under one or more
+#    contributor license agreements.  See the NOTICE file distributed with
+#    this work for additional information regarding copyright ownership.
+#    The ASF licenses this file to You under the Apache License, Version 2.0
+#    (the "License"); you may not use this file except in compliance with
+#    the License.  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS,
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#    See the License for the specific language governing permissions and
+#    limitations under the License.
+#
+
+realpath() {
+  OURPWD=${PWD}
+  cd "$(dirname "${1}")"
+  LINK=$(readlink "$(basename "${1}")")
+  while [ "${LINK}" ]; do
+    cd "$(dirname "${LINK}")"
+    LINK=$(readlink "$(basename "${1}")")
+  done
+  REALPATH="${PWD}/$(basename "${1}")"
+  cd "${OURPWD}"
+  echo "${REALPATH}"
+}
+
+REALNAME=$(realpath "$0")
+DIRNAME=$(dirname "${REALNAME}")
+PROGNAME=$(basename "${REALNAME}")
+
+#
+# Sourcing environment settings for smartspaces similar to tomcats setenv 
+#
+SMARTSPACES_SCRIPT="start"
+export SMARTSPACES_SCRIPT
+if [ -f "$DIRNAME/setenv" ]; then
+  . "$DIRNAME/setenv"
+fi
+
+warn() {
+    echo "${PROGNAME}: $*"
+}
+
+die() {
+    warn "$*"
+    exit 1
+}
+
+detectOS() {
+    # OS specific support (must be 'true' or 'false').
+    cygwin=false;
+    darwin=false;
+    aix=false;
+    os400=false;
+    case "`uname`" in
+        CYGWIN*)
+            cygwin=true
+            ;;
+        Darwin*)
+            darwin=true
+            ;;
+        AIX*)
+            aix=true
+            ;;
+        OS400*)
+            os400=true
+            ;;
+    esac
+    # For AIX, set an environment variable
+    if $aix; then
+         export LDR_CNTRL=MAXDATA=0xB0000000@DSA
+         echo $LDR_CNTRL
+    fi
+}
+
+locateHome() {
+    if [ "x$SMARTSPACES_HOME" != "x" ]; then
+        warn "Ignoring predefined value for SMARTSPACES_HOME"
+    fi
+
+    # In POSIX shells, CDPATH may cause cd to write to stdout
+    (unset CDPATH) >/dev/null 2>&1 && unset CDPATH
+
+    SMARTSPACES_HOME=`cd $DIRNAME/..; pwd`
+    if [ ! -d "$SMARTSPACES_HOME" ]; then
+        die "SMARTSPACES_HOME is not valid: $SMARTSPACES_HOME"
+    fi
+}
+
+locateBase() {
+    if [ "x$SMARTSPACES_BASE" != "x" ]; then
+        if [ ! -d "$SMARTSPACES_BASE" ]; then
+            die "SMARTSPACES_BASE is not valid: $SMARTSPACES_BASE"
+        fi
+    else
+        SMARTSPACES_BASE=$SMARTSPACES_HOME
+    fi
+}
+
+locateData() {
+    if [ "x$SMARTSPACES_DATA" != "x" ]; then
+        if [ ! -d "$SMARTSPACES_DATA" ]; then
+            die "SMARTSPACES_DATA is not valid: $SMARTSPACES_DATA"
+        fi
+    else
+        SMARTSPACES_DATA=$SMARTSPACES_BASE/data
+    fi
+}
+
+locateEtc() {
+    if [ "x$SMARTSPACES_ETC" != "x" ]; then
+        if [ ! -d "$SMARTSPACES_ETC" ]; then
+            die "SMARTSPACES_ETC is not valid: $SMARTSPACES_ETC"
+        fi
+    else
+        SMARTSPACES_ETC=$SMARTSPACES_BASE/etc
+    fi
+}
+
+enableRedirect() {
+    if [ "x$SMARTSPACES_REDIRECT" != "x" ]; then
+        warn "Redirecting Smartspaces output to $SMARTSPACES_REDIRECT"
+    else
+        SMARTSPACES_REDIRECT="/dev/null"
+    fi
+}
+
+init() {
+    # Determine if there is special OS handling we must perform
+    detectOS
+
+    # Locate the Smartspaces home directory
+    locateHome
+
+    # Locate the Smartspaces base directory
+    locateBase
+
+    # Locate the Smartspaces data directory
+    locateData
+
+    # Locate the Smartspaces etc directory
+    locateEtc
+
+    # Enable or not the Smartspaces output redirection
+    enableRedirect
+}
+
+run() {
+    if $cygwin; then
+        SMARTSPACES_HOME=`cygpath --path --windows "$SMARTSPACES_HOME"`
+        SMARTSPACES_BASE=`cygpath --path --windows "$SMARTSPACES_BASE"`
+        SMARTSPACES_DATA=`cygpath --path --windows "$SMARTSPACES_DATA"`
+        SMARTSPACES_ETC=`cygpath --path --windows "$SMARTSPACES_ETC"`
+        if [ ! -z "$CLASSPATH" ]; then
+            CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
+        fi
+    fi
+    # Ensure the log directory exists -- we need to have a place to redirect stdout/stderr
+    if [ ! -d "$SMARTSPACES_DATA/log" ]; then
+        mkdir -p "$SMARTSPACES_DATA/log"
+    fi
+    exec "$SMARTSPACES_HOME"/bin/smartspaces server "$@" >> "$SMARTSPACES_REDIRECT" 2>&1 &
+}
+
+main() {
+    init
+    run "$@"
+}
+
+main "$@"
+

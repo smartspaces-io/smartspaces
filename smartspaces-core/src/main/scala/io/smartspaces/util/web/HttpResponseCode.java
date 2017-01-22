@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.service.web;
+package io.smartspaces.util.web;
 
 /**
  * Response codes for HTTP.

@@ -24,7 +24,6 @@ import io.smartspaces.activity.component.BaseActivityComponent;
 import io.smartspaces.activity.configuration.WebServerActivityResourceConfigurator;
 import io.smartspaces.activity.impl.StatusDetail;
 import io.smartspaces.configuration.Configuration;
-import io.smartspaces.service.web.HttpConstants;
 import io.smartspaces.service.web.WebSocketConnection;
 import io.smartspaces.service.web.WebSocketHandler;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
@@ -34,6 +33,7 @@ import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerService;
 import io.smartspaces.service.web.server.WebServerWebSocketHandler;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
+import io.smartspaces.util.web.HttpConstants;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;

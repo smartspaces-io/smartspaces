@@ -25,13 +25,13 @@ import io.smartspaces.master.communication.MasterCommunicationManager;
 import io.smartspaces.master.server.remote.RemoteMasterServerMessages;
 import io.smartspaces.master.server.remote.master.RemoteMasterCommunicationHandler;
 import io.smartspaces.master.server.remote.master.RemoteMasterServerListener;
-import io.smartspaces.service.web.HttpResponseCode;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.web.HttpResponseCode;
 
 import com.google.common.collect.Lists;
 

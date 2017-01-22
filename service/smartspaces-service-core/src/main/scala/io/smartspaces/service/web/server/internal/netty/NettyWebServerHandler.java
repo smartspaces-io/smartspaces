@@ -29,13 +29,13 @@ import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesExceptionUtils;
-import io.smartspaces.service.web.HttpConstants;
 import io.smartspaces.service.web.server.HttpAuthProvider;
 import io.smartspaces.service.web.server.HttpAuthResponse;
 import io.smartspaces.service.web.server.HttpFileUploadListener;
 import io.smartspaces.service.web.server.WebResourceAccessManager;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
+import io.smartspaces.util.web.HttpConstants;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;

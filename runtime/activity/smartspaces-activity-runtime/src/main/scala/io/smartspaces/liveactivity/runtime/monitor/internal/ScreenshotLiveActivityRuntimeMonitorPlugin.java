@@ -20,8 +20,6 @@ package io.smartspaces.liveactivity.runtime.monitor.internal;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.liveactivity.runtime.LiveActivityRuntime;
 import io.smartspaces.liveactivity.runtime.monitor.PluginFunctionalityDescriptor;
-import io.smartspaces.service.web.HttpConstants;
-import io.smartspaces.service.web.HttpResponseCode;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
 import io.smartspaces.system.SmartSpacesEnvironment;
@@ -33,6 +31,8 @@ import io.smartspaces.util.process.NativeApplicationRunner.NativeApplicationRunn
 import io.smartspaces.util.process.NativeApplicationRunnerCollection;
 import io.smartspaces.util.process.StandardNativeApplicationRunnerCollection;
 import io.smartspaces.util.web.CommonMimeTypes;
+import io.smartspaces.util.web.HttpConstants;
+import io.smartspaces.util.web.HttpResponseCode;
 
 import java.io.File;
 import java.io.IOException;

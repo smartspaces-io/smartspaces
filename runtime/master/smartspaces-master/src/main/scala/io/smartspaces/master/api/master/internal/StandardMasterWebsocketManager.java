@@ -34,7 +34,6 @@ import io.smartspaces.master.event.MasterEventListener;
 import io.smartspaces.master.event.MasterEventManager;
 import io.smartspaces.master.server.services.ExtensionManager;
 import io.smartspaces.master.server.services.model.ActiveLiveActivity;
-import io.smartspaces.service.web.HttpResponseCode;
 import io.smartspaces.service.web.server.BasicMultipleConnectionWebServerWebSocketHandlerFactory;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpFileUpload;
@@ -49,6 +48,7 @@ import io.smartspaces.util.data.json.StandardJsonMapper;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.web.CommonMimeTypes;
+import io.smartspaces.util.web.HttpResponseCode;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;

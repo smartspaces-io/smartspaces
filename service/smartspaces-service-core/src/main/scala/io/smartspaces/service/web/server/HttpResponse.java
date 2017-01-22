@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.web.server;
 
-import io.smartspaces.service.web.HttpResponseCode;
+import io.smartspaces.util.web.HttpResponseCode;
 
 import java.io.OutputStream;
 import java.net.HttpCookie;

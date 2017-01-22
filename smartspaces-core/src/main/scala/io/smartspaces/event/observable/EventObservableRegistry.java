@@ -14,9 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.service.event.observable;
-
-import io.smartspaces.service.SupportedService;
+package io.smartspaces.event.observable;
 
 import io.reactivex.Observable;
 
@@ -26,12 +24,7 @@ import io.reactivex.Observable;
  * 
  * @author Keith M. Hughes
  */
-public interface EventObservableService extends SupportedService {
-
-  /**
-   * The service name.
-   */
-  public static final String SERVICE_NAME = "event.observable";
+public interface EventObservableRegistry  {
 
   /**
    * Add in a new observable.
@@ -43,7 +36,7 @@ public interface EventObservableService extends SupportedService {
    * 
    * @return this service
    */
-  EventObservableService registerObservable(String observableName, Observable<?> observable);
+  EventObservableRegistry registerObservable(String observableName, Observable<?> observable);
 
   /**
    * Remove an observable.
@@ -56,7 +49,7 @@ public interface EventObservableService extends SupportedService {
    * 
    * @return this service
    */
-  EventObservableService unregisterObservable(String observableName);
+  EventObservableRegistry unregisterObservable(String observableName);
 
   /**
    * Get the observable with a given name.

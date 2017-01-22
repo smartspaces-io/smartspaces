@@ -23,9 +23,9 @@ import io.smartspaces.liveactivity.runtime.InternalLiveActivityFilesystem;
 import io.smartspaces.liveactivity.runtime.LiveActivityStorageManager;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
 import io.smartspaces.liveactivity.runtime.monitor.PluginFunctionalityDescriptor;
-import io.smartspaces.service.web.HttpConstants;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
+import io.smartspaces.util.web.HttpConstants;
 
 import java.io.File;
 import java.io.OutputStream;

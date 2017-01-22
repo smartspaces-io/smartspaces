@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.util.web;
+package io.smartspaces.service.web;
 
 import io.smartspaces.service.web.WebSocketConnection;
 import io.smartspaces.service.web.WebSocketHandler;

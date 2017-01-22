@@ -18,8 +18,8 @@
 package io.smartspaces.service.web.server.internal.netty;
 
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.service.web.HttpResponseCode;
 import io.smartspaces.service.web.server.HttpResponse;
+import io.smartspaces.util.web.HttpResponseCode;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;

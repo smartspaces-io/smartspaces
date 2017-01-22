@@ -17,6 +17,10 @@
 dependencies {
   compile project(':service:smartspaces-service-core')
   compile project(':smartspaces-system')
+  
+  // TODO(keith): abstract how nativeactivityrunners are obtained, or drop that support.
+  compile project(':activityapi:smartspaces-activity-core')
+  
 
   compile files("${project.getProperty('smartspaces.dependencies.home')}/audio/jid3lib-0.5.4.jar")
   compile files("${project.getProperty('smartspaces.dependencies.home')}/audio/smartspaces.javazoom.jlayer-1.0.1.jar")

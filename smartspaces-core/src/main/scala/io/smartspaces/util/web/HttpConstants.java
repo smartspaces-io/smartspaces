@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.service.web;
+package io.smartspaces.util.web;
 
 import java.util.Map;
 
@@ -26,13 +26,7 @@ import com.google.common.collect.ImmutableMap;
  *
  * @author Keith M. Hughes
  */
-public final class HttpConstants {
-
-  /**
-   * Hidden constructor for utility class.
-   */
-  private HttpConstants() {
-  }
+public class HttpConstants {
 
   /**
    * The separator between URL path components.

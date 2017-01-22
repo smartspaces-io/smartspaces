@@ -14,9 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.service.event.observable;
-
-import io.smartspaces.service.BaseSupportedService;
+package io.smartspaces.event.observable;
 
 import io.reactivex.Observable;
 
@@ -24,12 +22,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The standard event observable service.
+ * The standard event observable registry.
  * 
  * @author Keith M. Hughes
  */
-public class StandardEventObservableService extends BaseSupportedService
-    implements EventObservableService {
+public class StandardEventObservableRegistry implements EventObservableRegistry {
 
   /**
    * The map of observables.
@@ -37,12 +34,7 @@ public class StandardEventObservableService extends BaseSupportedService
   private Map<String, Observable<?>> observables = new HashMap<>();
 
   @Override
-  public String getName() {
-    return SERVICE_NAME;
-  }
-
-  @Override
-  public synchronized EventObservableService registerObservable(String observableName,
+  public synchronized EventObservableRegistry registerObservable(String observableName,
       Observable<?> observable) {
     observables.put(observableName, observable);
 
@@ -50,7 +42,7 @@ public class StandardEventObservableService extends BaseSupportedService
   }
 
   @Override
-  public synchronized EventObservableService unregisterObservable(String observableName) {
+  public synchronized EventObservableRegistry unregisterObservable(String observableName) {
     observables.remove(observableName);
 
     return this;

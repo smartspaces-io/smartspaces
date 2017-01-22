@@ -16,13 +16,8 @@
 
 dependencies {
   compile project(':smartspaces-core')
-  compile project(':smartspaces-system')
-
-  compile project(':activityapi:smartspaces-activity-core')
   
   runtime 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.rome:1.0_1'
-
-  provided "${project.ext.osgiContainerDependency}"
 
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
@@ -32,9 +27,6 @@ jar {
   manifest {
     version = osgiVersion
     symbolicName = 'smartspaces.service.core'
-
-	instruction 'Bundle-Activator',
-			'io.smartspaces.service.core.internal.osgi.ServicesCoreOsgiBundleActivator'
 
     instruction 'Export-Package',
 		'*'

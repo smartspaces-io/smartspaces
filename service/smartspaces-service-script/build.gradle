@@ -17,6 +17,10 @@
 dependencies {
   compile project(':service:smartspaces-service-core')
   compile project(':smartspaces-system')
+  
+  // TODO(keith): Separate script based activities from this bundle.
+  // Might need to use bundle fragments.
+  compile project(':activityapi:smartspaces-activity-core')
 
   expandedJars 'org.codehaus.groovy:groovy-all:2.2.1'
   expandedJars files("${project.getProperty('smartspaces.dependencies.home')}/python/jython/jython2.7.0/jython.jar")

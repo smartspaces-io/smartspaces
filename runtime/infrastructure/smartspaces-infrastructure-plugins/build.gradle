@@ -18,6 +18,7 @@ dependencies {
 
   compile project(':smartspaces-core')
   compile project(':smartspaces-system')
+  compile project(':service:smartspaces-service-core')
   
   compile('io.moquette:moquette-broker:0.10-SNAPSHOT')
 

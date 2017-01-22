@@ -19,9 +19,9 @@ package io.smartspaces.workbench.project.jdom;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.service.web.HttpConstants;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+import io.smartspaces.util.web.HttpConstants;
 import io.smartspaces.workbench.SmartSpacesWorkbench;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.constituent.ProjectConstituent;

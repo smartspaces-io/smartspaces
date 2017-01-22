@@ -24,11 +24,11 @@ import io.smartspaces.master.server.remote.RemoteMasterServerMessages
 import io.smartspaces.master.server.remote.client.RemoteMasterServerClient
 import io.smartspaces.service.comm.network.zeroconf.ZeroconfService
 import io.smartspaces.service.comm.network.zeroconf.ZeroconfService$
-import io.smartspaces.service.web.HttpConstants
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.util.data.json.JsonMapper
 import io.smartspaces.util.data.json.StandardJsonMapper
 import io.smartspaces.util.web.HttpClientHttpContentCopier
+import io.smartspaces.util.web.HttpConstants
 import io.smartspaces.util.web.HttpContentCopier
 
 import com.google.common.base.Charsets

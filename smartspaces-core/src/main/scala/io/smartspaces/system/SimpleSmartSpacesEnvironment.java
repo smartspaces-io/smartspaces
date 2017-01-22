@@ -18,6 +18,8 @@
 package io.smartspaces.system;
 
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.event.observable.EventObservableRegistry;
+import io.smartspaces.event.observable.StandardEventObservableRegistry;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.scope.ManagedScope;
@@ -64,6 +66,11 @@ public class SimpleSmartSpacesEnvironment implements SmartSpacesEnvironment {
    * The service registry.
    */
   private ServiceRegistry serviceRegistry;
+  
+  /**
+   * The event observable registry.
+   */
+  private EventObservableRegistry eventObservableRegistry = new StandardEventObservableRegistry();
 
   /**
    * The time provider.
@@ -131,6 +138,11 @@ public class SimpleSmartSpacesEnvironment implements SmartSpacesEnvironment {
   @Override
   public ServiceRegistry getServiceRegistry() {
     return serviceRegistry;
+  }
+  
+  @Override
+  public EventObservableRegistry getEventObservableRegistry() {
+    return eventObservableRegistry;
   }
 
   @Override

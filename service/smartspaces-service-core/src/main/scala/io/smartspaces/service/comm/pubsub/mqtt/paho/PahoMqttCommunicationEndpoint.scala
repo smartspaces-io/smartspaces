@@ -125,7 +125,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       }
 
       log.info("Connecting to broker: " + mqttClient.getServerURI())
-      log.info(mqttConnectOptions.isAutomaticReconnect())
+
       mqttClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
         override def onSuccess(token: IMqttToken): Unit = {
           log.info("MQTT broker connect is successful on token " + token)

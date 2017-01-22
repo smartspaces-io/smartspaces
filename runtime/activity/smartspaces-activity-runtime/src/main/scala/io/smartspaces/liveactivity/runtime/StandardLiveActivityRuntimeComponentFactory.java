@@ -36,15 +36,24 @@ import io.smartspaces.liveactivity.runtime.activity.wrapper.internal.osnative.Na
 import io.smartspaces.liveactivity.runtime.activity.wrapper.internal.smartspaces.SmartSpacesNativeActivityWrapperFactory;
 import io.smartspaces.liveactivity.runtime.activity.wrapper.internal.smartspaces.StandardLiveActivityBundleLoader;
 import io.smartspaces.liveactivity.runtime.activity.wrapper.internal.web.WebActivityWrapperFactory;
+import io.smartspaces.service.Service;
 import io.smartspaces.service.ServiceRegistry;
+import io.smartspaces.service.comm.network.client.internal.netty.NettyTcpClientNetworkCommunicationEndpointService;
+import io.smartspaces.service.comm.network.client.internal.netty.NettyUdpClientNetworkCommunicationEndpointService;
+import io.smartspaces.service.comm.network.server.internal.netty.NettyTcpServerNetworkCommunicationEndpointService;
+import io.smartspaces.service.comm.network.server.internal.netty.NettyUdpServerNetworkCommunicationEndpointService;
 import io.smartspaces.service.comm.network.zeroconf.StandardZeroconfService;
-import io.smartspaces.service.comm.network.zeroconf.ZeroconfService;
-import io.smartspaces.service.web.client.WebSocketClientService;
+import io.smartspaces.service.comm.pubsub.mqtt.paho.PahoMqttCommunicationEndpointService;
+import io.smartspaces.service.comm.serial.xbee.internal.SmartSpacesXBeeCommunicationEndpointService;
+import io.smartspaces.service.control.opensoundcontrol.internal.SmartSpacesOpenSoundControlClientCommunicationEndpointService;
+import io.smartspaces.service.control.opensoundcontrol.internal.SmartSpacesOpenSoundControlServerCommunicationEndpointService;
 import io.smartspaces.service.web.client.internal.netty.NettyWebSocketClientService;
-import io.smartspaces.service.web.server.WebServerService;
 import io.smartspaces.service.web.server.internal.netty.NettyWebServerService;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.resources.ContainerResourceManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A factory for creating various components for a live activity runtime.
@@ -69,20 +78,10 @@ public class StandardLiveActivityRuntimeComponentFactory
   private ContainerResourceManager containerResourceManager;
 
   /**
-   * The SS service for web servers.
+   * The services started up by this factory.
    */
-  private WebServerService webServerService;
-
-  /**
-   * The SS service for web socket clients.
-   */
-  private WebSocketClientService webSocketClientService;
-
-  /**
-   * The SS service for zeroconf.
-   */
-  private ZeroconfService zeroconfService;
-
+  private List<Service> services = new ArrayList<>();
+  
   /**
    * Construct a new factory.
    *
@@ -150,20 +149,37 @@ public class StandardLiveActivityRuntimeComponentFactory
 
   @Override
   public void registerCoreServices(ServiceRegistry serviceRegistry) {
-    webServerService = new NettyWebServerService();
-    serviceRegistry.startupAndRegisterService(webServerService);
+    services.add(new NettyWebServerService());
 
-    webSocketClientService = new NettyWebSocketClientService();
-    serviceRegistry.startupAndRegisterService(webSocketClientService);
-    
-	zeroconfService = new StandardZeroconfService();
-    serviceRegistry.startupAndRegisterService(zeroconfService);
+    services.add(new NettyWebSocketClientService());
+
+    services.add(new StandardZeroconfService());
+
+    services.add(new SmartSpacesXBeeCommunicationEndpointService());
+
+    services.add(new NettyUdpClientNetworkCommunicationEndpointService());
+
+    services.add(new NettyUdpServerNetworkCommunicationEndpointService());
+
+    services.add(new NettyTcpClientNetworkCommunicationEndpointService());
+
+    services.add(new NettyTcpServerNetworkCommunicationEndpointService());
+
+    services.add(new SmartSpacesOpenSoundControlClientCommunicationEndpointService());
+
+    services.add(new SmartSpacesOpenSoundControlServerCommunicationEndpointService());
+
+    services.add(new PahoMqttCommunicationEndpointService());
+
+    for (Service service : services) {
+      serviceRegistry.startupAndRegisterService(service);
+    }
   }
 
   @Override
   public void unregisterCoreServices(ServiceRegistry serviceRegistry) {
-    serviceRegistry.shutdownAndUnregisterService(webServerService);
-    serviceRegistry.shutdownAndUnregisterService(webSocketClientService);
-    serviceRegistry.shutdownAndUnregisterService(zeroconfService);
+    for (Service service : services) {
+      serviceRegistry.shutdownAndUnregisterService(service);
+    }
   }
 }

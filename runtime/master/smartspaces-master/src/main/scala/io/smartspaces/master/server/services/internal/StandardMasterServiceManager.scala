@@ -18,6 +18,7 @@ package io.smartspaces.master.server.services.internal
 import io.smartspaces.master.server.services.MasterServiceManager
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.service.comm.network.zeroconf.StandardZeroconfService
+import io.smartspaces.service.comm.network.client.internal.netty.NettyTcpClientNetworkCommunicationEndpointService
 
 /**
  * The standard implementation of the master service manager.
@@ -32,19 +33,22 @@ class StandardMasterServiceManager extends MasterServiceManager {
   /**
    * The zeroconf service to add to the master.
    */
-  private val zeroconfService = new StandardZeroconfService
+  private val services = List(new StandardZeroconfService, new NettyTcpClientNetworkCommunicationEndpointService)
 
   override def startup(): Unit = {
     val serviceRegistry = spaceEnvironment.getServiceRegistry
     
-    serviceRegistry.startupAndRegisterService(zeroconfService)
-    
+    services.foreach { service => 
+      serviceRegistry.startupAndRegisterService(service) 
+    }
   }
 
   override def shutdown(): Unit = {
     val serviceRegistry = spaceEnvironment.getServiceRegistry
     
-    serviceRegistry.shutdownAndUnregisterService(zeroconfService)
+    services.foreach { service => 
+      serviceRegistry.shutdownAndUnregisterService(service) 
+    }
   }
   
   /**

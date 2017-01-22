@@ -19,6 +19,8 @@ package io.smartspaces.system;
 
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
+import io.smartspaces.event.observable.EventObservableRegistry;
+import io.smartspaces.event.observable.StandardEventObservableRegistry;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.resource.managed.ManagedResource;
@@ -29,14 +31,11 @@ import io.smartspaces.scope.StandardManagedScope;
 import io.smartspaces.service.Service;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.SimpleServiceRegistry;
-import io.smartspaces.service.SupportedService;
-import io.smartspaces.service.event.observable.StandardEventObservableService;
 import io.smartspaces.tasks.ManagedTasks;
 import io.smartspaces.tasks.StandardManagedTasks;
 import io.smartspaces.time.provider.SettableTimeProvider;
 import io.smartspaces.time.provider.TimeProvider;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.Jdk14Logger;
 
 import java.util.HashMap;
@@ -75,8 +74,6 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
         new StandardManagedTasks(environment.executorService, environment.log);
     environment.managedScope =
         new StandardManagedScope(environment.managedResources, environment.managedTasks);
-    StandardEventObservableService eventService = new StandardEventObservableService();
-    environment.registerAndStartService(eventService);
     environment.managedResources.startupResources();
 
     return environment;
@@ -106,6 +103,11 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
    * The service registry.
    */
   private ServiceRegistry serviceRegistry;
+  
+  /**
+   * The event observable registry.
+   */
+  private EventObservableRegistry eventObservableRegistry = new StandardEventObservableRegistry();
 
   /**
    * The time provider.
@@ -194,6 +196,11 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
   @Override
   public ServiceRegistry getServiceRegistry() {
     return serviceRegistry;
+  }
+  
+  @Override
+  public EventObservableRegistry getEventObservableRegistry() {
+    return eventObservableRegistry;
   }
 
   @SuppressWarnings("unchecked")

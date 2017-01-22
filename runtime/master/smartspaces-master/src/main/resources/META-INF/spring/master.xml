@@ -143,7 +143,8 @@
 
 	<bean id="smartspaces.controller.remote.client"
 		class="io.smartspaces.master.server.services.internal.comm.SimpleTcpRemoteSpaceControllerClient"
-		destroy-method="shutdown" init-method="startup">
+		destroy-method="shutdown" init-method="startup"
+		depends-on="smartspaces.manager.service" >
 
 		<property name="masterDataBundleManager" ref="smartspaces.master.databundlemanager" />
 

@@ -18,6 +18,8 @@
 package io.smartspaces.system.internal.osgi;
 
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.event.observable.EventObservableRegistry;
+import io.smartspaces.event.observable.StandardEventObservableRegistry;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.scope.ManagedScope;
@@ -83,6 +85,11 @@ public class OsgiSmartSpacesEnvironment
    * The service registry.
    */
   private ServiceRegistry serviceRegistry = new SimpleServiceRegistry(this);
+  
+  /**
+   * The event observable registry.
+   */
+  private EventObservableRegistry eventObservableRegistry = new StandardEventObservableRegistry();
 
   /**
    * The platform logging provider.
@@ -162,6 +169,11 @@ public class OsgiSmartSpacesEnvironment
   @Override
   public ServiceRegistry getServiceRegistry() {
     return serviceRegistry;
+  }
+  
+  @Override
+  public EventObservableRegistry getEventObservableRegistry() {
+    return eventObservableRegistry;
   }
 
   @Override

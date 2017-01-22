@@ -19,8 +19,6 @@ package io.smartspaces.liveactivity.runtime.monitor.internal;
 
 import io.smartspaces.liveactivity.runtime.monitor.LiveActivityRuntimeMonitorPlugin;
 import io.smartspaces.liveactivity.runtime.monitor.RemoteLiveActivityRuntimeMonitorService;
-import io.smartspaces.service.web.HttpConstants;
-import io.smartspaces.service.web.HttpResponseCode;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
@@ -28,6 +26,8 @@ import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.spacecontroller.SpaceController;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+import io.smartspaces.util.web.HttpConstants;
+import io.smartspaces.util.web.HttpResponseCode;
 
 import com.google.common.base.Joiner;
 

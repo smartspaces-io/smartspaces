@@ -18,6 +18,7 @@
 package io.smartspaces.system;
 
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.event.observable.EventObservableRegistry;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.service.ServiceRegistry;
@@ -293,6 +294,13 @@ public interface SmartSpacesEnvironment {
    * @return the service registry
    */
   ServiceRegistry getServiceRegistry();
+ 
+  /**
+   * Get the event observable registry.
+   * 
+   * @return the event observable registry
+   */
+  EventObservableRegistry getEventObservableRegistry();
 
   /**
    * Get a value from the environment.

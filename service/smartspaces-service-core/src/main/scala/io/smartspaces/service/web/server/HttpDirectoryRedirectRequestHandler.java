@@ -18,7 +18,7 @@
 package io.smartspaces.service.web.server;
 
 import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.service.web.HttpResponseCode;
+import io.smartspaces.util.web.HttpResponseCode;
 
 import java.io.File;
 import java.util.regex.Pattern;

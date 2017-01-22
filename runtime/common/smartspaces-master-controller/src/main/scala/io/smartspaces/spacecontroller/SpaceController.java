@@ -17,7 +17,6 @@
 
 package io.smartspaces.spacecontroller;
 
-import io.smartspaces.activity.binary.NativeActivityRunnerFactory;
 import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.system.SmartSpacesEnvironment;

@@ -14,10 +14,24 @@
  * the License.
  */
 
+package io.smartspaces.event.observable;
+
+import io.reactivex.Observable;
+
 /**
- * This package contains services for using Reactive-style observables
- * and subscribers in SmartSpaces.
+ * A creator for observables.
+ * 
+ * @param <T>
+ *          the type of the observable
  * 
  * @author Keith M. Hughes
  */
-package io.smartspaces.service.event.observable;
+public interface ObservableCreator<T extends Observable<?>> {
+
+  /**
+   * Create a new observable.
+   * 
+   * @return the new observable
+   */
+  T newObservable();
+}

@@ -22,7 +22,6 @@ import io.smartspaces.common.ResourceRepositoryUploadChannel;
 import io.smartspaces.resource.Version;
 import io.smartspaces.resource.repository.ResourceRepositoryServer;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
-import io.smartspaces.service.web.HttpResponseCode;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
 import io.smartspaces.service.web.server.HttpFileUpload;
 import io.smartspaces.service.web.server.HttpFileUploadListener;
@@ -34,6 +33,7 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.data.resource.CopyableResourceListener;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+import io.smartspaces.util.web.HttpResponseCode;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -131,26 +131,26 @@ public class VersionTest {
     Assert.assertFalse(new VersionRange(new Version(1, 2, 4)).contains(version));
 
     // In range
-    Assert.assertTrue(new VersionRange(new Version(1, 2, 3), new Version(1, 2, 4), true)
-        .contains(version));
-    Assert.assertTrue(new VersionRange(new Version(1, 2, 3), new Version(1, 2, 4), false)
-        .contains(version));
+    Assert.assertTrue(
+        new VersionRange(new Version(1, 2, 3), new Version(1, 2, 4), true).contains(version));
+    Assert.assertTrue(
+        new VersionRange(new Version(1, 2, 3), new Version(1, 2, 4), false).contains(version));
 
     // Below range, both inclusive and exclusive.
-    Assert.assertFalse(new VersionRange(new Version(1, 3, 3), new Version(1, 3, 4), true)
-        .contains(version));
+    Assert.assertFalse(
+        new VersionRange(new Version(1, 3, 3), new Version(1, 3, 4), true).contains(version));
 
     // Above range
-    Assert.assertFalse(new VersionRange(new Version(0, 3, 3), new Version(0, 3, 4), true)
-        .contains(version));
+    Assert.assertFalse(
+        new VersionRange(new Version(0, 3, 3), new Version(0, 3, 4), true).contains(version));
 
     // Bump against max, inclusive
-    Assert.assertTrue(new VersionRange(new Version(1, 2, 1), new Version(1, 2, 3), true)
-        .contains(version));
+    Assert.assertTrue(
+        new VersionRange(new Version(1, 2, 1), new Version(1, 2, 3), true).contains(version));
 
     // Bump against max, exclusive
-    Assert.assertFalse(new VersionRange(new Version(1, 2, 1), new Version(1, 2, 3), false)
-        .contains(version));
+    Assert.assertFalse(
+        new VersionRange(new Version(1, 2, 1), new Version(1, 2, 3), false).contains(version));
   }
 
   /**
@@ -159,10 +159,10 @@ public class VersionTest {
   @Test
   public void testVersionRangeToString() {
     Assert.assertEquals("1.8.3", new VersionRange(new Version(1, 8, 3)).toString());
-    Assert.assertEquals("[1.8.3, 1.8.4]", new VersionRange(new Version(1, 8, 3), new Version(1, 8,
-        4), true).toString());
-    Assert.assertEquals("[1.8.3, 1.8.4)", new VersionRange(new Version(1, 8, 3), new Version(1, 8,
-        4), false).toString());
+    Assert.assertEquals("[1.8.3, 1.8.4]",
+        new VersionRange(new Version(1, 8, 3), new Version(1, 8, 4), true).toString());
+    Assert.assertEquals("[1.8.3, 1.8.4)",
+        new VersionRange(new Version(1, 8, 3), new Version(1, 8, 4), false).toString());
   }
 
   /**
@@ -189,6 +189,15 @@ public class VersionTest {
     tryBadVersionRangeParse("[1 2]");
     tryBadVersionRangeParse("[1 2");
     tryBadVersionRangeParse("(1, 2)");
+  }
+
+  /**
+   * Test whether a qualifier works in a version range test.
+   */
+  @Test
+  public void testQualifiedVersionInRange() {
+    VersionRange range = new VersionRange(new Version(0, 1, 0), new Version(0, 2, 0), false);
+    Assert.assertTrue(range.contains(new Version(0, 1, 0, "SNAPSHOT")));
   }
 
   /**

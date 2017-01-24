@@ -63,7 +63,7 @@ public class NamedVersionedResourceCollectionTest {
   }
 
   /**
-   * Check finding a resource by range when it is in the middle
+   * Check finding a resource when there are multiple resources of that name.
    */
   @Test
   public void testFindingResourceWithMultiple() {
@@ -80,6 +80,21 @@ public class NamedVersionedResourceCollectionTest {
     Assert.assertEquals(v1Resource, collection.getResource("foo", v1));
     Assert.assertEquals(v0Resource,
         collection.getResource("foo", new VersionRange(v0, v0.incrementMinor(), true)));
+  }
+
+  /**
+   * Check finding a resource by range when it is in the middle with a qualifier
+   */
+  @Test
+  public void testFindingResourceWithQualifier() {
+    Version v0 = new Version(0, 1, 0, "SNAPSHOT");
+    Integer v0Resource = 12;
+    collection.addResource("foo", v0, v0Resource);
+
+    Assert.assertEquals(v0Resource, collection.getHighestResource("foo"));
+    Assert.assertEquals(v0Resource, collection.getResource("foo", v0));
+    Assert.assertEquals(v0Resource,
+        collection.getResource("foo", new VersionRange(new Version(0, 1, 0), new Version(0, 2, 0), true)));
   }
 
 }

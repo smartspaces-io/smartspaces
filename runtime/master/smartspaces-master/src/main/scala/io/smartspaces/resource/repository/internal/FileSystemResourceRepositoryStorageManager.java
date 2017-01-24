@@ -262,7 +262,7 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
       suffix = "jar";
     }
 
-    return name + "-" + version.toString() + "." + suffix;
+    return name + "-" + version.toMavenString() + "." + suffix;
   }
 
   @Override

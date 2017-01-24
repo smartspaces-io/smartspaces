@@ -26,6 +26,34 @@ import org.apache.commons.logging.Log
  *
  * @author Keith M. Hughes
  */
+object MqttCommunicationEndpoint {
+  
+  /**
+   * The 0 quality of service.
+   */
+  val QOS_0 = 0
+  
+  /**
+   * The 1 quality of service.
+   */
+  val QOS_1 = 1
+  
+  /**
+   * The 2 quality of service.
+   */
+  val QOS_2 = 2
+  
+  /**
+   * The separator between components of a topic name.
+   */
+  val TOPIC_SEPARATOR = "/"
+}
+
+/**
+ * An endpoint for MQTT communications.
+ *
+ * @author Keith M. Hughes
+ */
 trait MqttCommunicationEndpoint extends ManagedResource {
 
   /**

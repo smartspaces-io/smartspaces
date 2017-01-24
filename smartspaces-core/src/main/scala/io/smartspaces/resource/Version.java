@@ -45,8 +45,14 @@ public class Version implements Comparable<Version> {
   /**
    * Pattern for the version.
    */
-  public static final Pattern VERSION_PATTERN = Pattern
-      .compile("^([0-9]+)(\\.[0-9]+)?(\\.[0-9]+)?(\\." + QUALIFIER_REGEX + ")?$");
+  public static final Pattern VERSION_PATTERN =
+      Pattern.compile("^([0-9]+)(\\.[0-9]+)?(\\.[0-9]+)?(\\." + QUALIFIER_REGEX + ")?$");
+
+  /**
+   * Pattern for the version in Maven format.
+   */
+  public static final Pattern VERSION_PATTERN_MAVEN =
+      Pattern.compile("^([0-9]+)(\\.[0-9]+)?(\\.[0-9]+)?(-" + QUALIFIER_REGEX + ")?$");
 
   /**
    * The regex group that gives the major portion of the version.
@@ -95,6 +101,18 @@ public class Version implements Comparable<Version> {
   }
 
   /**
+   * Is the candidate have legal syntax for a maven version?
+   *
+   * @param candidate
+   *          the candidate version
+   *
+   * @return {@code true} if legal syntax
+   */
+  public static boolean isLegalMavenSyntax(String candidate) {
+    return Version.VERSION_PATTERN_MAVEN.matcher(candidate).matches();
+  }
+
+  /**
    * Parse a version string.
    *
    * @param version
@@ -122,9 +140,42 @@ public class Version implements Comparable<Version> {
    *           improperly formatted version or a {@code null} string
    */
   public static Version parseVersion(String version) throws SimpleSmartSpacesException {
+    return parseVersion(VERSION_PATTERN, version);
+  }
+
+  /**
+   * Parse a version string in Maven syntax.
+   *
+   * @param version
+   *          the version as a string
+   *
+   * @return the version represented by the string
+   *
+   * @throws SimpleSmartSpacesException
+   *           improperly formatted version or a {@code null} string
+   */
+  public static Version parseVersionMaven(String version) throws SimpleSmartSpacesException {
+    return parseVersion(VERSION_PATTERN_MAVEN, version);
+  }
+
+  /**
+   * Parse a version string.
+   *
+   * @param pattern
+   *          the pattern for determining the format of the version
+   * @param version
+   *          the version as a string
+   *
+   * @return the version represented by the string
+   *
+   * @throws SimpleSmartSpacesException
+   *           improperly formatted version or a {@code null} string
+   */
+  private static Version parseVersion(Pattern pattern, String version)
+      throws SimpleSmartSpacesException {
     if (version != null) {
       version = version.trim();
-      Matcher matcher = VERSION_PATTERN.matcher(version);
+      Matcher matcher = pattern.matcher(version);
       if (matcher.matches()) {
         String major = matcher.group(REGEX_GROUP_NUMBER_MAJOR);
         String minor = matcher.group(REGEX_GROUP_NUMBER_MINOR);
@@ -134,9 +185,9 @@ public class Version implements Comparable<Version> {
         if (qualifier != null) {
           qualifier = qualifier.substring(1);
         }
-        return new Version(Integer.parseInt(major), (minor != null ? Integer.parseInt(minor
-            .substring(1)) : 0), (micro != null ? Integer.parseInt(micro.substring(1)) : 0),
-            qualifier);
+        return new Version(Integer.parseInt(major),
+            (minor != null ? Integer.parseInt(minor.substring(1)) : 0),
+            (micro != null ? Integer.parseInt(micro.substring(1)) : 0), qualifier);
       } else {
         throw new SimpleSmartSpacesException(String.format("Illegal version %s", version));
       }
@@ -368,12 +419,26 @@ public class Version implements Comparable<Version> {
 
   @Override
   public String toString() {
-    StringBuilder builder =
-        new StringBuilder().append(major).append(VERSION_SECTION_SEPARATOR).append(minor)
-            .append(VERSION_SECTION_SEPARATOR).append(micro);
+    StringBuilder builder = new StringBuilder().append(major).append(VERSION_SECTION_SEPARATOR)
+        .append(minor).append(VERSION_SECTION_SEPARATOR).append(micro);
 
     if (!qualifier.isEmpty()) {
       builder.append(VERSION_SECTION_SEPARATOR).append(qualifier);
+    }
+    return builder.toString();
+  }
+
+  /**
+   * Convert to a maven style designator.
+   * 
+   * @return a maven style designator
+   */
+  public String toMavenString() {
+    StringBuilder builder = new StringBuilder().append(major).append(VERSION_SECTION_SEPARATOR)
+        .append(minor).append(VERSION_SECTION_SEPARATOR).append(micro);
+
+    if (!qualifier.isEmpty()) {
+      builder.append("-").append(qualifier);
     }
     return builder.toString();
   }
@@ -383,23 +448,21 @@ public class Version implements Comparable<Version> {
    */
   private void validate() {
     if (major < 0) {
-      throw new SimpleSmartSpacesException(String.format(
-          "Major version number cannot be negative: %d", major));
+      throw new SimpleSmartSpacesException(
+          String.format("Major version number cannot be negative: %d", major));
     }
     if (minor < 0) {
-      throw new SimpleSmartSpacesException(String.format(
-          "Minor version number cannot be negative: %d", minor));
+      throw new SimpleSmartSpacesException(
+          String.format("Minor version number cannot be negative: %d", minor));
     }
     if (micro < 0) {
-      throw new SimpleSmartSpacesException(String.format(
-          "Micro version number cannot be negative: %d", micro));
+      throw new SimpleSmartSpacesException(
+          String.format("Micro version number cannot be negative: %d", micro));
     }
     if (!qualifier.isEmpty() && !Version.QUALIFIER_PATTERN.matcher(qualifier).matches()) {
-      throw new SimpleSmartSpacesException(
-          String
-              .format(
-                  "Version qualifiers must use only characters a-z, A-Z, 0-9, _ and - cannot be negative: %s",
-                  qualifier));
+      throw new SimpleSmartSpacesException(String.format(
+          "Version qualifiers must use only characters a-z, A-Z, 0-9, _ and - cannot be negative: %s",
+          qualifier));
     }
   }
 }

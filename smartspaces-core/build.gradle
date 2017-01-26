@@ -85,6 +85,7 @@ jar {
         'org.jboss.netty.bootstrap;resolution:="optional"',
         'com.fasterxml.jackson.*;resolution:="optional"',
         'org.apache.commons.net.ntp;resolution:="optional"',
+        'org.apache.commons.net.telnet;resolution:="optional"',
         'org.ros.*;resolution:="optional"',
         'org.joda.*;resolution:="optional"',
         'org.eclipse.paho.client.mqttv3.*;resolution:="optional"',

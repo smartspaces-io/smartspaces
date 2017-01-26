@@ -68,4 +68,5 @@ include 'smartspaces-core',
 	'smartspaces_docs',
         'smartspaces_build:master',
         'smartspaces_build:controller',
-        'smartspaces_build:workbench'
+        'smartspaces_build:workbench',
+	'api:smartspaces-api-osgi-system'

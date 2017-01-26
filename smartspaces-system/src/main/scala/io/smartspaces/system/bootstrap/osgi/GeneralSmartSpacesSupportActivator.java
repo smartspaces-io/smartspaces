@@ -44,6 +44,8 @@ import io.smartspaces.tasks.StandardManagedTasks;
 import io.smartspaces.time.provider.LocalTimeProvider;
 import io.smartspaces.time.provider.NtpTimeProvider;
 import io.smartspaces.time.provider.TimeProvider;
+import io.smartspaces.util.concurrency.DefaultScheduledExecutorService;
+import io.smartspaces.util.net.InetAddressFactory;
 
 import org.apache.commons.logging.Log;
 import org.osgi.framework.BundleActivator;
@@ -51,8 +53,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.framework.wiring.FrameworkWiring;
-import org.ros.address.InetAddressFactory;
-import org.ros.concurrent.DefaultScheduledExecutorService;
 import org.ros.log.RosLogFactory;
 import org.ros.master.uri.MasterUriProvider;
 import org.ros.master.uri.StaticMasterUriProvider;

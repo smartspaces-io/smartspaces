@@ -15,8 +15,10 @@
  * the License.
  */
 
-package io.smartspaces.osgi.service;
+package io.smartspaces.api.osgi.service;
 
+import io.smartspaces.api.osgi.service.OsgiServiceTrackerCollection.MyServiceTracker;
+import io.smartspaces.api.osgi.service.OsgiServiceTrackerCollection.OsgiServiceTrackerCollectionListener;
 import io.smartspaces.resource.Version;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.resource.managed.ManagedResources;
@@ -25,21 +27,17 @@ import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.scope.StandardManagedScope;
 import io.smartspaces.service.Service;
 import io.smartspaces.service.ServiceRegistry;
+import io.smartspaces.service.SupportedService;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.tasks.ManagedTasks;
 import io.smartspaces.tasks.StandardManagedTasks;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.util.tracker.ServiceTracker;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * A base class for creating OSGi BundleActivator subclasses for Smart Spaces
@@ -47,7 +45,8 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @author Keith M. Hughes
  */
-public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleActivator {
+public abstract class SmartSpacesServiceOsgiBundleActivator
+    implements BundleActivator, OsgiServiceTrackerCollectionListener {
 
   /**
    * All OSGi service registrations from this bundle.
@@ -87,27 +86,21 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   /**
    * All service trackers we have.
    */
-  private final Map<String, MyServiceTracker<?>> serviceTrackers =
-      new HashMap<String, MyServiceTracker<?>>();
-
-  /**
-   * Object to give lock for putting this bundle's services together.
-   */
-  private final Object serviceLock = new Object();
+  private OsgiServiceTrackerCollection serviceTrackerCollection;
 
   @Override
   public void start(BundleContext context) throws Exception {
     this.bundleContext = context;
 
-    smartspacesEnvironmentTracker = newMyServiceTracker(SmartSpacesEnvironment.class.getName());
+    serviceTrackerCollection = new OsgiServiceTrackerCollection(context, this);
+
+    smartspacesEnvironmentTracker =
+        serviceTrackerCollection.newMyServiceTracker(SmartSpacesEnvironment.class.getName());
 
     // Get the registrations from the subclass.
     onStart();
 
-    // Open all the trackers.
-    for (MyServiceTracker<?> tracker : serviceTrackers.values()) {
-      tracker.open();
-    }
+    serviceTrackerCollection.startTracking();
   }
 
   /**
@@ -127,11 +120,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
       managedScope.shutdown();
     }
 
-    // Close all the trackers.
-    for (MyServiceTracker<?> tracker : serviceTrackers.values()) {
-      tracker.close();
-    }
-    serviceTrackers.clear();
+    serviceTrackerCollection.stopTracking();
   }
 
   /**
@@ -139,6 +128,20 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
    */
   protected void onStop() {
     // Default is do nothing.
+  }
+
+  /**
+   * Create a new service tracker.
+   *
+   * @param serviceName
+   *          name of the service class
+   * @param <T>
+   *          class being tracked by the service tracker
+   *
+   * @return the service tracker
+   */
+  protected <T> MyServiceTracker<T> newMyServiceTracker(String serviceName) {
+    return serviceTrackerCollection.newMyServiceTracker(serviceName);
   }
 
   /**
@@ -203,27 +206,19 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   /**
    * Got another reference from a dependency.
    */
-  protected void gotAnotherReference() {
-    synchronized (serviceLock) {
-      // If missing any of our needed services, punt.
-      for (MyServiceTracker<?> tracker : serviceTrackers.values()) {
-        if (tracker.getMyService() == null) {
-          return;
-        }
-      }
+  @Override
+  public void handleAllRequiredServicesAvailable() {
+    SmartSpacesEnvironment spaceEnvironment = smartspacesEnvironmentTracker.getMyService();
+    managedResources = new StandardManagedResources(spaceEnvironment.getLog());
 
-      SmartSpacesEnvironment spaceEnvironment = smartspacesEnvironmentTracker.getMyService();
-      managedResources = new StandardManagedResources(spaceEnvironment.getLog());
+    managedTasks =
+        new StandardManagedTasks(spaceEnvironment.getExecutorService(), spaceEnvironment.getLog());
 
-      managedTasks = new StandardManagedTasks(spaceEnvironment.getExecutorService(),
-          spaceEnvironment.getLog());
+    managedScope = new StandardManagedScope(managedResources, managedTasks);
 
-      managedScope = new StandardManagedScope(managedResources, managedTasks);
+    allRequiredServicesAvailable();
 
-      allRequiredServicesAvailable();
-
-      managedScope.startup();
-    }
+    managedScope.startup();
   }
 
   /**
@@ -282,24 +277,6 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   }
 
   /**
-   * Create a new service tracker.
-   *
-   * @param serviceName
-   *          name of the service class
-   * @param <T>
-   *          class being tracked by the service tracker
-   *
-   * @return the service tracker
-   */
-  protected <T> MyServiceTracker<T> newMyServiceTracker(String serviceName) {
-    MyServiceTracker<T> tracker = new MyServiceTracker<T>(bundleContext, serviceName);
-
-    serviceTrackers.put(serviceName, tracker);
-
-    return tracker;
-  }
-
-  /**
    * Get the bundle context for the bundle.
    *
    * @return the bundle context
@@ -318,51 +295,11 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   }
 
   /**
-   * An OSGi service tracking class.
+   * Get the service tracker for the Smart Spaces environment.
    *
-   * @param <T>
-   *          the class of the service being tracked
-   *
-   * @author Keith M. Hughes
+   * @return the service tracker
    */
-  public final class MyServiceTracker<T> extends ServiceTracker {
-
-    /**
-     * The reference for the service object being waited for.
-     */
-    private final AtomicReference<T> serviceReference = new AtomicReference<T>();
-
-    /**
-     * Construct a service tracker.
-     *
-     * @param context
-     *          bundle context the tracker is running under
-     * @param serviceName
-     *          the name of the service
-     */
-    public MyServiceTracker(BundleContext context, String serviceName) {
-      super(context, serviceName, null);
-    }
-
-    @Override
-    public Object addingService(ServiceReference reference) {
-      @SuppressWarnings("unchecked")
-      T service = (T) super.addingService(reference);
-
-      if (serviceReference.compareAndSet(null, service)) {
-        gotAnotherReference();
-      }
-
-      return service;
-    }
-
-    /**
-     * Get the service needed.
-     *
-     * @return the service, or {@code null} if it hasn't been obtained yet.
-     */
-    public T getMyService() {
-      return serviceReference.get();
-    }
+  public MyServiceTracker<SmartSpacesEnvironment> getSmartSpacesEnvironmentTracker() {
+    return smartspacesEnvironmentTracker;
   }
 }

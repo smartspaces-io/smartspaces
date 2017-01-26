@@ -80,7 +80,8 @@ allprojects {
       ':smartspaces_build',   
       ':smartspaces_build:master',
       ':smartspaces_build:controller',
-      ':smartspaces_build:workbench'
+      ':smartspaces_build:workbench',
+      ':api'
     ]
 
     nonOsgiJvmProjects = [
@@ -147,9 +148,9 @@ subprojects {
       archives jar
     }
 
-    if (name != 'smartspaces-bootstrap-core') {
+//    if (name != 'smartspaces-bootstrap-core') {
       apply plugin: 'osgi'
-    }
+//    }
 
     apply plugin: 'jacoco'
  

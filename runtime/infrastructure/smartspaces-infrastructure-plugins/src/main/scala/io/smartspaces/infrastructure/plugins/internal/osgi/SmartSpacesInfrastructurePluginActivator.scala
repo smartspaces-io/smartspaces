@@ -28,7 +28,7 @@ import io.smartspaces.service.comm.network.zeroconf.StandardZeroconfService
  */
 class SmartSpacesInfrastructurePluginActivator extends SmartSpacesServiceOsgiBundleActivator {
   override def allRequiredServicesAvailable(): Unit = {
-    val pluginsManager = new StandardInfrastructurePluginManager(getSmartspacesEnvironment)
+    val pluginsManager = new StandardInfrastructurePluginManager(getSmartSpacesEnvironment)
     addManagedResource(pluginsManager)
     registerOsgiFrameworkService(classOf[InfrastructurePluginManager].getName, pluginsManager)
   }

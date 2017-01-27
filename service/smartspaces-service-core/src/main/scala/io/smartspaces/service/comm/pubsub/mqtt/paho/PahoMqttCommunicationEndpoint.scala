@@ -93,7 +93,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
 
       mqttClient.setCallback(new MqttCallbackExtended() {
         override def connectComplete(reconnect: Boolean, serverURI: String): Unit = {
-          log.error("MQTT connection successful to " + mqttBrokerDescription.brokerAddress)
+          log.info("MQTT connection successful to " + mqttBrokerDescription.brokerAddress)
 
           brokerConnectSuccessful(reconnect)
         }
@@ -105,7 +105,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
         }
 
         override def deliveryComplete(token: IMqttDeliveryToken): Unit = {
-          log.info("Got delivery token " + token.getResponse())
+          //log.info("Got delivery token " + token.getResponse())
         }
 
         override def messageArrived(topic: String, message: MqttMessage): Unit = {
@@ -116,8 +116,8 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
 
       mqttConnectOptions.setCleanSession(true)
       mqttConnectOptions.setAutomaticReconnect(mqttBrokerDescription.autoreconnect)
-      if (mqttBrokerDescription.userName.isDefined) {
-        mqttConnectOptions.setUserName(mqttBrokerDescription.userName.get)
+      if (mqttBrokerDescription.username.isDefined) {
+        mqttConnectOptions.setUserName(mqttBrokerDescription.username.get)
         mqttConnectOptions.setPassword(mqttBrokerDescription.password.get.toCharArray())
       }
       if (mqttBrokerDescription.isSsl) {

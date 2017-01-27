@@ -291,7 +291,7 @@ public class GeneralSmartSpacesSupportActivator
    *          the base directory where Smart Spaces is installed
    */
   private void setupSpaceEnvironment(File baseInstallDir) {
-    Map<String, String> containerProperties = new HashMap<>(); // configurationProvider.getInitialConfiguration();
+    Map<String, String> containerProperties = configurationProvider.getInitialConfiguration();
 
     executorService = new DefaultScheduledExecutorService();
 
@@ -375,7 +375,8 @@ public class GeneralSmartSpacesSupportActivator
     // Configuration systemConfiguration =
     // systemConfigurationStorageManager.getSystemConfiguration();
     //
-    // systemConfiguration.setProperties(containerProperties);
+    Configuration systemConfiguration = new SimpleConfiguration(expressionEvaluatorFactory.newEvaluator());
+    systemConfiguration.setProperties(containerProperties);
     //
     // systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_NAME_SMARTSPACES_VERSION,
     // bundleContext.getProperty(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_VERSION));
@@ -399,8 +400,7 @@ public class GeneralSmartSpacesSupportActivator
     // SmartSpacesEnvironment.CONFIGURATION_NAME_SYSTEM_FILESYSTEM_DIR_TMP,
     // filesystem.getTempDirectory().getAbsolutePath());
 
-    spaceEnvironment
-        .setSystemConfiguration(new SimpleConfiguration(expressionEvaluatorFactory.newEvaluator()));
+    spaceEnvironment.setSystemConfiguration(systemConfiguration);
   }
 
   /**

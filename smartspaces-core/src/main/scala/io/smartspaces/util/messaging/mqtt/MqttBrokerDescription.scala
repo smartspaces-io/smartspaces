@@ -16,24 +16,53 @@
 
 package io.smartspaces.util.messaging.mqtt
 
+import io.smartspaces.SmartSpacesException
+import io.smartspaces.util.data.json.StandardJsonMapper
+
+import java.util.regex.Pattern
+
 /**
  * The description of an MQTT broker.
  *
  * @author Keith M. Hughes
  */
 object MqttBrokerDescription {
-  
+
+  val VERSION_PATTERN =
+    Pattern.compile("^([a-zA_Z]+)://(.+):([0-9]+)(@\\{.*\\})?$")
+
   /**
    * Parse a description string into an MQTT broker description.
    */
   def parse(description: String): MqttBrokerDescription = {
-    val isSsl = description.startsWith("ssl")
-    val postLocation = description.lastIndexOf(":")
-    
-    val brokerHost = description.substring(6, postLocation)
-    val brokerPort = description.substring(postLocation+1).toInt
-    
-    new MqttBrokerDescription(brokerHost, brokerPort, isSsl)
+    val matcher = VERSION_PATTERN.matcher(description.trim)
+    if (matcher.matches) {
+      val isSsl = "ssl" == matcher.group(1)
+
+      val brokerHost = matcher.group(2)
+
+      val brokerPort = matcher.group(3).toInt
+
+      val brokerDescription = new MqttBrokerDescription(brokerHost, brokerPort, isSsl)
+
+      val paramString = matcher.group(4)
+      if (paramString != null) {
+        val params = StandardJsonMapper.INSTANCE.parseObject(paramString.substring(1))
+
+        brokerDescription.username = Option(params.get("username").asInstanceOf[String])
+        brokerDescription.password = Option(params.get("password").asInstanceOf[String])
+        brokerDescription.keystorePath = Option(params.get("keystorePath").asInstanceOf[String])
+        brokerDescription.keystorePassword = Option(params.get("keystorePassword").asInstanceOf[String])
+        brokerDescription.caCertPath = Option(params.get("caCertPath").asInstanceOf[String])
+        brokerDescription.clientCertPath = Option(params.get("clientCertPath").asInstanceOf[String])
+        brokerDescription.clientKeyPath = Option(params.get("clientKeyPath").asInstanceOf[String])
+        brokerDescription.autoreconnect = params.get("autoreconnect").asInstanceOf[Boolean]
+      }
+
+      brokerDescription
+    } else {
+      throw new SmartSpacesException(s"MQTT broker description has the wrong syntax: ${description}")
+    }
   }
 }
 
@@ -52,40 +81,40 @@ class MqttBrokerDescription(val brokerHost: String, val brokerPort: Integer, val
   /**
    * The username for the broker.
    */
-  var userName: Option[String] = None
+  var username: Option[String] = None
 
   /**
    * The password for the broker.
    */
   var password: Option[String] = None
-  
+
   /**
    * File path to the keystore if using SSL.
    */
   var keystorePath: Option[String] = None
-   
+
   /**
    * Password for the keystore if using SSL.
    */
   var keystorePassword: Option[String] = None
-  
+
   /**
    * File path to the certificate authority cert if using client certificate SSL.
    */
   var caCertPath: Option[String] = None
-   
+
   /**
    * File path to the client cert if using client certificate SSL.
    */
   var clientCertPath: Option[String] = None
-  
+
   /**
    * File path to the client private key if using client certificate SSL.
    */
   var clientKeyPath: Option[String] = None
 
   /**
-   * {@code true} if should reautoconnect back to the broker.
+   * {@code true} if should reconnect automatically back to the broker.
    */
-  var autoreconnect = false
+  var autoreconnect: Boolean = false
 }

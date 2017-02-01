@@ -33,6 +33,8 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.resources.ContainerResourceLocation;
 import io.smartspaces.util.data.resource.MessageDigestResourceSignatureCalculator;
 import io.smartspaces.util.data.resource.ResourceSignatureCalculator;
+import io.smartspaces.util.io.FileSupport;
+import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.uuid.JavaUuidGenerator;
 import io.smartspaces.util.uuid.UuidGenerator;
 
@@ -45,8 +47,8 @@ import java.util.Set;
  *
  * @author Keith M. Hughes
  */
-public class StandardContainerResourceDeploymentManager implements
-    ContainerResourceDeploymentManager {
+public class StandardContainerResourceDeploymentManager
+    implements ContainerResourceDeploymentManager {
 
   /**
    * The resource repository storage manager to use.
@@ -72,6 +74,11 @@ public class StandardContainerResourceDeploymentManager implements
    * The space environment to run under.
    */
   private SmartSpacesEnvironment spaceEnvironment;
+  
+  /**
+   * The file support to use.
+   */
+  private FileSupport fileSupport = FileSupportImpl.INSTANCE;
 
   /**
    * The resource signature calculator.
@@ -90,8 +97,8 @@ public class StandardContainerResourceDeploymentManager implements
   }
 
   @Override
-  public Set<NamedVersionedResourceWithData<URI>> satisfyDependencies(
-      Set<ResourceDependencyReference> dependencies) {
+  public Set<NamedVersionedResourceWithData<URI>>
+      satisfyDependencies(Set<ResourceDependencyReference> dependencies) {
     Set<NamedVersionedResourceWithData<URI>> results = new HashSet<>();
 
     NamedVersionedResourceCollection<NamedVersionedResourceWithData<URI>> allResources =
@@ -103,10 +110,9 @@ public class StandardContainerResourceDeploymentManager implements
       if (resource != null) {
         results.add(resource);
       } else {
-        String location =
-            resourceRepositoryStorageManager.getBaseLocation(
-                ResourceRepositoryStorageManager.RESOURCE_CATEGORY_CONTAINER_BUNDLE)
-                .getAbsolutePath();
+        String location = resourceRepositoryStorageManager
+            .getBaseLocation(ResourceRepositoryStorageManager.RESOURCE_CATEGORY_CONTAINER_BUNDLE)
+            .getAbsolutePath();
         throw new SimpleSmartSpacesException(String.format(
             "Could not find a resource for the dependency %s %s from the master repository %s",
             dependency.getName(), dependency.getVersionRange(), location));
@@ -133,20 +139,19 @@ public class StandardContainerResourceDeploymentManager implements
     ContainerResourceDeploymentCommitRequest commitRequest =
         new ContainerResourceDeploymentCommitRequest(transactionId);
     for (NamedVersionedResourceWithData<URI> resource : resources) {
-      String resourceSignature =
-          resourceSignatureCalculator.getResourceSignature(resource.getData());
+      URI resourceUri = resource.getData();
+      String resourceSignature = resourceSignatureCalculator.getResourceSignature(resourceUri);
       if (resourceSignature == null) {
         resourceSignature = ContainerResourceDeploymentItem.RESOURCE_SIGNATURE_NONE;
         spaceEnvironment.getLog().formatWarn(
-            "Could not calulate resource signature for resource URI %s",
-            resource.getData().toString());
+            "Could not calulate resource signature for resource URI %s", resourceUri.toString());
       }
 
-      commitRequest.addItem(new ContainerResourceDeploymentItem(resource.getName(), resource
-          .getVersion(), ContainerResourceLocation.USER_BOOTSTRAP, resourceSignature,
+      commitRequest.addItem(new ContainerResourceDeploymentItem(resource.getName(),
+          resource.getVersion(), ContainerResourceLocation.USER_BOOTSTRAP, resourceSignature,
           repositoryServer.getResourceUri(
               ResourceRepositoryStorageManager.RESOURCE_CATEGORY_CONTAINER_BUNDLE,
-              resource.getName(), resource.getVersion())));
+              resource.getName(), resource.getVersion()), fileSupport.getResourceName(resourceUri)));
     }
 
     remoteSpaceControllerClient.commitSpaceControllerResourceDeployment(controller, commitRequest);

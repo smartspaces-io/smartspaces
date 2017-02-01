@@ -18,6 +18,8 @@ package io.smartspaces.service.comm.network.server;
 
 import io.smartspaces.messaging.MessageWriter;
 
+import java.net.SocketAddress;
+
 /**
  * A connection for a client to a TCP server.
  *
@@ -46,4 +48,11 @@ public interface TcpServerClientConnection<T> extends MessageWriter<T> {
    * Close the connection.
    */
   void close();
+  
+  /**
+   * Get the address of the remote client using the server.
+   * 
+   * @return the remote address
+   */
+  SocketAddress getRemoteAddress();
 }

@@ -105,9 +105,10 @@ public class OsgiContainerResourceManagerTest {
 
     String resourceName = "foo.bar";
     Version resourceVersion = new Version(1, 2, 3);
+    String destinationFileName = resourceName + "-" + resourceVersion.toString() + ".jar";
     ContainerResource resource =
         new ContainerResource(resourceName, resourceVersion, ContainerResourceType.LIBRARY,
-            ContainerResourceLocation.USER_BOOTSTRAP, "signature1");
+            ContainerResourceLocation.USER_BOOTSTRAP, "signature1", destinationFileName);
 
     Bundle[] bundles = new Bundle[] {};
     when(bundleContext.getBundles()).thenReturn(bundles);
@@ -116,9 +117,8 @@ public class OsgiContainerResourceManagerTest {
     when(filesystem.getInstallDirectory()).thenReturn(installFolder);
     File userBootstrapFolder = new File("/test/install/startup");
     when(fileSupport.newFile(installFolder, "startup")).thenReturn(userBootstrapFolder);
-    String destinationFilePath = resourceName + "-" + resourceVersion.toString() + ".jar";
-    File destinationFile = new File(userBootstrapFolder, destinationFilePath);
-    when(fileSupport.newFile(userBootstrapFolder, destinationFilePath)).thenReturn(destinationFile);
+    File destinationFile = new File(userBootstrapFolder, destinationFileName);
+    when(fileSupport.newFile(userBootstrapFolder, destinationFileName)).thenReturn(destinationFile);
 
     Bundle installedBundle = Mockito.mock(Bundle.class);
     String bundleLocation = destinationFile.toURI().toString();
@@ -178,17 +178,17 @@ public class OsgiContainerResourceManagerTest {
 
     String resourceName = "foo.bar";
     Version resourceVersion = new Version(1, 2, 3);
+    String destinationFileName = resourceName + "-" + resourceVersion.toString() + ".jar";
     ContainerResource resource =
         new ContainerResource(resourceName, resourceVersion, ContainerResourceType.LIBRARY,
-            ContainerResourceLocation.USER_BOOTSTRAP, signatureIncoming);
+            ContainerResourceLocation.USER_BOOTSTRAP, signatureIncoming, destinationFileName);
 
     File installFolder = new File("/test/install");
     when(filesystem.getInstallDirectory()).thenReturn(installFolder);
     File userBootstrapFolder = new File("/test/install/startup");
     when(fileSupport.newFile(installFolder, "startup")).thenReturn(userBootstrapFolder);
-    String destinationFilePath = resourceName + "-" + resourceVersion.toString() + ".jar";
-    File destinationFile = new File(userBootstrapFolder, destinationFilePath);
-    when(fileSupport.newFile(userBootstrapFolder, destinationFilePath)).thenReturn(destinationFile);
+    File destinationFile = new File(userBootstrapFolder, destinationFileName);
+    when(fileSupport.newFile(userBootstrapFolder, destinationFileName)).thenReturn(destinationFile);
 
     final Bundle installedBundle = Mockito.mock(Bundle.class);
 

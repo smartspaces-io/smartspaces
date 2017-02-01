@@ -57,7 +57,7 @@ public class MessageDigestResourceSignatureCalculator implements ResourceSignatu
   @Override
   public String getResourceSignature(URI resourceUri) {
     try {
-      if (URI_SCHEME_FILE.equals(resourceUri.getScheme())) {
+      if (FileSupport.URI_SCHEME_FILE.equals(resourceUri.getScheme())) {
         return getResourceSignature(fileSupport.newFile(resourceUri.toURL().getFile()));
       }
 

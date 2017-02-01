@@ -132,15 +132,15 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
       @Override
       public void onNewTcpConnection(TcpServerNetworkCommunicationEndpoint<String> endpoint,
           TcpServerClientConnection<String> connection) {
-        // TODO Auto-generated method stub
-
+        spaceEnvironment.getLog().formatInfo("Space controller has control connection from %s",
+            connection.getRemoteAddress());
       }
 
       @Override
       public void onCloseTcpConnection(TcpServerNetworkCommunicationEndpoint<String> endpoint,
           TcpServerClientConnection<String> connection) {
-        // TODO Auto-generated method stub
-
+        spaceEnvironment.getLog().formatInfo("Space controller has control connection from %s",
+            connection.getRemoteAddress());
       }
     });
     controllerAdminServer.startup();
@@ -159,7 +159,7 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
     publishControllerStatus(
         StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_SHUTDOWN, null);
     SmartSpacesUtilities.delay(SHUTDOWN_DELAY);
-    
+
     masterServerClient.shutdown();
 
     controllerAdminServer.shutdown();

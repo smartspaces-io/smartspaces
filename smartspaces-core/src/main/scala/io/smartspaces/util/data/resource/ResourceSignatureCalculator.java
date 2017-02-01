@@ -29,11 +29,6 @@ import java.net.URI;
 public interface ResourceSignatureCalculator {
 
   /**
-   * The URI scheme for a file.
-   */
-  String URI_SCHEME_FILE = "file";
-
-  /**
    * Get the signature for a resource.
    *
    * @param resourceFile

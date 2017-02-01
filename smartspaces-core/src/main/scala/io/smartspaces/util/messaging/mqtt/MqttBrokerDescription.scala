@@ -27,15 +27,28 @@ import java.util.regex.Pattern
  * @author Keith M. Hughes
  */
 object MqttBrokerDescription {
+  
+  /**
+   * The value for memory persistence.
+   */
+  val VALUE_PERSISTENCE_PATH_MEMORY = "memory:"
+  
+  /**
+   * The default for the path for the persistence for MQTT messages.
+   */
+  val DEFAULT_PERSISTENCE_PATH = VALUE_PERSISTENCE_PATH_MEMORY
 
-  val VERSION_PATTERN =
+  /**
+   * The regular expression for the broker description.
+   */
+  val BROKER_DESCRIPTION_PATTERN =
     Pattern.compile("^([a-zA_Z]+)://(.+):([0-9]+)(@\\{.*\\})?$")
 
   /**
    * Parse a description string into an MQTT broker description.
    */
   def parse(description: String): MqttBrokerDescription = {
-    val matcher = VERSION_PATTERN.matcher(description.trim)
+    val matcher = BROKER_DESCRIPTION_PATTERN.matcher(description.trim)
     if (matcher.matches) {
       val isSsl = "ssl" == matcher.group(1)
 
@@ -56,7 +69,8 @@ object MqttBrokerDescription {
         brokerDescription.caCertPath = Option(params.get("caCertPath").asInstanceOf[String])
         brokerDescription.clientCertPath = Option(params.get("clientCertPath").asInstanceOf[String])
         brokerDescription.clientKeyPath = Option(params.get("clientKeyPath").asInstanceOf[String])
-        brokerDescription.autoreconnect = params.get("autoreconnect").asInstanceOf[Boolean]
+        brokerDescription.autoreconnect = Option(params.get("autoreconnect").asInstanceOf[Boolean])
+        brokerDescription.persistencePath = Option(params.get("persistencePath").asInstanceOf[String])
       }
 
       brokerDescription
@@ -116,5 +130,10 @@ class MqttBrokerDescription(val brokerHost: String, val brokerPort: Integer, val
   /**
    * {@code true} if should reconnect automatically back to the broker.
    */
-  var autoreconnect: Boolean = false
+  var autoreconnect: Option[Boolean] = None
+  
+  /**
+   * The path to the persistence for MQTT retained messages.
+   */
+  var persistencePath: Option[String] = None
 }

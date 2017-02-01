@@ -183,8 +183,7 @@ public class OsgiContainerResourceManager implements ContainerResourceManager, M
     File resourceDestinationFolder = getResourceDestinationFolder(location);
 
     File resourceDestinationFile =
-        fileSupport.newFile(resourceDestinationFolder, incomingResource.getName() + "-"
-            + incomingResource.getVersion().toString() + ".jar");
+        fileSupport.newFile(resourceDestinationFolder, incomingResource.getSourceName());
     String resourceDestinationFileUri = resourceDestinationFile.toURI().toString();
 
     if (location.isImmediateLoad()) {
@@ -265,11 +264,12 @@ public class OsgiContainerResourceManager implements ContainerResourceManager, M
       ContainerResourceLocation resourceLocation) throws Exception {
     org.osgi.framework.Version version = bundle.getVersion();
     String bundleLocation = bundle.getLocation();
+    File bundleFile = getBundleFile(bundle);
     ContainerResource containerResource =
         new ContainerResource(bundle.getSymbolicName(), new Version(version.getMajor(),
             version.getMinor(), version.getMicro(), version.getQualifier()), type,
             resourceLocation,
-            resourceSignatureCalculator.getResourceSignature(getBundleFile(bundle)));
+            resourceSignatureCalculator.getResourceSignature(bundleFile), bundleFile.getName());
     cachedResources.put(bundleLocation, containerResource);
   }
 
@@ -546,11 +546,12 @@ public class OsgiContainerResourceManager implements ContainerResourceManager, M
     if (resourceLocation != null) {
       try {
         org.osgi.framework.Version osgiVersion = bundle.getVersion();
+        File bundleFile = getBundleFile(bundle);
         ContainerResource resource =
             new ContainerResource(bundle.getSymbolicName(), new Version(osgiVersion.getMajor(),
                 osgiVersion.getMinor(), osgiVersion.getMicro(), osgiVersion.getQualifier()),
                 ContainerResourceType.LIBRARY, resourceLocation,
-                resourceSignatureCalculator.getResourceSignature(getBundleFile(bundle)));
+                resourceSignatureCalculator.getResourceSignature(bundleFile), bundleFile.getName());
 
         cachedResources.put(bundleLocation, resource);
       } catch (Throwable e) {

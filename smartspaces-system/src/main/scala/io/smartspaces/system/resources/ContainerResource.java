@@ -43,6 +43,11 @@ public class ContainerResource extends NamedVersionedResource {
   private String signature;
 
   /**
+   * The source name of the resource, e.g. the original filename.
+   */
+  private String sourceName;
+
+  /**
    * Construct a new container resource.
    */
   public ContainerResource() {
@@ -61,14 +66,17 @@ public class ContainerResource extends NamedVersionedResource {
    *          location of the resource
    * @param signatureInitial
    *          the initial signature of the resource
+   * @param sourceName
+   *          the source name of the resource, e.g. the original filename
    */
   public ContainerResource(String name, Version version, ContainerResourceType type,
-      ContainerResourceLocation location, String signatureInitial) {
+      ContainerResourceLocation location, String signatureInitial, String sourceName) {
     super(name, version);
 
     this.type = type;
     this.location = location;
     this.signature = signatureInitial;
+    this.sourceName = sourceName;
   }
 
   /**
@@ -127,6 +135,25 @@ public class ContainerResource extends NamedVersionedResource {
     this.signature = signature;
   }
 
+  /**
+   * Get the source name of the resource, e.g. the original filename.
+   * 
+   * @return the source name
+   */
+  public String getSourceName() {
+    return sourceName;
+  }
+
+  /**
+   * Set the source name of the resource, e.g. the original filename.
+   * 
+   * @param sourceName
+   *          the source name
+   */
+  public void setSourceName(String sourceName) {
+    this.sourceName = sourceName;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -155,7 +182,7 @@ public class ContainerResource extends NamedVersionedResource {
 
   @Override
   public String toString() {
-    return "ContainerResource [location=" + location + ", getName()=" + getName()
-        + ", getVersion()=" + getVersion() + "]";
+    return "ContainerResource [type=" + type + ", location=" + location + ", signature=" + signature
+        + ", sourceName=" + sourceName + "]";
   }
 }

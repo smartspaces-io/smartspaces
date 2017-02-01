@@ -33,10 +33,23 @@ trait MqttPublisher extends MessageWriter[Array[Byte]] {
   /**
    * The default QoS for all messages.
    */
-  val qos: Integer
+  val qos: Int
   
   /**
    * The default retain value for messages.
    */
   val retain: Boolean
+  
+  /**
+   * Send a message.
+   *
+   * <p>
+   * The message will be serialized properly for the channel.
+   *
+   * @param message
+   *          the message to send
+   * @param retain
+   *          [[code true]] if the message should be retained
+   */
+  def writeMessage(message: Array[Byte], retain: Boolean): Unit
 }

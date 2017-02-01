@@ -37,6 +37,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -696,5 +697,21 @@ public class FileSupportImpl implements FileSupport {
     }
     
     return filtered;
+  }
+  
+  @Override
+  public String getResourceName(URI resourceUri) {
+    try {
+      if (FileSupport.URI_SCHEME_FILE.equals(resourceUri.getScheme())) {
+        return newFile(resourceUri.toURL().getPath()).getName();
+      }
+
+      // TODO(keith): Support more URI types
+      return null;
+    } catch (MalformedURLException e) {
+      throw SmartSpacesException.newFormattedException(e, "Could not obtain URL for resource %s",
+          resourceUri.toString());
+    }
+
   }
 }

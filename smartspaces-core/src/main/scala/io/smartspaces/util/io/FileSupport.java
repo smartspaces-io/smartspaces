@@ -44,6 +44,11 @@ import java.util.zip.ZipOutputStream;
 public interface FileSupport {
 
   /**
+   * The URI scheme for a file.
+   */
+  String URI_SCHEME_FILE = "file";
+
+  /**
    * Internal helper function to recursively copy contents into a zip file.
    *
    * @param zipOutputStream
@@ -779,4 +784,15 @@ public interface FileSupport {
    * @return the files passing the filterF
    */
   List<File> filterFiles(List<File> files, FileFilter filter);
+
+  /**
+   * Get the final name from a resource. This is an attempt to get, e.g. a file
+   * name for a file.
+   * 
+   * @param uri
+   *          the URI
+   * 
+   * @return the filename for the URI
+   */
+  String getResourceName(URI uri);
 }

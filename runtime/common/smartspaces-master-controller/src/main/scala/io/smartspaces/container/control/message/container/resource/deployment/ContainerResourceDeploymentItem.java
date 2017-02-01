@@ -58,10 +58,12 @@ public class ContainerResourceDeploymentItem extends ContainerResource {
    *          the signature of the resource
    * @param resourceSourceUri
    *          URI for getting the resource
+   * @param sourceName
+   *          the source name of the deployment item
    */
   public ContainerResourceDeploymentItem(String name, Version version,
-      ContainerResourceLocation location, String signature, String resourceSourceUri) {
-    super(name, version, ContainerResourceType.LIBRARY, location, signature);
+      ContainerResourceLocation location, String signature, String resourceSourceUri, String sourceName) {
+    super(name, version, ContainerResourceType.LIBRARY, location, signature, sourceName);
 
     this.resourceSourceUri = resourceSourceUri;
   }
@@ -94,6 +96,6 @@ public class ContainerResourceDeploymentItem extends ContainerResource {
    * @return the container resource representing this deployment item
    */
   public ContainerResource asContainerResource(ContainerResourceType type) {
-    return new ContainerResource(getName(), getVersion(), type, getLocation(), getSignature());
+    return new ContainerResource(getName(), getVersion(), type, getLocation(), getSignature(), getSourceName());
   }
 }

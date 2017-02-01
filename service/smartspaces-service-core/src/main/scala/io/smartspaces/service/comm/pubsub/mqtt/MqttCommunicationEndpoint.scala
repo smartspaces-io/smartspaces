@@ -20,6 +20,8 @@ import io.smartspaces.resource.managed.ManagedResource
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 
 import org.apache.commons.logging.Log
+import io.smartspaces.util.messaging.mqtt.MqttPublisherDescription
+import io.smartspaces.util.messaging.mqtt.MqttSubscriberDescription
 
 /**
  * An endpoint for MQTT communications.
@@ -27,22 +29,22 @@ import org.apache.commons.logging.Log
  * @author Keith M. Hughes
  */
 object MqttCommunicationEndpoint {
-  
+
   /**
    * The 0 quality of service.
    */
   val QOS_0 = 0
-  
+
   /**
    * The 1 quality of service.
    */
   val QOS_1 = 1
-  
+
   /**
    * The 2 quality of service.
    */
   val QOS_2 = 2
-  
+
   /**
    * The separator between components of a topic name.
    */
@@ -83,16 +85,38 @@ trait MqttCommunicationEndpoint extends ManagedResource {
   /**
    * Subscribe to the given topic.
    *
-   * @param topicName
+   * @param subscriberDescription
    *          the topic to subscribe to
-   * @param listener
-   * 					the listener for messages on this topic
    * @param qos
    * 					the QoS level of the topic
    * @param autoreconnect
    *          reconnect automatically if the connection is lost to the broker
+   * @param listener
+   * 					the listener for messages on this topic
    */
-  def subscribe(topicName: String, listener: MqttSubscriberListener, qos: Int, autoreconnect: Boolean): MqttCommunicationEndpoint
+  def subscribe(subscriberDescription: MqttSubscriberDescription, listener: MqttSubscriberListener): MqttCommunicationEndpoint
+
+  /**
+   * Subscribe to the given topic.
+   *
+   * @param topicName
+   *          the topic to subscribe to
+   * @param qos
+   * 					the QoS level of the topic
+   * @param autoreconnect
+   *          reconnect automatically if the connection is lost to the broker
+   * @param listener
+   * 					the listener for messages on this topic
+   */
+  def subscribe(topicName: String, qos: Int, autoreconnect: Boolean, listener: MqttSubscriberListener): MqttCommunicationEndpoint
+
+  /**
+   * Create an MQTT message publisher.
+   *
+   * @param publisherDescription
+   * 	      the publisher description
+   */
+  def createMessagePublisher(publisherDescription: MqttPublisherDescription): MqttPublisher
 
   /**
    * Create an MQTT message publisher.
@@ -104,15 +128,15 @@ trait MqttCommunicationEndpoint extends ManagedResource {
    * @param retain
    * 	      {@code true} if messages should be retained by default
    */
-  def createMessagePublisher(mqttTopicName: String, qos: Integer, retain: Boolean): MqttPublisher
+  def createMessagePublisher(mqttTopicName: String, qos: Int, retain: Boolean): MqttPublisher
 
   /**
    * Is the client connected?
-   * 
+   *
    * @return {@code true} if connected
    */
   def isConnected(): Boolean
-  
+
   /**
    * Get the log for the endpoint.
    *

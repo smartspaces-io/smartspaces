@@ -16,10 +16,18 @@
 
 package io.smartspaces.service.comm.pubsub.mqtt.paho
 
-import java.util.concurrent.ScheduledExecutorService
-
-import scala.collection.immutable.List
-
+import io.smartspaces.SmartSpacesException
+import io.smartspaces.resource.managed.IdempotentManagedResource
+import io.smartspaces.resource.managed.ManagedResourceState
+import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
+import io.smartspaces.service.comm.pubsub.mqtt.MqttConnectionListener
+import io.smartspaces.service.comm.pubsub.mqtt.MqttPublisher
+import io.smartspaces.service.comm.pubsub.mqtt.MqttSubscriberListener
+import io.smartspaces.util.io.FileSupport
+import io.smartspaces.util.io.FileSupportImpl
+import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
+import io.smartspaces.util.messaging.mqtt.MqttPublisherDescription
+import io.smartspaces.util.net.SslUtils
 import org.apache.commons.logging.Log
 import org.eclipse.paho.client.mqttv3.IMqttActionListener
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
@@ -32,25 +40,11 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.eclipse.paho.client.mqttv3.MqttException
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
-
-import io.smartspaces.SmartSpacesException
-import io.smartspaces.resource.managed.IdempotentManagedResource
-import io.smartspaces.resource.managed.ManagedResourceState
-import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
-import io.smartspaces.service.comm.pubsub.mqtt.MqttConnectionListener
-import io.smartspaces.service.comm.pubsub.mqtt.MqttPublisher
-import io.smartspaces.service.comm.pubsub.mqtt.MqttSubscriberListener
-import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
-import javax.net.ssl.KeyManagerFactory
-import java.security.KeyStore
-import javax.net.ssl.TrustManager
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManagerFactory
-import java.util.Properties
-import java.io.InputStream
+import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence
+import java.util.concurrent.ScheduledExecutorService
+import scala.collection.immutable.List
 import javax.net.ssl.SSLSocketFactory
-import java.io.FileInputStream
-import io.smartspaces.util.net.SslUtils
+import io.smartspaces.util.messaging.mqtt.MqttSubscriberDescription
 
 /**
  * An MQTT communication endpoint implemented with Paho.
@@ -59,6 +53,21 @@ import io.smartspaces.util.net.SslUtils
  */
 class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription, mqttClientId: String,
     executor: ScheduledExecutorService, log: Log) extends MqttCommunicationEndpoint with IdempotentManagedResource {
+
+  /**
+   * The default QoS value to be used.
+   */
+  val QOS_DEFAULT: Integer = 0
+
+  /**
+   * The default retain value for publishers.
+   */
+  val RETAIN_DEFAULT = false
+
+  /**
+   * The default value for auto reconnecting when communication lost.
+   */
+  val AUTORECONNECT_DEFAULT = false
 
   /**
    * The client persistence to use.
@@ -81,25 +90,39 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
   private var connectionListeners: List[MqttConnectionListener] = List()
 
   /**
+   * The file support to use.
+   */
+  private val fileSupport: FileSupport = FileSupportImpl.INSTANCE
+
+  /**
    * The list of subscribers.
    */
   private var subscribers: List[MqttSubscriber] = List()
 
   override def onStartup(): Unit = {
     try {
-      persistence = new MemoryPersistence()
+      val persistencePath = mqttBrokerDescription.persistencePath.getOrElse(MqttBrokerDescription.DEFAULT_PERSISTENCE_PATH)
+      if (MqttBrokerDescription.VALUE_PERSISTENCE_PATH_MEMORY == persistencePath) {
+        persistence = new MemoryPersistence()
+      } else if (persistencePath.startsWith("file:")) {
+        val fullPersistencePath = fileSupport.newFile(persistencePath.substring("file:".length)).getAbsolutePath
+        persistence = new MqttDefaultFilePersistence(fullPersistencePath)
+      } else {
+        throw new SmartSpacesException(s"Don't understand MQTT persistence path ${persistencePath}")
+      }
+
       mqttClient =
         new MqttAsyncClient(mqttBrokerDescription.brokerAddress, mqttClientId, persistence)
 
       mqttClient.setCallback(new MqttCallbackExtended() {
         override def connectComplete(reconnect: Boolean, serverURI: String): Unit = {
-          log.info("MQTT connection successful to " + mqttBrokerDescription.brokerAddress)
+          log.info(s"MQTT connection successful to ${mqttBrokerDescription.brokerAddress}")
 
           brokerConnectSuccessful(reconnect)
         }
 
         override def connectionLost(cause: Throwable): Unit = {
-          log.error("Lost MQTT connection to " + mqttBrokerDescription.brokerAddress, cause)
+          log.warn(s"Lost MQTT connection to ${mqttBrokerDescription.brokerAddress}", cause)
 
           brokerConnectLost()
         }
@@ -115,7 +138,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       })
 
       mqttConnectOptions.setCleanSession(true)
-      mqttConnectOptions.setAutomaticReconnect(mqttBrokerDescription.autoreconnect)
+      mqttConnectOptions.setAutomaticReconnect(mqttBrokerDescription.autoreconnect.getOrElse(AUTORECONNECT_DEFAULT))
       if (mqttBrokerDescription.username.isDefined) {
         mqttConnectOptions.setUserName(mqttBrokerDescription.username.get)
         mqttConnectOptions.setPassword(mqttBrokerDescription.password.get.toCharArray())
@@ -169,7 +192,12 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
     this
   }
 
-  override def subscribe(topicName: String, listener: MqttSubscriberListener, qos: Int, autoreconnect: Boolean): MqttCommunicationEndpoint = {
+  override def subscribe(subscriberDescription: MqttSubscriberDescription, listener: MqttSubscriberListener): MqttCommunicationEndpoint = {
+    return subscribe(subscriberDescription.topicName, subscriberDescription.qos.getOrElse(QOS_DEFAULT), 
+        subscriberDescription.autoreconnect.getOrElse(AUTORECONNECT_DEFAULT), listener)
+  }
+
+  override def subscribe(topicName: String, qos: Int, autoreconnect: Boolean, listener: MqttSubscriberListener): MqttCommunicationEndpoint = {
     val subscriber = new MqttSubscriber(topicName, listener, qos, autoreconnect)
 
     if (resourceState == ManagedResourceState.STARTED && mqttClient.isConnected()) {
@@ -183,7 +211,11 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
     this
   }
 
-  override def createMessagePublisher(mqttTopicName: String, qos: Integer, retain: Boolean): MqttPublisher = {
+  override def createMessagePublisher(publisherDescription: MqttPublisherDescription): MqttPublisher = {
+    createMessagePublisher(publisherDescription.topicName, publisherDescription.qos.getOrElse(QOS_DEFAULT), publisherDescription.retain.getOrElse(RETAIN_DEFAULT))
+  }
+
+  override def createMessagePublisher(mqttTopicName: String, qos: Int, retain: Boolean): MqttPublisher = {
     new MqttPublisherShim(mqttTopicName, qos, retain)
   }
 
@@ -262,7 +294,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       return SslUtils.configureSSLSocketFactory(mqttBrokerDescription.caCertPath.get, mqttBrokerDescription.clientCertPath.get, mqttBrokerDescription.clientKeyPath.get)
     }
   }
-  
+
   /**
    * An MQTT subscriber that interfaces with the Paho client.
    *
@@ -279,8 +311,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       try {
         mqttClient.subscribe(subscribedTopicName, qos, this)
       } catch {
-        case e: MqttException => throw SmartSpacesException.newFormattedException(e, "Could not subscribe to MQTT topic %s",
-          subscribedTopicName)
+        case e: MqttException => throw new SmartSpacesException(s"Could not subscribe to MQTT topic ${subscribedTopicName}", e)
       }
     }
 
@@ -288,7 +319,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       try {
         listener.handleMessage(PahoMqttCommunicationEndpoint.this, incomingTopicName, message.getPayload())
       } catch {
-        case e: Throwable => log.error(String.format("Error while handling MQTT message on topic %s", subscribedTopicName), e)
+        case e: Throwable => log.error(s"Error while handling MQTT message on topic ${subscribedTopicName}", e)
       }
     }
   }
@@ -298,9 +329,13 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
    *
    * @author Keith M. Hughes
    */
-  private class MqttPublisherShim(override val mqttTopicName: String, override val qos: Integer, override val retain: Boolean) extends MqttPublisher {
+  private class MqttPublisherShim(override val mqttTopicName: String, override val qos: Int, override val retain: Boolean) extends MqttPublisher {
 
     override def writeMessage(message: Array[Byte]): Unit = {
+      writeMessage(message, retain)
+    }
+
+    override def writeMessage(message: Array[Byte], retain: Boolean): Unit = {
       mqttClient.publish(mqttTopicName, message, qos, retain)
     }
   }

@@ -42,6 +42,7 @@ import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
 
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
@@ -158,7 +159,7 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint
   @Override
   public void shutdown() {
     listeners.clear();
-    
+
     if (bootstrap != null) {
       closeAllConnections();
 
@@ -439,6 +440,11 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint
     @Override
     public void close() {
       closeClientConnection(this);
+    }
+
+    @Override
+    public SocketAddress getRemoteAddress() {
+      return channel.getRemoteAddress();
     }
 
     /**

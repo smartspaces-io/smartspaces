@@ -139,7 +139,7 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
       @Override
       public void onCloseTcpConnection(TcpServerNetworkCommunicationEndpoint<String> endpoint,
           TcpServerClientConnection<String> connection) {
-        spaceEnvironment.getLog().formatInfo("Space controller has control connection from %s",
+        spaceEnvironment.getLog().formatInfo("Space controller has lost control connection from %s",
             connection.getRemoteAddress());
       }
     });

@@ -105,7 +105,7 @@ public class OsgiContainerResourceManagerTest {
 
     String resourceName = "foo.bar";
     Version resourceVersion = new Version(1, 2, 3);
-    String destinationFileName = resourceName + "-" + resourceVersion.toString() + ".jar";
+    String destinationFileName = resourceName + "-" + resourceVersion.toMavenString() + ".jar";
     ContainerResource resource =
         new ContainerResource(resourceName, resourceVersion, ContainerResourceType.LIBRARY,
             ContainerResourceLocation.USER_BOOTSTRAP, "signature1", destinationFileName);
@@ -121,7 +121,9 @@ public class OsgiContainerResourceManagerTest {
     when(fileSupport.newFile(userBootstrapFolder, destinationFileName)).thenReturn(destinationFile);
 
     Bundle installedBundle = Mockito.mock(Bundle.class);
-    String bundleLocation = destinationFile.toURI().toString();
+    URI bundleLocationUri = destinationFile.toURI();
+    String bundleLocation = bundleLocationUri.toString();
+    when(fileSupport.newFile(bundleLocationUri)).thenReturn(destinationFile);
     when(installedBundle.getVersion()).thenReturn(
         new org.osgi.framework.Version(resourceVersion.getMajor(), resourceVersion.getMinor(),
             resourceVersion.getMicro()));
@@ -239,16 +241,17 @@ public class OsgiContainerResourceManagerTest {
   @Test
   public void testLoadAndUnloadActivity() throws Exception {
     File bundleFile = new File("/foo/activity.jar");
-    String bundleFileUri = bundleFile.toURI().toString();
-
+    URI bundleFileUri = bundleFile.toURI();
+    String bundleFileLocation = bundleFileUri.toString();
     when(fileSupport.isFile(bundleFile)).thenReturn(true);
+    when(fileSupport.newFile(bundleFileUri)).thenReturn(bundleFile);
 
     Bundle bundle = mock(Bundle.class);
 
-    when(bundleContext.installBundle(bundleFileUri)).thenReturn(bundle);
+    when(bundleContext.installBundle(bundleFileLocation)).thenReturn(bundle);
     when(bundleContext.getBundles()).thenReturn(new Bundle[0]);
     when(bundle.getVersion()).thenReturn(new org.osgi.framework.Version(1, 2, 3));
-    when(bundle.getLocation()).thenReturn(bundleFileUri);
+    when(bundle.getLocation()).thenReturn(bundleFileLocation);
 
     Bundle loadedBundle = manager.loadAndStartBundle(bundleFile, ContainerResourceType.ACTIVITY);
 
@@ -256,14 +259,14 @@ public class OsgiContainerResourceManagerTest {
 
     verify(bundle).start();
 
-    ContainerResource containerResource = manager.getContainerResource(bundleFileUri);
+    ContainerResource containerResource = manager.getContainerResource(bundleFileLocation);
     assertEquals(ContainerResourceType.ACTIVITY, containerResource.getType());
 
     manager.uninstallBundle(bundle);
 
     verify(bundle).uninstall();
 
-    Assert.assertNull(manager.getContainerResource(bundleFileUri));
+    Assert.assertNull(manager.getContainerResource(bundleFileLocation));
   }
 
   /**

@@ -24,10 +24,11 @@ dependencies {
     transitive = false
   }
   
-  compile('com.orientechnologies:orientdb-core:2.2.7')
+  compile('com.orientechnologies:orientdb-core:2.2.7') {
+	  exclude group: 'org.xerial.snappy', module: 'snappy-java'
+  }
   
-  compile 'io.smartspaces:quartz-orientdb:0.2.0-SNAPSHOT'
-  //compile files("${project.getProperty('smartspaces.dependencies.home')}/scheduling/quartz/quartz-orientdb-1.0.0-alpha2-SNAPSHOT.jar")
+  compile 'io.smartspaces:quartz-orientdb:0.3.0-SNAPSHOT'
   
   provided "${project.ext.osgiContainerDependency}"
 

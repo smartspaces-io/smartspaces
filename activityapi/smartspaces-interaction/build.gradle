@@ -15,8 +15,14 @@
  */
 
 dependencies {
+	
+  compile project(":smartspaces-core")
+  compile project(":service:smartspaces-service-core")
+  compile project(":activityapi:smartspaces-activity-core")
+  
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
+  testCompile 'org.scalatest:scalatest_2.11:3.0.0'
 }
 
 jar {

@@ -13,6 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package io.smartspaces.sensor.processing
 
 import io.smartspaces.logging.ExtendedLog
@@ -21,13 +22,15 @@ import io.smartspaces.resource.managed.StandardManagedResources
 import io.smartspaces.util.data.dynamic.DynamicObject
 
 import scala.collection.mutable.ListBuffer
+import io.smartspaces.resource.managed.IdempotentManagedResource
+import io.smartspaces.sensor.input.SensorInput
 
 /**
  * The standard processor for sensor data.
  *
  * @author Keith M. Hughes
  */
-class StandardSensorProcessor(val log: ExtendedLog) extends SensorProcessor {
+class StandardSensorProcessor(val log: ExtendedLog) extends SensorProcessor with IdempotentManagedResource {
 
   /**
    * The managed resources controlled by the processor.
@@ -39,11 +42,11 @@ class StandardSensorProcessor(val log: ExtendedLog) extends SensorProcessor {
    */
   private val sensorHandlers: ListBuffer[SensorHandler] = new ListBuffer
 
-  override def startup(): Unit = {
+  override def onStartup(): Unit = {
     managedResources.startupResources()
   }
 
-  override def shutdown(): Unit = {
+  override def onShutdown(): Unit = {
     managedResources.shutdownResourcesAndClear()
   }
 

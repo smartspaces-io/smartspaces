@@ -18,6 +18,7 @@ package io.smartspaces.sensor.processing
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.resource.managed.ManagedResource
 import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.sensor.input.SensorInput
 
 /**
  * A processor for sensor data.

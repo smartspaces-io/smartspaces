@@ -20,7 +20,7 @@ package io.smartspaces.activity.component.comm.route;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.component.comm.PubSubActivityComponent;
 import io.smartspaces.messaging.route.MessageRouter;
-import io.smartspaces.messaging.route.RoutableInputMessageListener;
+import io.smartspaces.messaging.route.RouteMessageListener;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
 
 import com.google.common.collect.ImmutableList;
@@ -53,12 +53,26 @@ public interface MessageRouterActivityComponent extends PubSubActivityComponent 
   //List<String> BASE_COMPONENT_DEPENDENCIES = ImmutableList.of(RosActivityComponent.COMPONENT_NAME);
 
   /**
-   * Set the message listener for the component.
+   * Set the message listener for the component for messages not caught by explicit listeners.
    * 
    * @param messageListener
    *          the message listener
    */
-  void setRoutableInputMessageListener(RoutableInputMessageListener messageListener);
+  void setRoutableInputMessageListener(RouteMessageListener messageListener);
+
+  /**
+   * Set the message listener for the component for messages for a specific channel ID.
+   * 
+   * <p>
+   * There can only be one message listener per channel ID registered here. Additional registrations will delete
+   * the previous one.
+   * 
+   * @param channelId
+   *          ID of the channel for this specific listener
+   * @param messageListener
+   *          the message listener
+   */
+  void addRoutableInputMessageListener(String channelId, RouteMessageListener messageListener);
 
   /**
    * Separator for configuration values which allow multiple values.

@@ -22,7 +22,7 @@ import java.util.Set;
 import io.smartspaces.SmartSpacesException;
 
 /**
- * An element that can route messages in a protocol-independent manner. s
+ * An element that can route messages in a protocol-independent manner.
  * 
  * @author Keith M. Hughes
  */
@@ -34,12 +34,38 @@ public interface MessageRouter extends IncomingRouteMessageHandler {
   String DEFAULT_ROUTE_PROTOCOL_DEFAULT = "mqtt";
 
   /**
-   * Set the message listener for the component.
+   * Set the message listener for the component for messages not caught by explicit listeners.
    * 
+   * @param messageListener
+   *          the catchall message listener
+   */
+  void setRoutableInputMessageListener(RouteMessageListener messageListener);
+
+  /**
+   * Set the message listener for the component for messages for a specific channel ID.
+   * 
+   * <p>
+   * There can only be one message listener per channel ID registered here. Additional registrations will delete
+   * the previous one.
+   * 
+   * @param channelId
+   *          ID of the channel for this specific listener
    * @param messageListener
    *          the message listener
    */
-  void setRoutableInputMessageListener(RoutableInputMessageListener messageListener);
+  void addRoutableInputMessageListener(String channelId, RouteMessageListener messageListener);
+
+  /**
+   * Set the message listener for the component for messages for a specific channel ID.
+   * 
+   * <p>
+   * There can only be one message listener per channel ID registered here. Additional registrations will delete
+   * the previous one.
+   * 
+   * @param messageListeners
+   *          the message listeners keyed by channel ID
+   */
+  void addRoutableInputMessageListeners(Map<String, RouteMessageListener> messageListeners);
 
   /**
    * Get the node name for the router.

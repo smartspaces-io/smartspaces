@@ -20,7 +20,8 @@ import io.smartspaces.resource.managed.ManagedResource
 import io.smartspaces.sensor.entity.SensorDescriptionImporter
 import io.smartspaces.sensor.entity.model.query.SensedEntityModelQueryProcessor
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
-import io.smartspaces.sensor.processing.MqttSensorInput
+import io.smartspaces.sensor.input.MqttSensorInput
+import io.smartspaces.sensor.input.SensorInput
 
 /**
  * The sensor integration layer.
@@ -53,4 +54,16 @@ trait SensorIntegrator extends ManagedResource {
    * @return the MQTT sensor input that has been created
    */
   def addMqttSensorInput(brokerDecription: MqttBrokerDescription, clientId: String): MqttSensorInput
+
+  /**
+   * Add in a sensor input.
+   *
+   * @param brokerDescription
+   *      the description for the MQTT broker
+   * @param clientId
+   *      the broker client ID to use
+   *      
+   * @return the MQTT sensor input that has been created
+   */
+  def addSensorInput(sensorInput: SensorInput): Unit
 }

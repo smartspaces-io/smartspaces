@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,22 +14,20 @@
  * the License.
  */
 
-package io.smartspaces.sensor.processing
+package io.smartspaces.sensor.output
 
 /**
- * A sensor input that uses MQTT.
- *
+ * A writer for marker messages.
+ * 
  * @author Keith M. Hughes
  */
-trait MqttSensorInput extends SensorInput {
+trait MarkerMessageWriter {
   
   /**
-   * Add in a new MQTT subscription.
+   * Send a marker message over the route.
    *
-   * @param mqttSensorTopicName
-   *       the sensor topic name
-   * @param qos
-   *       the Quality of Service for the connection
+   * @param markerId
+   *       the ID of the marker
    */
-  def addMqttSubscription(mqttSensorTopicName: String, qos: Int): Unit
+  def sendMarkerMessage(markerId: String): Unit
 }

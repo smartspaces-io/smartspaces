@@ -27,6 +27,7 @@ import scala.collection.JavaConversions._
 import java.io.File
 import java.util.List
 import java.util.Map;
+import io.smartspaces.sensor.input.SensorInput
 
 /**
  * A sensor input that reads the output of

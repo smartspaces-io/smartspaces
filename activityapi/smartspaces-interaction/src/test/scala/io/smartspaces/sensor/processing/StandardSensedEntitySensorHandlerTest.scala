@@ -32,6 +32,7 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.scalatest.junit.JUnitSuite
 import io.smartspaces.system.SmartSpacesEnvironment
+import io.smartspaces.sensor.messages.SensorMessages
 
 /**
  * Tests for the {@link StandardSensedEntitySensorHandler}.

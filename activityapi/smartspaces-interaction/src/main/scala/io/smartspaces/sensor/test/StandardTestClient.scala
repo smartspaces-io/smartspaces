@@ -6,7 +6,7 @@ import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpointService
 import io.smartspaces.messaging.MessageWriter
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 import com.google.common.base.Charsets
-import io.smartspaces.sensor.processing.DynamicObjectByteArrayCodec
+import io.smartspaces.sensor.messages.DynamicObjectByteArrayCodec
 import io.smartspaces.service.comm.pubsub.mqtt.MqttPublisher
 import io.smartspaces.resource.managed.IdempotentManagedResource
 

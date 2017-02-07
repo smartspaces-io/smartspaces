@@ -27,15 +27,15 @@ import java.util.Map;
  *
  * @author Keith M. Hughes
  */
-public interface RoutableInputMessageListener {
+public interface RouteMessageListener {
 
   /**
    * A new message has come in.
    *
-   * @param channelName
-   *          the name of the channel the message came in on
+   * @param channelId
+   *          the ID of the channel the message came in on
    * @param message
    *          the message which has come in
    */
-  void onNewRoutableInputMessage(String channelName, Map<String, Object> message);
+  void onNewRouteMessage(String channelId, Map<String, Object> message);
 }

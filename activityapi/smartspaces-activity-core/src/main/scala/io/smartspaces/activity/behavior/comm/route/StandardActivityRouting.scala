@@ -17,14 +17,15 @@
 
 package io.smartspaces.activity.behavior.comm.route
 
-import java.util.Map
-import io.smartspaces.activity.component.comm.route.MessageRouterActivityComponent
 import io.smartspaces.activity.behavior.comm.ros.StandardActivityRos
-import io.smartspaces.messaging.route.RoutableInputMessageListener
+import io.smartspaces.activity.behavior.general.StandardActivityJson
+import io.smartspaces.activity.component.comm.route.MessageRouterActivityComponent
+import io.smartspaces.messaging.route.RouteMessageListener
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
 import io.smartspaces.util.data.json.JsonMapper
 import io.smartspaces.util.data.json.StandardJsonMapper
-import io.smartspaces.activity.behavior.general.StandardActivityJson
+
+import java.util.Map
 
 /**
  * An activity behavior for Routing support.
@@ -44,15 +45,15 @@ trait StandardActivityRouting extends /* StandardActivityRos with */ StandardAct
   /**
    * Router for input and output messages.
    */
-  private var router: MessageRouterActivityComponent = null
+  protected var router: MessageRouterActivityComponent = null
 
   abstract override def commonActivitySetup(): Unit = {
     super.commonActivitySetup();
 
     router = addActivityComponent(MessageRouterActivityComponent.COMPONENT_NAME)
-    router.setRoutableInputMessageListener(new RoutableInputMessageListener() {
-      override def onNewRoutableInputMessage(channelName: String, message: Map[String, Object]): Unit = {
-        handleRoutableInputMessage(channelName, message);
+    router.setRoutableInputMessageListener(new RouteMessageListener() {
+      override def onNewRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
+        handleNewRouteMessage(channelId, message);
       }
     });
   }
@@ -60,49 +61,51 @@ trait StandardActivityRouting extends /* StandardActivityRos with */ StandardAct
   /**
    * Handle a new input message.
    *
-   * @param channelName
+   * @param channelId
    *          the name of the channel
    * @param message
    *          the generic message
    */
-  private def handleRoutableInputMessage(channelName: String, message: Map[String, Object]): Unit = {
+  private def handleNewRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
     try {
-      callOnNewInputMessage(channelName, message)
+      callOnNewInputMessage(channelId, message)
     } catch {
-      case e: Exception => getLog().error("Could not process input message", e)
+      case e: Exception => getLog().error("Could not process new route message", e)
     }
   }
 
-  override def onNewInputMessage(channelName: String, message: Map[String, Object]): Unit = {
+  override def onNewInputMessage(channelId: String, message: Map[String, Object]): Unit = {
     // Default is to do nothing.
   }
 
-  override def sendOutputMessage(channelName: String, message: Map[String, Object]): Unit = {
+  override def sendOutputMessage(channelId: String, message: Map[String, Object]): Unit = {
     try {
-      router.writeOutputMessage(channelName, message)
+      router.writeOutputMessage(channelId, message)
     } catch {
       case e: Throwable => getLog().error(
-        String.format("Could not write message on route output channel %s", channelName), e)
+        s"Could not write message on route output channel ${channelId}", e)
     }
   }
 
-  override def sendOutputMessage(channelName: String, message: DynamicObjectBuilder): Unit = {
-    sendOutputMessage(channelName, message.toMap())
+  override def sendOutputMessage(channelId: String, message: DynamicObjectBuilder): Unit = {
+    sendOutputMessage(channelId, message.toMap())
   }
 
   /**
    * Call the {@link #onNewInputMessage(String, Map)} method.
    *
-   * @param channelName
-   *          the name of the channel
+   * @param channelId
+   *          the ID of the channel
    * @param message
    *          the message
    */
-  private def callOnNewInputMessage(channelName: String, message: Map[String, Object]): Unit = {
+  private def callOnNewInputMessage(channelId: String, message: Map[String, Object]): Unit = {
+    getLog().debug(s"In catch all message handler for channel ID ${channelId}")
+    
     val invocation = getExecutionContext().enterMethod()
 
     try {
-      onNewInputMessage(channelName, message)
+      onNewInputMessage(channelId, message)
     } finally {
       getExecutionContext().exitMethod(invocation)
     }

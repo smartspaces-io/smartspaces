@@ -16,15 +16,14 @@
 
 package io.smartspaces.sensor.processing
 
-import scala.collection.mutable._
-import io.smartspaces.util.data.dynamic.DynamicObject
-import io.smartspaces.sensor.entity.model.updater.SimpleLocationChangeModelUpdater
-import io.smartspaces.sensor.entity.model.SensedEntityModel
-import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
-import io.smartspaces.event.trigger.SimpleHysteresisThresholdValueTrigger
-import io.smartspaces.sensor.entity.model.SensorEntityModel
-import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
 import io.smartspaces.sensor.StandardSensorData
+import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
+import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
+import io.smartspaces.sensor.entity.model.SensedEntityModel
+import io.smartspaces.sensor.entity.model.SensorEntityModel
+import io.smartspaces.sensor.entity.model.updater.SimpleLocationChangeModelUpdater
+import io.smartspaces.sensor.messages.SensorMessages
+import io.smartspaces.util.data.dynamic.DynamicObject
 
 /**
  * The standard processor for sensors that give a simple marker ID.
@@ -32,12 +31,6 @@ import io.smartspaces.sensor.StandardSensorData
  * @author Keith M. Hughes
  */
 class SimpleMarkerSensorValueProcessor extends SensorValueProcessor {
-
-  /**
-   * The map from the marker IDs to the updater for that ID.
- 
-import io.smartspaces.sensor.processing.SensorValueProcessorContext  */
-  private val userTriggers: Map[String, SimpleHysteresisThresholdValueTrigger] = new HashMap
   
   private val modelUpdater = new SimpleLocationChangeModelUpdater
 
@@ -46,10 +39,9 @@ import io.smartspaces.sensor.processing.SensorValueProcessorContext  */
   override def processData(timestamp: Long, sensor: SensorEntityModel,
     sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
     data: DynamicObject) {
-    val markerId = data.getRequiredString("value")
+    val markerId = data.getRequiredString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)
 
-    val markerEntity = processorContext.completeSensedEntityModel.
-      sensorRegistry.getMarkerEntityByMarkerId(markerId)
+    val markerEntity = processorContext.completeSensedEntityModel.sensorRegistry.getMarkerEntityByMarkerId(markerId)
     val person =
       processorContext.completeSensedEntityModel.getMarkedSensedEntityModel(markerId).get.asInstanceOf[PersonSensedEntityModel]
     val newLocation = sensedEntityModel.asInstanceOf[PhysicalSpaceSensedEntityModel]

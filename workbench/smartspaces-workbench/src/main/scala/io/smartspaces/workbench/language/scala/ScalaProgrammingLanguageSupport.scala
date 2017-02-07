@@ -74,6 +74,16 @@ object ScalaProgrammingLanguageSupport {
     }
   }
 
+  /**
+   * A file filter for locating non-source files.
+   */
+  val NONSOURCE_FILE_FILTER = new FileFilter {
+    override def accept(file: File): Boolean = {
+      val fileName = file.getName
+      (!fileName.endsWith(FILE_EXTENSION_SCALA_SOURCE) && !fileName.endsWith(JavaProgrammingLanguageSupport.FILE_EXTENSION_JAVA_SOURCE)) && !file.isHidden()
+    }
+  }
+
 }
 
 /**
@@ -103,6 +113,14 @@ class ScalaProgrammingLanguageSupport extends ProgrammingLanguageSupport {
 
   override def getSourceFileFilter(): FileFilter = {
     ScalaProgrammingLanguageSupport.SOURCE_FILE_FILTER
+  }
+
+  override def getNonSourceFiles(baseSourceDirectory: File): java.util.List[String] = {
+    fileSupport.collectRelativeFilePaths(baseSourceDirectory, ScalaProgrammingLanguageSupport.NONSOURCE_FILE_FILTER, true)
+  }
+
+  override def getNonSourceFileFilter(): FileFilter = {
+    ScalaProgrammingLanguageSupport.NONSOURCE_FILE_FILTER
   }
 
   override def newCompiler(): ProgrammingLanguageCompiler = {

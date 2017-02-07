@@ -666,6 +666,44 @@ public class FileSupportImpl implements FileSupport {
   }
 
   @Override
+  public List<String> collectRelativeFilePaths(File baseDir, FileFilter filter, boolean recurse) {
+    List<String> files = new ArrayList<>();
+
+    collectRelativeFilePaths(baseDir, filter, recurse, files, "");
+
+    return files;
+  }
+
+  /**
+   * Collect files from the current directory.
+   *
+   * @param currentDir
+   *          the current directory
+   * @param filter
+   *          the file filter
+   * @param recurse
+   *          {@code true} if should recurse
+   * @param files
+   *          the collection of files being added to
+   */
+  private void collectRelativeFilePaths(File currentDir, FileFilter filter, boolean recurse,
+      List<String> files, String prefixFilePath) {
+    File[] contents = listFiles(currentDir);
+    if (contents != null) {
+      for (File file : contents) {
+        if (!file.isDirectory()) {
+          if (filter.accept(file)) {
+            files.add(prefixFilePath + file.getName());
+          }
+        } else if (recurse) {
+          collectRelativeFilePaths(file, filter, true, files,
+              prefixFilePath + file.getName() + "/");
+        }
+      }
+    }
+  }
+
+  @Override
   public FileInputStream newFileInputStream(File file) {
     try {
       return new FileInputStream(file);
@@ -688,17 +726,17 @@ public class FileSupportImpl implements FileSupport {
   @Override
   public List<File> filterFiles(List<File> files, FileFilter filter) {
     List<File> filtered = new ArrayList<>();
-    
+
     for (File file : files) {
       if (filter.accept(file)) {
         filtered.add(file);
       }
-        
+
     }
-    
+
     return filtered;
   }
-  
+
   @Override
   public String getResourceName(URI resourceUri) {
     try {

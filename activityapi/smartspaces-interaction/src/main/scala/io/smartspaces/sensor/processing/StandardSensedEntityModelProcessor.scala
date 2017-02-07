@@ -25,6 +25,7 @@ import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel
 import scala.collection.JavaConversions.iterableAsScalaIterable
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
+import io.smartspaces.sensor.messages.SensorMessages
 
 /**
  * A sensor processor that will update sensed entity models.

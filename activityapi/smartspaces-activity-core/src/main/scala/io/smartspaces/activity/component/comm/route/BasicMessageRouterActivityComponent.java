@@ -22,7 +22,7 @@ import io.smartspaces.activity.component.comm.ros.RosActivityComponent;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.handler.ProtectedHandlerContext;
 import io.smartspaces.messaging.route.MessageRouter;
-import io.smartspaces.messaging.route.RoutableInputMessageListener;
+import io.smartspaces.messaging.route.RouteMessageListener;
 import io.smartspaces.messaging.route.RouteDescription;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
 import io.smartspaces.messaging.route.StandardMessageRouter;
@@ -33,6 +33,7 @@ import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription$;
 
 import org.apache.commons.logging.Log;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,9 +50,14 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
   private RosActivityComponent rosActivityComponent;
 
   /**
-   * The listener for input messages.
+   * The catchall listener for input messages.
    */
-  private RoutableInputMessageListener messageListener;
+  private RouteMessageListener catchallMessageListener;
+
+  /**
+   * The messages listeners for specific channel IDs.
+   */
+  private Map<String, RouteMessageListener> messageListeners = new HashMap<>();
 
   /**
    * {@code true} if the component is "running", false otherwise.
@@ -89,15 +95,25 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
   }
 
   @Override
-  public void setRoutableInputMessageListener(RoutableInputMessageListener messageListener) {
-    this.messageListener = messageListener;
+  public void setRoutableInputMessageListener(RouteMessageListener messageListener) {
+    this.catchallMessageListener = messageListener;
+  }
+
+  @Override
+  public void addRoutableInputMessageListener(String channelId,
+      RouteMessageListener messageListener) {
+    if (running) {
+      messageRouter.addRoutableInputMessageListener(channelId, messageListener);
+    } else {
+      messageListeners.put(channelId, messageListener);
+    }
   }
 
   @Override
   protected void onConfigureComponent(Configuration configuration) {
-	// TODO(keith): Make this lazily evaluated.
-    //rosActivityComponent =
-    //    componentContext.getRequiredActivityComponent(RosActivityComponent.COMPONENT_NAME);
+    // TODO(keith): Make this lazily evaluated.
+    // rosActivityComponent =
+    // componentContext.getRequiredActivityComponent(RosActivityComponent.COMPONENT_NAME);
   }
 
   @Override
@@ -108,10 +124,15 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
     messageRouter = new StandardMessageRouter(new BasicMessageRouterProtectedHandlerContext(),
         timeProvider, log);
     Configuration configuration = componentContext.getActivity().getConfiguration();
-	messageRouter.setHostId(configuration.getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOSTID));
-	messageRouter.setNodeName(configuration.getRequiredPropertyString(PubSubActivityComponent.CONFIGURATION_NAME_ACTIVITY_PUBSUB_NODE_NAME));
+    messageRouter.setHostId(
+        configuration.getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOSTID));
+    messageRouter.setNodeName(configuration.getRequiredPropertyString(
+        PubSubActivityComponent.CONFIGURATION_NAME_ACTIVITY_PUBSUB_NODE_NAME));
+
     // messageRouter.setRosNode(rosActivityComponent.getNode());
-    messageRouter.setRoutableInputMessageListener(messageListener);
+    messageRouter.setRoutableInputMessageListener(catchallMessageListener);
+    messageRouter.addRoutableInputMessageListeners(messageListeners);
+
     messageRouter.setMqttBrokerDescriptionDefault(getMqttBrokerDescription());
   }
 

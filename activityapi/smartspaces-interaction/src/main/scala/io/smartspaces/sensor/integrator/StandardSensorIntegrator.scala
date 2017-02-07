@@ -16,9 +16,9 @@
 
 package io.smartspaces.sensor.integrator
 
-import io.smartspaces.configuration.Configuration
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.resource.managed.IdempotentManagedResource
+import io.smartspaces.scope.ManagedScope
 import io.smartspaces.sensor.entity.InMemorySensorRegistry
 import io.smartspaces.sensor.entity.SensorDescriptionImporter
 import io.smartspaces.sensor.entity.SensorRegistry
@@ -28,6 +28,9 @@ import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.sensor.entity.model.StandardCompleteSensedEntityModel
 import io.smartspaces.sensor.entity.model.query.SensedEntityModelQueryProcessor
 import io.smartspaces.sensor.entity.model.query.StandardSensedEntityModelQueryProcessor
+import io.smartspaces.sensor.input.MqttSensorInput
+import io.smartspaces.sensor.input.SensorInput
+import io.smartspaces.sensor.input.StandardMqttSensorInput
 import io.smartspaces.sensor.processing.ContinuousValueSensorValueProcessor
 import io.smartspaces.sensor.processing.SensedEntitySensorHandler
 import io.smartspaces.sensor.processing.SensedEntitySensorListener
@@ -36,19 +39,16 @@ import io.smartspaces.sensor.processing.SimpleMarkerSensorValueProcessor
 import io.smartspaces.sensor.processing.StandardBleProximitySensorValueProcessor
 import io.smartspaces.sensor.processing.StandardFilePersistenceSensorHandler
 import io.smartspaces.sensor.processing.StandardFilePersistenceSensorInput
-import io.smartspaces.sensor.processing.StandardMqttSensorInput
 import io.smartspaces.sensor.processing.StandardSensedEntityModelProcessor
 import io.smartspaces.sensor.processing.StandardSensedEntitySensorHandler
 import io.smartspaces.sensor.processing.StandardSensorProcessor
 import io.smartspaces.sensor.processing.StandardUnknownSensedEntityHandler
-import io.smartspaces.scope.ManagedScope
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.time.TimeFrequency
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 
 import java.io.File
-import io.smartspaces.sensor.processing.MqttSensorInput
 
 /**
  * The sensor integration layer.
@@ -184,5 +184,9 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
     sensorProcessor.addSensorInput(mqttSensorInput)
 
     return mqttSensorInput
+  }
+
+  override def addSensorInput(sensorInput: SensorInput): Unit = {
+    sensorProcessor.addSensorInput(sensorInput)
   }
 }

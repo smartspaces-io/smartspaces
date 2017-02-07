@@ -140,6 +140,8 @@ public class StandardJvmJarAssembler implements JvmJarAssembler {
     compiler.compile(context, compilationBuildFolder, classpath, compilationFiles,
         languageSupport.getCompilerOptions(context));
 
+    copyNonSourceFiles(context, languageSupport, compilationBuildFolder);
+
     addStaticLinkDependencies(compilationBuildFolder, context);
 
     createJarFile(project, jarDestinationFile, compilationBuildFolder, classpath, containerInfo,
@@ -150,6 +152,27 @@ public class StandardJvmJarAssembler implements JvmJarAssembler {
     }
 
     context.addArtifactToInclude(jarDestinationFile);
+  }
+
+  /**
+   * Copy all non-source files so that they end up in the executable jar.
+   * 
+   * @param context
+   *          the task context
+   * @param languageSupport
+   *          the language support for the implementation language
+   * @param compilationBuildFolder
+   *          the folder where the compiler places its compiled files
+   */
+  private void copyNonSourceFiles(ProjectTaskContext context,
+      ProgrammingLanguageSupport languageSupport, File compilationBuildFolder) {
+    for (File sourceDirectory : context.getSourceDirectories()) {
+      List<String> nonSourcePaths = languageSupport.getNonSourceFiles(sourceDirectory);
+      for (String nonSourcePath : nonSourcePaths) {
+        fileSupport.copyFile(fileSupport.newFile(sourceDirectory, nonSourcePath),
+            fileSupport.newFile(compilationBuildFolder, nonSourcePath));
+      }
+    }
   }
 
   /**
@@ -301,8 +324,10 @@ public class StandardJvmJarAssembler implements JvmJarAssembler {
 
       List<String> privatePackages = containerInfo.getPrivatePackages();
       if (!privatePackages.isEmpty()) {
-        // All private packages should be added as not being in the public
-        // packages. For some reason BND wants the NOT for private packages
+        // All private packages should be added as not being in the
+        // public
+        // packages. For some reason BND wants the NOT for private
+        // packages
         // added to the export.
         for (String privatePackage : privatePackages) {
           exportPackages.add("!" + privatePackage);
@@ -311,7 +336,8 @@ public class StandardJvmJarAssembler implements JvmJarAssembler {
       }
 
       // At this point exportPackages will have entries to avoid exporting
-      // private packages. This addition will make sure all packages from the
+      // private packages. This addition will make sure all packages from
+      // the
       // activity will export and will all be given the bundle version.
       String versionSpecifier = ";version=\"" + version + "\"";
       List<String> containerInfoExportPackages = containerInfo.getExportPackages();
@@ -325,7 +351,8 @@ public class StandardJvmJarAssembler implements JvmJarAssembler {
       }
       analyzer.setProperty(Constants.EXPORT_PACKAGE, Joiner.on(",").join(exportPackages));
 
-      // This will make sure any imports we miss will be added to the imports.
+      // This will make sure any imports we miss will be added to the
+      // imports.
       List<String> importPackages = new ArrayList<>();
       for (ImportPackage importPackage : containerInfo.getImportPackages()) {
         importPackages.add(importPackage.getOsgiHeader());

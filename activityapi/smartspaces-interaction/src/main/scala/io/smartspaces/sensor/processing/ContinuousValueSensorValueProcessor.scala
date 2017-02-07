@@ -21,6 +21,7 @@ import io.smartspaces.sensor.entity.model.SensedEntityModel
 import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.sensor.entity.MeasurementTypeDescription
 import io.smartspaces.sensor.entity.model.SimpleSensedValue
+import io.smartspaces.sensor.messages.SensorMessages
 
 /**
  * A processor for sensor value data messages with continuous values.

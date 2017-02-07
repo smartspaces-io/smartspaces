@@ -41,5 +41,10 @@ object StandardSensorData {
   /**
    * The type of a simple marker sensor value.
    */
-  val SENSOR_TYPE_MARKER_SIMPLE = "/sensor/marker"
+  val SENSOR_TYPE_MARKER_SIMPLE = "/sensor/type/marker"
+  
+  /**
+   * A standard name for a marker channel (though not all marker channel names.
+   */
+  val SENSOR_CHANNEL_NAME_MARKER = "marker"
 }

@@ -14,32 +14,22 @@
  * the License.
  */
 
-package io.smartspaces.sensor.processing
+package io.smartspaces.sensor.input
 
 /**
- * Useful support for sensor messaging.
- * 
+ * A sensor input that uses MQTT.
+ *
  * @author Keith M. Hughes
  */
-object SensorMessages {
-
+trait MqttSensorInput extends SensorInput {
+  
   /**
-   * The field name for the sensor field.
+   * Add in a new MQTT subscription.
+   *
+   * @param mqttSensorTopicName
+   *       the sensor topic name
+   * @param qos
+   *       the Quality of Service for the connection
    */
-  val SENSOR_MESSAGE_FIELD_NAME_SENSOR = "sensor"
-
-  /**
-   * The field name for the data field.
-   */
-  val SENSOR_MESSAGE_FIELD_NAME_DATA = "data"
-
-  /**
-   * The field name for the value field in the data field.
-   */
-  val SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE = "value"
-
-  /**
-   * The field name for the type field in the data field.
-   */
-  val SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE = "type"
+  def addMqttSubscription(mqttSensorTopicName: String, qos: Int): Unit
 }

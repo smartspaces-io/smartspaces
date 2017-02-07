@@ -29,6 +29,7 @@ import io.smartspaces.util.data.dynamic.DynamicObject
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
+import io.smartspaces.sensor.messages.SensorMessages
 
 /**
  * The standard implementation of a sensed entity sensor handler.

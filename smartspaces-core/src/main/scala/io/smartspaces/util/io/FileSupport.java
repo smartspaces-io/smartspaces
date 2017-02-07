@@ -754,6 +754,20 @@ public interface FileSupport {
   List<File> collectFiles(File baseDir, FileFilter filter, boolean recurse);
 
   /**
+   * Collect the relative file paths that pass the file filter. The paths will be relative to the .base directory
+   *
+   * @param baseDir
+   *          the base directory to start in
+   * @param filter
+   *          the filter that decides which files
+   * @param recurse
+   *          {@code true} if should recurse through directories
+   *
+   * @return the collection of files that pass the filter
+   */
+  List<String> collectRelativeFilePaths(File baseDir, FileFilter filter, boolean recurse);
+
+  /**
    * Create a new file input stream for the requested file.
    *
    * @param file

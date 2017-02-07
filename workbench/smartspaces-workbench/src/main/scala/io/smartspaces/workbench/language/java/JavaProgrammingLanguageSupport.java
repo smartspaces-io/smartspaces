@@ -111,6 +111,17 @@ public class JavaProgrammingLanguageSupport implements ProgrammingLanguageSuppor
   };
 
   /**
+   * The file filter for non-Java source files.
+   */
+  private static final FileFilter NONSOURCE_FILE_FILTER = new FileFilter() {
+
+    @Override
+    public boolean accept(File file) {
+      return !file.getName().endsWith(FILE_EXTENSION_JAVA_SOURCE) && !file.isHidden();
+    }
+  };
+
+  /**
    * The file support to use.
    */
   private final FileSupport fileSupport = FileSupportImpl.INSTANCE;
@@ -154,6 +165,16 @@ public class JavaProgrammingLanguageSupport implements ProgrammingLanguageSuppor
     return SOURCE_FILE_FILTER;
   }
 
+  @Override 
+  public List<String> getNonSourceFiles(File baseSourceDirectory) {
+    return fileSupport.collectRelativeFilePaths(baseSourceDirectory, NONSOURCE_FILE_FILTER, true);
+  }
+
+  @Override 
+  public FileFilter getNonSourceFileFilter() {
+    return NONSOURCE_FILE_FILTER;
+  }
+  
   @Override
   public ProgrammingLanguageCompiler newCompiler() {
     return new EclipseJavaProgrammingLanguageCompiler();

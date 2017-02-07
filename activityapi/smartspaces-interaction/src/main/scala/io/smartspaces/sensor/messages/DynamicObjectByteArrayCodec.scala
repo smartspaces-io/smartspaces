@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.sensor.processing
+package io.smartspaces.sensor.messages
 
 import java.nio.charset.Charset
 import com.google.common.base.Charsets

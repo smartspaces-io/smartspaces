@@ -14,9 +14,11 @@
  * the License.
  */
 
-package io.smartspaces.sensor.processing
+package io.smartspaces.sensor.input
 
 import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.sensor.messages.DynamicObjectByteArrayCodec
+import io.smartspaces.sensor.processing.SensorProcessor
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpointService
 import io.smartspaces.service.comm.pubsub.mqtt.MqttSubscriberListener
@@ -93,7 +95,7 @@ class StandardMqttSensorInput(private val mqttBrokerDescription: MqttBrokerDescr
    */
   private def handleSensorMessage(topicName: String, payload: Array[Byte]): Unit = {
     val message = codec.decode(payload)
-    log.formatDebug("Got message on topic %s", topicName)
+    log.formatDebug("Got sensor message on topic %s", topicName)
 
     // TODO(keith): Consider also checking message to see if it has a timestamp.
     // If so use it, otherwise use time provider.

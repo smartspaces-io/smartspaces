@@ -80,9 +80,15 @@ public class StandardMessageRouter implements MessageRouter {
   private String defaultRouteProtocol = DEFAULT_ROUTE_PROTOCOL_DEFAULT;
 
   /**
-   * The listener for input messages.
+   * The listener for input messages for messages not explicitly handled
+   * {@see #messageListeners}.
    */
-  private RoutableInputMessageListener messageListener;
+  private RouteMessageListener messageListener;
+
+  /**
+   * The messages listeners for specific channel IDs.
+   */
+  private Map<String, RouteMessageListener> messageListeners = new HashMap<>();
 
   /**
    * All input topic channel IDs mapped to their subscribers.
@@ -139,7 +145,7 @@ public class StandardMessageRouter implements MessageRouter {
    * Host ID of the container.
    */
   private String hostId;
-  
+
   /**
    * The node name of the router.
    */
@@ -282,12 +288,13 @@ public class StandardMessageRouter implements MessageRouter {
               }
             });
       } else if ("mqtt".equals(routeProtocol)) {
-    	// If the node name doesn't start with the component separator, add in the host ID.
-    	String mqttNodeName = nodeName;
-    	if (!nodeName.startsWith(PubSubActivityComponent.TOPIC_COMPONENT_SEPARATOR)) {
-    	  mqttNodeName = hostId + PubSubActivityComponent.TOPIC_COMPONENT_SEPARATOR + nodeName;
-    	}
-    	
+        // If the node name doesn't start with the component separator, add in
+        // the host ID.
+        String mqttNodeName = nodeName;
+        if (!nodeName.startsWith(PubSubActivityComponent.TOPIC_COMPONENT_SEPARATOR)) {
+          mqttNodeName = hostId + PubSubActivityComponent.TOPIC_COMPONENT_SEPARATOR + nodeName;
+        }
+
         MqttSubscribers subscribers = new StandardMqttSubscribers(mqttNodeName, log);
 
         final MqttRouteMessageSubscriber mqttRouteMessageSubscriber =
@@ -349,7 +356,8 @@ public class StandardMessageRouter implements MessageRouter {
 
       // Send the message out to the listener.
       Map<String, Object> msg = subscriber.decodeMessage(message);
-      messageListener.onNewRoutableInputMessage(channelId, msg);
+
+      getAppropriateMessageListener(channelId).onNewRouteMessage(channelId, msg);
 
       if (log.isTraceEnabled()) {
         log.trace(String.format("Exiting route message handler invocation %s after %dms",
@@ -360,6 +368,23 @@ public class StandardMessageRouter implements MessageRouter {
           String.format("Error after receiving routing message for channel %s", channelId), e);
     } finally {
       protectedHandlerContext.exitHandler();
+    }
+  }
+
+  /**
+   * Get the appropriate message listener for a given channel ID.
+   * 
+   * @param channelId
+   *          the channel ID
+   * 
+   * @return the appropriate listener
+   */
+  private RouteMessageListener getAppropriateMessageListener(String channelId) {
+    RouteMessageListener listener = messageListeners.get(channelId);
+    if (listener != null) {
+      return listener;
+    } else {
+      return messageListener;
     }
   }
 
@@ -425,7 +450,7 @@ public class StandardMessageRouter implements MessageRouter {
    *          the host ID
    */
   public void setHostId(String hostId) {
-	this.hostId = hostId;
+    this.hostId = hostId;
   }
 
   /**
@@ -459,8 +484,20 @@ public class StandardMessageRouter implements MessageRouter {
   }
 
   @Override
-  public void setRoutableInputMessageListener(RoutableInputMessageListener messageListener) {
+  public void setRoutableInputMessageListener(RouteMessageListener messageListener) {
     this.messageListener = messageListener;
+  }
+
+  @Override
+  public void addRoutableInputMessageListener(String channelId,
+      RouteMessageListener messageListener) {
+    messageListeners.put(channelId, messageListener);
+  }
+
+  @Override
+  public void
+      addRoutableInputMessageListeners(Map<String, RouteMessageListener> messageListeners) {
+    messageListeners.putAll(messageListeners);
   }
 
   /**

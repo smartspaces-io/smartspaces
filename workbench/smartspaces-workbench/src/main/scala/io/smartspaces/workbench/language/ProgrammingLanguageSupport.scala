@@ -54,7 +54,7 @@ trait ProgrammingLanguageSupport {
   def getCompilerOptions(context: ProjectTaskContext): List[String]
 
   /**
-   * get a list of files to compile.
+   * Get a list of files to compile.
    *
    * @param baseSourceDirectory
    *            the base directory to scan for sources from
@@ -69,6 +69,23 @@ trait ProgrammingLanguageSupport {
    * @return  the file filter
    */
   def getSourceFileFilter(): FileFilter
+
+  /**
+   * Get a list of relative file paths that are non-source.
+   *
+   * @param baseSourceDirectory
+   *            the base directory to scan for sources from
+   *            
+   * @return the list of files to add to
+   */
+  def getNonSourceFiles(baseSourceDirectory: File): List[String]
+
+  /**
+   * Get the file filter for non language files.
+   *
+   * @return  the file filter
+   */
+  def getNonSourceFileFilter(): FileFilter
 
   /**
    * Create a new compiler for the language.

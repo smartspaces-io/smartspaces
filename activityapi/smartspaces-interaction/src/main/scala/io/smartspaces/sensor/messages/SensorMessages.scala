@@ -14,22 +14,32 @@
  * the License.
  */
 
-package io.smartspaces.sensor.processing
-
-import io.smartspaces.resource.managed.ManagedResource
+package io.smartspaces.sensor.messages
 
 /**
- * An aggregator for sensor data over a given communication channel.
+ * Useful support for sensor messaging.
  * 
  * @author Keith M. Hughes
  */
-trait SensorInput extends ManagedResource {
+object SensorMessages {
 
   /**
-   * Set the sensor processor the input is running under.
-   * 
-   * @param sensorProcessor
-   *          the sensor processor
+   * The field name for the sensor field.
    */
-  def setSensorProcessor(sensorProcessor: SensorProcessor): Unit
+  val SENSOR_MESSAGE_FIELD_NAME_SENSOR = "sensor"
+
+  /**
+   * The field name for the data field.
+   */
+  val SENSOR_MESSAGE_FIELD_NAME_DATA = "data"
+
+  /**
+   * The field name for the value field in the data field.
+   */
+  val SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE = "value"
+
+  /**
+   * The field name for the type field in the data field.
+   */
+  val SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE = "type"
 }

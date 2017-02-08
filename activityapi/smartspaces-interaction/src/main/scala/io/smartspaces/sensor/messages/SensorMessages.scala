@@ -29,6 +29,21 @@ object SensorMessages {
   val SENSOR_MESSAGE_FIELD_NAME_SENSOR = "sensor"
 
   /**
+   * The field name for the message type field.
+   */
+  val SENSOR_MESSAGE_FIELD_NAME_MESSAGE_TYPE = "type"
+
+  /**
+   * The field value for a measurement for the message type field.
+   */
+  val SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT = "measurement"
+
+  /**
+   * The field value for a heartbeat for the message type field.
+   */
+  val SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_HEARTBEAT = "heartbeat"
+
+  /**
    * The field name for the data field.
    */
   val SENSOR_MESSAGE_FIELD_NAME_DATA = "data"

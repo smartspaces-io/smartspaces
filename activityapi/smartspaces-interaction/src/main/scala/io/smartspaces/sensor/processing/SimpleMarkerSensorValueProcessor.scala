@@ -16,7 +16,7 @@
 
 package io.smartspaces.sensor.processing
 
-import io.smartspaces.sensor.StandardSensorData
+import io.smartspaces.sensor.messages.StandardSensorData
 import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
 import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
 import io.smartspaces.sensor.entity.model.SensedEntityModel
@@ -36,7 +36,7 @@ class SimpleMarkerSensorValueProcessor extends SensorValueProcessor {
 
   override val sensorValueType = StandardSensorData.SENSOR_TYPE_MARKER_SIMPLE
 
-  override def processData(timestamp: Long, sensor: SensorEntityModel,
+  override def processData(timestamp: Long, sensorModel: SensorEntityModel,
     sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
     data: DynamicObject) {
     val markerId = data.getRequiredString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)
@@ -45,6 +45,8 @@ class SimpleMarkerSensorValueProcessor extends SensorValueProcessor {
     val person =
       processorContext.completeSensedEntityModel.getMarkedSensedEntityModel(markerId).get.asInstanceOf[PersonSensedEntityModel]
     val newLocation = sensedEntityModel.asInstanceOf[PhysicalSpaceSensedEntityModel]
+    
+    sensorModel.updateSensedValue(timestamp)
 
     processorContext.log.formatInfo("Detected marker ID %s,  person %s entering %s\n", markerId,
       person, newLocation);

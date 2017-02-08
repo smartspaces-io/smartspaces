@@ -59,7 +59,21 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
 
   override def handleSensorData(handler: SensedEntitySensorHandler, timestamp: Long,
     sensor: SensorEntityModel, sensedEntity: SensedEntityModel, data: DynamicObject): Unit = {
-    log.formatInfo("Updating model for entity %s", sensedEntity)
+    
+    val messageType = data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
+
+    log.info(s"Updating model with message type ${messageType} for entity ${sensedEntity}")
+
+    messageType match {
+      case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT => 
+        handleMeasurement(handler, timestamp, sensor, sensedEntity, data)
+      case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_HEARTBEAT => 
+        handleHeartbeat(handler, timestamp, sensor, sensedEntity, data)
+    }
+  }
+  
+  private def handleMeasurement(handler: SensedEntitySensorHandler, timestamp: Long,
+    sensor: SensorEntityModel, sensedEntity: SensedEntityModel, data: DynamicObject): Unit = {
 
     // Go into the data fields.
     data.down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
@@ -85,5 +99,11 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
     } else {
       log.formatWarn("Got sensor with no sensor detail %s", sensor.sensorEntityDescription)
     }
+  }
+  
+  private def handleHeartbeat(handler: SensedEntitySensorHandler, timestamp: Long,
+    sensor: SensorEntityModel, sensedEntity: SensedEntityModel, data: DynamicObject): Unit = {
+
+    sensor.updateHeartbeat(timestamp)
   }
 }

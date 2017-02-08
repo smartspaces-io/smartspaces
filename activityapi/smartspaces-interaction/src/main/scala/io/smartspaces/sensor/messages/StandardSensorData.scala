@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.sensor
+package io.smartspaces.sensor.messages
 
 /**
  * A collection of constants helpful for sensors.

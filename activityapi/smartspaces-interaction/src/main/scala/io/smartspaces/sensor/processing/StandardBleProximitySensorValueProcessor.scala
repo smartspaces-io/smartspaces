@@ -27,7 +27,7 @@ import io.smartspaces.sensor.entity.model.SensedEntityModel
 import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
 import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
-import io.smartspaces.sensor.StandardSensorData
+import io.smartspaces.sensor.messages.StandardSensorData
 
 import scala.collection.mutable._
 

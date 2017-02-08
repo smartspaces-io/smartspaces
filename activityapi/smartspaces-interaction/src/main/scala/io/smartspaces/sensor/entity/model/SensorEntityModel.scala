@@ -84,6 +84,15 @@ trait SensorEntityModel {
   def updateSensedValue[T <: Any](value: SensedValue[T], updateTime: Long): Unit
 
   /**
+   * A value has been updated, though there is no representation in the value model. This could be something like
+   * a marker value.
+   *
+   * @param updateTime
+   * 		      the time of this update
+   */
+  def updateSensedValue(updateTime: Long): Unit
+
+  /**
    * Update the heartbeat for the sensor.
    *
    * @param updateTime

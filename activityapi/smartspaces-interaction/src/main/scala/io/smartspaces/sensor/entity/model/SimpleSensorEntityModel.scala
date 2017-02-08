@@ -72,11 +72,15 @@ class SimpleSensorEntityModel(val sensorEntityDescription: SensorEntityDescripti
   }
 
   override def updateSensedValue[T <: Any](value: SensedValue[T], timestamp: Long): Unit = {
+    updateSensedValue(timestamp)
+
+    sensedValues.put(value.valueType.externalId, value)
+  }
+
+  override def updateSensedValue(timestamp: Long): Unit = {
     lastUpdate = Option(timestamp)
 
     updateHappened
-
-    sensedValues.put(value.valueType.externalId, value)
   }
 
   override def getLastUpdate(): Option[Long] = {

@@ -17,21 +17,26 @@
 package io.smartspaces.sensor.output
 
 import io.smartspaces.messaging.route.RouteMessagePublisher
-import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 import io.smartspaces.sensor.messages.SensorMessages
-import io.smartspaces.sensor.StandardSensorData
+import io.smartspaces.sensor.messages.StandardSensorData
 
 /**
  * A route message publisher that can send marker messages.
  *
  * @author Keith M. Hughes
  */
-class RouteMarkerMessageWriter(sensorId: String, routeMessagePublisher: RouteMessagePublisher) extends MarkerMessageWriter {
+class RouteMarkerSensorMessageWriter(sensorId: String, routeMessagePublisher: RouteMessagePublisher) extends MarkerSensorMessageWriter {
 
   override def sendMarkerMessage(markerId: String): Unit = {
-    val message = new StandardSensorMessageBuilder(sensorId)
+    val message = new StandardSensorMessageBuilder(sensorId, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
     
     message.addChannelData(StandardSensorData.SENSOR_CHANNEL_NAME_MARKER, StandardSensorData.SENSOR_TYPE_MARKER_SIMPLE, markerId)
+    
+    routeMessagePublisher.writeOutputMessage(message.toMap())
+  }
+  
+  override def sendHeartbeatMessage(): Unit = {
+    val message = new StandardSensorMessageBuilder(sensorId, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_HEARTBEAT)
     
     routeMessagePublisher.writeOutputMessage(message.toMap())
   }

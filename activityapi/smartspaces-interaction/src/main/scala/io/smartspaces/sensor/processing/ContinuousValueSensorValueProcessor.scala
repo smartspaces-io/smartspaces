@@ -32,16 +32,16 @@ class ContinuousValueSensorValueProcessor(val measurementType: MeasurementTypeDe
   
   override val sensorValueType = measurementType.externalId
   
-  override def processData(timestamp: Long, sensor: SensorEntityModel,
+  override def processData(timestamp: Long, sensorEntity: SensorEntityModel,
     sensedEntity: SensedEntityModel, processorContext: SensorValueProcessorContext,
     data: DynamicObject): Unit = {
     val value =
-      new SimpleSensedValue[Double](sensor, measurementType,
+      new SimpleSensedValue[Double](sensorEntity, measurementType,
         data.getDouble(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE), timestamp)
 
     processorContext.log.info(value)
 
     sensedEntity.updateSensedValue(value, timestamp)
-    sensor.updateSensedValue(value, timestamp)
+    sensorEntity.updateSensedValue(value, timestamp)
   }
 }

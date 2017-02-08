@@ -25,13 +25,15 @@ import java.util.Map
  *
  * @author Keith M. Hughes
  */
-class StandardSensorMessageBuilder(sensorId: String) {
+class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
 
   /**
    * The message builder.
    */
   val messageBuilder = new StandardDynamicObjectBuilder
   messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_SENSOR, sensorId)
+  messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_TYPE, messageType)
+  
   messageBuilder.newObject(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
 
   /**

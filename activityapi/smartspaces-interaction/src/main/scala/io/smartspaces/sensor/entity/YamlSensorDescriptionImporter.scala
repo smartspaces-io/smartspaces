@@ -37,7 +37,7 @@ import io.smartspaces.util.data.json.YamlMapper
  *
  * @author Keith M. Hughes
  */
-class YamlSensorDescriptionImporter(descriptionStream: InputStream, log: ExtendedLog) extends SensorDescriptionImporter {
+class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: ExtendedLog) extends SensorDescriptionImporter {
 
   /**
    * The field in all entity descriptions for the entity ID.
@@ -197,8 +197,6 @@ class YamlSensorDescriptionImporter(descriptionStream: InputStream, log: Extende
   private val MAPPER: YamlMapper = StandardYamlMapper.INSTANCE
 
   override def importDescriptions(sensorRegistry: SensorRegistry): SensorDescriptionImporter = {
-    val configuration: Map[String, Object] = MAPPER.parseObject(descriptionStream)
-
     val data: DynamicObject = new StandardDynamicObjectNavigator(configuration)
 
     getMeasurementTypes(sensorRegistry, data)

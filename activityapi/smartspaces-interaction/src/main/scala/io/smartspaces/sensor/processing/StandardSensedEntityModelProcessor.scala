@@ -62,7 +62,7 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
     
     val messageType = data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
 
-    log.info(s"Updating model with message type ${messageType} for entity ${sensedEntity}")
+    log.info(s"Updating model with message type ${messageType} from sensor ${sensor} for entity ${sensedEntity}")
 
     messageType match {
       case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT => 

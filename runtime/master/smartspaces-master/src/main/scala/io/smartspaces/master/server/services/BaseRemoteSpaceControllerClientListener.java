@@ -36,6 +36,11 @@ public class BaseRemoteSpaceControllerClientListener implements RemoteSpaceContr
   public void onSpaceControllerConnectAttempted(ActiveSpaceController controller) {
     // Default is do nothing
   }
+  
+  @Override
+  public void onSpaceControllerConnect(ActiveSpaceController controller, long timestamp) {
+    // Default is do nothing
+  }
 
   @Override
   public void onSpaceControllerConnectFailed(ActiveSpaceController controller, long waitedTime) {
@@ -48,37 +53,42 @@ public class BaseRemoteSpaceControllerClientListener implements RemoteSpaceContr
   }
 
   @Override
-  public void onSpaceControllerHeartbeat(String uuid, long timestamp) {
+  public void onSpaceControllerDisconnect(ActiveSpaceController controller, long timestamp) {
+    // Default is do nothing
+  }
+  
+  @Override
+  public void onSpaceControllerHeartbeat(ActiveSpaceController spaceController, long timestamp) {
     // Default is do nothing
   }
 
   @Override
-  public void onSpaceControllerStatusChange(String uuid, SpaceControllerState state) {
+  public void onSpaceControllerStatusChange(ActiveSpaceController spaceController, SpaceControllerState state) {
     // Default is do nothing
   }
 
   @Override
-  public void onSpaceControllerShutdown(String uuid) {
+  public void onSpaceControllerShutdown(ActiveSpaceController spaceController) {
     // Default is do nothing.
   }
 
   @Override
-  public void onLiveActivityDeployment(String uuid, LiveActivityDeploymentResponse result) {
+  public void onLiveActivityDeployment(String liveActivityUuid, LiveActivityDeploymentResponse result) {
     // Default is do nothing
   }
 
   @Override
-  public void onLiveActivityDelete(String uuid, LiveActivityDeleteResponse result) {
+  public void onLiveActivityDelete(String liveActivityUuid, LiveActivityDeleteResponse result) {
     // Default is do nothing
   }
 
   @Override
-  public void onLiveActivityRuntimeStateChange(String uuid, ActivityState state, String detail) {
+  public void onLiveActivityRuntimeStateChange(String liveActivityUuid, ActivityState state, String detail) {
     // Default is do nothing
   }
 
   @Override
-  public void onDataBundleStateChange(String uuid, DataBundleState state) {
+  public void onDataBundleStateChange(ActiveSpaceController spaceController, DataBundleState state) {
     // Default is do nothing
   }
 }

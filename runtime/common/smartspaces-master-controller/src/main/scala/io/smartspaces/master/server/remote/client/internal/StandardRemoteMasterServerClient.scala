@@ -88,8 +88,12 @@ class StandardRemoteMasterServerClient(spaceEnvironment: SmartSpacesEnvironment)
     val config = spaceEnvironment.getSystemConfiguration
 
     if (config.getPropertyBoolean(SmartSpacesEnvironment.CONFIGURATION_NAME_AUTOCONFIGURE, SmartSpacesEnvironment.CONFIGURATION_VALUE_DEFAULT_AUTOCONFIGURE)) {
+      val masterControlServerServiceType = config.getPropertyString(
+          RemoteMasterServerMessages.CONFIGURATION_NAME_ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE, 
+          RemoteMasterServerMessages.CONFIGURATION_VALUE_DEFAULT_ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE)
+      
       val zeroconfService: ZeroconfService = spaceEnvironment.getServiceRegistry().getService(ZeroconfService.SERVICE_NAME)
-      zeroconfService.addSimpleDiscovery(RemoteMasterServerMessages.ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE, new BaseZeroconfNotificationListener {
+      zeroconfService.addSimpleDiscovery(masterControlServerServiceType, new BaseZeroconfNotificationListener {
 
         override def zeroconfServiceAdded(serviceInfo: ZeroconfServiceInfo): Unit = {
           handleMasterInfoDetected(serviceInfo)

@@ -54,8 +54,7 @@ import io.smartspaces.spacecontroller.SpaceControllerState;
 import io.smartspaces.spacecontroller.SpaceControllerStatus;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
-import com.google.common.collect.Maps;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -81,8 +80,7 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
   /**
    * Map of controller communicators keyed by the name of the remote ROS node.
    */
-  private final Map<String, SpaceControllerCommunicator> controllerCommunicators =
-      Maps.newHashMap();
+  private final Map<String, SpaceControllerCommunicator> controllerCommunicators = new HashMap<>();
 
   /**
    * The message codec for controller/master communications.
@@ -388,24 +386,26 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
   /**
    * Handle controller status updates.
    *
+   * @param spaceController
+   *          the space controller that sent the status update
    * @param status
    *          The status update.
    */
-  private void handleRemoteControllerStatusUpdate(String statusMessage) {
+  private void handleRemoteControllerStatusUpdate(ActiveSpaceController spaceController, String statusMessage) {
     Map<String, Object> statusObject = messageCodec.parseMessage(statusMessage);
 
     String statusType = (String) statusObject
         .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE);
     switch (statusType) {
       case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_HEARTBEAT:
-        handleControllerHeartbeat(statusObject);
+        handleControllerHeartbeat(spaceController, statusObject);
 
         break;
 
       case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_CONTROLLER_FULL_STATUS:
         // A full status request will also be treated as a heartbeat event
         // since the controller will only respond if it is alive.
-        handleControllerHeartbeat(statusObject);
+        handleControllerHeartbeat(spaceController, statusObject);
 
         ControllerFullStatus fullStatus = messageCodec.decodeControllerFullStatus(statusObject);
 
@@ -413,7 +413,7 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
         if (log.isInfoEnabled()) {
           String controllerUuid = (String) statusObject
               .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID);
-          log.info(String.format("Received controller full status %s, %d activities",
+          log.info(String.format("Received space controller full status %s, %d activities",
               controllerUuid, liveActivityStatuses.size()));
         }
         for (LiveActivityRuntimeStatus liveActivityStatus : liveActivityStatuses) {
@@ -454,12 +454,12 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
         break;
 
       case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_DATA_CAPTURE:
-        handleControllerStatusDataCapture(statusObject);
+        handleControllerStatusDataCapture(spaceController, statusObject);
         break;
 
       case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_DATA_RESTORE:
 
-        handleControllerStatusDataRestore(statusObject);
+        handleControllerStatusDataRestore(spaceController, statusObject);
         break;
 
       case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_CONTAINER_RESOURCE_QUERY:
@@ -471,7 +471,7 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
         break;
 
       case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_SHUTDOWN:
-        handleSpaceControllerShutdown(statusObject);
+        handleSpaceControllerShutdown(spaceController, statusObject);
         break;
 
       default:
@@ -483,48 +483,90 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
   /**
    * Handle a data restore from a controller status message.
    * 
+   * @param spaceController
+   *          the space controller
    * @param statusObject
    *          the controller status object
    */
-  private void handleControllerStatusDataRestore(Map<String, Object> statusObject) {
+  private void handleControllerStatusDataRestore(ActiveSpaceController spaceController, Map<String, Object> statusObject) {
     String statusCode = (String) statusObject
         .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_CODE);
-    String controllerUuid = (String) statusObject
-        .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID);
     log.info("Received data restore response " + statusCode);
     DataBundleState restoreState = SpaceControllerStatus.isSuccessDescription(statusCode)
         ? DataBundleState.RESTORE_RECEIVED : DataBundleState.RESTORE_ERROR;
-    remoteControllerClientListeners.signalDataBundleState(controllerUuid, restoreState);
+    remoteControllerClientListeners.signalDataBundleState(spaceController, restoreState);
   }
 
   /**
    * Handle a data capture from a controller status message.
    * 
+   * @param spaceController
+   *          the space controller
    * @param statusObject
    *          the controller status object
    */
-  private void handleControllerStatusDataCapture(Map<String, Object> statusObject) {
+  private void handleControllerStatusDataCapture(ActiveSpaceController spaceController, Map<String, Object> statusObject) {
     String statusCode = (String) statusObject
         .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_CODE);
-    String controllerUuid = (String) statusObject
-        .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID);
     log.info("Received data capture response " + statusCode);
     DataBundleState captureState = SpaceControllerStatus.isSuccessDescription(statusCode)
         ? DataBundleState.CAPTURE_RECEIVED : DataBundleState.CAPTURE_ERROR;
-    remoteControllerClientListeners.signalDataBundleState(controllerUuid, captureState);
+    remoteControllerClientListeners.signalDataBundleState(spaceController, captureState);
   }
 
   /**
-   * Handle a controller heartbeat message.
+   * Handle a controller connect.
+   * 
+   * <p>
+   * The event is sent in a separate thread.
    *
+   * @param spaceController
+   *          the space controller that has connected
+   */
+  private void handleControllerConnect(ActiveSpaceController spaceController) {
+    long timestamp = System.currentTimeMillis();
+
+    spaceEnvironment.getExecutorService().submit(new Runnable() {
+
+      @Override
+      public void run() {
+        remoteControllerClientListeners.signalSpaceControllerConnect(spaceController, timestamp);
+      }
+    });
+  }
+
+  /**
+   * Handle a controller disconnect.
+   * 
+   * <p>
+   * The event is sent in a separate thread.
+   *
+   * @param spaceController
+   *          the space controller that has disconnected
+   */
+  private void handleControllerDisconnect(ActiveSpaceController spaceController) {
+    long timestamp = System.currentTimeMillis();
+
+    spaceEnvironment.getExecutorService().submit(new Runnable() {
+
+      @Override
+      public void run() {
+        remoteControllerClientListeners.signalSpaceControllerDisconnect(spaceController, timestamp);
+      }
+    });
+  }
+
+  /**
+   * Handle a space controller heartbeat message.
+   *
+   * @param spaceController
+   *          the space controller that sent the heartbeat
    * @param status
    *          the status message for the heartbeat
    */
-  private void handleControllerHeartbeat(Map<String, Object> status) {
-    String controllerUuid =
-        (String) status.get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID);
+  private void handleControllerHeartbeat(ActiveSpaceController spaceController, Map<String, Object> status) {
     long timestamp = System.currentTimeMillis();
-    remoteControllerClientListeners.signalSpaceControllerHeartbeat(controllerUuid, timestamp);
+    remoteControllerClientListeners.signalSpaceControllerHeartbeat(spaceController, timestamp);
   }
 
   /**
@@ -572,13 +614,14 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
 
   /**
    * Handle the shutdown of a space controller.
-   *
+   * 
+   * @param spaceController
+   *          the space controller
    * @param status
    *          the controller status
    */
-  private void handleSpaceControllerShutdown(Map<String, Object> statusObject) {
-    remoteControllerClientListeners.signalSpaceControllerShutdown((String) statusObject
-        .get(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID));
+  private void handleSpaceControllerShutdown(ActiveSpaceController spaceController, Map<String, Object> statusObject) {
+    remoteControllerClientListeners.signalSpaceControllerShutdown(spaceController);
   }
 
   @Override
@@ -638,10 +681,10 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
    *          The controller
    */
   private void shutdownCommunicator(ActiveSpaceController controller) {
-    String remoteNode = controller.getSpaceController().getHostId();
+    String hostId = controller.getSpaceController().getHostId();
     SpaceControllerCommunicator communicator = null;
     synchronized (controllerCommunicators) {
-      communicator = controllerCommunicators.remove(remoteNode);
+      communicator = controllerCommunicators.remove(hostId);
     }
 
     if (communicator != null) {
@@ -682,8 +725,7 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
   }
 
   /**
-   * Bundles the subscribers and publishers for communication with a space
-   * controller.
+   * Directly communicates with a space controller.
    *
    * @author Keith M. Hughes
    */
@@ -730,21 +772,24 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
         @Override
         public void
             onTcpClientConnectionSuccess(TcpClientNetworkCommunicationEndpoint<String> endpoint) {
-          log.info("Controller client connected");
+          log.formatInfo("Controller client connected %s", spaceController.getDisplayName());
           connectionLatch.countDown();
+          
+          handleControllerConnect(spaceController);
         }
 
         @Override
         public void
             onTcpClientConnectionClose(TcpClientNetworkCommunicationEndpoint<String> endpoint) {
-          // TODO Auto-generated method stub
-
-        }
+          log.formatInfo("Controller client disconnected %s", spaceController.getDisplayName());
+          
+          handleControllerDisconnect(spaceController);
+       }
 
         @Override
         public void onNewTcpClientMessage(TcpClientNetworkCommunicationEndpoint<String> endpoint,
             String message) {
-          handleRemoteControllerStatusUpdate(message);
+          handleRemoteControllerStatusUpdate(spaceController, message);
         }
       });
       controllerClient.startup();

@@ -60,4 +60,15 @@ public class StandardYamlMapper implements YamlMapper {
     }
   }
 
+  @Override
+  public Map<String, Object> parseObject(String obj) throws SmartSpacesException {
+    try {
+      @SuppressWarnings("unchecked")
+      Map<String, Object> object = MAPPER.readValue(obj, Map.class);
+      return object;
+    } catch (Exception e) {
+      throw new SmartSpacesException("Could not parse YAML string", e);
+    }
+  }
+
 }

@@ -45,4 +45,17 @@ public interface YamlMapper {
    */
   Map<String, Object> parseObject(InputStream stream) throws SmartSpacesException;
 
+  /**
+   * Parse an object in a string.
+   *
+   * @param object
+   *          the string to parse
+   *
+   * @return the map, if it parsed corrected
+   *
+   * @throws SmartSpacesException
+   *           the string did not parse properly
+   */
+  Map<String, Object> parseObject(String object) throws SmartSpacesException;
+
 }

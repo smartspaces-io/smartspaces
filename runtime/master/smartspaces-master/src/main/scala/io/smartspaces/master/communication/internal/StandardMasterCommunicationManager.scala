@@ -65,9 +65,9 @@ class StandardMasterCommunicationManager extends MasterCommunicationManager with
   private var spaceEnvironment: SmartSpacesEnvironment = null
 
   override def onStartup(): Unit = {
-    val host = spaceEnvironment.getSystemConfiguration.getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS)
-    val port =
-      spaceEnvironment.getSystemConfiguration().getPropertyInteger(
+    val config = spaceEnvironment.getSystemConfiguration()
+    val host = config.getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS)
+    val port = config.getPropertyInteger(
         RemoteMasterServerMessages.CONFIGURATION_NAME_MASTER_COMMUNICATION_PORT,
         RemoteMasterServerMessages.CONFIGURATION_VALUE_DEFAULT_MASTER_COMMUNICATION_PORT)
 
@@ -82,9 +82,13 @@ class StandardMasterCommunicationManager extends MasterCommunicationManager with
       handlers.foreach { handler => handler.register(this) }
     }
 
+    val masterControlServerServiceType = config.getPropertyString(
+        RemoteMasterServerMessages.CONFIGURATION_NAME_ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE, 
+        RemoteMasterServerMessages.CONFIGURATION_VALUE_DEFAULT_ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE)
+
     spaceEnvironment.getServiceRegistry.addServiceNotificationListener(ZeroconfService.SERVICE_NAME, new ServiceNotification[ZeroconfService]() {
       override def onServiceAvailable(zeroconfService: ZeroconfService): Unit = {
-        zeroconfService.registerService(new StandardZeroconfServiceInfo(RemoteMasterServerMessages.ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE, zeroconfName, null, host, port, 0, 0))
+        zeroconfService.registerService(new StandardZeroconfServiceInfo(masterControlServerServiceType, zeroconfName, null, host, port, 0, 0))
       }
     })
   }

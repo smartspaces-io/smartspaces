@@ -220,8 +220,8 @@ public class StandardActiveSpaceControllerManager
     try {
       remoteSpaceControllerClient.cleanSpaceControllerTempData(activeSpaceController);
     } catch (Throwable e) {
-      spaceEnvironment.getLog().formatError(e,
-          "Could not clean space controller temp data: %s", activeSpaceController.getDisplayName());
+      spaceEnvironment.getLog().formatError(e, "Could not clean space controller temp data: %s",
+          activeSpaceController.getDisplayName());
 
       // Communication failures from space controllers are handled by other
       // event mechanisms.
@@ -327,8 +327,7 @@ public class StandardActiveSpaceControllerManager
     try {
       remoteSpaceControllerClient.restoreSpaceControllerDataBundle(activeSpaceController);
     } catch (Throwable e) {
-      spaceEnvironment.getLog().formatError(e,
-          "Could not restore space controller data bundle: %s",
+      spaceEnvironment.getLog().formatError(e, "Could not restore space controller data bundle: %s",
           activeSpaceController.getDisplayName());
 
       // Communication failures from space controllers are handled by other
@@ -348,8 +347,7 @@ public class StandardActiveSpaceControllerManager
 
       // TODO(keith): Yuck!
       remoteSpaceControllerClient.getRemoteControllerClientListeners()
-          .signalSpaceControllerStatusChange(spaceController.getUuid(),
-              SpaceControllerState.UNKNOWN);
+          .signalSpaceControllerStatusChange(activeSpaceController, SpaceControllerState.UNKNOWN);
 
       cleanLiveActivityStateModels(spaceController);
     } catch (Throwable e) {
@@ -405,8 +403,7 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void deployActiveLiveActivity(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getLog().formatInfo(
-        "Deploying live activity to space controller %s: %s",
+    spaceEnvironment.getLog().formatInfo("Deploying live activity to space controller %s: %s",
         activeLiveActivity.getActiveController().getDisplayName(),
         activeLiveActivity.getDisplayName());
 
@@ -432,8 +429,7 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void deleteActiveLiveActivity(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getLog().formatInfo(
-        "Deleting live activity from space controller %s: %s",
+    spaceEnvironment.getLog().formatInfo("Deleting live activity from space controller %s: %s",
         activeLiveActivity.getActiveController().getDisplayName(),
         activeLiveActivity.getDisplayName());
 
@@ -467,8 +463,8 @@ public class StandardActiveSpaceControllerManager
       try {
         remoteSpaceControllerClient.fullConfigureLiveActivity(activeLiveActivity);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().formatError(e,
-            "A live activity has failed to configure: %s", activeLiveActivity.getDisplayName());
+        spaceEnvironment.getLog().formatError(e, "A live activity has failed to configure: %s",
+            activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
       }
@@ -489,8 +485,8 @@ public class StandardActiveSpaceControllerManager
       try {
         activeLiveActivity.startup();
       } catch (Throwable e) {
-        spaceEnvironment.getLog().formatError(e,
-            "A live activity has failed to star up: %s", activeLiveActivity.getDisplayName());
+        spaceEnvironment.getLog().formatError(e, "A live activity has failed to star up: %s",
+            activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
       }
@@ -533,8 +529,8 @@ public class StandardActiveSpaceControllerManager
       try {
         activeLiveActivity.deactivate();
       } catch (Throwable e) {
-        spaceEnvironment.getLog().formatError(e,
-            "A live activity has failed to deactivate: %s", activeLiveActivity.getDisplayName());
+        spaceEnvironment.getLog().formatError(e, "A live activity has failed to deactivate: %s",
+            activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
       }
@@ -555,8 +551,8 @@ public class StandardActiveSpaceControllerManager
       try {
         activeLiveActivity.shutdown();
       } catch (Throwable e) {
-        spaceEnvironment.getLog().formatError(e,
-            "A live activity has failed to shut down: %s", activeLiveActivity.getDisplayName());
+        spaceEnvironment.getLog().formatError(e, "A live activity has failed to shut down: %s",
+            activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
       }
@@ -592,16 +588,14 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void cleanLiveActivityPermanentData(ActiveLiveActivity activeLiveActivity) {
-    spaceEnvironment.getLog().formatInfo(
-        "Requesting permanent data clean for live activity: %s",
+    spaceEnvironment.getLog().formatInfo("Requesting permanent data clean for live activity: %s",
         activeLiveActivity.getDisplayName());
 
     synchronized (activeLiveActivity) {
       try {
         remoteSpaceControllerClient.cleanLiveActivityPermanentData(activeLiveActivity);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().formatError(e,
-            "Could not clean live activity permanent data: %s",
+        spaceEnvironment.getLog().formatError(e, "Could not clean live activity permanent data: %s",
             activeLiveActivity.getDisplayName());
 
         updateLiveActivityStateForCommunicationFailure(activeLiveActivity, e);
@@ -772,8 +766,7 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void activateActiveActivityGroup(ActiveLiveActivityGroup activeActivityGroup) {
     String groupId = activeActivityGroup.getActivityGroup().getId();
-    spaceEnvironment.getLog().formatInfo("requesting activity group %s activation",
-        groupId);
+    spaceEnvironment.getLog().formatInfo("requesting activity group %s activation", groupId);
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
@@ -800,8 +793,7 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void deactivateActiveActivityGroup(ActiveLiveActivityGroup activeActivityGroup) {
     String groupId = activeActivityGroup.getActivityGroup().getId();
-    spaceEnvironment.getLog().formatInfo("Requesting activity group %s deactivation",
-        groupId);
+    spaceEnvironment.getLog().formatInfo("Requesting activity group %s deactivation", groupId);
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
@@ -1085,46 +1077,46 @@ public class StandardActiveSpaceControllerManager
   }
 
   @Override
+  public void onSpaceControllerConnect(ActiveSpaceController spaceController, long timestamp) {
+    // TODO(keith): Transmit connect event
+  }
+
+  @Override
   public void onSpaceControllerDisconnectAttempted(ActiveSpaceController spaceController) {
     masterEventManager.signalSpaceControllerDisconnectAttempted(spaceController);
   }
 
   @Override
-  public void onSpaceControllerHeartbeat(String uuid, long timestamp) {
-    ActiveSpaceController spaceController = getActiveControllerByUuid(uuid);
-    if (spaceController != null) {
-      spaceController.setState(SpaceControllerState.RUNNING);
-      if (spaceEnvironment.getLog().isDebugEnabled()) {
-        spaceEnvironment.getLog().formatDebug("Got heartbeat from %s",
-            spaceController.getDisplayName());
-      }
-
-      masterEventManager.signalSpaceControllerHeartbeat(spaceController, timestamp);
-    } else {
-      spaceEnvironment.getLog()
-          .formatWarn("Heartbeat from unknown space controller with UUID %s", uuid);
-    }
+  public void onSpaceControllerDisconnect(ActiveSpaceController spaceController, long timestamp) {
+    // TODO(keith): Transmit disconnect event
   }
 
   @Override
-  public void onSpaceControllerStatusChange(String uuid, SpaceControllerState state) {
-    ActiveSpaceController spaceController = getActiveControllerByUuid(uuid);
-    if (spaceController != null) {
-      spaceController.setState(state);
-
-      spaceEnvironment.getLog().formatDebug("Got space controller status update %s to %s",
-          spaceController.getDisplayName(), state);
-
-      masterEventManager.signalSpaceControllerStatusChange(spaceController, state);
-    } else {
-      spaceEnvironment.getLog()
-          .formatWarn("Status change for unknown controller with UUID %s", uuid);
+  public void onSpaceControllerHeartbeat(ActiveSpaceController spaceController, long timestamp) {
+    spaceController.setState(SpaceControllerState.RUNNING);
+    if (spaceEnvironment.getLog().isDebugEnabled()) {
+      spaceEnvironment.getLog().formatDebug("Got heartbeat from %s",
+          spaceController.getDisplayName());
     }
+
+    masterEventManager.signalSpaceControllerHeartbeat(spaceController, timestamp);
   }
 
   @Override
-  public void onLiveActivityDeployment(String uuid, LiveActivityDeploymentResponse result) {
-    ActiveLiveActivity active = getActiveActivityByUuid(uuid);
+  public void onSpaceControllerStatusChange(ActiveSpaceController spaceController,
+      SpaceControllerState state) {
+    spaceController.setState(state);
+
+    spaceEnvironment.getLog().formatDebug("Got space controller status update %s to %s",
+        spaceController.getDisplayName(), state);
+
+    masterEventManager.signalSpaceControllerStatusChange(spaceController, state);
+  }
+
+  @Override
+  public void onLiveActivityDeployment(String liveActivityUuid,
+      LiveActivityDeploymentResponse result) {
+    ActiveLiveActivity active = getActiveActivityByUuid(liveActivityUuid);
     if (active != null) {
       if (result.getStatus().isSuccess()) {
 
@@ -1146,13 +1138,13 @@ public class StandardActiveSpaceControllerManager
       masterEventManager.signalLiveActivityDeploy(active, result,
           spaceEnvironment.getTimeProvider().getCurrentTime());
     } else {
-      logUnknownLiveActivity(uuid);
+      logUnknownLiveActivity(liveActivityUuid);
     }
   }
 
   @Override
-  public void onLiveActivityDelete(String uuid, LiveActivityDeleteResponse result) {
-    ActiveLiveActivity active = getActiveActivityByUuid(uuid);
+  public void onLiveActivityDelete(String liveActivityUuid, LiveActivityDeleteResponse result) {
+    ActiveLiveActivity active = getActiveActivityByUuid(liveActivityUuid);
     if (active != null) {
       switch (result.getStatus()) {
         case SUCCESS:
@@ -1184,21 +1176,21 @@ public class StandardActiveSpaceControllerManager
 
       masterEventManager.signalLiveActivityDelete(active, result);
     } else {
-      logUnknownLiveActivity(uuid);
+      logUnknownLiveActivity(liveActivityUuid);
     }
   }
 
   @Override
-  public void onLiveActivityRuntimeStateChange(String uuid, ActivityState newState,
+  public void onLiveActivityRuntimeStateChange(String liveActivityUuid, ActivityState newState,
       String newStateDetail) {
-    ActiveLiveActivity activeLiveActivity = getActiveActivityByUuid(uuid);
+    ActiveLiveActivity activeLiveActivity = getActiveActivityByUuid(liveActivityUuid);
     if (activeLiveActivity != null) {
       spaceEnvironment.getLog().formatInfo("Remote live activity has reported state %s: %s",
           newState, activeLiveActivity.getDisplayName());
 
       updateLiveActivityRuntimeState(activeLiveActivity, newState, newStateDetail);
     } else {
-      logUnknownLiveActivity(uuid);
+      logUnknownLiveActivity(liveActivityUuid);
     }
   }
 
@@ -1243,36 +1235,25 @@ public class StandardActiveSpaceControllerManager
   }
 
   @Override
-  public void onDataBundleStateChange(String uuid, DataBundleState state) {
-    ActiveSpaceController spaceController = getActiveControllerByUuid(uuid);
-    if (spaceController != null) {
-      spaceController.setDataBundleState(state);
-    } else {
-      spaceEnvironment.getLog()
-          .formatWarn("Data bundle state change update from unknown controller with UUID %s", uuid);
-    }
+  public void onDataBundleStateChange(ActiveSpaceController spaceController,
+      DataBundleState state) {
+    spaceController.setDataBundleState(state);
   }
 
   @Override
-  public void onSpaceControllerShutdown(String uuid) {
-    ActiveSpaceController spaceController = getActiveControllerByUuid(uuid);
-    if (spaceController != null) {
-      masterEventManager.signalSpaceControllerShutdown(spaceController);
-    } else {
-      spaceEnvironment.getLog().formatWarn("Shutdown from unknown controller with UUID %s",
-          uuid);
-    }
+  public void onSpaceControllerShutdown(ActiveSpaceController spaceController) {
+    masterEventManager.signalSpaceControllerShutdown(spaceController);
   }
 
   /**
-   * Log that an unknown activity gave its status.
+   * Log that an unknown live activity gave its status.
    *
-   * @param uuid
-   *          UUID of the unknown activity
+   * @param liveActivityUuid
+   *          UUID of the unknown live activity
    */
-  private void logUnknownLiveActivity(String uuid) {
-    spaceEnvironment.getLog()
-        .formatWarn("Got activity status update for unknown activity %s", uuid);
+  private void logUnknownLiveActivity(String liveActivityUuid) {
+    spaceEnvironment.getLog().formatWarn("Got activity status update for unknown activity %s",
+        liveActivityUuid);
   }
 
   /**

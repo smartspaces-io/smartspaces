@@ -86,16 +86,16 @@ public class RemoteSpaceControllerClientListenerCollection {
   /**
    * Signal a space controller connecting.
    *
-   * @param controller
+   * @param spaceController
    *          the controller being disconnected from
    */
-  public void signalSpaceControllerConnectAttempt(ActiveSpaceController controller) {
+  public void signalSpaceControllerConnectAttempt(ActiveSpaceController spaceController) {
     for (RemoteSpaceControllerClientListener listener : listeners) {
       try {
-        listener.onSpaceControllerConnectAttempted(controller);
+        listener.onSpaceControllerConnectAttempted(spaceController);
       } catch (Throwable e) {
         log.formatError(e, "Error handling space controller connect event for %s",
-            controller.getDisplayName());
+            spaceController.getDisplayName());
       }
     }
   }
@@ -103,36 +103,72 @@ public class RemoteSpaceControllerClientListenerCollection {
   /**
    * Signal a space controller connection failed.
    *
-   * @param controller
+   * @param spaceController
    *          the controller being disconnected from
    * @param timeToWait
    *          the time waited for the space controller connection, in
    *          milliseconds
    */
-  public void signalSpaceControllerConnectFailed(ActiveSpaceController controller, long waitedTime) {
+  public void signalSpaceControllerConnectFailed(ActiveSpaceController spaceController, long waitedTime) {
     for (RemoteSpaceControllerClientListener listener : listeners) {
       try {
-        listener.onSpaceControllerConnectFailed(controller, waitedTime);
+        listener.onSpaceControllerConnectFailed(spaceController, waitedTime);
       } catch (Throwable e) {
         log.formatError(e, "Error handling space controller connect event for %s",
-            controller.getDisplayName());
+            spaceController.getDisplayName());
       }
     }
   }
 
   /**
-   * Signal a space controller disconnecting.
+   * Signal a space controller connect.
    *
-   * @param controller
-   *          the controller being disconnected from
+   * @param spaceController
+   *          the controller that connected
    */
-  public void signalSpaceControllerDisconnectAttempt(ActiveSpaceController controller) {
+  public void signalSpaceControllerConnect(ActiveSpaceController spaceController, long timestamp) {
     for (RemoteSpaceControllerClientListener listener : listeners) {
       try {
-        listener.onSpaceControllerDisconnectAttempted(controller);
+        listener.onSpaceControllerConnect(spaceController, timestamp);
       } catch (Throwable e) {
-        log.formatError(e, "Error handling space controller disconnect event for %s",
-            controller.getDisplayName());
+        log.formatError(e, "Error handling space controller connect event for %s",
+            spaceController.getDisplayName());
+      }
+    }
+  }
+
+  /**
+   * Signal a space controller disconnect attempt.
+   *
+   * @param spaceController
+   *          the controller being disconnected from
+   */
+  public void signalSpaceControllerDisconnectAttempt(ActiveSpaceController spaceController) {
+    for (RemoteSpaceControllerClientListener listener : listeners) {
+      try {
+        listener.onSpaceControllerDisconnectAttempted(spaceController);
+      } catch (Throwable e) {
+        log.formatError(e, "Error handling space controller disconnect attempt event for %s",
+            spaceController.getDisplayName());
+      }
+    }
+  }
+
+  /**
+   * Signal a space controller disconnect.
+   *
+   * @param spaceController
+   *          the controller being disconnected from
+   * @param timestamp
+   *          the time of the disconnect
+   */
+  public void signalSpaceControllerDisconnect(ActiveSpaceController spaceController, long timestamp) {
+    for (RemoteSpaceControllerClientListener listener : listeners) {
+      try {
+        listener.onSpaceControllerDisconnect(spaceController, timestamp);
+      } catch (Throwable e) {
+        log.formatError(e, "Error handling space controller disconnect attempt event for %s",
+            spaceController.getDisplayName());
       }
     }
   }
@@ -140,18 +176,18 @@ public class RemoteSpaceControllerClientListenerCollection {
   /**
    * Signal a space controller heartbeat.
    *
-   * @param uuid
-   *          uuid of the controller
+   * @param spaceController
+   *          the space controller
    * @param timestamp
    *          timestamp of the heartbeat
    */
-  public void signalSpaceControllerHeartbeat(String uuid, long timestamp) {
+  public void signalSpaceControllerHeartbeat(ActiveSpaceController spaceController, long timestamp) {
     for (RemoteSpaceControllerClientListener listener : listeners) {
       try {
-        listener.onSpaceControllerHeartbeat(uuid, timestamp);
+        listener.onSpaceControllerHeartbeat(spaceController, timestamp);
       } catch (Throwable e) {
         log.formatError(e,
-            "Error handling space controller heartbeat event for UUID %s and timestamp %d", uuid,
+            "Error handling space controller heartbeat event for UUID %s and timestamp %d", spaceController.getDisplayName(),
             timestamp);
       }
     }
@@ -160,18 +196,18 @@ public class RemoteSpaceControllerClientListenerCollection {
   /**
    * Signal that the controller status has been updated.
    *
-   * @param uuid
-   *          the UUID of the space controller
+   * @param spaceController
+   *          the space controller
    * @param state
    *          the new state
    */
-  public void signalSpaceControllerStatusChange(String uuid, SpaceControllerState state) {
+  public void signalSpaceControllerStatusChange(ActiveSpaceController spaceController, SpaceControllerState state) {
     for (RemoteSpaceControllerClientListener listener : listeners) {
       try {
-        listener.onSpaceControllerStatusChange(uuid, state);
+        listener.onSpaceControllerStatusChange(spaceController, state);
       } catch (Throwable e) {
         log.formatError(e,
-            "Error handling space controller status change event for UUID %s and state %s", uuid,
+            "Error handling space controller status change event for %s and state %s", spaceController.getDisplayName(),
             state);
       }
     }
@@ -180,15 +216,15 @@ public class RemoteSpaceControllerClientListenerCollection {
   /**
    * Signal that the space controller is shutting down.
    *
-   * @param uuid
-   *          the UUID of the space controller
+   * @param spaceController
+   *          the space controller
    */
-  public void signalSpaceControllerShutdown(String uuid) {
+  public void signalSpaceControllerShutdown(ActiveSpaceController spaceController) {
     for (RemoteSpaceControllerClientListener listener : listeners) {
       try {
-        listener.onSpaceControllerShutdown(uuid);
+        listener.onSpaceControllerShutdown(spaceController);
       } catch (Throwable e) {
-        log.formatError(e, "Error handling space controller shutdown event for UUID %s", uuid);
+        log.formatError(e, "Error handling space controller shutdown event for %s", spaceController.getDisplayName());
       }
     }
   }
@@ -216,18 +252,18 @@ public class RemoteSpaceControllerClientListenerCollection {
   /**
    * Send the on deletion message to all listeners.
    *
-   * @param uuid
+   * @param liveActivityUuid
    *          UUID of the activity.
    * @param result
    *          result of the deletion
    */
-  public void signalActivityDelete(String uuid, LiveActivityDeleteResponse result) {
+  public void signalActivityDelete(String liveActivityUuid, LiveActivityDeleteResponse result) {
     for (RemoteSpaceControllerClientListener listener : listeners) {
       try {
-        listener.onLiveActivityDelete(uuid, result);
+        listener.onLiveActivityDelete(liveActivityUuid, result);
       } catch (Throwable e) {
         log.formatError(e, "Error handling live activity delete event for UUID %s and result %s",
-            uuid, result);
+            liveActivityUuid, result);
       }
     }
   }
@@ -235,22 +271,22 @@ public class RemoteSpaceControllerClientListenerCollection {
   /**
    * Send the activity state change message to all listeners.
    *
-   * @param uuid
+   * @param liveActivityUuid
    *          UUID of the activity
    * @param newRuntimeState
    *          runtime status of the remote activity
    * @param newRuntimeStateDetail
    *          detail about the new runtime state, can be {@code null}
    */
-  public void signalActivityStateChange(String uuid, ActivityState newRuntimeState,
+  public void signalActivityStateChange(String liveActivityUuid, ActivityState newRuntimeState,
       String newRuntimeStateDetail) {
     for (RemoteSpaceControllerClientListener listener : listeners) {
       try {
-        listener.onLiveActivityRuntimeStateChange(uuid, newRuntimeState, newRuntimeStateDetail);
+        listener.onLiveActivityRuntimeStateChange(liveActivityUuid, newRuntimeState, newRuntimeStateDetail);
       } catch (Throwable e) {
         log.formatError(e,
             "Error handling live activity state change event for UUID %s and new runtime state %s",
-            uuid, newRuntimeState);
+            liveActivityUuid, newRuntimeState);
       }
     }
   }
@@ -258,18 +294,18 @@ public class RemoteSpaceControllerClientListenerCollection {
   /**
    * Send the data bundle state change message to all listeners.
    *
-   * @param uuid
-   *          UUID of the activity
+   * @param spaceController
+   *          the space controller
    * @param status
    *          data bundle status
    */
-  public void signalDataBundleState(String uuid, DataBundleState status) {
+  public void signalDataBundleState(ActiveSpaceController spaceController, DataBundleState status) {
     for (RemoteSpaceControllerClientListener listener : listeners) {
       try {
-        listener.onDataBundleStateChange(uuid, status);
+        listener.onDataBundleStateChange(spaceController, status);
       } catch (Throwable e) {
         log.formatError(e,
-            "Error handling live activity data bundle event for UUID %s and status %s", uuid,
+            "Error handling live activity data bundle event for %s and status %s", spaceController.getDisplayName(),
             status);
       }
     }

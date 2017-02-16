@@ -34,50 +34,70 @@ public interface RemoteSpaceControllerClientListener {
   /**
    * A space controller connection is being attempted.
    *
-   * @param controller
+   * @param spaceController
    *          the controller being connected to
    */
-  void onSpaceControllerConnectAttempted(ActiveSpaceController controller);
+  void onSpaceControllerConnectAttempted(ActiveSpaceController spaceController);
 
   /**
-   * A space controller connection has failed.
+   * A space controller connection has been made.
    *
-   * @param controller
+   * @param spaceController
+   *          the controller being connected to
+   * @param timestamp
+   *          time when connection was lost
+   */
+  void onSpaceControllerConnect(ActiveSpaceController spaceController, long timestamp);
+
+  /**
+   * A space controller connection attempt has failed.
+   *
+   * @param spaceController
    *          the controller being connected to
    * @param timeToWait
    *          the time waited for the space controller connection, in
    *          milliseconds
    */
-  void onSpaceControllerConnectFailed(ActiveSpaceController controller, long timeToWait);
+  void onSpaceControllerConnectFailed(ActiveSpaceController spaceController, long timeToWait);
 
   /**
    * A space controller disconnection is being attempted.
    *
-   * @param controller
+   * @param spaceController
    *          the controller being disconnected from
    */
-  void onSpaceControllerDisconnectAttempted(ActiveSpaceController controller);
+  void onSpaceControllerDisconnectAttempted(ActiveSpaceController spaceController);
+
+  /**
+   * A space controller connection has been lost.
+   *
+   * @param spaceController
+   *          the space controller that disconnected
+   * @param timestamp
+   *          time when connection was lost
+   */
+  void onSpaceControllerDisconnect(ActiveSpaceController spaceController, long timestamp);
 
   /**
    * A controller has sent a heartbeat.
    *
-   * @param uuid
-   *          uuid of the controller
+   * @param spaceController
+   *          the space controller
    *
    * @param timestamp
    *          timestamp of the heartbeat
    */
-  void onSpaceControllerHeartbeat(String uuid, long timestamp);
+  void onSpaceControllerHeartbeat(ActiveSpaceController spaceController, long timestamp);
 
   /**
    * The controller status has been updated.
    *
-   * @param uuid
-   *          the UUID of the space controller
+   * @param spaceController
+   *          the space controller
    * @param state
    *          the new state
    */
-  void onSpaceControllerStatusChange(String uuid, SpaceControllerState state);
+  void onSpaceControllerStatusChange(ActiveSpaceController spaceController, SpaceControllerState state);
 
   /**
    * The space controller has signaled a shutdown..
@@ -85,47 +105,47 @@ public interface RemoteSpaceControllerClientListener {
    * @param uuid
    *          the UUID of the space controller
    */
-  void onSpaceControllerShutdown(String uuid);
+  void onSpaceControllerShutdown(ActiveSpaceController spaceController);
 
   /**
    * An activity has been deployed.
    *
-   * @param uuid
+   * @param liveActivityUuid
    *          uuid of the activity
    * @param result
    *          result of the install
    */
-  void onLiveActivityDeployment(String uuid, LiveActivityDeploymentResponse result);
+  void onLiveActivityDeployment(String liveActivityUuid, LiveActivityDeploymentResponse result);
 
   /**
    * An activity has been deleted.
    *
-   * @param uuid
+   * @param liveActivityUuid
    *          uuid of the activity
    * @param result
    *          result of the delete
    */
-  void onLiveActivityDelete(String uuid, LiveActivityDeleteResponse result);
+  void onLiveActivityDelete(String liveActivityUuid, LiveActivityDeleteResponse result);
 
   /**
    * A remote activity has deployment status.
    *
-   * @param uuid
+   * @param liveActivityUuid
    *          UUID of the activity
    * @param runtimeState
    *          runtime state change status of the remote activity
    * @param detail
    *          detail associated with activity status change
    */
-  void onLiveActivityRuntimeStateChange(String uuid, ActivityState runtimeState, String detail);
+  void onLiveActivityRuntimeStateChange(String liveActivityUuid, ActivityState runtimeState, String detail);
 
   /**
    * Data bundle control has a status update.
    *
-   * @param uuid
-   *          UUID of the controller
+   * @param spaceController
+   *          the space controller
    * @param state
    *          state change status of the controller data bundle transfer
    */
-  void onDataBundleStateChange(String uuid, DataBundleState state);
+  void onDataBundleStateChange(ActiveSpaceController spaceController, DataBundleState state);
 }

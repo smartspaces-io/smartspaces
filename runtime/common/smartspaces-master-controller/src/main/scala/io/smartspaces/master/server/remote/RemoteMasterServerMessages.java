@@ -112,7 +112,12 @@ public class RemoteMasterServerMessages {
   public static final int CONFIGURATION_VALUE_DEFAULT_MASTER_COMMUNICATION_PORT = 8090;
   
   /**
-   * The zeroconf service type for the master control server.
+   * Configuration property for the zeroconf service type for the master control server.
    */
-  public static final String ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE = "_smartspaces-master-control._tcp.local.";
+  public static final String CONFIGURATION_NAME_ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE = "smartspaces.zeroconf.servicetype.master.control";
+  
+  /**
+   * Default value for configuration property for the zeroconf service type for the master control server.
+   */
+  public static final String CONFIGURATION_VALUE_DEFAULT_ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE = "_smartspaces-master-control._tcp.local.";
 }

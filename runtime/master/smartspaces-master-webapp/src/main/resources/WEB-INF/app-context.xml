@@ -38,6 +38,9 @@
 	<osgi:reference id="io.smartspaces.master.api.activity"
 		interface="io.smartspaces.master.api.master.MasterApiActivityManager"
 		availability="mandatory" />
+	<osgi:reference id="io.smartspaces.master.api.resource"
+		interface="io.smartspaces.master.api.master.MasterApiResourceManager"
+		availability="mandatory" />
 	<osgi:reference id="io.smartspaces.master.api.automation"
 		interface="io.smartspaces.master.api.master.MasterApiAutomationManager"
 		availability="mandatory" />

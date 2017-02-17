@@ -43,7 +43,7 @@ import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
 import io.smartspaces.master.server.services.model.ActiveLiveActivity;
-import io.smartspaces.resource.repository.ActivityRepositoryManager;
+import io.smartspaces.resource.repository.ResourceRepositoryManager;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
@@ -80,9 +80,9 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   private SpaceControllerRepository spaceControllerRepository;
 
   /**
-   * Repository server which gives activities.
+   * Repository manager for resources, like activities.
    */
-  private ActivityRepositoryManager activityRepositoryManager;
+  private ResourceRepositoryManager resourceRepositoryManager;
 
   /**
    * Manager for activity operations.
@@ -119,7 +119,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   public Map<String, Object> saveActivity(SimpleActivity activityData,
       InputStream activityContentStream) {
     try {
-      Activity finalActivity = activityRepositoryManager.addActivity(activityContentStream);
+      Activity finalActivity = resourceRepositoryManager.addActivity(activityContentStream);
 
       return MasterApiMessageSupport.getSuccessResponse(extractBasicActivityApiData(finalActivity));
     } catch (Throwable e) {
@@ -1591,13 +1591,13 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   }
 
   /**
-   * Set the activity repository manager.
+   * Set the resource repository manager.
    *
-   * @param activityRepositoryManager
-   *          the activity repository manager
+   * @param resourceRepositoryManager
+   *          the resource repository manager
    */
-  public void setActivityRepositoryManager(ActivityRepositoryManager activityRepositoryManager) {
-    this.activityRepositoryManager = activityRepositoryManager;
+  public void setResourceRepositoryManager(ResourceRepositoryManager resourceRepositoryManager) {
+    this.resourceRepositoryManager = resourceRepositoryManager;
   }
 
   /**

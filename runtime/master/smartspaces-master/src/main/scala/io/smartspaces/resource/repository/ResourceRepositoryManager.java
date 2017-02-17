@@ -29,10 +29,26 @@ import java.io.InputStream;
  *
  * @author Keith M. Hughes
  */
-public interface ActivityRepositoryManager {
+public interface ResourceRepositoryManager {
+
+  /**
+   * Add a resource bundle to the repository.
+   * 
+   * <p>
+   * The stream will be closed after the method completes.
+   *
+   * @param resourceStream
+   *          the stream containing the resource
+   *
+   * @return the activity loaded
+   */
+  void addBundleResource(InputStream resourceStream);
 
   /**
    * Add an activity to the repository.
+   * 
+   * <p>
+   * The stream will be closed after the method completes.
    *
    * @param activityStream
    *          the stream containing the activity

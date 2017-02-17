@@ -119,5 +119,6 @@ public class RemoteMasterServerMessages {
   /**
    * Default value for configuration property for the zeroconf service type for the master control server.
    */
-  public static final String CONFIGURATION_VALUE_DEFAULT_ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE = "_smartspaces-master-control._tcp.local.";
+  public static final String CONFIGURATION_VALUE_DEFAULT_ZEROCONF_MASTER_CONTROL_SERVER_SERVICE_TYPE =
+      "_smartspaces-master-control._tcp.local.";
 }

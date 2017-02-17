@@ -19,7 +19,7 @@ package io.smartspaces.master.ui.internal.web.activity;
 
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.master.ui.internal.web.FormObjectValidator;
-import io.smartspaces.master.ui.internal.web.activity.ActivityAction.ActivityForm;
+import io.smartspaces.master.ui.internal.web.activity.ActivityUploadAction.ActivityForm;
 
 import org.springframework.validation.Errors;
 

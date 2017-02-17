@@ -210,7 +210,7 @@
 	</bean>
 
 	<bean id="smartspaces.resource.repository.manager"
-		class="io.smartspaces.resource.repository.internal.StandardActivityRepositoryManager">
+		class="io.smartspaces.resource.repository.internal.StandardResourceRepositoryManager">
 
 		<property name="activityRepository" ref="smartspaces.repository.activity" />
 
@@ -353,9 +353,20 @@
 
 				<property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
 
-				<property name="activityRepositoryManager" ref="smartspaces.resource.repository.manager" />
+				<property name="resourceRepositoryManager" ref="smartspaces.resource.repository.manager" />
 
 				<property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="smartspaces.master.api.resource" parent="txProxyTemplate">
+
+		<property name="target">
+			<bean
+				class="io.smartspaces.master.api.master.internal.StandardMasterApiResourceManager"
+				destroy-method="shutdown" init-method="startup" parent="abstractMasterApiManager">
+				<property name="resourceRepositoryManager" ref="smartspaces.resource.repository.manager" />
 			</bean>
 		</property>
 	</bean>
@@ -473,7 +484,7 @@
 
 		<property name="activityRepository" ref="smartspaces.repository.activity" />
 
-		<property name="activityRepositoryManager" ref="smartspaces.resource.repository.manager" />
+		<property name="resourceRepositoryManager" ref="smartspaces.resource.repository.manager" />
 
 		<property name="spaceEnvironment" ref="smartspaces.environment" />
 
@@ -487,6 +498,10 @@
 	<osgi:service
 		interface="io.smartspaces.master.api.master.MasterApiActivityManager"
 		ref="smartspaces.master.api.activity" />
+
+	<osgi:service
+		interface="io.smartspaces.master.api.master.MasterApiResourceManager"
+		ref="smartspaces.master.api.resource" />
 
 	<osgi:service
 		interface="io.smartspaces.master.api.master.MasterApiSpaceControllerManager"

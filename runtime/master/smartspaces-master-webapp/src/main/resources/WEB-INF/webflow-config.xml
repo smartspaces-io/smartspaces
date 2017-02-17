@@ -57,6 +57,8 @@ the License.
         path="/WEB-INF/freemarker/liveactivitygroup/LiveActivityGroupNewFlow.xml" />
     <webflow:flow-location id="space/new"
         path="/WEB-INF/freemarker/space/SpaceNewFlow.xml" />
+    <webflow:flow-location id="resource/upload"
+        path="/WEB-INF/freemarker/resource/ResourceUploadFlow.xml" />
     <webflow:flow-location id="admin/namedscript/new"
         path="/WEB-INF/freemarker/admin/NamedScriptNewFlow.xml" />
   </webflow:flow-registry>

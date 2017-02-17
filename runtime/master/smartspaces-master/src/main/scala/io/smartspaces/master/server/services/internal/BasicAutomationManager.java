@@ -169,9 +169,9 @@ public class BasicAutomationManager implements AutomationManager {
    */
   private void prepareImportDirectoryWatcher() {
     importDirectoryWatcher = new SimpleDirectoryWatcher();
-    importDirectoryWatcher.addDirectory(new File(spaceEnvironment.getFilesystem()
+    importDirectoryWatcher.addDirectory(fileSupport.newFile(spaceEnvironment.getFilesystem()
         .getInstallDirectory(), ACTIVITY_IMPORT_DIRECTORY));
-    importDirectoryWatcher.addDirectory(new File(spaceEnvironment.getFilesystem()
+    importDirectoryWatcher.addDirectory(fileSupport.newFile(spaceEnvironment.getFilesystem()
         .getInstallDirectory(), ACTIVITY_DEPLOY_DIRECTORY));
     importDirectoryWatcher.addDirectoryWatcherListener(new BaseDirectoryWatcherListener() {
       @Override
@@ -211,8 +211,7 @@ public class BasicAutomationManager implements AutomationManager {
    *          the folder which has been added
    */
   private void handleImportActivityFileAdded(File file) {
-    spaceEnvironment.getLog().info(
-        String.format("Activity file  %s found in autoinput folders", file));
+    spaceEnvironment.getLog().formatInfo("Activity file  %s found in autoinput folders", file);
 
     FileInputStream activityStream = null;
     try {

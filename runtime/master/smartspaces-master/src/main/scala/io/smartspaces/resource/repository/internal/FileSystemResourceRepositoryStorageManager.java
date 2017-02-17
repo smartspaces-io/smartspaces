@@ -20,6 +20,7 @@ package io.smartspaces.resource.repository.internal;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.resource.NamedVersionedResource;
 import io.smartspaces.resource.NamedVersionedResourceCollection;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.Version;
@@ -39,6 +40,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.Map;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -53,7 +57,8 @@ import com.google.common.collect.Maps;
  *
  * @author Keith M. Hughes
  */
-public class FileSystemResourceRepositoryStorageManager implements ResourceRepositoryStorageManager {
+public class FileSystemResourceRepositoryStorageManager
+    implements ResourceRepositoryStorageManager {
 
   /**
    * Configuration property for the location of the activities repository.
@@ -134,6 +139,16 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
   private static final String STAGED_RESOURCE_FILENAME_SUFFIX = ".zip";
 
   /**
+   * OSGi manifest header for getting the OSGi bundle symbolic name.
+   */
+  private static final String OSGI_HEADER_SYMBOLIC_NAME = "Bundle-SymbolicName";
+
+  /**
+   * OSGi manifest header for getting the OSGi bundle version.
+   */
+  private static final String OSGI_HEADER_VERSION = "Bundle-Version";
+
+  /**
    * Directory where files are staged.
    */
   private File stagingDirectory;
@@ -191,10 +206,9 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
 
     File baseInstallDir = spaceEnvironment.getFilesystem().getInstallDirectory();
 
-    stagingDirectory =
-        new File(baseInstallDir,
-            systemConfiguration.getPropertyString(CONFIGURATION_NAME_REPOSITORY_STAGING_LOCATION,
-                CONFIGURATION_VALUE_DEFAULT_REPOSITORY_ACTIVITY_STAGING_LOCATION));
+    stagingDirectory = new File(baseInstallDir,
+        systemConfiguration.getPropertyString(CONFIGURATION_NAME_REPOSITORY_STAGING_LOCATION,
+            CONFIGURATION_VALUE_DEFAULT_REPOSITORY_ACTIVITY_STAGING_LOCATION));
     ensureWriteableDirectory("staging", stagingDirectory);
 
     // TODO(keith): Check repository base same way as above.
@@ -209,9 +223,9 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
     dataRepositoryBaseLocation = new File(baseInstallDir, dataRepositoryPath);
     ensureWriteableDirectory("data", dataRepositoryBaseLocation);
 
-    bundleResourceRepositoryPath =
-        systemConfiguration.getPropertyString(CONFIGURATION_NAME_REPOSITORY_BUNDLE_RESOURCE_LOCATION,
-            CONFIGURATION_VALUE_DEFAULT_REPOSITORY_BUNDLE_RESOURCE_LOCATION);
+    bundleResourceRepositoryPath = systemConfiguration.getPropertyString(
+        CONFIGURATION_NAME_REPOSITORY_BUNDLE_RESOURCE_LOCATION,
+        CONFIGURATION_VALUE_DEFAULT_REPOSITORY_BUNDLE_RESOURCE_LOCATION);
     resourceRepositoryBaseLocation = new File(baseInstallDir, bundleResourceRepositoryPath);
     ensureWriteableDirectory("bundle resource", resourceRepositoryBaseLocation);
   }
@@ -227,19 +241,19 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
   private void ensureWriteableDirectory(String type, File directory) {
     if (directory.exists()) {
       if (!directory.isDirectory()) {
-        throw new SmartSpacesException(String.format(
-            "Resource repository %s directory %s is not a directory", type,
-            directory.getAbsolutePath()));
+        throw new SmartSpacesException(
+            String.format("Resource repository %s directory %s is not a directory", type,
+                directory.getAbsolutePath()));
       } else if (!directory.canWrite()) {
-        throw new SmartSpacesException(String.format(
-            "Resource repository %s directory %s is not writable", type,
-            directory.getAbsolutePath()));
+        throw new SmartSpacesException(
+            String.format("Resource repository %s directory %s is not writable", type,
+                directory.getAbsolutePath()));
       }
     } else {
       if (!directory.mkdirs()) {
-        throw new SmartSpacesException(String.format(
-            "Could not create activity repository %s directory %s", type,
-            directory.getAbsolutePath()));
+        throw new SmartSpacesException(
+            String.format("Could not create activity repository %s directory %s", type,
+                directory.getAbsolutePath()));
       }
     }
   }
@@ -268,9 +282,8 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
   @Override
   public String stageResource(InputStream resourceStream) {
     try {
-      File stagedFile =
-          File.createTempFile(STAGED_RESOURCE_FILENAME_PREFIX, STAGED_RESOURCE_FILENAME_SUFFIX,
-              stagingDirectory);
+      File stagedFile = File.createTempFile(STAGED_RESOURCE_FILENAME_PREFIX,
+          STAGED_RESOURCE_FILENAME_SUFFIX, stagingDirectory);
       fileSupport.copyInputStream(resourceStream, stagedFile);
 
       // +2 to get beyond path separator.
@@ -317,18 +330,58 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
   }
 
   @Override
+  public NamedVersionedResource getNameVersionResource(String stageHandle)
+      throws SmartSpacesException {
+    File stageFile = stagingFiles.get(stageHandle);
+    if (stageFile != null) {
+      JarFile jarFile = null;
+      try {
+        jarFile = new JarFile(stageFile);
+        Manifest manifest = jarFile.getManifest();
+        Attributes attributes = manifest.getMainAttributes();
+        String name = attributes.getValue(OSGI_HEADER_SYMBOLIC_NAME);
+        String version = attributes.getValue(OSGI_HEADER_VERSION);
+        if (name != null && version != null) {
+          return new NamedVersionedResource(name, Version.parseVersion(version));
+        } else {
+          throw SmartSpacesException.newFormattedException(
+              "Resource %s is not a proper OSGi bundle "
+                  + "(missing symbolic name and/or version) and is being ignored.",
+              stageFile.getAbsolutePath());
+        }
+      } catch (IOException e) {
+        throw SmartSpacesException.newFormattedException(e,
+            "Could not open resource file jar manifest for %s", stageFile.getAbsolutePath());
+      } finally {
+        // For some reason Closeables does not work with JarFile despite it
+        // claiming it is Closeable in the Javadoc.
+        if (jarFile != null) {
+          try {
+            jarFile.close();
+          } catch (IOException e) {
+            // Don't care.
+          }
+        }
+      }
+    } else {
+      throw SimpleSmartSpacesException.newFormattedException("%s is not a valid staging handle",
+          stageHandle);
+    }
+  }
+
+  @Override
   public InputStream getStagedResourceBundle(String stageHandle) {
     File stageFile = stagingFiles.get(stageHandle);
     if (stageFile != null) {
       try {
         return new FileInputStream(stageFile);
       } catch (Exception e) {
-        throw new SimpleSmartSpacesException(String.format(
-            "Cannot get bundle from staged resource %s", stageHandle), e);
+        throw new SimpleSmartSpacesException(
+            String.format("Cannot get bundle from staged resource %s", stageHandle), e);
       }
     } else {
-      throw new SimpleSmartSpacesException(String.format("%s is not a valid staging handle",
-          stageHandle));
+      throw new SimpleSmartSpacesException(
+          String.format("%s is not a valid staging handle", stageHandle));
     }
   }
 
@@ -358,8 +411,8 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
   }
 
   @Override
-  public NamedVersionedResourceCollection<NamedVersionedResourceWithData<URI>> getAllResources(
-      String category) {
+  public NamedVersionedResourceCollection<NamedVersionedResourceWithData<URI>>
+      getAllResources(String category) {
     return resourceAnalyzer.getResourceCollection(getBaseLocation(category));
   }
 
@@ -369,8 +422,8 @@ public class FileSystemResourceRepositoryStorageManager implements ResourceRepos
     try {
       return new FileOutputStream(resourceFile);
     } catch (FileNotFoundException e) {
-      throw new SmartSpacesException("Could not create resource output stream "
-          + resourceFile.getPath(), e);
+      throw new SmartSpacesException(
+          "Could not create resource output stream " + resourceFile.getPath(), e);
     }
   }
 

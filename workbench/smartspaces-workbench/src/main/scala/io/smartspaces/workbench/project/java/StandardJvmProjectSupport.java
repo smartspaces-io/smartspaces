@@ -165,23 +165,23 @@ public class StandardJvmProjectSupport implements JvmProjectSupport  {
    *          {@code true} if needs artifacts from the dynamic projects
    * @param projectTaskContext
    *          the project build context
-   * @param wokbenchTaskContext
+   * @param workbenchTaskContext
    *          the workbench task context
    */
   private void addDependenciesFromUserBootstrap(Set<File> compiletimeClasspathFromUserBootstrap,
       Set<File> runtimeClasspathFromUserBootstrap, boolean needsDynamicArtifacts,
-      ProjectTaskContext projectTaskContext, WorkbenchTaskContext wokbenchTaskContext) {
+      ProjectTaskContext projectTaskContext, WorkbenchTaskContext workbenchTaskContext) {
 
     NamedVersionedResourceCollection<NamedVersionedResourceWithData<URI>> startupResources =
-        new OsgiResourceAnalyzer(wokbenchTaskContext.getWorkbench().getLog())
-            .getResourceCollection(fileSupport.newFile(wokbenchTaskContext.getControllerDirectory(),
+        new OsgiResourceAnalyzer(workbenchTaskContext.getWorkbench().getLog())
+            .getResourceCollection(fileSupport.newFile(workbenchTaskContext.getControllerDirectory(),
                 ContainerFilesystemLayout.FOLDER_USER_BOOTSTRAP));
     for (ProjectDependency dependency : projectTaskContext.getProject().getDependencies()) {
       // Skip the dependency if a dynamic project that exists on the
       // workbench
       // project path.
       if (dependency.isDynamic()
-          && wokbenchTaskContext.getDynamicProjectFromProjectPath(dependency) != null) {
+          && workbenchTaskContext.getDynamicProjectFromProjectPath(dependency) != null) {
         continue;
       }
 

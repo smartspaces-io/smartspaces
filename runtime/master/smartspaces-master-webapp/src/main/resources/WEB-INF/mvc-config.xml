@@ -60,13 +60,25 @@
 	</bean>
 
 	<bean
+		id="io.smartspaces.master.webapp.spring.mvc.servlet.controller.resource"
+		class="io.smartspaces.master.ui.internal.web.resource.ResourceController"
+		parent="abstractControllerClass">
+	</bean>
+
+	<bean id="resourceUploadAction"
+		class="io.smartspaces.master.ui.internal.web.resource.ResourceUploadAction"
+		parent="abstractControllerClass">
+		<property name="masterApiResourceManager" ref="io.smartspaces.master.api.resource" />
+	</bean>
+
+	<bean
 		id="io.smartspaces.master.webapp.spring.mvc.servlet.controller.activity"
 		class="io.smartspaces.master.ui.internal.web.activity.ActivityController"
 		parent="abstractLiveControllerClass">
 	</bean>
 
-	<bean id="activityAction"
-		class="io.smartspaces.master.ui.internal.web.activity.ActivityAction"
+	<bean id="activityUploadAction"
+		class="io.smartspaces.master.ui.internal.web.activity.ActivityUploadAction"
 		parent="abstractControllerClass">
 		<property name="masterApiActivityManager" ref="io.smartspaces.master.api.activity" />
 	</bean>
@@ -89,8 +101,12 @@
 	</bean>
 
 	<bean name="activity/upload"
-		class="io.smartspaces.master.ui.internal.web.activity.NewActivityFlowHandler">
+		class="io.smartspaces.master.ui.internal.web.activity.ActivityUploadFlowHandler">
 		<property name="activityRepository" ref="activityRepository" />
+	</bean>
+
+	<bean name="resource/upload"
+		class="io.smartspaces.master.ui.internal.web.resource.ResourceUploadFlowHandler">
 	</bean>
 
 	<bean

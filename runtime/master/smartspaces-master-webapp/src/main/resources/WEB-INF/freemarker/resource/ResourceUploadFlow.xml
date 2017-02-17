@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (C) 2016 Keith M. Hughes Copyright (C) 2012 Google Inc. Licensed 
+<!-- Copyright (C) 2017 Keith M. Hughes
+
+    Licensed 
 	under the Apache License, Version 2.0 (the "License"); you may not use this 
 	file except in compliance with the License. You may obtain a copy of the 
 	License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by 
@@ -14,31 +16,30 @@
 	<!-- <secured attributes="ROLE_USER" /> -->
 
 	<on-start>
-		<evaluate expression="activityUploadAction.newActivity()" result="flowScope.activityForm" />
+		<evaluate expression="resourceUploadAction.newResource()" result="flowScope.resourceForm" />
 		<evaluate expression="new java.util.Date()" result="flowScope.now" />
 	</on-start>
 
-	<view-state id="newActivity" model="activityForm" view="activity/ActivityUpload">
+	<view-state id="newResource" model="resourceForm" view="resource/ResourceUpload">
 		<on-render>
-			<evaluate expression="activityUploadAction.addNeededEntities(flowRequestContext)" />
+			<evaluate expression="resourceUploadAction.addNeededEntities(flowRequestContext)" />
 		</on-render>
-		<transition on="save" to="saveUploadActivity" validate="true" />
+		<transition on="save" to="saveUploadResource" validate="true" />
 		<transition on="cancel" to="cancel" bind="false" />
 	</view-state>
 
-	<action-state id="saveUploadActivity">
-		<evaluate expression="activityUploadAction.saveActivity(activityForm)" />
-		<transition on="success" to="doneUploadActivity" />
-		<transition on="error" to="errorUploadActivity" />
+	<action-state id="saveUploadResource">
+		<evaluate expression="resourceUploadAction.saveResource(resourceForm)" />
+		<transition on="success" to="doneUploadResource" />
+		<transition on="error" to="errorUploadResource" />
 	</action-state>
 
-	<view-state id="errorUploadActivity" model="activityForm"
-		view="activity/ActivityUploadError">
+	<view-state id="errorUploadResource" model="resourceForm"
+		view="resource/ResourceUploadError">
 	</view-state>
 
-	<end-state id="doneUploadActivity"
-		view="externalRedirect:contextRelative:/activity/#{activityForm.activity.id}/view.html">
-		<output name="activityId" value="activityForm.activity.id" />
+	<end-state id="doneUploadResource"
+		view="externalRedirect:contextRelative:/resource/all.html">
 	</end-state>
 
 	<end-state id="cancel" />

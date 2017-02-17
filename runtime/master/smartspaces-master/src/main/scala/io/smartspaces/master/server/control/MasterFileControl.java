@@ -21,7 +21,7 @@ import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.master.api.master.MasterApiAutomationManager;
 import io.smartspaces.master.api.master.MasterApiSpaceControllerManager;
 import io.smartspaces.master.server.services.ActivityRepository;
-import io.smartspaces.resource.repository.ActivityRepositoryManager;
+import io.smartspaces.resource.repository.ResourceRepositoryManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 import io.smartspaces.util.io.directorywatcher.DirectoryWatcher;
@@ -162,9 +162,9 @@ public class MasterFileControl implements DirectoryWatcherListener {
   private ActivityRepository activityRepository;
 
   /**
-   * Repository manager for activities.
+   * Repository manager for resources.
    */
-  private ActivityRepositoryManager activityRepositoryManager;
+  private ResourceRepositoryManager resourceRepositoryManager;
 
   /**
    * The directory watcher watching the directory for control files.
@@ -293,7 +293,7 @@ public class MasterFileControl implements DirectoryWatcherListener {
   private void calculateActivityHashes() {
     List<Activity> activities = activityRepository.getAllActivities();
     for (Activity activity : activities) {
-      activityRepositoryManager.calculateBundleContentHash(activity);
+      resourceRepositoryManager.calculateBundleContentHash(activity);
       activityRepository.saveActivity(activity);
     }
   }
@@ -340,10 +340,10 @@ public class MasterFileControl implements DirectoryWatcherListener {
   }
 
   /**
-   * @param activityRepositoryManager
-   *          the activityRepositoryManager to set
+   * @param resourceRepositoryManager
+   *          the resource repository manager to set
    */
-  public void setActivityRepositoryManager(ActivityRepositoryManager activityRepositoryManager) {
-    this.activityRepositoryManager = activityRepositoryManager;
+  public void setResourceRepositoryManager(ResourceRepositoryManager resourceRepositoryManager) {
+    this.resourceRepositoryManager = resourceRepositoryManager;
   }
 }

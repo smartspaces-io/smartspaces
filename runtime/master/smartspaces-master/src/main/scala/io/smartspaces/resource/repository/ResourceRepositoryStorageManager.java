@@ -18,6 +18,7 @@
 package io.smartspaces.resource.repository;
 
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.resource.NamedVersionedResource;
 import io.smartspaces.resource.NamedVersionedResourceCollection;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.Version;
@@ -81,6 +82,9 @@ public interface ResourceRepositoryStorageManager extends ManagedResource {
   /**
    * Stage a resource.
    *
+   * <p>
+   * The resource stream is closed.
+   * 
    * @param resourceStream
    *          a stream of the incoming resource
    *
@@ -116,6 +120,21 @@ public interface ResourceRepositoryStorageManager extends ManagedResource {
    */
   InputStream getStagedResourceDescription(String descriptorFileName, String stageHandle)
       throws SmartSpacesException;
+  
+  /**
+   * Get the name and version of the staged file.
+   *
+   * @param stageHandle
+   *          the handle which was returned by
+   *          {@link #stageResource(InputStream)}
+   *
+   * @return the name and version of the resource
+   *
+   * @throws SmartSpacesException
+   *           if the stage handle is invalid or the activity contains no
+   *           description file
+   */
+  NamedVersionedResource getNameVersionResource(String stageHandle) throws SmartSpacesException;
 
   /**
    * Get an {@link InputStream} for the entire activity bundle.

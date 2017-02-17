@@ -25,8 +25,9 @@ import io.smartspaces.domain.support.ActivityDescriptionReader;
 import io.smartspaces.domain.support.ActivityUtils;
 import io.smartspaces.domain.support.JdomActivityDescriptionReader;
 import io.smartspaces.master.server.services.ActivityRepository;
+import io.smartspaces.resource.NamedVersionedResource;
 import io.smartspaces.resource.Version;
-import io.smartspaces.resource.repository.ActivityRepositoryManager;
+import io.smartspaces.resource.repository.ResourceRepositoryManager;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
 import io.smartspaces.util.data.resource.MessageDigestResourceSignatureCalculator;
 import io.smartspaces.util.data.resource.ResourceSignatureCalculator;
@@ -39,11 +40,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * The standard implementation of the {@link ActivityRepositoryManager}.
+ * The standard implementation of the {@link ResourceRepositoryManager}.
  *
  * @author Keith M. Hughes
  */
-public class StandardActivityRepositoryManager implements ActivityRepositoryManager {
+public class StandardResourceRepositoryManager implements ResourceRepositoryManager {
 
   /**
    * Repository for activities.
@@ -62,6 +63,20 @@ public class StandardActivityRepositoryManager implements ActivityRepositoryMana
       new MessageDigestResourceSignatureCalculator();
 
   @Override
+  public void addBundleResource(InputStream resourceStream) {
+    String stageHandle = repositoryStorageManager.stageResource(resourceStream);
+    try {
+      NamedVersionedResource resource =
+          repositoryStorageManager.getNameVersionResource(stageHandle);
+      repositoryStorageManager.commitResource(
+          ResourceRepositoryStorageManager.RESOURCE_CATEGORY_CONTAINER_BUNDLE, resource.getName(),
+          resource.getVersion(), stageHandle);
+    } finally {
+      repositoryStorageManager.removeStagedReource(stageHandle);
+    }
+  }
+
+  @Override
   public Activity addActivity(InputStream activityStream) {
     String stageHandle = repositoryStorageManager.stageResource(activityStream);
     InputStream activityDescriptionStream = null;
@@ -78,9 +93,8 @@ public class StandardActivityRepositoryManager implements ActivityRepositoryMana
 
       // TODO(keith): Might want to edit what it gives to the import so
       // this may need to move.
-      Activity finalActivity =
-          activityRepository.getActivityByNameAndVersion(activityDescription.getIdentifyingName(),
-              activityDescription.getVersion());
+      Activity finalActivity = activityRepository.getActivityByNameAndVersion(
+          activityDescription.getIdentifyingName(), activityDescription.getVersion());
       if (finalActivity == null) {
         finalActivity = activityRepository.newActivity();
         finalActivity.setIdentifyingName(activityDescription.getIdentifyingName());
@@ -110,10 +124,9 @@ public class StandardActivityRepositoryManager implements ActivityRepositoryMana
   public void calculateBundleContentHash(Activity activity) {
     InputStream inputStream = null;
     try {
-      inputStream =
-          repositoryStorageManager.getResourceStream(
-              ResourceRepositoryStorageManager.RESOURCE_CATEGORY_ACTIVITY,
-              activity.getIdentifyingName(), Version.parseVersion(activity.getVersion()));
+      inputStream = repositoryStorageManager.getResourceStream(
+          ResourceRepositoryStorageManager.RESOURCE_CATEGORY_ACTIVITY,
+          activity.getIdentifyingName(), Version.parseVersion(activity.getVersion()));
       String bundleSignature = resourceSignatureCalculator.getResourceSignature(inputStream);
       activity.setBundleContentHash(bundleSignature);
       inputStream.close();

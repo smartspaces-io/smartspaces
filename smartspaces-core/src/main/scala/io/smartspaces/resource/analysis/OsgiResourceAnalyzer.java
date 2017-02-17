@@ -17,6 +17,7 @@
 
 package io.smartspaces.resource.analysis;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.resource.NamedVersionedResourceCollection;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.Version;
@@ -30,8 +31,6 @@ import java.net.URI;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A resource analyzer for OSGi resources.
@@ -53,7 +52,7 @@ public class OsgiResourceAnalyzer implements ResourceAnalyzer {
   /**
    * Logger for the analyzer.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * The file support to use.
@@ -66,7 +65,7 @@ public class OsgiResourceAnalyzer implements ResourceAnalyzer {
    * @param log
    *          the log to use
    */
-  public OsgiResourceAnalyzer(Log log) {
+  public OsgiResourceAnalyzer(ExtendedLog log) {
     this.log = log;
   }
 
@@ -99,14 +98,13 @@ public class OsgiResourceAnalyzer implements ResourceAnalyzer {
 
             resources.addResource(resource.getName(), resource.getVersion(), resource);
           } else {
-            log.warn(String.format("Resource %s is not a proper OSGi bundle "
+            log.formatWarn("Resource %s is not a proper OSGi bundle "
                 + "(missing symbolic name and/or version) and is being ignored.",
-                file.getAbsolutePath()));
+                file.getAbsolutePath());
           }
         } catch (IOException e) {
-          log.error(
-              String.format("Could not open resource file jar manifest for %s",
-                  file.getAbsolutePath()), e);
+          log.formatError(e, "Could not open resource file jar manifest for %s",
+                  file.getAbsolutePath());
         } finally {
           // For some reason Closeables does not work with JarFile despite it
           // claiming it is Closeable in the Javadoc.

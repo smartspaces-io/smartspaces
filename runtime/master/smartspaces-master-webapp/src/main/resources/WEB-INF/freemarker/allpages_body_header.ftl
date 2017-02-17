@@ -33,6 +33,8 @@
 <li>&bull;</li>
 <li><a class="uglylink" onclick="return ugly.changePage('/smartspaces/troubleshoot/all.html', event);">Troubleshoot</a></li>
 <li>&bull;</li>
+<li><a class="uglylink" onclick="return ugly.changePage('/smartspaces/resource/all.html', event);">Resources</a></li>
+<li>&bull;</li>
 <li><a class="uglylink" onclick="return ugly.changePage('/smartspaces/admin/namedscript/all.html', event);">Scripts</a></li>
 <li>&bull;</li>
 <li><a class="uglylink" onclick="return ugly.changePage('/smartspaces/admin/support/index.html', event);">Support</a></li>

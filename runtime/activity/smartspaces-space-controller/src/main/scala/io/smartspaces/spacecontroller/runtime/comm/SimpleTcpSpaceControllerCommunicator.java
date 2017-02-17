@@ -190,11 +190,15 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
         break;
 
       case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_SHUTDOWN_ACTIVITIES:
+        spaceEnvironment.getLog().info("Received shutdown all live activities request");
+
         controllerControl.shutdownAllLiveActivities();
 
         break;
 
       case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_SHUTDOWN_CONTROLLER:
+        spaceEnvironment.getLog().info("Received shutdown request");
+
         controllerControl.shutdownControllerContainer();
 
         break;

@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,9 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.master.ui.internal.web.activity;
-
-import io.smartspaces.master.server.services.ActivityRepository;
+package io.smartspaces.master.ui.internal.web.resource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,15 +25,16 @@ import org.springframework.webflow.execution.repository.NoSuchFlowExecutionExcep
 import org.springframework.webflow.mvc.servlet.AbstractFlowHandler;
 
 /**
- * Spring Webflow handler for new activities.
+ * Spring Webflow handler for new resources.
  *
  * @author Keith M. Hughes
  */
-public class NewActivityFlowHandler extends AbstractFlowHandler {
+public class ResourceUploadFlowHandler extends AbstractFlowHandler {
 
-  private static final String DEFAULT_URL = "/activity/all.html";
-
-  private ActivityRepository activityRepository;
+	/**
+	 * The default URL for the flow.
+	 */
+  private static final String DEFAULT_URL = "/resource/all.html";
 
   @Override
   public String handleExecutionOutcome(FlowExecutionOutcome outcome, HttpServletRequest request,
@@ -53,20 +51,4 @@ public class NewActivityFlowHandler extends AbstractFlowHandler {
       throw e;
     }
   }
-
-  /**
-   * @return the activityRepository
-   */
-  public ActivityRepository getActivityRepository() {
-    return activityRepository;
-  }
-
-  /**
-   * @param activityRepository
-   *          the activityRepository to set
-   */
-  public void setActivityRepository(ActivityRepository activityRepository) {
-    this.activityRepository = activityRepository;
-  }
-
 }

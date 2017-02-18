@@ -20,6 +20,7 @@ package io.smartspaces.resource.repository.internal;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.common.ResourceRepositoryUploadChannel;
 import io.smartspaces.resource.Version;
+import io.smartspaces.resource.repository.ResourceCategory;
 import io.smartspaces.resource.repository.ResourceRepositoryServer;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
@@ -157,14 +158,14 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
   }
 
   @Override
-  public String getResourceUri(String category, String name, Version version) {
-    // TODO(keith): Get this from something fancier which we can store resources
+  public String getResourceUri(ResourceCategory category, String name, Version version) {
+    // TODO(keith): Get this from something fancier that we can store resources
     // in, get their meta-data, etc.
-    return repositoryBaseUrl + "/" + category + "/" + name + "/" + version;
+    return repositoryBaseUrl + "/" + category.getComponent() + "/" + name + "/" + version;
   }
 
   @Override
-  public OutputStream createResourceOutputStream(String category, String name, Version version) {
+  public OutputStream createResourceOutputStream(ResourceCategory category, String name, Version version) {
     return repositoryStorageManager.newResourceOutputStream(category, name, version);
   }
 
@@ -181,7 +182,7 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
         String.format("Got resource repository request %s", request.getUri()));
 
     String[] pathComponents = request.getUri().getPath().split("\\/");
-    String category = pathComponents[pathComponents.length - 3];
+    ResourceCategory category = ResourceCategory.getCategoryFromComponent(pathComponents[pathComponents.length - 3]);
     String name = pathComponents[pathComponents.length - 2];
     Version version = Version.parseVersion(pathComponents[pathComponents.length - 1]);
 

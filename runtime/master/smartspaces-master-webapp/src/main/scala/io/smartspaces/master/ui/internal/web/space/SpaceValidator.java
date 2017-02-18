@@ -17,7 +17,7 @@
 
 package io.smartspaces.master.ui.internal.web.space;
 
-import io.smartspaces.domain.space.Space;
+import io.smartspaces.domain.basic.Space;
 import io.smartspaces.master.ui.internal.web.FormObjectValidator;
 
 import org.springframework.validation.Errors;

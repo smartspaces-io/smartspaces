@@ -61,6 +61,9 @@
       io.smartspaces.master.server.services.internal.jpa.domain.JpaSpaceControllerMetadataItem
     </class>
     <class>
+      io.smartspaces.master.server.services.internal.jpa.domain.JpaResource
+    </class>
+    <class>
       io.smartspaces.master.server.services.internal.jpa.domain.JpaNamedScript
     </class>
     <class>

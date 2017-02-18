@@ -26,13 +26,15 @@ import io.smartspaces.domain.basic.ConfigurationParameter;
 import io.smartspaces.domain.basic.GroupLiveActivity.GroupLiveActivityDependency;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
+import io.smartspaces.domain.basic.Resource;
+import io.smartspaces.domain.basic.Space;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.basic.SpaceControllerConfiguration;
 import io.smartspaces.domain.basic.SpaceControllerMode;
-import io.smartspaces.domain.space.Space;
 import io.smartspaces.domain.system.NamedScript;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.AutomationRepository;
+import io.smartspaces.master.server.services.ResourceRepository;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
 import io.smartspaces.time.provider.TimeProvider;
 
@@ -84,6 +86,11 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
   private Map<String, Space> spaces = new HashMap<>();
 
   /**
+   * Map of resource IDs from the description to the created resources.
+   */
+  private Map<String, Resource> resources = new HashMap<>();
+
+  /**
    * Import a master domain model.
    *
    * @param model
@@ -92,14 +99,16 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
    *          the repository for activity entities
    * @param controllerRepository
    *          the repository for controller entities
+   * @param resourceRepository
+   *          the resource repository
    * @param automationRepository
    *          the repository for automation entities
    * @param timeProvider
    *          the time provider to use
    */
   public void importModel(String model, ActivityRepository activityRepository,
-      SpaceControllerRepository controllerRepository, AutomationRepository automationRepository,
-      TimeProvider timeProvider) {
+      SpaceControllerRepository controllerRepository, ResourceRepository resourceRepository,
+      AutomationRepository automationRepository, TimeProvider timeProvider) {
     Element rootElement = readDescription(model);
 
     if (!ELEMENT_NAME_DESCRIPTION_ROOT_ELEMENT.equals(rootElement.getName())) {
@@ -113,6 +122,7 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
     getLiveActivities(rootElement, activityRepository);
     getLiveActivityGroups(rootElement, activityRepository);
     getSpaces(rootElement, activityRepository);
+    getResources(rootElement, resourceRepository);
     getNamedScripts(rootElement, automationRepository);
   }
 
@@ -633,6 +643,65 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
         space.addSpace(subspace);
       }
     }
+  }
+
+  /**
+   * Get all resources from the description.
+   *
+   * @param rootElement
+   *          the root element of the XML description
+   * @param resourceRepository
+   *          repository for resource entities
+   */
+  private void getResources(Element rootElement, ResourceRepository resourceRepository) {
+    Element resourcesElement = rootElement.getChild(ELEMENT_NAME_ROOT_RESOURCES);
+
+    if (resourcesElement != null) {
+      @SuppressWarnings("unchecked")
+      List<Element> resourceElements =
+          resourcesElement.getChildren(ELEMENT_NAME_INDIVIDUAL_RESOURCE);
+      for (Element resourceElement : resourceElements) {
+        getResource(resourceElement, resourceRepository);
+      }
+    }
+  }
+
+  /**
+   * Get an individual resource.
+   *
+   * @param resourceElement
+   *          the resource XML element
+   * @param resourceRepository
+   *          repository for resource entities
+   */
+  private void getResource(Element resourceElement, ResourceRepository resourceRepository) {
+    String id = resourceElement.getAttributeValue(ATTRIBUTE_NAME_ID);
+
+    Resource resource = resourceRepository.newResource();
+
+    String identifyingName =
+        resourceElement.getChildTextTrim(ELEMENT_NAME_RESOURCE_IDENTIFYING_NAME);
+    String version = resourceElement.getChildTextTrim(ELEMENT_NAME_RESOURCE_VERSION);
+
+    resource.setIdentifyingName(identifyingName);
+    resource.setVersion(version);
+
+    String lastUploadDateString =
+        resourceElement.getAttributeValue(ATTRIBUTE_NAME_LAST_UPLOAD_DATE);
+    if (lastUploadDateString != null) {
+      resource.setLastUploadDate(new Date(Long.parseLong(lastUploadDateString)));
+    }
+
+
+    String bundleContentHash =
+        resourceElement.getChildTextTrim(ELEMENT_NAME_RESOURCE_BUNDLE_CONTENT_HASH);
+    if (bundleContentHash != null) {
+      resource.setBundleContentHash(bundleContentHash);
+    }
+
+    resources.put(id, resource);
+
+    resourceRepository.saveResource(resource);
   }
 
   /**

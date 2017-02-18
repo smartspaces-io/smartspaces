@@ -25,13 +25,15 @@ import io.smartspaces.domain.basic.ConfigurationParameter;
 import io.smartspaces.domain.basic.GroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
+import io.smartspaces.domain.basic.Resource;
+import io.smartspaces.domain.basic.Space;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.basic.SpaceControllerConfiguration;
 import io.smartspaces.domain.basic.SpaceControllerMode;
-import io.smartspaces.domain.space.Space;
 import io.smartspaces.domain.system.NamedScript;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.AutomationRepository;
+import io.smartspaces.master.server.services.ResourceRepository;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
 
 import org.jdom2.CDATA;
@@ -63,13 +65,15 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
    *          the repository for activity entities
    * @param controllerRepository
    *          the repository for controller entities
+   * @param resourceRepository
+   *          the repository for resources
    * @param automationRepository
    *          the repository for automation entities
    *
    * @return the XML description
    */
   public String newModel(ActivityRepository activityRepository,
-      SpaceControllerRepository controllerRepository, AutomationRepository automationRepository) {
+      SpaceControllerRepository controllerRepository, ResourceRepository resourceRepository, AutomationRepository automationRepository) {
 
     try {
       Element rootElement = new Element(ELEMENT_NAME_DESCRIPTION_ROOT_ELEMENT);
@@ -80,6 +84,7 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
       rootElement.addContent(newLiveActivityEntries(activityRepository));
       rootElement.addContent(newLiveActivityGroupEntries(activityRepository));
       rootElement.addContent(newSpaceEntries(activityRepository));
+      rootElement.addContent(newResourceEntries(resourceRepository));
       rootElement.addContent(newNamedScriptEntries(automationRepository));
 
       StringWriter out = new StringWriter();
@@ -534,8 +539,57 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
   }
 
   /**
-   * Create all named script entries.
+   * Create the resources section.
    *
+   * @param resourceRepository
+   *          repository for the resources
+   *
+   * @return the element for all resources
+   */
+  private Element newResourceEntries(ResourceRepository resourceRepository) {
+    Element resourcesElement = new Element(ELEMENT_NAME_ROOT_RESOURCES);
+
+    for (Resource resource : resourceRepository.getAllResources()) {
+      resourcesElement.addContent(newResourceEntry(resource));
+    }
+
+    return resourcesElement;
+  }
+
+  /**
+   * Create the entry for a specific resource.
+   *
+   * @param resource
+   *          the resource to write
+   *
+   * @return the element for the resource
+   */
+  private Element newResourceEntry(Resource resource) {
+    Element resourceElement = new Element(ELEMENT_NAME_INDIVIDUAL_RESOURCE);
+
+    resourceElement.setAttribute(ATTRIBUTE_NAME_ID, resource.getId())
+        .addContent(new Element(ELEMENT_NAME_RESOURCE_IDENTIFYING_NAME)
+            .addContent(resource.getIdentifyingName()))
+        .addContent(new Element(ELEMENT_NAME_RESOURCE_VERSION).addContent(resource.getVersion()));
+
+    Date lastUploadDate = resource.getLastUploadDate();
+    if (lastUploadDate != null) {
+      resourceElement.setAttribute(ATTRIBUTE_NAME_LAST_UPLOAD_DATE,
+          Long.toString(lastUploadDate.getTime()));
+    }
+
+    String bundleContentHash = resource.getBundleContentHash();
+    if (bundleContentHash != null) {
+      resourceElement.addContent(
+          new Element(ELEMENT_NAME_RESOURCE_BUNDLE_CONTENT_HASH).addContent(bundleContentHash));
+    }
+
+    return resourceElement;
+  }
+
+  /**
+   * Create all named script entries.
+   *activity
    * @param automationRepository
    *          repository which contains the scripts
    *

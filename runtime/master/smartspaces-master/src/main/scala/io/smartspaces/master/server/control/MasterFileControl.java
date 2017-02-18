@@ -71,11 +71,6 @@ public class MasterFileControl implements DirectoryWatcherListener {
   public static final String COMMAND_RESTART_HARD = "restart-hard";
 
   /**
-   * The command for forcing the calculation of all activity hashes.
-   */
-  public static final String COMMAND_CALCULATE_ACTIVITY_HASHES = "calculate-activity-hashes";
-
-  /**
    * The command for shutting down all space controllers.
    */
   public static final String COMMAND_SPACE_CONTROLLERS_SHUTDOWN_ALL =
@@ -231,8 +226,6 @@ public class MasterFileControl implements DirectoryWatcherListener {
         spaceSystemControl.hardRestart();;
       } else if (COMMAND_RESTART_SOFT.equalsIgnoreCase(command)) {
         spaceSystemControl.softRestart();
-      } else if (COMMAND_CALCULATE_ACTIVITY_HASHES.equalsIgnoreCase(command)) {
-        calculateActivityHashes();
       } else if (COMMAND_SPACE_CONTROLLERS_SHUTDOWN_ALL.equalsIgnoreCase(command)) {
         masterApiSpaceControllerManager.shutdownAllSpaceControllers();
       } else if (COMMAND_SPACE_CONTROLLERS_SHUTDOWN_ALL_ACTIVITIES.equalsIgnoreCase(command)) {
@@ -280,21 +273,6 @@ public class MasterFileControl implements DirectoryWatcherListener {
     } catch (Exception e) {
       spaceEnvironment.getLog().error(
           String.format("Exception while executing master file control %s", command), e);
-    }
-  }
-
-  /**
-   * Calculate and update the hashes for all current activities. This is
-   * necessary for working with legacy systems that have already uploaded
-   * activities.
-   *
-   * TODO(peringknife): Remove this after all centers have been upgraded.
-   */
-  private void calculateActivityHashes() {
-    List<Activity> activities = activityRepository.getAllActivities();
-    for (Activity activity : activities) {
-      resourceRepositoryManager.calculateBundleContentHash(activity);
-      activityRepository.saveActivity(activity);
     }
   }
 

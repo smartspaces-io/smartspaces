@@ -20,6 +20,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Map;
+
+import io.smartspaces.master.api.master.MasterApiResourceManager;
+import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.ui.internal.web.BaseActiveSpaceMasterController;
 
 /**
@@ -31,16 +35,33 @@ import io.smartspaces.master.ui.internal.web.BaseActiveSpaceMasterController;
 public class ResourceController extends BaseActiveSpaceMasterController {
 
   /**
+   * The master API manager for resources.
+   */
+  private MasterApiResourceManager masterApiResourceManager;
+
+  /**
    * Display a list of all resources.
    *
-   * @return Model and view for controller list display.
+   * @return model and view for resource list display
    */
   @RequestMapping("/resource/all.html")
   public ModelAndView listResources() {
+    Map<String, Object> response = masterApiResourceManager.getResourcesByFilter(null);
     ModelAndView mav = getModelAndView();
 
     mav.setViewName("resource/ResourceViewAll");
+    mav.addObject("resources", response.get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA));
 
     return mav;
+  }
+
+  /**
+   * Set the master API manager for resources.
+   * 
+   * @param masterApiResourceManager
+   *          the master API manager for resources
+   */
+  public void setMasterApiResourceManager(MasterApiResourceManager masterApiResourceManager) {
+    this.masterApiResourceManager = masterApiResourceManager;
   }
 }

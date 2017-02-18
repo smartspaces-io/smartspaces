@@ -18,8 +18,8 @@
 package io.smartspaces.master.ui.internal.web.space;
 
 import io.smartspaces.domain.basic.LiveActivityGroup;
-import io.smartspaces.domain.space.Space;
-import io.smartspaces.domain.space.pojo.SimpleSpace;
+import io.smartspaces.domain.basic.Space;
+import io.smartspaces.domain.basic.pojo.SimpleSpace;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.ui.internal.web.UiUtilities;
 

@@ -37,21 +37,6 @@ import java.net.URI;
 public interface ResourceRepositoryStorageManager extends ManagedResource {
 
   /**
-   * Resource category for bundle resources.
-   */
-  String RESOURCE_CATEGORY_CONTAINER_BUNDLE = "bundle";
-
-  /**
-   * Resource category for activities.
-   */
-  String RESOURCE_CATEGORY_ACTIVITY = "activity";
-
-  /**
-   * Resource category for data.
-   */
-  String RESOURCE_CATEGORY_DATA = "data";
-
-  /**
    * Get the name the resource has in the repository.
    *
    * @param category
@@ -63,7 +48,7 @@ public interface ResourceRepositoryStorageManager extends ManagedResource {
    *
    * @return the fully qualified name of the resource
    */
-  String getRepositoryResourceName(String category, String name, Version version);
+  String getRepositoryResourceName(ResourceCategory category, String name, Version version);
 
   /**
    * Does the repository contain a resource?
@@ -77,7 +62,7 @@ public interface ResourceRepositoryStorageManager extends ManagedResource {
    *
    * @return {@code true} if the repository contains the resource
    */
-  boolean containsResource(String category, String name, Version version);
+  boolean containsResource(ResourceCategory category, String name, Version version);
 
   /**
    * Stage a resource.
@@ -161,7 +146,7 @@ public interface ResourceRepositoryStorageManager extends ManagedResource {
    * @param stageHandle
    *          the staging handle for the resource
    */
-  void commitResource(String category, String name, Version version, String stageHandle);
+  void commitResource(ResourceCategory category, String name, Version version, String stageHandle);
 
   /**
    * Get a stream for a given resource.
@@ -179,7 +164,7 @@ public interface ResourceRepositoryStorageManager extends ManagedResource {
    * @return the input stream for the resource, or {@code null} if no such
    *         resource
    */
-  InputStream getResourceStream(String category, String name, Version version);
+  InputStream getResourceStream(ResourceCategory category, String name, Version version);
 
   /**
    * Create an output stream for writing a new resource into the repository.
@@ -193,7 +178,7 @@ public interface ResourceRepositoryStorageManager extends ManagedResource {
    *
    * @return stream to use for writing the resource
    */
-  OutputStream newResourceOutputStream(String category, String name, Version version);
+  OutputStream newResourceOutputStream(ResourceCategory category, String name, Version version);
 
   /**
    * Get all the resources available in a give category.
@@ -204,7 +189,7 @@ public interface ResourceRepositoryStorageManager extends ManagedResource {
    * @return all resources in the given category with a URI for the resource
    */
   NamedVersionedResourceCollection<NamedVersionedResourceWithData<URI>> getAllResources(
-      String category);
+      ResourceCategory category);
 
   /**
    * Get the base location for files from a give category.
@@ -214,5 +199,5 @@ public interface ResourceRepositoryStorageManager extends ManagedResource {
    *
    * @return the base location
    */
-  File getBaseLocation(String category);
+  File getBaseLocation(ResourceCategory category);
 }

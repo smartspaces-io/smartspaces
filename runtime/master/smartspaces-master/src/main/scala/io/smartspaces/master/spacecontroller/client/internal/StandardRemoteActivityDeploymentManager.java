@@ -35,18 +35,18 @@ import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.ResourceDependencyReference;
 import io.smartspaces.resource.Version;
 import io.smartspaces.resource.VersionRange;
+import io.smartspaces.resource.repository.ResourceCategory;
 import io.smartspaces.resource.repository.ResourceRepositoryServer;
-import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.uuid.JavaUuidGenerator;
 import io.smartspaces.util.uuid.UuidGenerator;
+
+import com.google.common.collect.Maps;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.google.common.collect.Maps;
 
 /**
  * The standard remote activity installer.
@@ -119,7 +119,7 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
 
     MasterActivityDeploymentRequestTracker tracker = new MasterActivityDeploymentRequestTracker(
         activeLiveActivity, transactionId,
-        repositoryServer.getResourceUri(ResourceRepositoryStorageManager.RESOURCE_CATEGORY_ACTIVITY,
+        repositoryServer.getResourceUri(ResourceCategory.RESOURCE_CATEGORY_ACTIVITY,
             activity.getIdentifyingName(), Version.parseVersion(activity.getVersion())),
         spaceEnvironment.getTimeProvider().getCurrentTime());
 

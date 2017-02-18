@@ -16,14 +16,23 @@
 
 package io.smartspaces.master.api.master.internal
 
+import io.smartspaces.domain.basic.Resource
 import io.smartspaces.master.api.master.MasterApiResourceManager
+import io.smartspaces.master.api.master.MasterApiUtilities
 import io.smartspaces.master.api.messages.MasterApiMessageSupport
 import io.smartspaces.master.api.messages.MasterApiMessages
+import io.smartspaces.master.server.services.ResourceRepository
 import io.smartspaces.resource.managed.IdempotentManagedResource
 import io.smartspaces.resource.repository.ResourceRepositoryManager
 
 import java.io.InputStream
+import java.util.ArrayList
+import java.util.Collections
+import java.util.HashMap
+import java.util.List
 import java.util.Map
+
+import scala.collection.JavaConversions.asScalaBuffer
 
 /**
  * Standard Master API manager for resource operations.
@@ -31,19 +40,51 @@ import java.util.Map
  * @author Keith M. Hughes
  */
 class StandardMasterApiResourceManager extends BaseMasterApiManager with MasterApiResourceManager with IdempotentManagedResource {
-  
+
+  /**
+   * The repository for resources.
+   */
+  private var resourceRepository: ResourceRepository = null
+
   /**
    * The repository manager for resources.
    */
   private var resourceRepositoryManager: ResourceRepositoryManager = null
 
+  override def getResourcesByFilter(filter: String): Map[String, Object] = {
+    val responseData: List[Map[String, Object]] = new ArrayList()
+
+    try {
+      val filterExpression = expressionFactory.getFilterExpression(filter)
+
+      val resources = resourceRepository.getResources(filterExpression)
+      Collections.sort(resources, MasterApiUtilities.RESOURCE_BY_NAME_AND_VERSION_COMPARATOR)
+      resources.foreach { resource =>
+        responseData.add(extractBasicResourceApiData(resource))
+      }
+
+      return MasterApiMessageSupport.getSuccessResponse(responseData);
+    } catch {
+      case e: Throwable =>
+        val response =
+          MasterApiMessageSupport.getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE,
+            e)
+
+        logResponseError("Attempt to get resource data failed", response)
+
+        return response
+    }
+  }
+
   override def saveResource(fileName: String, resourceContentStream: InputStream): Map[String, Object] = {
     try {
-      resourceRepositoryManager.addBundleResource(resourceContentStream)
+      val resource = resourceRepositoryManager.addBundleResource(resourceContentStream)
+      
+      spaceEnvironment.getLog.info(s"Successfully saved resource ${resource}")
 
       return MasterApiMessageSupport.getSuccessResponse()
     } catch {
-      case e: Throwable => 
+      case e: Throwable =>
         val response =
           MasterApiMessageSupport.getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE,
             e)
@@ -53,14 +94,44 @@ class StandardMasterApiResourceManager extends BaseMasterApiManager with MasterA
         return response
     }
   }
-  
+
+  /**
+   * Get basic information about a resource.
+   *
+   * @param resource
+   *          the resource
+   *
+   * @return a Master API coded object giving the basic information
+   */
+  private def extractBasicResourceApiData(resource: Resource): Map[String, Object] = {
+    val data: Map[String, Object] = new HashMap()
+
+    data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID, resource.getId())
+    data.put("identifyingName", resource.getIdentifyingName())
+    data.put("version", resource.getVersion())
+    data.put("lastUploadDate", resource.getLastUploadDate())
+    data.put("bundleContentHash", resource.getBundleContentHash())
+
+    return data
+  }
+
   /**
    * Set the resource repository manager.
-   * 
+   *
    * @param resourceRepositoryManager
    *           the resource repository manager
    */
   def setResourceRepositoryManager(resourceRepositoryManager: ResourceRepositoryManager): Unit = {
     this.resourceRepositoryManager = resourceRepositoryManager
+  }
+
+  /**
+   * Set the resource repository.
+   *
+   * @param resourceRepository
+   *           the resource repository
+   */
+  def setResourceRepository(resourceRepository: ResourceRepository): Unit = {
+    this.resourceRepository = resourceRepository
   }
 }

@@ -18,6 +18,8 @@
 package io.smartspaces.resource.repository;
 
 import io.smartspaces.domain.basic.Activity;
+import io.smartspaces.domain.basic.Resource;
+import io.smartspaces.resource.Version;
 
 import java.io.InputStream;
 
@@ -40,9 +42,9 @@ public interface ResourceRepositoryManager {
    * @param resourceStream
    *          the stream containing the resource
    *
-   * @return the activity loaded
+   * @return the resource loaded
    */
-  void addBundleResource(InputStream resourceStream);
+  Resource addBundleResource(InputStream resourceStream);
 
   /**
    * Add an activity to the repository.
@@ -58,11 +60,17 @@ public interface ResourceRepositoryManager {
   Activity addActivity(InputStream activityStream);
 
   /**
-   * Calculate and update the content hash for the activity bundle. This updates
-   * the activity's hash record with the calculated hash.
+   * Calculate and update the content hash for the specified bundle.
    *
-   * @param activity
-   *          activity for which to update the bundle hash
+   * @param category
+   *          the source category for the bundle
+   * @param identifyingName
+   *          the identifying name for the bundle
+   * @param version
+   *          the version of the bundle
+   * 
+   * @return the content hash
    */
-  void calculateBundleContentHash(Activity activity);
+  String calculateBundleContentHash(ResourceCategory category, String identifyingName,
+      Version version);
 }

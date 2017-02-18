@@ -29,7 +29,7 @@ import java.util.Map;
  *
  * <p>
  * The identifying name must be globally unique, but be vaguely readable, e.g.
- * com.google.blobtracker
+ * io.smartspaces.blobtracker
  *
  * @author Keith M. Hughes
  */

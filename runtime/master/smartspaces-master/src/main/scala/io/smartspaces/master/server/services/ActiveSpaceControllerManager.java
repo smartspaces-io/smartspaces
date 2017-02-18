@@ -19,8 +19,8 @@ package io.smartspaces.master.server.services;
 
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
+import io.smartspaces.domain.basic.Space;
 import io.smartspaces.domain.basic.SpaceController;
-import io.smartspaces.domain.space.Space;
 import io.smartspaces.master.server.services.model.ActiveLiveActivity;
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
 

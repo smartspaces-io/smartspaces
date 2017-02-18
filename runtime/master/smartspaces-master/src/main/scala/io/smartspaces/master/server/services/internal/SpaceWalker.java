@@ -17,7 +17,7 @@
 
 package io.smartspaces.master.server.services.internal;
 
-import io.smartspaces.domain.space.Space;
+import io.smartspaces.domain.basic.Space;
 
 import java.util.LinkedList;
 import java.util.Queue;

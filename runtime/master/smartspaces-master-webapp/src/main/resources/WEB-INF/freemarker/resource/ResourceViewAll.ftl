@@ -35,5 +35,24 @@
 <div id="commandResult">
 </div>
 
+<table class="activity-list">
+  <tr>
+    <th></th>
+    <th>Identifying Name</th>
+    <th>Version</th>
+    <th>Last Uploaded</th>
+    <th>Bundle Content Hash</th>
+  </tr>
+<#list resources as resource>
+    <#assign trCss = (resource_index % 2 == 0)?string("even","odd")>
+    <tr class="${trCss}">
+      <td><a class="uglylink" onclick="return ugly.changePage('/smartspaces/resource/${resource.id}/view.html', event);">View</a></td>
+      <td>${resource.identifyingName?html}</td>
+      <td>${resource.version}</td>
+      <td>${resource.lastUploadDate?datetime}</td>
+      <td class="resource-bundle-content-hash"><#if resource.bundleContentHash??>${resource.bundleContentHash}</#if></td>
+    </tr>
+</#list>
+</table>
 </body>
 <html>

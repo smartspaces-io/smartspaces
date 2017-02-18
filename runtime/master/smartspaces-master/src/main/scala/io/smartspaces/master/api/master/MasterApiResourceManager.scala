@@ -44,4 +44,13 @@ trait MasterApiResourceManager extends ManagedResource {
    */
    def saveResource(fileName: String, resourceContentStream: InputStream ): Map[String, Object]
 
+     /**
+   * Get all activities that meet a filter.
+   *
+   * @param filter
+   *          the filter, can be {@code null}
+   *
+   * @return the master API message for all activities that meet the filter
+   */
+  def getResourcesByFilter(filter: String): Map[String, Object]
 }

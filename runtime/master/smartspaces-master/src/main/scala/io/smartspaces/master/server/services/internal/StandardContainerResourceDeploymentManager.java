@@ -27,6 +27,7 @@ import io.smartspaces.resource.NamedVersionedResourceCollection;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.ResourceDependency;
 import io.smartspaces.resource.ResourceDependencyReference;
+import io.smartspaces.resource.repository.ResourceCategory;
 import io.smartspaces.resource.repository.ResourceRepositoryServer;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
@@ -103,7 +104,7 @@ public class StandardContainerResourceDeploymentManager
 
     NamedVersionedResourceCollection<NamedVersionedResourceWithData<URI>> allResources =
         resourceRepositoryStorageManager
-            .getAllResources(ResourceRepositoryStorageManager.RESOURCE_CATEGORY_CONTAINER_BUNDLE);
+            .getAllResources(ResourceCategory.RESOURCE_CATEGORY_CONTAINER_BUNDLE);
     for (ResourceDependency dependency : dependencies) {
       NamedVersionedResourceWithData<URI> resource =
           allResources.getResource(dependency.getName(), dependency.getVersionRange());
@@ -111,7 +112,7 @@ public class StandardContainerResourceDeploymentManager
         results.add(resource);
       } else {
         String location = resourceRepositoryStorageManager
-            .getBaseLocation(ResourceRepositoryStorageManager.RESOURCE_CATEGORY_CONTAINER_BUNDLE)
+            .getBaseLocation(ResourceCategory.RESOURCE_CATEGORY_CONTAINER_BUNDLE)
             .getAbsolutePath();
         throw new SimpleSmartSpacesException(String.format(
             "Could not find a resource for the dependency %s %s from the master repository %s",
@@ -150,7 +151,7 @@ public class StandardContainerResourceDeploymentManager
       commitRequest.addItem(new ContainerResourceDeploymentItem(resource.getName(),
           resource.getVersion(), ContainerResourceLocation.USER_BOOTSTRAP, resourceSignature,
           repositoryServer.getResourceUri(
-              ResourceRepositoryStorageManager.RESOURCE_CATEGORY_CONTAINER_BUNDLE,
+              ResourceCategory.RESOURCE_CATEGORY_CONTAINER_BUNDLE,
               resource.getName(), resource.getVersion()), fileSupport.getResourceName(resourceUri)));
     }
 

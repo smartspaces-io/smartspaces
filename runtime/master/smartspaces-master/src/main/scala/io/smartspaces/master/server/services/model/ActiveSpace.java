@@ -17,7 +17,7 @@
 
 package io.smartspaces.master.server.services.model;
 
-import io.smartspaces.domain.space.Space;
+import io.smartspaces.domain.basic.Space;
 
 /**
  * A {@link Space} which is now active in the system.

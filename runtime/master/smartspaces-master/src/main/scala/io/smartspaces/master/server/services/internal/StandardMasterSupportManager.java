@@ -20,6 +20,7 @@ package io.smartspaces.master.server.services.internal;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.AutomationRepository;
 import io.smartspaces.master.server.services.MasterSupportManager;
+import io.smartspaces.master.server.services.ResourceRepository;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
 import io.smartspaces.master.server.services.internal.support.JdomMasterDomainModelCreator;
 import io.smartspaces.master.server.services.internal.support.JdomMasterDomainModelImporter;
@@ -38,9 +39,14 @@ public class StandardMasterSupportManager implements MasterSupportManager {
   private ActivityRepository activityRepository;
 
   /**
-   * Repository for controller entities.
+   * Repository for space controller entities.
    */
   private SpaceControllerRepository spaceControllerRepository;
+
+  /**
+   * Repository for resource entities.
+   */
+  private ResourceRepository resourceRepository;
 
   /**
    * Repository for automation entities.
@@ -67,7 +73,8 @@ public class StandardMasterSupportManager implements MasterSupportManager {
     spaceEnvironment.getLog().info("Exporting master domain model");
     JdomMasterDomainModelCreator creator = new JdomMasterDomainModelCreator();
 
-    return creator.newModel(activityRepository, spaceControllerRepository, automationRepository);
+    return creator.newModel(activityRepository, spaceControllerRepository, resourceRepository,
+        automationRepository);
   }
 
   @Override
@@ -76,7 +83,7 @@ public class StandardMasterSupportManager implements MasterSupportManager {
     try {
       JdomMasterDomainModelImporter importer = new JdomMasterDomainModelImporter();
 
-      importer.importModel(model, activityRepository, spaceControllerRepository,
+      importer.importModel(model, activityRepository, spaceControllerRepository, resourceRepository,
           automationRepository, spaceEnvironment.getTimeProvider());
 
       spaceEnvironment.getLog().info("Master domain model imported successfully");
@@ -99,6 +106,16 @@ public class StandardMasterSupportManager implements MasterSupportManager {
    */
   public void setSpaceControllerRepository(SpaceControllerRepository spaceControllerRepository) {
     this.spaceControllerRepository = spaceControllerRepository;
+  }
+
+  /**
+   * Set the resource repository.
+   * 
+   * @param resourceRepository
+   *          the resource repository
+   */
+  public void setResourceRepository(ResourceRepository resourceRepository) {
+    this.resourceRepository = resourceRepository;
   }
 
   /**

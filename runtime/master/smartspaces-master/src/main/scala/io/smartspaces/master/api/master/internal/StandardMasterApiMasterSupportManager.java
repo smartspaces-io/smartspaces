@@ -25,6 +25,7 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,8 +34,8 @@ import java.util.Map;
  *
  * @author Keith M. Hughes
  */
-public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager implements
-    MasterApiMasterSupportManager {
+public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
+    implements MasterApiMasterSupportManager {
 
   /**
    * The master support manager.
@@ -58,8 +59,8 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager 
     } catch (Throwable e) {
       spaceEnvironment.getLog().error("Error while exporting master domain model", e);
 
-      return MasterApiMessageSupport.getFailureResponse(
-          MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+      return MasterApiMessageSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
 
@@ -78,48 +79,60 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager 
     } catch (Throwable e) {
       spaceEnvironment.getLog().error("Error while importing master domain model", e);
 
-      return MasterApiMessageSupport.getFailureResponse(
-          MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+      return MasterApiMessageSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
 
   @Override
   public Map<String, Object> exportToFileSystemMasterDomainModel() {
+    File masterDomainFile = fileSupport.newFile(MASTER_DOMAIN_FILE);
+
     try {
       String model = masterSupportManager.getMasterDomainModel();
 
-      fileSupport.writeFile(fileSupport.newFile(MASTER_DOMAIN_FILE), model);
+      fileSupport.writeFile(masterDomainFile, model);
+
+      spaceEnvironment.getLog().formatInfo("Exported master domain file to %s",
+          fileSupport.getAbsolutePath(masterDomainFile));
 
       return MasterApiMessageSupport.getSimpleSuccessResponse();
     } catch (Throwable e) {
-      spaceEnvironment.getLog().error("Error while exporting master domain model", e);
+      spaceEnvironment.getLog().formatError(e,
+          "Error while exporting master domain model to file %s",
+          fileSupport.getAbsolutePath(masterDomainFile));
 
-      return MasterApiMessageSupport.getFailureResponse(
-          MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+      return MasterApiMessageSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
 
   @Override
   public Map<String, Object> importFromFileSystemMasterDomainModel() {
+    File masterDomainFile = fileSupport.newFile(MASTER_DOMAIN_FILE);
     try {
-      String model = fileSupport.readFile(fileSupport.newFile(MASTER_DOMAIN_FILE));
+      String model = fileSupport.readFile(masterDomainFile);
 
       masterSupportManager.importMasterDomainModel(model);
+      
+      spaceEnvironment.getLog().formatInfo("Imported master domain file from %s",
+          fileSupport.getAbsolutePath(masterDomainFile));
 
       return MasterApiMessageSupport.getSimpleSuccessResponse();
     } catch (Throwable e) {
-      spaceEnvironment.getLog().error("Error while importing master domain model", e);
+      spaceEnvironment.getLog().formatError(e,
+          "Error while importing master domain model from file %s",
+          fileSupport.getAbsolutePath(masterDomainFile));
 
-      return MasterApiMessageSupport.getFailureResponse(
-          MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+      return MasterApiMessageSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
 
   @Override
   public Map<String, Object> getSmartSpacesVersion() {
     Map<String, Object> data = new HashMap<>();
-    data.put(
-        MasterApiMessages.MASTER_API_PARAMETER_NAME_SMART_SPACES_VERSION,
+    data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_SMART_SPACES_VERSION,
         spaceEnvironment.getSystemConfiguration().getPropertyString(
             SmartSpacesEnvironment.CONFIGURATION_NAME_SMARTSPACES_VERSION,
             MasterApiMessages.MASTER_API_PARAMETER_VALUE_SMART_SPACES_VERSION_UNKNOWN));

@@ -24,19 +24,15 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
+
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.common.ResourceRepositoryUploadChannel;
-import io.smartspaces.master.server.services.internal.StandardMasterDataBundleManager;
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.resource.Version;
+import io.smartspaces.resource.repository.ResourceCategory;
 import io.smartspaces.resource.repository.ResourceRepositoryServer;
 import io.smartspaces.util.data.resource.CopyableResource;
 import io.smartspaces.util.data.resource.CopyableResourceListener;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
 
 import org.junit.After;
 import org.junit.Before;
@@ -45,6 +41,11 @@ import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * Test the {@link StandardMasterDataBundleManager}.
@@ -74,7 +75,7 @@ public class StandardMasterDataBundleManagerTest {
   TestResults testResults;
 
   // Various test constants.
-  static final String TEST_RESOURCE_CATEGORY = "data";
+  static final ResourceCategory TEST_RESOURCE_CATEGORY = ResourceCategory.RESOURCE_CATEGORY_DATA;
   static final String TEST_UUID = "1bd6a9762679cba97d6b";
   static final Version TEST_RESOURCE_VERSION =
       StandardMasterDataBundleManager.DATA_BUNDLE_STATIC_VERSION;
@@ -111,7 +112,7 @@ public class StandardMasterDataBundleManagerTest {
       public String answer(InvocationOnMock invocation) throws Exception {
         return combineArgs(invocation.getArguments());
       }
-    }).when(resourceRepositoryServer).getResourceUri(anyString(), anyString(),
+    }).when(resourceRepositoryServer).getResourceUri(Matchers.any(ResourceCategory.class), anyString(),
         Matchers.any(Version.class));
 
     doAnswer(new Answer<OutputStream>() {
@@ -122,7 +123,7 @@ public class StandardMasterDataBundleManagerTest {
         testResults.outputUri = combineArgs(invocation.getArguments());
         return testResults.testOutputStream;
       }
-    }).when(resourceRepositoryServer).createResourceOutputStream(anyString(), anyString(),
+    }).when(resourceRepositoryServer).createResourceOutputStream(Matchers.any(ResourceCategory.class), anyString(),
         Matchers.any(Version.class));
 
     doAnswer(new Answer<Void>() {

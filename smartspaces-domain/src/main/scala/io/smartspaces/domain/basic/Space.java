@@ -15,10 +15,9 @@
  * the License.
  */
 
-package io.smartspaces.domain.space;
+package io.smartspaces.domain.basic;
 
 import io.smartspaces.domain.PersistedObject;
-import io.smartspaces.domain.basic.LiveActivityGroup;
 
 import java.io.Serializable;
 import java.util.List;

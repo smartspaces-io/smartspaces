@@ -15,11 +15,11 @@
  * the License.
  */
 
-package io.smartspaces.domain.space.pojo;
+package io.smartspaces.domain.basic.pojo;
 
 import io.smartspaces.domain.basic.LiveActivityGroup;
+import io.smartspaces.domain.basic.Space;
 import io.smartspaces.domain.pojo.SimpleObject;
-import io.smartspaces.domain.space.Space;
 
 import java.util.ArrayList;
 import java.util.HashMap;

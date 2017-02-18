@@ -26,10 +26,13 @@ import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.Version;
 import io.smartspaces.resource.analysis.OsgiResourceAnalyzer;
 import io.smartspaces.resource.analysis.ResourceAnalyzer;
+import io.smartspaces.resource.repository.ResourceCategory;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+
+import com.google.common.collect.Maps;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,8 +48,6 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import com.google.common.collect.Maps;
 
 /**
  * A {@link ResourceRepositoryStorageManager} which stores resources in the file
@@ -264,15 +265,15 @@ public class FileSystemResourceRepositoryStorageManager
   }
 
   @Override
-  public boolean containsResource(String category, String name, Version version) {
+  public boolean containsResource(ResourceCategory category, String name, Version version) {
     return getRepositoryFile(category, name, version).exists();
   }
 
   @Override
-  public String getRepositoryResourceName(String category, String name, Version version) {
+  public String getRepositoryResourceName(ResourceCategory category, String name, Version version) {
     // TODO(keith): Fix, cheesy
     String suffix = RESOURCE_ARCHIVE_EXTENSION;
-    if (category.equals(RESOURCE_CATEGORY_CONTAINER_BUNDLE)) {
+    if (category == ResourceCategory.RESOURCE_CATEGORY_CONTAINER_BUNDLE) {
       suffix = "jar";
     }
 
@@ -285,7 +286,6 @@ public class FileSystemResourceRepositoryStorageManager
       File stagedFile = File.createTempFile(STAGED_RESOURCE_FILENAME_PREFIX,
           STAGED_RESOURCE_FILENAME_SUFFIX, stagingDirectory);
       fileSupport.copyInputStream(resourceStream, stagedFile);
-
       // +2 to get beyond path separator.
       String handle =
           stagedFile.getAbsolutePath().substring(stagingDirectory.getAbsolutePath().length() + 1);
@@ -386,7 +386,7 @@ public class FileSystemResourceRepositoryStorageManager
   }
 
   @Override
-  public void commitResource(String category, String name, Version version, String stageHandle) {
+  public void commitResource(ResourceCategory category, String name, Version version, String stageHandle) {
     File stagingFile = stagingFiles.get(stageHandle);
     try {
       if (stagingFile != null) {
@@ -401,7 +401,7 @@ public class FileSystemResourceRepositoryStorageManager
   }
 
   @Override
-  public InputStream getResourceStream(String category, String name, Version version) {
+  public InputStream getResourceStream(ResourceCategory category, String name, Version version) {
     File resourceFile = getRepositoryFile(category, name, version);
     try {
       return new FileInputStream(resourceFile);
@@ -412,12 +412,12 @@ public class FileSystemResourceRepositoryStorageManager
 
   @Override
   public NamedVersionedResourceCollection<NamedVersionedResourceWithData<URI>>
-      getAllResources(String category) {
+      getAllResources(ResourceCategory category) {
     return resourceAnalyzer.getResourceCollection(getBaseLocation(category));
   }
 
   @Override
-  public OutputStream newResourceOutputStream(String category, String name, Version version) {
+  public OutputStream newResourceOutputStream(ResourceCategory category, String name, Version version) {
     File resourceFile = getRepositoryFile(category, name, version);
     try {
       return new FileOutputStream(resourceFile);
@@ -439,21 +439,21 @@ public class FileSystemResourceRepositoryStorageManager
    *
    * @return the file which contains the resource
    */
-  private File getRepositoryFile(String category, String name, Version version) {
+  private File getRepositoryFile(ResourceCategory category, String name, Version version) {
     File baseLocation = getBaseLocation(category);
 
     return new File(baseLocation, getRepositoryResourceName(category, name, version));
   }
 
   @Override
-  public File getBaseLocation(String category) {
+  public File getBaseLocation(ResourceCategory category) {
     // TODO(keith): Fix, cheesy
     File baseLocation = resourceRepositoryBaseLocation;
-    if (RESOURCE_CATEGORY_ACTIVITY.equals(category)) {
+    if (ResourceCategory.RESOURCE_CATEGORY_ACTIVITY == category) {
       baseLocation = activityRepositoryBaseLocation;
-    } else if (RESOURCE_CATEGORY_DATA.equals(category)) {
+    } else if (ResourceCategory.RESOURCE_CATEGORY_DATA == category) {
       baseLocation = dataRepositoryBaseLocation;
-    } else if (RESOURCE_CATEGORY_CONTAINER_BUNDLE.equals(category)) {
+    } else if (ResourceCategory.RESOURCE_CATEGORY_CONTAINER_BUNDLE == category) {
       baseLocation = resourceRepositoryBaseLocation;
     }
 

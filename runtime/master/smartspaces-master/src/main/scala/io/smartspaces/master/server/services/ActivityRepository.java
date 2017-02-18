@@ -24,9 +24,9 @@ import io.smartspaces.domain.basic.ActivityDependency;
 import io.smartspaces.domain.basic.ConfigurationParameter;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
+import io.smartspaces.domain.basic.Space;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.basic.pojo.SimpleLiveActivity;
-import io.smartspaces.domain.space.Space;
 import io.smartspaces.expression.FilterExpression;
 import io.smartspaces.resource.TypedId;
 

@@ -17,16 +17,20 @@
 
 package io.smartspaces.resource.repository.internal;
 
+import io.smartspaces.SmartSpacesException;
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.ActivityDependency;
+import io.smartspaces.domain.basic.Resource;
 import io.smartspaces.domain.basic.pojo.SimpleActivity;
 import io.smartspaces.domain.support.ActivityDescription;
 import io.smartspaces.domain.support.ActivityDescriptionReader;
 import io.smartspaces.domain.support.ActivityUtils;
 import io.smartspaces.domain.support.JdomActivityDescriptionReader;
 import io.smartspaces.master.server.services.ActivityRepository;
+import io.smartspaces.master.server.services.ResourceRepository;
 import io.smartspaces.resource.NamedVersionedResource;
 import io.smartspaces.resource.Version;
+import io.smartspaces.resource.repository.ResourceCategory;
 import io.smartspaces.resource.repository.ResourceRepositoryManager;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
 import io.smartspaces.util.data.resource.MessageDigestResourceSignatureCalculator;
@@ -52,6 +56,11 @@ public class StandardResourceRepositoryManager implements ResourceRepositoryMana
   private ActivityRepository activityRepository;
 
   /**
+   * Repository for resources.
+   */
+  private ResourceRepository resourceRepository;
+
+  /**
    * Storage manager for the repository.
    */
   private ResourceRepositoryStorageManager repositoryStorageManager;
@@ -63,14 +72,35 @@ public class StandardResourceRepositoryManager implements ResourceRepositoryMana
       new MessageDigestResourceSignatureCalculator();
 
   @Override
-  public void addBundleResource(InputStream resourceStream) {
+  public Resource addBundleResource(InputStream resourceStream) {
     String stageHandle = repositoryStorageManager.stageResource(resourceStream);
     try {
       NamedVersionedResource resource =
           repositoryStorageManager.getNameVersionResource(stageHandle);
-      repositoryStorageManager.commitResource(
-          ResourceRepositoryStorageManager.RESOURCE_CATEGORY_CONTAINER_BUNDLE, resource.getName(),
-          resource.getVersion(), stageHandle);
+
+      // TODO(keith): Might want to edit what it gives to the import so
+      // this may need to move.
+      Resource finalResource = resourceRepository.getResourceByNameAndVersion(resource.getName(),
+          resource.getVersion().toString());
+      if (finalResource == null) {
+        finalResource = resourceRepository.newResource();
+        finalResource.setIdentifyingName(resource.getName());
+        finalResource.setVersion(resource.getVersion().toString());
+      }
+
+      // TODO(peringknife): Use appropriate TimeProvider for this.
+      finalResource.setLastUploadDate(new Date());
+
+      finalResource.setBundleContentHash(
+          calculateBundleContentHash(ResourceCategory.RESOURCE_CATEGORY_CONTAINER_BUNDLE,
+              resource.getName(), resource.getVersion()));
+
+      resourceRepository.saveResource(finalResource);
+
+      repositoryStorageManager.commitResource(ResourceCategory.RESOURCE_CATEGORY_CONTAINER_BUNDLE,
+          resource.getName(), resource.getVersion(), stageHandle);
+
+      return finalResource;
     } finally {
       repositoryStorageManager.removeStagedReource(stageHandle);
     }
@@ -86,18 +116,16 @@ public class StandardResourceRepositoryManager implements ResourceRepositoryMana
       ActivityDescriptionReader reader = new JdomActivityDescriptionReader();
       ActivityDescription activityDescription = reader.readDescription(activityDescriptionStream);
 
-      repositoryStorageManager.commitResource(
-          ResourceRepositoryStorageManager.RESOURCE_CATEGORY_ACTIVITY,
-          activityDescription.getIdentifyingName(),
-          Version.parseVersion(activityDescription.getVersion()), stageHandle);
+      String identifyingName = activityDescription.getIdentifyingName();
+      Version version = Version.parseVersion(activityDescription.getVersion());
 
       // TODO(keith): Might want to edit what it gives to the import so
       // this may need to move.
-      Activity finalActivity = activityRepository.getActivityByNameAndVersion(
-          activityDescription.getIdentifyingName(), activityDescription.getVersion());
+      Activity finalActivity = activityRepository.getActivityByNameAndVersion(identifyingName,
+          activityDescription.getVersion());
       if (finalActivity == null) {
         finalActivity = activityRepository.newActivity();
-        finalActivity.setIdentifyingName(activityDescription.getIdentifyingName());
+        finalActivity.setIdentifyingName(identifyingName);
         finalActivity.setVersion(activityDescription.getVersion());
       }
 
@@ -108,9 +136,13 @@ public class StandardResourceRepositoryManager implements ResourceRepositoryMana
 
       copyDependencies(activityDescription, finalActivity);
 
-      calculateBundleContentHash(finalActivity);
+      finalActivity.setBundleContentHash(calculateBundleContentHash(
+          ResourceCategory.RESOURCE_CATEGORY_ACTIVITY, identifyingName, version));
 
       activityRepository.saveActivity(finalActivity);
+
+      repositoryStorageManager.commitResource(ResourceCategory.RESOURCE_CATEGORY_ACTIVITY,
+          identifyingName, version, stageHandle);
 
       return finalActivity;
     } finally {
@@ -121,17 +153,18 @@ public class StandardResourceRepositoryManager implements ResourceRepositoryMana
   }
 
   @Override
-  public void calculateBundleContentHash(Activity activity) {
+  public String calculateBundleContentHash(ResourceCategory category, String identifyingName,
+      Version version) {
     InputStream inputStream = null;
     try {
-      inputStream = repositoryStorageManager.getResourceStream(
-          ResourceRepositoryStorageManager.RESOURCE_CATEGORY_ACTIVITY,
-          activity.getIdentifyingName(), Version.parseVersion(activity.getVersion()));
+      inputStream = repositoryStorageManager.getResourceStream(category, identifyingName, version);
       String bundleSignature = resourceSignatureCalculator.getResourceSignature(inputStream);
-      activity.setBundleContentHash(bundleSignature);
       inputStream.close();
-    } catch (Exception e) {
-      // do something!
+
+      return bundleSignature;
+    } catch (Throwable e) {
+      throw SmartSpacesException.newFormattedException(e,
+          "Could not calculate bundle hash for %s:%s:%s", category, identifyingName, version);
     } finally {
       Closeables.closeQuietly(inputStream);
     }
@@ -169,6 +202,16 @@ public class StandardResourceRepositoryManager implements ResourceRepositoryMana
    */
   public void setActivityRepository(ActivityRepository activityRepository) {
     this.activityRepository = activityRepository;
+  }
+
+  /**
+   * Set the resource repository to use.
+   *
+   * @param resourceRepository
+   *          the resource repository
+   */
+  public void setResourceRepository(ResourceRepository resourceRepository) {
+    this.resourceRepository = resourceRepository;
   }
 
   /**

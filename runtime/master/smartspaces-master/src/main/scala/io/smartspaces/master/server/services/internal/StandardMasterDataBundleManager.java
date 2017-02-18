@@ -21,6 +21,7 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.common.ResourceRepositoryUploadChannel;
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.resource.Version;
+import io.smartspaces.resource.repository.ResourceCategory;
 import io.smartspaces.resource.repository.ResourceRepositoryServer;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
 import io.smartspaces.util.data.resource.CopyableResource;
@@ -28,9 +29,9 @@ import io.smartspaces.util.data.resource.CopyableResourceListener;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
-import java.io.OutputStream;
-
 import org.apache.commons.logging.Log;
+
+import java.io.OutputStream;
 
 /**
  * Basic data bundle manager. Needs to be sub-classed to provide the necessary
@@ -82,7 +83,7 @@ public abstract class StandardMasterDataBundleManager implements MasterDataBundl
     String uuid = controller.getSpaceController().getUuid();
     String destinationUri =
         resourceRepositoryServer.getResourceUri(
-            ResourceRepositoryStorageManager.RESOURCE_CATEGORY_DATA, uuid,
+            ResourceCategory.RESOURCE_CATEGORY_DATA, uuid,
             DATA_BUNDLE_STATIC_VERSION);
     sendControllerDataBundleCaptureRequest(controller, destinationUri);
   }
@@ -104,7 +105,7 @@ public abstract class StandardMasterDataBundleManager implements MasterDataBundl
     String uuid = controller.getSpaceController().getUuid();
     String sourceUri =
         resourceRepositoryServer.getResourceUri(
-            ResourceRepositoryStorageManager.RESOURCE_CATEGORY_DATA, uuid,
+            ResourceCategory.RESOURCE_CATEGORY_DATA, uuid,
             DATA_BUNDLE_STATIC_VERSION);
     sendControllerDataBundleRestoreRequest(controller, sourceUri);
   }
@@ -136,7 +137,7 @@ public abstract class StandardMasterDataBundleManager implements MasterDataBundl
     try {
       outputStream =
           resourceRepositoryServer.createResourceOutputStream(
-              ResourceRepositoryStorageManager.RESOURCE_CATEGORY_DATA, controllerUuid,
+              ResourceCategory.RESOURCE_CATEGORY_DATA, controllerUuid,
               DATA_BUNDLE_STATIC_VERSION);
       resourceUpload.copyTo(outputStream);
     } catch (Exception e) {

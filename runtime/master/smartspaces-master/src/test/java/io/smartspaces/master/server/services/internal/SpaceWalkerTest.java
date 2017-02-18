@@ -20,7 +20,8 @@ package io.smartspaces.master.server.services.internal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import io.smartspaces.domain.space.Space;
+
+import io.smartspaces.domain.basic.Space;
 import io.smartspaces.master.server.services.internal.SpaceWalker;
 
 import java.util.ArrayList;

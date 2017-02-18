@@ -20,8 +20,9 @@ package io.smartspaces.master.api.master;
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
+import io.smartspaces.domain.basic.Resource;
+import io.smartspaces.domain.basic.Space;
 import io.smartspaces.domain.basic.SpaceController;
-import io.smartspaces.domain.space.Space;
 import io.smartspaces.domain.system.NamedScript;
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
 
@@ -70,6 +71,12 @@ public class MasterApiUtilities {
       new ActiveControllerByNameComparator();
 
   /**
+   * A comparator for resources which orders by name.
+   */
+  public static final ResourceByNameAndVersionComparator RESOURCE_BY_NAME_AND_VERSION_COMPARATOR =
+      new ResourceByNameAndVersionComparator();
+
+  /**
    * A comparator for named scripts which orders by name.
    */
   public static final NamedScriptByNameComparator NAMED_SCRIPT_BY_NAME_COMPARATOR =
@@ -84,6 +91,24 @@ public class MasterApiUtilities {
     @Override
     public int compare(SpaceController o1, SpaceController o2) {
       return o1.getName().compareToIgnoreCase(o2.getName());
+    }
+  }
+
+  /**
+   * A comparator for resources which orders by name and then version.
+   *
+   * @author Keith M. Hughes
+   */
+  private static class ResourceByNameAndVersionComparator implements Comparator<Resource> {
+    @Override
+    public int compare(Resource o1, Resource o2) {
+      int compare = o1.getIdentifyingName().compareToIgnoreCase(o2.getIdentifyingName());
+
+      if (compare == 0) {
+        compare = o1.getVersion().compareTo(o2.getVersion());
+      }
+
+      return compare;
     }
   }
 

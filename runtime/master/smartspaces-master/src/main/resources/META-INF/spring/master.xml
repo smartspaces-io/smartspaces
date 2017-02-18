@@ -113,6 +113,20 @@
 		</property>
 	</bean>
 
+	<bean id="smartspaces.repository.resource" parent="txProxyTemplate">
+
+		<property name="target">
+
+			<bean
+				class="io.smartspaces.master.server.services.internal.jpa.JpaResourceRepository">
+
+				<property name="entityManager" ref="smartspaces.presistence.database.template" />
+
+				<property name="uuidGenerator" ref="smartspaces.uuid.generator" />
+			</bean>
+		</property>
+	</bean>
+
 	<bean id="smartspaces.repository.automation" parent="txProxyTemplate">
 
 		<property name="target">
@@ -212,18 +226,19 @@
 	<bean id="smartspaces.resource.repository.manager"
 		class="io.smartspaces.resource.repository.internal.StandardResourceRepositoryManager">
 
-		<property name="activityRepository" ref="smartspaces.repository.activity" />
+	  <property name="activityRepository" ref="smartspaces.repository.activity" />
+	  <property name="resourceRepository" ref="smartspaces.repository.resource" />
 
-		<property name="repositoryStorageManager" ref="smartspaces.resource.repository.storage" />
+	  <property name="repositoryStorageManager" ref="smartspaces.resource.repository.storage" />
 	</bean>
 
 	<bean id="smartspaces.resource.repository.server"
 		class="io.smartspaces.resource.repository.internal.HttpResourceRepositoryServer"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="repositoryStorageManager" ref="smartspaces.resource.repository.storage" />
+	  <property name="repositoryStorageManager" ref="smartspaces.resource.repository.storage" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
 	<bean id="io.smartspaces.activity.deployer.remote"
@@ -275,13 +290,15 @@
 		class="io.smartspaces.master.server.services.internal.StandardMasterSupportManager"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="activityRepository" ref="smartspaces.repository.activity" />
+	  <property name="activityRepository" ref="smartspaces.repository.activity" />
 
-		<property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
+	  <property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
 
-		<property name="automationRepository" ref="smartspaces.repository.automation" />
+	  <property name="resourceRepository" ref="smartspaces.repository.resource" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="automationRepository" ref="smartspaces.repository.automation" />
+
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
 	<bean id="smartspaces.master.automation"
@@ -366,7 +383,8 @@
 			<bean
 				class="io.smartspaces.master.api.master.internal.StandardMasterApiResourceManager"
 				destroy-method="shutdown" init-method="startup" parent="abstractMasterApiManager">
-				<property name="resourceRepositoryManager" ref="smartspaces.resource.repository.manager" />
+			  <property name="resourceRepositoryManager" ref="smartspaces.resource.repository.manager" />
+			  <property name="resourceRepository" ref="smartspaces.repository.resource" />
 			</bean>
 		</property>
 	</bean>
@@ -379,13 +397,13 @@
 				class="io.smartspaces.master.api.master.internal.StandardMasterApiSpaceControllerManager"
 				parent="abstractMasterApiManager">
 
-				<property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
+			  <property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
 
-				<property name="activityRepository" ref="smartspaces.repository.activity" />
+			  <property name="activityRepository" ref="smartspaces.repository.activity" />
 
-				<property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
+			  <property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
 
-				<property name="masterApiActivityManager" ref="smartspaces.master.api.activity" />
+			  <property name="masterApiActivityManager" ref="smartspaces.master.api.activity" />
 			</bean>
 		</property>
 	</bean>

@@ -20,9 +20,9 @@ package io.smartspaces.master.ui.internal.web;
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
+import io.smartspaces.domain.basic.Space;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.basic.SpaceControllerMode;
-import io.smartspaces.domain.space.Space;
 import io.smartspaces.master.api.master.MasterApiUtilities;
 
 import java.util.Collections;

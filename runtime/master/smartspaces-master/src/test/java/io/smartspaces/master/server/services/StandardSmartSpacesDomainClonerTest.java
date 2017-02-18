@@ -27,15 +27,15 @@ import io.smartspaces.domain.basic.ConfigurationParameter;
 import io.smartspaces.domain.basic.GroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
+import io.smartspaces.domain.basic.Space;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.basic.pojo.SimpleActivity;
 import io.smartspaces.domain.basic.pojo.SimpleActivityConfiguration;
 import io.smartspaces.domain.basic.pojo.SimpleConfigurationParameter;
 import io.smartspaces.domain.basic.pojo.SimpleLiveActivity;
 import io.smartspaces.domain.basic.pojo.SimpleLiveActivityGroup;
+import io.smartspaces.domain.basic.pojo.SimpleSpace;
 import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
-import io.smartspaces.domain.space.Space;
-import io.smartspaces.domain.space.pojo.SimpleSpace;
 
 import com.google.common.collect.Lists;
 import org.junit.Before;

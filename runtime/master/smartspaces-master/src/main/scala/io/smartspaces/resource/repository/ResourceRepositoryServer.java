@@ -43,7 +43,7 @@ public interface ResourceRepositoryServer extends ManagedResource {
    *
    * @return full URI for the resource with this server.
    */
-  String getResourceUri(String category, String name, Version version);
+  String getResourceUri(ResourceCategory category, String name, Version version);
 
   /**
    * Create an output stream for writing a new resource into the repository.
@@ -57,7 +57,7 @@ public interface ResourceRepositoryServer extends ManagedResource {
    *
    * @return stream to use for writing the resource
    */
-  OutputStream createResourceOutputStream(String category, String name, Version version);
+  OutputStream createResourceOutputStream(ResourceCategory category, String name, Version version);
 
   /**
    * Register an upload listener for the given key.

@@ -18,7 +18,7 @@
 package io.smartspaces.master.server.services.internal.jpa.domain;
 
 import io.smartspaces.domain.basic.LiveActivityGroup;
-import io.smartspaces.domain.space.Space;
+import io.smartspaces.domain.basic.Space;
 
 import java.util.ArrayList;
 import java.util.HashMap;

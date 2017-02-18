@@ -24,8 +24,8 @@ import io.smartspaces.container.control.message.activity.LiveActivityDeploymentR
 import io.smartspaces.domain.basic.GroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
+import io.smartspaces.domain.basic.Space;
 import io.smartspaces.domain.basic.SpaceController;
-import io.smartspaces.domain.space.Space;
 import io.smartspaces.master.event.MasterEventManager;
 import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
 import io.smartspaces.master.server.services.RemoteSpaceControllerClient;

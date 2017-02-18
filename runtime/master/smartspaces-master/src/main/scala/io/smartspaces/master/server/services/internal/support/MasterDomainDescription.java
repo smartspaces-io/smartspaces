@@ -298,6 +298,31 @@ public interface MasterDomainDescription {
   String ELEMENT_NAME_SPACE_INDIVIDUAL_LIVE_ACTIVITY_GROUP = "live-activity-group";
 
   /**
+   * The XML element name for the root resources element.
+   */
+  String ELEMENT_NAME_ROOT_RESOURCES = "resources";
+
+  /**
+   * The XML element name for an individual resource.
+   */
+  String ELEMENT_NAME_INDIVIDUAL_RESOURCE = "resource";
+
+  /**
+   * The XML element name for a resource's identifying name.
+   */
+  String ELEMENT_NAME_RESOURCE_IDENTIFYING_NAME = "identifying-name";
+
+  /**
+   * The XML element name for a resource's version.
+   */
+  String ELEMENT_NAME_RESOURCE_VERSION = "version";
+
+  /**
+   * The XML element name for a resource's bundle content hash.
+   */
+  String ELEMENT_NAME_RESOURCE_BUNDLE_CONTENT_HASH = "bundle-content-hash";
+
+  /**
    * The XML element name for the root named scripts element.
    */
   String ELEMENT_NAME_ROOT_NAMED_SCRIPTS = "named-scripts";

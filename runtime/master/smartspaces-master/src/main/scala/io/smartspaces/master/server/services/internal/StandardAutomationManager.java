@@ -20,6 +20,7 @@ package io.smartspaces.master.server.services.internal;
 import io.smartspaces.domain.system.NamedScript;
 import io.smartspaces.master.api.master.MasterApiActivityManager;
 import io.smartspaces.master.api.master.MasterApiMasterSupportManager;
+import io.smartspaces.master.api.master.MasterApiResourceManager;
 import io.smartspaces.master.api.master.MasterApiSpaceControllerManager;
 import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.api.messages.MasterApiMessages;
@@ -38,6 +39,8 @@ import io.smartspaces.util.io.directorywatcher.BaseDirectoryWatcherListener;
 import io.smartspaces.util.io.directorywatcher.DirectoryWatcher;
 import io.smartspaces.util.io.directorywatcher.SimpleDirectoryWatcher;
 
+import com.google.common.io.Closeables;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -47,11 +50,11 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A basic implementation of the {@link AutomationManager}.
+ * A standard implementation of the {@link AutomationManager}.
  *
  * @author Keith M. Hughes
  */
-public class BasicAutomationManager implements AutomationManager {
+public class StandardAutomationManager implements AutomationManager {
 
   /**
    * How often the watched directories should be scanned. In seconds.
@@ -61,12 +64,17 @@ public class BasicAutomationManager implements AutomationManager {
   /**
    * Watched subfolder for importing new activities.
    */
-  public static final String ACTIVITY_IMPORT_DIRECTORY = "master/activity/import";
+  public static final String ACTIVITY_IMPORT_DIRECTORY = "master/autoimport/activity/import";
 
   /**
    * Watched subfolder for importing and deploying new activities.
    */
-  public static final String ACTIVITY_DEPLOY_DIRECTORY = "master/activity/deploy";
+  public static final String ACTIVITY_DEPLOY_DIRECTORY = "master/autoimport/activity/deploy";
+
+  /**
+   * Watched subfolder for importing new resources.
+   */
+  public static final String RESOURCE_IMPORT_DIRECTORY = "master/autoimport/resource/import";
 
   /**
    * The script service to use for the automation master.
@@ -102,6 +110,11 @@ public class BasicAutomationManager implements AutomationManager {
    * The Master API controller manager to use for the automation master.
    */
   private MasterApiSpaceControllerManager masterApiSpaceControllerManager;
+
+  /**
+   * The Master API resource manager to use for the automation master.
+   */
+  private MasterApiResourceManager masterApiResourceManager;
 
   /**
    * The Master API master support manager to use for the automation master.
@@ -169,14 +182,16 @@ public class BasicAutomationManager implements AutomationManager {
    */
   private void prepareImportDirectoryWatcher() {
     importDirectoryWatcher = new SimpleDirectoryWatcher();
-    importDirectoryWatcher.addDirectory(fileSupport.newFile(spaceEnvironment.getFilesystem()
-        .getInstallDirectory(), ACTIVITY_IMPORT_DIRECTORY));
-    importDirectoryWatcher.addDirectory(fileSupport.newFile(spaceEnvironment.getFilesystem()
-        .getInstallDirectory(), ACTIVITY_DEPLOY_DIRECTORY));
+    importDirectoryWatcher.addDirectory(fileSupport.newFile(
+        spaceEnvironment.getFilesystem().getInstallDirectory(), ACTIVITY_IMPORT_DIRECTORY));
+    importDirectoryWatcher.addDirectory(fileSupport.newFile(
+        spaceEnvironment.getFilesystem().getInstallDirectory(), ACTIVITY_DEPLOY_DIRECTORY));
+    importDirectoryWatcher.addDirectory(fileSupport.newFile(
+        spaceEnvironment.getFilesystem().getInstallDirectory(), RESOURCE_IMPORT_DIRECTORY));
     importDirectoryWatcher.addDirectoryWatcherListener(new BaseDirectoryWatcherListener() {
       @Override
       public void onFileAdded(File file) {
-        handleImportActivityFileAdded(file);
+        handleImportFileAdded(file);
       }
     });
     importDirectoryWatcher.startup(spaceEnvironment, DIRECTORY_SCAN_TIME, TimeUnit.SECONDS);
@@ -196,6 +211,8 @@ public class BasicAutomationManager implements AutomationManager {
         activeSpaceControllerManager);
     automationBindings.put(ScriptingNames.SCRIPTING_NAME_MASTER_API_ACTIVITY_MANAGER,
         masterApiActivityManager);
+    automationBindings.put(ScriptingNames.SCRIPTING_NAME_MASTER_API_RESOURCE_MANAGER,
+        masterApiResourceManager);
     automationBindings.put(ScriptingNames.SCRIPTING_NAME_MASTER_API_SPACE_CONTROLLER_MANAGER,
         masterApiSpaceControllerManager);
     automationBindings.put(ScriptingNames.SCRIPTING_NAME_MASTER_API_MASTER_SUPPORT_MANAGER,
@@ -210,37 +227,38 @@ public class BasicAutomationManager implements AutomationManager {
    * @param file
    *          the folder which has been added
    */
-  private void handleImportActivityFileAdded(File file) {
-    spaceEnvironment.getLog().formatInfo("Activity file  %s found in autoinput folders", file);
+  private void handleImportFileAdded(File file) {
+    spaceEnvironment.getLog().formatInfo("Import file  %s found in autoinput folders", file);
 
-    FileInputStream activityStream = null;
+    String watchedFolder = file.getParent();
+
+    FileInputStream importStream = null;
     try {
-      activityStream = new FileInputStream(file);
-      Map<String, Object> activityResponse =
-          masterApiActivityManager.saveActivity(null, activityStream);
+      importStream = new FileInputStream(file);
+      if (watchedFolder.endsWith(RESOURCE_IMPORT_DIRECTORY)) {
+        Map<String, Object> resourceResponse =
+            masterApiResourceManager.saveResource(null, importStream);
 
-      if (MasterApiMessageSupport.isSuccessResponse(activityResponse)) {
-        String watchedFolder = file.getParent();
-        if (watchedFolder.endsWith(ACTIVITY_DEPLOY_DIRECTORY)) {
-          masterApiSpaceControllerManager
-              .deployAllLiveActivityInstances((String) MasterApiMessageSupport.getResponseDataMap(
-                  activityResponse).get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID));
+      } else {
+        Map<String, Object> activityResponse =
+            masterApiActivityManager.saveActivity(null, importStream);
+
+        if (MasterApiMessageSupport.isSuccessResponse(activityResponse)) {
+          if (watchedFolder.endsWith(ACTIVITY_DEPLOY_DIRECTORY)) {
+            masterApiSpaceControllerManager.deployAllLiveActivityInstances(
+                (String) MasterApiMessageSupport.getResponseDataMap(activityResponse)
+                    .get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID));
+          }
         }
       }
     } catch (Throwable e) {
-      spaceEnvironment.getLog().error(
-          String.format("Could not read imported activity file %s", file), e);
+      spaceEnvironment.getLog().formatError(e, "Could not read imported file %s", file.getAbsolutePath());
     } finally {
-      if (activityStream != null) {
-        try {
-          activityStream.close();
-        } catch (IOException e) {
-          // Don't care
-        }
-      }
+      Closeables.closeQuietly(importStream);
 
       file.delete();
     }
+
   }
 
   /**
@@ -279,7 +297,8 @@ public class BasicAutomationManager implements AutomationManager {
    * @param activeControllerManager
    *          the activeControllerManager to set
    */
-  public void setActiveSpaceControllerManager(ActiveSpaceControllerManager activeControllerManager) {
+  public void
+      setActiveSpaceControllerManager(ActiveSpaceControllerManager activeControllerManager) {
     this.activeSpaceControllerManager = activeControllerManager;
   }
 
@@ -298,6 +317,14 @@ public class BasicAutomationManager implements AutomationManager {
   public void setMasterApiSpaceControllerManager(
       MasterApiSpaceControllerManager masterApiControllerManager) {
     this.masterApiSpaceControllerManager = masterApiControllerManager;
+  }
+
+  /**
+   * @param masterApiResourceManager
+   *          the masterApiResourceManager to set
+   */
+  public void setMasterApiResourceManager(MasterApiResourceManager masterApiResourceManager) {
+    this.masterApiResourceManager = masterApiResourceManager;
   }
 
   /**

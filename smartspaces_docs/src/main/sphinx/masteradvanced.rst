@@ -93,7 +93,7 @@ Automatic Activity Import
 
 Activities can be autoimported in to the master.
 
-To use this, you must create a folder called *master/activity/import* in the 
+To use this, you must create a folder called *master/autoimport/activity/import* in the 
 same folder where your Master is installed.
 
 Now any Activity zip files which are placed in this folder will be auto-imported
@@ -105,7 +105,7 @@ must do that manually using the Master webapp or Master API.
 
 Activities can be autoimported in to the master and then deployed.
 
-To use this, you must create a folder called *master/activity/deploy* in the 
+To use this, you must create a folder called *master/autoimport/activity/deploy* in the 
 same folder where your Master is installed.
 
 Now any Activity zip files which are placed in this folder will be auto-imported
@@ -113,6 +113,21 @@ into the master and will then be immediately deployed to all controllers
 which contain a Live Activity based on the imported activity. 
 If there is already an Activity with the same identifying name
 and version, it will be replaced with this new Activity.
+
+Automatic Resource Import
+=========================
+
+Resources can be autoimported in to the master.
+
+To use this, you must create a folder called *master/autoimport/resource/import* in the 
+same folder where your Master is installed.
+
+Now any resource files which are placed in this folder will be auto-imported
+into the master. If there is already a resource with the same identifying name
+and version, it will be replaced with this new resource.
+
+The Live Activities dependent on this resource will not be immediately updated. You
+must do that manually using the Master webapp or Master API.
 
 Scripting the Master
 ====================
@@ -310,7 +325,7 @@ an Activity ID, rather than an actual domain object.
 The service will be called *masterApiActivityManager* in your script.
 
 You can find detailed documentation in the
-:javadoc:`io.smartspaces.master.api.MasterApiActivityManager` Javadoc.
+:javadoc:`io.smartspaces.master.api.master.MasterApiActivityManager` Javadoc.
 
 
 The Master API Controller Manager
@@ -324,7 +339,17 @@ a Live Activity ID, rather than an actual domain object.
 The service will be called *masterApiControllerManager* in your script.
 
 You can find detailed documentation in the
-:javadoc:`io.smartspaces.master.server.ui.MasterApiControllerManager` Javadoc.
+:javadoc:`io.smartspaces.master.api.master.MasterApiControllerManager` Javadoc.
+
+The Master API Resource Manager
+~~~~~~~
+s
+The Master API Resource Manager is used to perform various operations with Resources. 
+
+The service will be called *masterApiResourceManager* in your script.
+
+You can find detailed documentation in the
+:javadoc:`io.smartspaces.master.api.master.MasterApiControllerManager` Javadoc.
 
 
 The Master API Master Support Manager
@@ -337,7 +362,7 @@ describes every aspect of the space.
 The service will be called *masterApiMasterSupportManager* in your script.
 
 You can find detailed documentation in the
-:javadoc:`io.smartspaces.master.api.MasterApiMasterSupportManager` Javadoc.
+:javadoc:`io.smartspaces.master.api.master.MasterApiMasterSupportManager` Javadoc.
 
 
 The Smart Spaces Environment
@@ -470,7 +495,7 @@ is
 The Internal Smart Spaces ROS Master
 ==========================================
 
-Smart Spaces uses ROS (the Robot Operating System) for its inter-activity communication. Smart Spaces usually
+Smart Spaces uses ROS (the Robot Operating System) as one of its inter-activity communication options. Smart Spaces usually
 assumes that there is not an external ROS environment that it needs to plug itself into and so starts up its own ROS Master.
 
 If you want the Smart Spaces Master to not start up its own ROS Master, you can use the configuration parameter

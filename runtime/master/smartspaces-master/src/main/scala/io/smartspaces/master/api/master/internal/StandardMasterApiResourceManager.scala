@@ -76,7 +76,7 @@ class StandardMasterApiResourceManager extends BaseMasterApiManager with MasterA
     }
   }
 
-  override def saveResource(fileName: String, resourceContentStream: InputStream): Map[String, Object] = {
+  override def saveResource(resource: Resource, resourceContentStream: InputStream): Map[String, Object] = {
     try {
       val resource = resourceRepositoryManager.addBundleResource(resourceContentStream)
       

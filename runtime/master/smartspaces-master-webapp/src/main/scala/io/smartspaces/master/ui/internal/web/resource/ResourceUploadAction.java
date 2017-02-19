@@ -18,7 +18,8 @@ package io.smartspaces.master.ui.internal.web.resource;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.master.api.master.MasterApiActivityManager;
+import io.smartspaces.domain.basic.Resource;
+import io.smartspaces.domain.basic.pojo.SimpleResource;
 import io.smartspaces.master.api.master.MasterApiResourceManager;
 import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.ui.internal.web.BaseSpaceMasterController;
@@ -43,9 +44,9 @@ public class ResourceUploadAction extends BaseSpaceMasterController {
   private MasterApiResourceManager masterApiResourceManager;
 
   /**
-   * Get a new activity model.
+   * Get a new resource model.
    *
-   * @return new activity form
+   * @return new resource form
    */
   public ResourceForm newResource() {
     return new ResourceForm();
@@ -72,8 +73,8 @@ public class ResourceUploadAction extends BaseSpaceMasterController {
    */
   public String saveResource(ResourceForm form) {
     try {
-      Map<String, Object> resourceResponse =
-          masterApiResourceManager.saveResource(form.getResourceFile().getOriginalFilename(), form.getResourceFile().getInputStream());
+      Map<String, Object> resourceResponse = masterApiResourceManager
+          .saveResource(form.getResource(), form.getResourceFile().getInputStream());
 
       // So the ID gets copied out of the flow.
       if (MasterApiMessageSupport.isSuccessResponse(resourceResponse)) {
@@ -94,7 +95,7 @@ public class ResourceUploadAction extends BaseSpaceMasterController {
   }
 
   /**
-   * handle an error from an activity upload attempt.
+   * handle an error from an resource upload attempt.
    *
    * @param form
    *          the submission form
@@ -104,7 +105,7 @@ public class ResourceUploadAction extends BaseSpaceMasterController {
    * @return the key for webflow for the error handling
    */
   private String handleError(ResourceForm form, String responseDetail) {
-    // On an error, need to clear the activity file else flow serialization
+    // On an error, need to clear the resourceO file else flow serialization
     // fails.
     form.setResourceFile(null);
     form.setResourceError(responseDetail);
@@ -121,39 +122,59 @@ public class ResourceUploadAction extends BaseSpaceMasterController {
   }
 
   /**
-   * Form bean for activity objects.
+   * Form bean for resource objects.
    *
    * @author Keith M. Hughes
    */
   public static class ResourceForm implements Serializable {
 
     /**
-     * The activity file.
+     * Form for resource information input/output.
      */
-    private MultipartFile activityFile;
+    private SimpleResource resource = new SimpleResource();
 
     /**
-     * The activity error description.
+     * The resource file.
+     */
+    private MultipartFile resourceFile;
+
+    /**
+     * The resource error description.
      */
     private String resourceError;
 
     /**
-     * Get the uploaded activity file.
+     * @return the resource
+     */
+    public SimpleResource getResource() {
+      return resource;
+    }
+
+    /**
+     * @param resource
+     *          the resource to set
+     */
+    public void setResource(SimpleResource resource) {
+      this.resource = resource;
+    }
+
+    /**
+     * Get the uploaded resource file.
      *
      * @return the uploaded file
      */
     public MultipartFile getResourceFile() {
-      return activityFile;
+      return resourceFile;
     }
 
     /**
-     * Set the uploaded activity file.
+     * Set the uploaded resource file.
      *
-     * @param activityFile
+     * @param resourceFile
      *          the uploaded file
      */
-    public void setResourceFile(MultipartFile activityFile) {
-      this.activityFile = activityFile;
+    public void setResourceFile(MultipartFile resourceFile) {
+      this.resourceFile = resourceFile;
     }
 
     /**

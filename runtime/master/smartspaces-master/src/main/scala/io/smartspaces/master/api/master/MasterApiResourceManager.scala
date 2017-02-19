@@ -16,6 +16,7 @@
 
 package io.smartspaces.master.api.master
 
+import io.smartspaces.domain.basic.Resource
 import io.smartspaces.resource.managed.ManagedResource
 
 import java.io.InputStream
@@ -35,14 +36,14 @@ trait MasterApiResourceManager extends ManagedResource {
    * Includes saving the resource file in the resource repository. The method
    * also closes the input stream regardless of internal errors.
    *
-   * @param fileName
-   *          the filename of the resource
+   * @param resource
+   *          data on the resource
    * @param resourceContentStream
    *          the input stream containing the contents of the resource
    *
    * @return the master API message for the saved resource
    */
-   def saveResource(fileName: String, resourceContentStream: InputStream ): Map[String, Object]
+   def saveResource(resource: Resource, resourceContentStream: InputStream ): Map[String, Object]
 
      /**
    * Get all activities that meet a filter.

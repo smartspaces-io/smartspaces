@@ -41,10 +41,16 @@ public class ScriptingNames {
       "masterApiSpaceControllerManager";
 
   /**
-   * The scripting name for the Master API Space Controller Manager.
+   * The scripting name for the Master API Activity Manager.
    */
   public static final String SCRIPTING_NAME_MASTER_API_ACTIVITY_MANAGER =
       "masterApiActivityManager";
+
+  /**
+   * The scripting name for the Master API Resource Manager.
+   */
+  public static final String SCRIPTING_NAME_MASTER_API_RESOURCE_MANAGER =
+      "masterApiResourceManager";
 
   /**
    * The scripting name for the Master API Support Manager.

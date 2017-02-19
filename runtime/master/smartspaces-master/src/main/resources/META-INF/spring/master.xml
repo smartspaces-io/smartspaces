@@ -30,113 +30,108 @@
 	<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 
-		<property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />
+	  <property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />
 
-		<property name="url" value="jdbc:derby:database/smartspaces" />
+	  <property name="url" value="jdbc:derby:database/smartspaces" />
 
-		<property name="username" value="sa" />
+	  <property name="username" value="sa" />
 
-		<property name="password" value="" />
+	  <property name="password" value="" />
 	</bean>
 
 	<bean id="myEmf"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
 		p:persistenceUnitName="SmartSpaces">
 
-		<property name="dataSource" ref="myDataSource" />
+	  <property name="dataSource" ref="myDataSource" />
 
-		<property name="jpaVendorAdapter">
-			<bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter" />
-		</property>
+	  <property name="jpaVendorAdapter">
+	    <bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter" />
+	  </property>
 	</bean>
 
 	<bean id="smartspaces.presistence.database.template"
 		class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
-		<property name="entityManagerFactory" ref="myEmf" />
+	  <property name="entityManagerFactory" ref="myEmf" />
 	</bean>
 
 	<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="myEmf" />
+	  <property name="entityManagerFactory" ref="myEmf" />
 	</bean>
 
 	<bean id="txProxyTemplate" abstract="true"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 
-		<property name="transactionManager" ref="txManager" />
+	  <property name="transactionManager" ref="txManager" />
 
-		<property name="transactionAttributes">
+	  <property name="transactionAttributes">
+	    <props>
+          <prop key="get*">
+            PROPAGATION_REQUIRED,readOnly
+          </prop>
 
-			<props>
+          <prop key="set*">
+            PROPAGATION_SUPPORTS
+          </prop>
 
-				<prop key="get*">
-					PROPAGATION_REQUIRED,readOnly
-				</prop>
-
-				<prop key="set*">
-					PROPAGATION_SUPPORTS
-				</prop>
-
-				<prop key="*">
-					PROPAGATION_REQUIRED
-				</prop>
-			</props>
-		</property>
+          <prop key="*">
+            PROPAGATION_REQUIRED
+          </prop>
+        </props>
+      </property>
 	</bean>
 
 	<bean id="smartspaces.repository.controller" parent="txProxyTemplate">
 
-		<property name="target">
+	  <property name="target">
+        <bean
+            class="io.smartspaces.master.server.services.internal.jpa.JpaSpaceControllerRepository">
 
-			<bean
-				class="io.smartspaces.master.server.services.internal.jpa.JpaSpaceControllerRepository">
+          <property name="activityRepository" ref="smartspaces.repository.activity" />
 
-				<property name="activityRepository" ref="smartspaces.repository.activity" />
+          <property name="entityManager" ref="smartspaces.presistence.database.template" />
 
-				<property name="entityManager" ref="smartspaces.presistence.database.template" />
-
-				<property name="uuidGenerator" ref="smartspaces.uuid.generator" />
-			</bean>
-		</property>
+          <property name="uuidGenerator" ref="smartspaces.uuid.generator" />
+        </bean>
+      </property>
 	</bean>
 
 	<bean id="smartspaces.repository.activity" parent="txProxyTemplate">
 
-		<property name="target">
+	  <property name="target">
 
-			<bean
-				class="io.smartspaces.master.server.services.internal.jpa.JpaActivityRepository">
+        <bean
+            class="io.smartspaces.master.server.services.internal.jpa.JpaActivityRepository">
 
-				<property name="entityManager" ref="smartspaces.presistence.database.template" />
+          <property name="entityManager" ref="smartspaces.presistence.database.template" />
 
-				<property name="uuidGenerator" ref="smartspaces.uuid.generator" />
-			</bean>
-		</property>
+          <property name="uuidGenerator" ref="smartspaces.uuid.generator" />
+        </bean>
+      </property>
 	</bean>
 
 	<bean id="smartspaces.repository.resource" parent="txProxyTemplate">
 
-		<property name="target">
+	  <property name="target">
+        <bean
+            class="io.smartspaces.master.server.services.internal.jpa.JpaResourceRepository">
 
-			<bean
-				class="io.smartspaces.master.server.services.internal.jpa.JpaResourceRepository">
+          <property name="entityManager" ref="smartspaces.presistence.database.template" />
 
-				<property name="entityManager" ref="smartspaces.presistence.database.template" />
-
-				<property name="uuidGenerator" ref="smartspaces.uuid.generator" />
-			</bean>
-		</property>
+          <property name="uuidGenerator" ref="smartspaces.uuid.generator" />
+        </bean>
+      </property>
 	</bean>
 
 	<bean id="smartspaces.repository.automation" parent="txProxyTemplate">
 
-		<property name="target">
+	  <property name="target">
+        <bean
+            class="io.smartspaces.master.server.services.internal.jpa.JpaAutomationRepository">
 
-			<bean
-				class="io.smartspaces.master.server.services.internal.jpa.JpaAutomationRepository">
-
-				<property name="entityManager" ref="smartspaces.presistence.database.template" />
-			</bean>
-		</property>
+          <property name="entityManager" ref="smartspaces.presistence.database.template" />
+        </bean>
+      </property>
 	</bean>
 
 	<bean id="smartspaces.master.logger" factory-bean="smartspaces.environment"
@@ -148,11 +143,11 @@
 		class="io.smartspaces.master.server.services.internal.comm.StandardMasterRosContext"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="rosEnvironment" ref="ros.environment" />
+	  <property name="rosEnvironment" ref="ros.environment" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 
-		<property name="log" ref="smartspaces.master.logger" />
+	  <property name="log" ref="smartspaces.master.logger" />
 	</bean>
 
 	<bean id="smartspaces.controller.remote.client"
@@ -160,67 +155,67 @@
 		destroy-method="shutdown" init-method="startup"
 		depends-on="smartspaces.manager.service" >
 
-		<property name="masterDataBundleManager" ref="smartspaces.master.databundlemanager" />
+	  <property name="masterDataBundleManager" ref="smartspaces.master.databundlemanager" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 
-		<property name="log" ref="smartspaces.master.logger" />
+	  <property name="log" ref="smartspaces.master.logger" />
 	</bean>
 
 	<bean id="smartspaces.manager.service" class="io.smartspaces.master.server.services.internal.StandardMasterServiceManager"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
 	<bean id="smartspaces.master.databundlemanager"
 		class="io.smartspaces.master.server.services.internal.comm.TcpMasterDataBundleManager"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="remoteSpaceControllerClient" ref="smartspaces.controller.remote.client" />
+	  <property name="remoteSpaceControllerClient" ref="smartspaces.controller.remote.client" />
 
-		<property name="repositoryServer" ref="smartspaces.resource.repository.server" />
+	  <property name="repositoryServer" ref="smartspaces.resource.repository.server" />
 
-		<property name="log" ref="smartspaces.master.logger" />
+	  <property name="log" ref="smartspaces.master.logger" />
 	</bean>
 
 	<bean id="smartspaces.master.networkinfo.client"
 		class="io.smartspaces.network.client.internal.ros.RosNetworkInformationClient"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="masterRosContext" ref="smartspaces.master.ros.context" />
+	  <property name="masterRosContext" ref="smartspaces.master.ros.context" />
 
-		<property name="log" ref="smartspaces.master.logger" />
+	  <property name="log" ref="smartspaces.master.logger" />
 	</bean>
 
 	<bean id="smartspaces.master.server"
 		class="io.smartspaces.master.server.remote.master.internal.StandardRemoteMasterCommunicationHandler">
-		<property name="log" ref="smartspaces.master.logger" />
+	  <property name="log" ref="smartspaces.master.logger" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 		
-		<property name="listeners">
-		  <list>
-		    <ref bean="smartspaces.master.server.bridge" />
-		  </list>
-		</property>
+	  <property name="listeners">
+        <list>
+		  <ref bean="smartspaces.master.server.bridge" />
+		</list>
+	  </property>
 	</bean>
 
 	<bean id="smartspaces.resource.repository.storage"
 		class="io.smartspaces.resource.repository.internal.FileSystemResourceRepositoryStorageManager"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
 	<bean id="smartspaces.resource.deployment.manager"
 		class="io.smartspaces.master.server.services.internal.StandardContainerResourceDeploymentManager"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="resourceRepositoryStorageManager" ref="smartspaces.resource.repository.storage" />
-		<property name="repositoryServer" ref="smartspaces.resource.repository.server" />
-		<property name="remoteSpaceControllerClient" ref="smartspaces.controller.remote.client" />
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="resourceRepositoryStorageManager" ref="smartspaces.resource.repository.storage" />
+	  <property name="repositoryServer" ref="smartspaces.resource.repository.server" />
+	  <property name="remoteSpaceControllerClient" ref="smartspaces.controller.remote.client" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
 	<bean id="smartspaces.resource.repository.manager"
@@ -244,46 +239,46 @@
 	<bean id="io.smartspaces.activity.deployer.remote"
 		class="io.smartspaces.master.spacecontroller.client.internal.StandardRemoteActivityDeploymentManager"
 		destroy-method="shutdown" init-method="startup">
-		<property name="remoteSpaceControllerClient" ref="smartspaces.controller.remote.client" />
-		<property name="containerResourceDeploymentManager" ref="smartspaces.resource.deployment.manager" />
-		<property name="repositoryServer" ref="smartspaces.resource.repository.server" />
+	  <property name="remoteSpaceControllerClient" ref="smartspaces.controller.remote.client" />
+	  <property name="containerResourceDeploymentManager" ref="smartspaces.resource.deployment.manager" />
+	  <property name="repositoryServer" ref="smartspaces.resource.repository.server" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
 	<bean id="smartspaces.master.communication.manager"
 		class="io.smartspaces.master.communication.internal.StandardMasterCommunicationManager"
 		destroy-method="shutdown" init-method="startup">
 		
-		<property name="handlers">
-		  <list>
-		    <ref bean="smartspaces.master.server" />
-		  </list>
-		</property>
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="handlers">
+        <list>
+          <ref bean="smartspaces.master.server" />
+        </list>
+      </property>
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
 	<bean id="smartspaces.master.controller.active"
 		class="io.smartspaces.master.server.services.internal.StandardActiveSpaceControllerManager">
-		<property name="masterEventManager" ref="smartspaces.master.event.manager" />
+	  <property name="masterEventManager" ref="smartspaces.master.event.manager" />
 
-		<property name="remoteSpaceControllerClient" ref="smartspaces.controller.remote.client" />
+	  <property name="remoteSpaceControllerClient" ref="smartspaces.controller.remote.client" />
 
-		<property name="remoteActivityDeploymentManager" ref="io.smartspaces.activity.deployer.remote" />
+	  <property name="remoteActivityDeploymentManager" ref="io.smartspaces.activity.deployer.remote" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
 	<bean id="smartspaces.master.space.alert"
 		class="io.smartspaces.master.server.services.internal.StandardMasterAlertManager"
 		destroy-method="shutdown" init-method="startup">
-		<property name="masterEventManager" ref="smartspaces.master.event.manager" />
+	  <property name="masterEventManager" ref="smartspaces.master.event.manager" />
 
-		<property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
+	  <property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
 
-		<property name="alertService" ref="smartspaces.service.alert" />
+	  <property name="alertService" ref="smartspaces.service.alert" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
 	<bean id="smartspaces.master.support"
@@ -302,215 +297,215 @@
 	</bean>
 
 	<bean id="smartspaces.master.automation"
-		class="io.smartspaces.master.server.services.internal.BasicAutomationManager"
+		class="io.smartspaces.master.server.services.internal.StandardAutomationManager"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
+	  <property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 
-		<property name="activityRepository" ref="smartspaces.repository.activity" />
+	  <property name="activityRepository" ref="smartspaces.repository.activity" />
 
-		<property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
+	  <property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
 
-		<property name="schedulerService" ref="smartspaces.service.scheduler" />
+	  <property name="schedulerService" ref="smartspaces.service.scheduler" />
 
-		<property name="scriptService" ref="smartspaces.service.script" />
+	  <property name="scriptService" ref="smartspaces.service.script" />
 
-		<property name="masterApiActivityManager" ref="smartspaces.master.api.activity" />
+	  <property name="masterApiActivityManager" ref="smartspaces.master.api.activity" />
 
-		<property name="masterApiSpaceControllerManager" ref="smartspaces.master.api.controller" />
+	  <property name="masterApiSpaceControllerManager" ref="smartspaces.master.api.controller" />
 
-		<property name="masterApiMasterSupportManager" ref="smartspaces.master.api.support" />
+	  <property name="masterApiResourceManager" ref="smartspaces.master.api.resource" />
+
+	  <property name="masterApiMasterSupportManager" ref="smartspaces.master.api.support" />
 	</bean>
 
 	<bean id="smartspaces.master.extension"
-		class="io.smartspaces.master.server.services.internal.BasicExtensionManager"
+		class="io.smartspaces.master.server.services.internal.StandardExtensionManager"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
+	  <property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 
-		<property name="activityRepository" ref="smartspaces.repository.activity" />
+	  <property name="activityRepository" ref="smartspaces.repository.activity" />
 
-		<property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
+	  <property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
 
-		<property name="schedulerService" ref="smartspaces.service.scheduler" />
+	  <property name="schedulerService" ref="smartspaces.service.scheduler" />
 
-		<property name="scriptService" ref="smartspaces.service.script" />
+	  <property name="scriptService" ref="smartspaces.service.script" />
 
-		<property name="masterApiActivityManager" ref="smartspaces.master.api.activity" />
+	  <property name="masterApiActivityManager" ref="smartspaces.master.api.activity" />
 
-		<property name="masterApiSpaceControllerManager" ref="smartspaces.master.api.controller" />
+	  <property name="masterApiSpaceControllerManager" ref="smartspaces.master.api.controller" />
 
-		<property name="masterApiMasterSupportManager" ref="smartspaces.master.api.support" />
+	  <property name="masterApiResourceManager" ref="smartspaces.master.api.resource" />
 
-		<property name="automationManager" ref="smartspaces.master.automation" />
+	  <property name="masterApiMasterSupportManager" ref="smartspaces.master.api.support" />
+
+	  <property name="automationManager" ref="smartspaces.master.automation" />
 	</bean>
 
 	<bean id="abstractMasterApiManager" abstract="true">
-		<property name="expressionFactory" ref="smartspaces.expression.factory" />
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="expressionFactory" ref="smartspaces.expression.factory" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
 	<bean id="smartspaces.master.event.manager" class="io.smartspaces.master.event.StandardMasterEventManager">
-		<property name="log" ref="smartspaces.master.logger" />
+	  <property name="log" ref="smartspaces.master.logger" />
 	</bean>
 
 	<bean id="smartspaces.master.api.activity" parent="txProxyTemplate">
 
-		<property name="target">
-			<bean
-				class="io.smartspaces.master.api.master.internal.StandardMasterApiActivityManager"
-				destroy-method="shutdown" init-method="startup" parent="abstractMasterApiManager">
-				<property name="masterEventManager" ref="smartspaces.master.event.manager" />
+	  <property name="target">
+        <bean
+            class="io.smartspaces.master.api.master.internal.StandardMasterApiActivityManager"
+            destroy-method="shutdown" init-method="startup" parent="abstractMasterApiManager">
+          <property name="masterEventManager" ref="smartspaces.master.event.manager" />
 
-				<property name="activityRepository" ref="smartspaces.repository.activity" />
+          <property name="activityRepository" ref="smartspaces.repository.activity" />
 
-				<property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
+          <property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
 
-				<property name="resourceRepositoryManager" ref="smartspaces.resource.repository.manager" />
+          <property name="resourceRepositoryManager" ref="smartspaces.resource.repository.manager" />
 
-				<property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
-			</bean>
-		</property>
+          <property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
+        </bean>
+      </property>
 	</bean>
 
 	<bean id="smartspaces.master.api.resource" parent="txProxyTemplate">
 
-		<property name="target">
-			<bean
-				class="io.smartspaces.master.api.master.internal.StandardMasterApiResourceManager"
-				destroy-method="shutdown" init-method="startup" parent="abstractMasterApiManager">
-			  <property name="resourceRepositoryManager" ref="smartspaces.resource.repository.manager" />
-			  <property name="resourceRepository" ref="smartspaces.repository.resource" />
-			</bean>
-		</property>
+	  <property name="target">
+        <bean
+            class="io.smartspaces.master.api.master.internal.StandardMasterApiResourceManager"
+            destroy-method="shutdown" init-method="startup" parent="abstractMasterApiManager">
+          <property name="resourceRepositoryManager" ref="smartspaces.resource.repository.manager" />
+          <property name="resourceRepository" ref="smartspaces.repository.resource" />
+        </bean>
+      </property>
 	</bean>
 
 	<bean id="smartspaces.master.api.controller" parent="txProxyTemplate">
 
-		<property name="target">
+	  <property name="target">
+        <bean
+            class="io.smartspaces.master.api.master.internal.StandardMasterApiSpaceControllerManager"
+            parent="abstractMasterApiManager">
 
-			<bean
-				class="io.smartspaces.master.api.master.internal.StandardMasterApiSpaceControllerManager"
-				parent="abstractMasterApiManager">
+          <property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
 
-			  <property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
+          <property name="activityRepository" ref="smartspaces.repository.activity" />
 
-			  <property name="activityRepository" ref="smartspaces.repository.activity" />
+          <property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
 
-			  <property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
-
-			  <property name="masterApiActivityManager" ref="smartspaces.master.api.activity" />
-			</bean>
-		</property>
+          <property name="masterApiActivityManager" ref="smartspaces.master.api.activity" />
+        </bean>
+      </property>
 	</bean>
 
 	<bean id="smartspaces.master.api.automation" parent="txProxyTemplate">
 
-		<property name="target">
+	  <property name="target">
+        <bean
+            class="io.smartspaces.master.api.master.internal.BasicMasterApiAutomationManager"
+            parent="abstractMasterApiManager">
 
-			<bean
-				class="io.smartspaces.master.api.master.internal.BasicMasterApiAutomationManager"
-				parent="abstractMasterApiManager">
+          <property name="automationRepository" ref="smartspaces.repository.automation" />
 
-				<property name="automationRepository" ref="smartspaces.repository.automation" />
-
-				<property name="automationManager" ref="smartspaces.master.automation" />
-			</bean>
-		</property>
+          <property name="automationManager" ref="smartspaces.master.automation" />
+        </bean>
+      </property>
 	</bean>
 
 	<bean id="smartspaces.master.api.support" parent="txProxyTemplate">
 
-		<property name="target">
+	  <property name="target">
+        <bean
+            class="io.smartspaces.master.api.master.internal.StandardMasterApiMasterSupportManager"
+            parent="abstractMasterApiManager">
 
-			<bean
-				class="io.smartspaces.master.api.master.internal.StandardMasterApiMasterSupportManager"
-				parent="abstractMasterApiManager">
-
-				<property name="masterSupportManager" ref="smartspaces.master.support" />
-			</bean>
-		</property>
+          <property name="masterSupportManager" ref="smartspaces.master.support" />
+        </bean>
+      </property>
 	</bean>
 
 	<bean id="smartspaces.master.server.bridge" parent="txProxyTemplate">
 
-		<property name="target">
+	  <property name="target">
+        <bean
+            class="io.smartspaces.master.server.services.internal.RemoteMasterServerBridge">
 
-			<bean
-				class="io.smartspaces.master.server.services.internal.RemoteMasterServerBridge">
+          <property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
 
-				<property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
+          <property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
 
-				<property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
+          <property name="spaceEnvironment" ref="smartspaces.environment" />
 
-		        <property name="spaceEnvironment" ref="smartspaces.environment" />
-
-				<property name="log" ref="smartspaces.master.logger" />
-			</bean>
-		</property>
+          <property name="log" ref="smartspaces.master.logger" />
+        </bean>
+      </property>
 	</bean>
 
 	<bean id="smartspaces.master.websocket"
 		class="io.smartspaces.master.api.master.internal.StandardMasterWebsocketManager"
 		destroy-method="shutdown" init-method="startup">
-		<property name="masterEventManager" ref="smartspaces.master.event.manager" />
+	  <property name="masterEventManager" ref="smartspaces.master.event.manager" />
 
-		<property name="masterCommunicationManager" ref="smartspaces.master.communication.manager" />
+	  <property name="masterCommunicationManager" ref="smartspaces.master.communication.manager" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 
-		<property name="extensionManager" ref="smartspaces.master.extension" />
+	  <property name="extensionManager" ref="smartspaces.master.extension" />
 
-		<property name="masterApiActivityManager" ref="smartspaces.master.api.activity" />
+	  <property name="masterApiActivityManager" ref="smartspaces.master.api.activity" />
 
-		<property name="masterApiSpaceControllerManager" ref="smartspaces.master.api.controller" />
+	  <property name="masterApiSpaceControllerManager" ref="smartspaces.master.api.controller" />
 
-		<property name="masterApiAutomationManager" ref="smartspaces.master.api.automation" />
+	  <property name="masterApiAutomationManager" ref="smartspaces.master.api.automation" />
 
-		<property name="masterApiMasterSupportManager" ref="smartspaces.master.api.support" />
+	  <property name="masterApiMasterSupportManager" ref="smartspaces.master.api.support" />
 	</bean>
 
-	<context:component-scan base-package="smartspaces" />
+	<context:component-scan base-package="io.smartspaces" />
 
 	<bean id="smartspaces.master.shell"
 		class="io.smartspaces.master.api.master.internal.osgi.OsgiMasterShell"
 		destroy-method="deactivate" init-method="activate">
 
-		<property name="masterApiActivityManager" ref="smartspaces.master.api.activity" />
+	  <property name="masterApiActivityManager" ref="smartspaces.master.api.activity" />
 
-		<property name="masterApiSpaceControllerManager" ref="smartspaces.master.api.controller" />
+	  <property name="masterApiSpaceControllerManager" ref="smartspaces.master.api.controller" />
 
-		<property name="activityRepository" ref="smartspaces.repository.activity" />
+	  <property name="activityRepository" ref="smartspaces.repository.activity" />
 
-		<property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
+	  <property name="spaceControllerRepository" ref="smartspaces.repository.controller" />
 
-		<property name="scriptService" ref="smartspaces.service.script" />
+	  <property name="scriptService" ref="smartspaces.service.script" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 
-		<property name="spaceSystemControl" ref="smartspaces.systemctl" />
+	  <property name="spaceSystemControl" ref="smartspaces.systemctl" />
 
-		<property name="bundleContext" ref="bundleContext" />
+	  <property name="bundleContext" ref="bundleContext" />
 	</bean>
 
 	<bean id="smartspaces.master.control.file" class="io.smartspaces.master.server.control.MasterFileControl"
 		destroy-method="shutdown" init-method="startup">
 
-		<property name="activityRepository" ref="smartspaces.repository.activity" />
+	  <property name="activityRepository" ref="smartspaces.repository.activity" />
 
-		<property name="resourceRepositoryManager" ref="smartspaces.resource.repository.manager" />
+	  <property name="resourceRepositoryManager" ref="smartspaces.resource.repository.manager" />
 
-		<property name="spaceEnvironment" ref="smartspaces.environment" />
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 
-		<property name="spaceSystemControl" ref="smartspaces.systemctl" />
+	  <property name="spaceSystemControl" ref="smartspaces.systemctl" />
 
-		<property name="masterApiSpaceControllerManager" ref="smartspaces.master.api.controller" />
+	  <property name="masterApiSpaceControllerManager" ref="smartspaces.master.api.controller" />
 
-		<property name="masterApiAutomationManager" ref="smartspaces.master.api.automation" />
+	  <property name="masterApiAutomationManager" ref="smartspaces.master.api.automation" />
 	</bean>
 
 	<osgi:service

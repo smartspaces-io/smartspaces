@@ -19,6 +19,7 @@ package io.smartspaces.master.server.services.internal;
 
 import io.smartspaces.master.api.master.MasterApiActivityManager;
 import io.smartspaces.master.api.master.MasterApiMasterSupportManager;
+import io.smartspaces.master.api.master.MasterApiResourceManager;
 import io.smartspaces.master.api.master.MasterApiSpaceControllerManager;
 import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
@@ -56,7 +57,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Keith M. Hughes
  */
-public class BasicExtensionManager implements ExtensionManager {
+public class StandardExtensionManager implements ExtensionManager {
 
   /**
    * How often the watched directories should be scanned. In seconds.
@@ -107,6 +108,11 @@ public class BasicExtensionManager implements ExtensionManager {
    * The Master API controller manager to use for the extension master.
    */
   private MasterApiSpaceControllerManager masterApiSpaceControllerManager;
+
+  /**
+   * The Master API resource manager to use for the extension master.
+   */
+  private MasterApiResourceManager masterApiResourceManager;
 
   /**
    * The Master API master support manager to use for the extension master.
@@ -206,6 +212,8 @@ public class BasicExtensionManager implements ExtensionManager {
         activeSpaceControllerManager);
     bindings.put(ScriptingNames.SCRIPTING_NAME_MASTER_API_ACTIVITY_MANAGER,
         masterApiActivityManager);
+    bindings.put(ScriptingNames.SCRIPTING_NAME_MASTER_API_RESOURCE_MANAGER,
+        masterApiResourceManager);
     bindings.put(ScriptingNames.SCRIPTING_NAME_MASTER_API_SPACE_CONTROLLER_MANAGER,
         masterApiSpaceControllerManager);
     bindings.put(ScriptingNames.SCRIPTING_NAME_MASTER_API_MASTER_SUPPORT_MANAGER,
@@ -376,6 +384,13 @@ public class BasicExtensionManager implements ExtensionManager {
   public void setMasterApiSpaceControllerManager(
       MasterApiSpaceControllerManager masterApiControllerManager) {
     this.masterApiSpaceControllerManager = masterApiControllerManager;
+  }
+
+  /**
+   * @param masterApiResourceManager the masterApiResourceManager to set
+   */
+  public void setMasterApiResourceManager(MasterApiResourceManager masterApiResourceManager) {
+    this.masterApiResourceManager = masterApiResourceManager;
   }
 
   /**

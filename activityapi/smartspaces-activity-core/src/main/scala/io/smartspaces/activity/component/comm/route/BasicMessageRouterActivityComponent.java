@@ -21,17 +21,16 @@ import io.smartspaces.activity.component.comm.PubSubActivityComponent;
 import io.smartspaces.activity.component.comm.ros.RosActivityComponent;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.handler.ProtectedHandlerContext;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.messaging.route.MessageRouter;
-import io.smartspaces.messaging.route.RouteMessageListener;
 import io.smartspaces.messaging.route.RouteDescription;
+import io.smartspaces.messaging.route.RouteMessageListener;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
 import io.smartspaces.messaging.route.StandardMessageRouter;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription$;
-
-import org.apache.commons.logging.Log;
 
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +76,7 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
   /**
    * The logger to use.
    */
-  private Log log;
+  private ExtendedLog log;
 
   @Override
   public String getName() {

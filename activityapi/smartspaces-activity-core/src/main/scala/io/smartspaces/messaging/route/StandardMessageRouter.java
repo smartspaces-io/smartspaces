@@ -20,6 +20,7 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.component.comm.PubSubActivityComponent;
 import io.smartspaces.handler.ProtectedHandlerContext;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.messaging.codec.MapByteArrayCodec;
 import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.messaging.codec.MessageDecoder;
@@ -44,7 +45,6 @@ import io.smartspaces.util.messaging.ros.StandardRosSubscribers;
 import com.google.common.collect.Maps;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
-import org.apache.commons.logging.Log;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -169,7 +169,7 @@ public class StandardMessageRouter implements MessageRouter {
   /**
    * The logger to use.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * Construct a new router.
@@ -182,7 +182,7 @@ public class StandardMessageRouter implements MessageRouter {
    *          the logger to uses
    */
   public StandardMessageRouter(ProtectedHandlerContext protectedHandlerContext,
-      TimeProvider timeProvider, Log log) {
+      TimeProvider timeProvider, ExtendedLog log) {
     this.protectedHandlerContext = protectedHandlerContext;
     this.timeProvider = timeProvider;
     this.log = log;

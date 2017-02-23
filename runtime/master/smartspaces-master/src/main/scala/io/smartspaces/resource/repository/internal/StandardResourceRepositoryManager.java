@@ -91,9 +91,7 @@ public class StandardResourceRepositoryManager implements ResourceRepositoryMana
       // TODO(peringknife): Use appropriate TimeProvider for this.
       finalResource.setLastUploadDate(new Date());
 
-      finalResource.setBundleContentHash(
-          calculateBundleContentHash(ResourceCategory.RESOURCE_CATEGORY_CONTAINER_BUNDLE,
-              resource.getName(), resource.getVersion()));
+      finalResource.setBundleContentHash(calculateBundleContentHash(stageHandle));
 
       resourceRepository.saveResource(finalResource);
 
@@ -136,8 +134,7 @@ public class StandardResourceRepositoryManager implements ResourceRepositoryMana
 
       copyDependencies(activityDescription, finalActivity);
 
-      finalActivity.setBundleContentHash(calculateBundleContentHash(
-          ResourceCategory.RESOURCE_CATEGORY_ACTIVITY, identifyingName, version));
+      finalActivity.setBundleContentHash(calculateBundleContentHash(stageHandle));
 
       activityRepository.saveActivity(finalActivity);
 
@@ -165,6 +162,30 @@ public class StandardResourceRepositoryManager implements ResourceRepositoryMana
     } catch (Throwable e) {
       throw SmartSpacesException.newFormattedException(e,
           "Could not calculate bundle hash for %s:%s:%s", category, identifyingName, version);
+    } finally {
+      Closeables.closeQuietly(inputStream);
+    }
+  }
+
+  /**
+   * Get the bundle content hash for a staged bundle.
+   * 
+   * @param stagingHandle
+   *          the staging handle
+   * 
+   * @return the hash
+   */
+  private String calculateBundleContentHash(String stagingHandle) {
+    InputStream inputStream = null;
+    try {
+      inputStream = repositoryStorageManager.getStagedResourceStream(stagingHandle);
+      String bundleSignature = resourceSignatureCalculator.getResourceSignature(inputStream);
+      inputStream.close();
+
+      return bundleSignature;
+    } catch (Throwable e) {
+      throw SmartSpacesException.newFormattedException(e,
+          "Could not calculate bundle hash for staged resource %s", stagingHandle);
     } finally {
       Closeables.closeQuietly(inputStream);
     }

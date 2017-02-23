@@ -134,6 +134,15 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
           TcpServerClientConnection<String> connection) {
         spaceEnvironment.getLog().formatInfo("Space controller has control connection from %s",
             connection.getRemoteAddress());
+        
+        // TODO(keith): Consider initiating this from master once connection has been made.
+        spaceEnvironment.getExecutorService().submit(new Runnable() {
+
+          @Override
+          public void run() {
+            publishControllerFullStatus();
+          }
+        });
       }
 
       @Override
@@ -320,7 +329,7 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
    * Create and publish controller full status.
    */
   private void publishControllerFullStatus() {
-    spaceEnvironment.getLog().info("Getting full controller status");
+    spaceEnvironment.getLog().info("Sending full controller status");
 
     SimpleSpaceController controllerInfo = controllerControl.getControllerInfo();
 

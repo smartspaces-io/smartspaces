@@ -249,7 +249,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
       registeredServices.add(service);
     } catch (Exception e) {
       spaceEnvironment.getLog()
-          .error(String.format("Error while starting up service %s", service.getName()), e);
+          .formatError(e, "Error while starting up service %s", service.getName());
     }
   }
 

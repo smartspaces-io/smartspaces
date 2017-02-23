@@ -370,7 +370,7 @@ public class FileSystemResourceRepositoryStorageManager
   }
 
   @Override
-  public InputStream getStagedResourceBundle(String stageHandle) {
+  public InputStream getStagedResourceStream(String stageHandle) {
     File stageFile = stagingFiles.get(stageHandle);
     if (stageFile != null) {
       try {

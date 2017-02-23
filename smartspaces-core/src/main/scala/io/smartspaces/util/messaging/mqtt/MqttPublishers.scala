@@ -14,19 +14,19 @@
  * the License.
  */
 
-package io.smartspaces.util.messaging.mqtt;
+package io.smartspaces.util.messaging.mqtt
 
-import java.util.Set;
+import java.util.Set
 
 /**
- * A collection of MQTT publishers for a given message topic.
+ * A collection of MQTT publishers for a given message.
  * 
  * @param <T>
  *          the type of messages
  *
  * @author Keith M. Hughes
  */
-public interface MqttPublishers<T> {
+trait MqttPublishers[T] {
 
   /**
    * Add publishers to the collection.
@@ -36,7 +36,7 @@ public interface MqttPublishers<T> {
    * @param topicNames
    *          the topic names
    */
-  void addPublishers(MqttBrokerDescription mqttBroker, Set<String> topicNames);
+  def addPublishers(mqttBroker: MqttBrokerDescription ,  topicNames: Set[String]): Unit
 
   /**
    * Publish a message to all publishers.
@@ -44,10 +44,10 @@ public interface MqttPublishers<T> {
    * @param message
    *          the message to be published
    */
-  void publishMessage(T message);
+  def publishMessage( message: T): Unit
 
   /**
    * Shut down all publishers.
    */
-  void shutdown();
+  def shutdown(): Unit
 }

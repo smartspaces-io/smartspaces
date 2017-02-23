@@ -122,20 +122,20 @@ public interface ResourceRepositoryStorageManager extends ManagedResource {
   NamedVersionedResource getNameVersionResource(String stageHandle) throws SmartSpacesException;
 
   /**
-   * Get an {@link InputStream} for the entire activity bundle.
+   * Get an {@link InputStream} for the entire staged bundle.
    *
    * @param stageHandle
    *          staging handle for which to get the data stream
    *
-   * @return the input stream for the activity bundle
+   * @return the input stream for the staged bundle
    *
    * @throws SmartSpacesException
    *           if the bundle can not be accessed, or the handle is invalid
    */
-  InputStream getStagedResourceBundle(String stageHandle) throws SmartSpacesException;
+  InputStream getStagedResourceStream(String stageHandle) throws SmartSpacesException;
 
   /**
-   * Add a resource to the repository.
+   * Commit a staged resource to the repository.
    *
    * @param category
    *          category of the resource

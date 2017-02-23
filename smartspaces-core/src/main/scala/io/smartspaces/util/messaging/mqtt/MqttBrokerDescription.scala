@@ -85,7 +85,7 @@ object MqttBrokerDescription {
  *
  * @author Keith M. Hughes
  */
-class MqttBrokerDescription(val brokerHost: String, val brokerPort: Integer, val isSsl: Boolean) {
+class MqttBrokerDescription(val brokerHost: String, val brokerPort: Integer, val isSsl: Boolean) extends Equals {
 
   /**
    * The network address of the broker.
@@ -136,4 +136,20 @@ class MqttBrokerDescription(val brokerHost: String, val brokerPort: Integer, val
    * The path to the persistence for MQTT retained messages.
    */
   var persistencePath: Option[String] = None
+
+  def canEqual(other: Any) = {
+    other.isInstanceOf[MqttBrokerDescription]
+  }
+
+  override def equals(other: Any) = {
+    other match {
+      case that: MqttBrokerDescription => that.canEqual(MqttBrokerDescription.this) && brokerHost == that.brokerHost && brokerPort == that.brokerPort && isSsl == that.isSsl
+      case _ => false
+    }
+  }
+
+  override def hashCode() = {
+    val prime = 41
+    prime * (prime * (prime + brokerHost.hashCode) + brokerPort.hashCode) + isSsl.hashCode
+  }
 }

@@ -16,11 +16,11 @@
 
 package io.smartspaces.infrastructure.plugins
 
-import io.smartspaces.resource.managed.IdempotentManagedResource
-import scala.collection.mutable.HashMap
-import io.smartspaces.system.SmartSpacesEnvironment
-import io.moquette.server.netty.MoquetteIdleTimeoutHandler
 import io.smartspaces.infrastructure.plugins.comm.mqtt.MoquetteInfrastructurePlugin
+import io.smartspaces.resource.managed.IdempotentManagedResource
+import io.smartspaces.system.SmartSpacesEnvironment
+
+import scala.collection.mutable.HashMap
 
 /**
  * The standard infrastructure plugins manager.

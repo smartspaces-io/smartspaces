@@ -31,12 +31,12 @@ trait MqttPublishers[T] {
   /**
    * Add publishers to the collection.
    * 
-   * @param mqttBroker
-   *          the MQTT broker that the topics to be published to are attached to
+   * @param mqttClient
+   *          the MQTT client that the topics will be published to
    * @param topicNames
    *          the topic names
    */
-  def addPublishers(mqttBroker: MqttBrokerDescription ,  topicNames: Set[String]): Unit
+  def addPublishers(mqttClient: PahoMqttClient,  topicNames: Set[String]): Unit
 
   /**
    * Publish a message to all publishers.

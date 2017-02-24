@@ -20,7 +20,7 @@ dependencies {
   compile project(':smartspaces-system')
   compile project(':service:smartspaces-service-core')
   
-  compile('io.moquette:moquette-broker:0.10-SNAPSHOT')
+  //compile('io.moquette:moquette-broker:0.10-SNAPSHOT')
 
   provided "${project.ext.osgiContainerDependency}"
 }
@@ -41,7 +41,7 @@ jar {
 		'io.smartspaces.infrastructure.plugins.internal.*'
 		
     instruction 'Import-Package',
-		'io.moquette',
+		'io.moquette;resolution:="optional"',
 		'*'
   }
 }

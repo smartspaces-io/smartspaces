@@ -35,6 +35,7 @@ import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription;
 import io.smartspaces.util.messaging.mqtt.MqttPublishers;
 import io.smartspaces.util.messaging.mqtt.MqttSubscribers;
+import io.smartspaces.util.messaging.mqtt.PahoMqttClient;
 import io.smartspaces.util.messaging.mqtt.StandardMqttPublishers;
 import io.smartspaces.util.messaging.mqtt.StandardMqttSubscribers;
 import io.smartspaces.util.messaging.ros.RosPublishers;
@@ -45,8 +46,7 @@ import io.smartspaces.util.messaging.ros.StandardRosSubscribers;
 import com.google.common.collect.Maps;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.ros.message.MessageListener;
 import org.ros.node.ConnectedNode;
@@ -142,6 +142,12 @@ public class StandardMessageRouter implements MessageRouter {
   private Map<String, RouteDescription> outputRouteDescriptions = new HashMap<>();
 
   /**
+   * The route descriptions for all outputs keyed by channel IDs.
+   */
+  private Map<MqttBrokerDescription, PahoMqttClient> brokerDescriptionToMqttClient =
+      new HashMap<>();
+
+  /**
    * Host ID of the container.
    */
   private String hostId;
@@ -227,8 +233,8 @@ public class StandardMessageRouter implements MessageRouter {
             .add(new RosRouteMessagePublisher(channelId, publishers, rosMessageEncoder));
       } else if ("mqtt".equals(routeProtocol)) {
         MqttPublishers<Map<String, Object>> publishers =
-            new StandardMqttPublishers<Map<String, Object>>(getNodeName(), mqttMessageCodec, log);
-        publishers.addPublishers(getMqttBrokerDescription(), topicNamesForProtocol);
+            new StandardMqttPublishers<Map<String, Object>>(mqttMessageCodec, log);
+        publishers.addPublishers(getMqttClient(getMqttBrokerDescription()), topicNamesForProtocol);
 
         routeMessagePublishers.add(new MqttRouteMessagePublisher(channelId, publishers));
       } else {
@@ -288,7 +294,8 @@ public class StandardMessageRouter implements MessageRouter {
               }
             });
       } else if ("mqtt".equals(routeProtocol)) {
-        // If the node name doesn't start with the component separator, add in
+        // If the node name doesn't start with the component separator,
+        // add in
         // the host ID.
         String mqttNodeName = nodeName;
         if (!nodeName.startsWith(PubSubActivityComponent.TOPIC_COMPONENT_SEPARATOR)) {
@@ -301,21 +308,12 @@ public class StandardMessageRouter implements MessageRouter {
             new MqttRouteMessageSubscriber(channelId, subscribers, mqttMessageCodec);
         routeMessageSubscribers.add(mqttRouteMessageSubscriber);
 
-        subscribers.addSubscribers(getMqttBrokerDescription(), topicNamesForProtocol,
-            new MqttCallback() {
-              @Override
-              public void connectionLost(Throwable cause) {
-                log.warn("Lost connection to MQTT broker");
-              }
+        subscribers.addSubscribers(getMqttClient(getMqttBrokerDescription()), topicNamesForProtocol,
+            new IMqttMessageListener() {
 
               @Override
               public void messageArrived(String topic, MqttMessage message) throws Exception {
                 handleNewIncomingMessage(message.getPayload(), mqttRouteMessageSubscriber);
-              }
-
-              @Override
-              public void deliveryComplete(IMqttDeliveryToken token) {
-                // Not used since not publishing
               }
             });
       }
@@ -444,6 +442,24 @@ public class StandardMessageRouter implements MessageRouter {
   }
 
   /**
+   * Get the MQTT client allocated with a given broker description.
+   * 
+   * @param mqttBrokerDescription
+   *          the MQTT broker description
+   */
+  private PahoMqttClient getMqttClient(MqttBrokerDescription mqttBrokerDescription) {
+    PahoMqttClient client = brokerDescriptionToMqttClient.get(mqttBrokerDescription);
+    if (client == null) {
+      client = new PahoMqttClient(mqttBrokerDescription, getNodeName(), log);
+      client.startup();
+      
+      brokerDescriptionToMqttClient.put(mqttBrokerDescription, client);
+    }
+    
+    return client;
+  }
+
+  /**
    * Set the host ID for the router.
    * 
    * @param hostId
@@ -495,8 +511,7 @@ public class StandardMessageRouter implements MessageRouter {
   }
 
   @Override
-  public void
-      addRoutableInputMessageListeners(Map<String, RouteMessageListener> messageListeners) {
+  public void addRoutableInputMessageListeners(Map<String, RouteMessageListener> messageListeners) {
     messageListeners.putAll(messageListeners);
   }
 

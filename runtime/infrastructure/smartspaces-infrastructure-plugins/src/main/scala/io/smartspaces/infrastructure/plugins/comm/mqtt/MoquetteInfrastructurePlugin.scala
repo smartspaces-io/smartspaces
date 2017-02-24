@@ -21,16 +21,16 @@ import io.smartspaces.infrastructure.plugins.InfrastructurePlugin
 import io.smartspaces.resource.managed.IdempotentManagedResource
 import io.smartspaces.system.SmartSpacesEnvironment
 
-import io.moquette.server.Server
-import io.moquette.server.config.IConfig
-import io.moquette.BrokerConstants
+//import io.moquette.server.Server
+//import io.moquette.server.config.IConfig
+//import io.moquette.BrokerConstants
 import io.smartspaces.service.comm.network.zeroconf.ZeroconfService
 import io.smartspaces.service.comm.network.zeroconf.ZeroconfServiceInfo
 import io.smartspaces.service.comm.network.zeroconf.StandardZeroconfServiceInfo
 import io.smartspaces.util.io.FileSupportImpl
 import io.smartspaces.service.ServiceNotification
-import io.moquette.server.config.IResourceLoader
-import io.moquette.server.config.ClasspathResourceLoader
+//import io.moquette.server.config.IResourceLoader
+//import io.moquette.server.config.ClasspathResourceLoader
 
 /**
  * An infrastructure plugin to start up a Moquette MQTT broker.
@@ -60,7 +60,7 @@ class MoquetteInfrastructurePlugin(val spaceEnvironment: SmartSpacesEnvironment)
   /**
    * The Moquette broker server.
    */
-  private var mqttBroker: Server = null
+  //private var mqttBroker: Server = null
 
   /**
    * The name of the plugin.
@@ -88,27 +88,27 @@ class MoquetteInfrastructurePlugin(val spaceEnvironment: SmartSpacesEnvironment)
   val fileSupport = FileSupportImpl.INSTANCE
 
   override def onStartup(): Unit = {
-    val config = new SmartSpacesMoquetteConfig(spaceEnvironment.getSystemConfiguration)
+    //val config = new SmartSpacesMoquetteConfig(spaceEnvironment.getSystemConfiguration)
 
     enabled = spaceEnvironment.getSystemConfiguration.getPropertyBoolean(MoquetteInfrastructurePlugin.CONFIGURATION_NAME_INFRASTRUCTURE_MQTT_ENABLE, MoquetteInfrastructurePlugin.CONFIGURATION_VALUE_DEFAULT_INFRASTRUCTURE_MQTT_ENABLE)
 
     if (enabled) {
-      val storageFilePath = config.getProperty(BrokerConstants.PERSISTENT_STORE_PROPERTY_NAME)
-      if (storageFilePath != null && !storageFilePath.trim().isEmpty()) {
-        val storageFile = fileSupport.newFile(storageFilePath)
-        fileSupport.directoryExists(storageFile.getParentFile)
-      }
+//      val storageFilePath = config.getProperty(BrokerConstants.PERSISTENT_STORE_PROPERTY_NAME)
+//      if (storageFilePath != null && !storageFilePath.trim().isEmpty()) {
+//        val storageFile = fileSupport.newFile(storageFilePath)
+//        fileSupport.directoryExists(storageFile.getParentFile)
+//      }
 
-      mqttBroker = new Server()
+      //mqttBroker = new Server()
 
-      mqttBroker.startServer(config)
+      //mqttBroker.startServer(config)
 
-      val host = config.getProperty(BrokerConstants.HOST_PROPERTY_NAME)
-      val port = config.getProperty(BrokerConstants.PORT_PROPERTY_NAME)
+      //val host = config.getProperty(BrokerConstants.HOST_PROPERTY_NAME)
+      //val port = config.getProperty(BrokerConstants.PORT_PROPERTY_NAME)
 
       spaceEnvironment.getServiceRegistry.addServiceNotificationListener(ZeroconfService.SERVICE_NAME, new ServiceNotification[ZeroconfService]() {
         override def onServiceAvailable(zeroconfService: ZeroconfService): Unit = {
-          zeroconfService.registerService(new StandardZeroconfServiceInfo(zeroconfServiceType, zeroconfName, null, host, Integer.parseInt(port), 0, 0))
+          //zeroconfService.registerService(new StandardZeroconfServiceInfo(zeroconfServiceType, zeroconfName, null, host, Integer.parseInt(port), 0, 0))
         }
       })
     }
@@ -116,7 +116,7 @@ class MoquetteInfrastructurePlugin(val spaceEnvironment: SmartSpacesEnvironment)
 
   override def onShutdown(): Unit = {
     if (enabled) {
-      mqttBroker.stopServer()
+      //mqttBroker.stopServer()
     }
   }
 }
@@ -126,32 +126,32 @@ class MoquetteInfrastructurePlugin(val spaceEnvironment: SmartSpacesEnvironment)
  *
  * @author Keith M. Hughes
  */
-class SmartSpacesMoquetteConfig(val smartSpacesConfig: Configuration) extends IConfig {
-
-  /**
-   * A property prefix to add to all Moquette configuration names so that they scope properly
-   * to Moquette.
-   */
-  val MOQUETTE_PROPERTY_PREFIX = "mqtt.moquette."
-
-  /**
-   * The resource loader for the config.
-   */
-  val resourceLoader = new ClasspathResourceLoader()
-
-  override def setProperty(name: String, value: String): Unit = {
-    smartSpacesConfig.setProperty(MOQUETTE_PROPERTY_PREFIX + name, value)
-  }
-
-  override def getProperty(name: String): String = {
-    smartSpacesConfig.getPropertyString(MOQUETTE_PROPERTY_PREFIX + name)
-  }
-
-  override def getProperty(name: String, defaultValue: String): String = {
-    smartSpacesConfig.getPropertyString(MOQUETTE_PROPERTY_PREFIX + name, defaultValue)
-  }
-
-  override def getResourceLoader(): IResourceLoader = {
-    resourceLoader
-  }
-}
+//class SmartSpacesMoquetteConfig(val smartSpacesConfig: Configuration) extends IConfig {
+//
+//  /**
+//   * A property prefix to add to all Moquette configuration names so that they scope properly
+//   * to Moquette.
+//   */
+//  val MOQUETTE_PROPERTY_PREFIX = "mqtt.moquette."
+//
+//  /**
+//   * The resource loader for the config.
+//   */
+//  val resourceLoader = new ClasspathResourceLoader()
+//
+//  override def setProperty(name: String, value: String): Unit = {
+//    smartSpacesConfig.setProperty(MOQUETTE_PROPERTY_PREFIX + name, value)
+//  }
+//
+//  override def getProperty(name: String): String = {
+//    smartSpacesConfig.getPropertyString(MOQUETTE_PROPERTY_PREFIX + name)
+//  }
+//
+//  override def getProperty(name: String, defaultValue: String): String = {
+//    smartSpacesConfig.getPropertyString(MOQUETTE_PROPERTY_PREFIX + name, defaultValue)
+//  }
+//
+//  override def getResourceLoader(): IResourceLoader = {
+//    resourceLoader
+//  }
+//}

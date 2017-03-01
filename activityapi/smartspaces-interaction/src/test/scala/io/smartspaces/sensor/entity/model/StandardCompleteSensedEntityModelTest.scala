@@ -30,6 +30,7 @@ import org.mockito.MockitoAnnotations
 import org.mockito.MockitoAnnotations.Mock
 import org.scalatest.junit.JUnitSuite
 import io.smartspaces.event.observable.EventObservableRegistry
+import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
 
 /**
  * Test the {@link #StandardCompleteSensedEntityModel}.
@@ -42,6 +43,8 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
   @Mock var sensorRegistry: SensorRegistry = null
 
   @Mock var eventObservableRegistry: EventObservableRegistry = null
+  
+  @Mock var eventEmitter: SensorProcessingEventEmitter = null
 
   @Mock var log: ExtendedLog = null
 
@@ -55,7 +58,7 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
     Mockito.when(spaceEnvironment.getTimeProvider).thenReturn(timeProvider)
     Mockito.when(spaceEnvironment.getEventObservableRegistry).thenReturn(eventObservableRegistry)
 
-    allModels = new StandardCompleteSensedEntityModel(sensorRegistry, log, spaceEnvironment)
+    allModels = new StandardCompleteSensedEntityModel(sensorRegistry, eventEmitter, log, spaceEnvironment)
   }
 
   @Test def testModelUpdate(): Unit = {

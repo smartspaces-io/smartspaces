@@ -26,5 +26,5 @@ import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel;
  * @author Keith M. Hughes
  */
 class SensorValueProcessorContext(val completeSensedEntityModel: CompleteSensedEntityModel ,
-      val log: ExtendedLog ) {
+      val log: ExtendedLog) {
 }

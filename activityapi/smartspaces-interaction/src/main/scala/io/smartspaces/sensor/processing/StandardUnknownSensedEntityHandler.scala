@@ -32,19 +32,19 @@ class StandardUnknownSensedEntityHandler extends UnknownSensedEntityHandler {
   private val unknownSensorIds: Set[String] = new HashSet[String]
 
   override def handleUnknownSensor(sensorId: String): Unit = {
-    this.synchronized {
+    synchronized {
       unknownSensorIds.add(sensorId);
     }
   }
 
   override def removeUnknownSensorId(sensorId: String): Unit = {
-    this.synchronized {
+    synchronized {
       unknownSensorIds.remove(sensorId)
     }
   }
 
   override def getAllUnknownSensorIds(): scala.collection.immutable.Set[String] = {
-    this.synchronized {
+    synchronized {
       unknownSensorIds.toSet
     }
   }

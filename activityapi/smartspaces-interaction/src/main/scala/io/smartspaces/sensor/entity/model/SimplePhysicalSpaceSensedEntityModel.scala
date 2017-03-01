@@ -46,7 +46,7 @@ class SimplePhysicalSpaceSensedEntityModel(
 
       val entered = scala.collection.immutable.HashSet(person)
 
-      models.broadcastOccupanyEvent(new PhysicalLocationOccupancyEvent(this, entered, null, timestamp))
+      models.eventEmitter.broadcastOccupanyEvent(new PhysicalLocationOccupancyEvent(this, entered, null, timestamp))
     }
 
     this
@@ -61,7 +61,7 @@ class SimplePhysicalSpaceSensedEntityModel(
 
       val exited = scala.collection.immutable.HashSet(person)
 
-      models.broadcastOccupanyEvent(new PhysicalLocationOccupancyEvent(this, null, exited, timestamp))
+      models.eventEmitter.broadcastOccupanyEvent(new PhysicalLocationOccupancyEvent(this, null, exited, timestamp))
     }
 
     this

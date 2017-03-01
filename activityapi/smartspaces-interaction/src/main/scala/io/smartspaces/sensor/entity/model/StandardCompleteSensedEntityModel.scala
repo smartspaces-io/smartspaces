@@ -34,14 +34,18 @@ import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
 import io.smartspaces.sensor.entity.model.event.PhysicalLocationOccupancyEvent
 import io.smartspaces.event.observable.EventObservableRegistry
 import io.smartspaces.event.observable.ObservableCreator
+import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
+import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
 
 /**
  * A collection of sensed entity models.
  *
  * @author Keith M. Hughes
  */
-class StandardCompleteSensedEntityModel(val sensorRegistry: SensorRegistry,
-    override val log: ExtendedLog, private val spaceEnvironment: SmartSpacesEnvironment) extends CompleteSensedEntityModel {
+class StandardCompleteSensedEntityModel(val sensorRegistry: SensorRegistry, 
+    override val eventEmitter: SensorProcessingEventEmitter,
+    override val log: ExtendedLog, 
+    private val spaceEnvironment: SmartSpacesEnvironment) extends CompleteSensedEntityModel {
 
   /**
    * Map of entity IDs to their sensor entity models.
@@ -69,50 +73,12 @@ class StandardCompleteSensedEntityModel(val sensorRegistry: SensorRegistry,
   private val markerIdToPersonModels: Map[String, PersonSensedEntityModel] = new HashMap
 
   /**
-   * The creator for physical occupancy observables.
-   */
-  private val physicalLocationOccupancyEventCreator: ObservableCreator[EventPublisherSubject[PhysicalLocationOccupancyEvent]] =
-    new ObservableCreator[EventPublisherSubject[PhysicalLocationOccupancyEvent]]() {
-      override def newObservable(): EventPublisherSubject[PhysicalLocationOccupancyEvent] = {
-        EventPublisherSubject.create(log)
-      }
-    }
-
-  /**
-   * The subject for physical location occupancy events
-   */
-  private var physicalLocationOccupancyEventSubject: EventPublisherSubject[PhysicalLocationOccupancyEvent] = null
-
-  /**
-   * The subject for sensor offline events
-   */
-  private var sensorOfflineEventSubject: EventPublisherSubject[SensorOfflineEvent] = null
-
-  /**
-   * The creator for sensor offline observables.
-   */
-  private val sensorOfflineEventCreator: ObservableCreator[EventPublisherSubject[SensorOfflineEvent]] =
-    new ObservableCreator[EventPublisherSubject[SensorOfflineEvent]]() {
-      override def newObservable(): EventPublisherSubject[SensorOfflineEvent] = {
-        EventPublisherSubject.create(log)
-      }
-    }
-
-  /**
    * The readwrite lock for the
    */
   private val readWriteLock = new ReentrantReadWriteLock
 
   override def prepare(): Unit = {
-    val eventObservableRegistry = spaceEnvironment.getEventObservableRegistry
-    physicalLocationOccupancyEventSubject =
-      eventObservableRegistry.getObservable(PhysicalLocationOccupancyEvent.EVENT_TYPE,
-        physicalLocationOccupancyEventCreator)
-
-    sensorOfflineEventSubject =
-      eventObservableRegistry.getObservable(SensorOfflineEvent.EVENT_TYPE,
-        sensorOfflineEventCreator)
-
+ 
     createModelsFromDescriptions()
   }
 
@@ -208,15 +174,6 @@ class StandardCompleteSensedEntityModel(val sensorRegistry: SensorRegistry,
 
   override def getMarkedSensedEntityModel(markerId: String): Option[PersonSensedEntityModel] = {
     markerIdToPersonModels.get(markerId)
-  }
-
-  override def broadcastOccupanyEvent(event: PhysicalLocationOccupancyEvent): Unit = {
-    physicalLocationOccupancyEventSubject.onNext(event)
-  }
-
-  override def broadcastSensorOfflineEvent(event: SensorOfflineEvent): Unit = {
-    log.warn("Broadcasting sensor offline event " + event.sensorModel.sensorEntityDescription)
-    sensorOfflineEventSubject.onNext(event)
   }
 
   override def checkModels(): Unit = {

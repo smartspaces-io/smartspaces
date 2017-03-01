@@ -24,32 +24,51 @@ import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.sensor.entity.model.updater.SimpleLocationChangeModelUpdater
 import io.smartspaces.sensor.messages.SensorMessages
 import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.sensor.entity.model.updater.LocationChangeModelUpdater
 
 /**
  * The standard processor for sensors that give a simple marker ID.
  *
  * @author Keith M. Hughes
  */
-class SimpleMarkerSensorValueProcessor extends SensorValueProcessor {
+class SimpleMarkerSensorValueProcessor(unknownMarkerHandler: UnknownMarkerHandler, val modelUpdater: LocationChangeModelUpdater) extends SensorValueProcessor {
   
-  private val modelUpdater = new SimpleLocationChangeModelUpdater
+  def this(unknownMarkerHandler: UnknownMarkerHandler) = {
+    this(unknownMarkerHandler, new SimpleLocationChangeModelUpdater)
+  }
 
+  /**
+   * The type of the sensor value for this processor.
+   */
   override val sensorValueType = StandardSensorData.SENSOR_TYPE_MARKER_SIMPLE
 
   override def processData(timestamp: Long, sensorModel: SensorEntityModel,
     sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
-    data: DynamicObject) {
+    data: DynamicObject): Unit = {
     val markerId = data.getRequiredString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)
 
     val markerEntity = processorContext.completeSensedEntityModel.sensorRegistry.getMarkerEntityByMarkerId(markerId)
-    val person =
-      processorContext.completeSensedEntityModel.getMarkedSensedEntityModel(markerId).get.asInstanceOf[PersonSensedEntityModel]
+    if (markerEntity.isEmpty) {
+      processorContext.log.warn(s"Detected unknown marker ID ${markerId}")
+      unknownMarkerHandler.handleUnknownMarker(markerId, timestamp)
+
+      return
+    }
+
+    val personOption =
+      processorContext.completeSensedEntityModel.getMarkedSensedEntityModel(markerId)
+    if (personOption.isEmpty) {
+      processorContext.log.warn(s"No person associated with marker ${markerId}")
+
+      return
+    }
+      
+    val person = personOption.get.asInstanceOf[PersonSensedEntityModel]
     val newLocation = sensedEntityModel.asInstanceOf[PhysicalSpaceSensedEntityModel]
-    
+
     sensorModel.updateSensedValue(timestamp)
 
-    processorContext.log.formatInfo("Detected marker ID %s,  person %s entering %s\n", markerId,
-      person, newLocation);
+    processorContext.log.info(s"Detected marker ID ${markerId}, person ${person.sensedEntityDescription.externalId} entering ${newLocation}")
 
     modelUpdater.updateLocation(newLocation, person, timestamp)
   }

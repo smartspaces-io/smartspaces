@@ -29,6 +29,7 @@ import io.smartspaces.sensor.entity.MeasurementTypeDescription
 import io.smartspaces.sensor.entity.SensorDetail
 import io.smartspaces.sensor.entity.SensorEntityDescription
 import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
+import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
 
 /**
  * Tests for the SimpleSensorEntityModel.
@@ -41,6 +42,8 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
   @Mock var sensorEntityDescription: SensorEntityDescription = null
 
   @Mock var allModels: CompleteSensedEntityModel = null
+  
+  @Mock var eventEmitter: SensorProcessingEventEmitter = null
 
   @Mock var sensorDetail: SensorDetail = null
 
@@ -48,6 +51,8 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
 
   @Before def setup(): Unit = {
     MockitoAnnotations.initMocks(this)
+   
+    Mockito.when(allModels.eventEmitter).thenReturn(eventEmitter)
 
     Mockito.when(sensorEntityDescription.sensorDetail).thenReturn(Option(sensorDetail))
 
@@ -72,13 +77,13 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
     // Model didn't change from short change
     model.checkIfOfflineTransition(modelCreationTime + timeoutTime / 2)
     Assert.assertFalse(model.online)
-    Mockito.verify(allModels, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+    Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     // Now trigger it from no signal from model start.
     val offlineTime = modelCreationTime + timeoutTime + 1
     model.checkIfOfflineTransition(offlineTime)
     Assert.assertFalse(model.online)
-    Mockito.verify(allModels, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     val event = argumentCaptor.getValue
     Assert.assertEquals(model, event.sensorModel)
@@ -105,13 +110,13 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
     // Model didn't change from short change
     model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
     Assert.assertTrue(model.online)
-    Mockito.verify(allModels, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+    Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     // Now trigger it
     var offlineTime = lastUpdate + timeoutTime + 1
     model.checkIfOfflineTransition(offlineTime)
     Assert.assertFalse(model.online)
-    Mockito.verify(allModels, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     val event = argumentCaptor.getValue
     Assert.assertEquals(model, event.sensorModel)
@@ -136,13 +141,13 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
     // Model didn't change from short change
     model.checkIfOfflineTransition(modelCreationTime + timeoutTime / 2)
     Assert.assertFalse(model.online)
-    Mockito.verify(allModels, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+    Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     // Now trigger it from no signal from model start.
     val offlineTime = modelCreationTime + timeoutTime + 1
     model.checkIfOfflineTransition(offlineTime)
     Assert.assertFalse(model.online)
-    Mockito.verify(allModels, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     val event = argumentCaptor.getValue
     Assert.assertEquals(model, event.sensorModel)
@@ -169,13 +174,13 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
     // Model didn't change from short change
     model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
     Assert.assertTrue(model.online)
-    Mockito.verify(allModels, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+    Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     // Now trigger it
     var offlineTime = lastUpdate + timeoutTime + 1
     model.checkIfOfflineTransition(offlineTime)
     Assert.assertFalse(model.online)
-    Mockito.verify(allModels, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     val event = argumentCaptor.getValue
     Assert.assertEquals(model, event.sensorModel)
@@ -203,13 +208,13 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
     // Model didn't change from short change
     model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
     Assert.assertTrue(model.online)
-    Mockito.verify(allModels, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+    Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     // Now trigger it
     var offlineTime = lastUpdate + timeoutTime + 1
     model.checkIfOfflineTransition(offlineTime)
     Assert.assertFalse(model.online)
-    Mockito.verify(allModels, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     val event = argumentCaptor.getValue
     Assert.assertEquals(model, event.sensorModel)

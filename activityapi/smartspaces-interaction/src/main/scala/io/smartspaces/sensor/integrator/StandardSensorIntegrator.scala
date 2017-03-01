@@ -49,6 +49,9 @@ import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 
 import java.io.File
+import io.smartspaces.sensor.processing.StandardSensorProcessingEventEmitter
+import io.smartspaces.sensor.processing.StandardUnknownMarkerHandler
+import io.smartspaces.sensor.processing.UnknownMarkerHandler
 
 /**
  * The sensor integration layer.
@@ -78,10 +81,30 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
   var descriptionImporter: SensorDescriptionImporter = null
 
   /**
+   * The collection of event emitters.
+   */
+  val eventEmitter = new StandardSensorProcessingEventEmitter(spaceEnvironment, log)
+
+  /**
+   * The handler for unknown sensed entities.
+   */
+  val unknownSensedEntityHandler = new StandardUnknownSensedEntityHandler()
+
+  /**
+   * The handler for unknown markers.
+   */
+  val unknownMarkerHandler: UnknownMarkerHandler = new StandardUnknownMarkerHandler(eventEmitter)
+
+  /**
    * The sensor processor for the integrator
    */
   private var sensorProcessor: SensorProcessor = null
 
+  /**
+   * Get the query processor.
+   *
+   * @return the query processor
+   */
   def queryProcessor: SensedEntityModelQueryProcessor = _queryProcessor
 
   override def onStartup(): Unit = {
@@ -90,7 +113,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
     descriptionImporter.importDescriptions(sensorRegistry)
 
     completeSensedEntityModel =
-      new StandardCompleteSensedEntityModel(sensorRegistry, log, spaceEnvironment)
+      new StandardCompleteSensedEntityModel(sensorRegistry, eventEmitter, log, spaceEnvironment)
     completeSensedEntityModel.prepare()
 
     _queryProcessor = new StandardSensedEntityModelQueryProcessor(completeSensedEntityModel)
@@ -106,15 +129,15 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
     if (liveData) {
 
       if (sampleRecord) {
-        val persistenceHandler = new StandardFilePersistenceSensorHandler(sampleFile);
-        sensorProcessor.addSensorHandler(persistenceHandler);
+        val persistenceHandler = new StandardFilePersistenceSensorHandler(sampleFile)
+        sensorProcessor.addSensorHandler(persistenceHandler)
       }
     } else {
-      persistedSensorInput = new StandardFilePersistenceSensorInput(sampleFile);
-      sensorProcessor.addSensorInput(persistedSensorInput);
+      persistedSensorInput = new StandardFilePersistenceSensorInput(sampleFile)
+      sensorProcessor.addSensorInput(persistedSensorInput)
     }
 
-    val unknownSensedEntityHandler = new StandardUnknownSensedEntityHandler();
+    val unknownSensedEntityHandler = new StandardUnknownSensedEntityHandler()
 
     val sensorHandler =
       new StandardSensedEntitySensorHandler(completeSensedEntityModel, unknownSensedEntityHandler, log)
@@ -130,14 +153,15 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
           sensedEntity, data.asMap())
 
       }
-    });
+    })
 
     val modelProcessor =
       new StandardSensedEntityModelProcessor(completeSensedEntityModel, log)
     modelProcessor.addSensorValueProcessor(new StandardBleProximitySensorValueProcessor())
-    modelProcessor.addSensorValueProcessor(new SimpleMarkerSensorValueProcessor())
+    modelProcessor.addSensorValueProcessor(new SimpleMarkerSensorValueProcessor(unknownMarkerHandler))
     sensorRegistry.getAllMeasurementTypes().filter(_.valueType == "double").foreach {
-      measurementType => modelProcessor.addSensorValueProcessor(new ContinuousValueSensorValueProcessor(measurementType))
+      measurementType =>
+        modelProcessor.addSensorValueProcessor(new ContinuousValueSensorValueProcessor(measurementType))
     }
 
     sensorHandler.addSensedEntitySensorListener(modelProcessor)
@@ -161,8 +185,8 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
     //      }
     //    } else {
     //      // Playing back
-    //      val latch = new CountDownLatch(1);
-    //      val playableSensorInput = persistedSensorInput;
+    //      val latch = new CountDownLatch(1)
+    //      val playableSensorInput = persistedSensorInput
     //      spaceEnvironment.getExecutorService().submit(new Runnable() {
     //
     //        override def run(): Unit = {

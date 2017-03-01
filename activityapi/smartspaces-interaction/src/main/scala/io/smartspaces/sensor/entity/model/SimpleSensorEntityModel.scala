@@ -88,7 +88,7 @@ class SimpleSensorEntityModel(val sensorEntityDescription: SensorEntityDescripti
   }
 
   /**
-   * Set he last update time.
+   * Set the last update time.
    *
    * <p>
    * This is for testing.
@@ -107,7 +107,7 @@ class SimpleSensorEntityModel(val sensorEntityDescription: SensorEntityDescripti
   }
 
   /**
-   * Set he last update time.
+   * Set the last update time.
    *
    * <p>
    * This is for testing.
@@ -193,6 +193,6 @@ class SimpleSensorEntityModel(val sensorEntityDescription: SensorEntityDescripti
    */
   private def signalOffline(currentTime: Long): Unit = {
     offlineSignaled = true
-    allModels.broadcastSensorOfflineEvent(new SensorOfflineEvent(this, currentTime))
+    allModels.eventEmitter.broadcastSensorOfflineEvent(new SensorOfflineEvent(this, currentTime))
   }
 }

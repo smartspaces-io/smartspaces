@@ -23,6 +23,8 @@ import io.smartspaces.sensor.entity.SensorRegistry
 import io.smartspaces.sensor.entity.SimpleSensorSensedEntityAssociation
 import io.smartspaces.sensor.entity.model.event.PhysicalLocationOccupancyEvent
 import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
+import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
+import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
 
 /**
  * A collection of sensed entity models.
@@ -31,7 +33,17 @@ import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
  */
 trait CompleteSensedEntityModel {
   
+  /**
+   * Logger to be used with the model.
+   */
   val log: ExtendedLog
+  
+  /**
+   * The event emitter.
+   * 
+   * TODO(keith): Maybe hand this in some how with method calls?
+   */
+  val eventEmitter: SensorProcessingEventEmitter
 
   /**
    * Prepare the collection.
@@ -143,22 +155,6 @@ trait CompleteSensedEntityModel {
    */
   def getMarkedSensedEntityModel(markerId: String): Option[PersonSensedEntityModel]
 
-  /**
-   * Broadcast a physical location occupancy event.
-   *
-   * @param event
-   * 		the event to broadcast
-   */
-  def broadcastOccupanyEvent(event: PhysicalLocationOccupancyEvent): Unit
-
-  /**
-   * Broadcast a sensor offline event.
-   *
-   * @param event
-   * 		the event to broadcast
-   */
-  def broadcastSensorOfflineEvent(event: SensorOfflineEvent): Unit
-  
   /**
    * Check all models for  things like going offline.
    */

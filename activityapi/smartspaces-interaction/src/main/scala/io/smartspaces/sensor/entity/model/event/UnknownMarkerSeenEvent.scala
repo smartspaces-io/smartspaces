@@ -14,25 +14,27 @@
  * the License.
  */
 
-package io.smartspaces.sensor.event
+package io.smartspaces.sensor.entity.model.event
+
 
 /**
- * An event for a marker being seen.
+ * An unknown marker ID has been seen.
  * 
  * @author Keith M. Hughes
  */
-object MarkerSeenEntityEvent {
+object UnknownMarkerSeenEvent {
 
   /**
    * The type of the event.
    */
-  val EVENT_TYPE = "marker.seen.known"
+  val EVENT_TYPE = "marker.seen.unknown"
 }
 
 /**
- * An event for a marker being seen.
+ * An unknown marker ID has been seen.
  * 
  * @author Keith M. Hughes
  */
-class MarkerSeenEntityEvent(val markerId: String, val timestamp: Long) {
+class UnknownMarkerSeenEvent(val markerId: String, val timestamp: Long) {
+  
 }

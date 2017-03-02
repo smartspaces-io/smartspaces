@@ -76,6 +76,18 @@ public class MasterSupportController extends BaseSpaceMasterController {
     return masterApiMasterSupportManager.importFromFileSystemMasterDomainModel();
   }
 
+  @RequestMapping(value = "/admin/support/hardRestartMaster.json", method = RequestMethod.GET)
+  public @ResponseBody
+      Map<String, ? extends Object> hardRestartMasterl() {
+    return masterApiMasterSupportManager.hardRestartMaster();
+  }
+
+  @RequestMapping(value = "/admin/support/softRestartMaster.json", method = RequestMethod.GET)
+  public @ResponseBody
+      Map<String, ? extends Object> softRestartMasterl() {
+    return masterApiMasterSupportManager.softRestartMaster();
+  }
+
   /**
    * @param masterApiMasterSupportManager
    *          the masterApiMasterSupportManager to set

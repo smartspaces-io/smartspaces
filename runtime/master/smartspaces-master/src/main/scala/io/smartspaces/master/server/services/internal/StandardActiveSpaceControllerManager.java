@@ -360,6 +360,54 @@ public class StandardActiveSpaceControllerManager
   }
 
   @Override
+  public void hardRestartSpaceController(SpaceController spaceController) {
+    ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
+
+    spaceEnvironment.getLog().formatInfo("Hard restarting space controller %s",
+        activeSpaceController.getDisplayName());
+
+    try {
+      remoteSpaceControllerClient.requestSpaceControllerHardRestart(activeSpaceController);
+
+      // TODO(keith): Yuck!
+      remoteSpaceControllerClient.getRemoteControllerClientListeners()
+          .signalSpaceControllerStatusChange(activeSpaceController, SpaceControllerState.UNKNOWN);
+
+      cleanLiveActivityStateModels(spaceController);
+    } catch (Throwable e) {
+      spaceEnvironment.getLog().formatError(e, "Could not hard restart space controller: %s",
+          activeSpaceController.getDisplayName());
+
+      // Communication failures from space controllers are handled by other
+      // event mechanisms.
+    }
+  }
+
+  @Override
+  public void softRestartSpaceController(SpaceController spaceController) {
+    ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);
+
+    spaceEnvironment.getLog().formatInfo("Soft restarting space controller %s",
+        activeSpaceController.getDisplayName());
+
+    try {
+      remoteSpaceControllerClient.requestSpaceControllerSoftRestart(activeSpaceController);
+
+      // TODO(keith): Yuck!
+      remoteSpaceControllerClient.getRemoteControllerClientListeners()
+          .signalSpaceControllerStatusChange(activeSpaceController, SpaceControllerState.UNKNOWN);
+
+      cleanLiveActivityStateModels(spaceController);
+    } catch (Throwable e) {
+      spaceEnvironment.getLog().formatError(e, "Could not soft restart space controller: %s",
+          activeSpaceController.getDisplayName());
+
+      // Communication failures from space controllers are handled by other
+      // event mechanisms.
+    }
+  }
+
+  @Override
   public void shutdownAllActivities(SpaceController spaceController) {
     // The async results will signal all active apps.
     ActiveSpaceController activeSpaceController = getActiveSpaceController(spaceController);

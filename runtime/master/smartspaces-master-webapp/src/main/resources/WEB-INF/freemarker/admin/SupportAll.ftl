@@ -36,6 +36,18 @@ function importMasterDomainModel() {
         doAjaxCommand("importMasterDomainModel");
     }
 }
+
+function hardRestartMaster() {
+    if (confirm("Are you sure you want to hard restart the master?")) {
+        doAjaxCommand("hardRestartMaster");
+    }
+}
+
+function softRestartMaster() {
+    if (confirm("Are you sure you want to soft restart the master?")) {
+        doAjaxCommand("softRestartMaster");
+    }
+}
 </script>
 
 </head>
@@ -48,6 +60,8 @@ function importMasterDomainModel() {
   <tr>
     <td><button type="button" onclick="doAjaxCommand('exportMasterDomainModel')" title="Export the Master Domain Model">Export Master Model</button></td>
     <td><button type="button" onclick="importMasterDomainModel()" title="Import the Master Domain Model">Import Master Model</button></td>
+    <td><button type="button" onclick="hardRestartMaster()" title="Hard restart the master">Hard Restart Master</button></td>
+    <td><button type="button" onclick="softRestartMaster()" title="Soft restart the master">Soft Restart Master</button></td>
   </tr>
 </table>
 

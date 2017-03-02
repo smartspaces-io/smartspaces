@@ -161,6 +161,22 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
   }
 
   @Override
+  public void requestSpaceControllerHardRestart(ActiveSpaceController controller) {
+    sendControllerRequest(controller,
+        StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_RESTART_HARD_CONTROLLER);
+
+    // Heartbeat is shut down once controller acknowledges shutdown.
+  }
+
+  @Override
+  public void requestSpaceControllerSoftRestart(ActiveSpaceController controller) {
+    sendControllerRequest(controller,
+        StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_RESTART_SOFT_CONTROLLER);
+
+    // Heartbeat is shut down once controller acknowledges shutdown.
+  }
+
+  @Override
   public void requestSpaceControllerStatus(ActiveSpaceController controller) {
     sendControllerRequest(controller,
         StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_STATUS);

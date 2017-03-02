@@ -459,11 +459,53 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
         try {
           activeSpaceControllerManager.shutdownSpaceController(controller);
         } catch (Throwable e) {
-          spaceEnvironment.getLog().error(String.format("Unable to shut down controller %s (%s)",
+          spaceEnvironment.getLog().formatError(e, "Unable to shut down controller %s (%s)",
+              controller.getUuid(), controller.getName());
+        }
+      } else {
+        spaceEnvironment.getLog().formatError("Unknown controller %s", id);
+
+        return getNoSuchSpaceControllerResponse(id);
+      }
+    }
+
+    return MasterApiMessageSupport.getSimpleSuccessResponse();
+  }
+
+  @Override
+  public Map<String, Object> hardRestartSpaceControllers(List<String> ids) {
+    for (String id : ids) {
+      SpaceController controller = spaceControllerRepository.getSpaceControllerByTypedId(id);
+      if (controller != null) {
+        try {
+          activeSpaceControllerManager.hardRestartSpaceController(controller);
+        } catch (Throwable e) {
+          spaceEnvironment.getLog().error(String.format("Unable to hard restart controller %s (%s)",
               controller.getUuid(), controller.getName()), e);
         }
       } else {
-        spaceEnvironment.getLog().error(String.format("Unknown controller %s", id));
+        spaceEnvironment.getLog().formatError("Unknown controller %s", id);
+
+        return getNoSuchSpaceControllerResponse(id);
+      }
+    }
+
+    return MasterApiMessageSupport.getSimpleSuccessResponse();
+  }
+
+  @Override
+  public Map<String, Object> softRestartSpaceControllers(List<String> ids) {
+    for (String id : ids) {
+      SpaceController controller = spaceControllerRepository.getSpaceControllerByTypedId(id);
+      if (controller != null) {
+        try {
+          activeSpaceControllerManager.softRestartSpaceController(controller);
+        } catch (Throwable e) {
+          spaceEnvironment.getLog().error(String.format("Unable to soft restart controller %s (%s)",
+              controller.getUuid(), controller.getName()), e);
+        }
+      } else {
+        spaceEnvironment.getLog().formatError("Unknown controller %s", id);
 
         return getNoSuchSpaceControllerResponse(id);
       }
@@ -521,8 +563,36 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       try {
         activeSpaceControllerManager.shutdownSpaceController(controller);
       } catch (Throwable e) {
-        spaceEnvironment.getLog().error(String.format("Unable to shut down controller %s (%s)",
-            controller.getUuid(), controller.getName()), e);
+        spaceEnvironment.getLog().formatError(e, "Unable to shut down controller %s (%s)",
+            controller.getUuid(), controller.getName());
+      }
+    }
+
+    return MasterApiMessageSupport.getSimpleSuccessResponse();
+  }
+
+  @Override
+  public Map<String, Object> hardRestartAllSpaceControllers() {
+    for (SpaceController controller : getAllEnabledSpaceControllers()) {
+      try {
+        activeSpaceControllerManager.hardRestartSpaceController(controller);
+      } catch (Throwable e) {
+        spaceEnvironment.getLog().formatError(e, "Unable to hard restart controller %s (%s)",
+            controller.getUuid(), controller.getName());
+      }
+    }
+
+    return MasterApiMessageSupport.getSimpleSuccessResponse();
+  }
+
+  @Override
+  public Map<String, Object> softRestartAllSpaceControllers() {
+    for (SpaceController controller : getAllEnabledSpaceControllers()) {
+      try {
+        activeSpaceControllerManager.softRestartSpaceController(controller);
+      } catch (Throwable e) {
+        spaceEnvironment.getLog().formatError(e, "Unable to soft restart controller %s (%s)",
+            controller.getUuid(), controller.getName());
       }
     }
 

@@ -130,6 +130,20 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
   }
 
   @Override
+  public Map<String, Object> hardRestartMaster() {
+    masterSupportManager.hardRestartMaster();
+    
+    return MasterApiMessageSupport.getSimpleSuccessResponse();
+  }
+
+  @Override
+  public Map<String, Object> softRestartMaster() {
+    masterSupportManager.softRestartMaster();
+
+    return MasterApiMessageSupport.getSimpleSuccessResponse();
+  }
+
+  @Override
   public Map<String, Object> getSmartSpacesVersion() {
     Map<String, Object> data = new HashMap<>();
     data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_SMART_SPACES_VERSION,

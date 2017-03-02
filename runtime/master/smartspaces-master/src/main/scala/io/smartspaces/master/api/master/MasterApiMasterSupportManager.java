@@ -73,6 +73,20 @@ public interface MasterApiMasterSupportManager {
   Map<String, Object> importFromFileSystemMasterDomainModel();
 
   /**
+   * Hard reset the master..
+   *
+   * @return the Master API response
+   */
+  Map<String, Object> hardRestartMaster();
+
+  /**
+   * Soft reset the master..
+   *
+   * @return the Master API response
+   */
+  Map<String, Object> softRestartMaster();
+
+  /**
    * Get the Smart Spaces Version.
    *
    * @return the Master API response

@@ -106,6 +106,16 @@ public class StandardMasterSpaceControllerCodec {
   public static final String OPERATION_CONTROLLER_SHUTDOWN_CONTROLLER = "shutdownController";
 
   /**
+   * Hard restart the entire controller.
+   */
+  public static final String OPERATION_CONTROLLER_RESTART_HARD_CONTROLLER = "hardRestartController";
+
+  /**
+   * Soft restart the entire controller.
+   */
+  public static final String OPERATION_CONTROLLER_RESTART_SOFT_CONTROLLER = "softRestartController";
+
+  /**
    * Shut down all activities in the controller.
    */
   public static final String OPERATION_CONTROLLER_SHUTDOWN_ACTIVITIES = "shutdownActivities";

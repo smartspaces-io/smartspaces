@@ -74,6 +74,22 @@ public interface RemoteSpaceControllerClient extends ManagedResource {
   void requestSpaceControllerShutdown(ActiveSpaceController controller);
 
   /**
+   * Request a hard restart of a controller.
+   *
+   * @param controller
+   *          the controller to hard restart
+   */
+  void requestSpaceControllerHardRestart(ActiveSpaceController controller);
+
+  /**
+   * Request the soft restart of a controller.
+   *
+   * @param controller
+   *          the controller to soft restart
+   */
+  void requestSpaceControllerSoftRestart(ActiveSpaceController controller);
+
+  /**
    * Request the status of a controller.
    *
    * @param controller

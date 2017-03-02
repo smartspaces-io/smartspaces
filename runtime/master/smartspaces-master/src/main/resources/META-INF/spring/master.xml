@@ -293,6 +293,8 @@
 
 	  <property name="automationRepository" ref="smartspaces.repository.automation" />
 
+	  <property name="spaceSystemControl" ref="smartspaces.systemctl" />
+
 	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 

@@ -63,6 +63,18 @@ function shutdownAllControllers() {
     }
 }
 
+function hardRestartAllControllers() {
+    if (confirm("Are you sure you want to hard restart all controllers?")) {
+        window.location='/smartspaces/spacecontroller/all/hardrestart.html';
+    }
+}
+
+function softRestartAllControllers() {
+    if (confirm("Are you sure you want to soft restart all controllers?")) {
+        window.location='/smartspaces/spacecontroller/all/softrestart.html';
+    }
+}
+
 function captureDataAllControllers() {
   if (confirm("Are you sure you want to capture data bundles for all controllers?")) {
     doAjaxCommand('capturedata');
@@ -89,6 +101,8 @@ function shutdownAllActivitiesAllControllers() {
     <td><button type="button" id="connectAllButton" onclick="window.location='/smartspaces/spacecontroller/all/connect.html'" title="Connect to all known controllers">Connect All</button></td>
     <td><button type="button" id="statusAllButton" onclick="doAjaxCommand('status')" title="Status from all controllers that claim they are in some sort of connection">Status All</button></td>
     <td><button type="button" id="shutdownAllButton" onclick="shutdownAllControllers();" title="Shut down all connected controllers">Shutdown All</button></td>
+    <td><button type="button" id="hardRestartAllButton" onclick="hardRestartAllControllers();" title="Hard restart all connected controllers">Hard Restart All</button></td>
+    <td><button type="button" id="softRestartAllButton" onclick="softRestartAllControllers();" title="Soft restart all connected controllers">Soft Restart All</button></td>
     <td><button type="button" onclick="cleanTempDataAllControllers()" title="Clean the tmp data for all controllers">Clean Tmp</button></td>
     <td><button type="button" onclick="cleanPermanentDataAllControllers()" title="Clean the permanent data for all controllers">Clean Permanent</button></td>
     <td><button type="button" id="captureDataAllButton" onclick="captureDataAllControllers()" title="Capture All Data">Capture All Data</button></td>

@@ -130,7 +130,7 @@ public interface MasterApiSpaceControllerManager {
   Map<String, Object> deleteSpaceController(String id);
 
   /**
-   * Shut down a set of controllers controller.
+   * Shut down a set of controllers controllers.
    *
    * @param ids
    *          IDs of the controllers
@@ -138,6 +138,26 @@ public interface MasterApiSpaceControllerManager {
    * @return the Master API response
    */
   Map<String, Object> shutdownSpaceControllers(List<String> ids);
+
+  /**
+   * Hard restart a set of controllers controllers.
+   *
+   * @param ids
+   *          IDs of the controllers
+   *
+   * @return the Master API response
+   */
+  Map<String, Object> hardRestartSpaceControllers(List<String> ids);
+
+  /**
+   * Soft restart a set of controllers controllers.
+   *
+   * @param ids
+   *          IDs of the controllers
+   *
+   * @return the Master API response
+   */
+  Map<String, Object> softRestartSpaceControllers(List<String> ids);
 
   /**
    * Connect to all controllers in the repository.
@@ -159,6 +179,20 @@ public interface MasterApiSpaceControllerManager {
    * @return the Master API response
    */
   Map<String, Object> shutdownAllSpaceControllers();
+
+  /**
+   * Hard restart all controllers in the repository.
+   *
+   * @return the Master API response
+   */
+  Map<String, Object> hardRestartAllSpaceControllers();
+
+  /**
+   * Soft restart all controllers in the repository.
+   *
+   * @return the Master API response
+   */
+  Map<String, Object> softRestartAllSpaceControllers();
 
   /**
    * Get the status from all controllers in the repository that are not marked

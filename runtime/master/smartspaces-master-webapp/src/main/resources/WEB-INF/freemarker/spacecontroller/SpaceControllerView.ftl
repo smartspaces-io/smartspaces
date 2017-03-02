@@ -74,9 +74,22 @@ function deleteController() {
         window.location='/smartspaces/spacecontroller/${spacecontroller.id}/delete.html'
     }
 }
+
 function shutdownController() {
     if (confirm("Are you sure you want to shutdown the controller?")) {
        doAjaxCommand('shutdown');
+    }
+}
+
+function hardRestartController() {
+    if (confirm("Are you sure you want to hard restart the controller?")) {
+       doAjaxCommand('hardrestart');
+    }
+}
+
+function softRestartController() {
+    if (confirm("Are you sure you want to soft restart the controller?")) {
+       doAjaxCommand('softrestart');
     }
 }
 
@@ -115,6 +128,8 @@ function shutdownActivities() {
     <td><button type="button" onclick="cleanTempDataSpaceController()" title="Clean the controller's tmp data">Clean Tmp</button></td>
     <td><button type="button" onclick="cleanPermanentDataSpaceController()" title="Clean the controller's permanent data">Clean Permanent</button></td>
     <td><button type="button" onclick="shutdownController()" title="Shutdown the controller">Shutdown</button></td>
+    <td><button type="button" onclick="hardRestartController()" title="Hard restart the controller">Hard Restart</button></td>
+    <td><button type="button" onclick="softRestartController()" title="Soft restart the controller">Soft Restart</button></td>
     <td><button type="button" onclick="shutdownActivities()" title="Shutdown all activities on the controller">Shutdown All Activities</button></td>
     <td><button type="button" onclick="restoreData()" title="Restore controller data">Restore Data</button></td>
     <#if liveactivities?has_content>

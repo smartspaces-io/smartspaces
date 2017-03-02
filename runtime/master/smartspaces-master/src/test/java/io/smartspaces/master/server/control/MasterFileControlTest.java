@@ -109,6 +109,27 @@ public class MasterFileControlTest {
   }
 
   /**
+   * Make sure hard restart all controllers is called on if a hard restart all
+   * controllers command is received.
+   */
+  @Test
+  public void testHardRestartAllControllersCall() {
+    fileControl.handleCommand(MasterFileControl.COMMAND_SPACE_CONTROLLERS_HARD_RESTART_ALL);
+
+    verify(masterApiControllerManager, times(1)).hardRestartAllSpaceControllers();
+  }
+  /**
+   * Make sure hard restart all controllers is called on if a hard restart all
+   * controllers command is received.
+   */
+  @Test
+  public void testSoftRestartAllControllersCall() {
+    fileControl.handleCommand(MasterFileControl.COMMAND_SPACE_CONTROLLERS_SOFT_RESTART_ALL);
+
+    verify(masterApiControllerManager, times(1)).softRestartAllSpaceControllers();
+  }
+
+  /**
    * Make sure shutdown all activities on all controllers is called on if a
    * shutdown all activities on all controllers command is received.
    */

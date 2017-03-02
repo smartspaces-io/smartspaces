@@ -190,6 +190,16 @@ public class SpaceControllerController extends BaseActiveSpaceMasterController {
     return masterApiSpaceControllerManager.shutdownSpaceControllers(Lists.newArrayList(id));
   }
 
+  @RequestMapping(value = "/spacecontroller/{id}/hardrestart.json", method = RequestMethod.GET)
+  public @ResponseBody Map<String, ? extends Object> hardRestartController(@PathVariable String id) {
+    return masterApiSpaceControllerManager.hardRestartSpaceControllers(Lists.newArrayList(id));
+  }
+
+  @RequestMapping(value = "/spacecontroller/{id}/softrestart.json", method = RequestMethod.GET)
+  public @ResponseBody Map<String, ? extends Object> softRestartController(@PathVariable String id) {
+    return masterApiSpaceControllerManager.softRestartSpaceControllers(Lists.newArrayList(id));
+  }
+
   @RequestMapping(value = "/spacecontroller/{id}/activities/shutdown.json",
       method = RequestMethod.GET)
   public @ResponseBody Map<String, ? extends Object> shutdownAllAppsController(
@@ -224,6 +234,20 @@ public class SpaceControllerController extends BaseActiveSpaceMasterController {
   @RequestMapping(value = "/spacecontroller/all/shutdown.html", method = RequestMethod.GET)
   public String shutdownAllControllers() {
     masterApiSpaceControllerManager.shutdownAllSpaceControllers();
+
+    return "redirect:/spacecontroller/all.html";
+  }
+
+  @RequestMapping(value = "/spacecontroller/all/hardrestart.html", method = RequestMethod.GET)
+  public String hardRestartAllControllers() {
+    masterApiSpaceControllerManager.hardRestartAllSpaceControllers();
+
+    return "redirect:/spacecontroller/all.html";
+  }
+
+  @RequestMapping(value = "/spacecontroller/all/softrestart.html", method = RequestMethod.GET)
+  public String softRestartAllControllers() {
+    masterApiSpaceControllerManager.softRestartAllSpaceControllers();
 
     return "redirect:/spacecontroller/all.html";
   }

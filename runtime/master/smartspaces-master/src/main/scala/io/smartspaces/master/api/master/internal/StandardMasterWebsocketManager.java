@@ -747,12 +747,28 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
         return masterApiSpaceControllerManager
             .cleanSpaceControllerActivitiesTempDataAllSpaceControllers();
       }
-    });
+    });   
     registerMasterApiHandler(new MasterApiWebSocketCommandHandler(
         MasterApiMessages.MASTER_API_COMMAND_SPACE_CONTROLLER_SHUTDOWN) {
       @Override
       public Map<String, Object> execute(Map<String, Object> commandArgs) {
         return masterApiSpaceControllerManager.shutdownSpaceControllers(Lists
+            .newArrayList(getEntityId(commandArgs)));
+      }
+    });
+    registerMasterApiHandler(new MasterApiWebSocketCommandHandler(
+        MasterApiMessages.MASTER_API_COMMAND_SPACE_CONTROLLER_RESTART_HARD) {
+      @Override
+      public Map<String, Object> execute(Map<String, Object> commandArgs) {
+        return masterApiSpaceControllerManager.hardRestartSpaceControllers(Lists
+            .newArrayList(getEntityId(commandArgs)));
+      }
+    });
+    registerMasterApiHandler(new MasterApiWebSocketCommandHandler(
+        MasterApiMessages.MASTER_API_COMMAND_SPACE_CONTROLLER_RESTART_SOFT) {
+      @Override
+      public Map<String, Object> execute(Map<String, Object> commandArgs) {
+        return masterApiSpaceControllerManager.softRestartSpaceControllers(Lists
             .newArrayList(getEntityId(commandArgs)));
       }
     });
@@ -768,6 +784,20 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
       @Override
       public Map<String, Object> execute(Map<String, Object> commandArgs) {
         return masterApiSpaceControllerManager.shutdownAllSpaceControllers();
+      }
+    });
+    registerMasterApiHandler(new MasterApiWebSocketCommandHandler(
+        MasterApiMessages.MASTER_API_COMMAND_SPACE_CONTROLLER_ALL_RESTART_HARD) {
+      @Override
+      public Map<String, Object> execute(Map<String, Object> commandArgs) {
+        return masterApiSpaceControllerManager.hardRestartAllSpaceControllers();
+      }
+    });
+    registerMasterApiHandler(new MasterApiWebSocketCommandHandler(
+        MasterApiMessages.MASTER_API_COMMAND_SPACE_CONTROLLER_ALL_RESTART_SOFT) {
+      @Override
+      public Map<String, Object> execute(Map<String, Object> commandArgs) {
+        return masterApiSpaceControllerManager.softRestartAllSpaceControllers();
       }
     });
     registerMasterApiHandler(new MasterApiWebSocketCommandHandler(

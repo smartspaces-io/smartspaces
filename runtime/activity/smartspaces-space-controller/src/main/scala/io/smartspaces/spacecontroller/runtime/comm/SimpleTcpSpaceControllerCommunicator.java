@@ -206,9 +206,23 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
         break;
 
       case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_SHUTDOWN_CONTROLLER:
-        spaceEnvironment.getLog().info("Received shutdown request");
+        spaceEnvironment.getLog().info("Received shutdown controller request");
 
         controllerControl.shutdownControllerContainer();
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_RESTART_HARD_CONTROLLER:
+        spaceEnvironment.getLog().info("Received hard restart controller request");
+
+        controllerControl.hardRestartControllerContainer();
+
+        break;
+
+      case StandardMasterSpaceControllerCodec.OPERATION_CONTROLLER_RESTART_SOFT_CONTROLLER:
+        spaceEnvironment.getLog().info("Received soft restart controller request");
+
+        controllerControl.softRestartControllerContainer();
 
         break;
 

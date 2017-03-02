@@ -77,6 +77,18 @@ public class MasterFileControl implements DirectoryWatcherListener {
       "space-controllers-shutdown-all";
 
   /**
+   * The command for hard restart all space controllers.
+   */
+  public static final String COMMAND_SPACE_CONTROLLERS_HARD_RESTART_ALL =
+      "space-controllers-hard-restart-all";
+
+  /**
+   * The command for hard restart all space controllers.
+   */
+  public static final String COMMAND_SPACE_CONTROLLERS_SOFT_RESTART_ALL =
+      "space-controllers-soft-restart-all";
+
+  /**
    * The command for shutting down all activities on all space controllers.
    */
   public static final String COMMAND_SPACE_CONTROLLERS_SHUTDOWN_ALL_ACTIVITIES =
@@ -228,6 +240,10 @@ public class MasterFileControl implements DirectoryWatcherListener {
         spaceSystemControl.softRestart();
       } else if (COMMAND_SPACE_CONTROLLERS_SHUTDOWN_ALL.equalsIgnoreCase(command)) {
         masterApiSpaceControllerManager.shutdownAllSpaceControllers();
+      } else if (COMMAND_SPACE_CONTROLLERS_HARD_RESTART_ALL.equalsIgnoreCase(command)) {
+        masterApiSpaceControllerManager.hardRestartAllSpaceControllers();
+      } else if (COMMAND_SPACE_CONTROLLERS_SOFT_RESTART_ALL.equalsIgnoreCase(command)) {
+        masterApiSpaceControllerManager.softRestartAllSpaceControllers();
       } else if (COMMAND_SPACE_CONTROLLERS_SHUTDOWN_ALL_ACTIVITIES.equalsIgnoreCase(command)) {
         masterApiSpaceControllerManager.shutdownAllActivitiesAllSpaceControllers();
       } else if (command.startsWith(COMMAND_PREFIX_LIVE_ACTIVITY_GROUP_STARTUP)) {

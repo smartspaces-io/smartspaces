@@ -40,4 +40,14 @@ public interface MasterSupportManager extends ManagedResource {
    *          the model to import
    */
   void importMasterDomainModel(String model);
+  
+  /**
+   * Hard restart the master.
+   */
+  void hardRestartMaster();
+  
+  /**
+   * Soft restart the master.
+   */
+  void softRestartMaster();
 }

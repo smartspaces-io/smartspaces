@@ -25,6 +25,7 @@ import io.smartspaces.master.server.services.SpaceControllerRepository;
 import io.smartspaces.master.server.services.internal.support.JdomMasterDomainModelCreator;
 import io.smartspaces.master.server.services.internal.support.JdomMasterDomainModelImporter;
 import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.system.core.container.SmartSpacesSystemControl;
 
 /**
  * The standard implementation of the {@link MasterSupportManager}.
@@ -52,6 +53,11 @@ public class StandardMasterSupportManager implements MasterSupportManager {
    * Repository for automation entities.
    */
   private AutomationRepository automationRepository;
+  
+  /**
+   * System control for the container.
+   */
+  private SmartSpacesSystemControl spaceSystemControl;
 
   /**
    * The space environment being run under.
@@ -92,6 +98,16 @@ public class StandardMasterSupportManager implements MasterSupportManager {
     }
   }
 
+  @Override
+  public void hardRestartMaster() {
+    spaceSystemControl.hardRestart();
+  }
+
+  @Override
+  public void softRestartMaster() {
+    spaceSystemControl.softRestart();
+  }
+
   /**
    * @param activityRepository
    *          the activityRepository to set
@@ -125,6 +141,16 @@ public class StandardMasterSupportManager implements MasterSupportManager {
   public void setAutomationRepository(AutomationRepository automationRepository) {
     this.automationRepository = automationRepository;
   }
+  
+
+  /**
+   * @param spaceSystemControl
+   *          the spaceSystemControl to set
+   */
+  public void setSpaceSystemControl(SmartSpacesSystemControl spaceSystemControl) {
+    this.spaceSystemControl = spaceSystemControl;
+  }
+
 
   /**
    * @param spaceEnvironment

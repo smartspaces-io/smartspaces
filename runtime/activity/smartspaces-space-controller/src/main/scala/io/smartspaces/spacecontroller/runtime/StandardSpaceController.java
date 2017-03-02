@@ -60,8 +60,8 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Keith M. Hughes
  */
-public class StandardSpaceController extends BaseSpaceController implements SpaceControllerControl,
-    LiveActivityStatusPublisher {
+public class StandardSpaceController extends BaseSpaceController
+    implements SpaceControllerControl, LiveActivityStatusPublisher {
 
   /**
    * The amount of time to wait for shutting down the controller if some startup
@@ -258,9 +258,8 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
 
     SpaceControllerInformationValidator spaceControllerInformationValidator =
         new SpaceControllerInformationValidator();
-    StringBuilder errorBuilder =
-        spaceControllerInformationValidator.checkControllerInfoForErrors(spaceControllerInfo,
-            getSpaceEnvironment().getLog());
+    StringBuilder errorBuilder = spaceControllerInformationValidator
+        .checkControllerInfoForErrors(spaceControllerInfo, getSpaceEnvironment().getLog());
     if (errorBuilder.length() != 0) {
       // DO NOT LIKE THIS BUT HOW TO SHUT THE CONTAINER DOWN WITHOUT TONS OF
       // STARTUP ERRORS.
@@ -280,8 +279,8 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
       uuid = uuidGenerator.newUuid();
       spaceControllerInfo.setUuid(uuid);
 
-      getSpaceEnvironment().getLog().warn(
-          String.format("No controller UUID found, generated UUID is %s", uuid));
+      getSpaceEnvironment().getLog()
+          .warn(String.format("No controller UUID found, generated UUID is %s", uuid));
 
       controllerInfoPersister.persist(spaceControllerInfo, getSpaceEnvironment());
     }
@@ -332,8 +331,8 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
         case READY:
           break;
         default:
-          getSpaceEnvironment().getLog().error(
-              String.format("Unknown startup type %s for activity %s/%s",
+          getSpaceEnvironment().getLog()
+              .error(String.format("Unknown startup type %s for activity %s/%s",
                   activity.getRuntimeStartupType(), activity.getIdentifyingName(),
                   activity.getUuid()));
       }
@@ -512,6 +511,16 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
   }
 
   @Override
+  public void hardRestartControllerContainer() {
+    spaceSystemControl.hardRestart();
+  }
+
+  @Override
+  public void softRestartControllerContainer() {
+    spaceSystemControl.softRestart();
+  }
+
+  @Override
   public List<InstalledLiveActivity> getAllInstalledLiveActivities() {
     return liveActivityRuntime.getAllInstalledLiveActivities();
   }
@@ -550,9 +559,8 @@ public class StandardSpaceController extends BaseSpaceController implements Spac
   public LiveActivityDeleteResponse deleteLiveActivity(LiveActivityDeleteRequest request) {
     String uuid = request.getUuid();
     if (liveActivityRuntime.isLiveActivityRunning(uuid)) {
-      getSpaceEnvironment().getLog().error(
-          String
-              .format("Attempt to delete live activity %s failed, live activity is running", uuid));
+      getSpaceEnvironment().getLog().error(String
+          .format("Attempt to delete live activity %s failed, live activity is running", uuid));
 
       return new LiveActivityDeleteResponse(uuid, LiveActivityDeleteStatus.FAILURE,
           getSpaceEnvironment().getTimeProvider().getCurrentTime(),

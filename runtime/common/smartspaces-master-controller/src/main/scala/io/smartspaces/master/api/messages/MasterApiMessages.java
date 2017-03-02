@@ -549,6 +549,18 @@ public class MasterApiMessages {
       MASTER_API_COMMAND_PREFIX_SPACE_CONTROLLER + "/shutdown";
 
   /**
+   * Web socket command for hard restarting a space controller.
+   */
+  public static final String MASTER_API_COMMAND_SPACE_CONTROLLER_RESTART_HARD =
+      MASTER_API_COMMAND_PREFIX_SPACE_CONTROLLER + "/restart/hard";
+
+  /**
+   * Web socket command for soft restarting a space controller.
+   */
+  public static final String MASTER_API_COMMAND_SPACE_CONTROLLER_RESTART_SOFT =
+      MASTER_API_COMMAND_PREFIX_SPACE_CONTROLLER + "/restart/soft";
+
+  /**
    * Web socket command for shutting down all live activities on a space
    * controller.
    */
@@ -560,6 +572,18 @@ public class MasterApiMessages {
    */
   public static final String MASTER_API_COMMAND_SPACE_CONTROLLER_ALL_SHUTDOWN =
       MASTER_API_COMMAND_PREFIX_SPACE_CONTROLLER + "/all/shutdown";
+
+  /**
+   * Web socket command for hard restarting all space controllers.
+   */
+  public static final String MASTER_API_COMMAND_SPACE_CONTROLLER_ALL_RESTART_HARD =
+      MASTER_API_COMMAND_PREFIX_SPACE_CONTROLLER + "/all/restart/hard";
+
+  /**
+   * Web socket command for soft restarting all space controllers.
+   */
+  public static final String MASTER_API_COMMAND_SPACE_CONTROLLER_ALL_RESTART_SOFT =
+      MASTER_API_COMMAND_PREFIX_SPACE_CONTROLLER + "/all/restart/soft";
 
   /**
    * Web socket command for shutting down all live activities on all space

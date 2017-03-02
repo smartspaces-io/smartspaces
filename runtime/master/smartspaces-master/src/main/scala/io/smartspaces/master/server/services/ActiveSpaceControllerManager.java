@@ -81,6 +81,22 @@ public interface ActiveSpaceControllerManager {
   void shutdownSpaceController(SpaceController controller);
 
   /**
+   * Hard restart a controller.
+   *
+   * @param controller
+   *          the controller to hard restart
+   */
+  void hardRestartSpaceController(SpaceController controller);
+
+  /**
+   * Soft restart a controller.
+   *
+   * @param controller
+   *          the controller to soft restart
+   */
+  void softRestartSpaceController(SpaceController controller);
+
+  /**
    * Request a status from a controller.
    *
    * <p>

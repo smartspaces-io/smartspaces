@@ -45,6 +45,16 @@ public interface SpaceControllerControl extends SpaceController {
   void shutdownControllerContainer();
 
   /**
+   * Hard restart the controller container.
+   */
+  void hardRestartControllerContainer();
+
+  /**
+   * Soft restart the controller container.
+   */
+  void softRestartControllerContainer();
+
+  /**
    * Configure the controller.
    *
    * @param configuration

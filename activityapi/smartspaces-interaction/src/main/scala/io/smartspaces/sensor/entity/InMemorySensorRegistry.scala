@@ -19,6 +19,7 @@ package io.smartspaces.sensor.entity
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Map
+import io.smartspaces.SmartSpacesException
 
 /**
  * A sensor registry totally contained in memory.
@@ -246,6 +247,14 @@ class InMemorySensorRegistry extends SensorRegistry {
     // TODO(keith) Decide what to do if neither exists
     val sensor = externalIdToSensor.get(sensorId)
     val sensedEntity = externalIdToSensed.get(sensedEntityId)
+    
+    if (sensor.isEmpty) {
+      throw new SmartSpacesException(s"Sensor ID ${sensorId} not found when associating sensor with sensed entity");
+    }
+    
+    if (sensedEntity.isEmpty) {
+      throw new SmartSpacesException(s"Sensed entity ID ${sensedEntityId} not found when associating sensor with sensed entity");
+    }
 
     sensorSensedEntityAssociations +=
       new SimpleSensorSensedEntityAssociation(sensor.get, sensedEntity.get)
@@ -261,6 +270,15 @@ class InMemorySensorRegistry extends SensorRegistry {
     // TODO(keith) Decide what to do if neither exists
     val marker = externalIdToMarker.get(markerId)
     val markedEntity = externalIdToMarkable.get(markedEntityId)
+    
+    if (marker.isEmpty) {
+      throw new SmartSpacesException(s"Marker ID ${markerId} not found when associating marker with marked entity");
+    }
+    
+    if (markedEntity.isEmpty) {
+      throw new SmartSpacesException(s"Marked entity ID ${markedEntityId} not found when associating marker with marked entity");
+    }
+    
 
     associateMarkerWithMarkedEntity(marker.get, markedEntity.get)
   }

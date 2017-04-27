@@ -18,11 +18,10 @@ package io.smartspaces.master.ui.internal.web.resource;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.domain.basic.Resource;
 import io.smartspaces.domain.basic.pojo.SimpleResource;
 import io.smartspaces.master.api.master.MasterApiResourceManager;
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.ui.internal.web.BaseSpaceMasterController;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -77,11 +76,11 @@ public class ResourceUploadAction extends BaseSpaceMasterController {
           .saveResource(form.getResource(), form.getResourceFile().getInputStream());
 
       // So the ID gets copied out of the flow.
-      if (MasterApiMessageSupport.isSuccessResponse(resourceResponse)) {
+      if (SmartSpacesMessagesSupport.isSuccessResponse(resourceResponse)) {
 
         return "success";
       } else {
-        return handleError(form, MasterApiMessageSupport.getResponseDetail(resourceResponse));
+        return handleError(form, SmartSpacesMessagesSupport.getResponseDetail(resourceResponse));
       }
     } catch (Throwable e) {
       String message = (e instanceof SimpleSmartSpacesException)

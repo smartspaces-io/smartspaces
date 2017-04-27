@@ -17,13 +17,9 @@
 
 package io.smartspaces.master.ui.internal.web.space;
 
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
-import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.ui.internal.web.BaseActiveSpaceMasterController;
-
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessages;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +29,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * A Spring MVC controller for spaces.
@@ -53,7 +53,7 @@ public class SpaceController extends BaseActiveSpaceMasterController {
     mav.setViewName("space/SpaceViewAll");
 
     Map<String, Object> result = masterApiActivityManager.getSpacesByFilter(null);
-    mav.addObject("spaces", result.get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA));
+    mav.addObject("spaces", result.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA));
 
     return mav;
   }
@@ -64,9 +64,9 @@ public class SpaceController extends BaseActiveSpaceMasterController {
     Map<String, Object> response = masterApiActivityManager.getSpaceFullView(id);
 
     ModelAndView mav = getModelAndView();
-    if (MasterApiMessageSupport.isSuccessResponse(response)) {
+    if (SmartSpacesMessagesSupport.isSuccessResponse(response)) {
       mav.setViewName("space/SpaceView");
-      mav.addAllObjects(MasterApiMessageSupport.getResponseDataMap(response));
+      mav.addAllObjects(SmartSpacesMessagesSupport.getResponseDataMap(response));
     } else {
       mav.setViewName("space/SpaceNonexistent");
     }
@@ -86,9 +86,9 @@ public class SpaceController extends BaseActiveSpaceMasterController {
     Map<String, Object> response = masterApiActivityManager.getSpaceLiveActivityGroupView(id);
 
     ModelAndView mav = getModelAndView();
-    if (MasterApiMessageSupport.isSuccessResponse(response)) {
+    if (SmartSpacesMessagesSupport.isSuccessResponse(response)) {
       mav.setViewName("space/SpaceViewLiveActivities");
-      mav.addAllObjects(MasterApiMessageSupport.getResponseDataMap(response));
+      mav.addAllObjects(SmartSpacesMessagesSupport.getResponseDataMap(response));
     } else {
       mav.setViewName("space/SpaceNonexistent");
     }
@@ -97,8 +97,8 @@ public class SpaceController extends BaseActiveSpaceMasterController {
   }
 
   @RequestMapping(value = "/space/all.json", method = RequestMethod.GET)
-  public @ResponseBody Map<String, ? extends Object> listAllSpacesJson(@RequestParam(
-      value = "filter", required = false) String filter) {
+  public @ResponseBody Map<String, ? extends Object>
+      listAllSpacesJson(@RequestParam(value = "filter", required = false) String filter) {
     return masterApiActivityManager.getSpacesByFilter(filter);
   }
 
@@ -113,8 +113,8 @@ public class SpaceController extends BaseActiveSpaceMasterController {
   }
 
   @RequestMapping(value = "/space/{id}/liveactivitystatus.json", method = RequestMethod.GET)
-  public @ResponseBody Map<String, ? extends Object> statusSpaceLiveActivities(
-      @PathVariable String id) {
+  public @ResponseBody Map<String, ? extends Object>
+      statusSpaceLiveActivities(@PathVariable String id) {
     return masterApiSpaceControllerManager.liveActivityStatusSpace(id);
   }
 
@@ -127,7 +127,7 @@ public class SpaceController extends BaseActiveSpaceMasterController {
   @RequestMapping(value = "/space/{id}/load.json", method = RequestMethod.GET)
   public @ResponseBody Map<String, ? extends Object> loadSpace(@PathVariable String id) {
     // Should check code base to see if this can go.
-    return MasterApiMessageSupport.getSimpleSuccessResponse();
+    return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
   }
 
   @RequestMapping(value = "/space/{id}/deploy.json", method = RequestMethod.GET)

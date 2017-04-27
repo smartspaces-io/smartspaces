@@ -82,10 +82,10 @@ class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: C
   override def associateSensorWithEntity(sensor: SensorEntityDescription,
     sensedEntity: SensedEntityDescription): SensedEntitySensorHandler = {
 
-    val sensorModel = completeSensedEntityModel.getSensorEntityModel(sensor.externalId)
+    val sensorModel = completeSensedEntityModel.getSensorEntityModelByExternalId(sensor.externalId)
     sensors.put(sensor.externalId, sensorModel.get)
 
-    val sensedModel = completeSensedEntityModel.getSensedEntityModel(sensedEntity.externalId)
+    val sensedModel = completeSensedEntityModel.getSensedEntityModelByExternalId(sensedEntity.externalId)
     sensedEntities.put(sensedEntity.externalId, sensedModel.get)
     sensorToSensedEntity.put(sensor.externalId, sensedEntity.externalId)
 

@@ -23,11 +23,11 @@ import io.smartspaces.sensor.entity.MeasurementTypeDescription
  * 
  * @author Keith M. Hughes
  */
-class SimpleSensedValue[T <: Any](val sensor: SensorEntityModel, val valueType: MeasurementTypeDescription,
+class SimpleSensedValue[T <: Any](val sensor: SensorEntityModel, val measurementTypeDescription: MeasurementTypeDescription,
     val value: T, val timestamp: Long) extends SensedValue[T] {
 
   override def toString() = {
-    "SimpleSensedValue [sensor=" + sensor + ", valueType=" +
-      valueType + ", value=" + value + ", timestamp=" + timestamp + "]"
+    "SimpleSensedValue [sensor=" + sensor + ", measurementTypeDescription=" +
+      measurementTypeDescription + ", value=" + value + ", timestamp=" + timestamp + "]"
   }
 }

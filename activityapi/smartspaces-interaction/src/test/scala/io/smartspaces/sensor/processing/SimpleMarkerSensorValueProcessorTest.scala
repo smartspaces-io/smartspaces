@@ -114,7 +114,7 @@ class SimpleMarkerSensorValueProcessorTest {
     val personDescription = Mockito.mock(classOf[PersonSensedEntityDescription])
     val personEntity = Mockito.mock(classOf[PersonSensedEntityModel])
     Mockito.when(personEntity.sensedEntityDescription).thenReturn(personDescription)
-    Mockito.when(completeSensedEntityModel.getMarkedSensedEntityModel(markerId)).thenReturn(Some(personEntity))
+    Mockito.when(completeSensedEntityModel.getMarkedSensedEntityModelByMarkerId(markerId)).thenReturn(Some(personEntity))
 
     val sensorModel = Mockito.mock(classOf[SensorEntityModel])
     val sensedEntityModel = Mockito.mock(classOf[PhysicalSpaceSensedEntityModel])

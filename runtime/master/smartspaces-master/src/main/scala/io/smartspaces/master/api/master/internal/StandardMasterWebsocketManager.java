@@ -26,7 +26,6 @@ import io.smartspaces.master.api.master.MasterApiAutomationManager;
 import io.smartspaces.master.api.master.MasterApiMasterSupportManager;
 import io.smartspaces.master.api.master.MasterApiSpaceControllerManager;
 import io.smartspaces.master.api.master.MasterWebsocketManager;
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.communication.MasterCommunicationManager;
 import io.smartspaces.master.event.BaseMasterEventListener;
@@ -34,6 +33,8 @@ import io.smartspaces.master.event.MasterEventListener;
 import io.smartspaces.master.event.MasterEventManager;
 import io.smartspaces.master.server.services.ExtensionManager;
 import io.smartspaces.master.server.services.model.ActiveLiveActivity;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessages;
 import io.smartspaces.service.web.server.BasicMultipleConnectionWebServerWebSocketHandlerFactory;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpFileUpload;
@@ -963,12 +964,12 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
       writeActivityUploadResponse(response, activityResponse);
     } catch (Throwable e) {
       Map<String, Object> failureResponse =
-          MasterApiMessageSupport.getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE,
+          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE,
               e);
 
       spaceEnvironment.getLog().error(
           "Could not upload activity via Master API\n"
-              + MasterApiMessageSupport.getResponseDetail(failureResponse));
+              + SmartSpacesMessagesSupport.getResponseDetail(failureResponse));
 
       writeActivityUploadResponse(response, failureResponse);
     } finally {
@@ -990,7 +991,7 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
       Map<String, Object> activityResponse) {
     try {
       response
-          .setResponseCode(MasterApiMessageSupport.isSuccessResponse(activityResponse) ? HttpResponseCode.OK
+          .setResponseCode(SmartSpacesMessagesSupport.isSuccessResponse(activityResponse) ? HttpResponseCode.OK
               : HttpResponseCode.INTERNAL_SERVER_ERROR);
       response.setContentType(CommonMimeTypes.MIME_TYPE_APPLICATION_JSON);
       response.getOutputStream().write(jsonMapper.toString(activityResponse).getBytes());
@@ -1029,9 +1030,9 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
         .getTimeProvider().getCurrentTime()));
 
     Map<String, Object> message = new HashMap<>();
-    message.put(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_TYPE,
+    message.put(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE,
         MasterApiMessages.MASTER_API_MESSAGE_TYPE_STATUS_UPDATE);
-    message.put(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA, data);
+    message.put(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA, data);
 
     webSocketHandlerFactory.sendJson(message);
   }
@@ -1056,12 +1057,12 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
       log.debug(String.format("Master API websocket received request %s", message));
     }
 
-    String command = (String) message.get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_TYPE);
+    String command = (String) message.get(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE);
     Map<String, Object> commandArgs =
-        (Map<String, Object>) message.get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA);
+        (Map<String, Object>) message.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
 
     String requestId =
-        (String) message.get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_REQUEST_ID);
+        (String) message.get(SmartSpacesMessages.MESSAGE_ENVELOPE_REQUEST_ID);
 
     try {
       if (command.startsWith(MasterApiMessages.MASTER_API_COMMAND_EXTENSION_PREFIX)) {
@@ -1070,7 +1071,7 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
         Map<String, Object> responseMessage =
             extensionManager.evaluateApiExtension(extensionName, commandArgs);
         responseMessage.put("command", command);
-        responseMessage.put(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_TYPE,
+        responseMessage.put(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE,
             MasterApiMessages.MASTER_API_MESSAGE_TYPE_COMMAND_RESPONSE);
         potentiallyAddRequestId(responseMessage, requestId);
 
@@ -1083,7 +1084,7 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
           String.format("Error while performing Master API websocket command %s", command), e);
 
       Map<String, Object> responseMessage =
-          MasterApiMessageSupport.getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE,
+          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE,
               e);
       potentiallyAddRequestId(responseMessage, requestId);
 
@@ -1134,7 +1135,7 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
     MasterApiWebSocketCommandHandler handler = commandHandlers.get(command);
     if (handler != null) {
       Map<String, Object> responseMessage = handler.execute(commandArgs);
-      responseMessage.put(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_TYPE,
+      responseMessage.put(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE,
           MasterApiMessages.MASTER_API_MESSAGE_TYPE_COMMAND_RESPONSE);
       potentiallyAddRequestId(responseMessage, requestId);
 
@@ -1155,7 +1156,7 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
    */
   private void potentiallyAddRequestId(Map<String, Object> message, String requestId) {
     if (requestId != null) {
-      message.put(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_REQUEST_ID, requestId);
+      message.put(SmartSpacesMessages.MESSAGE_ENVELOPE_REQUEST_ID, requestId);
     }
   }
 

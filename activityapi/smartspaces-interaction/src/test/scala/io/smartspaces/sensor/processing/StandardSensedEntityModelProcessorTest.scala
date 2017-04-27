@@ -134,7 +134,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val sensedEntityModel =
       new SimpleSensedEntityModel(sensedEntity, completeSensedEntityModel)
 
-    Mockito.when(completeSensedEntityModel.getSensedEntityModel(sensedEntity.externalId))
+    Mockito.when(completeSensedEntityModel.getSensedEntityModelByExternalId(sensedEntity.externalId))
       .thenReturn(Option(sensedEntityModel))
 
     val data = builder.toDynamicObject()

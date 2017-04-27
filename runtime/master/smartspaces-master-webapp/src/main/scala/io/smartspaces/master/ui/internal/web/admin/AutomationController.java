@@ -20,14 +20,11 @@ package io.smartspaces.master.ui.internal.web.admin;
 import io.smartspaces.domain.system.NamedScript;
 import io.smartspaces.master.api.master.MasterApiAutomationManager;
 import io.smartspaces.master.api.master.MasterApiUtilities;
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.server.services.AutomationRepository;
 import io.smartspaces.master.ui.internal.web.BaseSpaceMasterController;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +33,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.common.collect.Lists;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A Spring MVC controller for automation activities.
@@ -93,7 +92,7 @@ public class AutomationController extends BaseSpaceMasterController {
   public ModelAndView deleteController(@PathVariable String id) {
     ModelAndView mav = getModelAndView();
     Map<String, Object> response = masterApiAutomationManager.deleteNamedScript(id);
-    if (MasterApiMessageSupport.isSuccessResponse(response)) {
+    if (SmartSpacesMessagesSupport.isSuccessResponse(response)) {
       mav.clear();
       mav.setViewName("redirect:/admin/namedscript/all.html");
     } else {

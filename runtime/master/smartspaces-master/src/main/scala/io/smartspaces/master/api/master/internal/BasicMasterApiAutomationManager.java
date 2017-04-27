@@ -24,10 +24,11 @@ import io.smartspaces.domain.system.pojo.SimpleNamedScript;
 import io.smartspaces.expression.FilterExpression;
 import io.smartspaces.master.api.master.MasterApiAutomationManager;
 import io.smartspaces.master.api.master.MasterApiUtilities;
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.server.services.AutomationManager;
 import io.smartspaces.master.server.services.AutomationRepository;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessages;
 import io.smartspaces.service.scheduler.SchedulerService;
 
 import java.util.ArrayList;
@@ -126,7 +127,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
     if (script != null) {
       automationRepository.deleteNamedScript(script);
 
-      return MasterApiMessageSupport.getSimpleSuccessResponse();
+      return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
     } else {
       return noSuchNamedScriptResult();
     }
@@ -140,7 +141,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
       // TODO(keith): Run in another thread?
       automationManager.runScript(script);
 
-      return MasterApiMessageSupport.getSimpleSuccessResponse();
+      return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
     } else {
       return noSuchNamedScriptResult();
     }
@@ -159,11 +160,11 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
         responseData.add(extractBasicNamedScriptApiData(script));
       }
 
-      return MasterApiMessageSupport.getSuccessResponse(responseData);
+      return SmartSpacesMessagesSupport.getSuccessResponse(responseData);
     } catch (Throwable e) {
       spaceEnvironment.getLog().error("Attempt to get named script data failed", e);
 
-      return MasterApiMessageSupport.getFailureResponse(
+      return SmartSpacesMessagesSupport.getFailureResponse(
           MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
@@ -194,7 +195,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
   public Map<String, Object> getNamedScriptView(String id) {
     NamedScript activity = automationRepository.getNamedScriptById(id);
     if (activity != null) {
-      return MasterApiMessageSupport.getSuccessResponse(extractBasicNamedScriptApiData(activity));
+      return SmartSpacesMessagesSupport.getSuccessResponse(extractBasicNamedScriptApiData(activity));
     } else {
       return noSuchNamedScriptResult();
     }
@@ -203,7 +204,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
   @Override
   public Map<String, Object> updateNamedScriptMetadata(String id, Object metadataCommandObj) {
     if (!(metadataCommandObj instanceof Map)) {
-      return MasterApiMessageSupport.getFailureResponse(
+      return SmartSpacesMessagesSupport.getFailureResponse(
           MasterApiMessages.MESSAGE_SPACE_CALL_ARGS_NOMAP,
           MasterApiMessages.MESSAGE_SPACE_DETAIL_CALL_ARGS_NOMAP);
     }
@@ -223,7 +224,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
         @SuppressWarnings("unchecked")
         Map<String, Object> replacement =
             (Map<String, Object>) metadataCommand
-                .get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA);
+                .get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
         script.setMetadata(replacement);
       } else if (MasterApiMessages.MASTER_API_COMMAND_METADATA_MODIFY.equals(command)) {
         Map<String, Object> metadata = script.getMetadata();
@@ -231,7 +232,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
         @SuppressWarnings("unchecked")
         Map<String, Object> modifications =
             (Map<String, Object>) metadataCommand
-                .get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA);
+                .get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
         for (Entry<String, Object> entry : modifications.entrySet()) {
           metadata.put(entry.getKey(), entry.getValue());
         }
@@ -242,25 +243,25 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
 
         @SuppressWarnings("unchecked")
         List<String> modifications =
-            (List<String>) metadataCommand.get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA);
+            (List<String>) metadataCommand.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
         for (String entry : modifications) {
           metadata.remove(entry);
         }
 
         script.setMetadata(metadata);
       } else {
-        return MasterApiMessageSupport.getFailureResponse(
+        return SmartSpacesMessagesSupport.getFailureResponse(
             MasterApiMessages.MESSAGE_SPACE_COMMAND_UNKNOWN,
             String.format("Unknown command %s", command));
       }
 
       automationRepository.saveNamedScript(script);
 
-      return MasterApiMessageSupport.getSimpleSuccessResponse();
+      return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
     } catch (Throwable e) {
       spaceEnvironment.getLog().error("Could not modify named script metadata", e);
 
-      return MasterApiMessageSupport.getFailureResponse(
+      return SmartSpacesMessagesSupport.getFailureResponse(
           MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
@@ -271,7 +272,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
    * @return the Master API response
    */
   private Map<String, Object> noSuchNamedScriptResult() {
-    return MasterApiMessageSupport.getFailureResponse(
+    return SmartSpacesMessagesSupport.getFailureResponse(
         MasterApiAutomationManager.MESSAGE_SPACE_DOMAIN_NAMEDSCRIPT_UNKNOWN,
         "The requested named script is unknown");
   }

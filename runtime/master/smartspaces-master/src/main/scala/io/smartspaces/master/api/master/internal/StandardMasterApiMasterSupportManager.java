@@ -18,9 +18,9 @@
 package io.smartspaces.master.api.master.internal;
 
 import io.smartspaces.master.api.master.MasterApiMasterSupportManager;
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.server.services.MasterSupportManager;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
@@ -55,11 +55,11 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
       Map<String, Object> data = new HashMap<>();
       data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_MODEL, model);
 
-      return MasterApiMessageSupport.getSuccessResponse(data);
+      return SmartSpacesMessagesSupport.getSuccessResponse(data);
     } catch (Throwable e) {
       spaceEnvironment.getLog().error("Error while exporting master domain model", e);
 
-      return MasterApiMessageSupport
+      return SmartSpacesMessagesSupport
           .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
@@ -67,7 +67,7 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
   @Override
   public Map<String, Object> importMasterDomainModel(String model) {
     if (model == null || model.trim().isEmpty()) {
-      return MasterApiMessageSupport.getFailureResponse(
+      return SmartSpacesMessagesSupport.getFailureResponse(
           MasterApiMessages.MESSAGE_SPACE_CALL_ARGS_MISSING,
           MasterApiMessages.MESSAGE_SPACE_DETAIL_CALL_FAILURE_MISSING_MODEL);
     }
@@ -75,11 +75,11 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
     try {
       masterSupportManager.importMasterDomainModel(model);
 
-      return MasterApiMessageSupport.getSimpleSuccessResponse();
+      return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
     } catch (Throwable e) {
       spaceEnvironment.getLog().error("Error while importing master domain model", e);
 
-      return MasterApiMessageSupport
+      return SmartSpacesMessagesSupport
           .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
@@ -96,13 +96,13 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
       spaceEnvironment.getLog().formatInfo("Exported master domain file to %s",
           fileSupport.getAbsolutePath(masterDomainFile));
 
-      return MasterApiMessageSupport.getSimpleSuccessResponse();
+      return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
     } catch (Throwable e) {
       spaceEnvironment.getLog().formatError(e,
           "Error while exporting master domain model to file %s",
           fileSupport.getAbsolutePath(masterDomainFile));
 
-      return MasterApiMessageSupport
+      return SmartSpacesMessagesSupport
           .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
@@ -118,13 +118,13 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
       spaceEnvironment.getLog().formatInfo("Imported master domain file from %s",
           fileSupport.getAbsolutePath(masterDomainFile));
 
-      return MasterApiMessageSupport.getSimpleSuccessResponse();
+      return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
     } catch (Throwable e) {
       spaceEnvironment.getLog().formatError(e,
           "Error while importing master domain model from file %s",
           fileSupport.getAbsolutePath(masterDomainFile));
 
-      return MasterApiMessageSupport
+      return SmartSpacesMessagesSupport
           .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
     }
   }
@@ -133,14 +133,14 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
   public Map<String, Object> hardRestartMaster() {
     masterSupportManager.hardRestartMaster();
     
-    return MasterApiMessageSupport.getSimpleSuccessResponse();
+    return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
   }
 
   @Override
   public Map<String, Object> softRestartMaster() {
     masterSupportManager.softRestartMaster();
 
-    return MasterApiMessageSupport.getSimpleSuccessResponse();
+    return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
   }
 
   @Override
@@ -151,7 +151,7 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
             SmartSpacesEnvironment.CONFIGURATION_NAME_SMARTSPACES_VERSION,
             MasterApiMessages.MASTER_API_PARAMETER_VALUE_SMART_SPACES_VERSION_UNKNOWN));
 
-    return MasterApiMessageSupport.getSuccessResponse(data);
+    return SmartSpacesMessagesSupport.getSuccessResponse(data);
   }
 
   /**

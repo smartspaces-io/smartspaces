@@ -17,15 +17,12 @@
 
 package io.smartspaces.master.ui.internal.web.spacecontroller;
 
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.ui.internal.web.BaseActiveSpaceMasterController;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessages;
 
-import java.util.Collections;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,7 +31,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.common.collect.Lists;
+import java.util.Collections;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * A controller for Smart Spaces space controller operations.
@@ -56,7 +56,7 @@ public class SpaceControllerController extends BaseActiveSpaceMasterController {
     ModelAndView mav = getModelAndView();
     mav.setViewName("spacecontroller/SpaceControllerViewAll");
     mav.addObject("spacecontrollers",
-        response.get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA));
+        response.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA));
 
     return mav;
   }
@@ -67,9 +67,9 @@ public class SpaceControllerController extends BaseActiveSpaceMasterController {
 
     ModelAndView mav = getModelAndView();
 
-    if (MasterApiMessageSupport.isSuccessResponse(response)) {
+    if (SmartSpacesMessagesSupport.isSuccessResponse(response)) {
       mav.setViewName("spacecontroller/SpaceControllerView");
-      mav.addAllObjects(MasterApiMessageSupport.getResponseDataMap(response));
+      mav.addAllObjects(SmartSpacesMessagesSupport.getResponseDataMap(response));
     } else {
       mav.setViewName("spacecontroller/SpaceControllerNonexistent");
     }
@@ -82,10 +82,10 @@ public class SpaceControllerController extends BaseActiveSpaceMasterController {
     ModelAndView mav = getModelAndView();
     Map<String, Object> response = masterApiSpaceControllerManager.deleteSpaceController(id);
 
-    if (MasterApiMessageSupport.isSuccessResponse(response)) {
+    if (SmartSpacesMessagesSupport.isSuccessResponse(response)) {
       mav.clear();
       mav.setViewName("redirect:/spacecontroller/all.html");
-    } else if (MasterApiMessageSupport.isResponseReason(response,
+    } else if (SmartSpacesMessagesSupport.isResponseReason(response,
         MasterApiMessages.MESSAGE_SPACE_DOMAIN_CONTROLLER_UNKNOWN)) {
       mav.setViewName("spacecontroller/SpaceControllerNonexistent");
     }
@@ -119,7 +119,7 @@ public class SpaceControllerController extends BaseActiveSpaceMasterController {
 
       return masterApiSpaceControllerManager.setSpaceControllerConfiguration(id, map);
     } else {
-      return MasterApiMessageSupport.getFailureResponse(
+      return SmartSpacesMessagesSupport.getFailureResponse(
           MasterApiMessages.MESSAGE_SPACE_CALL_ARGS_NOMAP,
           MasterApiMessages.MESSAGE_SPACE_DETAIL_CALL_ARGS_NOMAP);
     }

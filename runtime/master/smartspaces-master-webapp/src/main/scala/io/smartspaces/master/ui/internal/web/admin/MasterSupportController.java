@@ -18,16 +18,16 @@
 package io.smartspaces.master.ui.internal.web.admin;
 
 import io.smartspaces.master.api.master.MasterApiMasterSupportManager;
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.ui.internal.web.BaseSpaceMasterController;
-
-import java.util.Map;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Map;
 
 /**
  * A Spring MVC controller for support activities.
@@ -57,7 +57,7 @@ public class MasterSupportController extends BaseSpaceMasterController {
     ModelAndView mav = getModelAndView();
 
     Map<String, Object> response = masterApiMasterSupportManager.getSmartSpacesVersion();
-    mav.addAllObjects(MasterApiMessageSupport.getResponseDataMap(response));
+    mav.addAllObjects(SmartSpacesMessagesSupport.getResponseDataMap(response));
 
     mav.setViewName("admin/SupportAll");
 

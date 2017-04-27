@@ -74,7 +74,7 @@ class SimpleSensorEntityModel(val sensorEntityDescription: SensorEntityDescripti
   override def updateSensedValue[T <: Any](value: SensedValue[T], timestamp: Long): Unit = {
     updateSensedValue(timestamp)
 
-    sensedValues.put(value.valueType.externalId, value)
+    sensedValues.put(value.measurementTypeDescription.externalId, value)
   }
 
   override def updateSensedValue(timestamp: Long): Unit = {

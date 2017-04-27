@@ -243,17 +243,17 @@ class InMemorySensorRegistry extends SensorRegistry {
     idToSensed.values.toList
   }
 
-  override def associateSensorWithSensedEntity(sensorId: String, sensedEntityId: String): SensorRegistry = {
+  override def associateSensorWithSensedEntity(sensorExternalId: String, sensedEntityExternalId: String): SensorRegistry = {
     // TODO(keith) Decide what to do if neither exists
-    val sensor = externalIdToSensor.get(sensorId)
-    val sensedEntity = externalIdToSensed.get(sensedEntityId)
+    val sensor = externalIdToSensor.get(sensorExternalId)
+    val sensedEntity = externalIdToSensed.get(sensedEntityExternalId)
     
     if (sensor.isEmpty) {
-      throw new SmartSpacesException(s"Sensor ID ${sensorId} not found when associating sensor with sensed entity");
+      throw new SmartSpacesException(s"Sensor external ID ${sensorExternalId} not found when associating sensor with sensed entity");
     }
     
     if (sensedEntity.isEmpty) {
-      throw new SmartSpacesException(s"Sensed entity ID ${sensedEntityId} not found when associating sensor with sensed entity");
+      throw new SmartSpacesException(s"Sensed entity external ID ${sensedEntityExternalId} not found when associating sensor with sensed entity");
     }
 
     sensorSensedEntityAssociations +=
@@ -266,17 +266,17 @@ class InMemorySensorRegistry extends SensorRegistry {
     sensorSensedEntityAssociations.toList
   }
 
-  override def associateMarkerWithMarkedEntity(markerId: String, markedEntityId: String): SensorRegistry = {
+  override def associateMarkerWithMarkedEntity(markerExternalId: String, markedEntityExternalId: String): SensorRegistry = {
     // TODO(keith) Decide what to do if neither exists
-    val marker = externalIdToMarker.get(markerId)
-    val markedEntity = externalIdToMarkable.get(markedEntityId)
+    val marker = externalIdToMarker.get(markerExternalId)
+    val markedEntity = externalIdToMarkable.get(markedEntityExternalId)
     
     if (marker.isEmpty) {
-      throw new SmartSpacesException(s"Marker ID ${markerId} not found when associating marker with marked entity");
+      throw new SmartSpacesException(s"Marker ID ${markerExternalId} not found when associating marker with marked entity");
     }
     
     if (markedEntity.isEmpty) {
-      throw new SmartSpacesException(s"Marked entity ID ${markedEntityId} not found when associating marker with marked entity");
+      throw new SmartSpacesException(s"Marked entity ID ${markedEntityExternalId} not found when associating marker with marked entity");
     }
     
 

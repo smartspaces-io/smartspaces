@@ -21,13 +21,13 @@ import io.smartspaces.master.api.master.MasterApiActivityManager;
 import io.smartspaces.master.api.master.MasterApiMasterSupportManager;
 import io.smartspaces.master.api.master.MasterApiResourceManager;
 import io.smartspaces.master.api.master.MasterApiSpaceControllerManager;
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.AutomationManager;
 import io.smartspaces.master.server.services.ExtensionManager;
 import io.smartspaces.master.server.services.ScriptingNames;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 import io.smartspaces.service.scheduler.SchedulerService;
 import io.smartspaces.service.script.FileScriptSource;
 import io.smartspaces.service.script.Script;
@@ -184,16 +184,16 @@ public class StandardExtensionManager implements ExtensionManager {
         @SuppressWarnings("unchecked")
         Map<String, Object> result = (Map<String, Object>) script.eval(completeBindings);
 
-        return MasterApiMessageSupport.getSuccessResponse(result);
+        return SmartSpacesMessagesSupport.getSuccessResponse(result);
       } catch (Throwable e) {
         spaceEnvironment.getLog().error(String.format("Could not run extension %s", extensionName),
             e);
 
-        return MasterApiMessageSupport.getFailureResponse(
+        return SmartSpacesMessagesSupport.getFailureResponse(
             RESULT_KEY_SPACE_MASTER_EXTENSION_EXCEPTION, e);
       }
     } else {
-      return MasterApiMessageSupport.getFailureResponse(RESULT_KEY_SPACE_MASTER_EXTENSION_UNKNOWN,
+      return SmartSpacesMessagesSupport.getFailureResponse(RESULT_KEY_SPACE_MASTER_EXTENSION_UNKNOWN,
           String.format("The requested master extension %s is not found", extensionName));
     }
   }

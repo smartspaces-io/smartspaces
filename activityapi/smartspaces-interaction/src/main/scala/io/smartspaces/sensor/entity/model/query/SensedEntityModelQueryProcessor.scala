@@ -16,10 +16,11 @@
 
 package io.smartspaces.sensor.entity.model.query
 
+import io.smartspaces.messaging.codec.MessageEncoder
 import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
 import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
 import io.smartspaces.sensor.entity.model.SensedValue
-import io.smartspaces.sensor.value.converter.ObjectConverter
+import io.smartspaces.sensor.entity.model.SensorEntityModel
 
 /**
  * A processor for queries against a sensor model.
@@ -32,10 +33,10 @@ import io.smartspaces.sensor.value.converter.ObjectConverter
 trait SensedEntityModelQueryProcessor {
 
   /**
-   * Get all values from the entire model for a given measurement type.
+   * Get all sensed values for a given sensed entity.
    *
-   * @param sensedEntityId
-   *           ID of the sensed entity of interest
+   * @param sensedEntityExternalId
+   *           The external ID of the sensed entity of interest
    *
    * @return the list of sensor values for the given sensed entity
    */
@@ -44,25 +45,42 @@ trait SensedEntityModelQueryProcessor {
   /**
    * Get all values from the entire model for a given measurement type.
    *
-   * @param measurementTypeId
-   *           ID of the measurement type of interest
+   * @param measurementTypeExternalId
+   *           The external ID of the measurement type of interest
    *
    * @return the list of sensor values for the given measurement type
    */
-  def getAllValuesForMeasurementType(measurementTypeId: String): List[SensedValue[Any]]
+  def getAllValuesForMeasurementType(measurementTypeExternalId: String): List[SensedValue[Any]]
 
   /**
    * Get all occupants of a given physical location.
    *
-   * @param physicalLocationId
+   * @param physicalLocationExternalId
    *            ID of the physical location
    *
    * @returns the list of occupants of the physical location, or none if the location doesn't exist.
    */
-  def getOccupantsOfPhysicalLocation(physicalLocationId: String): Option[Set[PersonSensedEntityModel]]
+  def getOccupantsOfPhysicalSpace(physicalLocationExternalId: String): Option[Set[PersonSensedEntityModel]]
 
   /**
-   * Get all physical location models and convert them.
+   * Get a physical space model and convert it.
+   *
+   * <p>
+   * The conversion will take place in a read transaction.
+   *
+   * @param id
+   *      the ID of the physical space
+   * @param converter
+   * 			the converter to be applied to the physical space models
+   * @param [T]
+   * 			the return type of the converter
+   *
+   * @return the converted model
+   */
+  def getPhysicalSpace[T](id: String, converter: MessageEncoder[PhysicalSpaceSensedEntityModel, T]): Option[T]
+
+  /**
+   * Get all physical space models and convert them.
    *
    * <p>
    * The conversion will take place in a read transaction.
@@ -74,5 +92,83 @@ trait SensedEntityModelQueryProcessor {
    *
    * @return the converted model
    */
-  def getAllPhysicalLocations[T](converter: ObjectConverter[List[PhysicalSpaceSensedEntityModel], T]): T
+  def getAllPhysicalSpaces[T](converter: MessageEncoder[List[PhysicalSpaceSensedEntityModel], T]): T
+
+  /**
+   * Get a person model and convert it.
+   *
+   * <p>
+   * The conversion will take place in a read transaction.
+   *
+   * @param id
+   *      ID of the person
+   * @param converter
+   * 			the converter to be applied to the person model
+   * @param [T]
+   * 			the return type of the converter
+   *
+   * @return the converted model
+   */
+  def getPerson[T](id: String, converter: MessageEncoder[PersonSensedEntityModel, T]): Option[T]
+
+  /**
+   * Get all people models and convert them.
+   *
+   * <p>
+   * The conversion will take place in a read transaction.
+   *
+   * @param converter
+   * 			the converter to be applied to the people models
+   * @param [T]
+   * 			the return type of the converter
+   *
+   * @return the converted model
+   */
+  def getAllPeople[T](converter: MessageEncoder[List[PersonSensedEntityModel], T]): T
+
+  /**
+   * Get a sensor model and convert it.
+   *
+   * <p>
+   * The conversion will take place in a read transaction.
+   *
+   * @param id
+   *      the ID of the sensor
+   * @param converter
+   * 			the converter to be applied to the sensor models
+   * @param [T]
+   * 			the return type of the converter
+   *
+   * @return the converted model
+   */
+  def getSensor[T](id: String, converter: MessageEncoder[SensorEntityModel, T]): Option[T]
+
+  /**
+   * Get all sensor models and convert them.
+   *
+   * <p>
+   * The conversion will take place in a read transaction.
+   *
+   * @param converter
+   * 			the converter to be applied to the sensor models
+   * @param [T]
+   * 			the return type of the converter
+   *
+   * @return the converted model
+   */
+  def getAllSensors[T](converter: MessageEncoder[List[SensorEntityModel], T]): T
+  
+  /**
+   * Get all of the unknown marker IDs.
+   *
+   * @return all of the unknown marker IDs
+   */
+  def getAllUnknownMarkerIds(): Set[String]
+
+  /**
+   * Get all of the unknown sensor IDs.
+   *
+   * @return all of the unknown sensor IDs
+   */
+  def getAllUnknownSensorIds(): Set[String]
 }

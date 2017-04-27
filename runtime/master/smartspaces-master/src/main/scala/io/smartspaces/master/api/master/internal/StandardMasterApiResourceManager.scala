@@ -19,9 +19,9 @@ package io.smartspaces.master.api.master.internal
 import io.smartspaces.domain.basic.Resource
 import io.smartspaces.master.api.master.MasterApiResourceManager
 import io.smartspaces.master.api.master.MasterApiUtilities
-import io.smartspaces.master.api.messages.MasterApiMessageSupport
 import io.smartspaces.master.api.messages.MasterApiMessages
 import io.smartspaces.master.server.services.ResourceRepository
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport
 import io.smartspaces.resource.managed.IdempotentManagedResource
 import io.smartspaces.resource.repository.ResourceRepositoryManager
 
@@ -63,11 +63,11 @@ class StandardMasterApiResourceManager extends BaseMasterApiManager with MasterA
         responseData.add(extractBasicResourceApiData(resource))
       }
 
-      return MasterApiMessageSupport.getSuccessResponse(responseData);
+      return SmartSpacesMessagesSupport.getSuccessResponse(responseData);
     } catch {
       case e: Throwable =>
         val response =
-          MasterApiMessageSupport.getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE,
+          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE,
             e)
 
         logResponseError("Attempt to get resource data failed", response)
@@ -82,11 +82,11 @@ class StandardMasterApiResourceManager extends BaseMasterApiManager with MasterA
       
       spaceEnvironment.getLog.info(s"Successfully saved resource ${resource}")
 
-      return MasterApiMessageSupport.getSuccessResponse()
+      return SmartSpacesMessagesSupport.getSuccessResponse()
     } catch {
       case e: Throwable =>
         val response =
-          MasterApiMessageSupport.getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE,
+          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE,
             e)
 
         logResponseError("Attempt to import resource failed", response)

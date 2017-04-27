@@ -52,6 +52,7 @@ import java.io.File
 import io.smartspaces.sensor.processing.StandardSensorProcessingEventEmitter
 import io.smartspaces.sensor.processing.StandardUnknownMarkerHandler
 import io.smartspaces.sensor.processing.UnknownMarkerHandler
+import io.smartspaces.sensor.processing.UnknownSensedEntityHandler
 
 /**
  * The sensor integration layer.
@@ -88,7 +89,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
   /**
    * The handler for unknown sensed entities.
    */
-  val unknownSensedEntityHandler = new StandardUnknownSensedEntityHandler()
+  val unknownSensedEntityHandler: UnknownSensedEntityHandler = new StandardUnknownSensedEntityHandler()
 
   /**
    * The handler for unknown markers.
@@ -116,7 +117,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
       new StandardCompleteSensedEntityModel(sensorRegistry, eventEmitter, log, spaceEnvironment)
     completeSensedEntityModel.prepare()
 
-    _queryProcessor = new StandardSensedEntityModelQueryProcessor(completeSensedEntityModel)
+    _queryProcessor = new StandardSensedEntityModelQueryProcessor(completeSensedEntityModel, unknownMarkerHandler, unknownSensedEntityHandler)
 
     sensorProcessor = new StandardSensorProcessor(log)
 
@@ -136,8 +137,6 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
       persistedSensorInput = new StandardFilePersistenceSensorInput(sampleFile)
       sensorProcessor.addSensorInput(persistedSensorInput)
     }
-
-    val unknownSensedEntityHandler = new StandardUnknownSensedEntityHandler()
 
     val sensorHandler =
       new StandardSensedEntitySensorHandler(completeSensedEntityModel, unknownSensedEntityHandler, log)

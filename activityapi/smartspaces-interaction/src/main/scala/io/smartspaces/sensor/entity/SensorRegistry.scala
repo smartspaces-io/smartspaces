@@ -272,14 +272,14 @@ trait SensorRegistry {
   /**
    * Associate a marker with its marked entity.
    *
-   * @param markerId
-   *          the ID of the marker
-   * @param markedEntityId
-   *          the ID of the marked entity
+   * @param markerExternalId
+   *          the external ID of the marker
+   * @param markedEntityExternalId
+   *          the external ID of the marked entity
    *
    * @returns this registry
    */
-  def associateMarkerWithMarkedEntity(markerId: String, markedEntityId: String): SensorRegistry
+  def associateMarkerWithMarkedEntity(markerExternalId: String, markedEntityExternalId: String): SensorRegistry
 
   /**
    * Associate a marker with its marked entity.
@@ -304,14 +304,14 @@ trait SensorRegistry {
   /**
    * Associate a sensor with its sensed entity.
    *
-   * @param sensorId
-   *          the ID of the sensor
-   * @param sensedEntityId
-   *          the ID of the sensed entity
+   * @param sensorExternalId
+   *          the external ID of the sensor
+   * @param sensedEntityExternalId
+   *          the external ID of the sensed entity
    *
    * @returns this registry
    */
-  def associateSensorWithSensedEntity(sensorId: String, sensedEntityId: String): SensorRegistry
+  def associateSensorWithSensedEntity(sensorExternalId: String, sensedEntityExternalId: String): SensorRegistry
 
   /**
    * Get the associations between sensors and their sensed entities.

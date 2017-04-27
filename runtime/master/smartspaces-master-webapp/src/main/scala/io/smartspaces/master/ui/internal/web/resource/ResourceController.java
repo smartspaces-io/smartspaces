@@ -16,15 +16,15 @@
 
 package io.smartspaces.master.ui.internal.web.resource;
 
+import io.smartspaces.master.api.master.MasterApiResourceManager;
+import io.smartspaces.master.ui.internal.web.BaseActiveSpaceMasterController;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessages;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
-
-import io.smartspaces.master.api.master.MasterApiResourceManager;
-import io.smartspaces.master.api.messages.MasterApiMessages;
-import io.smartspaces.master.ui.internal.web.BaseActiveSpaceMasterController;
 
 /**
  * Spring MVC controller for resource operations.
@@ -50,7 +50,7 @@ public class ResourceController extends BaseActiveSpaceMasterController {
     ModelAndView mav = getModelAndView();
 
     mav.setViewName("resource/ResourceViewAll");
-    mav.addObject("resources", response.get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA));
+    mav.addObject("resources", response.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA));
 
     return mav;
   }

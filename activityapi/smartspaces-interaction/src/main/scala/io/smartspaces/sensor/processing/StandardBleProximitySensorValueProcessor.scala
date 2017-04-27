@@ -113,7 +113,7 @@ class StandardBleProximitySensorValueProcessor extends SensorValueProcessor {
       userTriggers.put(markerId, newUserTrigger)
 
       val person =
-        processorContext.completeSensedEntityModel.getMarkedSensedEntityModel(markerId).asInstanceOf[PersonSensedEntityModel]
+        processorContext.completeSensedEntityModel.getMarkedSensedEntityModelByMarkerId(markerId).asInstanceOf[PersonSensedEntityModel]
       val modelUpdater = new SimplePersonPhysicalSpaceModelUpdater(
         sensedEntityModel.asInstanceOf[PhysicalSpaceSensedEntityModel], person)
       userTriggerToUpdaters.put(newUserTrigger, modelUpdater)

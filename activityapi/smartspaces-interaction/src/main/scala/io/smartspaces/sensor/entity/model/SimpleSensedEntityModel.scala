@@ -56,7 +56,7 @@ class SimpleSensedEntityModel(val sensedEntityDescription: SensedEntityDescripti
   override def updateSensedValue[T <: Any](value: SensedValue[T], timestamp: Long): Unit = {
     // TODO(keith): Needs some sort of concurrency block
     lastUpdate = timestamp
-    sensedValues.put(value.valueType.id, value);
+    sensedValues.put(value.measurementTypeDescription.id, value);
   }
   
   override def getLastUpdate(): Long = {

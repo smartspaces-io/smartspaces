@@ -30,6 +30,6 @@ class CelciusToFahrenheitMeasurementValueConverter extends MeasurementValueConve
   override val to: MeasurementUnitDescription = null
   
   override  def convert(value: Double): Double = {
-     value * 9 / 5 + 32
+    value * 9 / 5 + 32
   }
 }

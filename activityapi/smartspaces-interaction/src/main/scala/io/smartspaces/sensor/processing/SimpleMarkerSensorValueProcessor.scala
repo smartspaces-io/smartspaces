@@ -56,7 +56,7 @@ class SimpleMarkerSensorValueProcessor(unknownMarkerHandler: UnknownMarkerHandle
     }
 
     val personOption =
-      processorContext.completeSensedEntityModel.getMarkedSensedEntityModel(markerId)
+      processorContext.completeSensedEntityModel.getMarkedSensedEntityModelByMarkerId(markerId)
     if (personOption.isEmpty) {
       processorContext.log.warn(s"No person associated with marker ${markerId}")
 

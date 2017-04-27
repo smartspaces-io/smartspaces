@@ -21,16 +21,16 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.domain.basic.pojo.SimpleActivity;
 import io.smartspaces.master.api.master.MasterApiActivityManager;
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.ui.internal.web.BaseSpaceMasterController;
-
-import java.io.Serializable;
-import java.util.Map;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.RequestContext;
+
+import java.io.Serializable;
+import java.util.Map;
 
 /**
  * The webflow action for activity upload.
@@ -79,14 +79,14 @@ public class ActivityUploadAction extends BaseSpaceMasterController {
               .getInputStream());
 
       // So the ID gets copied out of the flow.
-      if (MasterApiMessageSupport.isSuccessResponse(activityResponse)) {
+      if (SmartSpacesMessagesSupport.isSuccessResponse(activityResponse)) {
 
         form.getActivity().setId(
-            (String) MasterApiMessageSupport.getResponseDataMap(activityResponse).get(
+            (String) SmartSpacesMessagesSupport.getResponseDataMap(activityResponse).get(
                 MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID));
         return "success";
       } else {
-        return handleError(form, MasterApiMessageSupport.getResponseDetail(activityResponse));
+        return handleError(form, SmartSpacesMessagesSupport.getResponseDetail(activityResponse));
       }
     } catch (Throwable e) {
       String message =

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -22,6 +22,10 @@ package io.smartspaces.messaging.codec;
  * <p>
  * Instances are threadsafe and can encode multiple messages simultaneously.
  * 
+ * <p>
+ * This type of encoder takes the message being generated and makes it an input. This is
+ * useful for messages that are built up incrementally.
+ * 
  * @param <I>
  *          the type of the message objects being encoded
  * @param <O>
@@ -29,15 +33,15 @@ package io.smartspaces.messaging.codec;
  * 
  * @author Keith M. Hughes
  */
-public interface MessageEncoder<I, O> {
+public interface IncrementalMessageEncoder<I, O> {
 
   /**
    * Encode a message to go out.
    * 
    * @param out
    *          the outgoing message
-   * 
-   * @return the encoded message
+   * @param message
+   *          the container that the messages will go into
    */
-  O encode(I out);
+  void encode(I out, O message);
 }

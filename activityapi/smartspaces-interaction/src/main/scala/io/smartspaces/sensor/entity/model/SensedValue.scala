@@ -36,7 +36,7 @@ trait SensedValue[+T <: Any] {
   /**
    * The type of the sensed value.
    */
-  val valueType: MeasurementTypeDescription
+  val measurementTypeDescription: MeasurementTypeDescription
 
   /**
    * The timestamp of when the value was last updated, in milliseconds since the epoch.

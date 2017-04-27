@@ -17,13 +17,9 @@
 
 package io.smartspaces.master.ui.internal.web.liveactivitygroup;
 
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
-import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.ui.internal.web.BaseActiveSpaceMasterController;
-
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessages;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +29,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Spring MVC controller for activity groups.
@@ -54,7 +54,7 @@ public class LiveActivityGroupController extends BaseActiveSpaceMasterController
     ModelAndView mav = getModelAndView();
     mav.setViewName("liveactivitygroup/LiveActivityGroupViewAll");
     mav.addObject("liveactivitygroups",
-        response.get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA));
+        response.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA));
 
     return mav;
   }
@@ -64,10 +64,10 @@ public class LiveActivityGroupController extends BaseActiveSpaceMasterController
     ModelAndView mav = getModelAndView();
 
     Map<String, Object> response = masterApiActivityManager.getLiveActivityGroupFullView(id);
-    if (MasterApiMessageSupport.isSuccessResponse(response)) {
+    if (SmartSpacesMessagesSupport.isSuccessResponse(response)) {
       mav.setViewName("liveactivitygroup/LiveActivityGroupView");
 
-      mav.addAllObjects(MasterApiMessageSupport.getResponseDataMap(response));
+      mav.addAllObjects(SmartSpacesMessagesSupport.getResponseDataMap(response));
     } else {
       mav.setViewName("liveactivitygroup/LiveActivityGroupNonexistent");
     }

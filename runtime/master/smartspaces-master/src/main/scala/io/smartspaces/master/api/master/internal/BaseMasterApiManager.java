@@ -18,8 +18,8 @@
 package io.smartspaces.master.api.master.internal;
 
 import io.smartspaces.expression.ExpressionFactory;
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.api.messages.MasterApiMessages;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
 import java.util.Map;
@@ -51,7 +51,7 @@ public class BaseMasterApiManager {
    */
   protected void logResponseError(String errorPreamble, Map<String, Object> response) {
     spaceEnvironment.getLog().error(
-        errorPreamble + "\n" + MasterApiMessageSupport.getResponseDetail(response));
+        errorPreamble + "\n" + SmartSpacesMessagesSupport.getResponseDetail(response));
   }
 
   /**
@@ -63,7 +63,7 @@ public class BaseMasterApiManager {
    * @return the API response
    */
   protected Map<String, Object> getNoSuchActivityResponse(String id) {
-    return MasterApiMessageSupport.getFailureResponse(
+    return SmartSpacesMessagesSupport.getFailureResponse(
         MasterApiMessages.MESSAGE_SPACE_DOMAIN_ACTIVITY_UNKNOWN,
         String.format("Unknown activity %s", id));
   }
@@ -77,7 +77,7 @@ public class BaseMasterApiManager {
    * @return the API response
    */
   protected Map<String, Object> getNoSuchLiveActivityResponse(String id) {
-    return MasterApiMessageSupport.getFailureResponse(
+    return SmartSpacesMessagesSupport.getFailureResponse(
         MasterApiMessages.MESSAGE_SPACE_DOMAIN_LIVEACTIVITY_UNKNOWN,
         String.format("Unknown live activity %s", id));
   }
@@ -91,7 +91,7 @@ public class BaseMasterApiManager {
    * @return the API response
    */
   protected Map<String, Object> getNoSuchLiveActivityGroupResponse(String id) {
-    return MasterApiMessageSupport.getFailureResponse(
+    return SmartSpacesMessagesSupport.getFailureResponse(
         MasterApiMessages.MESSAGE_SPACE_DOMAIN_LIVEACTIVITYGROUP_UNKNOWN,
         String.format("Unknown live activity group %s", id));
   }
@@ -105,7 +105,7 @@ public class BaseMasterApiManager {
    * @return a no such space API response
    */
   protected Map<String, Object> getNoSuchSpaceResponse(String id) {
-    return MasterApiMessageSupport
+    return SmartSpacesMessagesSupport
         .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_DOMAIN_SPACE_UNKNOWN,
             String.format("Unknown space %s", id));
   }
@@ -119,7 +119,7 @@ public class BaseMasterApiManager {
    * @return the API response
    */
   protected Map<String, Object> getNoSuchSpaceControllerResponse(String id) {
-    return MasterApiMessageSupport.getFailureResponse(
+    return SmartSpacesMessagesSupport.getFailureResponse(
         MasterApiMessages.MESSAGE_SPACE_DOMAIN_CONTROLLER_UNKNOWN,
         String.format("Unknown space controller %s", id));
   }

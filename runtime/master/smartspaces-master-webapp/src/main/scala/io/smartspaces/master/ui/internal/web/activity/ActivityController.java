@@ -17,13 +17,9 @@
 
 package io.smartspaces.master.ui.internal.web.activity;
 
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
-import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.ui.internal.web.BaseActiveSpaceMasterController;
-
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessages;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +29,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Spring MVC controller for activity operations.
@@ -54,7 +54,7 @@ public class ActivityController extends BaseActiveSpaceMasterController {
     ModelAndView mav = getModelAndView();
 
     mav.setViewName("activity/ActivityViewAll");
-    mav.addObject("activities", response.get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA));
+    mav.addObject("activities", response.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA));
 
     return mav;
   }
@@ -64,9 +64,9 @@ public class ActivityController extends BaseActiveSpaceMasterController {
     ModelAndView mav = getModelAndView();
 
     Map<String, Object> response = masterApiActivityManager.getActivityFullView(id);
-    if (MasterApiMessageSupport.isSuccessResponse(response)) {
+    if (SmartSpacesMessagesSupport.isSuccessResponse(response)) {
       mav.setViewName("activity/ActivityView");
-      mav.addAllObjects(MasterApiMessageSupport.getResponseDataMap(response));
+      mav.addAllObjects(SmartSpacesMessagesSupport.getResponseDataMap(response));
     } else {
       mav.setViewName("activity/ActivityNonexistent");
     }
@@ -79,7 +79,7 @@ public class ActivityController extends BaseActiveSpaceMasterController {
     ModelAndView mav = getModelAndView();
 
     Map<String, Object> response = masterApiActivityManager.deleteActivity(id);
-    if (MasterApiMessageSupport.isSuccessResponse(response)) {
+    if (SmartSpacesMessagesSupport.isSuccessResponse(response)) {
       mav.clear();
       mav.setViewName("redirect:/activity/all.html");
     } else {

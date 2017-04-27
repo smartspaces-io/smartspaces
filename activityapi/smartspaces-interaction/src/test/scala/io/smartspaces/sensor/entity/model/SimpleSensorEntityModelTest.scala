@@ -245,12 +245,12 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
    *
    */
   @Test def testValueUpdate(): Unit = {
-    val valueTypeExternalId = "glorp"
-    val valueType = Mockito.mock(classOf[MeasurementTypeDescription])
-    Mockito.when(valueType.externalId).thenReturn(valueTypeExternalId)
+    val measurementTypeDescriptionExternalId = "glorp"
+    val measurementTypeDescription = Mockito.mock(classOf[MeasurementTypeDescription])
+    Mockito.when(measurementTypeDescription.externalId).thenReturn(measurementTypeDescriptionExternalId)
 
     val value = Mockito.mock(classOf[SensedValue[Double]])
-    Mockito.when(value.valueType).thenReturn(valueType)
+    Mockito.when(value.measurementTypeDescription).thenReturn(measurementTypeDescription)
 
     val currentTime = 10000l
 

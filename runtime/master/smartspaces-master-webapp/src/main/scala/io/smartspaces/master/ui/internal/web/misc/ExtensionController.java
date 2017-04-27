@@ -17,14 +17,10 @@
 
 package io.smartspaces.master.ui.internal.web.misc;
 
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.server.services.ExtensionManager;
 import io.smartspaces.master.ui.internal.web.BaseSpaceMasterController;
-
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +28,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * A spring MVC controller for extensions.
@@ -55,7 +55,7 @@ public class ExtensionController extends BaseSpaceMasterController {
 
       return extensionManager.evaluateApiExtension(extensionName, args);
     } else {
-      return MasterApiMessageSupport.getFailureResponse(
+      return SmartSpacesMessagesSupport.getFailureResponse(
           MasterApiMessages.MESSAGE_SPACE_CALL_ARGS_NOMAP,
           MasterApiMessages.MESSAGE_SPACE_DETAIL_CALL_ARGS_NOMAP);
     }

@@ -78,14 +78,24 @@ trait CompleteSensedEntityModel {
   def associateSensorWithSensed(association: SimpleSensorSensedEntityAssociation): Unit
 
   /**
-   * Get the sensor entity model for a given entity external ID.
+   * Get the sensor entity model for a given entity ID.
    *
    * @param id
+   *          the ID of the entity
+   *
+   * @return the model
+   */
+  def getSensorEntityModelById(id: String): Option[SensorEntityModel]
+
+  /**
+   * Get the sensor entity model for a given entity external ID.
+   *
+   * @param externalId
    *          the external ID of the entity
    *
    * @return the model
    */
-  def getSensorEntityModel(id: String): Option[SensorEntityModel]
+  def getSensorEntityModelByExternalId(externalId: String): Option[SensorEntityModel]
 
   /**
    * Get all sensor entity models in the collection.
@@ -95,14 +105,24 @@ trait CompleteSensedEntityModel {
   def getAllSensorEntityModels(): List[SensorEntityModel]
 
   /**
-   * Get the sensed entity model for a given entity external ID.
+   * Get the sensed entity model for a given entity ID.
    *
    * @param id
+   *          the ID of the entity
+   *
+   * @return the model
+   */
+  def getSensedEntityModelById(id: String): Option[SensedEntityModel]
+
+  /**
+   * Get the sensed entity model for a given entity external ID.
+   *
+   * @param externalId
    *          the external ID of the entity
    *
    * @return the model
    */
-  def getSensedEntityModel(id: String): Option[SensedEntityModel]
+  def getSensedEntityModelByExternalId(externalId: String): Option[SensedEntityModel]
 
   /**
    * Get all sensed entity models in the collection.
@@ -112,14 +132,24 @@ trait CompleteSensedEntityModel {
   def getAllSensedEntityModels(): List[SensedEntityModel]
 
   /**
-   * Get the model for a given physical space entity external ID.
+   * Get the model for a given physical space entity ID.
    *
    * @param id
    *          the external ID of the entity
    *
    * @return the model
    */
-  def getPhysicalSpaceSensedEntityModel(id: String): Option[PhysicalSpaceSensedEntityModel]
+  def getPhysicalSpaceSensedEntityModelById(id: String): Option[PhysicalSpaceSensedEntityModel]
+
+  /**
+   * Get the model for a given physical space entity external ID.
+   *
+   * @param externalId
+   *          the external ID of the entity
+   *
+   * @return the model
+   */
+  def getPhysicalSpaceSensedEntityModelByExternalId(externalId: String): Option[PhysicalSpaceSensedEntityModel]
 
   /**
    * Get all physical space models in the collection.
@@ -129,14 +159,24 @@ trait CompleteSensedEntityModel {
   def getAllPhysicalSpaceSensedEntityModels(): List[PhysicalSpaceSensedEntityModel]
 
   /**
-   * Get the model for a given person entity external ID.
+   * Get the model for a given person entity ID.
    *
    * @param id
+   *          the ID of the entity
+   *
+   * @return the model
+   */
+  def getPersonSensedEntityModelById(id: String): Option[PersonSensedEntityModel]
+
+  /**
+   * Get the model for a given person entity external ID.
+   *
+   * @param externalId
    *          the external ID of the entity
    *
    * @return the model
    */
-  def getPersonSensedEntityModel(id: String): Option[PersonSensedEntityModel]
+  def getPersonSensedEntityModelByExternalId(externalId: String): Option[PersonSensedEntityModel]
 
   /**
    * Get all person models in the collection.
@@ -153,7 +193,7 @@ trait CompleteSensedEntityModel {
    *
    * @return the model
    */
-  def getMarkedSensedEntityModel(markerId: String): Option[PersonSensedEntityModel]
+  def getMarkedSensedEntityModelByMarkerId(markerId: String): Option[PersonSensedEntityModel]
 
   /**
    * Check all models for  things like going offline.

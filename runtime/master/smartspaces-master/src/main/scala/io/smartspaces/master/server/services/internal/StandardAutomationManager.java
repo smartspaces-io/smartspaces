@@ -22,13 +22,13 @@ import io.smartspaces.master.api.master.MasterApiActivityManager;
 import io.smartspaces.master.api.master.MasterApiMasterSupportManager;
 import io.smartspaces.master.api.master.MasterApiResourceManager;
 import io.smartspaces.master.api.master.MasterApiSpaceControllerManager;
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.AutomationManager;
 import io.smartspaces.master.server.services.ScriptingNames;
 import io.smartspaces.master.server.services.SpaceControllerRepository;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 import io.smartspaces.service.scheduler.SchedulerService;
 import io.smartspaces.service.script.ScriptService;
 import io.smartspaces.service.script.StringScriptSource;
@@ -43,7 +43,6 @@ import com.google.common.io.Closeables;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -243,10 +242,10 @@ public class StandardAutomationManager implements AutomationManager {
         Map<String, Object> activityResponse =
             masterApiActivityManager.saveActivity(null, importStream);
 
-        if (MasterApiMessageSupport.isSuccessResponse(activityResponse)) {
+        if (SmartSpacesMessagesSupport.isSuccessResponse(activityResponse)) {
           if (watchedFolder.endsWith(ACTIVITY_DEPLOY_DIRECTORY)) {
             masterApiSpaceControllerManager.deployAllLiveActivityInstances(
-                (String) MasterApiMessageSupport.getResponseDataMap(activityResponse)
+                (String) SmartSpacesMessagesSupport.getResponseDataMap(activityResponse)
                     .get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID));
           }
         }

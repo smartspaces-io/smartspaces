@@ -19,50 +19,14 @@ package io.smartspaces.master.api.messages;
 
 /**
  * Message components for the Master API.
+ * 
+ * <p>
+ * 
+ * See {@link io.smartspaces.messaging.dynamic.SmartSpacesMessages} for the message envelopes.
  *
  * @author Keith M. Hughes
  */
 public class MasterApiMessages {
-
-  /**
-   * The type field for a websocket message envelope.
-   */
-  public static final String MASTER_API_MESSAGE_ENVELOPE_TYPE = "type";
-
-  /**
-   * The data field for a websocket message envelope.
-   */
-  public static final String MASTER_API_MESSAGE_ENVELOPE_DATA = "data";
-
-  /**
-   * Field in the Master API response giving the request ID.
-   */
-  public static final String MASTER_API_MESSAGE_ENVELOPE_REQUEST_ID = "requestId";
-
-  /**
-   * Field in the Master API response giving the result.
-   */
-  public static final String MASTER_API_MESSAGE_ENVELOPE_RESULT = "result";
-
-  /**
-   * The result given for a successful Master API call.
-   */
-  public static final String MASTER_API_RESULT_SUCCESS = "success";
-
-  /**
-   * The result given for a failed Master API call.
-   */
-  public static final String MASTER_API_RESULT_FAILURE = "failure";
-
-  /**
-   * Field in the Master API response giving the reason for a response.
-   */
-  public static final String MASTER_API_MESSAGE_ENVELOPE_REASON = "reason";
-
-  /**
-   * Field in the Master API response giving the detail for a response.
-   */
-  public static final String MASTER_API_MESSAGE_ENVELOPE_DETAIL = "detail";
 
   /**
    * The field in a Master API command map giving the name of the command field.

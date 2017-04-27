@@ -17,13 +17,10 @@
 
 package io.smartspaces.master.ui.internal.web.liveactivity;
 
-import io.smartspaces.master.api.messages.MasterApiMessageSupport;
 import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.ui.internal.web.BaseActiveSpaceMasterController;
-
-import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessages;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +30,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Spring MVC controller for working with live activities.
@@ -54,7 +55,7 @@ public class LiveActivityController extends BaseActiveSpaceMasterController {
     ModelAndView mav = getModelAndView();
     mav.setViewName("liveactivity/LiveActivityViewAll");
     mav.addObject("liveactivities",
-        response.get(MasterApiMessages.MASTER_API_MESSAGE_ENVELOPE_DATA));
+        response.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA));
     mav.addObject("canCreateLiveActivities", masterApiActivityManager.canCreateLiveActivities());
 
     return mav;
@@ -65,9 +66,9 @@ public class LiveActivityController extends BaseActiveSpaceMasterController {
     Map<String, Object> response = masterApiActivityManager.getLiveActivityFullView(id);
 
     ModelAndView mav = getModelAndView();
-    if (MasterApiMessageSupport.isSuccessResponse(response)) {
+    if (SmartSpacesMessagesSupport.isSuccessResponse(response)) {
       mav.setViewName("liveactivity/LiveActivityView");
-      mav.addAllObjects(MasterApiMessageSupport.getResponseDataMap(response));
+      mav.addAllObjects(SmartSpacesMessagesSupport.getResponseDataMap(response));
     } else {
       mav.setViewName("liveactivity/LiveActivityNonexistent");
     }
@@ -112,7 +113,7 @@ public class LiveActivityController extends BaseActiveSpaceMasterController {
 
       return masterApiActivityManager.configureLiveActivity(id, map);
     } else {
-      return MasterApiMessageSupport.getFailureResponse(
+      return SmartSpacesMessagesSupport.getFailureResponse(
           MasterApiMessages.MESSAGE_SPACE_CALL_ARGS_NOMAP,
           MasterApiMessages.MESSAGE_SPACE_DETAIL_CALL_ARGS_NOMAP);
     }
@@ -167,7 +168,7 @@ public class LiveActivityController extends BaseActiveSpaceMasterController {
     ModelAndView mav = getModelAndView();
 
     Map<String, Object> response = masterApiActivityManager.deleteLiveActivity(id);
-    if (MasterApiMessageSupport.isSuccessResponse(response)) {
+    if (SmartSpacesMessagesSupport.isSuccessResponse(response)) {
       mav.clear();
       mav.setViewName("redirect:/liveactivity/all.html");
     } else {

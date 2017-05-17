@@ -22,7 +22,7 @@ import io.smartspaces.system.SmartSpacesEnvironment
 
 import io.smartspaces.sensor.entity.model.event._
 import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
-import io.smartspaces.sensor.entity.model.event.PhysicalLocationOccupancyEvent
+import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
 import io.smartspaces.event.observable.ObservableCreator
 
 
@@ -31,14 +31,14 @@ class StandardSensorEventTester(val spaceEnvironment: SmartSpacesEnvironment) {
   /**
    * The subject for physical location occupancy events
    */
-  private var physicalLocationOccupancyEventSubject: EventPublisherSubject[PhysicalLocationOccupancyEvent] = null
+  private var physicalLocationOccupancyEventSubject: EventPublisherSubject[PhysicalSpaceOccupancyLiveEvent] = null
 
   /**
    * The creator for physical occupancy observables.
    */
-  private val physicalLocationOccupancyEventCreator: ObservableCreator[EventPublisherSubject[PhysicalLocationOccupancyEvent]] =
-    new ObservableCreator[EventPublisherSubject[PhysicalLocationOccupancyEvent]]() {
-      override def newObservable(): EventPublisherSubject[PhysicalLocationOccupancyEvent] = {
+  private val physicalLocationOccupancyEventCreator: ObservableCreator[EventPublisherSubject[PhysicalSpaceOccupancyLiveEvent]] =
+    new ObservableCreator[EventPublisherSubject[PhysicalSpaceOccupancyLiveEvent]]() {
+      override def newObservable(): EventPublisherSubject[PhysicalSpaceOccupancyLiveEvent] = {
         EventPublisherSubject.create(spaceEnvironment.getLog)
       }
     }
@@ -62,7 +62,7 @@ class StandardSensorEventTester(val spaceEnvironment: SmartSpacesEnvironment) {
     val eventObservableRegistry = spaceEnvironment.getEventObservableRegistry
 
     physicalLocationOccupancyEventSubject =
-      eventObservableRegistry.getObservable(PhysicalLocationOccupancyEvent.EVENT_TYPE,
+      eventObservableRegistry.getObservable(PhysicalSpaceOccupancyLiveEvent.EVENT_TYPE,
         physicalLocationOccupancyEventCreator)
 
     sensorOfflineEventSubject =
@@ -71,7 +71,7 @@ class StandardSensorEventTester(val spaceEnvironment: SmartSpacesEnvironment) {
   }
   
   
-  def broadcastOccupanyEvent(event: PhysicalLocationOccupancyEvent): Unit = {
+  def broadcastOccupanyEvent(event: PhysicalSpaceOccupancyLiveEvent): Unit = {
     physicalLocationOccupancyEventSubject.onNext(event)
   }
 

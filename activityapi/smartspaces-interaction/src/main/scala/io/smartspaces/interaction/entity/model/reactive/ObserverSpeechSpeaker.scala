@@ -19,16 +19,16 @@ package io.smartspaces.interaction.entity.model.reactive
 import io.smartspaces.event.observable.BaseObserver
 import io.smartspaces.interaction.behavior.speech.SpeechSpeaker
 import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
-import io.smartspaces.sensor.entity.model.event.PhysicalLocationOccupancyEvent
+import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
 
 /**
  * A reactive observer for speech events.
  *
  * @author Keith M. Hughes
  */
-class ObserverSpeechSpeaker(private val speechSpeaker: SpeechSpeaker) extends BaseObserver[PhysicalLocationOccupancyEvent] {
+class ObserverSpeechSpeaker(private val speechSpeaker: SpeechSpeaker) extends BaseObserver[PhysicalSpaceOccupancyLiveEvent] {
 
-  override def onNext(event: PhysicalLocationOccupancyEvent): Unit = {
+  override def onNext(event: PhysicalSpaceOccupancyLiveEvent): Unit = {
     val entered = event.entered
     if (entered != null) {
       entered.foreach((person: PersonSensedEntityModel) => {

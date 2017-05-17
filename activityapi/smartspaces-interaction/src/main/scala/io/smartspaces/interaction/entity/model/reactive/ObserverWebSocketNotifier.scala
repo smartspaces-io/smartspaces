@@ -20,7 +20,7 @@ import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import io.smartspaces.activity.behavior.web.WebServerActivityBehavior
 import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
-import io.smartspaces.sensor.entity.model.event.PhysicalLocationOccupancyEvent
+import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 
 /**
@@ -29,7 +29,7 @@ import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
  *
  * @author Keith M. Hughes
  */
-class ObserverWebSocketNotifier(private val webServer: WebServerActivityBehavior) extends Observer[PhysicalLocationOccupancyEvent] {
+class ObserverWebSocketNotifier(private val webServer: WebServerActivityBehavior) extends Observer[PhysicalSpaceOccupancyLiveEvent] {
 
   override def onComplete(): Unit = {
     // Nothing to do
@@ -39,7 +39,7 @@ class ObserverWebSocketNotifier(private val webServer: WebServerActivityBehavior
     // Nothing to do
   }
 
-  override def onNext(event: PhysicalLocationOccupancyEvent): Unit = {
+  override def onNext(event: PhysicalSpaceOccupancyLiveEvent): Unit = {
     val entered = event.entered
     if (entered != null) {
       entered.foreach((person: PersonSensedEntityModel) => {

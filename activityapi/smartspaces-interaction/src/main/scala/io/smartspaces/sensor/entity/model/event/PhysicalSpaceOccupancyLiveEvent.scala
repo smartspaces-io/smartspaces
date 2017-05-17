@@ -20,11 +20,14 @@ import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
 import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
 
 /**
- * An event that signals occupancy changes in a physical location.
+ * A live event that signals occupancy changes in a physical location.
+ * 
+ * <p>
+ * Live events are events coming from a sensor.
  *
  * @author Keith M. Hughes
  */
-object PhysicalLocationOccupancyEvent {
+object PhysicalSpaceOccupancyLiveEvent {
 
   /**
    * The type of the event.
@@ -33,10 +36,13 @@ object PhysicalLocationOccupancyEvent {
 }
 
 /**
- * An event that signals occupancy changes in a physical location.
+ * A live event that signals occupancy changes in a physical location.
+ * 
+ * <p>
+ * Live events are events coming from a sensor.
  *
  * @author Keith M. Hughes
  */
-class PhysicalLocationOccupancyEvent(val physicalSpace: PhysicalSpaceSensedEntityModel,
+class PhysicalSpaceOccupancyLiveEvent(val physicalSpace: PhysicalSpaceSensedEntityModel,
     val entered: Set[PersonSensedEntityModel], val exited: Set[PersonSensedEntityModel], val timestamp: Long) {
 }

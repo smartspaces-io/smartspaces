@@ -27,7 +27,7 @@ import org.scalatest.junit.JUnitSuite
 
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.entity.PhysicalSpaceSensedEntityDescription
-import io.smartspaces.sensor.entity.model.event.PhysicalLocationOccupancyEvent
+import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
 import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
 
 /**
@@ -66,7 +66,7 @@ class SimplePhysicalSpaceSensedEntityModelTest extends JUnitSuite {
     model.occupantEntered(personModel, 100)
 
     val argumentCaptor =
-      ArgumentCaptor.forClass(classOf[PhysicalLocationOccupancyEvent])
+      ArgumentCaptor.forClass(classOf[PhysicalSpaceOccupancyLiveEvent])
 
     Mockito.verify(eventEmitter, Mockito.times(1)).broadcastOccupanyEvent(argumentCaptor.capture())
 
@@ -88,7 +88,7 @@ class SimplePhysicalSpaceSensedEntityModelTest extends JUnitSuite {
     model.occupantExited(personModel, 100)
 
     val argumentCaptor =
-      ArgumentCaptor.forClass(classOf[PhysicalLocationOccupancyEvent])
+      ArgumentCaptor.forClass(classOf[PhysicalSpaceOccupancyLiveEvent])
 
     // First call will be person entering.
     Mockito.verify(eventEmitter, Mockito.times(2)).broadcastOccupanyEvent(argumentCaptor.capture())

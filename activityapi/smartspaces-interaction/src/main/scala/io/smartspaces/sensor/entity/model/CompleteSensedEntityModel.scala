@@ -21,7 +21,7 @@ import io.smartspaces.sensor.entity.SensedEntityDescription
 import io.smartspaces.sensor.entity.SensorEntityDescription
 import io.smartspaces.sensor.entity.SensorRegistry
 import io.smartspaces.sensor.entity.SimpleSensorSensedEntityAssociation
-import io.smartspaces.sensor.entity.model.event.PhysicalLocationOccupancyEvent
+import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
 import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
 import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
 import io.smartspaces.sensor.processing.SensorProcessingEventEmitter

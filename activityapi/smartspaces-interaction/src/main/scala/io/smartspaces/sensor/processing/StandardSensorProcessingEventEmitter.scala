@@ -18,7 +18,7 @@ package io.smartspaces.sensor.processing
 
 import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
 import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
-import io.smartspaces.sensor.entity.model.event.PhysicalLocationOccupancyEvent
+import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
 import io.smartspaces.event.observable.EventPublisherSubject
 import io.smartspaces.event.observable.ObservableCreator
 import io.smartspaces.logging.ExtendedLog
@@ -39,9 +39,9 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
   /**
    * The creator for physical occupancy observables.
    */
-  private val physicalLocationOccupancyEventCreator: ObservableCreator[EventPublisherSubject[PhysicalLocationOccupancyEvent]] =
-    new ObservableCreator[EventPublisherSubject[PhysicalLocationOccupancyEvent]]() {
-      override def newObservable(): EventPublisherSubject[PhysicalLocationOccupancyEvent] = {
+  private val physicalLocationOccupancyEventCreator: ObservableCreator[EventPublisherSubject[PhysicalSpaceOccupancyLiveEvent]] =
+    new ObservableCreator[EventPublisherSubject[PhysicalSpaceOccupancyLiveEvent]]() {
+      override def newObservable(): EventPublisherSubject[PhysicalSpaceOccupancyLiveEvent] = {
         EventPublisherSubject.create(log)
       }
     }
@@ -49,8 +49,8 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
   /**
    * The subject for physical location occupancy events
    */
-  private var physicalLocationOccupancyEventSubject: EventPublisherSubject[PhysicalLocationOccupancyEvent] =
-      eventObservableRegistry.getObservable(PhysicalLocationOccupancyEvent.EVENT_TYPE,
+  private var physicalLocationOccupancyEventSubject: EventPublisherSubject[PhysicalSpaceOccupancyLiveEvent] =
+      eventObservableRegistry.getObservable(PhysicalSpaceOccupancyLiveEvent.EVENT_TYPE,
         physicalLocationOccupancyEventCreator)
 
   /**
@@ -87,7 +87,7 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
       eventObservableRegistry.getObservable(UnknownMarkerSeenEvent.EVENT_TYPE,
         unknownMarkerSeenEventCreator)
 
-  override def broadcastOccupanyEvent(event: PhysicalLocationOccupancyEvent): Unit = {
+  override def broadcastOccupanyEvent(event: PhysicalSpaceOccupancyLiveEvent): Unit = {
     physicalLocationOccupancyEventSubject.onNext(event)
   }
 

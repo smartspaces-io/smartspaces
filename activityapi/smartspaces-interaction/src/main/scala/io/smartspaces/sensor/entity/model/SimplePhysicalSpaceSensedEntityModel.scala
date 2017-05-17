@@ -20,7 +20,7 @@ import scala.collection.mutable.HashSet
 import scala.collection.mutable.Set
 
 import io.smartspaces.sensor.entity.PhysicalSpaceSensedEntityDescription
-import io.smartspaces.sensor.entity.model.event.PhysicalLocationOccupancyEvent
+import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
 
 /**
  * A model of a physical space.
@@ -46,7 +46,7 @@ class SimplePhysicalSpaceSensedEntityModel(
 
       val entered = scala.collection.immutable.HashSet(person)
 
-      models.eventEmitter.broadcastOccupanyEvent(new PhysicalLocationOccupancyEvent(this, entered, null, timestamp))
+      models.eventEmitter.broadcastOccupanyEvent(new PhysicalSpaceOccupancyLiveEvent(this, entered, null, timestamp))
     }
 
     this
@@ -61,7 +61,7 @@ class SimplePhysicalSpaceSensedEntityModel(
 
       val exited = scala.collection.immutable.HashSet(person)
 
-      models.eventEmitter.broadcastOccupanyEvent(new PhysicalLocationOccupancyEvent(this, null, exited, timestamp))
+      models.eventEmitter.broadcastOccupanyEvent(new PhysicalSpaceOccupancyLiveEvent(this, null, exited, timestamp))
     }
 
     this

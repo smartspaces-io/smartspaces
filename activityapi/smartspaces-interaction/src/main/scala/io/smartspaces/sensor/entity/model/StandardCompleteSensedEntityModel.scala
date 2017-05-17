@@ -31,7 +31,7 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
-import io.smartspaces.sensor.entity.model.event.PhysicalLocationOccupancyEvent
+import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
 import io.smartspaces.event.observable.EventObservableRegistry
 import io.smartspaces.event.observable.ObservableCreator
 import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent

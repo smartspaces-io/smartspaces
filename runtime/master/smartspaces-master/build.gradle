@@ -74,7 +74,7 @@ dependencies {
     exclude group: 'commons-logging' 
   }
   
-  compile('org.apache.felix:org.apache.felix.gogo.command:0.16.0') {
+  compile('org.apache.felix:org.apache.felix.gogo.runtime:1.0.6') {
     exclude group: 'org.osgi'
     exclude group: 'org.easymock'
   }
@@ -150,7 +150,7 @@ jar {
 		'io.smartspaces.resource.repository.internal.*'
 		
     instruction 'Import-Package',
-		'org.apache.felix.service.command;status=provisional',
+		'org.apache.felix.service.command',
 		'org.eclipse.gemini.blueprint.config',
 		'org.springframework.transaction.config',
 		'org.springframework.aop',

@@ -19,6 +19,11 @@ package io.smartspaces.scope
 import io.smartspaces.resource.managed.ManagedResources
 import io.smartspaces.tasks.InternalManagedTasks
 import io.smartspaces.tasks.ManagedTasks
+import io.smartspaces.resource.managed.ManagedResource
+import io.smartspaces.tasks.ManagedTask
+import java.util.concurrent.TimeUnit
+import io.smartspaces.time.TimeFrequency
+import io.smartspaces.time.TimeDelay
 
 /**
  * The standard managed scope object.
@@ -35,5 +40,58 @@ class StandardManagedScope(override val managedResources: ManagedResources, over
     managedTasks.asInstanceOf[InternalManagedTasks].shutdownAll()
     
     managedResources.shutdownResourcesAndClear()
+  }
+
+  override def addResource(resource: ManagedResource): Unit = {   
+    managedResources.addResource(resource)
+  }
+
+  override def addStartedResource(resource: ManagedResource): Unit = {
+    managedResources.addResource(resource)
+  }
+  
+  override def submit(task: Runnable): ManagedTask = {
+    managedTasks.submit(task)
+  }
+
+  override def schedule(task: Runnable, delay: Long, unit: TimeUnit): ManagedTask = {
+    managedTasks.schedule(task, delay, unit)
+  }
+
+  override def scheduleAtFixedRate(task: Runnable,  taskFrequency: TimeFrequency): ManagedTask = {
+    managedTasks.scheduleAtFixedRate(task,  taskFrequency)
+  }
+
+  override def scheduleAtFixedRate(task: Runnable, taskFrequency: TimeFrequency,
+      allowTerminate: Boolean): ManagedTask = {
+    managedTasks.scheduleAtFixedRate(task, taskFrequency, allowTerminate)
+  }
+
+  override def scheduleAtFixedRate(task: Runnable, initialDelay: Long, period: Long, unit: TimeUnit): ManagedTask = {
+    managedTasks.scheduleAtFixedRate(task, initialDelay, period, unit)
+  }
+
+  override def scheduleAtFixedRate(task: Runnable, initialDelay: Long, period: Long,
+      unit: TimeUnit, allowTerminate: Boolean): ManagedTask = {
+    managedTasks.scheduleAtFixedRate(task, initialDelay, period, unit , allowTerminate)
+  }
+
+  override def scheduleWithFixedDelay(task: Runnable, taskDelay: TimeDelay): ManagedTask = {
+    managedTasks.scheduleWithFixedDelay(task, taskDelay)
+  }
+
+  override def scheduleWithFixedDelay(task: Runnable, taskDelay: TimeDelay,
+     allowTerminate: Boolean): ManagedTask = {
+    managedTasks.scheduleWithFixedDelay(task, taskDelay, allowTerminate)
+  }
+
+  override def scheduleWithFixedDelay(task: Runnable, initialDelay: Long, delay: Long,
+      unit: TimeUnit): ManagedTask = {
+    managedTasks.scheduleWithFixedDelay(task, initialDelay, delay, unit)
+  }
+
+  override def scheduleWithFixedDelay(task: Runnable, initialDelay: Long, delay: Long,
+      unit: TimeUnit, allowTerminate: Boolean): ManagedTask = {
+    managedTasks.scheduleWithFixedDelay(task, initialDelay, delay, unit, allowTerminate)
   }
 }

@@ -16,6 +16,8 @@
 
 package io.smartspaces.event.observable;
 
+import io.smartspaces.scope.ManagedScope;
+
 import io.reactivex.Observable;
 
 /**
@@ -24,7 +26,7 @@ import io.reactivex.Observable;
  * 
  * @author Keith M. Hughes
  */
-public interface EventObservableRegistry  {
+public interface EventObservableRegistry {
 
   /**
    * Add in a new observable.
@@ -60,6 +62,23 @@ public interface EventObservableRegistry  {
    * @return the named observable, or {@code null} if no such observable
    */
   <T extends Observable<?>> T getObservable(String observableName);
+  
+  /**
+   * Connect the given observer to the named observable.
+   * 
+   * <p>
+   * The observer will be added to the managed scope so it will be disconnected when the scope shuts down.
+   * 
+   * @param observableName
+   *           the name of the observable
+   * @param scope
+   *           the managed scope to place the observer in
+   * @param observers
+   *           the observers to add
+   *           
+   * @return {@code true} if the observable with the given name was found
+   */
+  <T> boolean connectObservers(String observableName, ManagedScope scope, BaseObserver<T>... observers);
 
   /**
    * Get the observable with a given name.

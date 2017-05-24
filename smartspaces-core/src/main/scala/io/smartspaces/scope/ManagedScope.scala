@@ -29,7 +29,7 @@ import io.smartspaces.tasks.ManagedTasks
  *
  * @author Keith M. Hughes
  */
-trait ManagedScope extends ManagedResource {
+trait ManagedScope extends ManagedResource with ManagedTasks {
 
   /**
    * The collection of managed tasks for the scope.
@@ -40,4 +40,25 @@ trait ManagedScope extends ManagedResource {
    * The collection of managed resources for the scope.
    */
   val managedResources: ManagedResources
+  
+  /**
+   * Add a new resource to the  managed resources collection.
+   * 
+   * <p>
+   * If {@link #startupResources()} has already been called, the resource
+   * will be immediately started and will only be added to the collection if it starts
+   * properly.
+   *
+   * @param resource
+   *          the resource to add
+   */
+  def addResource(resource: ManagedResource): Unit
+
+  /**
+   * Add a resource to the managed resources collection that has already been started.
+   *
+   * @param resource
+   *          the resource to add
+   */
+  def addStartedResource(resource: ManagedResource): Unit
 }

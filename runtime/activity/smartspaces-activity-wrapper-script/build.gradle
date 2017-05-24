@@ -38,7 +38,7 @@ jar {
 
     instruction 'Import-Package',
         'org.apache.commons.logging.impl',
-        'org.apache.felix.service.command;status=provisional',
+        //'org.apache.felix.service.command;status=provisional',
         'io.smartspaces.evaluation',
         '*'
   }

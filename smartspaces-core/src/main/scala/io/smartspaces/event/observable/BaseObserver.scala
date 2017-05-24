@@ -18,11 +18,22 @@ package io.smartspaces.event.observable
 
 import io.reactivex.observers.DefaultObserver
 import io.reactivex.disposables.Disposable
+import io.smartspaces.resource.managed.BaseManagedResource
+import io.smartspaces.resource.managed.ManagedResource
 
 /**
  * An implementation of a reactive Observer that supplies default methods for all callbacks.
+ * 
+ * <p>
+ * This observer is a ManagedResource, and will cancel its description when shut down.
  */
-class BaseObserver[T] extends DefaultObserver[T] {
+class BaseObserver[T] extends DefaultObserver[T] with ManagedResource {
+  
+  override def startup(): Unit = {}
+  
+  override def shutdown(): Unit = {
+    cancel()
+  }
 
   override def onNext(value: T): Unit = {
     // Default is do nothing

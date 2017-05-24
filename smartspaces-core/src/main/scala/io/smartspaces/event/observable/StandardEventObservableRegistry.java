@@ -16,6 +16,8 @@
 
 package io.smartspaces.event.observable;
 
+import io.smartspaces.scope.ManagedScope;
+
 import io.reactivex.Observable;
 
 import java.util.HashMap;
@@ -67,4 +69,23 @@ public class StandardEventObservableRegistry implements EventObservableRegistry 
 
     return observable;
   }
+
+  @Override
+  public <T> boolean connectObservers(String observableName, ManagedScope scope,
+      BaseObserver<T>... observers) {
+    Observable<? extends T> observable = getObservable(observableName);
+    if (observable != null) {
+      if (observers != null) {
+        for (BaseObserver<T> observer : observers) {
+          observable.subscribe(observer);
+
+          scope.addResource(observer);
+        }
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }

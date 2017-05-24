@@ -39,14 +39,17 @@ dependencies {
   
   bootstrap project(":runtime:master:smartspaces-master-webapp")
 
+  // TODO(keith): Move this to the Karaf shell with SSH or make it switchable.
   bootstrap 'org.apache.felix:org.apache.felix.gogo.runtime:1.0.6'
   bootstrap 'org.apache.felix:org.apache.felix.gogo.shell:1.0.0'
-  
   bootstrap('org.apache.felix:org.apache.felix.gogo.command:1.0.2') {
     exclude group: 'org.osgi'
     exclude group: 'org.easymock'
   }
-
+  bootstrap('org.apache.felix:org.apache.felix.shell.remote:1.2.0') {
+	transitive=false
+  }
+  
   system 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'
   system 'org.apache.log4j:com.springsource.org.apache.log4j:1.2.16'
   system "${project.ext.osgiContainerDependency}"

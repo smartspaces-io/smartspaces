@@ -65,6 +65,16 @@ import java.util.jar.Manifest;
 public class SmartSpacesFrameworkBootstrap {
 
   /**
+   * The system property name for the Felix Gogo shell arguments.
+   */
+  private static final String SYSTEM_PROPERTY_NAME_GOGO_ARGS = "gosh.args";
+
+  /**
+   * The value for the system property for a non-interactive Felix Gogo shell.
+   */
+  private static final String SYSTEM_PROPERTY_VALUE_GOGO_ARGS_NOINTERACTIVE = "--nointeractive";
+
+  /**
    * Configuration parameter to specify if startup order of bundles should be
    * logged.
    */
@@ -123,11 +133,6 @@ public class SmartSpacesFrameworkBootstrap {
    * The location of the delegations.conf file relative to the IS install.
    */
   public static final String LOCATION_DELEGATIONS_CONF = "lib/system/java/delegations.conf";
-
-  /**
-   * The bundle symbolic name for the OSGi shell being used.
-   */
-  public static final String BUNDLE_SYMBOLIC_NAME_OSGI_SHELL = "org.apache.felix.gogo.shell";
 
   /**
    * External packages loaded from the Smart Spaces system folder that must be
@@ -272,7 +277,7 @@ public class SmartSpacesFrameworkBootstrap {
    */
   private boolean needShell = true;
 
-  /**
+  /**oshell
    * Logging provider for the container.
    */
   private Log4jLoggingProvider loggingProvider;
@@ -346,6 +351,10 @@ public class SmartSpacesFrameworkBootstrap {
     configFolder = new File(baseInstallFolder, ContainerFilesystemLayout.FOLDER_DEFAULT_CONFIG);
 
     processCommandLineArgs(args);
+    
+    if (!needShell) {
+      System.setProperty(SYSTEM_PROPERTY_NAME_GOGO_ARGS, SYSTEM_PROPERTY_VALUE_GOGO_ARGS_NOINTERACTIVE);
+    }
 
     initialBundles = new ArrayList<File>();
 
@@ -701,13 +710,7 @@ public class SmartSpacesFrameworkBootstrap {
       if (isFragment(bundle)) {
         continue;
       }
-      // TODO(keith): See if way to start up shell from property
-      // since we may want it for remote access.
-      String symbolicName = bundle.getSymbolicName();
-      if (symbolicName.equals(BUNDLE_SYMBOLIC_NAME_OSGI_SHELL) && !needShell) {
-        continue;
-      }
-
+ 
       startBundle(bundle);
     }
   }

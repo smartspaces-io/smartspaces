@@ -50,6 +50,17 @@ dependencies {
   bootstrap project(":service:smartspaces-service-mail-receiver")
   bootstrap project(":service:smartspaces-service-mail-sender")
   bootstrap project(":service:smartspaces-service-template")
+  
+  // TODO(keith): Move this to the Karaf shell with SSH or make it switchable.
+  bootstrap 'org.apache.felix:org.apache.felix.gogo.runtime:1.0.6'
+  bootstrap 'org.apache.felix:org.apache.felix.gogo.shell:1.0.0'
+  bootstrap('org.apache.felix:org.apache.felix.gogo.command:1.0.2') {
+	exclude group: 'org.osgi'
+	exclude group: 'org.easymock'
+  }
+  bootstrap('org.apache.felix:org.apache.felix.shell.remote:1.2.0') {
+	transitive=false
+  }
 
   bootstrap 'org.apache.felix:org.apache.felix.gogo.runtime:1.0.6'
   bootstrap 'org.apache.felix:org.apache.felix.gogo.shell:1.0.0'

@@ -32,7 +32,6 @@ import io.smartspaces.system.core.logging.LoggingProvider;
 import io.smartspaces.time.provider.TimeProvider;
 
 import com.google.common.collect.Maps;
-import org.apache.commons.logging.Log;
 
 import java.util.HashMap;
 import java.util.Map;

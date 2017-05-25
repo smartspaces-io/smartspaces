@@ -154,12 +154,6 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
   private OsgiContainerResourceManager containerResourceManager;
 
   /**
-   * Managed resources for the bundle. This simplifies automatic startup and
-   * shutdown of resources the bundle may need to provide.
-   */
-  private ManagedResources managedResources;
-
-  /**
    * All service registrations put into place.
    */
   private final List<ServiceRegistration<?>> serviceRegistrations = new ArrayList<>();
@@ -173,7 +167,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    * Update period for NTP.
    */
   private static final long NTP_UPDATE_PERIOD_SECONDS = 10L;
-  
+
   /**
    * The managed scope for the entire container.
    */
@@ -190,7 +184,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     try {
       getCoreServices();
 
-      managedResources = new StandardManagedResources(loggingProvider.getLog());
+      ManagedResources managedResources = new StandardManagedResources(loggingProvider.getLog());
 
       ManagedTasks managedTasks =
           new StandardManagedTasks(executorService, loggingProvider.getLog());
@@ -221,7 +215,12 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
         bundleContext.getBundle(0).adapt(FrameworkWiring.class), filesystem,
         configurationProvider.getConfigFolder(), spaceEnvironment.getLog());
     containerResourceManager.startup();
-    managedResources.addResource(containerResourceManager);
+    containerManagedScope.managedResources().addResource(containerResourceManager);
+
+    long containerStartupTime = spaceEnvironment.getTimeProvider().getCurrentTime();
+    spaceEnvironment.getSystemConfiguration().setProperty(
+        SmartSpacesEnvironment.CONFIGURATION_NAME_CONTAINER_STARTUP_TIME,
+        Long.toString(containerStartupTime));
   }
 
   @Override
@@ -298,14 +297,14 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    */
   private void setupSpaceEnvironment(File baseInstallDir) {
     Log log = loggingProvider.getLog();
-    
+
     Map<String, String> containerProperties = configurationProvider.getInitialConfiguration();
 
     executorService = new DefaultScheduledExecutorService();
 
     filesystem = new BasicSmartSpacesFilesystem(baseInstallDir);
     filesystem.startup();
-    managedResources.addResource(filesystem);
+    containerManagedScope.addResource(filesystem);
 
     spaceEnvironment = new OsgiSmartSpacesEnvironment();
     spaceEnvironment.setExecutorService(executorService);
@@ -315,12 +314,12 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
         containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NAME_NETWORK_TYPE));
     spaceEnvironment.setContainerManagedScope(containerManagedScope);
 
-    setupSystemConfiguration(bundleContext, containerProperties, log);
+    setupSystemConfiguration(containerProperties, log);
 
     timeProvider = getTimeProvider(containerProperties, loggingProvider.getLog());
     spaceEnvironment.setTimeProvider(timeProvider);
     timeProvider.startup();
-    managedResources.addResource(timeProvider);
+    containerManagedScope.managedResources().addResource(timeProvider);
 
     setupRosEnvironment(
         systemConfigurationStorageManager.getSystemConfiguration().getCollapsedMap(),
@@ -416,7 +415,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     // one in the config properties.
     rosEnvironment.setMasterUri(null);
     rosEnvironment.startup();
-    managedResources.addResource(new ManagedResource() {
+    containerManagedScope.addResource(new ManagedResource() {
 
       @Override
       public void startup() {
@@ -468,15 +467,12 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
   /**
    * Set up the system configuration.
    *
-   * @param context
-   *          bundle context to use
    * @param containerProperties
    *          properties for the container
    * @param log
    *          the logger to use
    */
-  private void setupSystemConfiguration(BundleContext context,
-      Map<String, String> containerProperties, Log log) {
+  private void setupSystemConfiguration(Map<String, String> containerProperties, Log log) {
     expressionEvaluatorFactory = new SimpleExpressionEvaluatorFactory();
 
     FileSystemConfigurationStorageManager fileSystemConfigurationStorageManager =
@@ -488,7 +484,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
     systemConfigurationStorageManager = fileSystemConfigurationStorageManager;
     systemConfigurationStorageManager.startup();
-    managedResources.addResource(systemConfigurationStorageManager);
+    containerManagedScope.addResource(systemConfigurationStorageManager);
 
     Configuration systemConfiguration = systemConfigurationStorageManager.getSystemConfiguration();
 

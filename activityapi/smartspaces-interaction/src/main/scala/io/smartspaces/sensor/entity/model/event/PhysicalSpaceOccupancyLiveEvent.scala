@@ -33,6 +33,41 @@ object PhysicalSpaceOccupancyLiveEvent {
    * The type of the event.
    */
   val EVENT_TYPE = "location.occupancy"
+
+  /**
+   * An immutable set to represent no occupants in an event.
+   */
+  val NO_OCCUPANTS_SET = scala.collection.immutable.HashSet[PersonSensedEntityModel]()
+  
+  /**
+   * Create a new event for people just entering the physical space.
+   * 
+   * @param physicalSpace
+   *          the model for the physical space
+   * @param entered
+   *          the occupants that entered
+   * @param timestamp
+   *          the timestamp of the event
+   */
+  def newEnteredOnlyEvent(physicalSpace: PhysicalSpaceSensedEntityModel,
+      entered: Set[PersonSensedEntityModel], timestamp: Long): PhysicalSpaceOccupancyLiveEvent = {
+    new PhysicalSpaceOccupancyLiveEvent(physicalSpace, entered, NO_OCCUPANTS_SET, timestamp)
+  }
+  
+  /**
+   * Create a new event for people just entering the physical space.
+   * 
+   * @param physicalSpace
+   *          the model for the physical space
+   * @param exited
+   *          the occupants that entered
+   * @param timestamp
+   *          the timestamp of the event
+   */
+  def newExitedOnlyEvent(physicalSpace: PhysicalSpaceSensedEntityModel,
+      exited: Set[PersonSensedEntityModel], timestamp: Long): PhysicalSpaceOccupancyLiveEvent = {
+    new PhysicalSpaceOccupancyLiveEvent(physicalSpace, NO_OCCUPANTS_SET, exited, timestamp)
+  }
 }
 
 /**

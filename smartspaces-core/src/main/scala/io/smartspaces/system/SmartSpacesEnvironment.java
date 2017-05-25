@@ -149,6 +149,11 @@ public interface SmartSpacesEnvironment {
   String CONFIGURATION_NAME_SYSTEM_FILESYSTEM_DIR_TMP = "system.tmpdir";
 
   /**
+   * The configuration name for when the container started.
+   */
+  String CONFIGURATION_NAME_CONTAINER_STARTUP_TIME = "smartspaces.container.startup.time";
+
+  /**
    * The log level for warnings and above.
    */
   String LOG_LEVEL_WARN = LoggingProvider.LOG_LEVEL_WARN;

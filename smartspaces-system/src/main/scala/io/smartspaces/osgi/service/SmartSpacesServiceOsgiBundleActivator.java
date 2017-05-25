@@ -75,11 +75,6 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
   private ManagedResources managedResources;
 
   /**
-   * A collection of managed tasks.
-   */
-  private ManagedTasks managedTasks;
-
-  /**
    * A managed scope for the bundle.
    */
   private ManagedScope managedScope;
@@ -215,7 +210,7 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
       SmartSpacesEnvironment spaceEnvironment = smartspacesEnvironmentTracker.getMyService();
       managedResources = new StandardManagedResources(spaceEnvironment.getLog());
 
-      managedTasks = new StandardManagedTasks(spaceEnvironment.getExecutorService(),
+      ManagedTasks managedTasks = new StandardManagedTasks(spaceEnvironment.getExecutorService(),
           spaceEnvironment.getLog());
 
       managedScope = new StandardManagedScope(managedResources, managedTasks);
@@ -248,8 +243,8 @@ public abstract class SmartSpacesServiceOsgiBundleActivator implements BundleAct
 
       registeredServices.add(service);
     } catch (Exception e) {
-      spaceEnvironment.getLog()
-          .formatError(e, "Error while starting up service %s", service.getName());
+      spaceEnvironment.getLog().formatError(e, "Error while starting up service %s",
+          service.getName());
     }
   }
 

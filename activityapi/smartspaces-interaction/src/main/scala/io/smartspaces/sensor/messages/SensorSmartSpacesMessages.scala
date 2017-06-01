@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.sensor.value.converter
+package io.smartspaces.sensor.messages
 
 /**
  * Constants and functions for working with sensor messages.

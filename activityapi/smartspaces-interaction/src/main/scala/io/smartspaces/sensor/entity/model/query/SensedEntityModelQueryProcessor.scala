@@ -40,7 +40,7 @@ trait SensedEntityModelQueryProcessor {
    *
    * @return the list of sensor values for the given sensed entity
    */
-  def getAllValuesForSensedEntity(sensedEntityId: String): Option[List[SensedValue[Any]]]
+  def getAllValuesForSensedEntity(sensedEntityId: String): Option[Iterable[SensedValue[Any]]]
 
   /**
    * Get all values from the entire model for a given measurement type.
@@ -50,7 +50,7 @@ trait SensedEntityModelQueryProcessor {
    *
    * @return the list of sensor values for the given measurement type
    */
-  def getAllValuesForMeasurementType(measurementTypeExternalId: String): List[SensedValue[Any]]
+  def getAllValuesForMeasurementType(measurementTypeExternalId: String): Iterable[SensedValue[Any]]
 
   /**
    * Get all occupants of a given physical location.
@@ -92,7 +92,7 @@ trait SensedEntityModelQueryProcessor {
    *
    * @return the converted model
    */
-  def getAllPhysicalSpaces[T](converter: MessageEncoder[List[PhysicalSpaceSensedEntityModel], T]): T
+  def getAllPhysicalSpaces[T](converter: MessageEncoder[Iterable[PhysicalSpaceSensedEntityModel], T]): T
 
   /**
    * Get a person model and convert it.
@@ -124,7 +124,7 @@ trait SensedEntityModelQueryProcessor {
    *
    * @return the converted model
    */
-  def getAllPeople[T](converter: MessageEncoder[List[PersonSensedEntityModel], T]): T
+  def getAllPeople[T](converter: MessageEncoder[Iterable[PersonSensedEntityModel], T]): T
 
   /**
    * Get a sensor model and convert it.
@@ -156,7 +156,7 @@ trait SensedEntityModelQueryProcessor {
    *
    * @return the converted model
    */
-  def getAllSensors[T](converter: MessageEncoder[List[SensorEntityModel], T]): T
+  def getAllSensors[T](converter: MessageEncoder[Iterable[SensorEntityModel], T]): T
   
   /**
    * Get all of the unknown marker IDs.

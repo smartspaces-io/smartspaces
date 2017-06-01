@@ -138,9 +138,14 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   val SECTION_FIELD_DEFAULT_VALUE_SENSORS_ACTIVE = true
 
   /**
-   * The section header for the physical location section of the file.hannels
+   * The section header for the physical space section of the file.
    */
-  val SECTION_HEADER_PHYSICAL_LOCATIONS = "physicalLocations"
+  val SECTION_HEADER_PHYSICAL_SPACES = "physicalSpaces"
+  
+  /**
+   * The physical space details section field for the channels for the physical space type.
+   */
+  val SECTION_FIELD_PHYSICAL_SPACE_DETAILS_PHYSICAL_SPACE_TYPE = "physicalSpaceType"
 
   /**
    * The section header for the marker section of the file.
@@ -458,7 +463,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
    *          the data read from the input stream
    */
   def getPhysicalLocations(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
-    data.down(SECTION_HEADER_PHYSICAL_LOCATIONS)
+    data.down(SECTION_HEADER_PHYSICAL_SPACES)
 
     data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
       val itemData = entry.down()
@@ -466,7 +471,8 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
       sensorRegistry.registerSensedEntity(new SimplePhysicalSpaceSensedEntityDescription(getNextId(),
         itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_NAME),
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION)))
+        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION), 
+        getOptionalString(itemData, SECTION_FIELD_PHYSICAL_SPACE_DETAILS_PHYSICAL_SPACE_TYPE)))
     })
 
     data.up()
@@ -546,5 +552,9 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   private def getNextId(): String = {
     id = id + 1
     return Integer.toString(id)
+  }
+  
+  private def getOptionalString(itemData: DynamicObject, fieldName: String): Option[String] = {
+    Option(itemData.getString(fieldName))
   }
 }

@@ -88,7 +88,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val sensorModel = new SimpleSensorEntityModel(sensor, completeSensedEntityModel, 0)
 
     val sensedEntity =
-      new SimplePhysicalSpaceSensedEntityDescription("2", "foo", "foo", "foo")
+      new SimplePhysicalSpaceSensedEntityDescription("2", "foo", "foo", "foo", None)
     val sensedEntityModel =
       new SimpleSensedEntityModel(sensedEntity, completeSensedEntityModel)
 
@@ -130,7 +130,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val sensorModel = new SimpleSensorEntityModel(sensor, completeSensedEntityModel, 0)
 
     val sensedEntity =
-      new SimplePhysicalSpaceSensedEntityDescription("1", "foo", "foo", "foo")
+      new SimplePhysicalSpaceSensedEntityDescription("1", "foo", "foo", "foo", None)
     val sensedEntityModel =
       new SimpleSensedEntityModel(sensedEntity, completeSensedEntityModel)
 

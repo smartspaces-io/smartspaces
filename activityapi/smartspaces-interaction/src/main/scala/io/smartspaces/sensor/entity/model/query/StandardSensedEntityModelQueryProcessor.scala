@@ -33,7 +33,7 @@ import io.smartspaces.sensor.processing.UnknownSensedEntityHandler
 class StandardSensedEntityModelQueryProcessor(private val allModels: CompleteSensedEntityModel,
     private val unknownMarkerHandler: UnknownMarkerHandler, private val unknownSensedEntityHander: UnknownSensedEntityHandler) extends SensedEntityModelQueryProcessor {
 
-  override def getAllValuesForSensedEntity(sensedEntityExternalId: String): Option[List[SensedValue[Any]]] = {
+  override def getAllValuesForSensedEntity(sensedEntityExternalId: String): Option[Iterable[SensedValue[Any]]] = {
     allModels.doReadTransaction { () =>
       val model = allModels.getSensedEntityModelByExternalId(sensedEntityExternalId)
       if (model.isDefined) {
@@ -44,7 +44,7 @@ class StandardSensedEntityModelQueryProcessor(private val allModels: CompleteSen
     }
   }
 
-  override def getAllValuesForMeasurementType(measurementTypeExternalId: String): List[SensedValue[Any]] = {
+  override def getAllValuesForMeasurementType(measurementTypeExternalId: String): Iterable[SensedValue[Any]] = {
     allModels.doReadTransaction { () =>
       for (
         sensedEntityModel <- allModels.getAllSensedEntityModels(); sensedValue <- sensedEntityModel.getAllSensedValues();
@@ -76,7 +76,7 @@ class StandardSensedEntityModelQueryProcessor(private val allModels: CompleteSen
     }
   }
 
-  override def getAllPhysicalSpaces[T](encoder: MessageEncoder[List[PhysicalSpaceSensedEntityModel], T]): T = {
+  override def getAllPhysicalSpaces[T](encoder: MessageEncoder[Iterable[PhysicalSpaceSensedEntityModel], T]): T = {
     allModels.doReadTransaction { () =>
       val models = allModels.getAllPhysicalSpaceSensedEntityModels()
 
@@ -96,7 +96,7 @@ class StandardSensedEntityModelQueryProcessor(private val allModels: CompleteSen
     }
   }
 
-  override def getAllPeople[T](encoder: MessageEncoder[List[PersonSensedEntityModel], T]): T = {
+  override def getAllPeople[T](encoder: MessageEncoder[Iterable[PersonSensedEntityModel], T]): T = {
     allModels.doReadTransaction { () =>
       val models = allModels.getAllPersonSensedEntityModels()
 
@@ -116,7 +116,7 @@ class StandardSensedEntityModelQueryProcessor(private val allModels: CompleteSen
     }
   }
 
-  override def getAllSensors[T](encoder: MessageEncoder[List[SensorEntityModel], T]): T = {
+  override def getAllSensors[T](encoder: MessageEncoder[Iterable[SensorEntityModel], T]): T = {
     allModels.doReadTransaction { () =>
       val models = allModels.getAllSensorEntityModels()
 

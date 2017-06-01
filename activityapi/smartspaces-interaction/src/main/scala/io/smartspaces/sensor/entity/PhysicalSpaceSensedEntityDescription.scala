@@ -25,5 +25,9 @@ package io.smartspaces.sensor.entity
  * @author Keith M. Hughes
  */
 trait PhysicalSpaceSensedEntityDescription extends SensedEntityDescription {
-
+  
+  /**
+   * The type of the physical space, if known.
+   */
+  val physicalSpaceType: Option[String]
 }

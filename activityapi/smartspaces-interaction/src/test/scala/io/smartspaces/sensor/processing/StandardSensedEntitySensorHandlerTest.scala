@@ -86,7 +86,7 @@ class StandardSensedEntitySensorHandlerTest extends JUnitSuite {
     val sensorModel = new SimpleSensorEntityModel(sensor, allModels, 0)
 
     val sensedEntity =
-      new SimplePhysicalSpaceSensedEntityDescription("2", "foo", "foo", "foo")
+      new SimplePhysicalSpaceSensedEntityDescription("2", "foo", "foo", "foo", None)
     val sensedEntityModel = new SimpleSensedEntityModel(sensedEntity, allModels)
 
     Mockito.when(allModels.getSensorEntityModelByExternalId(sensor.externalId)).thenReturn(Option(sensorModel))

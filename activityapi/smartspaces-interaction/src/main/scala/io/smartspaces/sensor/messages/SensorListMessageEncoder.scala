@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.sensor.value.converter
+package io.smartspaces.sensor.messages
 
 import io.smartspaces.messaging.codec.IncrementalMessageEncoder
 import io.smartspaces.messaging.codec.MessageEncoder
@@ -23,27 +23,32 @@ import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 
-
 /**
- * A message encoder for a sensor to a web representation.
+ * A message encoder from a sensor list to a web representation.
  *
  * @author Keith M. Hughes
  */
-class SensorMessageEncoder(private val builder: DynamicObjectBuilder, 
-    private val singleSensorEncoder: IncrementalMessageEncoder[SensorEntityModel, DynamicObjectBuilder], private val messageType: String) extends MessageEncoder[SensorEntityModel, DynamicObjectBuilder] {
+class SensorListMessageEncoder(private val builder: DynamicObjectBuilder, 
+    private val singleSensorEncoder: IncrementalMessageEncoder[SensorEntityModel, DynamicObjectBuilder], private val messageType: String) 
+    extends MessageEncoder[Iterable[SensorEntityModel], DynamicObjectBuilder] {
 
   def this(messageType: String) = {
     this(new StandardDynamicObjectBuilder(), StandardSensorIncrementalMessageEncoder, messageType)
 
     builder.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE, messageType)
     builder.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_RESULT, SmartSpacesMessages.MESSAGE_ENVELOPE_VALUE_RESULT_SUCCESS)
-    builder.newObject(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA)
+    builder.newArray(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA)
   }
+  
+  override def encode(models: Iterable[SensorEntityModel]): DynamicObjectBuilder = {
+    models.foreach { model =>
+      builder.newObject()
+      
+      singleSensorEncoder.encode(model, builder)
 
-  override def encode(model: SensorEntityModel): DynamicObjectBuilder = {
-    singleSensorEncoder.encode(model, builder)
+      builder.up()
+    }
       
     builder
   }
 }
- 

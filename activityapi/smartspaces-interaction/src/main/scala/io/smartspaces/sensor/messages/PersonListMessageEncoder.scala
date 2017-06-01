@@ -14,40 +14,41 @@
  * the License.
  */
 
-package io.smartspaces.sensor.value.converter
+package io.smartspaces.sensor.messages
 
 import io.smartspaces.messaging.codec.IncrementalMessageEncoder
-import io.smartspaces.messaging.codec.MessageEncoder
 import io.smartspaces.messaging.dynamic.SmartSpacesMessages
-import io.smartspaces.sensor.entity.model.SensorEntityModel
+import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
+import io.smartspaces.messaging.codec.MessageEncoder
 
 /**
- * A message encoder from a sensor list to a web representation.
- *
+ * A message encoder from a person list to a web representation.
+ * 
  * @author Keith M. Hughes
  */
-class SensorListMessageEncoder(private val builder: DynamicObjectBuilder, 
-    private val singleSensorEncoder: IncrementalMessageEncoder[SensorEntityModel, DynamicObjectBuilder], private val messageType: String) extends MessageEncoder[List[SensorEntityModel], DynamicObjectBuilder] {
+class PersonListMessageEncoder(private val builder: DynamicObjectBuilder, 
+    private val personEncoder: IncrementalMessageEncoder[PersonSensedEntityModel, DynamicObjectBuilder], private val messageType: String)
+    extends MessageEncoder[Iterable[PersonSensedEntityModel], DynamicObjectBuilder] {
 
   def this(messageType: String) = {
-    this(new StandardDynamicObjectBuilder(), StandardSensorIncrementalMessageEncoder, messageType)
+    this(new StandardDynamicObjectBuilder(), StandardPersonIncrementalMessageEncoder, messageType)
 
     builder.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE, messageType)
     builder.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_RESULT, SmartSpacesMessages.MESSAGE_ENVELOPE_VALUE_RESULT_SUCCESS)
     builder.newArray(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA)
   }
-  
-  override def encode(models: List[SensorEntityModel]): DynamicObjectBuilder = {
-    models.foreach { model =>
+
+  override def encode(value: Iterable[PersonSensedEntityModel]): DynamicObjectBuilder = {
+    value.foreach { model =>
       builder.newObject()
-      
-      singleSensorEncoder.encode(model, builder)
+
+      personEncoder.encode(model, builder)
 
       builder.up()
     }
-      
+
     builder
   }
-}
+} 

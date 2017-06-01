@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,40 +14,41 @@
  * the License.
  */
 
-package io.smartspaces.sensor.value.converter
+package io.smartspaces.sensor.messages
 
 import io.smartspaces.messaging.codec.IncrementalMessageEncoder
 import io.smartspaces.messaging.codec.MessageEncoder
 import io.smartspaces.messaging.dynamic.SmartSpacesMessages
-import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
+import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyEvent
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 
 /**
- * A message encoder from a physical space list to a web representation.
- * 
+ * A message encoder from a physical space occupancy event list to a web representation.
+ *
  * @author Keith M. Hughes
  */
-class PhysicalSpaceListMessageEncoder(private val builder: DynamicObjectBuilder, 
-    private val physicalSpaceEncoder: IncrementalMessageEncoder[PhysicalSpaceSensedEntityModel, DynamicObjectBuilder], private val messageType: String) extends MessageEncoder[List[PhysicalSpaceSensedEntityModel], DynamicObjectBuilder] {
+class PhysicalSpaceOccupancyEventListMessageEncoder(private val builder: DynamicObjectBuilder, 
+    private val singleEventEncoder: IncrementalMessageEncoder[PhysicalSpaceOccupancyEvent, DynamicObjectBuilder], private val messageType: String)
+    extends MessageEncoder[Iterable[PhysicalSpaceOccupancyEvent], DynamicObjectBuilder] {
 
   def this(messageType: String) = {
-    this(new StandardDynamicObjectBuilder(), StandardPhysicalSpaceIncrementalMessageEncoder, messageType)
+    this(new StandardDynamicObjectBuilder(), StandardPhysicalSpaceOccupancyEventIncrementalMessageEncoder, messageType)
 
     builder.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE, messageType)
     builder.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_RESULT, SmartSpacesMessages.MESSAGE_ENVELOPE_VALUE_RESULT_SUCCESS)
     builder.newArray(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA)
   }
-
-  override def encode(value: List[PhysicalSpaceSensedEntityModel]): DynamicObjectBuilder = {
-    value.foreach { model =>
+  
+  override def encode(models: Iterable[PhysicalSpaceOccupancyEvent]): DynamicObjectBuilder = {
+    models.foreach { model =>
       builder.newObject()
-
-      physicalSpaceEncoder.encode(model, builder)
+      
+      singleEventEncoder.encode(model, builder)
 
       builder.up()
     }
-
+      
     builder
   }
-} 
+}

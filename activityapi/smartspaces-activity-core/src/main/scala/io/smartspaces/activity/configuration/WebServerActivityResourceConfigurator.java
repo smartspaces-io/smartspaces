@@ -53,7 +53,13 @@ public class WebServerActivityResourceConfigurator
    * Configuration property suffix giving location of the webapp content.
    * Relative paths give relative to app install directory.
    */
-  public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_CONTENT_LOCATION = ".content.location";
+  public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_CONTENT_LOCATION =
+      ".content.location";
+
+  /**
+   * The default value for the webapp content location.
+   */
+  public static final String CONFIGURATION_VALUE_DEFAULT_WEBAPP_CONTENT_LOCATION = "webapp";
 
   /**
    * Configuration property suffix for enabling cross origin content.
@@ -64,7 +70,8 @@ public class WebServerActivityResourceConfigurator
   /**
    * Configuration property suffix for whether the server is secure or not.
    */
-  public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_WEB_SERVER_SECURE = ".web.server.secure";
+  public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_WEB_SERVER_SECURE =
+      ".web.server.secure";
 
   /**
    * Configuration property suffix for obtaining the file path for the SSL
@@ -151,7 +158,8 @@ public class WebServerActivityResourceConfigurator
         configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_WEB_SERVER_WEBSOCKET_URI);
 
     webServerPort = configuration.getPropertyInteger(
-        configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_WEB_SERVER_PORT, CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_PORT);
+        configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_WEB_SERVER_PORT,
+        CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_PORT);
     webServer.setPort(webServerPort);
 
     String serverName = (resourceName.isEmpty()) ? String.format("%sWebServer", activity.getName())
@@ -163,10 +171,10 @@ public class WebServerActivityResourceConfigurator
     webServer.setSecureServer(secure);
 
     if (secure) {
-      String certificatePath = configuration
-          .getPropertyString(configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_SSL_CERTIFICATE);
-      String privateKeyPath = configuration
-          .getPropertyString(configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_SSL_PRIVATE_KEY);
+      String certificatePath = configuration.getPropertyString(
+          configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_SSL_CERTIFICATE);
+      String privateKeyPath = configuration.getPropertyString(
+          configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_SSL_PRIVATE_KEY);
 
       boolean hasCertificatePath = certificatePath != null && !certificatePath.trim().isEmpty();
       boolean hasPrivateKeyPath = privateKeyPath != null && !privateKeyPath.trim().isEmpty();
@@ -188,8 +196,9 @@ public class WebServerActivityResourceConfigurator
         configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_ENABLE_CROSS_ORIGIN,
         CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_ENABLE_CROSS_ORIGIN);
 
-    String webServerHost = configuration.getPropertyString(
-        SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS, CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_HOST);
+    String webServerHost =
+        configuration.getPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS,
+            CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_HOST);
 
     webContentPath = "/" + activity.getName();
     webBaseUrl = ((secure) ? "https" : "http") + "://" + webServerHost + ":" + webServerPort;
@@ -210,13 +219,19 @@ public class WebServerActivityResourceConfigurator
 
     webInitialPage = webInitialPageBuilder.toString();
 
-    String contentLocation = configuration
-        .getPropertyString(configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_CONTENT_LOCATION);
-    if (contentLocation != null) {
-      webContentBaseDir = fileSupport
-          .resolveFile(activity.getActivityFilesystem().getInstallDirectory(), contentLocation);
+    String contentLocation = configuration.getPropertyString(
+        configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_CONTENT_LOCATION,
+        CONFIGURATION_VALUE_DEFAULT_WEBAPP_CONTENT_LOCATION);
+    webContentBaseDir = fileSupport
+        .resolveFile(activity.getActivityFilesystem().getInstallDirectory(), contentLocation);
 
+    if (fileSupport.isDirectory(webContentBaseDir)) {
+      activity.getLog().formatInfo("Adding static content directory for base webapp to webserver: %s",
+          webContentBaseDir.getAbsolutePath());
       webServer.addStaticContentHandler(webContentPath, webContentBaseDir);
+    } else if (fileSupport.isFile(webContentBaseDir)) {
+      activity.getLog().formatWarn("Static content directory for base webapp for webserver is not a directory: %s",
+          webContentBaseDir.getAbsolutePath());
     }
   }
 

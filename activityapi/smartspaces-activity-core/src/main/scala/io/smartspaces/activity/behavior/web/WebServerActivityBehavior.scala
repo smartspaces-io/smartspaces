@@ -23,6 +23,7 @@ import io.smartspaces.service.web.server.HttpFileUpload
 import io.smartspaces.service.web.server.WebServer
 import java.io.File
 import java.util.Map
+import io.smartspaces.activity.component.web.WebServerActivityComponent
 
 /**
  * Web server behavior for an activity.
@@ -136,4 +137,10 @@ trait WebServerActivityBehavior extends ActivityBehavior with JsonActivityBehavi
    */
   def getWebServer(): WebServer
 
+  /**
+   * Get the web server activity component for the activity.
+   *
+   * @return the web server activity component
+   */
+  def getWebServerComponent(): WebServerActivityComponent
 }

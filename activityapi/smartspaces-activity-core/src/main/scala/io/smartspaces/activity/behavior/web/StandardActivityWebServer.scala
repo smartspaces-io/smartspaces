@@ -150,12 +150,11 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
     // The default is do nothing.
   }
 
-  /**
-   * Get the web server for the activity.
-   *
-   * @return the web server
-   */
-  def getWebServer():  WebServer = {
-    return webServerComponent.getWebServer()
+  override def getWebServer():  WebServer = {
+    webServerComponent.getWebServer()
   }  
+  
+  override def getWebServerComponent(): WebServerActivityComponent = {
+    webServerComponent
+  }
 }

@@ -45,7 +45,7 @@ task install(type: Exec, dependsOn: [copySphinxConf, javadoc ]) {
   commandLine 'make', 'html', 'latexpdf'
 }
 
-task clean << {
+task clean doLast {
   ant.delete dir: 'build'
   ant.delete file: 'src/main/sphinx/conf.py'
 }

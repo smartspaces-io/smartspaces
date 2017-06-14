@@ -111,11 +111,11 @@ dependencies {
 compileScala.doLast {
   ant {
 	path (id: 'foo') {
-		pathelement(path: "build/classes/main")
+		pathelement(path: "build/classes/scala/main")
 		pathelement(path: configurations.runtime.asPath)
 	}
 	
-	copy(todir: "build/classes/main") {
+	copy(todir: "build/classes/scala/main") {
 		fileset(dir: 'src/main/resources')
 	}
 

@@ -143,7 +143,24 @@ public class WebServerActivityResourceConfigurator
   /**
    * The file support for the configurator.
    */
-  private FileSupport fileSupport = FileSupportImpl.INSTANCE;
+  private FileSupport fileSupport;
+
+  /**
+   * Create a resource configurator with the standard file support.
+   */
+  public WebServerActivityResourceConfigurator() {
+    this(FileSupportImpl.INSTANCE);
+  }
+
+  /**
+   * Create a configurator where the file support is supplied.
+   * 
+   * @param fileSupport
+   *          the file support to use
+   */
+  public WebServerActivityResourceConfigurator(FileSupport fileSupport) {
+    this.fileSupport = fileSupport;
+  }
 
   @Override
   public void configure(String resourceName, Activity activity, WebServer webServer) {
@@ -226,11 +243,14 @@ public class WebServerActivityResourceConfigurator
         .resolveFile(activity.getActivityFilesystem().getInstallDirectory(), contentLocation);
 
     if (fileSupport.isDirectory(webContentBaseDir)) {
-      activity.getLog().formatInfo("Adding static content directory for base webapp to webserver: %s",
+      activity.getLog().formatInfo(
+          "Adding static content directory for base webapp to webserver: %s",
           webContentBaseDir.getAbsolutePath());
       webServer.addStaticContentHandler(webContentPath, webContentBaseDir);
+      System.out.println(webContentBaseDir);
     } else if (fileSupport.isFile(webContentBaseDir)) {
-      activity.getLog().formatWarn("Static content directory for base webapp for webserver is not a directory: %s",
+      activity.getLog().formatWarn(
+          "Static content directory for base webapp for webserver is not a directory: %s",
           webContentBaseDir.getAbsolutePath());
     }
   }

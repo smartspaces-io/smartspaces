@@ -33,7 +33,7 @@ public class ContainerFilesystemLayout {
    * The folder where Smart Spaces system files as needed for bootstrap
    * are kept.
    */
-  public static final String FOLDER_SMARTSPACES_SYSTEM = "lib/system/java";
+  public static final String FOLDER_SMARTSPACES_SYSTEM = "lib/system/jvm";
 
   /**
    * Subdirectory which will contain the bootstrap bundles.

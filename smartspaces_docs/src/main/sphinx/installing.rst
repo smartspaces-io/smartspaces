@@ -186,7 +186,7 @@ Delete the contents of the following folders in your master and in all of
 your controllers and workbenches.
 
 1. bootstrap
-2. lib/system/java
+2. lib/system/jvm
 
 Also delete the file *smartspaces-launcher-x.y.z* from the root folder
 of each master, controller, and workbench, where *x.y.z* was the version

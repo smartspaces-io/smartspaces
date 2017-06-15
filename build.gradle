@@ -47,13 +47,13 @@ allprojects {
     // be pushed to production.
     //
     // Final versions should set the qualifier to null.
-    smartSpacesVersion = '0.8.0'
+    smartSpacesVersion = '0.9.0'
     smartSpacesVersionQualifier = 'SNAPSHOT'
 
     // These specify the layout of IS containers.
     
-    // Where the Java system libraries go
-    smartSpacesContainerSystemJava = 'lib/system/java'
+    // Where the JVM system libraries go
+    smartSpacesContainerSystemJava = 'lib/system/jvm'
     
     // Where the OSGi bootstrap bundles go
     smartSpacesContainerBootstrap = 'bootstrap'

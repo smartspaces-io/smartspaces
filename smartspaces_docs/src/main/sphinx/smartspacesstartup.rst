@@ -92,7 +92,7 @@ by the launcher, it does not have to be a fixed path specified in
 ``startup_linux.bash``.
 
 The launcher's first step for building the OSGi classpath is to take each file found in the 
-``lib/system/java`` folder and place it on the OSGi classpath. 
+``lib/system/jvm`` folder and place it on the OSGi classpath. 
 
 The launcher then scans the ``config/environment`` folder for any files ending in ``.ext``. These
 are **extension** files that can modify the OSGi runtime environment. These files describe jars and classes
@@ -131,7 +131,7 @@ are the only classes that are automatically exported from the OSGi system bundle
 and Java bootstrap classpaths. It is necessary to 
 explicitly export classes in, for example, the ``javax`` root package.
 
-One source of packages to be exported by the root bundle is found in ``lib/system/java/delegations.conf``.
+One source of packages to be exported by the root bundle is found in ``lib/system/jvm/delegations.conf``.
 Every line of this file is expected to be a Java package to be exported by the OSGi system bundle. This
 particular file is used to export packages found in the Java JRE/JDK and includes things like Java sound
 and graphics APis.
@@ -187,7 +187,7 @@ Core Services
 There are some core services that the launcher bootstrap supplies to the OSGi service registry.
 
 One is the logging provider, which provides the container logger and the factory for activity logs. You can
-set the properties of this logger in ``lib/system/java/log4j.properties`` for non-mobile containers. It
+set the properties of this logger in ``config/system/log4j.properties`` for non-mobile containers. It
 connects to the Android logger for Android devices.
 
 Another service is the configuration provider, which provides access to the initial configuration for the container.

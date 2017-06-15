@@ -130,9 +130,9 @@ public class SmartSpacesFrameworkBootstrap {
   public static final char META_INF_COMMENT_CHARACTER = '#';
 
   /**
-   * The location of the delegations.conf file relative to the IS install.
+   * The location of the delegations.conf file relative to the SS install.
    */
-  public static final String LOCATION_DELEGATIONS_CONF = "lib/system/java/delegations.conf";
+  public static final String LOCATION_DELEGATIONS_CONF = "lib/system/jvm/delegations.conf";
 
   /**
    * External packages loaded from the Smart Spaces system folder that must be

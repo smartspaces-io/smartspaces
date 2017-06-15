@@ -15,10 +15,10 @@ cd $EXEDIR/..
 export SMARTSPACES_HOME=${SMARTSPACES_HOME:-$EXEDIR/../..}
 
 BOOTSTRAP=${EXEDIR}/../bootstrap
-LIBSYSTEMJAVA=${EXEDIR}/../lib/system/java
+LIBSYSTEMJVM=${EXEDIR}/../lib/system/jvm
 
 CLASSPATH=$(find "${BOOTSTRAP}" -name '*.jar' | xargs echo | tr ' ' ':')
-CLASSPATH=${CLASSPATH}:${LIBSYSTEMJAVA}/com.springsource.org.apache.commons.logging-1.1.1.jar
+CLASSPATH=${CLASSPATH}:${LIBSYSTEMJVM}/com.springsource.org.apache.commons.logging-1.1.1.jar
 
 # Read user configuration file, if present.
 RCFILE=$HOME/.smartspaces.rc

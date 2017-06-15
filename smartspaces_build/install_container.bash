@@ -27,7 +27,7 @@ echo Installing IS version "${VERSION}" into container "${CONTAINER}" of type "$
 CONTAINER_BIN="${CONTAINER}/bin"
 CONTAINER_BOOTSTRAP="${CONTAINER}/bootstrap"
 CONTAINER_CONFIG="${CONTAINER}/config"
-CONTAINER_LIB_SYSTEM_JAVA="${CONTAINER}/lib/system/java"
+CONTAINER_LIB_SYSTEM_JAVA="${CONTAINER}/lib/system/jvm"
 CONTAINER_EXTRAS="${CONTAINER}/extras"
 CONTAINER_TEMPLATES="${CONTAINER}/templates"
 
@@ -55,8 +55,8 @@ ${DO_CMD} mkdir -p "${CONTAINER_TEMPLATES}"
 ${DO_CMD} cp "${STAGING}/config/system/"* "${CONTAINER_CONFIG}/system"
 ${DO_CMD} cp "${STAGING}/bootstrap/"* "${CONTAINER_BOOTSTRAP}"
 ${DO_CMD} cp "${STAGING}/bin/"* "${CONTAINER_BIN}"
-${DO_CMD} cp "${STAGING}/lib/system/java/delegations.conf" "${CONTAINER_LIB_SYSTEM_JAVA}"
-${DO_CMD} cp "${STAGING}/lib/system/java/"*.jar "${CONTAINER_LIB_SYSTEM_JAVA}"
+${DO_CMD} cp "${STAGING}/lib/system/jvm/delegations.conf" "${CONTAINER_LIB_SYSTEM_JAVA}"
+${DO_CMD} cp "${STAGING}/lib/system/jvm/"*.jar "${CONTAINER_LIB_SYSTEM_JAVA}"
 ${DO_CMD} cp "${STAGING}/smartspaces-launcher-${VERSION}.jar" "${CONTAINER}"
 
 if [ "${CONTAINER_TYPE}" == "controller" ]; then

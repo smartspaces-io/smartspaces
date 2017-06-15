@@ -67,7 +67,7 @@ abstract class MachineOperator {
       doCommand(machine, "cp -r ${controller.folder} ${controller.folder}_`date '+%Y%m%d_%H:%M'`", options, errors)
 
       doCommand(machine, "rm -fR ${controller.folder}/bootstrap/*", options, errors)
-      doCommand(machine, "rm -fR ${controller.folder}/lib/system/java/*", options, errors)
+      doCommand(machine, "rm -fR ${controller.folder}/lib/system/jvm/*", options, errors)
       doCommand(machine, "rm -fR ${controller.folder}/bin/*", options, errors)
       doCommand(machine, "rm -fR ${controller.folder}/interactivespaces-launcher-*", options, errors)
     }

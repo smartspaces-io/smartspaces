@@ -76,7 +76,7 @@ public class SmartSpacesLauncher {
   /**
    * The subdirectory which contains the system files.
    */
-  private static final String SPACES_LIB_SYSTEM_JVM = "lib/system/java";
+  private static final String SPACES_LIB_SYSTEM_JVM = "lib/system/jvm";
 
   /**
    * The subdirectory which contains the environment files relative to the

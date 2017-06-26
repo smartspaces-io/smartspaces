@@ -24,7 +24,6 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.service.web.server.HttpAuthProvider;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
-import io.smartspaces.service.web.server.HttpFileUploadListener;
 import io.smartspaces.service.web.server.HttpStaticContentRequestHandler;
 import io.smartspaces.service.web.server.WebResourceAccessManager;
 import io.smartspaces.service.web.server.WebServer;
@@ -355,11 +354,6 @@ public class NettyWebServer implements WebServer {
   public void setWebSocketHandlerFactory(String webSocketUriPrefix,
       WebServerWebSocketHandlerFactory webSocketHandlerFactory) {
     serverHandler.setWebSocketHandlerFactory(webSocketUriPrefix, webSocketHandlerFactory);
-  }
-
-  @Override
-  public void setHttpFileUploadListener(HttpFileUploadListener listener) {
-    serverHandler.setHttpFileUploadListener(listener);
   }
 
   @Override

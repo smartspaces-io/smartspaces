@@ -31,7 +31,6 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesExceptionUtils;
 import io.smartspaces.service.web.server.HttpAuthProvider;
 import io.smartspaces.service.web.server.HttpAuthResponse;
-import io.smartspaces.service.web.server.HttpFileUploadListener;
 import io.smartspaces.service.web.server.WebResourceAccessManager;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
@@ -148,14 +147,6 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   private WebServerWebSocketHandlerFactory webSocketHandlerFactory;
 
   /**
-   * The listener for file uploads.
-   *
-   * <p>
-   * Can be {@code null}.
-   */
-  private HttpFileUploadListener fileUploadListener;
-
-  /**
    * The web server we are attached to.
    */
   private NettyWebServer webServer;
@@ -230,16 +221,6 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
           HttpConstants.URL_PATH_COMPONENT_SEPARATOR + WebServer.WEBSOCKET_URI_PREFIX_DEFAULT;
     }
     this.webSocketHandlerFactory = webSocketHandlerFactory;
-  }
-
-  /**
-   * Set the file upload listener.
-   *
-   * @param fileUploadListener
-   *          the listener to use (can be {@code null})
-   */
-  public void setHttpFileUploadListener(HttpFileUploadListener fileUploadListener) {
-    this.fileUploadListener = fileUploadListener;
   }
 
   @Override
@@ -396,7 +377,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
     }
 
     NettyHttpPostRequestHandler postRequestHandler = locatePostRequestHandler(request);
-    if (postRequestHandler == null && fileUploadListener == null) {
+    if (postRequestHandler == null) {
       return false;
     }
 
@@ -890,14 +871,5 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
         pos >= 0 ? uriPath.substring(pos + HttpConstants.URL_PATH_COMPONENT_SEPARATOR.length())
             : uriPath;
     return !UNWARNED_MISSING_FILE_NAMES.contains(filename);
-  }
-
-  /**
-   * Get the file upload listener.
-   *
-   * @return the file upload listener
-   */
-  public HttpFileUploadListener getHttpFileUploadListener() {
-    return fileUploadListener;
   }
 }

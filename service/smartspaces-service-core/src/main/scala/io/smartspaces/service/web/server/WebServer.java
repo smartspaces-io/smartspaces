@@ -207,21 +207,6 @@ public interface WebServer extends ManagedResource {
       WebServerWebSocketHandlerFactory webSocketHandlerFactory);
 
   /**
-   * Set the listener for file uploads.
-   *
-   * @param listener
-   *          the listener to use
-   *
-   * @deprecated Use
-   *             {@link #addDynamicPostRequestHandler(String, boolean, HttpDynamicPostRequestHandler)}
-   *             or
-   *             {@link #addDynamicPostRequestHandler(String, boolean, HttpDynamicPostRequestHandler, Map)}
-   *             .
-   */
-  @Deprecated
-  void setHttpFileUploadListener(HttpFileUploadListener listener);
-
-  /**
    * Get the name given to the server.
    *
    * <p>

@@ -19,7 +19,6 @@ package io.smartspaces.activity.behavior.web
 
 import io.smartspaces.service.web.server.BasicMultipleConnectionWebServerWebSocketHandlerFactory
 import io.smartspaces.util.data.json.StandardJsonMapper
-import io.smartspaces.service.web.server.HttpFileUploadListener
 import io.smartspaces.service.web.server.MultipleConnectionWebSocketHandler
 import io.smartspaces.util.data.json.JsonMapper
 import io.smartspaces.activity.behavior.general.StandardActivityJson
@@ -36,7 +35,7 @@ import java.io.File
  *
  * @author Keith M. Hughes
  */
-trait StandardActivityWebServer extends WebServerActivityBehavior with StandardActivityJson with MultipleConnectionWebSocketHandler with HttpFileUploadListener{
+trait StandardActivityWebServer extends WebServerActivityBehavior with StandardActivityJson with MultipleConnectionWebSocketHandler {
 
   /**
    * The JSON mapper.
@@ -58,7 +57,6 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
 
     webSocketFactory = new BasicMultipleConnectionWebServerWebSocketHandlerFactory(this, getLog());
     webServerComponent.setWebSocketHandlerFactory(webSocketFactory);
-    webServerComponent.setHttpFileUploadListener(this);
   }
 
   override def addStaticContent(uriPrefix: String ,  baseDir: File): Unit =  {
@@ -125,29 +123,6 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
     } finally {
       getExecutionContext().exitMethod(invocation)
     }
-  }
-
-  override def handleHttpFileUpload(fileUpload: HttpFileUpload ): Unit = {
-    val invocation = getExecutionContext().enterMethod()
-
-    try {
-      onHttpFileUpload(fileUpload)
-    } finally {
-      getExecutionContext().exitMethod(invocation)
-    }
-  }
-
-  /**
-   * A file upload has happened.
-   *
-   * <p>
-   * This method should be overridden if it should be handled.
-   *
-   * @param fileUpload
-   *          the file upload
-   */
-  def onHttpFileUpload(fileUpload: HttpFileUpload ): Unit = {
-    // The default is do nothing.
   }
 
   override def getWebServer():  WebServer = {

@@ -263,7 +263,7 @@ subprojects {
       url 'http://repository.pentaho.org/artifactory/repo/'
     }
     maven {
-      url "https://repos.inhabitech.com:8082/repository/smartspaces-io"
+      url "https://eng.inhabitech.com:8082/repository/smartspaces-io"
     }
   }
 }

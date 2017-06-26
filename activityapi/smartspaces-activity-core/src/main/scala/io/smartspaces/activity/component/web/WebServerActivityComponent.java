@@ -22,7 +22,6 @@ import io.smartspaces.activity.component.ActivityComponent;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
-import io.smartspaces.service.web.server.HttpFileUploadListener;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 
@@ -119,23 +118,6 @@ public interface WebServerActivityComponent extends ActivityComponent {
    */
   WebServerActivityComponent setWebSocketHandlerFactory(
       WebServerWebSocketHandlerFactory webSocketHandlerFactory);
-
-  /**
-   * Set the HTTP file upload listener for the web server to use.
-   *
-   * <p>
-   * This can be called either before or after calling
-   * {@link BasicWebServerActivityComponent#configureComponent(Activity, Configuration)}
-   * . But if called both before and after, the second call will be the one
-   * used.
-   *
-   * @param httpFileUploadListener
-   *          the HTTP file upload listener to use (can be {@code null})
-   *
-   * @return the web server component this method was called on
-   */
-  WebServerActivityComponent
-      setHttpFileUploadListener(HttpFileUploadListener httpFileUploadListener);
 
   /**
    * Add static content for the web server to serve.

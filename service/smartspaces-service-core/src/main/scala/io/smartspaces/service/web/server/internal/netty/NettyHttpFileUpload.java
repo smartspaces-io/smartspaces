@@ -179,7 +179,8 @@ public class NettyHttpFileUpload implements HttpFileUpload {
     if (handler != null) {
       handleFileUploadCompleteThroughHandler(context);
     } else {
-      handleFileUploadCompleteThroughListener(context);
+        getLog().error(
+                String.format("HTTP post web request not handled due to no handle for URI %s", nettyHttpRequest.getUri()));
     }
   }
 
@@ -195,29 +196,6 @@ public class NettyHttpFileUpload implements HttpFileUpload {
     } catch (Exception e) {
       getLog().error(
           String.format("Exception when handling web request %s", nettyHttpRequest.getUri()), e);
-    }
-  }
-
-  /**
-   * Handle the file handle completion through the listener.
-   *
-   * @param context
-   *          the channel context
-   */
-  private void handleFileUploadCompleteThroughListener(ChannelHandlerContext context) {
-    try {
-      webServerHandler.getHttpFileUploadListener().handleHttpFileUpload(this);
-
-      HttpResponseStatus status = HttpResponseStatus.OK;
-      getLog().debug(
-          String.format("HTTP [%s] %s --> (File Upload)", status.getCode(),
-              nettyHttpRequest.getUri()));
-      webServerHandler.sendSuccessHttpResponse(context, nettyHttpRequest);
-    } catch (Throwable e) {
-      getLog().error("Error while calling file upload listener", e);
-      webServerHandler.sendError(context, HttpResponseStatus.INTERNAL_SERVER_ERROR);
-    } finally {
-      clean();
     }
   }
 

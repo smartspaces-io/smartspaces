@@ -23,9 +23,9 @@ import io.smartspaces.resource.Version;
 import io.smartspaces.resource.repository.ResourceCategory;
 import io.smartspaces.resource.repository.ResourceRepositoryServer;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
+import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
 import io.smartspaces.service.web.server.HttpFileUpload;
-import io.smartspaces.service.web.server.HttpFileUploadListener;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
 import io.smartspaces.service.web.server.WebServer;
@@ -64,8 +64,7 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
    * The internal name given to the web server being used for the activity
    * repository.
    */
-  private static final String ACTIVITY_REPOSITORY_SERVER_NAME =
-      "smartspaces_activity_repository";
+  private static final String ACTIVITY_REPOSITORY_SERVER_NAME = "smartspaces_activity_repository";
 
   /**
    * Parameter key for the UUID field.
@@ -114,13 +113,11 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
 
   @Override
   public void startup() {
-    repositoryPort =
-        spaceEnvironment.getSystemConfiguration().getPropertyInteger(
-            CONFIGURATION_NAME_ACTIVITY_RESPOSITORY_SERVER_PORT,
-            CONFIGURATION_VALUE_DEFAULT_ACTIVITY_RESPOSITORY_SERVER_PORT);
-    repositoryServer =
-        new NettyWebServer(spaceEnvironment.getExecutorService(),
-            spaceEnvironment.getExecutorService(), spaceEnvironment.getLog());
+    repositoryPort = spaceEnvironment.getSystemConfiguration().getPropertyInteger(
+        CONFIGURATION_NAME_ACTIVITY_RESPOSITORY_SERVER_PORT,
+        CONFIGURATION_VALUE_DEFAULT_ACTIVITY_RESPOSITORY_SERVER_PORT);
+    repositoryServer = new NettyWebServer(spaceEnvironment.getExecutorService(),
+        spaceEnvironment.getExecutorService(), spaceEnvironment.getLog());
 
     repositoryServer.setServerName(ACTIVITY_REPOSITORY_SERVER_NAME);
     repositoryServer.setPort(repositoryPort);
@@ -133,23 +130,22 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
       }
     });
 
-    repositoryServer.setHttpFileUploadListener(new HttpFileUploadListener() {
+    repositoryServer.addDynamicPostRequestHandler(webappPath, true, new HttpDynamicPostRequestHandler() {
+
       @Override
-      public void handleHttpFileUpload(HttpFileUpload fileUpload) {
-        handleResourceUpload(fileUpload);
+      public void handle(HttpRequest request, HttpFileUpload body, HttpResponse response) {
+        handleResourceUpload(body);
       }
     });
 
     repositoryServer.startup();
 
-    repositoryBaseUrl =
-        "http://"
-            + spaceEnvironment.getSystemConfiguration().getRequiredPropertyString(
-                SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS) + ":" + repositoryServer.getPort()
-            + webappPath;
+    repositoryBaseUrl = "http://"
+        + spaceEnvironment.getSystemConfiguration()
+            .getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS)
+        + ":" + repositoryServer.getPort() + webappPath;
 
-    spaceEnvironment.getLog().info(
-        String.format("HTTP Resource Repository started with base URL %s", repositoryBaseUrl));
+    spaceEnvironment.getLog().formatInfo("HTTP Resource Repository started with base URL %s", repositoryBaseUrl);
   }
 
   @Override
@@ -159,13 +155,15 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
 
   @Override
   public String getResourceUri(ResourceCategory category, String name, Version version) {
-    // TODO(keith): Get this from something fancier that we can store resources
+    // TODO(keith): Get this from something fancier that we can store
+    // resources
     // in, get their meta-data, etc.
     return repositoryBaseUrl + "/" + category.getComponent() + "/" + name + "/" + version;
   }
 
   @Override
-  public OutputStream createResourceOutputStream(ResourceCategory category, String name, Version version) {
+  public OutputStream createResourceOutputStream(ResourceCategory category, String name,
+      Version version) {
     return repositoryStorageManager.newResourceOutputStream(category, name, version);
   }
 
@@ -178,17 +176,18 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
    *          the response
    */
   private void handleResourceRequest(HttpRequest request, HttpResponse response) {
-    spaceEnvironment.getLog().info(
-        String.format("Got resource repository request %s", request.getUri()));
+    spaceEnvironment.getLog()
+        .info(String.format("Got resource repository request %s", request.getUri()));
 
     String[] pathComponents = request.getUri().getPath().split("\\/");
-    ResourceCategory category = ResourceCategory.getCategoryFromComponent(pathComponents[pathComponents.length - 3]);
+    ResourceCategory category =
+        ResourceCategory.getCategoryFromComponent(pathComponents[pathComponents.length - 3]);
     String name = pathComponents[pathComponents.length - 2];
     Version version = Version.parseVersion(pathComponents[pathComponents.length - 1]);
 
-    spaceEnvironment.getLog().info(
-        String.format("Got resource repository request for resource %s:%s of category %s", name,
-            version, category));
+    spaceEnvironment.getLog()
+        .info(String.format("Got resource repository request for resource %s:%s of category %s",
+            name, version, category));
 
     InputStream resourceStream =
         repositoryStorageManager.getResourceStream(category, name, version);
@@ -197,13 +196,12 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
       try {
         fileSupport.copyInputStream(resourceStream, response.getOutputStream());
       } catch (IOException e) {
-        spaceEnvironment.getLog().error(
-            String.format("Error while writing resource %s:%s of category %s", name, version,
-                category));
+        spaceEnvironment.getLog().error(String
+            .format("Error while writing resource %s:%s of category %s", name, version, category));
       }
     } else {
-      spaceEnvironment.getLog().warn(
-          String.format("No such resource %s:%s of category %s", name, version, category));
+      spaceEnvironment.getLog()
+          .warn(String.format("No such resource %s:%s of category %s", name, version, category));
       response.setResponseCode(HttpResponseCode.NOT_FOUND);
     }
   }

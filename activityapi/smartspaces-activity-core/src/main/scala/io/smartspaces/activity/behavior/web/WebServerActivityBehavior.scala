@@ -120,17 +120,6 @@ trait WebServerActivityBehavior extends ActivityBehavior with JsonActivityBehavi
   def sendAllWebSocketString(data: String): Unit
 
   /**
-   * A file upload has happened.
-   *
-   * <p>
-   * This method should be overridden if it should be handled.
-   *
-   * @param fileUpload
-   *          the file upload
-   */
-  def onHttpFileUpload(fileUpload: HttpFileUpload): Unit
-
-  /**
    * Get the web server for the activity.
    *
    * @return the web server

@@ -22,7 +22,7 @@ STAGING="$4"
 DO_CMD=
 #DO_CMD=echo
 
-echo Installing IS version "${VERSION}" into container "${CONTAINER}" of type "${CONTAINER_TYPE}" from "${STAGING}"
+echo Installing SmartSpaces version "${VERSION}" into container "${CONTAINER}" of type "${CONTAINER_TYPE}" from "${STAGING}"
 
 CONTAINER_BIN="${CONTAINER}/bin"
 CONTAINER_BOOTSTRAP="${CONTAINER}/bootstrap"

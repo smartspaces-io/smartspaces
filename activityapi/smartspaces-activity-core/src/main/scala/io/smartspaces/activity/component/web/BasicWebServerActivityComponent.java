@@ -28,7 +28,6 @@ import io.smartspaces.service.web.WebSocketConnection;
 import io.smartspaces.service.web.WebSocketHandler;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
-import io.smartspaces.service.web.server.HttpFileUploadListener;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerService;
 import io.smartspaces.service.web.server.WebServerWebSocketHandler;
@@ -62,11 +61,6 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
    * Factory for web socket handlers.
    */
   private WebServerWebSocketHandlerFactory webSocketHandlerFactory;
-
-  /**
-   * A potential listener for file uploads.
-   */
-  private HttpFileUploadListener httpFileUploadListener;
 
   /**
    * List of static content for the web server.
@@ -130,10 +124,6 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
 
     if (webSocketHandlerFactory != null) {
       setWebServerWebSocketHandlerFactory();
-    }
-
-    if (httpFileUploadListener != null) {
-      webServer.setHttpFileUploadListener(httpFileUploadListener);
     }
   }
 
@@ -210,18 +200,6 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
 
     if (webServer != null) {
       setWebServerWebSocketHandlerFactory();
-    }
-
-    return this;
-  }
-
-  @Override
-  public WebServerActivityComponent setHttpFileUploadListener(
-      HttpFileUploadListener httpFileUploadListener) {
-    this.httpFileUploadListener = httpFileUploadListener;
-
-    if (webServer != null) {
-      webServer.setHttpFileUploadListener(httpFileUploadListener);
     }
 
     return this;

@@ -22,7 +22,6 @@ import io.smartspaces.util.data.json.StandardJsonMapper
 import io.smartspaces.service.web.server.MultipleConnectionWebSocketHandler
 import io.smartspaces.util.data.json.JsonMapper
 import io.smartspaces.activity.behavior.general.StandardActivityJson
-import io.smartspaces.service.web.server.HttpFileUpload
 import io.smartspaces.activity.component.web.WebServerActivityComponent
 import io.smartspaces.service.web.server.WebServer
 import java.io.File

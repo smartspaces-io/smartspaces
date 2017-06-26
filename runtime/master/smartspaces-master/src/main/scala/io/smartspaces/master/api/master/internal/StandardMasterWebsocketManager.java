@@ -37,7 +37,7 @@ import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 import io.smartspaces.messaging.dynamic.SmartSpacesMessages;
 import io.smartspaces.service.web.server.BasicMultipleConnectionWebServerWebSocketHandlerFactory;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
-import io.smartspaces.service.web.server.HttpFileUpload;
+import io.smartspaces.service.web.server.HttpPostBody;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
 import io.smartspaces.service.web.server.MultipleConnectionWebServerWebSocketHandlerFactory;
@@ -929,7 +929,7 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
     webServer.addDynamicPostRequestHandler(MASTERAPI_PATH_PREFIX_ACTIVITY_UPLOAD, false,
         new HttpDynamicPostRequestHandler() {
           @Override
-          public void handle(HttpRequest request, HttpFileUpload upload, HttpResponse response) {
+          public void handle(HttpRequest request, HttpPostBody upload, HttpResponse response) {
             handleMasterApiActivityUpload(request, upload, response);
           }
         });
@@ -950,7 +950,7 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager impleme
    * @param response
    *          the HTTP response to write back
    */
-  private void handleMasterApiActivityUpload(HttpRequest request, HttpFileUpload upload,
+  private void handleMasterApiActivityUpload(HttpRequest request, HttpPostBody upload,
       HttpResponse response) {
     File tempFile = null;
     try {

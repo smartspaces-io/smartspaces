@@ -19,7 +19,6 @@ package io.smartspaces.activity.behavior.web
 
 import io.smartspaces.activity.ActivityBehavior
 import io.smartspaces.activity.behavior.general.JsonActivityBehavior
-import io.smartspaces.service.web.server.HttpFileUpload
 import io.smartspaces.service.web.server.WebServer
 import java.io.File
 import java.util.Map

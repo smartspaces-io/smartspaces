@@ -17,10 +17,9 @@
 
 package io.smartspaces.service.web.server;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.SupportedService;
 import io.smartspaces.util.web.MimeResolver;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A service for obtaining web servers.
@@ -46,7 +45,7 @@ public interface WebServerService extends SupportedService {
    *
    * @return the web server
    */
-  WebServer newWebServer(String serverName, int port, Log log);
+  WebServer newWebServer(String serverName, int port, ExtendedLog log);
 
   /**
    * Create a new server.
@@ -60,7 +59,7 @@ public interface WebServerService extends SupportedService {
    *
    * @return the web server
    */
-  WebServer newWebServer(Log log);
+  WebServer newWebServer(ExtendedLog log);
 
   /**
    * Get the web server.

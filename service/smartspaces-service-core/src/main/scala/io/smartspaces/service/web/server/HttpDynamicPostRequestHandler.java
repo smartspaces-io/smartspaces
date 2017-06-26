@@ -29,10 +29,10 @@ public interface HttpDynamicPostRequestHandler {
    *
    * @param request
    *          the request to handle
-   * @param upload
-   *          the file upload from the request
+   * @param postBody
+   *          the post body from the request
    * @param response
    *          the response
    */
-  void handle(HttpRequest request, HttpFileUpload upload, HttpResponse response);
+  void handle(HttpRequest request, HttpPostBody postBody, HttpResponse response);
 }

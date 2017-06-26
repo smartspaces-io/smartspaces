@@ -17,15 +17,17 @@
 
 package io.smartspaces.service.web.server.internal.netty;
 
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.service.web.server.HttpFileUpload;
+import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 
-import org.apache.commons.logging.Log;
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.web.server.HttpPostBody;
+
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.HttpChunk;
 import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.multipart.Attribute;
 import org.jboss.netty.handler.codec.http.multipart.FileUpload;
 import org.jboss.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
@@ -42,11 +44,11 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A Netty-based {@link HttpFileUpload}.
+ * A Netty-based {@link HttpPostBody}.
  *
  * @author Keith M. Hughes
  */
-public class NettyHttpFileUpload implements HttpFileUpload {
+public class NettyHttpPostBody implements HttpPostBody {
 
   /**
    * The handler for the POST request. It can be {@code null}.
@@ -97,7 +99,7 @@ public class NettyHttpFileUpload implements HttpFileUpload {
    * @param cookies
    *          any cookies to add to responses
    */
-  public NettyHttpFileUpload(HttpRequest nettyHttpRequest, HttpPostRequestDecoder decoder,
+  public NettyHttpPostBody(HttpRequest nettyHttpRequest, HttpPostRequestDecoder decoder,
       NettyHttpPostRequestHandler handler, NettyWebServerHandler webServerHandler,
       Set<HttpCookie> cookies) {
     this.nettyHttpRequest = nettyHttpRequest;
@@ -112,7 +114,7 @@ public class NettyHttpFileUpload implements HttpFileUpload {
    *
    * @return the original Netty HTTP request
    */
-  public HttpRequest getNettyHttpRequest() {
+  HttpRequest getNettyHttpRequest() {
     return nettyHttpRequest;
   }
 
@@ -128,7 +130,7 @@ public class NettyHttpFileUpload implements HttpFileUpload {
    *           problem adding chunk
    *
    */
-  public void addChunk(ChannelHandlerContext ctx, HttpChunk chunk) throws Exception {
+  void addChunk(ChannelHandlerContext ctx, HttpChunk chunk) throws Exception {
     if (!chunk.getContent().readable() && !chunk.isLast()) {
       return;
     }
@@ -152,50 +154,52 @@ public class NettyHttpFileUpload implements HttpFileUpload {
   /**
    * Clean up anything from the upload.
    */
-  public void clean() {
+  void clean() {
     decoder.cleanFiles();
   }
 
   /**
    * Complete processing of the file upload.
    */
-  public void completeNonChunked() {
-    try {
-      for (InterfaceHttpData data : decoder.getBodyHttpDatas()) {
-        processHttpData(data);
+  void completeNonChunked() {
+    if (decoder.isMultipart()) {
+
+      try {
+        for (InterfaceHttpData data : decoder.getBodyHttpDatas()) {
+          processHttpData(data);
+        }
+      } catch (Exception e) {
+        getLog().error("Error while completing HTTP chunked POST data", e);
       }
-    } catch (Exception e) {
-      getLog().error("Error while completing HTTP chunked POST data", e);
     }
   }
 
   /**
-   * The file upload is complete. Handle it as needed.
+   * The body upload is complete. Handle it as needed.
    *
    * @param context
    *          the context for the channel handler
    */
-  public void fileUploadComplete(ChannelHandlerContext context) {
+  void bodyUploadComplete(ChannelHandlerContext context) {
     if (handler != null) {
-      handleFileUploadCompleteThroughHandler(context);
+      handleBodyUploadCompleteThroughHandler(context);
     } else {
-        getLog().error(
-                String.format("HTTP post web request not handled due to no handle for URI %s", nettyHttpRequest.getUri()));
+      getLog().formatError("HTTP post web request not handled due to no handle for URI %s",
+          nettyHttpRequest.getUri());
     }
   }
 
   /**
-   * Handle the file load completion through the handler.
+   * Handle the body upload completion through the handler.
    *
    * @param context
    *          the context for the channel handler
    */
-  private void handleFileUploadCompleteThroughHandler(ChannelHandlerContext context) {
+  private void handleBodyUploadCompleteThroughHandler(ChannelHandlerContext context) {
     try {
       handler.handleWebRequest(context, nettyHttpRequest, this, cookies);
     } catch (Exception e) {
-      getLog().error(
-          String.format("Exception when handling web request %s", nettyHttpRequest.getUri()), e);
+      getLog().formatError(e, "Exception when handling web request %s", nettyHttpRequest.getUri());
     }
   }
 
@@ -212,21 +216,29 @@ public class NettyHttpFileUpload implements HttpFileUpload {
         parameters.put(attribute.getName(), attribute.getValue());
       } catch (IOException e1) {
         // Error while reading data from File, only print name and error
-        getLog().error(
-            "Form post BODY Attribute: " + attribute.getHttpDataType().name() + ": "
-                + attribute.getName() + " Error while reading value:", e1);
+        getLog().error("Form post BODY Attribute: " + attribute.getHttpDataType().name() + ": "
+            + attribute.getName() + " Error while reading value:", e1);
       }
     } else if (data.getHttpDataType() == HttpDataType.FileUpload) {
       fileUpload = (FileUpload) data;
       if (fileUpload.isCompleted()) {
-        getLog().info(String.format("File %s uploaded", fileUpload.getFilename()));
+        getLog().formatInfo("File %s uploaded", fileUpload.getFilename());
       } else {
         getLog().error("File to be continued but should not!");
       }
     } else {
-      getLog().warn(
-          String.format("Unprocessed form post data type %s", data.getHttpDataType().name()));
+      getLog().formatWarn("Unprocessed form post data type %s", data.getHttpDataType().name());
     }
+  }
+
+  @Override
+  public String getContentType() {
+    return nettyHttpRequest.headers().get(CONTENT_TYPE);
+  }
+
+  @Override
+  public boolean isMultipart() {
+    return decoder.isMultipart();
   }
 
   @Override
@@ -286,12 +298,28 @@ public class NettyHttpFileUpload implements HttpFileUpload {
     return parameters;
   }
 
+  @Override
+  public byte[] getContent() throws SmartSpacesException {
+    if (!isMultipart()) {
+      ChannelBuffer content = nettyHttpRequest.getContent();
+      int readableBytes = content.readableBytes();
+
+      byte[] contentBytes = new byte[readableBytes];
+      content.getBytes(0, contentBytes);
+
+      return contentBytes;
+    } else {
+      throw new SimpleSmartSpacesException(
+          "The HTTP POST was multipart and attempting to get the content");
+    }
+  }
+
   /**
    * Get the log for the uploader.
    *
    * @return the log
    */
-  private Log getLog() {
+  private ExtendedLog getLog() {
     return webServerHandler.getWebServer().getLog();
   }
 }

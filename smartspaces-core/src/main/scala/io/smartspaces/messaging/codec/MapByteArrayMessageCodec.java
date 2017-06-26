@@ -29,7 +29,7 @@ import io.smartspaces.util.data.json.StandardJsonMapper;
  * 
  * @author Keith M. Hughes
  */
-public class MapByteArrayCodec implements MessageCodec<Map<String, Object>, byte[]> {
+public class MapByteArrayMessageCodec implements MessageCodec<Map<String, Object>, byte[]> {
 
   /**
    * The default charset for the codec.
@@ -50,7 +50,7 @@ public class MapByteArrayCodec implements MessageCodec<Map<String, Object>, byte
    * Construct a codec that supports JSON ended in charset
    * {@link #CHARSET_DEFAULT}.
    */
-  public MapByteArrayCodec() {
+  public MapByteArrayMessageCodec() {
     this(CHARSET_DEFAULT);
   }
 
@@ -60,7 +60,7 @@ public class MapByteArrayCodec implements MessageCodec<Map<String, Object>, byte
    * @param charset
    *          the charset to use
    */
-  public MapByteArrayCodec(Charset charset) {
+  public MapByteArrayMessageCodec(Charset charset) {
     this.charset = charset;
   }
 

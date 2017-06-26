@@ -22,14 +22,14 @@ package io.smartspaces.messaging.codec;
  * <p>
  * Instances are threadsafe and can decode multiple messages simultaneously.
  * 
+ * @param <D>
+ *          the type of decoded messages
  * @param <I>
- *          the type of internal messages
- * @param <O>
- *          the type of outgoing messages
+ *          the type of incoming messages
  * 
  * @author Keith M. Hughes
  */
-public interface MessageDecoder<I, O> {
+public interface MessageDecoder<D, I> {
 
   /**
    * Decode an incoming message.
@@ -39,5 +39,5 @@ public interface MessageDecoder<I, O> {
    * 
    * @return the decoded message
    */
-  I decode(O in);
+  D decode(I in);
 }

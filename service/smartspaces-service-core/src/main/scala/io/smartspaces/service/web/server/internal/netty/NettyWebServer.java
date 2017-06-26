@@ -21,6 +21,7 @@ import static org.jboss.netty.channel.Channels.pipeline;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.web.server.HttpAuthProvider;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
@@ -32,7 +33,6 @@ import io.smartspaces.util.net.NetworkBindSimpleSmartSpacesException;
 import io.smartspaces.util.web.MimeResolver;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelException;
@@ -114,7 +114,7 @@ public class NettyWebServer implements WebServer {
   /**
    * Logger for the web server.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * Bootstrap for the server.
@@ -175,7 +175,7 @@ public class NettyWebServer implements WebServer {
    * @param log
    *          logger
    */
-  public NettyWebServer(ScheduledExecutorService threadPool, Log log) {
+  public NettyWebServer(ScheduledExecutorService threadPool, ExtendedLog log) {
     this(threadPool, threadPool, log);
   }
 
@@ -190,7 +190,7 @@ public class NettyWebServer implements WebServer {
    *          logger
    */
   public NettyWebServer(ScheduledExecutorService bossThreadPool,
-      ScheduledExecutorService workerThreadPool, Log log) {
+      ScheduledExecutorService workerThreadPool, ExtendedLog log) {
     this.bossThreadPool = bossThreadPool;
     this.workerThreadPool = workerThreadPool;
     this.log = log;
@@ -488,7 +488,7 @@ public class NettyWebServer implements WebServer {
    *
    * @return the logger
    */
-  public Log getLog() {
+  public ExtendedLog getLog() {
     return log;
   }
 }

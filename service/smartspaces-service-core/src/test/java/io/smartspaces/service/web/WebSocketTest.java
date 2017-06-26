@@ -17,8 +17,7 @@
 
 package io.smartspaces.service.web;
 
-import io.smartspaces.service.web.WebSocketConnection;
-import io.smartspaces.service.web.WebSocketHandler;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.web.client.internal.netty.NettyWebSocketClient;
 import io.smartspaces.service.web.server.WebServerWebSocketHandler;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
@@ -27,12 +26,11 @@ import io.smartspaces.service.web.server.internal.netty.NettyWebServer;
 import io.smartspaces.testing.sizes.TestSizeLarge;
 
 import junit.framework.Assert;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.Jdk14Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.mockito.Mockito;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -58,14 +56,14 @@ import java.util.concurrent.atomic.AtomicReference;
 @Category(TestSizeLarge.class)
 public class WebSocketTest {
 
-  private Log log;
+  private ExtendedLog log;
   private ScheduledExecutorService threadPool;
 
   private WebSocketConnection serverConnection;
 
   @Before
   public void setup() {
-    log = new Jdk14Logger("goober"); // Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
 
     threadPool = Executors.newScheduledThreadPool(100);
   }

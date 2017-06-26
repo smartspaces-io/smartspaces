@@ -20,7 +20,7 @@ package io.smartspaces.service.web.server.internal.netty;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.addHeader;
 
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
-import io.smartspaces.service.web.server.HttpFileUpload;
+import io.smartspaces.service.web.server.HttpPostBody;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
@@ -105,7 +105,7 @@ public class NettyHttpDynamicPostRequestHandlerHandler implements NettyHttpPostR
 
   @Override
   public void handleWebRequest(ChannelHandlerContext ctx, HttpRequest nettyRequest,
-      HttpFileUpload upload, Set<HttpCookie> cookiesToAdd) throws IOException {
+      HttpPostBody postBody, Set<HttpCookie> cookiesToAdd) throws IOException {
     NettyHttpRequest request = new NettyHttpRequest(nettyRequest,
         ctx.getChannel().getRemoteAddress(), parentHandler.getWebServer().getLog());
     NettyHttpResponse response = new NettyHttpResponse(ctx, extraHttpContentHeaders);
@@ -113,7 +113,7 @@ public class NettyHttpDynamicPostRequestHandlerHandler implements NettyHttpPostR
 
     DefaultHttpResponse res;
     try {
-      requestHandler.handle(request, upload, response);
+      requestHandler.handle(request, postBody, response);
 
       res = new DefaultHttpResponse(HttpVersion.HTTP_1_1,
           HttpResponseStatus.valueOf(response.getResponseCode()));
@@ -128,10 +128,9 @@ public class NettyHttpDynamicPostRequestHandlerHandler implements NettyHttpPostR
       parentHandler.sendHttpResponse(ctx, nettyRequest, res, true, false);
 
       parentHandler.getWebServer().getLog()
-          .debug(String.format("Dynamic content handler for %s completed", uriPrefix));
+          .formatDebug("Dynamic content handler for %s completed", uriPrefix);
     } catch (Throwable e) {
-      parentHandler.getWebServer().getLog().error(String
-          .format("Error while handling dynamic web server request %s", nettyRequest.getUri()), e);
+      parentHandler.getWebServer().getLog().formatError(e, "Error while handling dynamic web server request %s", nettyRequest.getUri());
 
       parentHandler.sendError(ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR);
     }

@@ -36,6 +36,7 @@ import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 import io.smartspaces.util.web.HttpConstants;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
@@ -127,7 +128,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   /**
    * Map of Netty channel IDs to file uploads.
    */
-  private Map<Integer, NettyHttpFileUpload> fileUploadHandlers = Maps.newConcurrentMap();
+  private Map<Integer, NettyHttpPostBody> postBodyHandlers = Maps.newConcurrentMap();
 
   /**
    * Map of host names to the handshaker factory for that host.
@@ -233,8 +234,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
     } else if (msg instanceof HttpChunk) {
       handleHttpChunk(ctx, (HttpChunk) msg);
     } else {
-      webServer.getLog().warn(
-          String.format("Web server received unknown frame %s", msg.getClass().getName()));
+      webServer.getLog().formatWarn("Web server received unknown frame %s", msg.getClass().getName());
     }
 
   }
@@ -391,17 +391,17 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
     }
 
     try {
-      NettyHttpFileUpload fileUpload =
-          new NettyHttpFileUpload(request, new HttpPostRequestDecoder(HTTP_DATA_FACTORY, request),
+      NettyHttpPostBody postBody =
+          new NettyHttpPostBody(request, new HttpPostRequestDecoder(HTTP_DATA_FACTORY, request),
               postRequestHandler, this, cookies);
 
       if (request.isChunked()) {
         // Chunked data so more coming.
-        fileUploadHandlers.put(context.getChannel().getId(), fileUpload);
+        postBodyHandlers.put(context.getChannel().getId(), postBody);
       } else {
-        fileUpload.completeNonChunked();
+        postBody.completeNonChunked();
 
-        fileUpload.fileUploadComplete(context);
+        postBody.bodyUploadComplete(context);
       }
     } catch (Throwable e) {
       webServer.getLog().error("Could not start file upload", e);
@@ -547,19 +547,19 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    *          the chunk frame
    */
   private void handleHttpChunk(ChannelHandlerContext context, HttpChunk chunk) {
-    NettyHttpFileUpload fileUpload = fileUploadHandlers.get(context.getChannel().getId());
+    NettyHttpPostBody fileUpload = postBodyHandlers.get(context.getChannel().getId());
     if (fileUpload != null) {
       try {
         fileUpload.addChunk(context, chunk);
 
         if (chunk.isLast()) {
-          fileUploadHandlers.remove(context.getChannel().getId());
+          postBodyHandlers.remove(context.getChannel().getId());
 
-          fileUpload.fileUploadComplete(context);
+          fileUpload.bodyUploadComplete(context);
         }
       } catch (Throwable e) {
         // An error, so don't leave handler around.
-        fileUploadHandlers.remove(context.getChannel().getId());
+        postBodyHandlers.remove(context.getChannel().getId());
 
         webServer.getLog().error("Error while processing a chunk of file upload", e);
         sendError(context, HttpResponseStatus.INTERNAL_SERVER_ERROR);

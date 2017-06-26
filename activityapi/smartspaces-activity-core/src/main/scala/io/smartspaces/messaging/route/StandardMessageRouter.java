@@ -21,7 +21,7 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.component.comm.PubSubActivityComponent;
 import io.smartspaces.handler.ProtectedHandlerContext;
 import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.messaging.codec.MapByteArrayCodec;
+import io.smartspaces.messaging.codec.MapByteArrayMessageCodec;
 import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.messaging.codec.MessageDecoder;
 import io.smartspaces.messaging.codec.MessageEncoder;
@@ -121,7 +121,7 @@ public class StandardMessageRouter implements MessageRouter {
   /**
    * A message codec for MQTT route messages.
    */
-  private MessageCodec<Map<String, Object>, byte[]> mqttMessageCodec = new MapByteArrayCodec();
+  private MessageCodec<Map<String, Object>, byte[]> mqttMessageCodec = new MapByteArrayMessageCodec();
 
   /**
    * The description for the default MQTT broker.

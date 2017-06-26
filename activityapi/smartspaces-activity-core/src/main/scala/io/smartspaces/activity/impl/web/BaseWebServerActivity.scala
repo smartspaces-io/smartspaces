@@ -24,7 +24,6 @@ import io.smartspaces.activity.component.web.WebServerActivityComponent;
 import io.smartspaces.activity.execution.ActivityMethodInvocation;
 import io.smartspaces.activity.impl.BaseActivity;
 import io.smartspaces.service.web.server.BasicMultipleConnectionWebServerWebSocketHandlerFactory;
-import io.smartspaces.service.web.server.HttpFileUpload;
 import io.smartspaces.service.web.server.MultipleConnectionWebSocketHandler;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.util.data.json.JsonMapper;

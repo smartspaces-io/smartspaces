@@ -25,7 +25,7 @@ import io.smartspaces.resource.repository.ResourceRepositoryServer;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
-import io.smartspaces.service.web.server.HttpFileUpload;
+import io.smartspaces.service.web.server.HttpPostBody;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
 import io.smartspaces.service.web.server.WebServer;
@@ -133,7 +133,7 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
     repositoryServer.addDynamicPostRequestHandler(webappPath, true, new HttpDynamicPostRequestHandler() {
 
       @Override
-      public void handle(HttpRequest request, HttpFileUpload body, HttpResponse response) {
+      public void handle(HttpRequest request, HttpPostBody body, HttpResponse response) {
         handleResourceUpload(body);
       }
     });
@@ -223,7 +223,7 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
    * @param resourceUpload
    *          the upload
    */
-  private void handleResourceUpload(HttpFileUpload resourceUpload) {
+  private void handleResourceUpload(HttpPostBody resourceUpload) {
     String name = resourceUpload.getFormName();
     String uuid = resourceUpload.getParameters().get(UUID_PARAMETER_KEY);
     CopyableResourceListener listener = resourceUploadListenerMap.get(name);

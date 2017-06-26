@@ -17,6 +17,7 @@
 
 package io.smartspaces.service.web.server.internal.netty;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerService;
 import io.smartspaces.service.web.server.internal.BaseWebServerService;
@@ -26,10 +27,10 @@ import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.web.MapExtensionMimeResolver;
 import io.smartspaces.util.web.MimeResolver;
 
+import org.apache.commons.logging.Log;
+
 import java.io.InputStream;
 import java.util.concurrent.ScheduledExecutorService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A {@link WebServerService} which gives NETTY web servers.
@@ -84,7 +85,7 @@ public class NettyWebServerService extends BaseWebServerService {
   }
 
   @Override
-  public synchronized WebServer newWebServer(String serverName, int port, Log log) {
+  public synchronized WebServer newWebServer(String serverName, int port, ExtendedLog log) {
     WebServer server = newWebServer(log);
 
     server.setPort(port);
@@ -94,7 +95,7 @@ public class NettyWebServerService extends BaseWebServerService {
   }
 
   @Override
-  public synchronized WebServer newWebServer(Log log) {
+  public synchronized WebServer newWebServer(ExtendedLog log) {
     ScheduledExecutorService threadPool = getSpaceEnvironment().getExecutorService();
 
     WebServer server = new NettyWebServer(threadPool, threadPool, log);
@@ -128,9 +129,8 @@ public class NettyWebServerService extends BaseWebServerService {
     MapExtensionMimeResolver resolver = new MapExtensionMimeResolver();
 
     try {
-      InputStream mimeResource =
-          MapExtensionMimeResolver.class.getClassLoader().getResourceAsStream(
-              BUNDLE_LOCATION_WEB_SERVER_MIME_TYPES);
+      InputStream mimeResource = MapExtensionMimeResolver.class.getClassLoader()
+          .getResourceAsStream(BUNDLE_LOCATION_WEB_SERVER_MIME_TYPES);
       if (mimeResource != null) {
         String mimeFile = fileSupport.inputStreamAsString(mimeResource);
         String[] lines = mimeFile.split(MIME_TYPE_LINE_SPLITTER_REGEX);

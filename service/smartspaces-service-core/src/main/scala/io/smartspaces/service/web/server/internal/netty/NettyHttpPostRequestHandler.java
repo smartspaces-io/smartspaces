@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.web.server.internal.netty;
 
-import io.smartspaces.service.web.server.HttpFileUpload;
+import io.smartspaces.service.web.server.HttpPostBody;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -50,14 +50,14 @@ public interface NettyHttpPostRequestHandler {
    *          the channel handler context
    * @param nettyRequest
    *          the Netty HTTP request
-   * @param upload
-   *          the HTTP file upload
+   * @param postBody
+   *          the HTTP post body
    * @param cookiesToAdd
    *          cookies to be set on the response
    *
    * @throws IOException
    *           something bad happened
    */
-  void handleWebRequest(ChannelHandlerContext ctx, HttpRequest nettyRequest, HttpFileUpload upload,
+  void handleWebRequest(ChannelHandlerContext ctx, HttpRequest nettyRequest, HttpPostBody postBody,
       Set<HttpCookie> cookiesToAdd) throws IOException;
 }

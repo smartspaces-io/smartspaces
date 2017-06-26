@@ -17,17 +17,32 @@
 
 package io.smartspaces.service.web.server;
 
+import io.smartspaces.SmartSpacesException;
 import io.smartspaces.util.data.resource.CopyableResource;
 
 import java.util.Map;
 
 /**
- * An HTTP file upload.
+ * The body of an HTTP POST.
  *
  * @author Keith M. Hughes
  */
-public interface HttpFileUpload extends CopyableResource {
-
+public interface HttpPostBody extends CopyableResource {
+  
+  /**
+   * Get the content type of the post.
+   * 
+   * @return the content type of the post
+   */
+  String getContentType();
+  
+  /**
+   * Is the POST a multipart post?
+   * 
+   * @return {@code true} if multipart
+   */
+  boolean isMultipart();
+  
   /**
    * Get the form name of the file upload.
    *
@@ -43,14 +58,14 @@ public interface HttpFileUpload extends CopyableResource {
   boolean hasFile();
 
   /**
-   * Get the file name the file had.
+   * Get the file name the file had in a multipart upload.
    *
    * @return the file name, or {@code null} if there was no file
    */
   String getFilename();
 
   /**
-   * Get the parameters which were part of the file upload.
+   * Get the parameters which were part of the multipart upload.
    *
    * <p>
    * These are any text parameters in the HTTP form.
@@ -58,4 +73,16 @@ public interface HttpFileUpload extends CopyableResource {
    * @return the map
    */
   Map<String, String> getParameters();
+  
+  /**
+   * Get the content of the POST.
+   * 
+   * <p>
+   * This only returns a value if the was not a multipart .
+   * 
+   * @return the content of the POST
+   * 
+   * @throws SmartSpacesException this was a multipart POST.
+   */
+  byte[] getContent() throws SmartSpacesException;
 }

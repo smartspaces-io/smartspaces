@@ -17,11 +17,11 @@
 
 package io.smartspaces.tasks;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.time.TimeDelay;
 import io.smartspaces.time.TimeFrequency;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +48,7 @@ public class StandardManagedTasks implements InternalManagedTasks {
   /**
    * The logger for the collection.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Construct a managed task collection.
@@ -58,7 +58,7 @@ public class StandardManagedTasks implements InternalManagedTasks {
    * @param log
    *          the logger for the task
    */
-  public StandardManagedTasks(ScheduledExecutorService executorService, Log log) {
+  public StandardManagedTasks(ScheduledExecutorService executorService, ExtendedLog log) {
     this.executorService = executorService;
     this.log = log;
   }

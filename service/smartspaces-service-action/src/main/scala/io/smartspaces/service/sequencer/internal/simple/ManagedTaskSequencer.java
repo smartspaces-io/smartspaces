@@ -17,6 +17,7 @@
 
 package io.smartspaces.service.sequencer.internal.simple;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.sequencer.Sequence;
 import io.smartspaces.service.sequencer.SequenceElements;
 import io.smartspaces.service.sequencer.Sequencer;
@@ -26,8 +27,6 @@ import io.smartspaces.tasks.ManagedTask;
 import io.smartspaces.tasks.ManagedTasks;
 import io.smartspaces.tasks.StandardManagedTasks;
 import io.smartspaces.util.SmartSpacesUtilities;
-
-import org.apache.commons.logging.Log;
 
 /**
  * An implementation of the Sequencer interface that uses {@link ManagedTasks}.
@@ -80,7 +79,7 @@ public class ManagedTaskSequencer implements Sequencer {
   /**
    * The logger for the sequencer.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Create a ManagedCommandScheduler with the given ManagedCommands instance.
@@ -90,7 +89,7 @@ public class ManagedTaskSequencer implements Sequencer {
    * @param log
    *          the logger to use
    */
-  public ManagedTaskSequencer(SmartSpacesEnvironment spaceEnvironment, Log log) {
+  public ManagedTaskSequencer(SmartSpacesEnvironment spaceEnvironment, ExtendedLog log) {
     this.spaceEnvironment = spaceEnvironment;
     this.managedTasks = new StandardManagedTasks(spaceEnvironment.getExecutorService(), log);
     this.log = log;
@@ -112,7 +111,7 @@ public class ManagedTaskSequencer implements Sequencer {
   }
 
   @Override
-  public Log getLog() {
+  public ExtendedLog getLog() {
     return log;
   }
 

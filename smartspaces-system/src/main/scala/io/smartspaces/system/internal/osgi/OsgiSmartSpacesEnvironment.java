@@ -230,10 +230,10 @@ public class OsgiSmartSpacesEnvironment
   }
 
   @Override
-  public void setLoggingProvider(LoggingProvider loggingProvider) {
+  public void setLoggingProvider(LoggingProvider loggingProvider, ExtendedLog containerLog) {
     this.loggingProvider = loggingProvider;
 
-    log = new StandardExtendedLog("container", loggingProvider.getLog());
+    log = containerLog;
   }
 
   @Override

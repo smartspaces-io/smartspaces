@@ -17,8 +17,7 @@
 
 package io.smartspaces.service.sequencer;
 
-import org.apache.commons.logging.Log;
-
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.resource.managed.ManagedResource;
 
 /**
@@ -40,5 +39,5 @@ public interface Sequencer extends ManagedResource {
    * 
    * @return the logger
    */
-  Log getLog();
+  ExtendedLog getLog();
 }

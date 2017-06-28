@@ -16,11 +16,10 @@
 
 package io.smartspaces.service.sequencer.internal.simple;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.sequencer.Sequencer;
 import io.smartspaces.service.sequencer.SequencerService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A sequencer service that returns sequencers based on managed commands.
@@ -36,7 +35,7 @@ public class ManagedTaskSequencerService extends BaseSupportedService
   }
 
   @Override
-  public Sequencer newSequencer(Log log) {
+  public Sequencer newSequencer(ExtendedLog log) {
     return new ManagedTaskSequencer(getSpaceEnvironment(), log);
   }
 }

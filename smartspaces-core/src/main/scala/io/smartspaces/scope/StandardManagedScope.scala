@@ -24,6 +24,27 @@ import io.smartspaces.tasks.ManagedTask
 import java.util.concurrent.TimeUnit
 import io.smartspaces.time.TimeFrequency
 import io.smartspaces.time.TimeDelay
+import java.util.concurrent.ScheduledExecutorService
+import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.tasks.StandardManagedTasks
+import io.smartspaces.resource.managed.StandardManagedResources
+
+/**
+ * The standard managed scope object.
+ *
+ * @author Keith M. Hughes
+ */
+object StandardManagedScope {
+  
+  /**
+   * Create a new managed scope.
+   * 
+   * @return the new managed scope
+   */
+  def newManagedScope(executorService: ScheduledExecutorService, log: ExtendedLog): ManagedScope = {
+    new StandardManagedScope(new StandardManagedResources(log), new StandardManagedTasks(executorService, log))
+  }
+}
 
 /**
  * The standard managed scope object.

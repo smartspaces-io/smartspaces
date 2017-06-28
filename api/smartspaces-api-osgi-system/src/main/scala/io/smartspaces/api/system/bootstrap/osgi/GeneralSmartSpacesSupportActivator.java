@@ -25,6 +25,8 @@ import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.FileSystemConfigurationStorageManager;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.evaluation.SimpleExpressionEvaluatorFactory;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.resource.managed.ManagedResources;
 import io.smartspaces.resource.managed.StandardManagedResources;
 import io.smartspaces.scope.ManagedScope;
@@ -77,11 +79,11 @@ public class GeneralSmartSpacesSupportActivator
    * The service tracker collection.
    */
   private OsgiServiceTrackerCollection serviceTrackerCollection;
-
+  
   /**
-   * The base logger from the logging provider.
+   * The container log.
    */
-  private Log log;
+  private ExtendedLog containerLog;
 
   /**
    * Thread pool for everyone to use.
@@ -212,12 +214,12 @@ public class GeneralSmartSpacesSupportActivator
 
     try {
       getCoreServices();
-      log = loggingProvider.getLog();
+      containerLog = new StandardExtendedLog("container", loggingProvider.getLog());
 
-      managedResources = new StandardManagedResources(loggingProvider.getLog());
+      managedResources = new StandardManagedResources(containerLog);
 
       ManagedTasks managedTasks =
-          new StandardManagedTasks(executorService, loggingProvider.getLog());
+          new StandardManagedTasks(executorService, containerLog);
 
       containerManagedScope = new StandardManagedScope(managedResources, managedTasks);
       containerManagedScope.startup();
@@ -228,8 +230,7 @@ public class GeneralSmartSpacesSupportActivator
 
       registerOsgiServices();
     } catch (Exception e) {
-      e.printStackTrace();
-      log.error("Could not start up smartspaces system", e);
+      containerLog.error("Could not start up smartspaces system", e);
     }
   }
 
@@ -301,7 +302,7 @@ public class GeneralSmartSpacesSupportActivator
 
     spaceEnvironment = new OsgiSmartSpacesEnvironment();
     spaceEnvironment.setExecutorService(executorService);
-    spaceEnvironment.setLoggingProvider(loggingProvider);
+    spaceEnvironment.setLoggingProvider(loggingProvider, containerLog);
     spaceEnvironment.setFilesystem(filesystem);
     spaceEnvironment.setContainerManagedScope(containerManagedScope);
 
@@ -334,9 +335,9 @@ public class GeneralSmartSpacesSupportActivator
       if (host != null) {
         InetAddress ntpAddress = InetAddressFactory.newFromHostString(host);
         return new NtpTimeProvider(ntpAddress, NTP_UPDATE_PERIOD_SECONDS, TimeUnit.SECONDS,
-            executorService, log);
+            executorService, containerLog);
       } else {
-        log.warn(String.format(
+        containerLog.warn(String.format(
             "Could not find host for NTP time provider. No value for configuration %s",
             SmartSpacesEnvironment.CONFIGURATION_NAME_PROVIDER_TIME_NTP_URL));
 

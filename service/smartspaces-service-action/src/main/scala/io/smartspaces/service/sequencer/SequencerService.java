@@ -16,9 +16,8 @@
 
 package io.smartspaces.service.sequencer;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.SupportedService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A service for obtaining sequencers.
@@ -40,5 +39,5 @@ public interface SequencerService extends SupportedService {
    * 
    * @return the new sequencer
    */
-  Sequencer newSequencer(Log log);
+  Sequencer newSequencer(ExtendedLog log);
 }

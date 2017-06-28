@@ -13,12 +13,34 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package io.smartspaces.sensor.output
 
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 import io.smartspaces.sensor.messages.SensorMessages
 
 import java.util.Map
+
+/**
+ * The standard sensor message builder.
+ *
+ * @author Keith M. Hughes
+ */
+object StandardSensorMessageBuilder {
+  
+  /**
+   * Create a new measurement message.
+   * 
+   * @param sensorId
+   *            the sensor external ID
+   * 
+   * @return the message builder
+   */
+  def newMeasurementMessage(sensorId: String): StandardSensorMessageBuilder = {
+    new StandardSensorMessageBuilder(sensorId, 
+          SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
+  }
+}
 
 /**
  * The standard sensor message builder.
@@ -45,12 +67,16 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
    *       the type of the channel data
    * @param value
    *       the value of the channel data
+   * 
+   * @return this builder
    */
-  def addChannelData(channelName: String, channelType: String, value: String) {
+  def addChannelData(channelName: String, channelType: String, value: String): StandardSensorMessageBuilder = {
     messageBuilder.newObject(channelName)
 
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, channelType)
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE, value)
+    
+    this
   }
 
   /**

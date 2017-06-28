@@ -20,10 +20,8 @@ package io.smartspaces.resource.managed;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import io.smartspaces.resource.managed.ManagedResource;
-import io.smartspaces.resource.managed.StandardManagedResources;
+import io.smartspaces.logging.ExtendedLog;
 
-import org.apache.commons.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -37,11 +35,11 @@ public class StandardManagedResourcesTest {
 
   private StandardManagedResources resources;
 
-  private Log log;
+  private ExtendedLog log;
 
   @Before
   public void setup() {
-    log = Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
 
     resources = new StandardManagedResources(log);
 

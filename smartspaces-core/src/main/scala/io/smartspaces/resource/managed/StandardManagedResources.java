@@ -18,9 +18,9 @@
 package io.smartspaces.resource.managed;
 
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +41,7 @@ public class StandardManagedResources implements ManagedResources {
   /**
    * Logger for the managed resources.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * {@code true} if the collection has been officially started.
@@ -54,7 +54,7 @@ public class StandardManagedResources implements ManagedResources {
    * @param log
    *          the log for the collection
    */
-  public StandardManagedResources(Log log) {
+  public StandardManagedResources(ExtendedLog log) {
     this.log = log;
   }
 

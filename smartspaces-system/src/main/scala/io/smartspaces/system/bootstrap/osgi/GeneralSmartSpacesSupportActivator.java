@@ -22,6 +22,8 @@ import io.smartspaces.configuration.FileSystemConfigurationStorageManager;
 import io.smartspaces.configuration.SystemConfigurationStorageManager;
 import io.smartspaces.evaluation.ExpressionEvaluatorFactory;
 import io.smartspaces.evaluation.SimpleExpressionEvaluatorFactory;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.resource.managed.ManagedResources;
 import io.smartspaces.resource.managed.StandardManagedResources;
@@ -129,6 +131,11 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    * The platform logging provider.
    */
   private LoggingProvider loggingProvider;
+  
+  /**
+   * The container log.
+   */
+  private ExtendedLog containerLog;
 
   /**
    * The platform configuration provider.
@@ -183,11 +190,13 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
     try {
       getCoreServices();
+      
+      containerLog = new StandardExtendedLog("container", loggingProvider.getLog());
 
-      ManagedResources managedResources = new StandardManagedResources(loggingProvider.getLog());
+      ManagedResources managedResources = new StandardManagedResources(containerLog);
 
       ManagedTasks managedTasks =
-          new StandardManagedTasks(executorService, loggingProvider.getLog());
+          new StandardManagedTasks(executorService, containerLog);
 
       containerManagedScope = new StandardManagedScope(managedResources, managedTasks);
       containerManagedScope.startup();
@@ -296,8 +305,6 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    *          the base directory where Smart Spaces is installed
    */
   private void setupSpaceEnvironment(File baseInstallDir) {
-    Log log = loggingProvider.getLog();
-
     Map<String, String> containerProperties = configurationProvider.getInitialConfiguration();
 
     executorService = new DefaultScheduledExecutorService();
@@ -308,13 +315,13 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
     spaceEnvironment = new OsgiSmartSpacesEnvironment();
     spaceEnvironment.setExecutorService(executorService);
-    spaceEnvironment.setLoggingProvider(loggingProvider);
+    spaceEnvironment.setLoggingProvider(loggingProvider, containerLog);
     spaceEnvironment.setFilesystem(filesystem);
     spaceEnvironment.setNetworkType(
         containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NAME_NETWORK_TYPE));
     spaceEnvironment.setContainerManagedScope(containerManagedScope);
 
-    setupSystemConfiguration(containerProperties, log);
+    setupSystemConfiguration(containerProperties, containerLog);
 
     timeProvider = getTimeProvider(containerProperties, loggingProvider.getLog());
     spaceEnvironment.setTimeProvider(timeProvider);

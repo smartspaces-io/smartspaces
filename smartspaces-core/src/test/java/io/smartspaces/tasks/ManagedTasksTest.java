@@ -21,7 +21,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.commons.logging.Log;
+import io.smartspaces.logging.ExtendedLog;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,13 +46,13 @@ public class ManagedTasksTest {
 
   private StandardManagedTasks tasks;
 
-  private Log log;
+  private ExtendedLog log;
 
   @Before
   public void setup() {
     executorService = new DefaultScheduledExecutorService();
 
-    log = Mockito.mock(Log.class);
+    log = Mockito.mock(ExtendedLog.class);
 
     tasks = new StandardManagedTasks(executorService, log);
   }

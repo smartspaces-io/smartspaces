@@ -181,7 +181,7 @@ public class ImageOpenCvVisionFaceDetectActivity extends BaseRoutableActivity {
 
       getLog().debug(String.format("Faces detected: %s", message));
 
-      sendOutputDynamicObjectBuilder(ROUTE_CHANNEL, message);
+      sendRouteMessage(ROUTE_CHANNEL, message);
     }
   }
 

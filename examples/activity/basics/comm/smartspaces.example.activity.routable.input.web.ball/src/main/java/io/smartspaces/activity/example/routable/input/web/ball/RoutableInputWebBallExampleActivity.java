@@ -30,7 +30,7 @@ import io.smartspaces.activity.impl.web.BaseRoutableWebActivity;
 public class RoutableInputWebBallExampleActivity extends BaseRoutableWebActivity {
 
   @Override
-  public void onNewInputMessage(String channelName, Map<String, Object> message) {
+  public void onNewIncomingRouteMessage(String channelName, Map<String, Object> message) {
     if ("input1".equals(channelName) && isActivated()) {
       sendAllWebSocketJson(message);
     }

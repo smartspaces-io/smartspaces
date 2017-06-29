@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.sensor.processing
+package io.smartspaces.sensor.processing.value
 
 import io.smartspaces.sensor.messages.StandardSensorData
 import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
@@ -25,6 +25,9 @@ import io.smartspaces.sensor.entity.model.updater.SimpleLocationChangeModelUpdat
 import io.smartspaces.sensor.messages.SensorMessages
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.sensor.entity.model.updater.LocationChangeModelUpdater
+import io.smartspaces.sensor.processing.value.SensorValueProcessor
+import io.smartspaces.sensor.processing.SensorValueProcessorContext
+import io.smartspaces.sensor.processing.UnknownMarkerHandler
 
 /**
  * The standard processor for sensors that give a simple marker ID.

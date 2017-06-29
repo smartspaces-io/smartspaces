@@ -23,10 +23,10 @@ class ExampleOutputRoutablePythonActivity(BaseRoutableActivity):
         self.log.info("Activated")
         message = {}
         message["message"] = "yipee! activated!"
-        self.sendOutputMessage("output1", message)
+        self.sendRouteMessage("output1", message)
 
     def onActivityDeactivate(self):
         self.log.info("Deactivated")
         message = {}
         message["message"] = "bummer! deactivated!"
-        self.sendOutputMessage("output1", message)
+        self.sendRouteMessage("output1", message)

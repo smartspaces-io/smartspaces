@@ -45,6 +45,7 @@ import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
 import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
 import io.smartspaces.sensor.entity.PersonSensedEntityDescription
 import io.smartspaces.sensor.entity.model.updater.LocationChangeModelUpdater
+import io.smartspaces.sensor.processing.value.SimpleMarkerSensorValueProcessor
 
 /**
  * A test for the simple marker sensor value processor.

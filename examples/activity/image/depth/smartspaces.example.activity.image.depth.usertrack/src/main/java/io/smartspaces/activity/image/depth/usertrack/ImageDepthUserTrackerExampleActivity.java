@@ -113,7 +113,7 @@ public class ImageDepthUserTrackerExampleActivity extends BaseRoutableActivity {
 
       getLog().debug(String.format("Entities detected: %s", message));
 
-      sendOutputMessage(ROUTE_CHANNEL, message);
+      sendRouteMessage(ROUTE_CHANNEL, message);
     }
   }
 }

@@ -16,6 +16,8 @@
 
 package io.smartspaces.sensor.processing
 
+import io.smartspaces.sensor.processing.value.SensorValueProcessor
+
 /**
  * A processor for sensed entity model message updates,
  * 

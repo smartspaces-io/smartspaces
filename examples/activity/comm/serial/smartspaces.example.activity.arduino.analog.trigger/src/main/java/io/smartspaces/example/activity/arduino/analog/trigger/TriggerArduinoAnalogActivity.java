@@ -187,6 +187,6 @@ public class TriggerArduinoAnalogActivity extends BaseRoutableActivity {
 
     Map<String, Object> message = Maps.newHashMap();
     message.put("message", "Do not stand so close to me!");
-    sendOutputMessage("triggermessage", message);
+    sendRouteMessage("triggermessage", message);
   }
 }

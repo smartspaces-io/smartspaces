@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.sensor.processing
+package io.smartspaces.sensor.processing.value
 
 import io.smartspaces.event.trigger.SimpleHysteresisThresholdValueTriggerWithData
 import io.smartspaces.event.trigger.TriggerWithData
@@ -28,8 +28,10 @@ import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
 import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
 import io.smartspaces.sensor.messages.StandardSensorData
-
 import scala.collection.mutable._
+import io.smartspaces.sensor.processing.value.SensorValueProcessor
+import io.smartspaces.sensor.processing.SensorValueProcessorContext
+import io.smartspaces.sensor.processing.StandardBleProximitySupport
 
 /**
  * The standard processor for BLE proximity data.

@@ -164,7 +164,7 @@ public class OpenSoundControlRoutableExampleActivity extends BaseRoutableActivit
   }
 
   @Override
-  public void onNewInputMessage(String channelName, Map<String, Object> message) {
+  public void onNewIncomingRouteMessage(String channelName, Map<String, Object> message) {
     getLog().debug("Got message on input channel " + channelName);
     int analog1 = (Integer) message.get(MESSAGE_FIELD_ANALOG);
     int analog2 = (Integer) message.get(MESSAGE_FIELD_ANALOG2);

@@ -19,7 +19,7 @@ from io.smartspaces.activity.impl.route import BaseRoutableActivity
 
 class ExampleInputRoutablePythonActivity(BaseRoutableActivity):
 
-    def onNewInputMessage(self, channelName, message):
+    def onNewIncomingRouteMessage(self, channelName, message):
         self.log.info("Got message on input channel " + channelName)
         self.log.info(message)
 

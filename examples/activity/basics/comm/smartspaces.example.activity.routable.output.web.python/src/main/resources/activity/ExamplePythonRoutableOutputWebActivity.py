@@ -43,4 +43,4 @@ class ExamplePythonRoutableOutputWebActivity(BaseRoutableWebActivity):
 
         message = {}
         message["message"] = data["message"]
-        self.sendOutputMessage("output1", message)
+        self.sendRouteMessage("output1", message)

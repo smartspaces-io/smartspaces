@@ -98,7 +98,7 @@ public class AccelerometerAndroidActivity extends BaseRoutableRosActivity {
       message.put("y", y);
       message.put("z", z);
 
-      sendOutputJson("output1", message);
+      sendRouteMessage("output1", message);
     }
   }
 }

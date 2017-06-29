@@ -31,28 +31,28 @@ import io.smartspaces.sensor.entity.model.query.StandardSensedEntityModelQueryPr
 import io.smartspaces.sensor.input.MqttSensorInput
 import io.smartspaces.sensor.input.SensorInput
 import io.smartspaces.sensor.input.StandardMqttSensorInput
-import io.smartspaces.sensor.processing.ContinuousValueSensorValueProcessor
 import io.smartspaces.sensor.processing.SensedEntitySensorHandler
 import io.smartspaces.sensor.processing.SensedEntitySensorListener
 import io.smartspaces.sensor.processing.SensorProcessor
-import io.smartspaces.sensor.processing.SimpleMarkerSensorValueProcessor
-import io.smartspaces.sensor.processing.StandardBleProximitySensorValueProcessor
 import io.smartspaces.sensor.processing.StandardFilePersistenceSensorHandler
 import io.smartspaces.sensor.processing.StandardFilePersistenceSensorInput
 import io.smartspaces.sensor.processing.StandardSensedEntityModelProcessor
 import io.smartspaces.sensor.processing.StandardSensedEntitySensorHandler
+import io.smartspaces.sensor.processing.StandardSensorProcessingEventEmitter
 import io.smartspaces.sensor.processing.StandardSensorProcessor
+import io.smartspaces.sensor.processing.StandardUnknownMarkerHandler
 import io.smartspaces.sensor.processing.StandardUnknownSensedEntityHandler
+import io.smartspaces.sensor.processing.UnknownMarkerHandler
+import io.smartspaces.sensor.processing.UnknownSensedEntityHandler
+import io.smartspaces.sensor.processing.value.ContinuousValueSensorValueProcessor
+import io.smartspaces.sensor.processing.value.SimpleMarkerSensorValueProcessor
+import io.smartspaces.sensor.processing.value.StandardBleProximitySensorValueProcessor
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.time.TimeFrequency
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 
 import java.io.File
-import io.smartspaces.sensor.processing.StandardSensorProcessingEventEmitter
-import io.smartspaces.sensor.processing.StandardUnknownMarkerHandler
-import io.smartspaces.sensor.processing.UnknownMarkerHandler
-import io.smartspaces.sensor.processing.UnknownSensedEntityHandler
 
 /**
  * The sensor integration layer.

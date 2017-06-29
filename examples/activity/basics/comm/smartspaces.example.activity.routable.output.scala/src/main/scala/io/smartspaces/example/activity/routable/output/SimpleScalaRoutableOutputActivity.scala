@@ -30,12 +30,12 @@ class SimpleScalaRoutableOutputActivity extends BaseActivity with StandardActivi
   override def onActivityActivate(): Unit = {
     val message: Map[String, Object] = new HashMap[String,Object]()
     message.put("message", "yipee! activated!")
-    sendOutputMessage("output1", message)
+    sendRouteMessage("output1", message)
   }
 
   override def onActivityDeactivate(): Unit = {
     val message: Map[String, Object] = new HashMap[String,Object]()
     message.put("message", "bummer! deactivated!")
-    sendOutputMessage("output1", message)
+    sendRouteMessage("output1", message)
   }
 }

@@ -26,6 +26,7 @@ import scala.collection.JavaConversions.iterableAsScalaIterable
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
 import io.smartspaces.sensor.messages.SensorMessages
+import io.smartspaces.sensor.processing.value.SensorValueProcessor
 
 /**
  * A sensor processor that will update sensed entity models.
@@ -77,6 +78,9 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
 
     // Go into the data fields.
     data.down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
+    
+    // If the message contained a timestamp, use it, otherwise use when the message came into the processor.
+    val measurementTimestamp = data.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, timestamp)
 
     val sensorDetail = sensor.sensorEntityDescription.sensorDetail
     if (sensorDetail.isDefined) {
@@ -89,7 +93,7 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
         val sensorValueProcessor = sensorValuesProcessors.get(sensedMeasurementType.externalId)
         if (sensorValueProcessor.isDefined) {
           entry.down()
-          sensorValueProcessor.get.processData(timestamp, sensor, sensedEntity, processorContext,
+          sensorValueProcessor.get.processData(measurementTimestamp, sensor, sensedEntity, processorContext,
             data);
         } else {
           log.formatWarn("Got unknown sensed type with no apparent processor %s", sensedMeasurementType)

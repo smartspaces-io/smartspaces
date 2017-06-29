@@ -27,7 +27,7 @@ import io.smartspaces.activity.impl.route.BaseRoutableActivity;
 public class SimpleJavaRoutableInputActivity extends BaseRoutableActivity {
 
   @Override
-  public void onNewInputMessage(String channelName, Map<String, Object> message) {
+  public void onNewIncomingRouteMessage(String channelName, Map<String, Object> message) {
     getLog().info("Got message on input channel " + channelName);
     getLog().info(message);
   }

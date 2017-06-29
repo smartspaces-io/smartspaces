@@ -94,7 +94,7 @@ public class ExternalProxyInternalExampleActivity extends BaseRoutableWebActivit
           @SuppressWarnings("unchecked")
           Map<String, Object> data = (Map<String, Object>) d;
 
-          sendOutputMessage("output1", data);
+          sendRouteMessage("output1", data);
         }
       }, getSpaceEnvironment().getExecutorService(), getLog());
 

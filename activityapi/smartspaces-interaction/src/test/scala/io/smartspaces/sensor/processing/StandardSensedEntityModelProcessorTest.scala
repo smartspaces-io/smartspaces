@@ -38,6 +38,7 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.scalatest.junit.JUnitSuite
 import io.smartspaces.sensor.messages.SensorMessages
+import io.smartspaces.sensor.processing.value.SensorValueProcessor
 
 /**
  * Tests for the {@link StandardSensedEntityModelProcessor}.

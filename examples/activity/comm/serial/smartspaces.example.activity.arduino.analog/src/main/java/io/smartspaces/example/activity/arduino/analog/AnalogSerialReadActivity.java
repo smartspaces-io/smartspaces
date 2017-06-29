@@ -128,7 +128,7 @@ public class AnalogSerialReadActivity extends BaseRoutableActivity {
     Map<String, Object> message = Maps.newHashMap();
     message.put("analog", value1);
     message.put("analog2", value2);
-    sendOutputMessage("signal", message);
+    sendRouteMessage("signal", message);
   }
 
   /**

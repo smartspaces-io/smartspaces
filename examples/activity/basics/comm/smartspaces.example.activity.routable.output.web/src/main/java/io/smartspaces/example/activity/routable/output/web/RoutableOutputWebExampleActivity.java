@@ -42,7 +42,7 @@ public class RoutableOutputWebExampleActivity extends BaseRoutableWebActivity {
     if (isActivated()) {
       // In this example, just pass though the message as it came across.
       // This is not always the best choice.
-      sendOutputMessage("output1", data);
+      sendRouteMessage("output1", data);
     }
   }
 }

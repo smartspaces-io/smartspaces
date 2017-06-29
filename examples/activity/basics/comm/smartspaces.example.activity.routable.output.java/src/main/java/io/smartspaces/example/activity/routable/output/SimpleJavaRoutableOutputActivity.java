@@ -32,13 +32,13 @@ public class SimpleJavaRoutableOutputActivity extends BaseRoutableActivity {
   public void onActivityActivate() {
     Map<String, Object> message = Maps.newHashMap();
     message.put("message", "yipee! activated!");
-    sendOutputMessage("output1", message);
+    sendRouteMessage("output1", message);
   }
 
   @Override
   public void onActivityDeactivate() {
     Map<String, Object> message = Maps.newHashMap();
     message.put("message", "bummer! deactivated!");
-    sendOutputMessage("output1", message);
+    sendRouteMessage("output1", message);
   }
 }

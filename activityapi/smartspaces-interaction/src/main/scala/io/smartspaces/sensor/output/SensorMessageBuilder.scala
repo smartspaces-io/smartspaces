@@ -27,18 +27,18 @@ import java.util.Map
  * @author Keith M. Hughes
  */
 object StandardSensorMessageBuilder {
-  
+
   /**
    * Create a new measurement message.
-   * 
+   *
    * @param sensorId
    *            the sensor external ID
-   * 
+   *
    * @return the message builder
    */
   def newMeasurementMessage(sensorId: String): StandardSensorMessageBuilder = {
-    new StandardSensorMessageBuilder(sensorId, 
-          SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
+    new StandardSensorMessageBuilder(sensorId,
+      SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
   }
 }
 
@@ -55,8 +55,22 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
   val messageBuilder = new StandardDynamicObjectBuilder
   messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_SENSOR, sensorId)
   messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_TYPE, messageType)
-  
+
   messageBuilder.newObject(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
+
+  /**
+   * Add in a timestamp.
+   *
+   * @param timestamp
+   *       the vtimestamp for the data
+   *
+   * @return this builder
+   */
+  def addTimestamp(timestamp: Long): StandardSensorMessageBuilder = {
+    messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, timestamp)
+    
+    this
+  }
 
   /**
    * Add in data for a channel.
@@ -67,7 +81,9 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
    *       the type of the channel data
    * @param value
    *       the value of the channel data
-   * 
+   * @param timestamp
+   *       a potential timestamp for the field
+   *
    * @return this builder
    */
   def addChannelData(channelName: String, channelType: String, value: String): StandardSensorMessageBuilder = {
@@ -76,6 +92,8 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, channelType)
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE, value)
     
+    messageBuilder.up
+
     this
   }
 

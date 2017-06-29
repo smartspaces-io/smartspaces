@@ -17,7 +17,7 @@
 package io.smartspaces.sensor.input
 
 import io.smartspaces.logging.ExtendedLog
-import io.smartspaces.sensor.messages.DynamicObjectByteArrayCodec
+import io.smartspaces.messaging.codec.DynamicObjectByteArrayCodec
 import io.smartspaces.sensor.processing.SensorProcessor
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpointService

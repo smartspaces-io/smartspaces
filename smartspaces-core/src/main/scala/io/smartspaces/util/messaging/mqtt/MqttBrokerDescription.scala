@@ -152,4 +152,8 @@ class MqttBrokerDescription(val brokerHost: String, val brokerPort: Integer, val
     val prime = 41
     prime * (prime * (prime + brokerHost.hashCode) + brokerPort.hashCode) + isSsl.hashCode
   }
+  
+  override def toString(): String = {
+    s"${getClass.getName()}[broker: ${brokerAddress}]"
+  }
 }

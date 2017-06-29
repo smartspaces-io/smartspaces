@@ -16,10 +16,9 @@
 
 package io.smartspaces.service.comm.pubsub.mqtt
 
+import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.service.SupportedService
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
-
-import org.apache.commons.logging.Log
 
 /**
  * A service for getting MQTT communication endpoints.
@@ -55,5 +54,5 @@ trait MqttCommunicationEndpointService extends SupportedService {
    */
 
    def newMqttCommunicationEndpoint(
-       mqttBrokerDescription: MqttBrokerDescription,  mqttClientId: String, log: Log ): MqttCommunicationEndpoint
+       mqttBrokerDescription: MqttBrokerDescription,  mqttClientId: String, log: ExtendedLog): MqttCommunicationEndpoint
 }

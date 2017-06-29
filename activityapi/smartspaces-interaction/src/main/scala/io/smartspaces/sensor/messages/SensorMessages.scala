@@ -57,4 +57,9 @@ object SensorMessages {
    * The field name for the type field in the data field.
    */
   val SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE = "type"
+
+  /**
+   * The field name for the timestamp field in the data field.
+   */
+  val SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP = "timestamp"
 }

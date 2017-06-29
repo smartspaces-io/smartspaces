@@ -45,6 +45,7 @@ import java.util.concurrent.ScheduledExecutorService
 import scala.collection.immutable.List
 import javax.net.ssl.SSLSocketFactory
 import io.smartspaces.util.messaging.mqtt.MqttSubscriberDescription
+import io.smartspaces.logging.ExtendedLog
 
 /**
  * An MQTT communication endpoint implemented with Paho.
@@ -52,7 +53,7 @@ import io.smartspaces.util.messaging.mqtt.MqttSubscriberDescription
  * @author Keith M. Hughes
  */
 class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription, mqttClientId: String,
-    executor: ScheduledExecutorService, log: Log) extends MqttCommunicationEndpoint with IdempotentManagedResource {
+    executor: ScheduledExecutorService, log: ExtendedLog) extends MqttCommunicationEndpoint with IdempotentManagedResource {
 
   /**
    * The default QoS value to be used.
@@ -218,12 +219,18 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
   override def createMessagePublisher(mqttTopicName: String, qos: Int, retain: Boolean): MqttPublisher = {
     new MqttPublisherShim(mqttTopicName, qos, retain)
   }
-
+  
+  override def publish(topicName: String, message: Array[Byte], qos: Int, retain: Boolean): MqttCommunicationEndpoint = {
+    mqttClient.publish(topicName, message, qos, retain)
+    
+    this
+  }
+  
   override def isConnected: Boolean = {
     mqttClient != null && mqttClient.isConnected()
   }
 
-  override def getLog(): Log = {
+  override def getLog(): ExtendedLog = {
     log
   }
 

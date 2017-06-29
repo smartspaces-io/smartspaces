@@ -16,15 +16,11 @@
 
 package io.smartspaces.service.comm.pubsub.mqtt.paho
 
-import org.apache.commons.logging.Log
-
+import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.service.BaseSupportedService
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpointService
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
-import io.smartspaces.system.StandaloneSmartSpacesEnvironment
-import io.smartspaces.time.provider.LocalTimeProvider
-import io.smartspaces.service.comm.pubsub.mqtt.MqttSubscriberListener
   
 /**
  * A service for getting MQTT communication endpoints implemented with Paho.
@@ -39,7 +35,7 @@ class PahoMqttCommunicationEndpointService extends BaseSupportedService
   }
 
   override def newMqttCommunicationEndpoint(
-    mqttBrokerDescription: MqttBrokerDescription, mqttClientId: String, log: Log): MqttCommunicationEndpoint = {
+    mqttBrokerDescription: MqttBrokerDescription, mqttClientId: String, log: ExtendedLog): MqttCommunicationEndpoint = {
     new PahoMqttCommunicationEndpoint(mqttBrokerDescription, mqttClientId, getSpaceEnvironment.getExecutorService, log)
   }
 }

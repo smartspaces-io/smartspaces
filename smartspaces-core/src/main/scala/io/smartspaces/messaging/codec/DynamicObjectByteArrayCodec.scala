@@ -14,15 +14,16 @@
  * the License.
  */
 
-package io.smartspaces.sensor.messages
+package io.smartspaces.messaging.codec
 
-import java.nio.charset.Charset
-import com.google.common.base.Charsets
-import io.smartspaces.messaging.codec.MessageCodec
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
 import io.smartspaces.util.data.json.JsonMapper
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.data.json.StandardJsonMapper
+
+import com.google.common.base.Charsets
+
+import java.nio.charset.Charset
 
 /**
  * A codec for translating between {@link DynamicObject}s and byte arrays.

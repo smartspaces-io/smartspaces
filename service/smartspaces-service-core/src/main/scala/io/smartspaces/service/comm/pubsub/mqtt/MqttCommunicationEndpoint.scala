@@ -22,6 +22,7 @@ import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 import org.apache.commons.logging.Log
 import io.smartspaces.util.messaging.mqtt.MqttPublisherDescription
 import io.smartspaces.util.messaging.mqtt.MqttSubscriberDescription
+import io.smartspaces.logging.ExtendedLog
 
 /**
  * An endpoint for MQTT communications.
@@ -131,6 +132,22 @@ trait MqttCommunicationEndpoint extends ManagedResource {
   def createMessagePublisher(mqttTopicName: String, qos: Int, retain: Boolean): MqttPublisher
 
   /**
+   * Publish a message to a given topic.
+   *
+   * @param topicName
+   *        the name of the topic
+   * @param message
+   *        the message
+   * @param qos
+   *        the quality of service for the message
+   * @param retain
+   *        {@code true} if the message should be retained for new subscribers
+   * 
+   * @return this endpoint
+   */
+  def publish(topicName: String, message: Array[Byte], qos: Int, retain: Boolean): MqttCommunicationEndpoint
+  
+  /**
    * Is the client connected?
    *
    * @return {@code true} if connected
@@ -142,5 +159,5 @@ trait MqttCommunicationEndpoint extends ManagedResource {
    *
    * @return the log
    */
-  def getLog(): Log
+  def getLog(): ExtendedLog
 }

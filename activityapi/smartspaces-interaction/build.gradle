@@ -32,5 +32,12 @@ jar {
 
     instruction 'Export-Package',
         'io.smartspaces.*'
+
+    instruction 'Import-Package',
+        'org.apache.commons.ognl.*;resolution:="optional"',
+        'org.ros.*;resolution:="optional"',
+        'com.google.common;resolution:="optional"',
+        'smartspaces_msgs;resolution:="optional"',
+        '*'
   }
 }

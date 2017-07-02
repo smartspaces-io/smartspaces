@@ -40,6 +40,7 @@ jar {
         'org.apache.commons.ognl.*;resolution:="optional"',
         'org.ros.*;resolution:="optional"',
         'com.google.common;resolution:="optional"',
+        'smartspaces_msgs;resolution:="optional"',
         '*'
   }
 }

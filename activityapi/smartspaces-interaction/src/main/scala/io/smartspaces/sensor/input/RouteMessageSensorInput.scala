@@ -44,8 +44,6 @@ class RouteMessageSensorInput(log: ExtendedLog, spaceEnvironment: SmartSpacesEnv
   override def onNewRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
     log.info(s"Got sensor message on route with channel ID ${channelId} ${message}")
 
-    // TODO(keith): Consider also checking message to see if it has a timestamp.
-    // If so use it, otherwise use time provider.
     val currentTime = spaceEnvironment.getTimeProvider().getCurrentTime()
 
     val sensorDataEvent = new StandardDynamicObjectNavigator(message)

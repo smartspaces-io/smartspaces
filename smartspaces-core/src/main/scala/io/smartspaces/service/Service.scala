@@ -20,6 +20,7 @@ package io.smartspaces.service
 import io.smartspaces.resource.managed.ManagedResource
 
 import java.util.Map
+import java.util.Collection
 
 /**
  * A Smart Spaces service.
@@ -27,6 +28,13 @@ import java.util.Map
  * @author Keith M. Hughes
  */
 trait Service extends ManagedResource {
+  
+  /**
+   * Get the dependencies for the service.
+   * 
+   * @return the dependencies
+   */
+  def getDependencies(): Collection[ServiceDescription]
 
   /**
    * Get the name of the service.

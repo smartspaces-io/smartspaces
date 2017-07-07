@@ -24,7 +24,7 @@ import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.service.ServiceRegistry;
-import io.smartspaces.service.SimpleServiceRegistry;
+import io.smartspaces.service.StandardServiceRegistry;
 import io.smartspaces.system.InternalSmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesFilesystem;
@@ -83,7 +83,7 @@ public class OsgiSmartSpacesEnvironment
   /**
    * The service registry.
    */
-  private ServiceRegistry serviceRegistry = new SimpleServiceRegistry(this);
+  private ServiceRegistry serviceRegistry = new StandardServiceRegistry(this);
   
   /**
    * The event observable registry.

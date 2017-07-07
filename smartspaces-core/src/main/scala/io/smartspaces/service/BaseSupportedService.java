@@ -19,6 +19,7 @@ package io.smartspaces.service;
 
 import io.smartspaces.system.SmartSpacesEnvironment;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -33,6 +34,11 @@ public abstract class BaseSupportedService implements SupportedService {
    * The space environment for this service.
    */
   private SmartSpacesEnvironment spaceEnvironment;
+
+  @Override
+  public Collection<ServiceDescription> getDependencies() {
+    return Collections.EMPTY_LIST;
+  }
 
   @Override
   public Map<String, Object> getMetadata() {
@@ -71,18 +77,18 @@ public abstract class BaseSupportedService implements SupportedService {
    */
   private class MyServiceDescription implements ServiceDescription {
     @Override
-    public String getName() {
+    public String name() {
       return BaseSupportedService.this.getName();
     }
 
     @Override
-    public Map<String, Object> getMetadata() {
+    public Map<String, Object> metadata() {
       return BaseSupportedService.this.getMetadata();
     }
 
     @Override
     public String toString() {
-      return "MyServiceDescription [name=" + getName() + ", metadata=" + getMetadata() + "]";
+      return "MyServiceDescription [name=" + name() + ", metadata=" + metadata() + "]";
     }
   }
 }

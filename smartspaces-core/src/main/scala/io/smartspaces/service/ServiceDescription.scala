@@ -15,28 +15,24 @@
  * the License.
  */
 
-package io.smartspaces.service;
+package io.smartspaces.service
 
-import java.util.Map;
+import java.util.Map
 
 /**
  * A description of a {@link Service}.
  *
  * @author Keith M. Hughes
  */
-public interface ServiceDescription {
+trait ServiceDescription {
 
   /**
    * Get the name of the service.
-   *
-   * @return the name of the service
    */
-  String getName();
+ val name: String
 
   /**
-   * Get the metadata for the service.
-   *
-   * @return the metadata for the service
+   * The metadata for the service.
    */
-  Map<String, Object> getMetadata();
+  val metadata: Map[String, Object]
 }

@@ -30,7 +30,7 @@ import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.scope.StandardManagedScope;
 import io.smartspaces.service.Service;
 import io.smartspaces.service.ServiceRegistry;
-import io.smartspaces.service.SimpleServiceRegistry;
+import io.smartspaces.service.StandardServiceRegistry;
 import io.smartspaces.tasks.ManagedTasks;
 import io.smartspaces.tasks.StandardManagedTasks;
 import io.smartspaces.time.provider.SettableTimeProvider;
@@ -67,7 +67,7 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
     environment.systemConfiguration = SimpleConfiguration.newConfiguration();
     environment.executorService = Executors.newScheduledThreadPool(NUM_THREADS_IN_POOL);
     environment.log = new StandardExtendedLog("container", new Jdk14Logger("test.smartspaces"));
-    environment.serviceRegistry = new SimpleServiceRegistry(environment);
+    environment.serviceRegistry = new StandardServiceRegistry(environment);
     environment.timeProvider = new SettableTimeProvider();
     environment.managedResources = new StandardManagedResources(environment.log);
     environment.managedTasks =

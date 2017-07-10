@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2013 Google Inc.
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,9 +16,6 @@
 dependencies {
 	
   compile project(":smartspaces-core")
-  compile project(":service:smartspaces-service-core")
-  compile project(":activityapi:smartspaces-activity-core")
-  compile project(":activityapi:smartspaces-data")
   
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
@@ -29,17 +25,12 @@ dependencies {
 jar {
   manifest {
     version = osgiVersion
-    symbolicName = 'smartspaces.interaction'
+    symbolicName = 'smartspaces.data'
 
     instruction 'Export-Package',
         'io.smartspaces.*'
 
     instruction 'Import-Package',
-        'org.apache.commons.ognl.*;resolution:="optional"',
-        'org.ros.*;resolution:="optional"',
-        'com.google.common;resolution:="optional"',
-        'smartspaces_msgs;resolution:="optional"',
-        'io.smartspaces.activity;resolution:="optional"',
         '*'
   }
 }

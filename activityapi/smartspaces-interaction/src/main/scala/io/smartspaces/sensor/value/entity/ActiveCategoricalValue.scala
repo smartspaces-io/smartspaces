@@ -21,7 +21,6 @@ import io.smartspaces.data.entity.BaseCategoricalValueInstance
 import io.smartspaces.data.entity.CategoricalValue
 import io.smartspaces.data.entity.CategoricalValueInstance
 
-
 /**
  * The activity categorical value.
  * 

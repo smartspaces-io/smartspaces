@@ -67,25 +67,8 @@ trait OrdinalValue[+T <: OrdinalValueInstance]  extends CategoricalValue[T] {
  * 
  * @author Keith M. Hughes
  */
-abstract class BaseOrdinalValue[T <: OrdinalValueInstance](override val name: String, override val values: List[T]) extends OrdinalValue[T] {
-    
-  /**
-   * A map from IDs to the value instance.
-   */
-  private val idToValue = values.map(v => (v.id, v)).toMap
-   
-  /**
-   * A map from labels to the value instance.
-   */
-  private val labelToValue = values.map(v => (v.label, v)).toMap
-
-  override def fromId(id: Int): Option[T] = {
-    idToValue.get(id)
-  }
-
-  override def fromLabel(label: String): Option[T] = {
-    labelToValue.get(label)
-  }
+abstract class BaseOrdinalValue[T <: OrdinalValueInstance](name: String, values: List[T]) 
+    extends BaseCategoricalValue[T](name, values) with OrdinalValue[T] {
 }
 
 /**

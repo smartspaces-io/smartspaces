@@ -16,14 +16,16 @@
 
 package io.smartspaces.sensor.entity.model.event
 
+import io.smartspaces.sensor.value.entity.PresenceCategoricalValueInstances.PresenceCategoricalValueInstance
+
 /**
  * An event that a person entered or exited a physical space.
  *
  * @author Keith M. Hughes
  */
 class PhysicalSpaceOccupancyEvent(val physicalSpaceExternalId: String,
-    val personExternalId: String, val timestamp: Long, val entered: Byte) {
+    val personExternalId: String, val timestamp: Long, val presence: PresenceCategoricalValueInstance) {
   override def toString(): String = {
-    s"PhysicalSpaceOccupancyEvent[ physicalSpaceExternalId=${physicalSpaceExternalId}, personExternalId=${personExternalId}, timestamp=${timestamp}, entered=${entered}]"
+    s"PhysicalSpaceOccupancyEvent[ physicalSpaceExternalId=${physicalSpaceExternalId}, personExternalId=${personExternalId}, timestamp=${timestamp}, presence=${presence.label}]"
   }
 }

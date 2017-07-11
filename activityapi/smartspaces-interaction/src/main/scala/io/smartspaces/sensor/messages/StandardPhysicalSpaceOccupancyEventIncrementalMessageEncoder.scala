@@ -33,6 +33,6 @@ object StandardPhysicalSpaceOccupancyEventIncrementalMessageEncoder extends Incr
     builder.setProperty("physicalSpaceExternalId", model.physicalSpaceExternalId)
     builder.setProperty("personExternalId", model.personExternalId)
     builder.setProperty("timestamp", model.timestamp)
-    builder.setProperty("entered", model.entered == 1)
+    builder.setProperty("presence", model.presence.label)
   }
 }

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.sensor.messages
+package io.smartspaces.sensor.messaging.messages
 
 /**
  * A collection of constants helpful for sensors.
@@ -39,9 +39,19 @@ object StandardSensorData {
   val MEASUREMENT_TYPE_MOTION = "/sensor/measurement/motion"
 
   /**
+   * The type of a presence sensor value.
+   */
+  val MEASUREMENT_TYPE_PRESENCE = "/sensor/measurement/presence"
+
+  /**
    * The type of a vibration sensor value.
    */
   val MEASUREMENT_TYPE_VIBRATION = "/sensor/measurement/vibration"
+
+  /**
+   * The type of an illuminance (light level) sensor value.
+   */
+  val MEASUREMENT_TYPE_ILLUMINANCE = "/sensor/measurement/illuminance"
 
   /**
    * The type of a contact sensor value.
@@ -64,6 +74,26 @@ object StandardSensorData {
   val SENSOR_TYPE_VIBRATION = "/sensor/type/vibration"
 
   /**
+   * The type of a light level sensor.
+   */
+  val SENSOR_TYPE_ILLUMINANCE = "/sensor/type/illuminance"
+
+  /**
+   * The type of a presence sensor.
+   */
+  val SENSOR_TYPE_PRESENCE = "/sensor/type/presence"
+
+  /**
+   * The type of a temperature sensor.
+   */
+  val SENSOR_TYPE_TEMPERATURE = "/sensor/type/temperature"
+
+  /**
+   * The type of a humidity sensor.
+   */
+  val SENSOR_TYPE_HUMIDITY = "/sensor/type/humidity"
+
+  /**
    * The type of a BLE Proximity sensor value.
    */
   val SENSOR_TYPE_PROXIMITY_BLE = "proximity.ble"
@@ -74,7 +104,7 @@ object StandardSensorData {
   val SENSOR_TYPE_MARKER_SIMPLE = "/sensor/type/marker"
   
   /**
-   * A standard name for a marker channel (though not all marker channel names.
+   * A standard name for a marker channel (though not all marker channel names).
    */
   val SENSOR_CHANNEL_NAME_MARKER = "marker"
 }

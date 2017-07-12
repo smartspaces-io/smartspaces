@@ -14,22 +14,22 @@
  * the License.
  */
 
-package io.smartspaces.sensor.messages
+package io.smartspaces.sensor.messaging.codec
 
 import io.smartspaces.messaging.codec.IncrementalMessageEncoder
-import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
+import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
+import io.smartspaces.sensor.messaging.messages.SensorSmartSpacesMessages
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
 
 /**
- * An incremental message encoder for physical messages.
+ * An incremental message encoder for person messages.
  * 
- * This encoder handles a single sensor.
+ * This encoder handles a single person.
  * 
  * @author Keith M. Hughes
  */
-object StandardPhysicalSpaceIncrementalMessageEncoder extends IncrementalMessageEncoder[PhysicalSpaceSensedEntityModel, DynamicObjectBuilder] {
-  
-  override def encode(model: PhysicalSpaceSensedEntityModel, builder: DynamicObjectBuilder): Unit = {
+object StandardPersonIncrementalMessageEncoder extends IncrementalMessageEncoder[PersonSensedEntityModel, DynamicObjectBuilder] {
+  override def encode(model: PersonSensedEntityModel, builder: DynamicObjectBuilder): Unit = {
     builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_COMMON_ID, model.sensedEntityDescription.id)
     builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_COMMON_EXTERNAL_ID, model.sensedEntityDescription.externalId)
     builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_COMMON_DISPLAY_NAME, model.sensedEntityDescription.displayName)

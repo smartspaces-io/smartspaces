@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.sensor.input
+package io.smartspaces.sensor.messaging.input
 
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.messaging.codec.DynamicObjectByteArrayCodec

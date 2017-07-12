@@ -199,8 +199,6 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
    */
   private var id: Integer = 0
 
-  private val MAPPER: YamlMapper = StandardYamlMapper.INSTANCE
-
   override def importDescriptions(sensorRegistry: SensorRegistry): SensorDescriptionImporter = {
     val data: DynamicObject = new StandardDynamicObjectNavigator(configuration)
 

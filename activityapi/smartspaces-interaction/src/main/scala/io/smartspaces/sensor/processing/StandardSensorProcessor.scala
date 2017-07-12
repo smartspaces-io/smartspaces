@@ -17,43 +17,31 @@
 package io.smartspaces.sensor.processing
 
 import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.resource.managed.IdempotentManagedResource
 import io.smartspaces.resource.managed.ManagedResources
 import io.smartspaces.resource.managed.StandardManagedResources
+import io.smartspaces.sensor.messaging.input.SensorInput
 import io.smartspaces.util.data.dynamic.DynamicObject
 
 import scala.collection.mutable.ListBuffer
-import io.smartspaces.resource.managed.IdempotentManagedResource
-import io.smartspaces.sensor.input.SensorInput
+import io.smartspaces.scope.ManagedScope
 
 /**
  * The standard processor for sensor data.
  *
  * @author Keith M. Hughes
  */
-class StandardSensorProcessor(val log: ExtendedLog) extends SensorProcessor with IdempotentManagedResource {
-
-  /**
-   * The managed resources controlled by the processor.
-   */
-  private val managedResources: ManagedResources = new StandardManagedResources(log)
+class StandardSensorProcessor(val managedScope: ManagedScope, val log: ExtendedLog) extends SensorProcessor with IdempotentManagedResource {
 
   /**
    * All sensor handlers added to the processor.
    */
   private val sensorHandlers: ListBuffer[SensorHandler] = new ListBuffer
 
-  override def onStartup(): Unit = {
-    managedResources.startupResources()
-  }
-
-  override def onShutdown(): Unit = {
-    managedResources.shutdownResourcesAndClear()
-  }
-
   override def addSensorInput(sensorInput: SensorInput): SensorProcessor = {
     sensorInput.setSensorProcessor(this)
 
-    managedResources.addResource(sensorInput)
+    managedScope.addResource(sensorInput)
 
     this
   }
@@ -62,7 +50,7 @@ class StandardSensorProcessor(val log: ExtendedLog) extends SensorProcessor with
     sensorHandler.sensorProcessor = this
     sensorHandlers += sensorHandler
 
-    managedResources.addResource(sensorHandler)
+    managedScope.addResource(sensorHandler)
 
     this
   }

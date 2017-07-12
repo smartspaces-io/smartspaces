@@ -17,35 +17,26 @@
 package io.smartspaces.sensor.processing
 
 import io.smartspaces.logging.ExtendedLog
-import io.smartspaces.sensor.entity.SimpleMeasurementTypeDescription
-import io.smartspaces.sensor.entity.SimplePhysicalSpaceSensedEntityDescription
-import io.smartspaces.sensor.entity.SimpleSensorChannelDetail
-import io.smartspaces.sensor.entity.SimpleSensorDetail
-import io.smartspaces.sensor.entity.SimpleSensorEntityDescription
+import io.smartspaces.sensor.entity.MarkerEntityDescription
+import io.smartspaces.sensor.entity.PersonSensedEntityDescription
+import io.smartspaces.sensor.entity.SensorRegistry
 import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel
-import io.smartspaces.sensor.entity.model.SensedEntityModel
+import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
+import io.smartspaces.sensor.entity.model.PhysicalSpaceLocatableSensedEntityModel
+import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
 import io.smartspaces.sensor.entity.model.SensorEntityModel
-import io.smartspaces.sensor.entity.model.SimpleSensedEntityModel
-import io.smartspaces.sensor.entity.model.SimpleSensorEntityModel
-import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.sensor.entity.model.updater.LocationChangeModelUpdater
+import io.smartspaces.sensor.messaging.messages.SensorMessages
+import io.smartspaces.sensor.processing.value.SensorValueProcessorContext
+import io.smartspaces.sensor.processing.value.SimpleMarkerSensorValueProcessor
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Matchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.scalatest.junit.JUnitSuite
-import io.smartspaces.sensor.messages.SensorMessages
-import io.smartspaces.sensor.entity.model.PhysicalSpaceLocatableSensedEntityModel
-import io.smartspaces.sensor.entity.SensorRegistry
-import io.smartspaces.sensor.entity.MarkerEntityDescription
-import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
-import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
-import io.smartspaces.sensor.entity.PersonSensedEntityDescription
-import io.smartspaces.sensor.entity.model.updater.LocationChangeModelUpdater
-import io.smartspaces.sensor.processing.value.SimpleMarkerSensorValueProcessor
+import io.smartspaces.scope.ManagedScope
 
 /**
  * A test for the simple marker sensor value processor.
@@ -65,6 +56,8 @@ class SimpleMarkerSensorValueProcessorTest {
   @Mock var sensorRegistry: SensorRegistry = _
   
   @Mock var modelUpdater: LocationChangeModelUpdater = _
+  
+  @Mock var managedScope: ManagedScope = _
 
   var context: SensorValueProcessorContext = null
 
@@ -75,7 +68,7 @@ class SimpleMarkerSensorValueProcessorTest {
 
     Mockito.when(completeSensedEntityModel.sensorRegistry).thenReturn(sensorRegistry)
 
-    context = new SensorValueProcessorContext(completeSensedEntityModel, log: ExtendedLog)
+    context = new SensorValueProcessorContext(completeSensedEntityModel, managedScope, log)
   }
 
   /**

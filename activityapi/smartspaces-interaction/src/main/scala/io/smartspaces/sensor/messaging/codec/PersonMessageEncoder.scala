@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Keith M. Hughes
+O * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,35 +14,34 @@
  * the License.
  */
 
-package io.smartspaces.sensor.messages
+package io.smartspaces.sensor.messaging.codec
 
 import io.smartspaces.messaging.codec.IncrementalMessageEncoder
 import io.smartspaces.messaging.codec.MessageEncoder
 import io.smartspaces.messaging.dynamic.SmartSpacesMessages
-import io.smartspaces.sensor.entity.model.SensorEntityModel
+import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 
 /**
- * A message encoder for a sensor to a web representation.
+ * A message encoder from a person to a web representation.
  *
  * @author Keith M. Hughes
  */
-class SensorMessageEncoder(private val builder: DynamicObjectBuilder, 
-    private val singleSensorEncoder: IncrementalMessageEncoder[SensorEntityModel, DynamicObjectBuilder], private val messageType: String) extends MessageEncoder[SensorEntityModel, DynamicObjectBuilder] {
+class PersonMessageEncoder(private val builder: DynamicObjectBuilder,
+    private val personEncoder: IncrementalMessageEncoder[PersonSensedEntityModel, DynamicObjectBuilder], private val messageType: String) extends MessageEncoder[PersonSensedEntityModel, DynamicObjectBuilder] {
 
   def this(messageType: String) = {
-    this(new StandardDynamicObjectBuilder(), StandardSensorIncrementalMessageEncoder, messageType)
+    this(new StandardDynamicObjectBuilder(), StandardPersonIncrementalMessageEncoder, messageType)
 
     builder.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE, messageType)
     builder.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_RESULT, SmartSpacesMessages.MESSAGE_ENVELOPE_VALUE_RESULT_SUCCESS)
     builder.newObject(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA)
   }
 
-  override def encode(model: SensorEntityModel): DynamicObjectBuilder = {
-    singleSensorEncoder.encode(model, builder)
-      
+  override def encode(model: PersonSensedEntityModel): DynamicObjectBuilder = {
+    personEncoder.encode(model, builder)
+
     builder
   }
-}
- 
+} 

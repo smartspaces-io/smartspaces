@@ -22,6 +22,7 @@ import io.smartspaces.sensor.entity.SimpleSensorEntityDescription
 import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel
 import io.smartspaces.sensor.entity.model.SimpleSensedEntityModel
 import io.smartspaces.sensor.entity.model.SimpleSensorEntityModel
+import io.smartspaces.sensor.messaging.messages.SensorMessages
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 
 import org.junit.Before
@@ -31,8 +32,6 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.scalatest.junit.JUnitSuite
-import io.smartspaces.system.SmartSpacesEnvironment
-import io.smartspaces.sensor.messages.SensorMessages
 
 /**
  * Tests for the {@link StandardSensedEntitySensorHandler}.

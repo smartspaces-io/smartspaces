@@ -16,6 +16,19 @@
 
 package io.smartspaces.sensor.entity
 
+object MeasurementTypeDescription {
+  
+  /**
+   * The prefix on the value of the value type field for categorical variables.
+   */
+  val VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE = "categorical:"
+   
+  /**
+   * The value type for continuous numbers.
+   */
+  val VALUE_TYPE_DOUBLE = "double"
+}
+
 /**
  * A description of a measurement type, such as temperature or humidity.
  * 

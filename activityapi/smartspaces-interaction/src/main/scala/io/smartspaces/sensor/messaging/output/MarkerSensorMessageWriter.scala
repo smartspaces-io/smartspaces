@@ -14,17 +14,20 @@
  * the License.
  */
 
-package io.smartspaces.sensor.output
+package io.smartspaces.sensor.messaging.output
 
 /**
- * A writer for sensor messages.
+ * A writer for marker messages.
  * 
  * @author Keith M. Hughes
  */
-trait SensorMessageWriter {
+trait MarkerSensorMessageWriter extends SensorMessageWriter {
   
   /**
-   * Send a heartbeat message over the route for the sensor.
+   * Send a marker message over the route.
+   *
+   * @param markerId
+   *       the ID of the marker
    */
-  def sendHeartbeatMessage(): Unit 
+  def sendMarkerMessage(markerId: String): Unit
 }

@@ -24,12 +24,12 @@ import io.smartspaces.sensor.entity.SensorEntityDescription
 import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel
 import io.smartspaces.sensor.entity.model.SensedEntityModel
 import io.smartspaces.sensor.entity.model.SensorEntityModel
+import io.smartspaces.sensor.messaging.messages.SensorMessages
 import io.smartspaces.util.data.dynamic.DynamicObject
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
-import io.smartspaces.sensor.messages.SensorMessages
 
 /**
  * The standard implementation of a sensed entity sensor handler.

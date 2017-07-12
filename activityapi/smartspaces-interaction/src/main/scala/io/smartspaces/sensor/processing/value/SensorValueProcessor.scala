@@ -19,7 +19,6 @@ package io.smartspaces.sensor.processing.value
 import io.smartspaces.sensor.entity.model.SensedEntityModel
 import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.util.data.dynamic.DynamicObject
-import io.smartspaces.sensor.processing.SensorValueProcessorContext
 
 /**
  * A processor for sensor value data messages.

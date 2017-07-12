@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,19 +16,21 @@
 
 package io.smartspaces.sensor.processing.value
 
-import io.smartspaces.sensor.entity.MeasurementTypeDescription
+import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.sensor.entity.model.SimpleSensedValue
 import io.smartspaces.sensor.entity.model.SensedEntityModel
 import io.smartspaces.sensor.entity.model.SensorEntityModel
-import io.smartspaces.sensor.entity.model.SimpleSensedValue
+import io.smartspaces.sensor.entity.MeasurementTypeDescription
 import io.smartspaces.sensor.messaging.messages.SensorMessages
-import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.data.entity.CategoricalValue
+import io.smartspaces.data.entity.CategoricalValueInstance
 
 /**
- * A processor for sensor value data messages with continuous values.
+ * A processor for sensor value data messages with categorical values.
  *
  * @author Keith M. Hughes
  */
-class ContinuousValueSensorValueProcessor(val measurementType: MeasurementTypeDescription) extends SensorValueProcessor {
+class CategoricalValueSensorValueProcessor(val measurementType: MeasurementTypeDescription, val categoricalValue: CategoricalValue[CategoricalValueInstance]) extends SensorValueProcessor {
   
   override val sensorValueType = measurementType.externalId
   
@@ -36,8 +38,8 @@ class ContinuousValueSensorValueProcessor(val measurementType: MeasurementTypeDe
     sensedEntity: SensedEntityModel, processorContext: SensorValueProcessorContext,
     data: DynamicObject): Unit = {
     val value =
-      new SimpleSensedValue[Double](sensorEntity, measurementType,
-        data.getDouble(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE), timestamp)
+      new SimpleSensedValue[CategoricalValueInstance](sensorEntity, measurementType,
+        categoricalValue.fromLabel(data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)).get, timestamp)
 
     processorContext.log.info(value)
 

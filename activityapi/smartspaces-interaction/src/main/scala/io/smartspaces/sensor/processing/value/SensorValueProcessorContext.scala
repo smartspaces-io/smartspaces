@@ -14,10 +14,11 @@
  * the License.
  */
 
-package io.smartspaces.sensor.processing
+package io.smartspaces.sensor.processing.value
 
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel;
+import io.smartspaces.scope.ManagedScope
 
 /**
  * A context containing values useful for {@link SensorValueProcessor}
@@ -26,5 +27,5 @@ import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel;
  * @author Keith M. Hughes
  */
 class SensorValueProcessorContext(val completeSensedEntityModel: CompleteSensedEntityModel ,
-      val log: ExtendedLog) {
+      val managedScope: ManagedScope, val log: ExtendedLog) {
 }

@@ -16,6 +16,7 @@
 
 package io.smartspaces.sensor.processing
 
+import io.smartspaces.sensor.messaging.input.SensorInput
 import io.smartspaces.util.SmartSpacesUtilities
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
 import io.smartspaces.util.data.json.JsonMapper
@@ -23,11 +24,11 @@ import io.smartspaces.util.data.json.StandardJsonMapper
 import io.smartspaces.util.io.FileSupport
 import io.smartspaces.util.io.FileSupportImpl
 
-import scala.collection.JavaConversions._
 import java.io.File
 import java.util.List
-import java.util.Map;
-import io.smartspaces.sensor.input.SensorInput
+import java.util.Map
+
+import scala.collection.JavaConversions.asScalaBuffer
 
 /**
  * A sensor input that reads the output of

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.sensor.messages
+package io.smartspaces.sensor.messaging.messages
 
 /**
  * Useful support for sensor messaging.

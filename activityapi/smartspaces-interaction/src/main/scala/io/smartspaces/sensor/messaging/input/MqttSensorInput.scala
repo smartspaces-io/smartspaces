@@ -14,23 +14,22 @@
  * the License.
  */
 
-package io.smartspaces.sensor.input
-
-import io.smartspaces.resource.managed.ManagedResource
-import io.smartspaces.sensor.processing.SensorProcessor
+package io.smartspaces.sensor.messaging.input
 
 /**
- * An aggregator for sensor data over a given communication channel.
- * 
+ * A sensor input that uses MQTT.
+ *
  * @author Keith M. Hughes
  */
-trait SensorInput extends ManagedResource {
-
+trait MqttSensorInput extends SensorInput {
+  
   /**
-   * Set the sensor processor the input is running under.
-   * 
-   * @param sensorProcessor
-   *          the sensor processor
+   * Add in a new MQTT subscription.
+   *
+   * @param mqttSensorTopicName
+   *       the sensor topic name
+   * @param qos
+   *       the Quality of Service for the connection
    */
-  def setSensorProcessor(sensorProcessor: SensorProcessor): Unit
+  def addMqttSubscription(mqttSensorTopicName: String, qos: Int): Unit
 }

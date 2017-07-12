@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,33 +14,40 @@
  * the License.
  */
 
-package io.smartspaces.sensor.messages
+package io.smartspaces.sensor.messaging.codec
 
 import io.smartspaces.messaging.codec.IncrementalMessageEncoder
 import io.smartspaces.messaging.codec.MessageEncoder
 import io.smartspaces.messaging.dynamic.SmartSpacesMessages
-import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
+import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 
 /**
- * A message encoder from a physical space to a web representation.
- *
+ * A message encoder from a person list to a web representation.
+ * 
  * @author Keith M. Hughes
  */
-class PhysicalSpaceMessageEncoder(private val builder: DynamicObjectBuilder,
-    private val physicalSpaceEncoder: IncrementalMessageEncoder[PhysicalSpaceSensedEntityModel, DynamicObjectBuilder], private val messageType: String) extends MessageEncoder[PhysicalSpaceSensedEntityModel, DynamicObjectBuilder] {
+class PersonListMessageEncoder(private val builder: DynamicObjectBuilder, 
+    private val personEncoder: IncrementalMessageEncoder[PersonSensedEntityModel, DynamicObjectBuilder], private val messageType: String)
+    extends MessageEncoder[Iterable[PersonSensedEntityModel], DynamicObjectBuilder] {
 
   def this(messageType: String) = {
-    this(new StandardDynamicObjectBuilder(), StandardPhysicalSpaceIncrementalMessageEncoder, messageType)
+    this(new StandardDynamicObjectBuilder(), StandardPersonIncrementalMessageEncoder, messageType)
 
     builder.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE, messageType)
     builder.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_RESULT, SmartSpacesMessages.MESSAGE_ENVELOPE_VALUE_RESULT_SUCCESS)
-    builder.newObject(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA)
+    builder.newArray(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA)
   }
 
-  override def encode(model: PhysicalSpaceSensedEntityModel): DynamicObjectBuilder = {
-    physicalSpaceEncoder.encode(model, builder)
+  override def encode(value: Iterable[PersonSensedEntityModel]): DynamicObjectBuilder = {
+    value.foreach { model =>
+      builder.newObject()
+
+      personEncoder.encode(model, builder)
+
+      builder.up()
+    }
 
     builder
   }

@@ -14,11 +14,11 @@
  * the License.
  */
 
-package io.smartspaces.sensor.output
+package io.smartspaces.sensor.messaging.output
 
 import io.smartspaces.messaging.route.RouteMessagePublisher
-import io.smartspaces.sensor.messages.SensorMessages
-import io.smartspaces.sensor.messages.StandardSensorData
+import io.smartspaces.sensor.messaging.messages.SensorMessages
+import io.smartspaces.sensor.messaging.messages.StandardSensorData
 
 /**
  * A route message publisher that can send marker messages.

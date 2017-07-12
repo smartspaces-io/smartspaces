@@ -14,10 +14,11 @@
  * the License.
  */
 
-package io.smartspaces.sensor.messages
+package io.smartspaces.sensor.messaging.codec
 
 import io.smartspaces.messaging.codec.IncrementalMessageEncoder
 import io.smartspaces.sensor.entity.model.SensorEntityModel
+import io.smartspaces.sensor.messaging.messages.SensorSmartSpacesMessages
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
 
 /**

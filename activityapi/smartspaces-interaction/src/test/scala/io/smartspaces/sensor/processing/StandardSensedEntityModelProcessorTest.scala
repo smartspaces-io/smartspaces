@@ -27,6 +27,8 @@ import io.smartspaces.sensor.entity.model.SensedEntityModel
 import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.sensor.entity.model.SimpleSensedEntityModel
 import io.smartspaces.sensor.entity.model.SimpleSensorEntityModel
+import io.smartspaces.sensor.messaging.messages.SensorMessages
+import io.smartspaces.sensor.processing.value.SensorValueProcessor
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 
@@ -37,8 +39,8 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.scalatest.junit.JUnitSuite
-import io.smartspaces.sensor.messages.SensorMessages
-import io.smartspaces.sensor.processing.value.SensorValueProcessor
+import io.smartspaces.scope.ManagedScope
+import io.smartspaces.sensor.processing.value.SensorValueProcessorContext
 
 /**
  * Tests for the {@link StandardSensedEntityModelProcessor}.
@@ -47,18 +49,20 @@ import io.smartspaces.sensor.processing.value.SensorValueProcessor
  */
 class StandardSensedEntityModelProcessorTest extends JUnitSuite {
 
-  var processor: StandardSensedEntityModelProcessor = null
+  var processor: StandardSensedEntityModelProcessor = _
 
-  @Mock var completeSensedEntityModel: CompleteSensedEntityModel = null
+  @Mock var completeSensedEntityModel: CompleteSensedEntityModel = _
 
-  @Mock var log: ExtendedLog = null
+  @Mock var log: ExtendedLog = _
 
-  @Mock var handler: SensedEntitySensorHandler = null
+  @Mock var handler: SensedEntitySensorHandler = _
+  
+  @Mock var managedScope: ManagedScope = _
 
   @Before def setup(): Unit = {
     MockitoAnnotations.initMocks(this)
 
-    processor = new StandardSensedEntityModelProcessor(completeSensedEntityModel, log)
+    processor = new StandardSensedEntityModelProcessor(completeSensedEntityModel, managedScope, log)
   }
 
   /**

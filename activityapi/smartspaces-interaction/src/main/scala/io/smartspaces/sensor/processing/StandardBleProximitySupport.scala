@@ -18,6 +18,7 @@ package io.smartspaces.sensor.processing
 
 import io.smartspaces.event.trigger.SimpleHysteresisThresholdValueTriggerWithData
 import io.smartspaces.sensor.entity.model.SensorEntityModel
+import io.smartspaces.sensor.processing.value.SensorValueProcessorContext
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
 

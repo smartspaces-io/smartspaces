@@ -17,21 +17,21 @@
 package io.smartspaces.sensor.processing.value
 
 import io.smartspaces.event.trigger.SimpleHysteresisThresholdValueTriggerWithData
-import io.smartspaces.event.trigger.TriggerWithData
 import io.smartspaces.event.trigger.TriggerEventType
-import io.smartspaces.event.trigger.TriggerWithDataListener
 import io.smartspaces.event.trigger.TriggerState
-import io.smartspaces.util.data.dynamic.DynamicObject
-import io.smartspaces.sensor.entity.model.updater.SimplePersonPhysicalSpaceModelUpdater
-import io.smartspaces.sensor.entity.model.SensedEntityModel
+import io.smartspaces.event.trigger.TriggerWithData
+import io.smartspaces.event.trigger.TriggerWithDataListener
 import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
-import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
-import io.smartspaces.sensor.messages.StandardSensorData
-import scala.collection.mutable._
-import io.smartspaces.sensor.processing.value.SensorValueProcessor
-import io.smartspaces.sensor.processing.SensorValueProcessorContext
+import io.smartspaces.sensor.entity.model.SensedEntityModel
+import io.smartspaces.sensor.entity.model.SensorEntityModel
+import io.smartspaces.sensor.entity.model.updater.SimplePersonPhysicalSpaceModelUpdater
+import io.smartspaces.sensor.messaging.messages.StandardSensorData
 import io.smartspaces.sensor.processing.StandardBleProximitySupport
+import io.smartspaces.util.data.dynamic.DynamicObject
+
+import scala.collection.mutable.HashMap
+import scala.collection.mutable.Map
 
 /**
  * The standard processor for BLE proximity data.

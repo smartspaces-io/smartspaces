@@ -16,17 +16,19 @@
 
 package io.smartspaces.sensor.processing
 
-import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.scope.ManagedScope
+import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel
 import io.smartspaces.sensor.entity.model.SensedEntityModel
 import io.smartspaces.sensor.entity.model.SensorEntityModel
-import io.smartspaces.logging.ExtendedLog
-import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel
+import io.smartspaces.sensor.messaging.messages.SensorMessages
+import io.smartspaces.sensor.processing.value.SensorValueProcessor
+import io.smartspaces.sensor.processing.value.SensorValueProcessorContext
+import io.smartspaces.util.data.dynamic.DynamicObject
 
 import scala.collection.JavaConversions.iterableAsScalaIterable
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
-import io.smartspaces.sensor.messages.SensorMessages
-import io.smartspaces.sensor.processing.value.SensorValueProcessor
 
 /**
  * A sensor processor that will update sensed entity models.
@@ -34,7 +36,7 @@ import io.smartspaces.sensor.processing.value.SensorValueProcessor
  * @author Keith M. Hughes
  */
 class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: CompleteSensedEntityModel,
-  private val log: ExtendedLog)
+    private val managedScope: ManagedScope, private val log: ExtendedLog)
     extends SensedEntityModelProcessor with SensedEntitySensorListener {
 
   /**
@@ -45,14 +47,14 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
   /**
    * The context for sensor value processors.
    */
-  val processorContext = new SensorValueProcessorContext(completeSensedEntityModel, log)
+  val processorContext = new SensorValueProcessorContext(completeSensedEntityModel, managedScope, log)
 
   override def addSensorValueProcessor(processor: SensorValueProcessor): SensedEntityModelProcessor = {
-    log.formatInfo("Adding sensor processor for %s", processor.sensorValueType)
+    log.info(s"Adding sensor processor for ${processor.sensorValueType}")
 
     val previous = sensorValuesProcessors.put(processor.sensorValueType, processor)
     if (previous.isDefined) {
-      log.formatWarn("A sensor processor for %s has just been replaced", processor.sensorValueType)
+      log.warn("A sensor processor for ${processor.sensorValueType} has just been replaced")
     }
 
     this
@@ -96,12 +98,12 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
           sensorValueProcessor.get.processData(measurementTimestamp, sensor, sensedEntity, processorContext,
             data);
         } else {
-          log.formatWarn("Got unknown sensed type with no apparent processor %s", sensedMeasurementType)
+          log.warn(s"Got unknown sensed type with no apparent processor ${sensedMeasurementType}")
         }
 
       })
     } else {
-      log.formatWarn("Got sensor with no sensor detail %s", sensor.sensorEntityDescription)
+      log.warn("Got sensor with no sensor detail ${sensor.sensorEntityDescription}")
     }
   }
   

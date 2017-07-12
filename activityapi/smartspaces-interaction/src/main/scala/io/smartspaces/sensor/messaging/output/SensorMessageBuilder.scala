@@ -14,10 +14,10 @@
  * the License.
  */
 
-package io.smartspaces.sensor.output
+package io.smartspaces.sensor.messaging.output
 
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
-import io.smartspaces.sensor.messages.SensorMessages
+import io.smartspaces.sensor.messaging.messages.SensorMessages
 
 import java.util.Map
 

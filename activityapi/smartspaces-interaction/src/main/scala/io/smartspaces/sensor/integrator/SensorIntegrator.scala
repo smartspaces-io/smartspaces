@@ -19,9 +19,9 @@ package io.smartspaces.sensor.integrator
 import io.smartspaces.resource.managed.ManagedResource
 import io.smartspaces.sensor.entity.SensorDescriptionImporter
 import io.smartspaces.sensor.entity.model.query.SensedEntityModelQueryProcessor
+import io.smartspaces.sensor.messaging.input.MqttSensorInput
+import io.smartspaces.sensor.messaging.input.SensorInput
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
-import io.smartspaces.sensor.input.MqttSensorInput
-import io.smartspaces.sensor.input.SensorInput
 
 /**
  * The sensor integration layer.

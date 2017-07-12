@@ -16,10 +16,13 @@
 
 package io.smartspaces.sensor.integrator
 
+import io.smartspaces.data.entity.StandardValueRegistry
+import io.smartspaces.data.entity.ValueRegistry
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.resource.managed.IdempotentManagedResource
 import io.smartspaces.scope.ManagedScope
 import io.smartspaces.sensor.entity.InMemorySensorRegistry
+import io.smartspaces.sensor.entity.MeasurementTypeDescription
 import io.smartspaces.sensor.entity.SensorDescriptionImporter
 import io.smartspaces.sensor.entity.SensorRegistry
 import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel
@@ -28,9 +31,9 @@ import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.sensor.entity.model.StandardCompleteSensedEntityModel
 import io.smartspaces.sensor.entity.model.query.SensedEntityModelQueryProcessor
 import io.smartspaces.sensor.entity.model.query.StandardSensedEntityModelQueryProcessor
-import io.smartspaces.sensor.input.MqttSensorInput
-import io.smartspaces.sensor.input.SensorInput
-import io.smartspaces.sensor.input.StandardMqttSensorInput
+import io.smartspaces.sensor.messaging.input.MqttSensorInput
+import io.smartspaces.sensor.messaging.input.SensorInput
+import io.smartspaces.sensor.messaging.input.StandardMqttSensorInput
 import io.smartspaces.sensor.processing.SensedEntitySensorHandler
 import io.smartspaces.sensor.processing.SensedEntitySensorListener
 import io.smartspaces.sensor.processing.SensorProcessor
@@ -64,22 +67,22 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
   /**
    * The sensor registry for the integrator.
    */
-  private var sensorRegistry: SensorRegistry = null
+  private var sensorRegistry: SensorRegistry = _
 
   /**
    * The complete set of models of sensors and sensed entities.
    */
-  private var completeSensedEntityModel: CompleteSensedEntityModel = null
+  private var completeSensedEntityModel: CompleteSensedEntityModel = _
 
   /**
    * The processor for queries against the models.
    */
-  private var _queryProcessor: SensedEntityModelQueryProcessor = null
+  private var _queryProcessor: SensedEntityModelQueryProcessor = _
 
   /**
    * The description importer
    */
-  var descriptionImporter: SensorDescriptionImporter = null
+  var descriptionImporter: SensorDescriptionImporter = _
 
   /**
    * The collection of event emitters.
@@ -99,7 +102,9 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
   /**
    * The sensor processor for the integrator
    */
-  private var sensorProcessor: SensorProcessor = null
+  private var sensorProcessor: SensorProcessor = _
+  
+  private val valueRegistry: ValueRegistry = StandardValueRegistry
 
   /**
    * Get the query processor.
@@ -119,7 +124,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
 
     _queryProcessor = new StandardSensedEntityModelQueryProcessor(completeSensedEntityModel, unknownMarkerHandler, unknownSensedEntityHandler)
 
-    sensorProcessor = new StandardSensorProcessor(log)
+    sensorProcessor = new StandardSensorProcessor(managedScope, log)
 
     val sampleFile = new File("/var/tmp/sensordata.json")
     val liveData = true
@@ -155,12 +160,19 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
     })
 
     val modelProcessor =
-      new StandardSensedEntityModelProcessor(completeSensedEntityModel, log)
+      new StandardSensedEntityModelProcessor(completeSensedEntityModel, managedScope, log)
     modelProcessor.addSensorValueProcessor(new StandardBleProximitySensorValueProcessor())
     modelProcessor.addSensorValueProcessor(new SimpleMarkerSensorValueProcessor(unknownMarkerHandler))
-    sensorRegistry.getAllMeasurementTypes().filter(_.valueType == "double").foreach {
+    sensorRegistry.getAllMeasurementTypes.filter(_.valueType == MeasurementTypeDescription.VALUE_TYPE_DOUBLE).foreach {
       measurementType =>
         modelProcessor.addSensorValueProcessor(new ContinuousValueSensorValueProcessor(measurementType))
+    }
+    sensorRegistry.getAllMeasurementTypes.filter(_.valueType.startsWith(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE)).foreach {
+      measurementType => {
+        val categoricalVariable = valueRegistry.getCategoricalValue(
+            measurementType.valueType.substring(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE.length()))
+        modelProcessor.addSensorValueProcessor(new ContinuousValueSensorValueProcessor(measurementType))
+      }
     }
 
     sensorHandler.addSensedEntitySensorListener(modelProcessor)

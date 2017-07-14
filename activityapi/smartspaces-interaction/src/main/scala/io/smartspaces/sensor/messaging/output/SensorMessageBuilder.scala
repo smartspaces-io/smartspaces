@@ -98,6 +98,31 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
   }
 
   /**
+   * Add in data for a channel.
+   *
+   * @param channelName
+   *       the name of the channel
+   * @param channelType
+   *       the type of the channel data
+   * @param value
+   *       the value of the channel data
+   * @param timestamp
+   *       a potential timestamp for the field
+   *
+   * @return this builder
+   */
+  def addChannelData(channelName: String, channelType: String, value: Double): StandardSensorMessageBuilder = {
+    messageBuilder.newObject(channelName)
+
+    messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, channelType)
+    messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE, value)
+    
+    messageBuilder.up
+
+    this
+  }
+
+  /**
    * Turn the message into a map.
    *
    * @return the map for the massage

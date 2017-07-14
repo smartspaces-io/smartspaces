@@ -56,6 +56,9 @@ import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 
 import java.io.File
+import io.smartspaces.sensor.value.entity.ContactCategoricalValue
+import io.smartspaces.sensor.value.entity.PresenceCategoricalValue
+import io.smartspaces.sensor.value.entity.ActiveCategoricalValue
 
 /**
  * The sensor integration layer.
@@ -104,7 +107,11 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
    */
   private var sensorProcessor: SensorProcessor = _
   
-  private val valueRegistry: ValueRegistry = StandardValueRegistry
+  /**
+   * The value registry with a collection of base values.
+   */
+  private val valueRegistry: ValueRegistry = StandardValueRegistry.registerCategoricalValues(
+      ContactCategoricalValue, PresenceCategoricalValue, ActiveCategoricalValue)
 
   /**
    * Get the query processor.
@@ -213,7 +220,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
   }
 
   override def addMqttSensorInput(mqttBrokerDecription: MqttBrokerDescription, clientId: String): MqttSensorInput = {
-    log.formatInfo("MQTT Broker URL %s", mqttBrokerDecription.brokerAddress)
+    log.info(s"MQTT Broker URL ${mqttBrokerDecription.brokerAddress}")
     var mqttSensorInput = new StandardMqttSensorInput(mqttBrokerDecription,
       clientId, spaceEnvironment, log)
     sensorProcessor.addSensorInput(mqttSensorInput)

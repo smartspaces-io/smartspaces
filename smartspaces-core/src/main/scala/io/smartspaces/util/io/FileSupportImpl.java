@@ -44,6 +44,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -751,5 +752,14 @@ public class FileSupportImpl implements FileSupport {
           resourceUri.toString());
     }
 
+  }
+
+  @Override
+  public void loadPropertiesFile(Properties properties, String filePath) {
+    try (FileInputStream fis = new FileInputStream(filePath)) {
+      properties.load(fis);
+    } catch (Throwable e) {
+      throw new SmartSpacesException("Could not load properties file from " + filePath, e);
+    }
   }
 }

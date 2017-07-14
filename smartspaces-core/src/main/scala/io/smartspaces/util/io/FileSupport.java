@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.List;
+import java.util.Properties;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -754,7 +755,8 @@ public interface FileSupport {
   List<File> collectFiles(File baseDir, FileFilter filter, boolean recurse);
 
   /**
-   * Collect the relative file paths that pass the file filter. The paths will be relative to the .base directory
+   * Collect the relative file paths that pass the file filter. The paths will
+   * be relative to the .base directory
    *
    * @param baseDir
    *          the base directory to start in
@@ -809,4 +811,14 @@ public interface FileSupport {
    * @return the filename for the URI
    */
   String getResourceName(URI uri);
+
+  /**
+   * Load the contents of the file at the file path into the properties.
+   * 
+   * @param properties
+   *          the properties to load into
+   * @param filePath
+   *          the file path of the file
+   */
+  void loadPropertiesFile(Properties properties, String filePath);
 }

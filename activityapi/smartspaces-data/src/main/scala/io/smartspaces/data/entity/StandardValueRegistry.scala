@@ -18,28 +18,38 @@ package io.smartspaces.data.entity
 
 /**
  * The standard implementation of a value registry.
- * 
+ *
  * @author Keith M. Hughes
  */
 object StandardValueRegistry extends ValueRegistry {
-  
+
   /**
    * The mapping of names to the categorical variable for that name.
    */
   private var categoricalValues: Map[String, CategoricalValue[CategoricalValueInstance]] = Map()
-  
+
   override def registerCategoricalValue(value: CategoricalValue[CategoricalValueInstance]): ValueRegistry = {
-    
+
     synchronized {
       categoricalValues = categoricalValues + (value.name -> value)
     }
-    
+
     this
   }
-  
+
+  override def registerCategoricalValues(values: CategoricalValue[CategoricalValueInstance]*): ValueRegistry = {
+
+    synchronized {
+      values.foreach(value =>
+        categoricalValues = categoricalValues + (value.name -> value))
+    }
+
+    this
+  }
+
   /**
    * Get a categorical value by name.
-   * 
+   *
    * @param name
    *       the name of the categorical value
    */

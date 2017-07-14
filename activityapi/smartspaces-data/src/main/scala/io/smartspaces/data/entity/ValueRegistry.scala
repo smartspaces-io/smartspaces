@@ -26,6 +26,16 @@ trait ValueRegistry {
   /**
    * Register a categorical value with the registry.
    * 
+   * @param values
+   *       the values to add
+   * 
+   * @return this registry
+   */
+  def registerCategoricalValues(value: CategoricalValue[CategoricalValueInstance]*): ValueRegistry
+  
+  /**
+   * Register a categorical value with the registry.
+   * 
    * @param value
    *       the value to add
    * 

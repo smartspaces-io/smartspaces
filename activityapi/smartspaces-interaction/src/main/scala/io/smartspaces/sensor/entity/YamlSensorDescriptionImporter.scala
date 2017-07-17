@@ -141,7 +141,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
    * The section header for the physical space section of the file.
    */
   val SECTION_HEADER_PHYSICAL_SPACES = "physicalSpaces"
-  
+
   /**
    * The physical space details section field for the channels for the physical space type.
    */
@@ -238,7 +238,8 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
         measurementTypeData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION), valueType,
         null)
 
-      if (!"id".equals(valueType)) {
+      if (!MeasurementTypeDescription.VALUE_TYPE_ID.equals(valueType) && 
+          !valueType.startsWith(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE)) {
         val defaultUnitId =
           measurementTypeData.getRequiredString(SECTION_FIELD_MEASUREMENT_TYPES_DEFAULT_UNIT)
 
@@ -469,7 +470,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
       sensorRegistry.registerSensedEntity(new SimplePhysicalSpaceSensedEntityDescription(getNextId(),
         itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_NAME),
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION), 
+        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
         getOptionalString(itemData, SECTION_FIELD_PHYSICAL_SPACE_DETAILS_PHYSICAL_SPACE_TYPE)))
     })
 
@@ -551,7 +552,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
     id = id + 1
     return Integer.toString(id)
   }
-  
+
   private def getOptionalString(itemData: DynamicObject, fieldName: String): Option[String] = {
     Option(itemData.getString(fieldName))
   }

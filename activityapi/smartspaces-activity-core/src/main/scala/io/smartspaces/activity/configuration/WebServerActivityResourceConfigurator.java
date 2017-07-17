@@ -51,6 +51,8 @@ public class WebServerActivityResourceConfigurator
 
   /**
    * Configuration property suffix giving location of the webapp content.
+   * 
+   * <p>
    * Relative paths give relative to app install directory.
    */
   public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_CONTENT_LOCATION =
@@ -60,6 +62,16 @@ public class WebServerActivityResourceConfigurator
    * The default value for the webapp content location.
    */
   public static final String CONFIGURATION_VALUE_DEFAULT_WEBAPP_CONTENT_LOCATION = "webapp";
+
+  /**
+   * Configuration property suffix giving location of the webapp content to
+   * display if a URL doesn't resolve to an existing file.
+   * 
+   * <p>
+   * Relative paths give relative to app install directory.
+   */
+  public static final String CONFIGURATION_NAME_SUFFIX_WEBAPP_CONTENT_FALLBACK_LOCATION =
+      ".content.fallback.location";
 
   /**
    * Configuration property suffix for enabling cross origin content.
@@ -243,10 +255,13 @@ public class WebServerActivityResourceConfigurator
         .resolveFile(activity.getActivityFilesystem().getInstallDirectory(), contentLocation);
 
     if (fileSupport.isDirectory(webContentBaseDir)) {
+      String contentFallbackLocation = configuration.getPropertyString(
+          configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_CONTENT_FALLBACK_LOCATION);
+      
       activity.getLog().formatInfo(
-          "Adding static content directory for base webapp to webserver: %s",
-          webContentBaseDir.getAbsolutePath());
-      webServer.addStaticContentHandler(webContentPath, webContentBaseDir);
+          "Adding static content directory for base webapp to webserver: %s with fallback content %s",
+          webContentBaseDir.getAbsolutePath(), contentFallbackLocation);
+      webServer.addStaticContentHandler(webContentPath, webContentBaseDir, null, contentFallbackLocation, null);
       System.out.println(webContentBaseDir);
     } else if (fileSupport.isFile(webContentBaseDir)) {
       activity.getLog().formatWarn(

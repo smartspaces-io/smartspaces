@@ -348,6 +348,20 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   }
 
   @Override
+  public boolean isObject(String propertyName) {
+    Object position = getObjectProperty(propertyName);
+    
+    return position instanceof Map;
+  }
+
+  @Override
+  public boolean isObject(int index) {
+    Object position = getArrayIndex(index);
+    
+    return position instanceof Map;
+  }
+
+  @Override
   public Map<String, Object> asMap() throws DynamicObjectSmartSpacesException {
     if (currentType == DynamicObjectType.OBJECT) {
       return Collections.unmodifiableMap(currentObject);
@@ -359,6 +373,20 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   @Override
   public boolean isArray() {
     return currentType == DynamicObjectType.ARRAY;
+  }
+
+  @Override
+  public boolean isArray(String propertyName) {
+    Object position = getObjectProperty(propertyName);
+    
+    return position instanceof List;
+  }
+
+  @Override
+  public boolean isArray(int index) {
+    Object position = getArrayIndex(index);
+    
+    return position instanceof List;
   }
 
   @SuppressWarnings("unchecked")

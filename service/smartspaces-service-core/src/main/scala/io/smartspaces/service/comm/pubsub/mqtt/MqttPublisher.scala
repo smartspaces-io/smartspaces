@@ -52,4 +52,11 @@ trait MqttPublisher extends MessageWriter[Array[Byte]] {
    *          [[code true]] if the message should be retained
    */
   def writeMessage(message: Array[Byte], retain: Boolean): Unit
+  
+  /**
+   * Is the publisher connected?
+   * 
+   * @return {@code true} if connected
+   */
+  def isConnected(): Boolean
 }

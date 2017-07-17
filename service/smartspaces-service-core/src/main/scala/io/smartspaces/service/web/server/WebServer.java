@@ -87,12 +87,16 @@ public interface WebServer extends ManagedResource {
    * @param extraHttpContentHeaders
    *          extra content headers to add to every response, can be
    *          {@code null}
+   * @param fallbackFilePath
+   *          file path relative to the base directory to use if a file is not
+   *          found, can be {@code null}
    * @param fallbackHandler
    *          dynamic content handler to use if requested file is missing, can
    *          be {@code null}
    */
   void addStaticContentHandler(String uriPrefix, File baseDir,
-      Map<String, String> extraHttpContentHeaders, HttpDynamicRequestHandler fallbackHandler);
+      Map<String, String> extraHttpContentHeaders, String fallbackFilePath,
+      HttpDynamicRequestHandler fallbackHandler);
 
   /**
    * Add in a new dynamic content handler to the server.
@@ -109,8 +113,8 @@ public interface WebServer extends ManagedResource {
    * @param handler
    *          dynamic request handler
    */
-      void
-      addDynamicContentHandler(String uriPrefix, boolean usePath, HttpDynamicRequestHandler handler);
+  void addDynamicContentHandler(String uriPrefix, boolean usePath,
+      HttpDynamicRequestHandler handler);
 
   /**
    * Add in a new dynamic content handler to the server.

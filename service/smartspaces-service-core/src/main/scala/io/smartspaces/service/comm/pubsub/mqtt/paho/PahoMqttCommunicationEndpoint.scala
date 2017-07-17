@@ -345,5 +345,9 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
     override def writeMessage(message: Array[Byte], retain: Boolean): Unit = {
       mqttClient.publish(mqttTopicName, message, qos, retain)
     }
+    
+    override def isConnected(): Boolean = {
+      mqttClient.isConnected()
+    }
   }
 }

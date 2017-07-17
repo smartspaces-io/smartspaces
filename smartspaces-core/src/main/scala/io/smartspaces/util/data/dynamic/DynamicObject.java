@@ -376,6 +376,32 @@ public interface DynamicObject {
   boolean isObject();
 
   /**
+   * Is the value with the given property name an object?
+   * 
+   * @param propertyName
+   *          the property name to examine
+   * 
+   * @return {@code true} if the object with the given property name an object
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           the current level is not an object
+   */
+  boolean isObject(String propertyName);
+
+  /**
+   * Is the value with the given position an object?
+   * 
+   * @param index
+   *          the position in the array
+   * 
+   * @return {@code true} if the object with the given property name an object
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           the current level is not an array
+   */
+  boolean isObject(int index);
+
+  /**
    * If the current level is a object, get that object as a map.
    *
    * <p>
@@ -395,6 +421,32 @@ public interface DynamicObject {
    * @return {@code true} if the current level is an array
    */
   boolean isArray();
+
+  /**
+   * Is the value with the given property name an array?
+   * 
+   * @param propertyName
+   *          the property name to examine
+   * 
+   * @return {@code true} if the object with the given property name an object
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           the current level is not an object
+   */
+  boolean isArray(String propertyName);
+
+  /**
+   * Is the value with the given position an array?
+   * 
+   * @param index
+   *          the position in the array
+   * 
+   * @return {@code true} if the object with the given property name an object
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           the current level is not an array
+   */
+  boolean isArray(int index);
 
   /**
    * If the current level is an array, get that array.

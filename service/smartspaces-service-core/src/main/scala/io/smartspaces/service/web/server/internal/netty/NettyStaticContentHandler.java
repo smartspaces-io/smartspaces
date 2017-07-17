@@ -64,8 +64,8 @@ import java.util.regex.Pattern;
  *
  * @author Keith M. Hughes
  */
-public class NettyStaticContentHandler implements NettyHttpGetRequestHandler,
-    HttpStaticContentRequestHandler {
+public class NettyStaticContentHandler
+    implements NettyHttpGetRequestHandler, HttpStaticContentRequestHandler {
 
   /**
    * The first portion of a content range header.
@@ -99,11 +99,6 @@ public class NettyStaticContentHandler implements NettyHttpGetRequestHandler,
   private NettyWebServerHandler parentHandler;
 
   /**
-   * Fallback handler to use in case of missing target.
-   */
-  private NettyHttpDynamicGetRequestHandlerHandler fallbackHandler;
-
-  /**
    * The URI prefix to be handled by this handler.
    */
   private String uriPrefix;
@@ -112,6 +107,17 @@ public class NettyStaticContentHandler implements NettyHttpGetRequestHandler,
    * Base directory for content served by this handler.
    */
   private File baseDir;
+
+  /**
+   * Fallback handler to use in case of missing target.
+   */
+  private NettyHttpDynamicGetRequestHandlerHandler fallbackHandler;
+
+  /**
+   * The path of a file to fall back to in the current folder if the file sought
+   * can't be found.
+   */
+  private String fallbackFilePath;
 
   /**
    * Extra headers to add to the response.
@@ -152,9 +158,10 @@ public class NettyStaticContentHandler implements NettyHttpGetRequestHandler,
    *          fallback handler to use, can be {@code null}
    */
   public NettyStaticContentHandler(NettyWebServerHandler parentHandler, String uriPrefix,
-      File baseDir, Map<String, String> extraHttpContentHeaders,
+      File baseDir, Map<String, String> extraHttpContentHeaders, String fallbackFilePath,
       NettyHttpDynamicGetRequestHandlerHandler fallbackHandler) {
     this.parentHandler = parentHandler;
+    this.fallbackFilePath = fallbackFilePath;
     this.fallbackHandler = fallbackHandler;
 
     if (extraHttpContentHeaders != null) {
@@ -208,39 +215,41 @@ public class NettyStaticContentHandler implements NettyHttpGetRequestHandler,
     }
 
     int luriPrefixLength = uriPrefix.length();
-    String filepath =
-        URLDecoder.decode(url.substring(url.indexOf(uriPrefix) + luriPrefixLength),
-            StandardCharsets.UTF_8.name());
+    String filepath = URLDecoder.decode(url.substring(url.indexOf(uriPrefix) + luriPrefixLength),
+        StandardCharsets.UTF_8.name());
 
-    File file = new File(baseDir, filepath);
+    File file = fileSupport.newFile(baseDir, filepath);
 
     // Refuse to process if the path wanders outside of the base directory.
     if (!allowLinks && !fileSupport.isParent(baseDir, file)) {
       HttpResponseStatus status = HttpResponseStatus.FORBIDDEN;
-      parentHandler
-          .getWebServer()
-          .getLog()
-          .warn(
-              String.format("HTTP [%s] %s --> (Path attempts to leave base directory)",
-                  status.getCode(), originalUrl));
+      parentHandler.getWebServer().getLog().formatWarn(
+          "HTTP [%s] %s --> (Path attempts to leave base directory)", status.getCode(),
+          originalUrl);
       parentHandler.sendError(ctx, status);
       return;
+    }
+
+    if (!fileSupport.exists(file)) {
+      if (fallbackFilePath != null) {
+        File fallbackFile = fileSupport.newFile(baseDir, fallbackFilePath);
+        if (fileSupport.exists(fallbackFile)) {
+          file = fallbackFile;
+        } else {
+          handleNonFileFallback(ctx, request, cookiesToAdd, originalUrl);
+          return;
+        }
+      } else {
+        handleNonFileFallback(ctx, request, cookiesToAdd, originalUrl);
+        return;
+      }
     }
 
     RandomAccessFile raf;
     try {
       raf = new RandomAccessFile(file, "r");
     } catch (FileNotFoundException fnfe) {
-      if (fallbackHandler != null) {
-        fallbackHandler.handleWebRequest(ctx, request, cookiesToAdd);
-      } else {
-        HttpResponseStatus status = HttpResponseStatus.NOT_FOUND;
-        parentHandler
-            .getWebServer()
-            .getLog()
-            .warn(String.format("HTTP [%s] %s --> (File Not Found)", status.getCode(), originalUrl));
-        parentHandler.sendError(ctx, status);
-      }
+      handleNonFileFallback(ctx, request, cookiesToAdd, originalUrl);
       return;
     }
     long fileLength = raf.length();
@@ -268,11 +277,8 @@ public class NettyStaticContentHandler implements NettyHttpGetRequestHandler,
     } catch (Exception e) {
       try {
         HttpResponseStatus status = HttpResponseStatus.REQUESTED_RANGE_NOT_SATISFIABLE;
-        parentHandler
-            .getWebServer()
-            .getLog()
-            .error(
-                String.format("[%s] HTTP %s --> %s", status.getCode(), originalUrl, e.getMessage()));
+        parentHandler.getWebServer().getLog().formatError("[%s] HTTP %s --> %s", status.getCode(),
+            originalUrl, e.getMessage());
         response.setStatus(status);
         parentHandler.sendError(ctx, status);
       } finally {
@@ -290,9 +296,9 @@ public class NettyStaticContentHandler implements NettyHttpGetRequestHandler,
       setContentLength(response, fileLength);
     } else {
       setContentLength(response, rangeRequest.getRangeLength());
-      addHeader(response, HttpHeaders.Names.CONTENT_RANGE, CONTENT_RANGE_PREFIX
-          + rangeRequest.begin + CONTENT_RANGE_RANGE_SEPARATOR + rangeRequest.end
-          + CONTENT_RANGE_RANGE_SIZE_SEPARATOR + fileLength);
+      addHeader(response, HttpHeaders.Names.CONTENT_RANGE,
+          CONTENT_RANGE_PREFIX + rangeRequest.begin + CONTENT_RANGE_RANGE_SEPARATOR
+              + rangeRequest.end + CONTENT_RANGE_RANGE_SIZE_SEPARATOR + fileLength);
       status = HttpResponseStatus.PARTIAL_CONTENT;
       response.setStatus(status);
     }
@@ -302,7 +308,8 @@ public class NettyStaticContentHandler implements NettyHttpGetRequestHandler,
     // Write the initial line and the header.
     ChannelFuture writeFuture = ch.write(response);
 
-    // Write the content if there have been no errors and we are a GET request.
+    // Write the content if there have been no errors and we are a GET
+    // request.
     if (HttpMethod.GET == request.getMethod()) {
       if (ch.getPipeline().get(SslHandler.class) != null) {
         // Cannot use zero-copy with HTTPS.
@@ -334,8 +341,20 @@ public class NettyStaticContentHandler implements NettyHttpGetRequestHandler,
       writeFuture.addListener(ChannelFutureListener.CLOSE);
     }
 
-    parentHandler.getWebServer().getLog()
-        .trace(String.format("[%s] HTTP %s --> %s", status.getCode(), originalUrl, file.getPath()));
+    parentHandler.getWebServer().getLog().formatTrace("[%s] HTTP %s --> %s", status.getCode(),
+        originalUrl, file.getPath());
+  }
+
+  private void handleNonFileFallback(ChannelHandlerContext ctx, HttpRequest request,
+      Set<HttpCookie> cookiesToAdd, String originalUrl) throws IOException {
+    if (fallbackHandler != null) {
+      fallbackHandler.handleWebRequest(ctx, request, cookiesToAdd);
+    } else {
+      HttpResponseStatus status = HttpResponseStatus.NOT_FOUND;
+      parentHandler.getWebServer().getLog().formatWarn("HTTP [%s] %s --> (File Not Found)",
+          status.getCode(), originalUrl);
+      parentHandler.sendError(ctx, status);
+    }
   }
 
   /**
@@ -374,8 +393,8 @@ public class NettyStaticContentHandler implements NettyHttpGetRequestHandler,
 
     Matcher m = RANGE_HEADER_REGEX.matcher(rangeHeader);
     if (!m.matches()) {
-      throw new SimpleSmartSpacesException(String.format(
-          "Unsupported HTTP range header, illegal syntax: %s", rangeHeader));
+      throw new SimpleSmartSpacesException(
+          String.format("Unsupported HTTP range header, illegal syntax: %s", rangeHeader));
     }
 
     RangeRequest range = new RangeRequest();

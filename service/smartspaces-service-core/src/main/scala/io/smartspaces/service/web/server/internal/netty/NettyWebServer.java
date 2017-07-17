@@ -278,12 +278,12 @@ public class NettyWebServer implements WebServer {
   @Override
   public void addStaticContentHandler(String uriPrefix, File baseDir,
       Map<String, String> extraHttpContentHeaders) {
-    addStaticContentHandler(uriPrefix, baseDir, extraHttpContentHeaders, null);
+    addStaticContentHandler(uriPrefix, baseDir, extraHttpContentHeaders, null, null);
   }
 
   @Override
   public void addStaticContentHandler(String uriPrefix, File baseDir,
-      Map<String, String> extraHttpContentHeaders, HttpDynamicRequestHandler fallbackHandler) {
+      Map<String, String> extraHttpContentHeaders, String fallbackFilePath, HttpDynamicRequestHandler fallbackHandler) {
     if (!baseDir.exists()) {
       throw new SmartSpacesException(String.format("Cannot find web folder %s",
           baseDir.getAbsolutePath()));
@@ -295,7 +295,7 @@ public class NettyWebServer implements WebServer {
 
     NettyStaticContentHandler staticContentHandler =
         new NettyStaticContentHandler(serverHandler, uriPrefix, baseDir, extraHttpContentHeaders,
-            fallbackNettyHandler);
+            fallbackFilePath, fallbackNettyHandler);
     staticContentHandler.setAllowLinks(isDebugMode());
     if (isDebugMode()) {
       getLog().warn("Enabling web-server link following because of debug mode -- not secure.");

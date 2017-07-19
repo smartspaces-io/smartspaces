@@ -208,9 +208,9 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
       registerOsgiServices();
 
       spaceEnvironment.getLog()
-          .info(String.format("Base system startup. Smart Spaces Version %s",
+          .formatInfo("Base system startup. Smart Spaces Version %s",
               spaceEnvironment.getSystemConfiguration().getPropertyString(
-                  SmartSpacesEnvironment.CONFIGURATION_NAME_SMARTSPACES_VERSION)));
+                  SmartSpacesEnvironment.CONFIGURATION_NAME_SMARTSPACES_VERSION));
     } catch (Exception e) {
       spaceEnvironment.getLog().error("Could not start up smartspaces system", e);
     }

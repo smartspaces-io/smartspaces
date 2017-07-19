@@ -28,6 +28,9 @@ import io.smartspaces.resource.managed.ManagedResources;
 import io.smartspaces.resource.managed.StandardManagedResources;
 import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.scope.StandardManagedScope;
+import io.smartspaces.service.Service;
+import io.smartspaces.service.ServiceRegistry;
+import io.smartspaces.service.SupportedService;
 import io.smartspaces.system.BasicSmartSpacesFilesystem;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.core.configuration.ConfigurationProvider;
@@ -77,7 +80,7 @@ public class GeneralSmartSpacesSupportActivator
    * The service tracker collection.
    */
   private OsgiServiceTrackerCollection serviceTrackerCollection;
-  
+
   /**
    * The container log.
    */
@@ -130,9 +133,14 @@ public class GeneralSmartSpacesSupportActivator
   private ManagedResources managedResources;
 
   /**
-   * All service registrations put into place.
+   * All OSGi service registrations put into place.
    */
-  private final List<ServiceRegistration<?>> serviceRegistrations = new ArrayList<>();
+  private final List<ServiceRegistration<?>> osgiServiceRegistrations = new ArrayList<>();
+
+  /**
+   * All Smart Spaces services registered by this bundle.
+   */
+  private final List<Service> registeredSmartSpacesServices = new ArrayList<>();
 
   /**
    * Host address to use if address lookup fails.
@@ -164,12 +172,10 @@ public class GeneralSmartSpacesSupportActivator
   public void stop(BundleContext context) throws Exception {
     serviceTrackerCollection.stopTracking();
 
-    containerManagedScope.shutdown();
+    unregisterOsgiServices();
+    unregisterSmartSpacesServices();
 
-    // Remove all OSGi service registrations.
-    for (ServiceRegistration<?> registration : serviceRegistrations) {
-      registration.unregister();
-    }
+    containerManagedScope.shutdown();
   }
 
   /**
@@ -178,6 +184,31 @@ public class GeneralSmartSpacesSupportActivator
    */
   public void onStart() {
     // Default is to do nothing
+  }
+
+  /**
+   * Unregister all OSGi-registered services.
+   */
+  private void unregisterOsgiServices() {
+    for (ServiceRegistration<?> service : osgiServiceRegistrations) {
+      service.unregister();
+    }
+    osgiServiceRegistrations.clear();
+  }
+
+  /**
+   * Unregister and shutdown all services registered with smart spaces.
+   */
+  private void unregisterSmartSpacesServices() {
+    ServiceRegistry serviceRegistry = spaceEnvironment.getServiceRegistry();
+    for (Service service : registeredSmartSpacesServices) {
+      try {
+        serviceRegistry.shutdownAndUnregisterService(service);
+      } catch (Throwable e) {
+        containerLog.error("Could not shut service down", e);
+      }
+    }
+    registeredSmartSpacesServices.clear();
   }
 
   /**
@@ -216,17 +247,16 @@ public class GeneralSmartSpacesSupportActivator
 
       managedResources = new StandardManagedResources(containerLog);
 
-      ManagedTasks managedTasks =
-          new StandardManagedTasks(executorService, containerLog);
+      ManagedTasks managedTasks = new StandardManagedTasks(executorService, containerLog);
 
       containerManagedScope = new StandardManagedScope(managedResources, managedTasks);
       containerManagedScope.startup();
 
       setupSpaceEnvironment(baseInstallDir);
 
-      createAdditionalResources();
+      registerOsgiFrameworkServices();
 
-      registerOsgiServices();
+      createAdditionalResources();
     } catch (Exception e) {
       containerLog.error("Could not start up smartspaces system", e);
     }
@@ -267,8 +297,8 @@ public class GeneralSmartSpacesSupportActivator
   /**
    * Register all services which need to be made available to others.
    */
-  private void registerOsgiServices() {
-    registerOsgiService(SmartSpacesEnvironment.class.getName(), spaceEnvironment);
+  private void registerOsgiFrameworkServices() {
+    registerOsgiFrameworkService(SmartSpacesEnvironment.class.getName(), spaceEnvironment);
   }
 
   /**
@@ -279,9 +309,30 @@ public class GeneralSmartSpacesSupportActivator
    * @param service
    *          the service object
    */
-  protected void registerOsgiService(String name, Object service) {
-    serviceRegistrations.add(bundleContext.registerService(name, service, null));
+  protected void registerOsgiFrameworkService(String name, Object service) {
+    osgiServiceRegistrations.add(bundleContext.registerService(name, service, null));
   }
+
+  /**
+   * Register a new service with Smart Spaces.
+   * 
+   * <p>
+   * The service will be injected with the space environment and then will be
+   * started if a {@link SupportedService}.
+   *
+   * @param service
+   *          the service to be registered
+   */
+  public void registerNewSmartSpacesService(Service service) {
+    try {
+      spaceEnvironment.getServiceRegistry().startupAndRegisterService(service);
+
+      registeredSmartSpacesServices.add(service);
+    } catch (Exception e) {
+      containerLog.formatError(e, "Error while starting up service %s", service.getName());
+    }
+  }
+
 
   /**
    * Set up the {@link SmartSpacesEnvironment} everyone should use.
@@ -374,7 +425,8 @@ public class GeneralSmartSpacesSupportActivator
     // Configuration systemConfiguration =
     // systemConfigurationStorageManager.getSystemConfiguration();
     //
-    Configuration systemConfiguration = new SimpleConfiguration(expressionEvaluatorFactory.newEvaluator());
+    Configuration systemConfiguration =
+        new SimpleConfiguration(expressionEvaluatorFactory.newEvaluator());
     systemConfiguration.setProperties(containerProperties);
     //
     // systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_NAME_SMARTSPACES_VERSION,
@@ -382,7 +434,8 @@ public class GeneralSmartSpacesSupportActivator
     //
     // String hostAddress = getHostAddress(systemConfiguration);
     // if (hostAddress != null) {
-    // log.info(String.format("Using container host address %s", hostAddress));
+    // log.info(String.format("Using container host address %s",
+    // hostAddress));
     // systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_ADDRESS,
     // hostAddress);
     // } else {
@@ -422,7 +475,7 @@ public class GeneralSmartSpacesSupportActivator
       String hostInterface = systemConfiguration
           .getPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_INTERFACE);
       if (hostInterface != null) {
-        spaceEnvironment.getLog().formatInfo("Using network interface with name %s", hostInterface);
+        containerLog.formatInfo("Using network interface with name %s", hostInterface);
         NetworkInterface networkInterface = NetworkInterface.getByName(hostInterface);
         if (networkInterface != null) {
           for (InetAddress inetAddress : Collections.list(networkInterface.getInetAddresses())) {
@@ -431,7 +484,7 @@ public class GeneralSmartSpacesSupportActivator
             }
           }
         } else {
-          spaceEnvironment.getLog().formatWarn(
+          containerLog.formatWarn(
               "No network interface with name %s from configuration %s", hostInterface,
               SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_INTERFACE);
 
@@ -449,8 +502,8 @@ public class GeneralSmartSpacesSupportActivator
       }
 
       return null;
-    } catch (Exception e) {
-      spaceEnvironment.getLog().error("Could not obtain IP address", e);
+    } catch (Throwable e) {
+      containerLog.error("Could not obtain IP address", e);
       return UNKNOWN_HOST_ADDRESS;
     }
   }

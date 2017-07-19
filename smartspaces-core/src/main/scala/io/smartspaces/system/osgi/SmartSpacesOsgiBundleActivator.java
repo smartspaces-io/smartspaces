@@ -54,9 +54,9 @@ public abstract class SmartSpacesOsgiBundleActivator
   private final List<ServiceRegistration<?>> osgiServiceRegistrations = new ArrayList<>();
 
   /**
-   * All services registered by this bundle.
+   * All Smart Spaces services registered by this bundle.
    */
-  private final List<Service> registeredServices = new ArrayList<>();
+  private final List<Service> registeredSmartSpacesServices = new ArrayList<>();
 
   /**
    * OSGi service tracker for the smart spaces environment.
@@ -160,14 +160,14 @@ public abstract class SmartSpacesOsgiBundleActivator
   private void unregisterSmartSpacesServices() {
     ServiceRegistry serviceRegistry =
         smartspacesEnvironmentTracker.getMyService().getServiceRegistry();
-    for (Service service : registeredServices) {
+    for (Service service : registeredSmartSpacesServices) {
       try {
         serviceRegistry.shutdownAndUnregisterService(service);
       } catch (Throwable e) {
         getSmartSpacesEnvironment().getLog().error("Could not shut service down", e);
       }
     }
-    registeredServices.clear();
+    registeredSmartSpacesServices.clear();
   }
 
   /**
@@ -241,10 +241,10 @@ public abstract class SmartSpacesOsgiBundleActivator
     try {
       spaceEnvironment.getServiceRegistry().startupAndRegisterService(service);
 
-      registeredServices.add(service);
+      registeredSmartSpacesServices.add(service);
     } catch (Exception e) {
       spaceEnvironment.getLog()
-          .error(String.format("Error while starting up service %s", service.getName()), e);
+          .formatError(e, "Error while starting up service %s", service.getName());
     }
   }
 

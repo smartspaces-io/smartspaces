@@ -16,17 +16,17 @@
 
 package io.smartspaces.infrastructure.plugins.internal.osgi
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator
 import io.smartspaces.infrastructure.plugins.InfrastructurePluginManager
 import io.smartspaces.infrastructure.plugins.StandardInfrastructurePluginManager
 import io.smartspaces.service.comm.network.zeroconf.StandardZeroconfService
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator
 
 /**
  * The OSGi activator for the infrastructure plugins.
  * 
  * @author Keith M. Hughes
  */
-class SmartSpacesInfrastructurePluginActivator extends SmartSpacesServiceOsgiBundleActivator {
+class SmartSpacesInfrastructurePluginActivator extends SmartSpacesOsgiBundleActivator {
   override def allRequiredServicesAvailable(): Unit = {
     val pluginsManager = new StandardInfrastructurePluginManager(getSmartSpacesEnvironment)
     addManagedResource(pluginsManager)

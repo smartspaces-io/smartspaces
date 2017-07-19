@@ -16,6 +16,7 @@
 
 dependencies {
   compile project(':smartspaces-core')
+  compile project(':smartspaces-testing')
   
   runtime 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.rome:1.0_1'
 

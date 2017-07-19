@@ -17,15 +17,15 @@
 
 package io.smartspaces.service.comm.chat.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.comm.chat.internal.xmpp.smack.SmackXmppChatService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGi bundle activator for the ChatService.
  *
  * @author Keith M. Hughes
  */
-public class ChatServiceOsgiBundleActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class ChatServiceOsgiBundleActivator extends SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

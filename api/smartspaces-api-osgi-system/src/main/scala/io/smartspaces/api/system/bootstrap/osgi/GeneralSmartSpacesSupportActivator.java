@@ -17,9 +17,6 @@
 
 package io.smartspaces.api.system.bootstrap.osgi;
 
-import io.smartspaces.api.osgi.service.OsgiServiceTrackerCollection;
-import io.smartspaces.api.osgi.service.OsgiServiceTrackerCollection.MyServiceTracker;
-import io.smartspaces.api.osgi.service.OsgiServiceTrackerCollection.OsgiServiceTrackerCollectionListener;
 import io.smartspaces.api.system.internal.osgi.OsgiSmartSpacesEnvironment;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.FileSystemConfigurationStorageManager;
@@ -35,6 +32,9 @@ import io.smartspaces.system.BasicSmartSpacesFilesystem;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.core.configuration.ConfigurationProvider;
 import io.smartspaces.system.core.logging.LoggingProvider;
+import io.smartspaces.system.osgi.OsgiServiceTrackerCollection;
+import io.smartspaces.system.osgi.OsgiServiceTrackerCollection.MyServiceTracker;
+import io.smartspaces.system.osgi.OsgiServiceTrackerCollection.OsgiServiceTrackerCollectionListener;
 import io.smartspaces.tasks.ManagedTasks;
 import io.smartspaces.tasks.StandardManagedTasks;
 import io.smartspaces.time.provider.LocalTimeProvider;
@@ -43,7 +43,6 @@ import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.concurrency.DefaultScheduledExecutorService;
 import io.smartspaces.util.net.InetAddressFactory;
 
-import org.apache.commons.logging.Log;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -55,7 +54,6 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;

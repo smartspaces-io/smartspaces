@@ -17,15 +17,15 @@
 
 package io.smartspaces.service.image.depth.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.image.depth.internal.openni2.Openni2DepthCameraService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGI bundle activator for the image depth camera service.
  *
  * @author Keith M. Hughes
  */
-public class DepthCameraServiceActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class DepthCameraServiceActivator extends SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

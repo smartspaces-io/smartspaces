@@ -21,7 +21,6 @@ ext {
  
 dependencies {
   compile project(':smartspaces-core')
-  compile project(':smartspaces-system')
   compile project(':service:smartspaces-service-core')
   compile project(':activityapi:smartspaces-interaction')
 

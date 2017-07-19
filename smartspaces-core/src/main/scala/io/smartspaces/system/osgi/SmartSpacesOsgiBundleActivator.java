@@ -15,10 +15,8 @@
  * the License.
  */
 
-package io.smartspaces.api.osgi.service;
+package io.smartspaces.system.osgi;
 
-import io.smartspaces.api.osgi.service.OsgiServiceTrackerCollection.MyServiceTracker;
-import io.smartspaces.api.osgi.service.OsgiServiceTrackerCollection.OsgiServiceTrackerCollectionListener;
 import io.smartspaces.resource.Version;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.resource.managed.ManagedResources;
@@ -29,6 +27,8 @@ import io.smartspaces.service.Service;
 import io.smartspaces.service.ServiceRegistry;
 import io.smartspaces.service.SupportedService;
 import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.system.osgi.OsgiServiceTrackerCollection.MyServiceTracker;
+import io.smartspaces.system.osgi.OsgiServiceTrackerCollection.OsgiServiceTrackerCollectionListener;
 import io.smartspaces.tasks.ManagedTasks;
 import io.smartspaces.tasks.StandardManagedTasks;
 
@@ -45,7 +45,7 @@ import java.util.List;
  *
  * @author Keith M. Hughes
  */
-public abstract class SmartSpacesServiceOsgiBundleActivator
+public abstract class SmartSpacesOsgiBundleActivator
     implements BundleActivator, OsgiServiceTrackerCollectionListener {
 
   /**

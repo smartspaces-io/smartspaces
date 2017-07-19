@@ -17,16 +17,16 @@
 
 package io.smartspaces.service.mail.sender.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.mail.sender.MailSenderService;
 import io.smartspaces.service.mail.sender.internal.JavaxMailMailSenderService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGI bundle activator for the mail sender service.
  *
  * @author Keith M. Hughes
  */
-public class OsgiMailSenderServiceActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class OsgiMailSenderServiceActivator extends SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

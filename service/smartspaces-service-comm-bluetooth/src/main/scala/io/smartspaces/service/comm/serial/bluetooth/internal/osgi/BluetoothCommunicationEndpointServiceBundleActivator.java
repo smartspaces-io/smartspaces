@@ -17,9 +17,9 @@
 
 package io.smartspaces.service.comm.serial.bluetooth.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.comm.serial.bluetooth.BluetoothCommunicationEndpointService;
 import io.smartspaces.service.comm.serial.bluetooth.internal.jsr82.Jsr82BluetoothCommunicationEndpointService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * OSGi bundle activator for the bluetooth communication service.
@@ -27,7 +27,7 @@ import io.smartspaces.service.comm.serial.bluetooth.internal.jsr82.Jsr82Bluetoot
  * @author Keith M. Hughes
  */
 public class BluetoothCommunicationEndpointServiceBundleActivator extends
-    SmartSpacesServiceOsgiBundleActivator {
+    SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

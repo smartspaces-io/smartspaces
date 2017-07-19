@@ -16,7 +16,7 @@
 
 dependencies {
   compile project(':service:smartspaces-service-core')
-  compile project(':smartspaces-system')
+  compile project(':smartspaces-core')
 
   compile files("${project.getProperty('smartspaces.dependencies.home')}/comm/mail/dumbster-1.9.0.1-SNAPSHOT.jar")
 

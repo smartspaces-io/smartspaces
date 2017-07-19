@@ -21,7 +21,7 @@
  
 dependencies {
   compile project(':service:smartspaces-service-core')
-  compile project(':smartspaces-system')
+  compile project(':smartspaces-core')
 
   extrasCompile files("${project.getProperty('smartspaces.dependencies.home')}/comm/usb/jsr80-1.0.1.jar")
   extrasCompile files("${project.getProperty('smartspaces.dependencies.home')}/comm/usb/usb4java-1.0.0.jar")

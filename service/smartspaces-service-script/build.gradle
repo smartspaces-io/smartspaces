@@ -16,7 +16,7 @@
 
 dependencies {
   compile project(':service:smartspaces-service-core')
-  compile project(':smartspaces-system')
+  compile project(':smartspaces-core')
   
   // TODO(keith): Separate script based activities from this bundle.
   // Might need to use bundle fragments.

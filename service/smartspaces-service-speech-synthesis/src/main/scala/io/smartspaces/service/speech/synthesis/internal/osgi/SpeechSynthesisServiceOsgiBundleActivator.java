@@ -17,9 +17,9 @@
 
 package io.smartspaces.service.speech.synthesis.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.speech.synthesis.SpeechSynthesisService;
 import io.smartspaces.service.speech.synthesis.internal.freetts.FreeTtsSpeechSynthesisService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * OSGi bundle activator for the speech service.
@@ -27,7 +27,7 @@ import io.smartspaces.service.speech.synthesis.internal.freetts.FreeTtsSpeechSyn
  * @author Keith M. Hughes
  */
 public class SpeechSynthesisServiceOsgiBundleActivator extends
-    SmartSpacesServiceOsgiBundleActivator {
+    SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

@@ -22,10 +22,11 @@ import io.smartspaces.liveactivity.runtime.StandardLiveActivityRuntimeComponentF
 import io.smartspaces.liveactivity.runtime.monitor.RemoteLiveActivityRuntimeMonitorService;
 import io.smartspaces.liveactivity.runtime.osgi.OsgiServiceRegistrationLiveActivityRuntimeListener;
 import io.smartspaces.liveactivity.runtime.standalone.development.DevelopmentStandaloneLiveActivityRuntime;
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.spacecontroller.SpaceController;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.core.container.SmartSpacesSystemControl;
+import io.smartspaces.system.osgi.OsgiServiceTrackerCollection.MyServiceTracker;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 import io.smartspaces.system.resources.ContainerResourceManager;
 
 import org.apache.commons.logging.Log;
@@ -37,7 +38,7 @@ import org.apache.commons.logging.Log;
  *
  * @author Trevor Pering
  */
-public class StandaloneBundleActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class StandaloneBundleActivator extends SmartSpacesOsgiBundleActivator {
 
   /**
    * The default value for enabling the remote monitoring.

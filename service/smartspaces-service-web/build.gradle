@@ -16,7 +16,7 @@
 
 dependencies {
   compile project(':service:smartspaces-service-core')
-  compile project(':smartspaces-system')
+  compile project(':smartspaces-core')
 
   compile files("${project.getProperty('smartspaces.dependencies.home')}/image/smartspaces.com.google.zxing.all-2.1.jar")
 

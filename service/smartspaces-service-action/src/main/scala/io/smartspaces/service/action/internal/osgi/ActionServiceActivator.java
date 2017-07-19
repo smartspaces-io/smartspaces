@@ -16,16 +16,16 @@
 
 package io.smartspaces.service.action.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.action.internal.StandardActionService;
 import io.smartspaces.service.sequencer.internal.simple.ManagedTaskSequencerService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * The OSGi bundle activator for the action service classes.
  * 
  * @author Keith M. Hughes
  */
-public class ActionServiceActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class ActionServiceActivator extends SmartSpacesOsgiBundleActivator {
   @Override
   protected void allRequiredServicesAvailable() {
     registerNewSmartSpacesService(new StandardActionService());

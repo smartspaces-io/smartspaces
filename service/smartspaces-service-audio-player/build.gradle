@@ -16,7 +16,7 @@
 
 dependencies {
   compile project(':service:smartspaces-service-core')
-  compile project(':smartspaces-system')
+  compile project(':smartspaces-core')
   
   // TODO(keith): abstract how nativeactivityrunners are obtained, or drop that support.
   compile project(':activityapi:smartspaces-activity-core')

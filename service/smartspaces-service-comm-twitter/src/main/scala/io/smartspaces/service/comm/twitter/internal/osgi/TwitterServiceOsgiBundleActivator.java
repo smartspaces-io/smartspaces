@@ -17,16 +17,16 @@
 
 package io.smartspaces.service.comm.twitter.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.comm.twitter.TwitterService;
 import io.smartspaces.service.comm.twitter.internal.twitter4j.Twitter4jTwitterConnectionService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGi bundle activator for the Twitter services.
  *
  * @author Keith M. Hughes
  */
-public class TwitterServiceOsgiBundleActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class TwitterServiceOsgiBundleActivator extends SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

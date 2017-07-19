@@ -17,15 +17,15 @@
 
 package io.smartspaces.service.comm.serial.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.comm.serial.internal.rxtx.RxtxSerialCommunicationEndpointService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGI bundle activator for the serial communication service.
  *
  * @author Keith M. Hughes
  */
-public class SerialCommunicationBundleActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class SerialCommunicationBundleActivator extends SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

@@ -35,7 +35,6 @@ import io.smartspaces.liveactivity.runtime.monitor.internal.StandardRemoteLiveAc
 import io.smartspaces.liveactivity.runtime.osgi.OsgiServiceRegistrationLiveActivityRuntimeListener;
 import io.smartspaces.liveactivity.runtime.repository.LocalLiveActivityRepository;
 import io.smartspaces.liveactivity.runtime.repository.internal.file.FileLocalLiveActivityRepository;
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.spacecontroller.SpaceController;
 import io.smartspaces.spacecontroller.resource.deployment.ContainerResourceDeploymentManager;
 import io.smartspaces.spacecontroller.resource.deployment.ControllerContainerResourceDeploymentManager;
@@ -50,6 +49,8 @@ import io.smartspaces.spacecontroller.runtime.internal.StandardSpaceControllerAc
 import io.smartspaces.spacecontroller.ui.internal.osgi.OsgiSpaceControllerShell;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.core.container.SmartSpacesSystemControl;
+import io.smartspaces.system.osgi.OsgiServiceTrackerCollection.MyServiceTracker;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 import io.smartspaces.system.resources.ContainerResourceManager;
 import io.smartspaces.tasks.SequentialTaskQueue;
 import io.smartspaces.tasks.SimpleSequentialTaskQueue;
@@ -61,7 +62,7 @@ import org.ros.osgi.common.RosEnvironment;
  *
  * @author Keith M. Hughes
  */
-public class OsgiSpaceControllerActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class OsgiSpaceControllerActivator extends SmartSpacesOsgiBundleActivator {
 
   /**
    * The default value for enabling the remote monitoring.

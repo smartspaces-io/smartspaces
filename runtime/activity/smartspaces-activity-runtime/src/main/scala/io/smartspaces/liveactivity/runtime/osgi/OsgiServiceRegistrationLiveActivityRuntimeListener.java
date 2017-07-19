@@ -21,7 +21,7 @@ import io.smartspaces.activity.binary.NativeActivityRunnerFactory;
 import io.smartspaces.liveactivity.runtime.BaseLiveActivityRuntimeListener;
 import io.smartspaces.liveactivity.runtime.LiveActivityRunnerFactory;
 import io.smartspaces.liveactivity.runtime.LiveActivityRuntime;
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * A listener for live activity runtimes that registers live activity runtime
@@ -35,7 +35,7 @@ public class OsgiServiceRegistrationLiveActivityRuntimeListener extends
   /**
    * The bundle activator to be used for registering services.
    */
-  private SmartSpacesServiceOsgiBundleActivator bundleActivator;
+  private SmartSpacesOsgiBundleActivator bundleActivator;
 
   /**
    * Construct a new listener.
@@ -44,7 +44,7 @@ public class OsgiServiceRegistrationLiveActivityRuntimeListener extends
    *          the bundle activator to be used for registering services
    */
   public OsgiServiceRegistrationLiveActivityRuntimeListener(
-      SmartSpacesServiceOsgiBundleActivator bundleActivator) {
+      SmartSpacesOsgiBundleActivator bundleActivator) {
     this.bundleActivator = bundleActivator;
   }
 

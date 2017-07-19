@@ -17,16 +17,16 @@
 
 package io.smartspaces.service.script.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.script.ScriptService;
 import io.smartspaces.service.script.internal.JavaxScriptScriptService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGI bundle activator for the script service.
  *
  * @author Keith M. Hughes
  */
-public class OsgiScriptServiceActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class OsgiScriptServiceActivator extends SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

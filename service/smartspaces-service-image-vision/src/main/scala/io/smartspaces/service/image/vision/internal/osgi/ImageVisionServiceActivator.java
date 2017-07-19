@@ -17,15 +17,15 @@
 
 package io.smartspaces.service.image.vision.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.image.gesture.leapmotion.LeapMotionGestureService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGI bundle activator for the image vision service.
  *
  * @author Keith M. Hughes
  */
-public class ImageVisionServiceActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class ImageVisionServiceActivator extends SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

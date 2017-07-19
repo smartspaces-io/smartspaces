@@ -17,15 +17,15 @@
 
 package io.smartspaces.service.audio.player.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.audio.player.internal.jlayer.JLayerAudioTrackPlayerService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * OSGi bundle activator for the sound service.
  *
  * @author Keith M. Hughes
  */
-public class AudioPlayerServiceOsgiBundleActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class AudioPlayerServiceOsgiBundleActivator extends SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

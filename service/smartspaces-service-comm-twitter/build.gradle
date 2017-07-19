@@ -16,7 +16,7 @@
 
 dependencies {
   compile project(':service:smartspaces-service-core')
-  compile project(':smartspaces-system')
+  compile project(':smartspaces-core')
 
   compile files("${project.getProperty('smartspaces.dependencies.home')}/comm/twitter/smartspaces.org.twitter4j-3.0.3.jar")
 

@@ -21,7 +21,7 @@ ext {
  
 dependencies {
   compile project(':service:smartspaces-service-core')
-  compile project(':smartspaces-system')
+  compile project(':smartspaces-core')
 
   extrasCompile files(files("${project.getProperty('smartspaces.dependencies.home')}/comm/bluetooth/bluecove-2.1.0.jar"))
 

@@ -18,7 +18,7 @@ configurations { includeInJar }
 
 dependencies {
   compile project(':service:smartspaces-service-core')
-  compile project(':smartspaces-system')
+  compile project(':smartspaces-core')
 
   includeInJar fileTree(dir: 'libs', include: '*.jar')
 

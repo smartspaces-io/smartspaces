@@ -17,15 +17,15 @@
 
 package io.smartspaces.service.comm.usb.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.comm.usb.internal.libusb4j.Usb4JavaUsbCommunicationEndpointService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGI bundle activator for the USB communication service.
  *
  * @author Keith M. Hughes
  */
-public class UsbCommunicationBundleActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class UsbCommunicationBundleActivator extends SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

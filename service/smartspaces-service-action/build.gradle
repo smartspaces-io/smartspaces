@@ -14,7 +14,7 @@
  */
 
 dependencies {
-  compile project(':smartspaces-system')
+  compile project(':smartspaces-core')
 
   provided "${project.ext.osgiContainerDependency}"
 

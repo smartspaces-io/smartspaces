@@ -17,16 +17,16 @@
 
 package io.smartspaces.service.scheduler.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.scheduler.SchedulerService;
 import io.smartspaces.service.scheduler.internal.quartz.QuartzSchedulerService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGI bundle activator for the scheduler service.
  *
  * @author Keith M. Hughes
  */
-public class OsgiSchedulerServiceActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class OsgiSchedulerServiceActivator extends SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

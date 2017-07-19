@@ -17,17 +17,18 @@
 
 package io.smartspaces.service.alert.notifier.mail.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.alert.AlertService;
 import io.smartspaces.service.alert.notifier.mail.internal.BasicMailAlertNotifier;
 import io.smartspaces.service.mail.sender.MailSenderService;
+import io.smartspaces.system.osgi.OsgiServiceTrackerCollection.MyServiceTracker;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGi activator for a mail alert notifier.
  *
  * @author Keith M. Hughes
  */
-public class OsgiMailAlertNotifierActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class OsgiMailAlertNotifierActivator extends SmartSpacesOsgiBundleActivator {
 
   /**
    * OSGi service tracker for the mail sender service.

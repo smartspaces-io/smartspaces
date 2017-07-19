@@ -17,16 +17,16 @@
 
 package io.smartspaces.service.alert.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.alert.AlertService;
 import io.smartspaces.service.alert.internal.BasicAlertService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGI bundle activator for the alert service.
  *
  * @author Keith M. Hughes
  */
-public class OsgiAlertServiceActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class OsgiAlertServiceActivator extends SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

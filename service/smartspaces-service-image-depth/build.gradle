@@ -21,7 +21,6 @@ ext {
 
 dependencies {
   compile project(':smartspaces-core')
-  compile project(':smartspaces-system')
   compile project(':activityapi:smartspaces-interaction')
   compile project(':service:smartspaces-service-image-depth-openni2')
 

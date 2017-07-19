@@ -17,15 +17,15 @@
 
 package io.smartspaces.service.template.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.template.internal.freemarker.FreemarkerTemplaterService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGI bundle activator setting up some templater services.
  *
  * @author Keith M. Hughes
  */
-public class TemplateBundleActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class TemplateBundleActivator extends SmartSpacesOsgiBundleActivator {
 	
   @Override
   protected void allRequiredServicesAvailable() {

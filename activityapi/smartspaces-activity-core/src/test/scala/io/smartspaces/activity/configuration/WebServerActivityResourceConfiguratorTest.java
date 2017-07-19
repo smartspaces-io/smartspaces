@@ -91,7 +91,7 @@ public class WebServerActivityResourceConfiguratorTest {
     configurator.configure(null, activity, webServer);
 
     Mockito.verify(webServer).setPort(testPort);
-    Mockito.verify(webServer).addStaticContentHandler("/" + activityName, contentDir);
+    Mockito.verify(webServer).addStaticContentHandler("/" + activityName, contentDir, null, null, null);
 
     Assert.assertEquals(webSocketUri, configurator.getWebSocketUriPrefix());
     String webBaseUrl = "http://localhost:" + testPort;
@@ -127,7 +127,7 @@ public class WebServerActivityResourceConfiguratorTest {
     configurator.configure(null, activity, webServer);
 
     Mockito.verify(webServer).setPort(testPort);
-    Mockito.verify(webServer).addStaticContentHandler("/" + activityName, contentDir);
+    Mockito.verify(webServer).addStaticContentHandler("/" + activityName, contentDir, null, null, null);
 
     Assert.assertEquals(webSocketUri, configurator.getWebSocketUriPrefix());
     String webBaseUrl = "https://localhost:" + testPort;

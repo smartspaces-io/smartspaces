@@ -19,15 +19,16 @@ package io.smartspaces.controller.activity.wrapper.internal.script.osgi;
 
 import io.smartspaces.controller.activity.wrapper.internal.script.ScriptActivityWrapperFactory;
 import io.smartspaces.liveactivity.runtime.LiveActivityRunnerFactory;
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.script.ScriptService;
+import io.smartspaces.system.osgi.OsgiServiceTrackerCollection.MyServiceTracker;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGi activator for the script activity wrapper.
  *
  * @author Keith M. Hughes
  */
-public class OsgiScriptActivityWrapperActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class OsgiScriptActivityWrapperActivator extends SmartSpacesOsgiBundleActivator {
 
   /**
    * The service tracker for the script service.

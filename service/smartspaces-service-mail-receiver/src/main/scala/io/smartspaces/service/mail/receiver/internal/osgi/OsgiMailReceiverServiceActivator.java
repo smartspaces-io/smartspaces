@@ -17,16 +17,16 @@
 
 package io.smartspaces.service.mail.receiver.internal.osgi;
 
-import io.smartspaces.osgi.service.SmartSpacesServiceOsgiBundleActivator;
 import io.smartspaces.service.mail.receiver.MailReceiverService;
 import io.smartspaces.service.mail.receiver.internal.DumbsterMailReceiverService;
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
 
 /**
  * An OSGI bundle activator for the mail receiver service.
  *
  * @author Keith M. Hughes
  */
-public class OsgiMailReceiverServiceActivator extends SmartSpacesServiceOsgiBundleActivator {
+public class OsgiMailReceiverServiceActivator extends SmartSpacesOsgiBundleActivator {
 
   @Override
   protected void allRequiredServicesAvailable() {

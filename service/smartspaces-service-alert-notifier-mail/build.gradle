@@ -15,7 +15,7 @@
  */
 
 dependencies {
-  compile project(':smartspaces-system')
+  compile project(':smartspaces-core')
   compile project(':service:smartspaces-service-alert')
   compile project(':service:smartspaces-service-mail-sender')
 

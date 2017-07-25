@@ -18,8 +18,6 @@
 package io.smartspaces.service;
 
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.resource.managed.ManagedResource;
-import io.smartspaces.scope.ManagedScope;
 
 import java.util.Set;
 

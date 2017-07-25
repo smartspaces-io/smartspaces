@@ -15,24 +15,30 @@
  * the License.
  */
 
-package io.smartspaces.service.scheduler;
+package io.smartspaces.service.scheduler
 
-import io.smartspaces.service.SupportedService;
+import io.smartspaces.service.SupportedService
 
-import java.util.Date;
-import java.util.Map;
+import java.util.Date
+import java.util.Map
+import java.util.Set
+import io.smartspaces.resource.managed.ConditionalInitializerMixin
 
-/**
- * A scheduler
- *
- * @author Keith M. Hughes
- */
-public interface SchedulerService extends SupportedService {
+object SchedulerService {
 
   /**
    * The name of the service.
    */
-  public static final String SERVICE_NAME = "scheduler";
+  val SERVICE_NAME = "scheduler"
+
+}
+
+/**
+ * A service for scheduling jobs. These jobs can persist through system restart.
+ *
+ * @author Keith M. Hughes
+ */
+trait SchedulerService extends SupportedService with ConditionalInitializerMixin[SchedulerService] {
 
   /**
    * Schedule a script using a CRON expression.
@@ -47,11 +53,11 @@ public interface SchedulerService extends SupportedService {
    * @param schedule
    *          the cron schedule when the job should fire
    */
-  void scheduleScriptWithCron(String jobName, String groupName, String id, String schedule);
+  def scheduleScriptWithCron(jobName: String, groupName: String, id: String, schedule: String): Unit
 
   /**
    * Schedule an action job for a specific time.
-   * 
+   *
    * <p>
    * The job will be persisted.
    *
@@ -69,12 +75,12 @@ public interface SchedulerService extends SupportedService {
    * @param when
    *          the date when the job should fire
    */
-  void scheduleAction(String jobName, String jobGroupName, String actionSource, String actionName,
-      Map<String, Object> data, Date when);
+  def scheduleAction(jobName: String, jobGroupName: String, actionSource: String, actionName: String,
+    data: Map[String, Object], when: Date): Unit
 
   /**
    * Schedule an action job using a CRON expression.
-   * 
+   *
    * <p>
    * The job will be persisted.
    *
@@ -92,16 +98,45 @@ public interface SchedulerService extends SupportedService {
    * @param schedule
    *          the cron schedule when the job should fire
    */
-  void scheduleActionWithCron(String jobName, String groupName, String actionSource,
-      String actionName, Map<String, Object> data, String schedule);
-  
+  def scheduleActionWithCron(jobName: String, groupName: String, actionSource: String,
+    actionName: String, data: Map[String, Object], schedule: String): Unit
+
   /**
    * Remove all jobs in the given job group.
-   * 
+   *
    * @param jobGroupName
-   * 		the name for the job group.
+   * 		the name for the job group
    */
-  void removeJobGroup(String jobGroupName);
+  def removeJobGroup(jobGroupName: String): Unit
+
+  /**
+   * Get the job group names.
+   *
+   * @return the job group names
+   */
+  def getJobGroupNames(): Set[String]
+
+  /**
+   * Get the job names for a particular group.
+   *
+   * @param groupName
+   *      the name of the group
+   *
+   * @return the group's job names
+   */
+  def getGroupJobNames(groupName: String): Set[String]
+
+  /**
+   * Does the given job exist?
+   *
+   * @param groupName
+   *      group name of the job
+   * @param jobName
+   *      name of the job in the group
+   *
+   * @return {@code true} if the job exists
+   */
+  def doesJobExist(groupName: String, jobName: String): Boolean
 
   /**
    * Add entities to the scheduler that can be used for scheduled jobs.
@@ -113,5 +148,5 @@ public interface SchedulerService extends SupportedService {
    * @param entities
    *          map of entity names to entities
    */
-  void addSchedulingEntities(Map<String, Object> entities);
+  def addSchedulingEntities(entities: Map[String, Object]): Unit
 }

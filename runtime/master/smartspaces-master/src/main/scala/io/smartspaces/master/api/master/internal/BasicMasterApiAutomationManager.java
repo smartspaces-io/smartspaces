@@ -30,6 +30,7 @@ import io.smartspaces.master.server.services.AutomationRepository;
 import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 import io.smartspaces.messaging.dynamic.SmartSpacesMessages;
 import io.smartspaces.service.scheduler.SchedulerService;
+import io.smartspaces.service.scheduler.SchedulerService$;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,7 +99,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
   private void potentiallyScheduleScript(NamedScript script) {
     if (script.getScheduled()) {
       SchedulerService schedulerService =
-          spaceEnvironment.getServiceRegistry().getService(SchedulerService.SERVICE_NAME);
+          spaceEnvironment.getServiceRegistry().getService(SchedulerService$.MODULE$.SERVICE_NAME());
       if (schedulerService != null) {
         spaceEnvironment.getLog().info(String.format("Scheduling script %s", script.getName()));
 

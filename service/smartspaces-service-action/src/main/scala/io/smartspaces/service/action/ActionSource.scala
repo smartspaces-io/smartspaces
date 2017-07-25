@@ -14,22 +14,22 @@
  * the License.
  */
 
-package io.smartspaces.service.action;
-
-import io.smartspaces.evaluation.ExecutionContext;
+package io.smartspaces.service.action
 
 /**
- * An action to be performed.
+ * A handler for actions.
  * 
  * @author Keith M. Hughes
  */
-public interface Action {
+trait ActionSource {
 
   /**
-   * Perform the action.
+   * Get an action.
    * 
-   * @param context
-   *          context for the action
+   * @param actionName
+   *          the name of the action
+   * 
+   * @return the action to perform
    */
-  void perform(ExecutionContext context);
+  def getAction(actionName: String): Action
 }

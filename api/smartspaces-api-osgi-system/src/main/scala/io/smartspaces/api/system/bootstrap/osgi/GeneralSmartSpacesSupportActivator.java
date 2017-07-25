@@ -21,6 +21,7 @@ import io.smartspaces.api.system.internal.osgi.OsgiSmartSpacesEnvironment;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.FileSystemConfigurationStorageManager;
 import io.smartspaces.configuration.SimpleConfiguration;
+import io.smartspaces.evaluation.ExpressionEvaluator;
 import io.smartspaces.evaluation.SimpleExpressionEvaluatorFactory;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
@@ -425,9 +426,12 @@ public class GeneralSmartSpacesSupportActivator
     // Configuration systemConfiguration =
     // systemConfigurationStorageManager.getSystemConfiguration();
     //
-    Configuration systemConfiguration =
-        new SimpleConfiguration(expressionEvaluatorFactory.newEvaluator());
+    ExpressionEvaluator expressionEvaluator = expressionEvaluatorFactory.newEvaluator();
+    SimpleConfiguration systemConfiguration =
+        new SimpleConfiguration(expressionEvaluator);
     systemConfiguration.setProperties(containerProperties);
+    expressionEvaluator.setEvaluationEnvironment(systemConfiguration);
+    
     //
     // systemConfiguration.setProperty(SmartSpacesEnvironment.CONFIGURATION_NAME_SMARTSPACES_VERSION,
     // bundleContext.getProperty(CoreConfiguration.CONFIGURATION_NAME_SMARTSPACES_VERSION));

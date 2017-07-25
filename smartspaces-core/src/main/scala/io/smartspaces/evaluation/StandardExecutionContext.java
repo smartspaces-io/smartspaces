@@ -16,6 +16,7 @@
 
 package io.smartspaces.evaluation;
 
+import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
 import org.apache.commons.logging.Log;
@@ -36,6 +37,11 @@ public class StandardExecutionContext implements ExecutionContext {
   private final SmartSpacesEnvironment spaceEnvironment;
 
   /**
+   * The managed scope for the context.
+   */
+  private final ManagedScope managedScope;
+
+  /**
    * The logger for this context.
    */
   private final Log log;
@@ -48,14 +54,23 @@ public class StandardExecutionContext implements ExecutionContext {
   /**
    * Construct a new context.
    * 
+   * @param managedScope
+   *          the managed scope for this context
    * @param spaceEnvironment
    *          the space environment
    * @param log
    *          the logger to use
    */
-  public StandardExecutionContext(SmartSpacesEnvironment spaceEnvironment, Log log) {
+  public StandardExecutionContext(ManagedScope managedScope,
+      SmartSpacesEnvironment spaceEnvironment, Log log) {
+    this.managedScope = managedScope;
     this.spaceEnvironment = spaceEnvironment;
     this.log = log;
+  }
+  
+  @Override
+  public ManagedScope getManagedScope() {
+    return managedScope;
   }
 
   @Override

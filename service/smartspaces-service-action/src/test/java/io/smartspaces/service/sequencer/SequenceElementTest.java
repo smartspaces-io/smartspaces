@@ -77,7 +77,7 @@ public class SequenceElementTest {
 
     GroupSequenceElement sequence = new GroupSequenceElement(element1, element2);
     SequenceExecutionContext sequenceExecutionContext =
-        new SequenceExecutionContext(sequencer, null, spaceEnvironment);
+        new SequenceExecutionContext(sequencer, null, null, spaceEnvironment, null);
     sequence.run(sequenceExecutionContext);
 
     Assert.assertEquals(Lists.newArrayList("a", "b"), actual);
@@ -96,7 +96,7 @@ public class SequenceElementTest {
 
     RepeatingSequenceElement sequence = new RepeatingSequenceElement(10, element1);
     SequenceExecutionContext sequenceExecutionContext =
-        new SequenceExecutionContext(sequencer, null, spaceEnvironment);
+        new SequenceExecutionContext(sequencer, null, null, spaceEnvironment, null);
     sequence.run(sequenceExecutionContext);
 
     Assert.assertEquals(10, actual.get());
@@ -108,7 +108,7 @@ public class SequenceElementTest {
 
     RunnableSequenceElement sequence = new RunnableSequenceElement(runnable);
     SequenceExecutionContext sequenceExecutionContext =
-        new SequenceExecutionContext(sequencer, null, spaceEnvironment);
+        new SequenceExecutionContext(sequencer, null, null, spaceEnvironment, null);
     sequence.run(sequenceExecutionContext);
 
     Mockito.verify(runnable).run();
@@ -127,7 +127,7 @@ public class SequenceElementTest {
     ActionReference ref = Mockito.mock(ActionReference.class);
     ActionSequenceElement sequence = new ActionSequenceElement(ref);
     SequenceExecutionContext sequenceExecutionContext =
-        new SequenceExecutionContext(sequencer, null, spaceEnvironment);
+        new SequenceExecutionContext(sequencer, null, null, spaceEnvironment, null);
     sequence.run(sequenceExecutionContext);
 
     Mockito.verify(actionService).performActionReference(ref, sequenceExecutionContext);

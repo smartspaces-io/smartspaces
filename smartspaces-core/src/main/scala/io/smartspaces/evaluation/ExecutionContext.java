@@ -16,6 +16,7 @@
 
 package io.smartspaces.evaluation;
 
+import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
 import org.apache.commons.logging.Log;
@@ -35,6 +36,13 @@ public interface ExecutionContext {
    * @return the space environment
    */
   SmartSpacesEnvironment getSpaceEnvironment();
+  
+  /**
+   * Get the managed scope for the context.
+   * 
+   * @return the managed scope
+   */
+  ManagedScope getManagedScope();
 
   /**
    * Get the logger for the context.

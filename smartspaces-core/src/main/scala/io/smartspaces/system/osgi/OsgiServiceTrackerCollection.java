@@ -76,7 +76,7 @@ public class OsgiServiceTrackerCollection {
    * @return the service tracker
    */
   public <T> MyServiceTracker<T> newMyServiceTracker(String serviceName) {
-    MyServiceTracker<T> tracker = new MyServiceTracker<T>(bundleContext, serviceName);
+    MyServiceTracker<T> tracker = new MyServiceTracker<T>(this, bundleContext, serviceName);
 
     serviceTrackers.put(serviceName, tracker);
 
@@ -128,7 +128,12 @@ public class OsgiServiceTrackerCollection {
    *
    * @author Keith M. Hughes
    */
-  public class MyServiceTracker<T> extends ServiceTracker {
+  public static class MyServiceTracker<T> extends ServiceTracker {
+    
+    /**
+     * The collection this tracker is in.
+     */
+    private OsgiServiceTrackerCollection collection;
 
     /**
      * The reference for the service object being waited for.
@@ -143,8 +148,9 @@ public class OsgiServiceTrackerCollection {
      * @param serviceName
      *          the name of the service
      */
-    public MyServiceTracker(BundleContext context, String serviceName) {
+    public MyServiceTracker(OsgiServiceTrackerCollection collection, BundleContext context, String serviceName) {
       super(context, serviceName, null);
+      this.collection = collection;
     }
 
     @Override
@@ -153,7 +159,7 @@ public class OsgiServiceTrackerCollection {
       T service = (T) super.addingService(reference);
 
       if (serviceReference.compareAndSet(null, service)) {
-        gotAnotherReference();
+        collection.gotAnotherReference();
       }
 
       return service;

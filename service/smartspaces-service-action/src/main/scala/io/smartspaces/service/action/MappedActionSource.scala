@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Keith M. Hughes
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,22 +14,30 @@
  * the License.
  */
 
-package io.smartspaces.service.action;
+package io.smartspaces.service.action
+
+import io.smartspaces.SimpleSmartSpacesException
 
 /**
- * A handler for actions.
- * 
+ * An action source with a map of actions.
+ *
  * @author Keith M. Hughes
  */
-public interface ActionSource {
+abstract class MappedActionSource extends ActionSource {
 
   /**
-   * Add in an action.
-   * 
-   * @param actionName
-   *          the name of the action
-   * 
-   * @return the action to perform
+   * The map of actions.
    */
-  Action getAction(String actionName);
+  val actionMap: Map[String, Action]
+
+  override def getAction(actionName: String): Action = {
+    val action = actionMap.get(actionName)
+
+    if (action.isDefined) {
+      action.get
+    } else {
+      throw new SimpleSmartSpacesException(s"Unknown action ${actionName}")
+    }
+
+  }
 }

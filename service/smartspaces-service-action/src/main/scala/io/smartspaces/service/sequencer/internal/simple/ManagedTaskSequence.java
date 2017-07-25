@@ -17,17 +17,19 @@
 
 package io.smartspaces.service.sequencer.internal.simple;
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.service.sequencer.Sequence;
-import io.smartspaces.service.sequencer.SequenceElement;
-import io.smartspaces.service.sequencer.SequenceExecutionContext;
-import io.smartspaces.tasks.ManagedTask;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.scope.ManagedScope;
+import io.smartspaces.service.sequencer.Sequence;
+import io.smartspaces.service.sequencer.SequenceElement;
+import io.smartspaces.service.sequencer.SequenceExecutionContext;
+import io.smartspaces.tasks.ManagedTask;
 
 /**
  * A basic implementation of the Sequencer interface.
@@ -40,6 +42,16 @@ public class ManagedTaskSequence implements Sequence {
    * The sequencer that created this sequence.
    */
   private ManagedTaskSequencer sequencer;
+
+  /**
+   * The scope for this sequence.
+   */
+  private ManagedScope managedScope;
+
+  /**
+   * The log for this sequence.
+   */
+  private ExtendedLog log;
 
   /**
    * The sequencer elements.
@@ -62,9 +74,16 @@ public class ManagedTaskSequence implements Sequence {
    *
    * @param scheduler
    *          the sequencer that created this sequence
+   * @param managedScope
+   *          the managed scope for this sequence
+   * @param log
+   *          the log for this sequence
    */
-  public ManagedTaskSequence(ManagedTaskSequencer scheduler) {
+  public ManagedTaskSequence(ManagedTaskSequencer scheduler, ManagedScope managedScope,
+      ExtendedLog log) {
     this.sequencer = scheduler;
+    this.managedScope = managedScope;
+    this.log = log;
   }
 
   @Override
@@ -113,9 +132,9 @@ public class ManagedTaskSequence implements Sequence {
    * @param sequencer
    *          the sequencer to run under
    */
-      void runSequence(ManagedTaskSequencer sequencer) {
-    SequenceExecutionContext sequenceExecutionContext =
-        new SequenceExecutionContext(sequencer, this, sequencer.getSpaceEnvironment());
+  void runSequence(ManagedTaskSequencer sequencer) {
+    SequenceExecutionContext sequenceExecutionContext = new SequenceExecutionContext(sequencer,
+        this, managedScope, sequencer.getSpaceEnvironment(), log);
 
     try {
       for (SequenceElement currentElement : sequencerElements) {

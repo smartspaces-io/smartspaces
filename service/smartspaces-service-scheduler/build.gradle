@@ -24,7 +24,7 @@ dependencies {
     transitive = false
   }
   
-  compile('com.orientechnologies:orientdb-core:2.2.7') {
+  compile('com.orientechnologies:orientdb-core:2.2.15') {
 	  exclude group: 'org.xerial.snappy', module: 'snappy-java'
   }
   
@@ -38,8 +38,8 @@ dependencies {
   runtime("org.apache.commons:com.springsource.org.apache.commons.codec:1.4.0")
   runtime("org.slf4j:slf4j-api:1.7.10")
 
-  runtime('com.orientechnologies:orientdb-client:2.2.7')
-  runtime('com.orientechnologies:orientdb-server:2.2.7') {
+  runtime('com.orientechnologies:orientdb-client:2.2.15')
+  runtime('com.orientechnologies:orientdb-server:2.2.15') {
     exclude group: 'javax.mail', module: 'mail'
     transitive = false
   }

@@ -17,6 +17,8 @@
 package io.smartspaces.service.sequencer;
 
 import io.smartspaces.evaluation.StandardExecutionContext;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
 /**
@@ -43,12 +45,16 @@ public class SequenceExecutionContext extends StandardExecutionContext {
    *          the sequencer running the sequence
    * @param sequence
    *          the sequence being run
+   * @param managedScope
+   *          the managed scope for the sequence
    * @param spaceEnvironment
    *          the space environment for the sequence environment
+   * @param log
+   *          the log for the context
    */
-  public SequenceExecutionContext(Sequencer sequencer, Sequence sequence,
-      SmartSpacesEnvironment spaceEnvironment) {
-    super(spaceEnvironment, spaceEnvironment.getLog());
+  public SequenceExecutionContext(Sequencer sequencer, Sequence sequence, ManagedScope managedScope,
+      SmartSpacesEnvironment spaceEnvironment, ExtendedLog log) {
+    super(managedScope, spaceEnvironment, log);
     this.sequencer = sequencer;
     this.sequence = sequence;
   }

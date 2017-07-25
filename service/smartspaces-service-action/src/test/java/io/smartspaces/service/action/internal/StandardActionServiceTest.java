@@ -54,7 +54,7 @@ public class StandardActionServiceTest {
     String sourceName = "foo";
     actionService.registerActionSource(sourceName, source);
 
-    StandardExecutionContext context = new StandardExecutionContext(null, null);
+    StandardExecutionContext context = new StandardExecutionContext(null, null, null);
     actionService.performAction(sourceName, actionName, context);
 
     Mockito.verify(action, Mockito.times(1)).perform(context);
@@ -74,7 +74,7 @@ public class StandardActionServiceTest {
 
     Map<String, Object> data = new HashMap<>();
     data.put("foo1",  "bar1");
-    StandardExecutionContext context = new StandardExecutionContext(null, null);
+    StandardExecutionContext context = new StandardExecutionContext(null, null, null);
 
     BasicActionReference actionReference =
         new BasicActionReference("ref1", "test1", sourceName, null, actionName, data);

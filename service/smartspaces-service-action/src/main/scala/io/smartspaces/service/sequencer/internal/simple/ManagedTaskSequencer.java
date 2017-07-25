@@ -18,6 +18,7 @@
 package io.smartspaces.service.sequencer.internal.simple;
 
 import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.service.sequencer.Sequence;
 import io.smartspaces.service.sequencer.SequenceElements;
 import io.smartspaces.service.sequencer.Sequencer;
@@ -42,7 +43,7 @@ public class ManagedTaskSequencer implements Sequencer {
     ManagedTaskSequencer sequencer =
         new ManagedTaskSequencer(spaceEnvironment, spaceEnvironment.getLog());
 
-    Sequence sequence = sequencer.newSequence();
+    Sequence sequence = sequencer.newSequence(spaceEnvironment.getContainerManagedScope(), spaceEnvironment.getLog());
     sequence.add(SequenceElements.runnable(new Runnable() {
 
       @Override
@@ -106,8 +107,8 @@ public class ManagedTaskSequencer implements Sequencer {
   }
 
   @Override
-  public Sequence newSequence() {
-    return new ManagedTaskSequence(this);
+  public Sequence newSequence(ManagedScope managedScope, ExtendedLog log) {
+    return new ManagedTaskSequence(this, managedScope, log);
   }
 
   @Override

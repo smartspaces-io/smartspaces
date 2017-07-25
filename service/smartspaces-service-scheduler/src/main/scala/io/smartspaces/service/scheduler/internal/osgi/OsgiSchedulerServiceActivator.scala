@@ -15,24 +15,23 @@
  * the License.
  */
 
-package io.smartspaces.service.scheduler.internal.osgi;
+package io.smartspaces.service.scheduler.internal.osgi
 
-import io.smartspaces.service.scheduler.SchedulerService;
-import io.smartspaces.service.scheduler.internal.quartz.QuartzSchedulerService;
-import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator;
+import io.smartspaces.service.scheduler.SchedulerService
+import io.smartspaces.service.scheduler.internal.quartz.StandardQuartzSchedulerService
+import io.smartspaces.system.osgi.SmartSpacesOsgiBundleActivator
 
 /**
  * An OSGI bundle activator for the scheduler service.
  *
  * @author Keith M. Hughes
  */
-public class OsgiSchedulerServiceActivator extends SmartSpacesOsgiBundleActivator {
+class OsgiSchedulerServiceActivator extends SmartSpacesOsgiBundleActivator {
 
-  @Override
-  protected void allRequiredServicesAvailable() {
-    QuartzSchedulerService schedulerService = new QuartzSchedulerService();
+  override def allRequiredServicesAvailable(): Unit = {
+    val schedulerService = new StandardQuartzSchedulerService()
 
-    registerNewSmartSpacesService(schedulerService);
-    registerOsgiService(SchedulerService.class.getName(), schedulerService);
+    registerNewSmartSpacesService(schedulerService)
+    registerOsgiService(classOf[SchedulerService].getName, schedulerService)
   }
 }

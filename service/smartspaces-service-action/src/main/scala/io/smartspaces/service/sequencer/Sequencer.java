@@ -19,6 +19,7 @@ package io.smartspaces.service.sequencer;
 
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.resource.managed.ManagedResource;
+import io.smartspaces.scope.ManagedScope;
 
 /**
  * A sequencer that creates sequences of actions that take place sequentially.
@@ -29,11 +30,16 @@ public interface Sequencer extends ManagedResource {
 
   /**
    * Create a new sequence.
+   * 
+   * @param managedScope
+   *          the scope for the sequence
+   * @param log
+   *          the log for when running the sequence
    *
    * @return the new sequence
    */
-  Sequence newSequence();
-  
+  Sequence newSequence(ManagedScope managedScope, ExtendedLog log);
+
   /**
    * Get the logger for the sequencer.
    * 

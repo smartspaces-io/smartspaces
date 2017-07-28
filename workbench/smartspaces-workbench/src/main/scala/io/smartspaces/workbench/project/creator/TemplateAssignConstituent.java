@@ -24,11 +24,13 @@ import io.smartspaces.workbench.project.ProjectContext;
 import io.smartspaces.workbench.project.constituent.BaseProjectConstituent;
 import io.smartspaces.workbench.project.constituent.BaseProjectConstituentBuilder;
 import io.smartspaces.workbench.project.constituent.ProjectConstituent;
-
-import java.util.Map;
+import io.smartspaces.workbench.project.constituent.ProjectConstituentBuilder;
+import io.smartspaces.workbench.project.constituent.ProjectConstituentBuilderFactory;
 
 import org.jdom2.Element;
 import org.jdom2.Namespace;
+
+import java.util.Map;
 
 /**
  * A simple variable assignment constituent for projects.

@@ -16,23 +16,19 @@
 
 package io.smartspaces.service.comm.network.zeroconf
 
-import java.io.IOException
-import java.net.Inet4Address
-import java.net.InetAddress
-import java.net.NetworkInterface
-import java.net.SocketException
-import java.util.concurrent.ConcurrentHashMap
-
-import scala.collection.JavaConversions.enumerationAsScalaIterator
-
 import io.smartspaces.SmartSpacesException
 import io.smartspaces.resource.managed.IdempotentManagedResource
 import io.smartspaces.service.BaseSupportedService
+import io.smartspaces.system.SmartSpacesEnvironment
+
+import java.io.IOException
+import java.net.InetAddress
+import java.util.concurrent.ConcurrentHashMap
+
 import javax.jmdns.JmDNS
 import javax.jmdns.ServiceEvent
-import javax.jmdns.ServiceListener
 import javax.jmdns.ServiceInfo
-import io.smartspaces.system.SmartSpacesEnvironment
+import javax.jmdns.ServiceListener
 
 /*
  * The standard implementation of the mDNS (Zeroconf) service.

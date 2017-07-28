@@ -30,7 +30,7 @@ import io.smartspaces.master.communication.MasterCommunicationHandler
 
 import java.util.List
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 /**
  * The standard manager for master communications.
@@ -79,7 +79,7 @@ class StandardMasterCommunicationManager extends MasterCommunicationManager with
     webServer.startup()
     
     if (handlers != null) {
-      handlers.foreach { handler => handler.register(this) }
+      handlers.asScala.foreach { handler => handler.register(this) }
     }
 
     val masterControlServerServiceType = config.getPropertyString(

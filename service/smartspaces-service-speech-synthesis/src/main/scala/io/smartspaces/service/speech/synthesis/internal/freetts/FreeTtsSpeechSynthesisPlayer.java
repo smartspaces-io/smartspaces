@@ -66,8 +66,8 @@ public class FreeTtsSpeechSynthesisPlayer implements SpeechSynthesisPlayer {
     voice = voiceManager.getVoice("kevin16");
 
     if (voice == null) {
-      throw new SmartSpacesException("Cannot find a voice named " + "kevin16"
-          + ".  Please specify a different voice.");
+      throw new SmartSpacesException(
+          "Cannot find a voice named " + "kevin16" + ".  Please specify a different voice.");
     }
 
     try {
@@ -90,12 +90,7 @@ public class FreeTtsSpeechSynthesisPlayer implements SpeechSynthesisPlayer {
     if (sync) {
       voice.speak(text);
     } else {
-      executorService.submit(new Runnable() {
-        @Override
-        public void run() {
-          voice.speak(text);
-        }
-      });
+      executorService.submit(() -> voice.speak(text));
     }
   }
 }

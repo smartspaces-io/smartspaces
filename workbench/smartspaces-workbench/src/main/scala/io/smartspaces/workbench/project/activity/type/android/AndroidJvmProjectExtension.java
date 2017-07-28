@@ -23,7 +23,7 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.process.NativeCommandsExecutor;
 import io.smartspaces.workbench.project.ProjectTaskContext;
-import io.smartspaces.workbench.project.java.JvmProjectExtension;
+import io.smartspaces.workbench.project.javalang.JvmProjectExtension;
 
 import java.io.File;
 import java.util.Arrays;

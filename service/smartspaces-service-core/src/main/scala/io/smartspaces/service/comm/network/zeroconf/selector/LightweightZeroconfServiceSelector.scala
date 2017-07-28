@@ -20,7 +20,7 @@ package io.smartspaces.service.comm.network.zeroconf.selector
 import io.smartspaces.SmartSpacesException
 import io.smartspaces.service.comm.network.zeroconf.ZeroconfServiceInfo
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 import java.util.ArrayList
 import java.util.Comparator
@@ -75,7 +75,7 @@ class LightweightZeroconfServiceSelector[T <: ZeroconfServiceInfo] extends Zeroc
     // If pending wasn't empty, then we have no other service other than
     // what was given just now.
     if (!pending.isEmpty()) {
-      pending.foreach {
+      pending.asScala.foreach {
         _.setService(serviceInfo)
       }
       pending.clear()
@@ -213,7 +213,7 @@ private class Services[T <: ZeroconfServiceInfo](val priority: Int) {
     var value = random.nextInt(totalWeight)
 
     var current: Long = 0
-    services.foreach { (service) =>
+    services.asScala.foreach { (service) =>
       current += service.weight
       if (value < current) {
         return Option(service)

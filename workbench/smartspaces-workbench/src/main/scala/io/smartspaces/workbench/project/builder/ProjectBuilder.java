@@ -29,7 +29,7 @@ import io.smartspaces.workbench.project.ProjectTaskContext;
  *
  * @author Keith M. Hughes
  */
-public interface ProjectBuilder<T extends Project> {
+public interface ProjectBuilder {
 
   /**
    * Configuration property defining the project home directory.
@@ -57,5 +57,5 @@ public interface ProjectBuilder<T extends Project> {
    * @throws SmartSpacesException
    *           the build failed
    */
-  void build(T project, ProjectTaskContext context) throws SmartSpacesException;
+  void build(Project project, ProjectTaskContext context) throws SmartSpacesException;
 }

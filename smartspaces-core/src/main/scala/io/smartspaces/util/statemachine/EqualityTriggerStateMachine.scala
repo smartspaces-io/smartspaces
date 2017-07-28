@@ -19,7 +19,7 @@ package io.smartspaces.util.statemachine
 import io.smartspaces.SimpleSmartSpacesException
 import io.smartspaces.SmartSpacesException
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 import java.util.HashMap
 import java.util.Map
@@ -128,7 +128,7 @@ class EqualityTriggerStateMachine[S, T, SO <: StateMachineObject[S, T]] extends 
    *           the state machine is invalid
    */
   def validate (): Unit = {
-    internalStates.entrySet().foreach { (internalState) =>
+    internalStates.entrySet.asScala.foreach { (internalState) =>
       if (internalState.getValue().state.isEmpty) {
         throw new SimpleSmartSpacesException(String.format(
           "State %s is not explicity defined", internalState.getKey().toString));

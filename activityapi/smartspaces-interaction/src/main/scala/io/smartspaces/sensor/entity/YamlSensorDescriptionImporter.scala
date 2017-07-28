@@ -19,8 +19,7 @@ package io.smartspaces.sensor.entity
 import java.io.InputStream
 import java.util.Map
 
-import scala.collection.JavaConversions.iterableAsScalaIterable
-import scala.collection.JavaConversions.mapAsScalaMap
+import scala.collection.JavaConverters._
 import scala.util.control.Breaks.break
 import scala.util.control.Breaks.breakable
 
@@ -227,7 +226,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   def getMeasurementTypes(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
     data.down(SECTION_HEADER_MEASUREMENT_TYPES)
 
-    data.getArrayEntries().foreach((measurementTypeEntry: ArrayDynamicObjectEntry) => {
+    data.getArrayEntries().asScala.foreach((measurementTypeEntry: ArrayDynamicObjectEntry) => {
       val measurementTypeData: DynamicObject = measurementTypeEntry.down()
 
       val valueType =
@@ -244,7 +243,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
           measurementTypeData.getRequiredString(SECTION_FIELD_MEASUREMENT_TYPES_DEFAULT_UNIT)
 
         measurementTypeData.down(SECTION_HEADER_MEASUREMENT_TYPES_MEASUREMENT_UNITS)
-        data.getArrayEntries().foreach((measurementUnitEntry: ArrayDynamicObjectEntry) => {
+        data.getArrayEntries().asScala.foreach((measurementUnitEntry: ArrayDynamicObjectEntry) => {
           val measurementUnitData = measurementUnitEntry.down()
 
           val measurementUnit =
@@ -283,7 +282,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   def getSensorDetails(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
     data.down(SECTION_HEADER_SENSOR_DETAILS)
 
-    data.getArrayEntries().foreach((sensorDetailEntry) => {
+    data.getArrayEntries().asScala.foreach((sensorDetailEntry) => {
       val sensorDetailData = sensorDetailEntry.down()
 
       var sensorUpdateTimeLimit: Option[Long] = None
@@ -305,7 +304,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
         sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit)
 
       sensorDetailData.down(SECTION_FIELD_SENSOR_DETAILS_CHANNELS)
-      data.getArrayEntries().foreach((channelDetailEntry: ArrayDynamicObjectEntry) => breakable {
+      data.getArrayEntries().asScala.foreach((channelDetailEntry: ArrayDynamicObjectEntry) => breakable {
         val channelDetailData = channelDetailEntry.down()
 
         val measurementTypeId =
@@ -360,7 +359,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   def getPeople(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
     data.down(SECTION_HEADER_PEOPLE)
 
-    data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
+    data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
       val itemData = entry.down()
 
       sensorRegistry.registerSensedEntity(new SimplePersonSensedEntityDescription(getNextId(),
@@ -382,7 +381,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   def getSensors(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
     data.down(SECTION_HEADER_SENSORS)
 
-    data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => breakable {
+    data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => breakable {
       val itemData = entry.down()
 
       var sensorDetail: Option[SensorDetail] = None
@@ -441,7 +440,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   def getMarkers(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
     data.down(SECTION_HEADER_MARKERS)
 
-    data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
+    data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
       val itemData = entry.down()
 
       sensorRegistry.registerMarker(new SimpleMarkerEntityDescription(getNextId(),
@@ -464,7 +463,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   def getPhysicalLocations(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
     data.down(SECTION_HEADER_PHYSICAL_SPACES)
 
-    data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
+    data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
       val itemData = entry.down()
 
       sensorRegistry.registerSensedEntity(new SimplePhysicalSpaceSensedEntityDescription(getNextId(),
@@ -488,7 +487,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   def getSensorSensedEntityAssociations(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
     data.down(SECTION_HEADER_SENSOR_ASSOCIATIONS)
 
-    data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
+    data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
       val itemData = entry.down()
 
       sensorRegistry.associateSensorWithSensedEntity(
@@ -509,7 +508,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   def getMarkerAssociations(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
     data.down(SECTION_HEADER_MARkER_ASSOCIATIONS)
 
-    data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
+    data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
       val itemData = entry.down()
 
       sensorRegistry.associateMarkerWithMarkedEntity(
@@ -531,12 +530,12 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   def getEntityConfigurations(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
     data.down(SECTION_HEADER_CONFIGURATIONS)
 
-    data.getObjectEntries().foreach((entry: ObjectDynamicObjectEntry) => {
+    data.getObjectEntries().asScala.foreach((entry: ObjectDynamicObjectEntry) => {
       val entityId = entry.getProperty()
 
       val configurationData = entry.getValue().down(entityId)
       if (configurationData.isObject) {
-        sensorRegistry.addConfigurationData(entityId, configurationData.asMap().toMap)
+        sensorRegistry.addConfigurationData(entityId, configurationData.asMap().asScala.toMap)
       }
     })
 

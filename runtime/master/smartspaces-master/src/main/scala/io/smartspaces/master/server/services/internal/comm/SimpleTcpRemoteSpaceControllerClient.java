@@ -542,13 +542,9 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
   private void handleControllerConnect(ActiveSpaceController spaceController) {
     long timestamp = System.currentTimeMillis();
 
-    spaceEnvironment.getExecutorService().submit(new Runnable() {
-
-      @Override
-      public void run() {
-        remoteControllerClientListeners.signalSpaceControllerConnect(spaceController, timestamp);
-      }
-    });
+    spaceEnvironment.getExecutorService().submit(() ->
+        remoteControllerClientListeners.signalSpaceControllerConnect(spaceController, timestamp)
+    );
   }
 
   /**
@@ -563,13 +559,9 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
   private void handleControllerDisconnect(ActiveSpaceController spaceController) {
     long timestamp = System.currentTimeMillis();
 
-    spaceEnvironment.getExecutorService().submit(new Runnable() {
-
-      @Override
-      public void run() {
-        remoteControllerClientListeners.signalSpaceControllerDisconnect(spaceController, timestamp);
-      }
-    });
+    spaceEnvironment.getExecutorService().submit(() ->
+        remoteControllerClientListeners.signalSpaceControllerDisconnect(spaceController, timestamp)
+    );
   }
 
   /**

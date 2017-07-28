@@ -43,22 +43,10 @@ public class ManagedTaskSequencer implements Sequencer {
     ManagedTaskSequencer sequencer =
         new ManagedTaskSequencer(spaceEnvironment, spaceEnvironment.getLog());
 
-    Sequence sequence = sequencer.newSequence(spaceEnvironment.getContainerManagedScope(), spaceEnvironment.getLog());
-    sequence.add(SequenceElements.runnable(new Runnable() {
-
-      @Override
-      public void run() {
-        System.out.println("Hello!");
-      }
-
-    })).add(SequenceElements.repeat(10, SequenceElements.runnable(new Runnable() {
-
-      @Override
-      public void run() {
-        System.out.println("Repeat");
-      }
-
-    })));
+    Sequence sequence = sequencer.newSequence(spaceEnvironment.getContainerManagedScope(),
+        spaceEnvironment.getLog());
+    sequence.add(SequenceElements.runnable(() -> System.out.println("Hello!"))).add(
+        SequenceElements.repeat(10, SequenceElements.runnable(() -> System.out.println("Repeat"))));
 
     sequence.startup();
     SmartSpacesUtilities.delay(10000);
@@ -125,12 +113,7 @@ public class ManagedTaskSequencer implements Sequencer {
    * @return the managed command running the sequence
    */
   ManagedTask startSequence(final ManagedTaskSequence sequence) {
-    return managedTasks.submit(new Runnable() {
-      @Override
-      public void run() {
-        sequence.runSequence(ManagedTaskSequencer.this);
-      }
-    });
+    return managedTasks.submit(() -> sequence.runSequence(ManagedTaskSequencer.this));
   }
 
   /**

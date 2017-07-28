@@ -38,7 +38,7 @@ public interface ProjectContext {
    *
    * @return the project being built
    */
-  <T extends Project> T getProject();
+  Project getProject();
 
   /**
    * Get the workbench task context the project is being built under.
@@ -50,12 +50,9 @@ public interface ProjectContext {
   /**
    * Get the project type for the project.
    *
-   * @param <T>
-   *          project type class
-   *
    * @return project type for the context
    */
-  <T extends ProjectType> T getProjectType();
+  ProjectType getProjectType();
 
   /**
    * Return the appropriate file path depending on evaluate and default root

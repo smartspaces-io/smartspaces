@@ -22,15 +22,16 @@ import io.smartspaces.workbench.project.ProjectConfigurationProperty;
 import io.smartspaces.workbench.project.constituent.BaseProjectConstituent;
 import io.smartspaces.workbench.project.constituent.BaseProjectConstituentBuilder;
 import io.smartspaces.workbench.project.constituent.ProjectConstituent;
+import io.smartspaces.workbench.project.constituent.ProjectConstituentBuilder;
+import io.smartspaces.workbench.project.constituent.ProjectConstituentBuilderFactory;
+
+import com.google.common.collect.Maps;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import org.jdom2.Element;
-import org.jdom2.Namespace;
-
-import com.google.common.collect.Maps;
 
 /**
  * The project file constituent for activity projects.

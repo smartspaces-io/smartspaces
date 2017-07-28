@@ -32,7 +32,7 @@ import java.util.HashMap
 import java.util.List
 import java.util.Map
 
-import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.JavaConverters._
 
 /**
  * Standard Master API manager for resource operations.
@@ -59,7 +59,7 @@ class StandardMasterApiResourceManager extends BaseMasterApiManager with MasterA
 
       val resources = resourceRepository.getResources(filterExpression)
       Collections.sort(resources, MasterApiUtilities.RESOURCE_BY_NAME_AND_VERSION_COMPARATOR)
-      resources.foreach { resource =>
+      resources.asScala.foreach { resource =>
         responseData.add(extractBasicResourceApiData(resource))
       }
 

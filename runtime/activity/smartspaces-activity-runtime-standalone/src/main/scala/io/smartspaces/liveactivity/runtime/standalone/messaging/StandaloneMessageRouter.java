@@ -264,12 +264,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     try {
       router.startup();
 
-      activity.getManagedTasks().submit(new Runnable() {
-        @Override
-        public void run() {
-          receiveLoop();
-        }
-      });
+      activity.getManagedTasks().submit(() -> receiveLoop());
 
       if (!messageWhiteList.isEmpty()) {
         final boolean autoFlush = true;

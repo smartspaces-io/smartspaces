@@ -82,26 +82,16 @@ public class SimpleAcceptingPriorityTaskQueue implements AcceptingPriorityTaskQu
     this.log = log;
   }
 
-  /* (non-Javadoc)
-   * @see io.smartspaces.tasks.AcceptingPriorityTaskQueue#startup()
-   */
   @Override
   public void startup() {
     synchronized (runningMutex) {
       if (queueFuture == null) {
-        queueFuture = spaceEnvironment.getExecutorService().submit(new Runnable() {
-          @Override
-          public void run() {
-            processTasks();
-          }
-        });
+        queueFuture = spaceEnvironment.getExecutorService().submit(() ->
+            processTasks());
       }
     }
   }
 
-  /* (non-Javadoc)
-   * @see io.smartspaces.tasks.AcceptingPriorityTaskQueue#shutdown()
-   */
   @Override
   public void shutdown() {
     synchronized (runningMutex) {
@@ -112,9 +102,6 @@ public class SimpleAcceptingPriorityTaskQueue implements AcceptingPriorityTaskQu
     }
   }
 
-  /* (non-Javadoc)
-   * @see io.smartspaces.tasks.AcceptingPriorityTaskQueue#stopAcceptingAndShutdown()
-   */
   @Override
   public void stopAcceptingAndShutdown() {
     synchronized (runningMutex) {
@@ -123,9 +110,6 @@ public class SimpleAcceptingPriorityTaskQueue implements AcceptingPriorityTaskQu
     }
   }
 
-  /* (non-Javadoc)
-   * @see io.smartspaces.tasks.AcceptingPriorityTaskQueue#isRunning()
-   */
   @Override
   public boolean isRunning() {
     synchronized (runningMutex) {
@@ -133,9 +117,6 @@ public class SimpleAcceptingPriorityTaskQueue implements AcceptingPriorityTaskQu
     }
   }
 
-  /* (non-Javadoc)
-   * @see io.smartspaces.tasks.AcceptingPriorityTaskQueue#setAccepting(boolean)
-   */
   @Override
   public void setAccepting(boolean accepting) {
     synchronized (acceptingMutex) {
@@ -143,17 +124,11 @@ public class SimpleAcceptingPriorityTaskQueue implements AcceptingPriorityTaskQu
     }
   }
 
-  /* (non-Javadoc)
-   * @see io.smartspaces.tasks.AcceptingPriorityTaskQueue#addTask(java.lang.Runnable)
-   */
   @Override
   public void addTask(Runnable task) {
     addTask(task, DEFAULT_PRIORITY);
   }
 
-  /* (non-Javadoc)
-   * @see io.smartspaces.tasks.AcceptingPriorityTaskQueue#addTask(java.lang.Runnable, int)
-   */
   @Override
   public void addTask(Runnable task, int priority) {
     synchronized (acceptingMutex) {

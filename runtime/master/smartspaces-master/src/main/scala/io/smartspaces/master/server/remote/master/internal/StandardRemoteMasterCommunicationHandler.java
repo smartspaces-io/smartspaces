@@ -124,17 +124,13 @@ public class StandardRemoteMasterCommunicationHandler implements RemoteMasterCom
    *          information about the controller
    */
   private void signalSpaceControllerRegistration(SpaceController controller) {
-    spaceEnvironment.getExecutorService().submit(new Runnable() {
-
-      @Override
-      public void run() {
-        log.info(listeners);
-        for (RemoteMasterServerListener listener : listeners) {
-          try {
-            listener.onSpaceControllerRegistration(controller);
-          } catch (Throwable e) {
-            log.error("Exception while signaling space controller registration", e);
-          }
+    spaceEnvironment.getExecutorService().submit(() -> {
+      log.info(listeners);
+      for (RemoteMasterServerListener listener : listeners) {
+        try {
+          listener.onSpaceControllerRegistration(controller);
+        } catch (Throwable e) {
+          log.error("Exception while signaling space controller registration", e);
         }
       }
     });

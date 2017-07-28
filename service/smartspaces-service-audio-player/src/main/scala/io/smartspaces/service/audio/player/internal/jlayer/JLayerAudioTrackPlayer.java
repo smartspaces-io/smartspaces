@@ -114,9 +114,7 @@ public class JLayerAudioTrackPlayer extends BaseAudioTrackPlayer {
       // The JLayer play() method runs entirely in the calling thread,
       // which means it blocks until the song is complete. So run in its own
       // thread.
-      executorService.submit(new Runnable() {
-        @Override
-        public void run() {
+      executorService.submit(() -> {
           try {
             player.play();
           } catch (JavaLayerException e) {
@@ -124,7 +122,6 @@ public class JLayerAudioTrackPlayer extends BaseAudioTrackPlayer {
           } finally {
             Closeables.closeQuietly(trackStream);
           }
-        }
       });
     } catch (Exception e) {
       throw new SmartSpacesException((String.format("Cannot create audio player for file %s",

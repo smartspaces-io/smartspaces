@@ -151,14 +151,11 @@ public class NtpTimeProvider implements TimeProvider {
     //
     // Note that errors thrown while periodically updating time will be
     // logged but not rethrown.
-    scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        try {
-          updateTime();
-        } catch (IOException e) {
-          log.error("Periodic NTP update failed.", e);
-        }
+    scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(() -> {
+      try {
+        updateTime();
+      } catch (IOException e) {
+        log.error("Periodic NTP update failed.", e);
       }
     }, 0, updatePeriod, updatePeriodTimeUnit);
   }

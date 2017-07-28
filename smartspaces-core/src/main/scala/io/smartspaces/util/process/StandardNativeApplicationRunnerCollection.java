@@ -39,7 +39,8 @@ import com.google.common.collect.Lists;
  *
  * @author Keith M. Hughes
  */
-public class StandardNativeApplicationRunnerCollection implements NativeApplicationRunnerCollection {
+public class StandardNativeApplicationRunnerCollection
+    implements NativeApplicationRunnerCollection {
 
   /**
    * The count for the countdown latch for
@@ -97,7 +98,8 @@ public class StandardNativeApplicationRunnerCollection implements NativeApplicat
    * @param log
    *          the logger
    */
-  public StandardNativeApplicationRunnerCollection(SmartSpacesEnvironment spaceEnvironment, Log log) {
+  public StandardNativeApplicationRunnerCollection(SmartSpacesEnvironment spaceEnvironment,
+      Log log) {
     this.spaceEnvironment = spaceEnvironment;
     this.log = log;
 
@@ -110,12 +112,8 @@ public class StandardNativeApplicationRunnerCollection implements NativeApplicat
       for (NativeApplicationRunner runner : runners) {
         runner.startup();
       }
-      samplingFuture = spaceEnvironment.getExecutorService().scheduleAtFixedRate(new Runnable() {
-        @Override
-        public void run() {
-          sampleRunners();
-        }
-      }, samplingPeriod, samplingPeriod, TimeUnit.MILLISECONDS);
+      samplingFuture = spaceEnvironment.getExecutorService().scheduleAtFixedRate(
+          () -> sampleRunners(), samplingPeriod, samplingPeriod, TimeUnit.MILLISECONDS);
     }
   }
 
@@ -157,8 +155,8 @@ public class StandardNativeApplicationRunnerCollection implements NativeApplicat
   }
 
   @Override
-  public NativeApplicationRunnerState runNativeApplicationRunner(
-      NativeApplicationDescription description, long waitTime) {
+  public NativeApplicationRunnerState
+      runNativeApplicationRunner(NativeApplicationDescription description, long waitTime) {
     NativeApplicationRunner runner = newNativeApplicationRunner();
     runner.configure(description);
 

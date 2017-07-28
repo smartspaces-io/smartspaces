@@ -20,12 +20,13 @@ package io.smartspaces.workbench.project.library;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
-import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
+import io.smartspaces.workbench.programming.ProgrammingLanguageSupport;
+import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectFileLayout;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.builder.BaseProjectBuilder;
-import io.smartspaces.workbench.project.java.JvmJarAssembler;
-import io.smartspaces.workbench.project.java.StandardJvmJarAssembler;
+import io.smartspaces.workbench.project.javalang.JvmJarAssembler;
+import io.smartspaces.workbench.project.javalang.StandardJvmJarAssembler;
 import io.smartspaces.workbench.project.test.IsolatedClassloaderJavaTestRunner;
 import io.smartspaces.workbench.project.test.JavaTestRunner;
 
@@ -36,7 +37,7 @@ import java.io.File;
  *
  * @author Keith M. Hughes
  */
-public class JvmLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject> {
+public class JvmLibraryProjectBuilder extends BaseProjectBuilder {
 
   /**
    * File extension to give the build artifact.
@@ -54,14 +55,16 @@ public class JvmLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject>
   private final FileSupport fileSupport = FileSupportImpl.INSTANCE;
 
   @Override
-  public void build(LibraryProject project, ProjectTaskContext context)
+  public void build(Project project, ProjectTaskContext context)
       throws SmartSpacesException {
+    
+    LibraryProject aproject = (LibraryProject) project;
 
     ProgrammingLanguageSupport languageSupport =
         context.getWorkbenchTaskContext().getWorkbench().getProgrammingLanguageRegistry()
             .getProgrammingLanguageSupport(context.getProject().getLanguage());
 
-    File buildDirectory = context.getBuildDirectory();
+    File buildDirectory = context.getRootBuildDirectory();
     File compilationFolder = getOutputDirectory(buildDirectory);
 
     File jarDestinationFile = getBuildDestinationFile(project, buildDirectory, JAR_FILE_EXTENSION);
@@ -71,7 +74,7 @@ public class JvmLibraryProjectBuilder extends BaseProjectBuilder<LibraryProject>
     context.processGeneratedResources(compilationFolder);
     context.processResources(compilationFolder);
 
-    jarAssembler.buildJar(jarDestinationFile, compilationFolder, null, project.getContainerInfo(),
+    jarAssembler.buildJar(jarDestinationFile, compilationFolder, null, aproject.getContainerInfo(),
         context, languageSupport);
 
     runTests(jarDestinationFile, context, languageSupport);

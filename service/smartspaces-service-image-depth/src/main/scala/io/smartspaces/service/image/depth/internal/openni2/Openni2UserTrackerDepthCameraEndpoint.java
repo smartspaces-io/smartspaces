@@ -71,8 +71,8 @@ public class Openni2UserTrackerDepthCameraEndpoint implements UserTrackerDepthCa
   /**
    * The tracked entity listeners.
    */
-  private final List<TrackedEntityListener<Vector3>> trackedEntityListeners = Lists
-      .newCopyOnWriteArrayList();
+  private final List<TrackedEntityListener<Vector3>> trackedEntityListeners =
+      Lists.newCopyOnWriteArrayList();
 
   /**
    * Logger for this endpoint.
@@ -153,12 +153,8 @@ public class Openni2UserTrackerDepthCameraEndpoint implements UserTrackerDepthCa
 
     pointerTrackerFrame = Pointer.allocatePointer(NiteUserTrackerFrame.class);
 
-    frameReaderLoop = executorService.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        processUserTrackFrame();
-      }
-    }, 0, readerLoopRate, TimeUnit.MILLISECONDS);
+    frameReaderLoop = executorService.scheduleAtFixedRate(() -> processUserTrackFrame(), 0,
+        readerLoopRate, TimeUnit.MILLISECONDS);
 
     sampling.set(true);
   }
@@ -173,8 +169,8 @@ public class Openni2UserTrackerDepthCameraEndpoint implements UserTrackerDepthCa
 
     IntValuedEnum<NiteStatus> niteStatus = NiTE2Library.niteShutdownUserTracker(userTracker.get());
     if (niteStatus != NiteStatus.NITE_STATUS_OK) {
-      log.error(OpenNi2Support.getFullNiteMessage("Could not shut down NiTE user tracker",
-          niteStatus));
+      log.error(
+          OpenNi2Support.getFullNiteMessage("Could not shut down NiTE user tracker", niteStatus));
     }
 
     IntValuedEnum<OniStatus> openniStatus = OpenNI2Library.oniDeviceClose(camera.get());
@@ -230,12 +226,11 @@ public class Openni2UserTrackerDepthCameraEndpoint implements UserTrackerDepthCa
 
           int state = userData.state();
 
-          SimpleTrackedEntity<Vector3> entity =
-              new SimpleTrackedEntity<Vector3>(Integer.toString(userData.id()), new Vector3(
-                  com.x(), com.y(), com.z()),
-                  (state & NiTE2Library.NiteUserState.NITE_USER_STATE_NEW.value) != 0,
-                  (state & NiTE2Library.NiteUserState.NITE_USER_STATE_VISIBLE.value) != 0,
-                  (state & NiTE2Library.NiteUserState.NITE_USER_STATE_LOST.value) != 0);
+          SimpleTrackedEntity<Vector3> entity = new SimpleTrackedEntity<Vector3>(
+              Integer.toString(userData.id()), new Vector3(com.x(), com.y(), com.z()),
+              (state & NiTE2Library.NiteUserState.NITE_USER_STATE_NEW.value) != 0,
+              (state & NiTE2Library.NiteUserState.NITE_USER_STATE_VISIBLE.value) != 0,
+              (state & NiTE2Library.NiteUserState.NITE_USER_STATE_LOST.value) != 0);
           entities.add(entity);
         }
       } catch (Exception e) {

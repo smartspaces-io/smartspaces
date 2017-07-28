@@ -22,13 +22,15 @@ import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.constituent.BaseProjectConstituent;
 import io.smartspaces.workbench.project.constituent.BaseProjectConstituentBuilder;
 import io.smartspaces.workbench.project.constituent.ProjectConstituent;
-import io.smartspaces.workbench.project.java.ContainerInfo;
-import io.smartspaces.workbench.project.java.ContainerInfo.ImportPackage;
-
-import java.util.List;
+import io.smartspaces.workbench.project.constituent.ProjectConstituentBuilder;
+import io.smartspaces.workbench.project.constituent.ProjectConstituentBuilderFactory;
+import io.smartspaces.workbench.project.javalang.ContainerInfo;
+import io.smartspaces.workbench.project.javalang.ContainerInfo.ImportPackage;
 
 import org.jdom2.Element;
 import org.jdom2.Namespace;
+
+import java.util.List;
 
 /**
  * The project file constituent for library projects.

@@ -17,7 +17,7 @@
 
 package io.smartspaces.workbench.project.activity.type;
 
-import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
+import io.smartspaces.workbench.programming.ProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectFileLayout;
 import io.smartspaces.workbench.project.ProjectTaskContext;
@@ -26,7 +26,7 @@ import io.smartspaces.workbench.project.ProjectType;
 import io.smartspaces.workbench.project.activity.ActivityProject;
 import io.smartspaces.workbench.project.activity.ActivityProjectTemplate;
 import io.smartspaces.workbench.project.activity.builder.BaseActivityProjectBuilder;
-import io.smartspaces.workbench.project.activity.builder.java.JvmActivityProjectBuilder;
+import io.smartspaces.workbench.project.activity.builder.javalang.JvmActivityProjectBuilder;
 import io.smartspaces.workbench.project.activity.type.android.AndroidJvmProjectExtension;
 import io.smartspaces.workbench.project.builder.ProjectBuilder;
 import io.smartspaces.workbench.project.ide.EclipseIdeProjectCreatorSpecification;

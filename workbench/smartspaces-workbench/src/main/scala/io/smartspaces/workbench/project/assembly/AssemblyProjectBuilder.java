@@ -34,7 +34,7 @@ import java.io.File;
  *
  * @author Trevor Pering
  */
-public class AssemblyProjectBuilder extends BaseProjectBuilder<AssemblyProject> {
+public class AssemblyProjectBuilder extends BaseProjectBuilder {
 
   /**
    * File extension for an assembly artifact.
@@ -47,8 +47,9 @@ public class AssemblyProjectBuilder extends BaseProjectBuilder<AssemblyProject> 
   private FileSupport fileSupport = FileSupportImpl.INSTANCE;
 
   @Override
-  public void build(AssemblyProject project, ProjectTaskContext context)
+  public void build(Project project, ProjectTaskContext context)
       throws SmartSpacesException {
+    AssemblyProject aproject = (AssemblyProject) project;
     String packFormat = project.getAttribute(PACK_FORMAT_ATTRIBUTE);
     if (!ZIP_PACK_FORMAT.equals(packFormat)) {
       throw new SimpleSmartSpacesException(String.format(
@@ -62,9 +63,9 @@ public class AssemblyProjectBuilder extends BaseProjectBuilder<AssemblyProject> 
     context.processGeneratedResources(stagingDirectory);
     context.processSources(stagingDirectory);
 
-    writeResourceMap(project, stagingDirectory, context);
+    writeResourceMap(aproject, stagingDirectory, context);
 
-    assemble(project, stagingDirectory, context);
+    assemble(aproject, stagingDirectory, context);
   }
 
   /**
@@ -77,9 +78,9 @@ public class AssemblyProjectBuilder extends BaseProjectBuilder<AssemblyProject> 
    * @param context
    *          the context to use when building the activity
    */
-  protected void assemble(Project project, File stagingDirectory, ProjectTaskContext context) {
+  protected void assemble(AssemblyProject project, File stagingDirectory, ProjectTaskContext context) {
     // TODO(keith): Move this into the archiver and don't do it in here.
-    File buildDirectory = context.getBuildDirectory();
+    File buildDirectory = context.getRootBuildDirectory();
     File assemblyFile = getBuildDestinationFile(project, buildDirectory, ASSEMBLY_FILE_EXTENSION);
     fileSupport.zip(assemblyFile, stagingDirectory);
   }

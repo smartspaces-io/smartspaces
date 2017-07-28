@@ -45,32 +45,32 @@ dependencies {
   
   compile 'javax.persistence:com.springsource.javax.persistence:2.0.0'
 
-  compile('org.springframework:spring-orm:3.1.1.RELEASE') {
+  compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-orm:4.3.7.RELEASE_1') {
     exclude group: 'commons-logging' 
     exclude group: 'aopalliance'
   }
   
-  compile('org.springframework:spring-tx:3.1.1.RELEASE') {
+  compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-tx:4.3.7.RELEASE_1') {
     exclude group: 'commons-logging' 
     exclude group: 'aopalliance'
   }
 
-  compile('org.springframework:spring-aop:3.1.1.RELEASE') {
+  compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-aop:4.3.7.RELEASE_1') {
     exclude group: 'commons-logging' 
     exclude group: 'aopalliance'
   }
 
-  compile('org.springframework:spring-jdbc:3.1.1.RELEASE') {
+  compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-jdbc:4.3.7.RELEASE_1') {
     exclude group: 'commons-logging' 
     exclude group: 'aopalliance'
   }
 
-  compile('org.springframework:spring-context:3.1.1.RELEASE') {
+  compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-context:4.3.7.RELEASE_1') {
     exclude group: 'commons-logging' 
     exclude group: 'aopalliance'
   }
   
-  compile('org.springframework:spring-core:3.1.1.RELEASE') {
+  compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-core:4.3.7.RELEASE_1') {
     exclude group: 'commons-logging' 
   }
   
@@ -152,6 +152,7 @@ jar {
     instruction 'Import-Package',
 		'org.apache.felix.service.command',
 		'org.eclipse.gemini.blueprint.config',
+		'org.springframework.core',
 		'org.springframework.transaction.config',
 		'org.springframework.aop',
 		'org.springframework.aop.framework',

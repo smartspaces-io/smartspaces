@@ -75,10 +75,9 @@ public class LimitedRetryRestartStrategy<T extends Restartable> extends BaseRest
 
   @Override
   public RestartStrategyInstance<T> newInstance(T restartable) {
-    LimitedRetryRestartStrategyInstance<T> instance =
-        new LimitedRetryRestartStrategyInstance<T>(restartable, this, numberRetries, sampleDelay,
-            timeDurationSuccessfulRestart, spaceEnvironment.getTimeProvider(),
-            spaceEnvironment.getExecutorService());
+    LimitedRetryRestartStrategyInstance<T> instance = new LimitedRetryRestartStrategyInstance<T>(
+        restartable, this, numberRetries, sampleDelay, timeDurationSuccessfulRestart,
+        spaceEnvironment.getTimeProvider(), spaceEnvironment.getExecutorService());
     instance.startRestartAttempts();
 
     return instance;
@@ -93,8 +92,8 @@ public class LimitedRetryRestartStrategy<T extends Restartable> extends BaseRest
    *
    * @author Keith M. Hughes
    */
-  public static class LimitedRetryRestartStrategyInstance<U extends Restartable> extends
-      BaseRestartStrategyInstance<U> {
+  public static class LimitedRetryRestartStrategyInstance<U extends Restartable>
+      extends BaseRestartStrategyInstance<U> {
 
     /**
      * The number of retries left.
@@ -165,16 +164,14 @@ public class LimitedRetryRestartStrategy<T extends Restartable> extends BaseRest
      * Do the first restart attempt.
      */
     public void startRestartAttempts() {
-      executorService.execute(new Runnable() {
-        @Override
-        public void run() {
-          attemptRestart();
+      executorService.execute(() -> {
+        attemptRestart();
 
-          while (running && !Thread.interrupted()) {
-            SmartSpacesUtilities.delay(getCurrentSampleDelay());
-            repeatedRestartAttempt();
-          }
+        while (running && !Thread.interrupted()) {
+          SmartSpacesUtilities.delay(getCurrentSampleDelay());
+          repeatedRestartAttempt();
         }
+
       });
     }
 

@@ -28,7 +28,7 @@ import java.io.File
 import java.util.List
 import java.util.Map
 
-import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.JavaConverters._
 
 /**
  * A sensor input that reads the output of
@@ -75,7 +75,7 @@ class StandardFilePersistenceSensorInput(private val inputFile: File) extends Se
       .get(StandardFilePersistenceSensorHandler.FIELD_NAME_SAMPLES).asInstanceOf[List[Map[String, Object]]]
 
     var lastTimestamp: Long = 0;
-    samples.foreach((sample) => {
+    samples.asScala.foreach((sample) => {
       val newTimestamp =
         sample.get(StandardFilePersistenceSensorHandler.FIELD_NAME_SAMPLE_TIMESTAMP).asInstanceOf[Long]
 

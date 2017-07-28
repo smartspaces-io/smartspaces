@@ -17,7 +17,8 @@
 
 package io.smartspaces.workbench.project.constituent;
 
-import org.apache.commons.logging.Log;
+import io.smartspaces.logging.ExtendedLog;
+
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
@@ -26,13 +27,12 @@ import org.jdom2.Namespace;
  *
  * @author Keith M. Hughes
  */
-public abstract class BaseProjectConstituentBuilder implements
-    ProjectConstituent.ProjectConstituentBuilder {
+public abstract class BaseProjectConstituentBuilder implements ProjectConstituentBuilder {
 
   /**
    * The logger for this builder.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * {@code true} if the builder had errors.
@@ -86,7 +86,7 @@ public abstract class BaseProjectConstituentBuilder implements
   }
 
   @Override
-  public void setLog(Log log) {
+  public void setLog(ExtendedLog log) {
     this.log = log;
   }
 }

@@ -39,8 +39,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.JavaConversions.asScalaSet
+import scala.collection.JavaConverters._
 
 /**
  * A collection of MQTT publishers for a given message topic.
@@ -74,7 +73,7 @@ class StandardMqttPublishers[T](messageEncoder: MessageEncoder[T, Array[Byte]], 
 
     log.debug(s"Adding publishers for topic names ${topicNames} to MQTT master ${mqttClient.mqttBrokerDescription}")
 
-    topicNames.foreach { topicName =>
+    topicNames.asScala.foreach { topicName =>
       log.debug(s"Adding publisher topic ${topicName}")
       clients.add(new MqttClientInformation(mqttClient, topicName));
     }
@@ -84,7 +83,7 @@ class StandardMqttPublishers[T](messageEncoder: MessageEncoder[T, Array[Byte]], 
     val mqttMessage = new MqttMessage(messageEncoder.encode(message))
     mqttMessage.setQos(1)
 
-    clients.foreach { client =>
+    clients.asScala.foreach { client =>
       try {
         client.mqttClient.mqttClient.publish(client.topicName, mqttMessage, null, actionListener);
       } catch {

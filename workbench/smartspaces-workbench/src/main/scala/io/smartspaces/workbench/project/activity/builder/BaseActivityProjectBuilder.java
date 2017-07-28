@@ -20,6 +20,7 @@ package io.smartspaces.workbench.project.activity.builder;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectTaskContext;
 import io.smartspaces.workbench.project.activity.ActivityProject;
 import io.smartspaces.workbench.project.builder.BaseProjectBuilder;
@@ -34,7 +35,7 @@ import java.util.Map;
  *
  * @author Keith M. Hughes
  */
-public class BaseActivityProjectBuilder extends BaseProjectBuilder<ActivityProject> {
+public class BaseActivityProjectBuilder extends BaseProjectBuilder {
 
   /**
    * Path for the location of the activity.xml template.
@@ -52,16 +53,18 @@ public class BaseActivityProjectBuilder extends BaseProjectBuilder<ActivityProje
   private final FileSupport fileSupport = FileSupportImpl.INSTANCE;
 
   @Override
-  public void build(ActivityProject project, ProjectTaskContext context)
+  public void build(Project project, ProjectTaskContext context)
       throws SmartSpacesException {
+    ActivityProject aproject = (ActivityProject)project;
+    
     File stagingDirectory = context.getStagingDirectory();
     fileSupport.directoryExists(stagingDirectory);
 
-    onBuild(project, context, stagingDirectory);
+    onBuild(aproject, context, stagingDirectory);
 
-    copyActivityResources(project, stagingDirectory, context);
-    handleActivityXml(project, stagingDirectory, context);
-    handleActivityConf(project, stagingDirectory, context);
+    copyActivityResources(aproject, stagingDirectory, context);
+    handleActivityXml(aproject, stagingDirectory, context);
+    handleActivityConf(aproject, stagingDirectory, context);
     context.processGeneratedResources(stagingDirectory);
     context.processResources(stagingDirectory);
     writeResourceMap(project, stagingDirectory, context);

@@ -19,12 +19,25 @@ package io.smartspaces.workbench.project.jdom;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.web.HttpConstants;
 import io.smartspaces.workbench.SmartSpacesWorkbench;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.constituent.ProjectConstituent;
+import io.smartspaces.workbench.project.constituent.ProjectConstituentBuilder;
+import io.smartspaces.workbench.project.constituent.ProjectConstituentBuilderFactory;
+
+import com.google.common.base.Charsets;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.located.LocatedJDOMFactory;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.ext.EntityResolver2;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,18 +48,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.located.LocatedJDOMFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.ext.EntityResolver2;
-
-import com.google.common.base.Charsets;
 
 /**
  * Base-class for facilitating reading XML documents using jdom.
@@ -69,7 +70,7 @@ public class JdomReader {
   /**
    * Map of resource types to resource builders.
    */
-  private final Map<String, ProjectConstituent.ProjectConstituentBuilderFactory> projectConstituentFactoryMap =
+  private final Map<String, ProjectConstituentBuilderFactory> projectConstituentFactoryMap =
       new HashMap<>();
 
   /**
@@ -109,8 +110,7 @@ public class JdomReader {
    * @param constituentFactory
    *          factory to add
    */
-  protected void addConstituentType(
-      ProjectConstituent.ProjectConstituentBuilderFactory constituentFactory) {
+  protected void addConstituentType(ProjectConstituentBuilderFactory constituentFactory) {
     projectConstituentFactoryMap.put(constituentFactory.getName(), constituentFactory);
   }
 
@@ -266,7 +266,7 @@ public class JdomReader {
    *
    * @return logger
    */
-  public Log getLog() {
+  public ExtendedLog getLog() {
     return workbench.getLog();
   }
 
@@ -292,7 +292,7 @@ public class JdomReader {
    *
    * @return the constituent factory map
    */
-  public Map<String, ProjectConstituent.ProjectConstituentBuilderFactory>
+  public Map<String, ProjectConstituentBuilderFactory>
       getProjectConstituentFactoryMap() {
     return projectConstituentFactoryMap;
   }
@@ -365,10 +365,10 @@ public class JdomReader {
   private void getConstituent(Namespace namespace, Element constituentElement, Project project,
       List<ProjectConstituent> constituents) {
     String type = constituentElement.getName();
-    ProjectConstituent.ProjectConstituentBuilderFactory factory =
+    ProjectConstituentBuilderFactory factory =
         getProjectConstituentFactoryMap().get(type);
     if (factory != null) {
-      ProjectConstituent.ProjectConstituentBuilder projectConstituentBuilder = factory.newBuilder();
+      ProjectConstituentBuilder projectConstituentBuilder = factory.newBuilder();
       projectConstituentBuilder.setLog(getLog());
       ProjectConstituent constituent =
           projectConstituentBuilder.buildConstituentFromElement(namespace, constituentElement,

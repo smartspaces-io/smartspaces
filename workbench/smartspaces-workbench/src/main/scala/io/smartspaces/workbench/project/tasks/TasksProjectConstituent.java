@@ -27,19 +27,19 @@ import io.smartspaces.workbench.project.StandardProjectTaskNames;
 import io.smartspaces.workbench.project.constituent.BaseProjectConstituent;
 import io.smartspaces.workbench.project.constituent.BaseProjectConstituentBuilder;
 import io.smartspaces.workbench.project.constituent.ProjectConstituent;
+import io.smartspaces.workbench.project.constituent.ProjectConstituentBuilderFactory;
 import io.smartspaces.workbench.tasks.NativeWorkbenchTaskFactory;
 import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
 import io.smartspaces.workbench.tasks.WorkbenchTaskFactory;
 import io.smartspaces.workbench.tasks.WorkbenchTaskModifiers;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.collect.Maps;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
 
-import com.google.common.collect.Maps;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A project constituent for handling the tasks section of a project file.

@@ -26,12 +26,14 @@ import io.smartspaces.workbench.project.constituent.BaseProjectConstituent;
 import io.smartspaces.workbench.project.constituent.BaseProjectConstituentBuilder;
 import io.smartspaces.workbench.project.constituent.ContentProjectConstituent;
 import io.smartspaces.workbench.project.constituent.ProjectConstituent;
-
-import java.io.File;
-import java.util.Map;
+import io.smartspaces.workbench.project.constituent.ProjectConstituentBuilder;
+import io.smartspaces.workbench.project.constituent.ProjectConstituentBuilderFactory;
 
 import org.jdom2.Element;
 import org.jdom2.Namespace;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * A file template specification.

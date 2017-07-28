@@ -40,7 +40,7 @@ import java.util.Map;
  *
  * @author peringknife@google.com (Trevor Pering)
  */
-public abstract class BaseProjectBuilder<T extends Project> implements ProjectBuilder<T> {
+public abstract class BaseProjectBuilder implements ProjectBuilder {
 
   /**
    * Template data key entry for the list of resource sources.
@@ -80,7 +80,7 @@ public abstract class BaseProjectBuilder<T extends Project> implements ProjectBu
    * @throws SmartSpacesException
    *           the build failed
    */
-  public void onBuild(T project, ProjectTaskContext context, File stagingDirectory)
+  public void onBuild(Project project, ProjectTaskContext context, File stagingDirectory)
       throws SmartSpacesException {
     // Default is nothing
   }
@@ -128,7 +128,7 @@ public abstract class BaseProjectBuilder<T extends Project> implements ProjectBu
   protected void
       writeResourceMap(Project project, File stagingDirectory, ProjectTaskContext context) {
     File resourceMapFile =
-        fileSupport.newFile(context.getBuildDirectory(), ActivityProject.FILENAME_RESOURCE_MAP);
+        fileSupport.newFile(context.getRootBuildDirectory(), ActivityProject.FILENAME_RESOURCE_MAP);
 
     Map<String, Object> templateData = new HashMap<>();
     List<Map<String, String>> srcList = new ArrayList<>();

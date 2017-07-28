@@ -128,8 +128,8 @@ allprojects {
   version = mavenVersion
 
   tasks.withType(JavaCompile) { 
-    sourceCompatibility = "1.7"
-    targetCompatibility = "1.7" 
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8" 
   }
 }
 
@@ -137,6 +137,8 @@ subprojects {
   ext {
     extrasBuildFolder = "build/staging/controller/extras"
   }
+  
+  task allDeps(type: DependencyReportTask) {}
 
   if (!ext.nonjavaProjects.contains(path)) {
     apply plugin: 'scala'
@@ -224,7 +226,7 @@ subprojects {
 
     if (!ext.nonOsgiJvmProjects.contains(path)) {
       dependencies {
-        compile 'org.scala-lang:scala-library:2.11.8'
+        compile 'org.scala-lang:scala-library:2.12.2'
       }
     }
     

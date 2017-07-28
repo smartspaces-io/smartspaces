@@ -18,9 +18,9 @@
 package io.smartspaces.workbench.project.test;
 
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
+import io.smartspaces.workbench.programming.ProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.ProjectTaskContext;
-import io.smartspaces.workbench.project.java.JvmProjectExtension;
+import io.smartspaces.workbench.project.javalang.JvmProjectExtension;
 
 import java.io.File;
 

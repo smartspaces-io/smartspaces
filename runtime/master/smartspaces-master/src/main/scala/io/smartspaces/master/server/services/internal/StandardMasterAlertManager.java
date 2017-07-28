@@ -142,12 +142,9 @@ public class StandardMasterAlertManager implements MasterAlertManager {
   public void startup() {
     masterEventManager.addListener(masterEventListener);
 
-    alertWatcherControl = spaceEnvironment.getExecutorService().scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        scan();
-      }
-    }, alertWatcherDelay, alertWatcherDelay, TimeUnit.MILLISECONDS);
+    alertWatcherControl = spaceEnvironment.getExecutorService().scheduleAtFixedRate(() ->
+        scan()
+        , alertWatcherDelay, alertWatcherDelay, TimeUnit.MILLISECONDS);
 
     spaceEnvironment.getLog().info("Master alert manager started");
   }
@@ -218,12 +215,9 @@ public class StandardMasterAlertManager implements MasterAlertManager {
     // Have to go into future so not happening in comm threads.
     // TODO(keith): Eventually handle with callback on shutdown events for
     // controller comms.
-    spaceEnvironment.getExecutorService().schedule(new Runnable() {
-      @Override
-      public void run() {
-        processSpaceControllerShutdown(activeSpaceController);
-      }
-    }, CONTROLLER_SHUTDOWN_EVENT_HANDLING_DELAY, TimeUnit.MILLISECONDS);
+    spaceEnvironment.getExecutorService().schedule(() ->
+        processSpaceControllerShutdown(activeSpaceController)
+      , CONTROLLER_SHUTDOWN_EVENT_HANDLING_DELAY, TimeUnit.MILLISECONDS);
   }
 
   /**
@@ -284,12 +278,9 @@ public class StandardMasterAlertManager implements MasterAlertManager {
     // Shouldn't block the thread with alert which could take time depending on
     // what is being contacted, e.g. email
     // server.
-    spaceEnvironment.getExecutorService().execute(new Runnable() {
-      @Override
-      public void run() {
-        raiseHeartbeatLostAlert(activeSpaceController, timeSinceLastHeartbeat);
-      }
-    });
+    spaceEnvironment.getExecutorService().execute(() ->
+        raiseHeartbeatLostAlert(activeSpaceController, timeSinceLastHeartbeat)
+    );
   }
 
   /**

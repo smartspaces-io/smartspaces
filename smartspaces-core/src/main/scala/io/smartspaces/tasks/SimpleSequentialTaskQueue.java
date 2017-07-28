@@ -68,12 +68,8 @@ public class SimpleSequentialTaskQueue implements SequentialTaskQueue {
 
   @Override
   public void startup() {
-    queueFuture = spaceEnvironment.getExecutorService().submit(new Runnable() {
-      @Override
-      public void run() {
-        processTasks();
-      }
-    });
+    queueFuture = spaceEnvironment.getExecutorService().submit(() ->
+        processTasks());
   }
 
   @Override

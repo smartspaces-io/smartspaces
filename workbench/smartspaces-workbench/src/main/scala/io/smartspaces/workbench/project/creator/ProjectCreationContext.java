@@ -122,8 +122,8 @@ public class ProjectCreationContext implements ProjectContext {
   }
 
   @Override
-  public <T extends Project> T getProject() {
-    return (T) project;
+  public Project getProject() {
+    return project;
   }
 
   /**
@@ -214,9 +214,8 @@ public class ProjectCreationContext implements ProjectContext {
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public <T extends ProjectType> T getProjectType() {
-    return (T) getWorkbenchTaskContext().getWorkbench().getProjectTypeRegistry()
+  public ProjectType getProjectType() {
+    return getWorkbenchTaskContext().getWorkbench().getProjectTypeRegistry()
         .getProjectType(project);
   }
 

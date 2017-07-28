@@ -26,7 +26,7 @@ import io.smartspaces.sensor.processing.value.SensorValueProcessor
 import io.smartspaces.sensor.processing.value.SensorValueProcessorContext
 import io.smartspaces.util.data.dynamic.DynamicObject
 
-import scala.collection.JavaConversions.iterableAsScalaIterable
+import scala.collection.JavaConverters._
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
 
@@ -88,7 +88,7 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
     if (sensorDetail.isDefined) {
       // Go through every property in the data set, find its type, and then create
       // appropriate values.
-      data.getProperties().foreach((channelId) => {
+      data.getProperties().asScala.foreach((channelId) => {
         if (data.isObject(channelId)) {
           log.info(s"Processing channel data ${channelId}")
 

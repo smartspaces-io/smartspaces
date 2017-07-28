@@ -23,7 +23,6 @@ import io.smartspaces.system.core.configuration.ConfigurationProvider;
 import io.smartspaces.system.core.container.ContainerCustomizerProvider;
 import io.smartspaces.system.core.logging.LoggingProvider;
 import io.smartspaces.workbench.SmartSpacesWorkbench;
-import io.smartspaces.workbench.ui.WorkbenchUi;
 
 import java.util.List;
 
@@ -42,11 +41,6 @@ import org.ros.concurrent.DefaultScheduledExecutorService;
  * @author Keith M. Hughes
  */
 public class SmartSpacesWorkbenchActivator implements BundleActivator {
-
-  /**
-   * The workbench UI, if any.
-   */
-  private WorkbenchUi ui;
 
   /**
    * The context for the workbench's OSGi bundle.
@@ -163,12 +157,7 @@ public class SmartSpacesWorkbenchActivator implements BundleActivator {
     // Make sure the bundle is us.
     if (event.getBundle().equals(bundleContext.getBundle())) {
       if (event.getType() == BundleEvent.STARTED) {
-        spaceEnvironment.getExecutorService().execute(new Runnable() {
-          @Override
-          public void run() {
-            runWorkbench();
-          }
-        });
+        spaceEnvironment.getExecutorService().execute(() -> runWorkbench());
       }
     }
   }
@@ -184,10 +173,7 @@ public class SmartSpacesWorkbenchActivator implements BundleActivator {
     SmartSpacesWorkbench workbench = new SmartSpacesWorkbench(spaceEnvironment, systemClassLoader);
 
     List<String> commandLineArguments = containerCustomizerProvider.getCommandLineArguments();
-    if (commandLineArguments.size() == 1
-        && SmartSpacesWorkbench.COMMAND_LINE_FLAG_GUI.equals(commandLineArguments.get(0))) {
-      ui = new WorkbenchUi(workbench);
-    } else if (!commandLineArguments.isEmpty()) {
+    if (!commandLineArguments.isEmpty()) {
       boolean success = false;
       try {
         success = workbench.doCommands(commandLineArguments);

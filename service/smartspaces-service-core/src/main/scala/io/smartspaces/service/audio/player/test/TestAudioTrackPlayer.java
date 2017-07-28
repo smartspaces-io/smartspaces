@@ -72,17 +72,14 @@ public class TestAudioTrackPlayer extends BaseAudioTrackPlayer {
 
   @Override
   public void start(final FilePlayableAudioTrack track) {
-    executorService.submit(new Runnable() {
-      @Override
-      public void run() {
-        playing.set(true);
-        notifyTrackStart(track);
+    executorService.submit(() -> {
+      playing.set(true);
+      notifyTrackStart(track);
 
-        SmartSpacesUtilities.delay(trackLength);
+      SmartSpacesUtilities.delay(trackLength);
 
-        playing.set(false);
-        notifyTrackStop(track);
-      }
+      playing.set(false);
+      notifyTrackStop(track);
     });
   }
 

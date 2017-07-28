@@ -18,10 +18,10 @@
 dependencies {
   compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit:4.11_1')
 
-  compile 'org.scala-lang:scala-library:2.11.8'
+  compile 'org.scala-lang:scala-library:2.12.2'
   
   runtime 'org.mockito:mockito-all:1.9.5'
-  runtime 'org.scalatest:scalatest_2.11:3.0.0'
+  runtime 'org.scalatest:scalatest_2.12:3.0.3'
   
   provided 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'
 

@@ -52,7 +52,7 @@ import java.util.HashSet
 import java.util.Map
 import java.util.Set
 
-import scala.collection.JavaConversions.asScalaSet
+import scala.collection.JavaConverters._
 
 object StandardQuartzSchedulerService {
   val ORIENTDB_URI = "PLOCAL:${system.installdir}/database/quartz"
@@ -248,7 +248,7 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
   override def removeJobGroup(jobGroupName: String): Unit = {
     try {
       val jobs = persistedScheduler.getJobKeys(GroupMatcher.jobGroupEquals(jobGroupName))
-      jobs.foreach { job =>
+      jobs.asScala.foreach { job =>
         persistedScheduler.deleteJob(job)
       }
     } catch {
@@ -272,7 +272,7 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
       val jobNames: Set[String] = new HashSet
 
       val jobKeys = persistedScheduler.getJobKeys(GroupMatcher.groupEquals(groupName))
-      jobKeys foreach { key =>
+      jobKeys.asScala foreach { key =>
         jobNames.add(key.getName())
       }
 

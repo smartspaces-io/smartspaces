@@ -18,7 +18,7 @@
 package io.smartspaces.workbench.project.library;
 
 import io.smartspaces.workbench.project.Project;
-import io.smartspaces.workbench.project.java.ContainerInfo;
+import io.smartspaces.workbench.project.javalang.ContainerInfo;
 
 /**
  * A Smart Spaces project for libraries.

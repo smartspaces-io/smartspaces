@@ -20,14 +20,14 @@ package io.smartspaces.workbench.project.ide;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.workbench.FreemarkerTemplater;
-import io.smartspaces.workbench.language.java.JavaProgrammingLanguageSupport;
-import io.smartspaces.workbench.language.scala.ScalaProgrammingLanguageSupport;
+import io.smartspaces.workbench.programming.javalang.JavaProgrammingLanguageSupport;
+import io.smartspaces.workbench.programming.scalalang.ScalaProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectDependency;
 import io.smartspaces.workbench.project.ProjectTaskContext;
-import io.smartspaces.workbench.project.java.JvmProjectExtension;
-import io.smartspaces.workbench.project.java.JvmProjectSupport;
-import io.smartspaces.workbench.project.java.StandardJvmProjectSupport;
+import io.smartspaces.workbench.project.javalang.JvmProjectExtension;
+import io.smartspaces.workbench.project.javalang.JvmProjectSupport;
+import io.smartspaces.workbench.project.javalang.StandardJvmProjectSupport;
 
 import com.google.common.collect.Lists;
 

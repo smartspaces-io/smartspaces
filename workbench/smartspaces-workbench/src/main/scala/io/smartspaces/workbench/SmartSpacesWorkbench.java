@@ -25,10 +25,10 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.SmartSpacesFilesystem;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
-import io.smartspaces.workbench.language.ProgrammingLanguageRegistry;
-import io.smartspaces.workbench.language.StandardProgrammingLanguageRegistry;
-import io.smartspaces.workbench.language.java.JavaProgrammingLanguageSupport;
-import io.smartspaces.workbench.language.scala.ScalaProgrammingLanguageSupport;
+import io.smartspaces.workbench.programming.ProgrammingLanguageRegistry;
+import io.smartspaces.workbench.programming.StandardProgrammingLanguageRegistry;
+import io.smartspaces.workbench.programming.javalang.JavaProgrammingLanguageSupport;
+import io.smartspaces.workbench.programming.scalalang.ScalaProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectManager;
 import io.smartspaces.workbench.project.ProjectTaskContext;
@@ -41,12 +41,10 @@ import io.smartspaces.workbench.project.creator.ProjectCreationContext;
 import io.smartspaces.workbench.project.creator.ProjectCreator;
 import io.smartspaces.workbench.project.creator.ProjectCreatorImpl;
 import io.smartspaces.workbench.project.group.GroupProjectTemplateSpecification;
-import io.smartspaces.workbench.project.java.BndOsgiContainerBundleCreator;
-import io.smartspaces.workbench.project.java.ContainerBundleCreator;
+import io.smartspaces.workbench.project.javalang.BndOsgiContainerBundleCreator;
+import io.smartspaces.workbench.project.javalang.ContainerBundleCreator;
 import io.smartspaces.workbench.project.jdom.JdomProjectGroupTemplateSpecificationReader;
 import io.smartspaces.workbench.tasks.WorkbenchTaskContext;
-import io.smartspaces.workbench.ui.UserInterfaceFactory;
-import io.smartspaces.workbench.ui.editor.swing.PlainSwingUserInterfaceFactory;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
@@ -170,11 +168,6 @@ public class SmartSpacesWorkbench {
    */
   private final SmartSpacesFilesystem workbenchFileSystem =
       new BasicSmartSpacesFilesystem(new File(".").getAbsoluteFile().getParentFile());
-
-  /**
-   * The user interface factory to be used by the workbench.
-   */
-  private final UserInterfaceFactory userInterfaceFactory = new PlainSwingUserInterfaceFactory();
 
   /**
    * File support for file operations.
@@ -699,13 +692,6 @@ public class SmartSpacesWorkbench {
    */
   public ProjectManager getProjectManager() {
     return projectManager;
-  }
-
-  /**
-   * @return the userInterfaceFactory
-   */
-  public UserInterfaceFactory getUserInterfaceFactory() {
-    return userInterfaceFactory;
   }
 
   /**

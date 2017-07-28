@@ -75,7 +75,7 @@ public class StandardActivityProjectPackager implements ActivityProjectPackager 
     ZipOutputStream out = null;
     try {
       // Create the ZIP file
-      File buildDestinationFile = getBuildDestinationFile(project, context.getBuildDirectory());
+      File buildDestinationFile = getBuildDestinationFile(project, context.getRootBuildDirectory());
       File activityFolder = context.getStagingDirectory();
 
       out = new ZipOutputStream(new FileOutputStream(buildDestinationFile));

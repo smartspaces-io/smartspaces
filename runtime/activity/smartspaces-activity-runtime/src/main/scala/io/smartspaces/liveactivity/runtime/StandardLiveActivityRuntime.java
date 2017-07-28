@@ -278,8 +278,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
       try {
         listener.onLiveActivityRuntimeStartup(this);
       } catch (Throwable e) {
-        getSpaceEnvironment().getLog()
-            .formatError("Error on live activity runtime onStartup call");
+        getSpaceEnvironment().getLog().formatError("Error on live activity runtime onStartup call");
       }
     }
   }
@@ -328,8 +327,8 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
         publishActivityStatus(uuid, status);
       }
     } catch (Throwable e) {
-      getSpaceEnvironment().getLog().formatError(e,
-          "Error during startup of live activity: %s", uuid);
+      getSpaceEnvironment().getLog().formatError(e, "Error during startup of live activity: %s",
+          uuid);
       ActivityStatus status = new ActivityStatus(ActivityState.STARTUP_FAILURE, e.getMessage());
       publishActivityStatus(uuid, status);
     }
@@ -350,8 +349,8 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
         InstalledLiveActivity liveActivity =
             liveActivityRepository.getInstalledLiveActivityByUuid(uuid);
         if (liveActivity != null) {
-          getSpaceEnvironment().getLog().formatInfo(
-              "Shutting down activity (wasn't running): %s", liveActivity.getDisplayName());
+          getSpaceEnvironment().getLog().formatInfo("Shutting down activity (wasn't running): %s",
+              liveActivity.getDisplayName());
           publishActivityStatus(uuid, LiveActivityRunner.INITIAL_ACTIVITY_STATUS);
         } else {
           // TODO(keith): Tell master the controller doesn't exist.
@@ -364,8 +363,8 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
         }
       }
     } catch (Throwable e) {
-      getSpaceEnvironment().getLog().formatError(e,
-          "Error during shutdown of live activity: %s", uuid);
+      getSpaceEnvironment().getLog().formatError(e, "Error during shutdown of live activity: %s",
+          uuid);
 
       ActivityStatus status = new ActivityStatus(ActivityState.SHUTDOWN_FAILURE, e.getMessage());
       publishActivityStatus(uuid, status);
@@ -418,8 +417,8 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
         publishActivityStatus(uuid, status);
       }
     } catch (Throwable e) {
-      getSpaceEnvironment().getLog().formatError(e,
-          "Error during activation of live activity: %s", uuid);
+      getSpaceEnvironment().getLog().formatError(e, "Error during activation of live activity: %s",
+          uuid);
 
       ActivityStatus status = new ActivityStatus(ActivityState.ACTIVATE_FAILURE, e.getMessage());
       publishActivityStatus(uuid, status);
@@ -538,8 +537,8 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
     instance.setActivityRuntime(this);
     instance.setUuid(uuid);
 
-    instance.setName(configuration
-        .getPropertyString(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_NAME));
+    instance.setName(
+        configuration.getPropertyString(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_NAME));
 
     instance.setConfiguration(configuration);
     instance.setActivityFilesystem(activityFilesystem);
@@ -576,8 +575,8 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
   }
 
   @Override
-  public ExtendedLog getActivityLog(InstalledLiveActivity installedActivity, Configuration configuration,
-      ActivityFilesystem activityFilesystem) {
+  public ExtendedLog getActivityLog(InstalledLiveActivity installedActivity,
+      Configuration configuration, ActivityFilesystem activityFilesystem) {
     return activityLogFactory.createLogger(installedActivity,
         configuration.getPropertyString(ActivityConfiguration.CONFIGURATION_NAME_LOG_LEVEL,
             SmartSpacesEnvironment.LOG_LEVEL_ERROR),
@@ -603,7 +602,8 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
         activity.getUuid().replace("-", "_"));
 
     ActivityFilesystem activityFilesystem = activity.getActivityFilesystem();
-    configuration.setProperty(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_FILESYSTEM_DIR_INSTALL,
+    configuration.setProperty(
+        ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_FILESYSTEM_DIR_INSTALL,
         activityFilesystem.getInstallDirectory().getAbsolutePath());
     configuration.setProperty(ActivityConfiguration.CONFIGURATION_NAME_ACTIVITY_FILESYSTEM_DIR_LOG,
         activityFilesystem.getLogDirectory().getAbsolutePath());
@@ -628,12 +628,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
     // TODO(keith): Android hates garbage collection. This may need an
     // object
     // pool.
-    taskQueue.addTask(new Runnable() {
-      @Override
-      public void run() {
-        handleActivityStateChange(activity, oldStatus, newStatus);
-      }
-    });
+    taskQueue.addTask(() -> handleActivityStateChange(activity, oldStatus, newStatus));
   }
 
   @Override
@@ -702,8 +697,8 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
     }
 
     if (liveActivityRunner == null) {
-      getSpaceEnvironment().getLog()
-          .formatWarn("Could not find live activity runner with uuid %s", uuid);
+      getSpaceEnvironment().getLog().formatWarn("Could not find live activity runner with uuid %s",
+          uuid);
     }
 
     return liveActivityRunner;
@@ -900,13 +895,8 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
     // TODO(keith): Android hates garbage collection. This may need an
     // object
     // pool.
-    taskQueue.addTask(new Runnable() {
-      @Override
-      public void run() {
-        activityStateTransitioners.transition(uuid,
-            liveActivityRunner.sampleActivityStatus().getState());
-      }
-    });
+    taskQueue.addTask(() -> activityStateTransitioners.transition(uuid,
+        liveActivityRunner.sampleActivityStatus().getState()));
   }
 
   /**
@@ -943,8 +933,7 @@ public class StandardLiveActivityRuntime extends BaseActivityRuntime
       reportIllegalActivityStateTransition(liveActivityRunner, transition);
     } else if (transitionResult == TransitionResult.NOOP) {
       // If didn't do anything, report the message requested.
-      getSpaceEnvironment().getLog()
-          .warn(String.format(noopMessage, liveActivityRunner.getUuid()));
+      getSpaceEnvironment().getLog().warn(String.format(noopMessage, liveActivityRunner.getUuid()));
       publishActivityStatus(liveActivityRunner.getUuid(),
           liveActivityRunner.getCachedActivityStatus());
     } else {

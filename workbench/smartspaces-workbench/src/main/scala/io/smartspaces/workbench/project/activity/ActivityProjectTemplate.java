@@ -19,7 +19,7 @@ package io.smartspaces.workbench.project.activity;
 
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
-import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
+import io.smartspaces.workbench.programming.ProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.BaseProjectTemplate;
 import io.smartspaces.workbench.project.creator.ProjectCreationContext;
 

@@ -21,14 +21,14 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
-import io.smartspaces.workbench.language.ProgrammingLanguageCompiler;
-import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
+import io.smartspaces.workbench.programming.ProgrammingLanguageCompiler;
+import io.smartspaces.workbench.programming.ProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectFileLayout;
 import io.smartspaces.workbench.project.ProjectTaskContext;
-import io.smartspaces.workbench.project.java.JvmProjectExtension;
-import io.smartspaces.workbench.project.java.JvmProjectSupport;
-import io.smartspaces.workbench.project.java.StandardJvmProjectSupport;
+import io.smartspaces.workbench.project.javalang.JvmProjectExtension;
+import io.smartspaces.workbench.project.javalang.JvmProjectSupport;
+import io.smartspaces.workbench.project.javalang.StandardJvmProjectSupport;
 
 import org.apache.commons.logging.Log;
 
@@ -84,7 +84,7 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
     languageSupport.getCompilationFiles(
         fileSupport.newFile(project.getBaseDirectory(), languageSupport.getTestSourceDirectory()),
         compilationFiles);
-    languageSupport.getCompilationFiles(fileSupport.newFile(context.getBuildDirectory(),
+    languageSupport.getCompilationFiles(fileSupport.newFile(context.getRootBuildDirectory(),
         languageSupport.getTestGeneratedSourceDirectory()), compilationFiles);
 
     if (compilationFiles.isEmpty()) {
@@ -97,7 +97,7 @@ public class IsolatedClassloaderJavaTestRunner implements JavaTestRunner {
 
     List<File> classpath = getClasspath(context, extension, jarDestinationFile);
 
-    File buildFolder = fileSupport.newFile(context.getBuildDirectory(),
+    File buildFolder = fileSupport.newFile(context.getRootBuildDirectory(),
         ProjectFileLayout.BUILD_DIRECTORY_CLASSES_TESTS);
     fileSupport.directoryExists(buildFolder);
 

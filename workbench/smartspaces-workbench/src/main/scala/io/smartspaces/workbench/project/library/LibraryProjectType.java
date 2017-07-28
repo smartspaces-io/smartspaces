@@ -17,7 +17,7 @@
 
 package io.smartspaces.workbench.project.library;
 
-import io.smartspaces.workbench.language.ProgrammingLanguageSupport;
+import io.smartspaces.workbench.programming.ProgrammingLanguageSupport;
 import io.smartspaces.workbench.project.BaseProjectTemplate;
 import io.smartspaces.workbench.project.Project;
 import io.smartspaces.workbench.project.ProjectTaskContext;

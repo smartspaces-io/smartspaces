@@ -19,8 +19,15 @@ package io.smartspaces.workbench.project.javalang;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
+
+import aQute.bnd.osgi.Analyzer;
+import aQute.bnd.osgi.Constants;
+import aQute.bnd.osgi.Jar;
+import aQute.bnd.osgi.Verifier;
+import org.apache.commons.logging.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,16 +36,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipOutputStream;
-
-import org.apache.commons.logging.Log;
-
-import aQute.bnd.osgi.Analyzer;
-import aQute.bnd.osgi.Constants;
-import aQute.bnd.osgi.Jar;
-import aQute.bnd.osgi.Verifier;
 
 /**
  * Create an OSGi bundle from a source file using BND.
@@ -98,7 +99,7 @@ public class BndOsgiContainerBundleCreator implements ContainerBundleCreator {
   /**
    * The logger to use.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * The file support to use for file operations.
@@ -113,7 +114,7 @@ public class BndOsgiContainerBundleCreator implements ContainerBundleCreator {
    * @param log
    *          the logger to use
    */
-  public BndOsgiContainerBundleCreator(File baseTempDir, Log log) {
+  public BndOsgiContainerBundleCreator(File baseTempDir, ExtendedLog log) {
     this.baseTempDir = baseTempDir;
     this.log = log;
   }
@@ -151,6 +152,7 @@ public class BndOsgiContainerBundleCreator implements ContainerBundleCreator {
         base = null;
         if (m.matches()) {
           base = m.group(1);
+          System.out.println(m.group(2));
         } else {
           throw new SimpleSmartSpacesException(
               "Can not calculate bundle name from the source jar, "
@@ -180,9 +182,14 @@ public class BndOsgiContainerBundleCreator implements ContainerBundleCreator {
       if (output.isDirectory()) {
         output = fileSupport.newFile(output, bundleFileName);
       }
+      
+      System.out.println(analyzer.getProperties());
 
-      analyzer.calcManifest();
+      Manifest manifest = analyzer.calcManifest();
+      System.out.println(manifest.getEntries());
+      
       Jar finalJar = analyzer.getJar();
+      finalJar.setManifest(manifest);
 
       List<String> errors = analyzer.getErrors();
       outputErrors(errors, log);
@@ -191,7 +198,7 @@ public class BndOsgiContainerBundleCreator implements ContainerBundleCreator {
       if (errors.isEmpty()) {
         finalJar.write(output);
 
-        log.info(String.format("Created OSGi bundle %s", output.getAbsolutePath()));
+        log.formatInfo("Created OSGi bundle %s", output.getAbsolutePath());
       }
     } catch (Throwable e) {
       throw new SmartSpacesException("Error while creating OSGi bundle", e);

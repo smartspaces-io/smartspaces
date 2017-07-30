@@ -36,9 +36,6 @@ class PureScalaProgrammingLanguageCompiler extends ProgrammingLanguageCompiler {
   override def compile(context: ProjectTaskContext, compilationBuildDirectory: File, classpath: java.util.List[File], compilationFiles: java.util.List[File],
     compilerOptions: java.util.List[String]): Unit = {
 
-    context.getLog()
-      .info(String.format("Running the Scala compiler with arguments %s", compilerOptions));
-
     def errorDisplay(s: String): Unit = {
       context.getLog().formatError("Error during scala compile: %s", s)
     }

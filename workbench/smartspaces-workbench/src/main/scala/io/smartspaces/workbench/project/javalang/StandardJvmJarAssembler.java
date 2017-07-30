@@ -140,9 +140,11 @@ public class StandardJvmJarAssembler implements JvmJarAssembler {
       throw new SimpleSmartSpacesException("No Scala or Java source files for Scala project");
     }
 
+    List<String> compilerOptions = languageSupport.getCompilerOptions(context);
+    context.getLog().formatInfo("Compiler options: %s", compilerOptions);
+    
     ProgrammingLanguageCompiler compiler = languageSupport.newCompiler();
-    compiler.compile(context, compilationBuildFolder, classpath, compilationFiles,
-        languageSupport.getCompilerOptions(context));
+    compiler.compile(context, compilationBuildFolder, classpath, compilationFiles, compilerOptions);
 
     copyNonSourceFiles(context, languageSupport, compilationBuildFolder);
 

@@ -18,8 +18,8 @@
 package io.smartspaces.master.ui.internal.web.activity;
 
 import io.smartspaces.master.ui.internal.web.BaseActiveSpaceMasterController;
-import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 import io.smartspaces.messaging.dynamic.SmartSpacesMessages;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
@@ -49,6 +50,23 @@ public class ActivityController extends BaseActiveSpaceMasterController {
    */
   @RequestMapping("/activity/all.html")
   public ModelAndView listActivities() {
+    Map<String, Object> response = masterApiActivityManager.getActivitiesByFilter(null);
+
+    ModelAndView mav = getModelAndView();
+
+    mav.setViewName("activity/ActivityViewAll");
+    mav.addObject("activities", response.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA));
+
+    return mav;
+  }
+
+  /**
+   * Display a list of all activities.
+   *
+   * @return Model and view for controller list display.
+   */
+  @RequestMapping(value="/activity/uploadStart.html", method = RequestMethod.POST)
+  public ModelAndView uploadActivity(@RequestParam("file") MultipartFile[] files) {
     Map<String, Object> response = masterApiActivityManager.getActivitiesByFilter(null);
 
     ModelAndView mav = getModelAndView();

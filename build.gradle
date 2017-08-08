@@ -259,9 +259,14 @@ subprojects {
       url 'http://repo.spring.io/libs-release-remote'
     }
     jcenter()
+
     maven {
-      url 'http://repository.pentaho.org/artifactory/repo/'
+      url 'https://artifacts.alfresco.com/nexus/content/repositories/public'
     }
+    
+    //maven {
+    //  url 'http://repository.pentaho.org/artifactory/repo/'
+    //}
     maven {
       url "https://eng.inhabitech.com:8082/repository/smartspaces-io"
     }

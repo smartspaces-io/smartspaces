@@ -100,11 +100,12 @@ Add the following to your gradle.properties file.
 
 ```
 smartspaces.dev.home=/home/you/smartspaces
+smartspaces.dev.home.subdir.default=latest
 ```
 
 The value is where you have an instance of Smart Spaces that you use for
 developing and testing Smart Spaces activities. This folder should
-contain subfolders master, controller, workbench for each compoenent of an
+contain subfolders master, controller, workbench for each component of an
 Smart Spaces development environment.
 
 - To build Smart Spaces and install updated files into your development
@@ -113,6 +114,17 @@ instance, use
 ```
 ./gradlew installDev
 ```
+
+which will copy everything into /home/you/smartspaces/latest
+
+If you are working with a couple of different containers, say one called mytest
+in addition to using latest, you can use the command
+
+```
+./gradlew -PdevHomeSubdir=mytest installDev
+```
+
+which will copy everything into /home/you/smartspaces/mytest
 
 - Controlling Test Sizes
 

@@ -184,7 +184,8 @@ task installDev(type: Exec, dependsOn: [
 ]) {
   // TODO(keith): get the common parts into a generic task available to all
   def stagingDir = new File(project.projectDir, "${project.ext.containerBuildTarget}").absolutePath
-  def containerDir = getProperty("smartspaces.dev.home") + "/" + project.ext.containerType
+  def subdir = project.hasProperty("devHomeSubdir") ? project.getProperty("devHomeSubdir") : getProperty("smartspaces.dev.home.subdir.default")
+  def containerDir = getProperty("smartspaces.dev.home") + "/" + subdir + "/" + project.ext.containerType
   commandLine "bash", "../install_container.bash", version, project.ext.containerType, containerDir, stagingDir
 }
 

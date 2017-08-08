@@ -120,7 +120,7 @@ allprojects {
       ext.testSizing = "small"
     }
 
-    // Define which OSGi framrwork is being used.
+    // Define which OSGi framework is being used.
     osgiContainerDependency = 'org.apache.felix:org.apache.felix.framework:5.6.1'
   }
 

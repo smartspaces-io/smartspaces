@@ -60,11 +60,11 @@ dependencies {
     exclude group: 'org.ops4j.pax.swissbox'
   }
   
-  compile 'org.eclipse.gemini.blueprint:gemini-blueprint-core:1.0.2.RELEASE'
+  compile 'io.smartspaces:org.eclipse.gemini.blueprint.core:1.0.2.RELEASE'
   
-  runtime 'org.eclipse.gemini.blueprint:gemini-blueprint-extender:1.0.2.RELEASE'
+  runtime 'io.smartspaces:org.eclipse.gemini.blueprint.extender:1.0.2.RELEASE'
   
-  compile 'org.eclipse.gemini.blueprint:gemini-blueprint-io:1.0.2.RELEASE'
+  compile 'io.smartspaces:org.eclipse.gemini.blueprint.io:1.0.2.RELEASE'
   
   compile('org.freemarker:com.springsource.freemarker:2.3.15') {
     exclude group: 'org.apache.log4j'

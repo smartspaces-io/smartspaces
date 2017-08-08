@@ -101,7 +101,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
 
     Mockito.verify(sensorValueProcessor, Mockito.never()).processData(Matchers.anyLong(),
       Matchers.any(classOf[SensorEntityModel]), Matchers.any(classOf[SensedEntityModel]),
-      Matchers.any(classOf[SensorValueProcessorContext]), Matchers.any(classOf[DynamicObject]))
+      Matchers.any(classOf[SensorValueProcessorContext]), Matchers.any(classOf[String]), Matchers.any(classOf[DynamicObject]))
   }
 
   /**
@@ -146,6 +146,6 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     processor.handleSensorData(handler, timestamp, sensorModel, sensedEntityModel, data)
 
     Mockito.verify(sensorValueProcessor, Mockito.times(1)).processData(timestamp, sensorModel,
-      sensedEntityModel, processor.processorContext, data)
+      sensedEntityModel, processor.processorContext, channelDetail.id, data)
   }
 }

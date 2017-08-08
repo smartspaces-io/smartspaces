@@ -22,6 +22,7 @@ import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.sensor.entity.model.SimpleSensedValue
 import io.smartspaces.sensor.messaging.messages.SensorMessages
 import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.sensor.entity.model.event.RawSensorLiveEvent
 
 /**
  * A processor for sensor value data messages with continuous values.
@@ -34,7 +35,7 @@ class ContinuousValueSensorValueProcessor(val measurementType: MeasurementTypeDe
   
   override def processData(timestamp: Long, sensorEntity: SensorEntityModel,
     sensedEntity: SensedEntityModel, processorContext: SensorValueProcessorContext,
-    data: DynamicObject): Unit = {
+    channelId: String, data: DynamicObject): Unit = {
     val value =
       new SimpleSensedValue[Double](sensorEntity, measurementType,
         data.getDouble(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE), timestamp)
@@ -43,5 +44,7 @@ class ContinuousValueSensorValueProcessor(val measurementType: MeasurementTypeDe
 
     sensedEntity.updateSensedValue(value, timestamp)
     sensorEntity.updateSensedValue(value, timestamp)
+    
+    processorContext.completeSensedEntityModel.eventEmitter.broadcastRawSensorEvent(new RawSensorLiveEvent(value, sensedEntity))
   }
 }

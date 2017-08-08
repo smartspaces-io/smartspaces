@@ -68,7 +68,7 @@ class SimplePhysicalSpaceSensedEntityModelTest extends JUnitSuite {
     val argumentCaptor =
       ArgumentCaptor.forClass(classOf[PhysicalSpaceOccupancyLiveEvent])
 
-    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastOccupanyEvent(argumentCaptor.capture())
+    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastOccupancyEvent(argumentCaptor.capture())
 
     val peopleEntered = Set(personModel)
     Assert.assertEquals(peopleEntered, argumentCaptor.getValue().entered)
@@ -91,7 +91,7 @@ class SimplePhysicalSpaceSensedEntityModelTest extends JUnitSuite {
       ArgumentCaptor.forClass(classOf[PhysicalSpaceOccupancyLiveEvent])
 
     // First call will be person entering.
-    Mockito.verify(eventEmitter, Mockito.times(2)).broadcastOccupanyEvent(argumentCaptor.capture())
+    Mockito.verify(eventEmitter, Mockito.times(2)).broadcastOccupancyEvent(argumentCaptor.capture())
 
     val peopleEntered = Set(personModel)
 

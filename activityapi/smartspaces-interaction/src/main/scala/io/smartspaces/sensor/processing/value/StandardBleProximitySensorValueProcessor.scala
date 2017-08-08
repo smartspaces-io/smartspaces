@@ -69,7 +69,7 @@ class StandardBleProximitySensorValueProcessor extends SensorValueProcessor {
 
   override def processData(timestamp: Long, sensor: SensorEntityModel,
     sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
-    data: DynamicObject) {
+    channelId: String, data: DynamicObject) {
     val markerId = "ble" + ":" + data.getRequiredString("id")
     val rssi = data.getDouble("rssi")
 
@@ -78,8 +78,7 @@ class StandardBleProximitySensorValueProcessor extends SensorValueProcessor {
 
     val markedEntity = processorContext.completeSensedEntityModel.
       sensorRegistry.getMarkableEntityByMarkerId(markerId)
-    processorContext.log.formatInfo("Detected ID %s,  RSSI= %f, %s\n", markerId, rssi,
-      markedEntity);
+    processorContext.log.info(s"Detected ID ${markerId},  RSSI= ${rssi}, ${markedEntity}\n");
   }
 
   /**

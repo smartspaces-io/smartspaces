@@ -23,6 +23,7 @@ import io.smartspaces.event.observable.EventPublisherSubject
 import io.smartspaces.event.observable.ObservableCreator
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.system.SmartSpacesEnvironment
+import io.smartspaces.sensor.entity.model.event.RawSensorLiveEvent
 
 /**
  * An emitter of events from sensor processors.
@@ -35,6 +36,23 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
    * The event registry. used only for object construction.
    */
   val eventObservableRegistry = spaceEnvironment.getEventObservableRegistry
+
+  /**
+   * The creator for raw sensor observables.
+   */
+  private val rawSensorEventCreator: ObservableCreator[EventPublisherSubject[RawSensorLiveEvent]] =
+    new ObservableCreator[EventPublisherSubject[RawSensorLiveEvent]]() {
+      override def newObservable(): EventPublisherSubject[RawSensorLiveEvent] = {
+        EventPublisherSubject.create(log)
+      }
+    }
+
+  /**
+   * The creator for raw sensor observables.
+   */
+  private val rawSensorEventSubject:  EventPublisherSubject[RawSensorLiveEvent] =
+      eventObservableRegistry.getObservable(RawSensorLiveEvent.EVENT_TYPE,
+        rawSensorEventCreator)
 
   /**
    * The creator for physical occupancy observables.
@@ -87,7 +105,11 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
       eventObservableRegistry.getObservable(UnknownMarkerSeenEvent.EVENT_TYPE,
         unknownMarkerSeenEventCreator)
 
-  override def broadcastOccupanyEvent(event: PhysicalSpaceOccupancyLiveEvent): Unit = {
+  override def broadcastRawSensorEvent(event: RawSensorLiveEvent): Unit = {
+    rawSensorEventSubject.onNext(event)
+  }
+
+  override def broadcastOccupancyEvent(event: PhysicalSpaceOccupancyLiveEvent): Unit = {
     physicalLocationOccupancyEventSubject.onNext(event)
   }
 

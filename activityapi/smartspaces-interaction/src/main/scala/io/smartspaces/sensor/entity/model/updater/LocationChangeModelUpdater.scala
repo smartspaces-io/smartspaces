@@ -25,6 +25,7 @@ import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
  * @author Keith M. Hughes
  */
 trait LocationChangeModelUpdater {
+  
   /**
    * Update the location of the person.
    *

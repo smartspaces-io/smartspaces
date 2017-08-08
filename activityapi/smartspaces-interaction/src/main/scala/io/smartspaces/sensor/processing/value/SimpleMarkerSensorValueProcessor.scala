@@ -45,7 +45,7 @@ class SimpleMarkerSensorValueProcessor(unknownMarkerHandler: UnknownMarkerHandle
 
   override def processData(timestamp: Long, sensorModel: SensorEntityModel,
     sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
-    data: DynamicObject): Unit = {
+    channelId: String, data: DynamicObject): Unit = {
     val markerId = data.getRequiredString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)
 
     val markerEntity = processorContext.completeSensedEntityModel.sensorRegistry.getMarkerEntityByMarkerId(markerId)

@@ -25,9 +25,9 @@ import io.smartspaces.time.provider.SettableTimeProvider
 
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.mockito.MockitoAnnotations.Mock
 import org.scalatest.junit.JUnitSuite
 import io.smartspaces.event.observable.EventObservableRegistry
 import io.smartspaces.sensor.processing.SensorProcessingEventEmitter

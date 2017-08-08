@@ -22,9 +22,9 @@ import org.junit.Before
 import org.junit.Test
 import org.scalatest.junit.JUnitSuite
 import org.mockito.ArgumentCaptor
+import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import org.mockito.MockitoAnnotations.Mock
 import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
 
 /**

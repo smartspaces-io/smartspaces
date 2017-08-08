@@ -24,6 +24,7 @@ import io.smartspaces.sensor.entity.MeasurementTypeDescription
 import io.smartspaces.sensor.messaging.messages.SensorMessages
 import io.smartspaces.data.entity.CategoricalValue
 import io.smartspaces.data.entity.CategoricalValueInstance
+import io.smartspaces.sensor.entity.model.event.RawSensorLiveEvent
 
 /**
  * A processor for sensor value data messages with categorical values.
@@ -36,7 +37,7 @@ class CategoricalValueSensorValueProcessor(val measurementType: MeasurementTypeD
   
   override def processData(timestamp: Long, sensorEntity: SensorEntityModel,
     sensedEntity: SensedEntityModel, processorContext: SensorValueProcessorContext,
-    data: DynamicObject): Unit = {
+    channelId: String, data: DynamicObject): Unit = {
     val value =
       new SimpleSensedValue[CategoricalValueInstance](sensorEntity, measurementType,
         categoricalValue.fromLabel(data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)).get, timestamp)
@@ -45,5 +46,7 @@ class CategoricalValueSensorValueProcessor(val measurementType: MeasurementTypeD
 
     sensedEntity.updateSensedValue(value, timestamp)
     sensorEntity.updateSensedValue(value, timestamp)
+    
+    processorContext.completeSensedEntityModel.eventEmitter.broadcastRawSensorEvent(new RawSensorLiveEvent(value, sensedEntity))
   }
 }

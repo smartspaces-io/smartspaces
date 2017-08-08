@@ -45,10 +45,12 @@ trait SensorValueProcessor {
    *          the sensed entity model that is associated with the sensor
    * @param processorContext
    *          the context for processor handling
+   * @param channelId
+   *          the channel ID being processed
    * @param data
    *          the data to process, should be inside the data field
    */
   def processData(timestamp: Long, sensor: SensorEntityModel,
     sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
-    data: DynamicObject): Unit
+    channelId: String, data: DynamicObject): Unit
 }

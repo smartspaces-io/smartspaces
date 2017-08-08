@@ -87,7 +87,7 @@ class SimpleMarkerSensorValueProcessorTest {
     val sensorModel = Mockito.mock(classOf[SensorEntityModel])
     val sensedEntityModel = Mockito.mock(classOf[PhysicalSpaceLocatableSensedEntityModel])
 
-    processor.processData(timestamp, sensorModel, sensedEntityModel, context, builder.toDynamicObject())
+    processor.processData(timestamp, sensorModel, sensedEntityModel, context, "channelId", builder.toDynamicObject())
 
     Mockito.verify(unknownMarkerHandler, Mockito.times(1)).handleUnknownMarker(markerId, timestamp)
   }
@@ -113,7 +113,7 @@ class SimpleMarkerSensorValueProcessorTest {
     val sensorModel = Mockito.mock(classOf[SensorEntityModel])
     val sensedEntityModel = Mockito.mock(classOf[PhysicalSpaceSensedEntityModel])
 
-    processor.processData(timestamp, sensorModel, sensedEntityModel, context, builder.toDynamicObject())
+    processor.processData(timestamp, sensorModel, sensedEntityModel, context, "channelId", builder.toDynamicObject())
 
     Mockito.verify(unknownMarkerHandler, Mockito.times(0)).handleUnknownMarker(markerId, timestamp)
     

@@ -97,7 +97,7 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
           if (sensorValueProcessor.isDefined) {
             data.down(channelId)
             sensorValueProcessor.get.processData(measurementTimestamp, sensor, sensedEntity, processorContext,
-              data);
+              channelId, data);
             data.up
           } else {
             log.warn(s"Got unknown sensed type with no apparent processor ${sensedMeasurementType}")

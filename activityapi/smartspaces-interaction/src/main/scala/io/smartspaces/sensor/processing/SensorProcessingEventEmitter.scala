@@ -19,6 +19,7 @@ package io.smartspaces.sensor.processing
 import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
 import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
 import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
+import io.smartspaces.sensor.entity.model.event.RawSensorLiveEvent
 
 /**
  * An emitter of events from sensor processors.
@@ -28,12 +29,20 @@ import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
 trait SensorProcessingEventEmitter {
   
   /**
+   * Broadcast a raw sensor event.
+   *
+   * @param event
+   * 		the event to broadcast
+   */
+  def broadcastRawSensorEvent(event:RawSensorLiveEvent): Unit
+  
+  /**
    * Broadcast a physical location occupancy event.
    *
    * @param event
    * 		the event to broadcast
    */
-  def broadcastOccupanyEvent(event: PhysicalSpaceOccupancyLiveEvent): Unit
+  def broadcastOccupancyEvent(event: PhysicalSpaceOccupancyLiveEvent): Unit
 
   /**
    * Broadcast a sensor offline event.

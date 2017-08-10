@@ -29,7 +29,8 @@ import io.smartspaces.sensor.entity.model.event.RawSensorLiveEvent
  *
  * @author Keith M. Hughes
  */
-class ContinuousValueSensorValueProcessor(val measurementType: MeasurementTypeDescription) extends SensorValueProcessor {
+class NumericContinuousValueSensorValueProcessor(
+    val measurementType: MeasurementTypeDescription) extends SensorValueProcessor {
   
   override val sensorValueType = measurementType.externalId
   

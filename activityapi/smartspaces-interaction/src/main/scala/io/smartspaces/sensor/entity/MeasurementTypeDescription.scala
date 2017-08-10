@@ -26,7 +26,7 @@ object MeasurementTypeDescription {
   /**
    * The value type for continuous numbers.
    */
-  val VALUE_TYPE_DOUBLE = "double"
+  val VALUE_TYPE_NUMERIC_CONTINUOUS = "numeric:continuous"
   
   /**
    * The value type for ids.

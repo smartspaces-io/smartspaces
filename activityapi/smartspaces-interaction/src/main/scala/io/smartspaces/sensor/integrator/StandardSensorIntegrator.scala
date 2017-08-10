@@ -16,6 +16,8 @@
 
 package io.smartspaces.sensor.integrator
 
+import java.io.File
+
 import io.smartspaces.data.entity.StandardValueRegistry
 import io.smartspaces.data.entity.ValueRegistry
 import io.smartspaces.logging.ExtendedLog
@@ -47,18 +49,17 @@ import io.smartspaces.sensor.processing.StandardUnknownMarkerHandler
 import io.smartspaces.sensor.processing.StandardUnknownSensedEntityHandler
 import io.smartspaces.sensor.processing.UnknownMarkerHandler
 import io.smartspaces.sensor.processing.UnknownSensedEntityHandler
-import io.smartspaces.sensor.processing.value.ContinuousValueSensorValueProcessor
+import io.smartspaces.sensor.processing.value.CategoricalValueSensorValueProcessor
+import io.smartspaces.sensor.processing.value.NumericContinuousValueSensorValueProcessor
 import io.smartspaces.sensor.processing.value.SimpleMarkerSensorValueProcessor
 import io.smartspaces.sensor.processing.value.StandardBleProximitySensorValueProcessor
+import io.smartspaces.sensor.value.entity.ActiveCategoricalValue
+import io.smartspaces.sensor.value.entity.ContactCategoricalValue
+import io.smartspaces.sensor.value.entity.PresenceCategoricalValue
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.time.TimeFrequency
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
-
-import java.io.File
-import io.smartspaces.sensor.value.entity.ContactCategoricalValue
-import io.smartspaces.sensor.value.entity.PresenceCategoricalValue
-import io.smartspaces.sensor.value.entity.ActiveCategoricalValue
 
 /**
  * The sensor integration layer.
@@ -170,15 +171,15 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
       new StandardSensedEntityModelProcessor(completeSensedEntityModel, managedScope, log)
     modelProcessor.addSensorValueProcessor(new StandardBleProximitySensorValueProcessor())
     modelProcessor.addSensorValueProcessor(new SimpleMarkerSensorValueProcessor(unknownMarkerHandler))
-    sensorRegistry.getAllMeasurementTypes.filter(_.valueType == MeasurementTypeDescription.VALUE_TYPE_DOUBLE).foreach {
+    sensorRegistry.getAllMeasurementTypes.filter(_.valueType == MeasurementTypeDescription.VALUE_TYPE_NUMERIC_CONTINUOUS).foreach {
       measurementType =>
-        modelProcessor.addSensorValueProcessor(new ContinuousValueSensorValueProcessor(measurementType))
+        modelProcessor.addSensorValueProcessor(new NumericContinuousValueSensorValueProcessor(measurementType))
     }
     sensorRegistry.getAllMeasurementTypes.filter(_.valueType.startsWith(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE)).foreach {
       measurementType => {
         val categoricalVariable = valueRegistry.getCategoricalValue(
             measurementType.valueType.substring(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE.length()))
-        modelProcessor.addSensorValueProcessor(new ContinuousValueSensorValueProcessor(measurementType))
+        modelProcessor.addSensorValueProcessor(new CategoricalValueSensorValueProcessor(measurementType, categoricalVariable.get))
       }
     }
 

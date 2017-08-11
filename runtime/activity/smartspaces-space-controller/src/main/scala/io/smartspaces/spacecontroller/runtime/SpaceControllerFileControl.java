@@ -144,6 +144,11 @@ public class SpaceControllerFileControl implements DirectoryWatcherListener, Man
     // Don't care.
   }
 
+  @Override
+  public void onFileModified(File file) {
+    // Don't care.
+  }
+
   /**
    * Handle the command coming in.
    *

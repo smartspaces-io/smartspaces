@@ -17,6 +17,18 @@
 
 package io.smartspaces.master.server.services.internal;
 
+import java.io.File;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import io.smartspaces.master.api.master.MasterApiActivityManager;
 import io.smartspaces.master.api.master.MasterApiMasterSupportManager;
 import io.smartspaces.master.api.master.MasterApiResourceManager;
@@ -33,24 +45,12 @@ import io.smartspaces.service.script.FileScriptSource;
 import io.smartspaces.service.script.Script;
 import io.smartspaces.service.script.ScriptService;
 import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.util.io.directorywatcher.BaseDirectoryWatcherListener;
 import io.smartspaces.util.io.directorywatcher.BatchDirectoryWatcher;
 import io.smartspaces.util.io.directorywatcher.BatchDirectoryWatcherListener;
 import io.smartspaces.util.io.directorywatcher.DirectoryWatcher;
-import io.smartspaces.util.io.directorywatcher.DirectoryWatcherListener;
 import io.smartspaces.util.io.directorywatcher.SimpleBatchDirectoryWatcher;
 import io.smartspaces.util.io.directorywatcher.SimpleDirectoryWatcher;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import java.io.File;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A basic implementation of an {@link ExtensionManager}.
@@ -274,7 +274,7 @@ public class StandardExtensionManager implements ExtensionManager {
     apiExtensionsDirectoryWatcher = new SimpleDirectoryWatcher();
     apiExtensionsDirectoryWatcher.addDirectory(new File(spaceEnvironment.getFilesystem()
         .getInstallDirectory(), API_EXTENSIONS_DIRECTORY));
-    apiExtensionsDirectoryWatcher.addDirectoryWatcherListener(new DirectoryWatcherListener() {
+    apiExtensionsDirectoryWatcher.addDirectoryWatcherListener(new BaseDirectoryWatcherListener() {
       @Override
       public void onFileAdded(File file) {
         onApiExtensionFileAdded(file);

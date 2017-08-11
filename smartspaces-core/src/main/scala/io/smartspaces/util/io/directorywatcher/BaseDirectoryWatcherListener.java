@@ -33,6 +33,11 @@ public class BaseDirectoryWatcherListener implements DirectoryWatcherListener {
   }
 
   @Override
+  public void onFileModified(File file) {
+    // Default is do nothing
+  }
+
+  @Override
   public void onFileRemoved(File file) {
     // Default is do nothing
   }

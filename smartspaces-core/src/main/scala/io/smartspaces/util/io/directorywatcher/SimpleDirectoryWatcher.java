@@ -17,17 +17,19 @@
 
 package io.smartspaces.util.io.directorywatcher;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
-import com.google.common.collect.Sets;
 import org.apache.commons.logging.Log;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +49,7 @@ public class SimpleDirectoryWatcher implements DirectoryWatcher, Runnable {
   /**
    * The files seen on the last round.
    */
-  private Set<File> filesLastScanned = new HashSet<>();
+  private Map<File, Long> filesSeen = new HashMap<>();
 
   /**
    * The listeners.
@@ -72,7 +74,7 @@ public class SimpleDirectoryWatcher implements DirectoryWatcher, Runnable {
   /**
    * The logger to use.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * The file support to use.
@@ -109,7 +111,7 @@ public class SimpleDirectoryWatcher implements DirectoryWatcher, Runnable {
    * @param log
    *          the logger to use
    */
-  public SimpleDirectoryWatcher(boolean cleanFirst, Log log) {
+  public SimpleDirectoryWatcher(boolean cleanFirst, ExtendedLog log) {
     this.log = log;
     setCleanFirst(cleanFirst);
   }
@@ -125,11 +127,15 @@ public class SimpleDirectoryWatcher implements DirectoryWatcher, Runnable {
 
   @Override
   public Set<File> startupWithScan(SmartSpacesEnvironment environment, long period, TimeUnit unit) {
-    filesLastScanned = scanAllDirectories();
+    Set<File> currentScan = scanAllDirectories();
+
+    for (File file : currentScan) {
+      filesSeen.put(file, file.lastModified());
+    }
 
     startup(environment, period, unit);
 
-    return Sets.newHashSet(filesLastScanned);
+    return currentScan;
   }
 
   @Override
@@ -179,10 +185,8 @@ public class SimpleDirectoryWatcher implements DirectoryWatcher, Runnable {
   public synchronized void scan() {
     Set<File> currentScan = scanAllDirectories();
 
-    findAddedFiles(currentScan);
     findRemovedFiles(currentScan);
-
-    filesLastScanned = currentScan;
+    findAddedFiles(currentScan);
   }
 
   /**
@@ -192,23 +196,37 @@ public class SimpleDirectoryWatcher implements DirectoryWatcher, Runnable {
    *          the files from the current scan
    */
   private void findRemovedFiles(Set<File> currentScan) {
-    for (File fileFromLast : filesLastScanned) {
+    Set<File> filesRemoved = new HashSet<>();
+
+    for (File fileFromLast : filesSeen.keySet()) {
       if (!currentScan.contains(fileFromLast)) {
-        signalFileRemoved(fileFromLast);
+        filesRemoved.add(fileFromLast);
       }
+    }
+
+    for (File removedFile : filesRemoved) {
+      filesSeen.remove(removedFile);
+      signalFileRemoved(removedFile);
     }
   }
 
   /**
-   * Find all files added since the last scan.
+   * Find all files added or modified since the last scan.
+   * 
+   * <p>
+   * This modifies the seen map.
    *
    * @param currentScan
    *          the files from the current scan
    */
   private void findAddedFiles(Set<File> currentScan) {
     for (File fileFromCurrent : currentScan) {
-      if (!filesLastScanned.contains(fileFromCurrent)) {
+      Long modifiedTime = fileFromCurrent.lastModified();
+      Long lastModifiedTime = filesSeen.put(fileFromCurrent, modifiedTime);
+      if (lastModifiedTime == null) {
         signalFileAdded(fileFromCurrent);
+      } else if (!lastModifiedTime.equals(modifiedTime)) {
+        signalFileModified(fileFromCurrent);
       }
     }
   }
@@ -245,9 +263,24 @@ public class SimpleDirectoryWatcher implements DirectoryWatcher, Runnable {
       try {
         listener.onFileAdded(fileAdded);
       } catch (Exception e) {
-        log.error(
-            String.format("Exception while signalling file added %s", fileAdded.getAbsolutePath()),
-            e);
+        log.formatError(e, "Exception while signalling file added %s", fileAdded.getAbsolutePath());
+      }
+    }
+  }
+
+  /**
+   * Signal all listeners that a file has been added.
+   *
+   * @param fileAdded
+   *          the file which has been added
+   */
+  private void signalFileModified(File fileModified) {
+    for (DirectoryWatcherListener listener : listeners) {
+      try {
+        listener.onFileModified(fileModified);
+      } catch (Throwable e) {
+        log.formatError(e, "Exception while signalling file added %s",
+            fileModified.getAbsolutePath());
       }
     }
   }
@@ -262,10 +295,9 @@ public class SimpleDirectoryWatcher implements DirectoryWatcher, Runnable {
     for (DirectoryWatcherListener listener : listeners) {
       try {
         listener.onFileRemoved(fileRemoved);
-      } catch (Exception e) {
-        log.error(
-            String.format("Exception while signalling file removed %s",
-                fileRemoved.getAbsolutePath()), e);
+      } catch (Throwable e) {
+        log.formatError(e, "Exception while signalling file removed %s",
+            fileRemoved.getAbsolutePath());
       }
     }
   }

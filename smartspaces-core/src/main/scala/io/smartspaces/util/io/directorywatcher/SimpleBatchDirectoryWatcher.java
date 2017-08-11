@@ -17,7 +17,10 @@
 
 package io.smartspaces.util.io.directorywatcher;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.util.io.FileSupport;
+import io.smartspaces.util.io.FileSupportImpl;
 
 import com.google.common.collect.Sets;
 
@@ -35,6 +38,16 @@ import java.util.concurrent.TimeUnit;
  * @author Keith M. Hughes
  */
 public class SimpleBatchDirectoryWatcher implements BatchDirectoryWatcher, Runnable {
+
+  /**
+   * {@code true} if the directories should be cleaned before they are watched.
+   */
+  private boolean cleanFirst = false;
+
+  /**
+   * {@code true} if the watcher should stop when there is an exception.
+   */
+  private boolean stopOnException = true;
 
   /**
    * The directories being watched.
@@ -56,8 +69,22 @@ public class SimpleBatchDirectoryWatcher implements BatchDirectoryWatcher, Runna
    */
   private ScheduledFuture<?> scanningFuture;
 
+  /**
+   * The logger to use.
+   */
+  private ExtendedLog log;
+
+  /**
+   * The file support to use.
+   */
+  private FileSupport fileSupport = FileSupportImpl.INSTANCE;
+
   @Override
   public synchronized void startup(SmartSpacesEnvironment environment, long period, TimeUnit unit) {
+    if (log == null) {
+      log = environment.getLog();
+    }
+    
     scanningFuture = environment.getExecutorService().scheduleAtFixedRate(this, 0, period, unit);
   }
 
@@ -82,6 +109,11 @@ public class SimpleBatchDirectoryWatcher implements BatchDirectoryWatcher, Runna
   public synchronized void addDirectory(File directory) {
     if (directory.isDirectory()) {
       if (directory.canRead()) {
+        if (directory.canWrite()) {
+          if (cleanFirst) {
+            fileSupport.deleteDirectoryContents(directory);
+          }
+        }
         directoriesWatched.add(directory);
       } else {
         throw new IllegalArgumentException(String.format("%s is not readable", directory));
@@ -99,13 +131,14 @@ public class SimpleBatchDirectoryWatcher implements BatchDirectoryWatcher, Runna
   }
 
   @Override
-  public synchronized void addBatchDirectoryWatcherListener(BatchDirectoryWatcherListener listener) {
+  public synchronized void
+      addBatchDirectoryWatcherListener(BatchDirectoryWatcherListener listener) {
     listeners.add(listener);
   }
 
   @Override
-  public synchronized void removeBatchDirectoryWatcherListener(
-      BatchDirectoryWatcherListener listener) {
+  public synchronized void
+      removeBatchDirectoryWatcherListener(BatchDirectoryWatcherListener listener) {
     listeners.remove(listener);
   }
 
@@ -169,6 +202,27 @@ public class SimpleBatchDirectoryWatcher implements BatchDirectoryWatcher, Runna
 
   @Override
   public void run() {
-    scan();
+    try {
+      scan();
+    } catch (Throwable e) {
+      log.error("Exception happened during directory watcher scan", e);
+
+      if (stopOnException) {
+        // TODO(keith): Not entirely happy with this. maybe
+        // eventually put the future into this instance and shut it
+        // down.
+        throw new RuntimeException();
+      }
+    }
+  }
+
+  @Override
+  public void setCleanFirst(boolean cleanFirst) {
+    this.cleanFirst = cleanFirst;
+  }
+
+  @Override
+  public void setStopOnException(boolean stopOnException) {
+    this.stopOnException = stopOnException;
   }
 }

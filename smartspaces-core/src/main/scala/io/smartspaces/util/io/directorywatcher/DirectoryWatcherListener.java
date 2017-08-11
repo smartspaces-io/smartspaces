@@ -35,6 +35,14 @@ public interface DirectoryWatcherListener {
   void onFileAdded(File file);
 
   /**
+   * A file has been changed since the last scan.
+   *
+   * @param file
+   *          the file which was added
+   */
+  void onFileModified(File file);
+
+  /**
    * A file has been removed since the last scan.
    *
    * @param file

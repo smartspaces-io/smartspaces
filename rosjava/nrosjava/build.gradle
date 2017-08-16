@@ -24,7 +24,7 @@ dependencies {
 
   compile project(':smartspaces-testing')
   
-  compile files("${project.getProperty('smartspaces.dependencies.home')}/comm/net/org.ros.rosjava.dnsjava-2.1.1.jar")
+  compile 'io.smartspaces:org.ros.rosjava.dnsjava:2.1.1'
 
   compile 'org.apache.commons:com.springsource.org.apache.commons.net:2.0.0'
   compile 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'

@@ -79,6 +79,21 @@ public interface EventObservableRegistry {
    * @return {@code true} if the observable with the given name was found
    */
   <T> boolean connectObservers(String observableName, ManagedScope scope, BaseObserver<T>... observers);
+  
+  /**
+   * Connect the given observer to the named observable when the observable is registered.
+   * 
+   * <p>
+   * The observer will be added to the managed scope so it will be disconnected when the scope shuts down.
+   * 
+   * @param observableName
+   *           the name of the observable
+   * @param scope
+   *           the managed scope to place the observer in
+   * @param observers
+   *           the observers to add
+   */
+  <T> void connectObserversWhenAvailable(String observableName, ManagedScope scope, BaseObserver<T>... observers);
 
   /**
    * Get the observable with a given name.

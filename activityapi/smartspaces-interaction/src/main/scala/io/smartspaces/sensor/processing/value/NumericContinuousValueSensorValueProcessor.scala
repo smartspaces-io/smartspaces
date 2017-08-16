@@ -19,10 +19,10 @@ package io.smartspaces.sensor.processing.value
 import io.smartspaces.sensor.entity.MeasurementTypeDescription
 import io.smartspaces.sensor.entity.model.SensedEntityModel
 import io.smartspaces.sensor.entity.model.SensorEntityModel
-import io.smartspaces.sensor.entity.model.SimpleSensedValue
+import io.smartspaces.sensor.entity.model.SimpleNumericContinuousSensedValue
+import io.smartspaces.sensor.entity.model.event.RawSensorLiveEvent
 import io.smartspaces.sensor.messaging.messages.SensorMessages
 import io.smartspaces.util.data.dynamic.DynamicObject
-import io.smartspaces.sensor.entity.model.event.RawSensorLiveEvent
 
 /**
  * A processor for sensor value data messages with continuous values.
@@ -38,7 +38,7 @@ class NumericContinuousValueSensorValueProcessor(
     sensedEntity: SensedEntityModel, processorContext: SensorValueProcessorContext,
     channelId: String, data: DynamicObject): Unit = {
     val value =
-      new SimpleSensedValue[Double](sensorEntity, measurementType,
+      new SimpleNumericContinuousSensedValue(sensorEntity, Option(channelId), measurementType,
         data.getDouble(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE), timestamp)
 
     processorContext.log.info(value)

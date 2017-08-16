@@ -75,8 +75,8 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
   /**
    * Add in data for a channel.
    *
-   * @param channelName
-   *       the name of the channel
+   * @param channelId
+   *       the ID of the channel
    * @param channelType
    *       the type of the channel data
    * @param value
@@ -86,8 +86,8 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
    *
    * @return this builder
    */
-  def addChannelData(channelName: String, channelType: String, value: String): StandardSensorMessageBuilder = {
-    messageBuilder.newObject(channelName)
+  def addChannelData(channelId: String, channelType: String, value: String): StandardSensorMessageBuilder = {
+    messageBuilder.newObject(channelId)
 
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, channelType)
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE, value)
@@ -100,8 +100,8 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
   /**
    * Add in data for a channel.
    *
-   * @param channelName
-   *       the name of the channel
+   * @param channelId
+   *       the ID of the channel
    * @param channelType
    *       the type of the channel data
    * @param value
@@ -111,8 +111,8 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
    *
    * @return this builder
    */
-  def addChannelData(channelName: String, channelType: String, value: Double): StandardSensorMessageBuilder = {
-    messageBuilder.newObject(channelName)
+  def addChannelData(channelId: String, channelType: String, value: Double): StandardSensorMessageBuilder = {
+    messageBuilder.newObject(channelId)
 
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, channelType)
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE, value)

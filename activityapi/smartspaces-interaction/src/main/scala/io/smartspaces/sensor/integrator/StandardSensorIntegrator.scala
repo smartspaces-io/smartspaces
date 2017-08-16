@@ -71,12 +71,12 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
   /**
    * The sensor registry for the integrator.
    */
-  private var sensorRegistry: SensorRegistry = _
+  private var _sensorRegistry: SensorRegistry = _
 
   /**
    * The complete set of models of sensors and sensed entities.
    */
-  private var completeSensedEntityModel: CompleteSensedEntityModel = _
+  private var _completeSensedEntityModel: CompleteSensedEntityModel = _
 
   /**
    * The processor for queries against the models.
@@ -107,28 +107,29 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
    * The sensor processor for the integrator
    */
   private var sensorProcessor: SensorProcessor = _
-  
+
   /**
    * The value registry with a collection of base values.
    */
-  private val valueRegistry: ValueRegistry = StandardValueRegistry.registerCategoricalValues(
-      ContactCategoricalValue, PresenceCategoricalValue, ActiveCategoricalValue)
+  private val _valueRegistry: ValueRegistry = StandardValueRegistry.registerCategoricalValues(
+    ContactCategoricalValue, PresenceCategoricalValue, ActiveCategoricalValue)
 
-  /**
-   * Get the query processor.
-   *
-   * @return the query processor
-   */
-  def queryProcessor: SensedEntityModelQueryProcessor = _queryProcessor
+  override def valueRegistry: ValueRegistry = _valueRegistry
+  
+  override def queryProcessor: SensedEntityModelQueryProcessor = _queryProcessor
+
+  override def sensorRegistry: SensorRegistry = _sensorRegistry
+
+  override def completeSensedEntityModel: CompleteSensedEntityModel = _completeSensedEntityModel
 
   override def onStartup(): Unit = {
-    sensorRegistry = new InMemorySensorRegistry()
+    _sensorRegistry = new InMemorySensorRegistry()
 
     descriptionImporter.importDescriptions(sensorRegistry)
 
-    completeSensedEntityModel =
-      new StandardCompleteSensedEntityModel(sensorRegistry, eventEmitter, log, spaceEnvironment)
-    completeSensedEntityModel.prepare()
+    _completeSensedEntityModel =
+      new StandardCompleteSensedEntityModel(_sensorRegistry, eventEmitter, log, spaceEnvironment)
+    _completeSensedEntityModel.prepare()
 
     _queryProcessor = new StandardSensedEntityModelQueryProcessor(completeSensedEntityModel, unknownMarkerHandler, unknownSensedEntityHandler)
 
@@ -161,8 +162,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
       override def handleSensorData(handler: SensedEntitySensorHandler, timestamp: Long,
         sensor: SensorEntityModel, sensedEntity: SensedEntityModel,
         data: DynamicObject): Unit = {
-        log.formatInfo("Got data at %s from sensor %s for entity %s: %s", timestamp.toString, sensor,
-          sensedEntity, data.asMap())
+        log.info(s"Got data at ${timestamp.toString} from sensor ${sensor} for entity ${sensedEntity}: ${data.asMap()}")
 
       }
     })
@@ -171,15 +171,21 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
       new StandardSensedEntityModelProcessor(completeSensedEntityModel, managedScope, log)
     modelProcessor.addSensorValueProcessor(new StandardBleProximitySensorValueProcessor())
     modelProcessor.addSensorValueProcessor(new SimpleMarkerSensorValueProcessor(unknownMarkerHandler))
-    sensorRegistry.getAllMeasurementTypes.filter(_.valueType == MeasurementTypeDescription.VALUE_TYPE_NUMERIC_CONTINUOUS).foreach {
-      measurementType =>
-        modelProcessor.addSensorValueProcessor(new NumericContinuousValueSensorValueProcessor(measurementType))
-    }
-    sensorRegistry.getAllMeasurementTypes.filter(_.valueType.startsWith(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE)).foreach {
-      measurementType => {
-        val categoricalVariable = valueRegistry.getCategoricalValue(
-            measurementType.valueType.substring(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE.length()))
-        modelProcessor.addSensorValueProcessor(new CategoricalValueSensorValueProcessor(measurementType, categoricalVariable.get))
+    sensorRegistry.getAllMeasurementTypes.foreach { measurementType =>
+      measurementType.valueType match {
+        case MeasurementTypeDescription.VALUE_TYPE_NUMERIC_CONTINUOUS =>
+          modelProcessor.addSensorValueProcessor(new NumericContinuousValueSensorValueProcessor(measurementType))
+        case mtype if mtype.startsWith(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE) =>
+          val categoricalVariableName = mtype.substring(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE.length())
+          log.info(s"Examining categorical variable ${categoricalVariableName}")
+          val categoricalVariable = _valueRegistry.getCategoricalValue(categoricalVariableName)
+          if (categoricalVariable.isDefined) {
+            modelProcessor.addSensorValueProcessor(new CategoricalValueSensorValueProcessor(measurementType, categoricalVariable.get))
+          } else {
+            log.warn(s"Unknown categorical variable ${categoricalVariableName}")
+          }
+        case mtype =>
+          log.warn(s"Unknown measurement type ${mtype}")
       }
     }
 

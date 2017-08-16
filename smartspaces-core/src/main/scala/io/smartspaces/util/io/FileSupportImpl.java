@@ -25,6 +25,7 @@ import io.smartspaces.SmartSpacesException;
 import com.google.common.io.Closeables;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
@@ -762,4 +763,29 @@ public class FileSupportImpl implements FileSupport {
       throw new SmartSpacesException("Could not load properties file from " + filePath, e);
     }
   }
+
+  @Override
+  public void writeFile(File file, BufferedFileWriter writer) {
+    BufferedWriter bwriter = null;
+    try {
+      bwriter = new BufferedWriter(new FileWriter(file));
+
+      writer.write(bwriter);
+
+      bwriter.flush();
+    } catch (Throwable e) {
+      throw SmartSpacesException.newFormattedException(e, "Exception while writing file %s",
+          file.getAbsolutePath());
+    } finally {
+      if (bwriter != null) {
+        try {
+          bwriter.close();
+        } catch (IOException e) {
+          throw SmartSpacesException.newFormattedException(e, "Exception while closing file %s",
+              file.getAbsolutePath());
+        }
+      }
+    }
+  }
+
 }

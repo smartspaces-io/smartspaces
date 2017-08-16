@@ -16,19 +16,20 @@
 
 package io.smartspaces.service.action.internal;
 
-import io.smartspaces.evaluation.StandardExecutionContext;
-import io.smartspaces.service.action.Action;
-import io.smartspaces.service.action.ActionSource;
-import io.smartspaces.service.action.BasicActionReference;
-import io.smartspaces.service.action.internal.StandardActionService;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.HashMap;
-import java.util.Map;
+import io.smartspaces.evaluation.StandardExecutionContext;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.action.Action;
+import io.smartspaces.service.action.ActionSource;
+import io.smartspaces.service.action.BasicActionReference;
+import io.smartspaces.system.SmartSpacesEnvironment;
 
 /**
  * Test the {@link StandardActionService}.
@@ -38,9 +39,21 @@ import java.util.Map;
 public class StandardActionServiceTest {
   private StandardActionService actionService;
 
+  private SmartSpacesEnvironment spaceEnvironment;
+  
+  private ExtendedLog log;
+
   @Before
   public void setup() {
+    spaceEnvironment = Mockito.mock(SmartSpacesEnvironment.class);
+    
+    log = Mockito.mock(ExtendedLog.class);
+    
+    Mockito.when(spaceEnvironment.getLog()).thenReturn(log);
+    
     actionService = new StandardActionService();
+
+    actionService.setSpaceEnvironment(spaceEnvironment);
   }
 
   @Test
@@ -73,7 +86,7 @@ public class StandardActionServiceTest {
     actionService.registerActionSource(sourceName, source);
 
     Map<String, Object> data = new HashMap<>();
-    data.put("foo1",  "bar1");
+    data.put("foo1", "bar1");
     StandardExecutionContext context = new StandardExecutionContext(null, null, null);
 
     BasicActionReference actionReference =
@@ -81,7 +94,7 @@ public class StandardActionServiceTest {
     actionService.performActionReference(actionReference, context);
 
     Mockito.verify(action, Mockito.times(1)).perform(context);
-    
+
     String value = context.getValue("foo1");
     Assert.assertEquals("bar1", value);
   }

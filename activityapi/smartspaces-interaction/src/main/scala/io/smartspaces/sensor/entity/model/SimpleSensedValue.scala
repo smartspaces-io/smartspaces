@@ -17,6 +17,7 @@
 package io.smartspaces.sensor.entity.model
 
 import io.smartspaces.sensor.entity.MeasurementTypeDescription
+import io.smartspaces.data.entity.CategoricalValueInstance
 
 /**
  * A sensed value from a sensor.
@@ -25,13 +26,35 @@ import io.smartspaces.sensor.entity.MeasurementTypeDescription
  */
 class SimpleSensedValue[T <: Any](
     override val sensor: SensorEntityModel, 
+    override val channelId: Option[String],
     override val measurementTypeDescription: MeasurementTypeDescription,
     override val value: T, 
     override val timestamp: Long
     ) extends SensedValue[T] {
 
   override def toString() = {
-    "SimpleSensedValue [sensor=" + sensor + ", measurementTypeDescription=" +
+    "SimpleSensedValue [sensor=" + sensor + ", channelId=" +
+      channelId + ", measurementTypeDescription=" +
       measurementTypeDescription + ", value=" + value + ", timestamp=" + timestamp + "]"
   }
 }
+
+class SimpleNumericContinuousSensedValue(
+    sensor: SensorEntityModel, 
+    channelId: Option[String],
+    measurementTypeDescription: MeasurementTypeDescription,
+    value: Double, 
+    timestamp: Long
+    ) extends SimpleSensedValue[Double](sensor, channelId, measurementTypeDescription, value, timestamp) {
+  
+}
+
+class SimpleCategoricalValueSensedValue(
+    sensor: SensorEntityModel, 
+    channelId: Option[String],
+    measurementTypeDescription: MeasurementTypeDescription,
+    value: CategoricalValueInstance, 
+    timestamp: Long
+    ) extends SimpleSensedValue[CategoricalValueInstance](sensor, channelId, measurementTypeDescription, value, timestamp) {
+}
+

@@ -17,12 +17,29 @@
 
 package io.smartspaces.api.system.bootstrap.osgi;
 
+import java.io.File;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
+
 import io.smartspaces.api.system.internal.osgi.OsgiSmartSpacesEnvironment;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.FileSystemConfigurationStorageManager;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.evaluation.ExpressionEvaluator;
 import io.smartspaces.evaluation.SimpleExpressionEvaluatorFactory;
+import io.smartspaces.event.observable.StandardEventObservableRegistry;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.resource.managed.ManagedResources;
@@ -46,22 +63,6 @@ import io.smartspaces.time.provider.NtpTimeProvider;
 import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.concurrency.DefaultScheduledExecutorService;
 import io.smartspaces.util.net.InetAddressFactory;
-
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
-
-import java.io.File;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Activate general services needed by a container wanting to use SmartSpaces
@@ -355,6 +356,7 @@ public class GeneralSmartSpacesSupportActivator
     spaceEnvironment.setLoggingProvider(loggingProvider, containerLog);
     spaceEnvironment.setFilesystem(filesystem);
     spaceEnvironment.setContainerManagedScope(containerManagedScope);
+    spaceEnvironment.setEventObservableRegistry(new StandardEventObservableRegistry(containerLog));
 
     setupSystemConfiguration(bundleContext, containerProperties);
 

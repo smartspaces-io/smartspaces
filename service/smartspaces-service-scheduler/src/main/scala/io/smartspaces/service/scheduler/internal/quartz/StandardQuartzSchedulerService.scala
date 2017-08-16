@@ -55,7 +55,7 @@ import java.util.Set
 import scala.collection.JavaConversions.asScalaSet
 
 object StandardQuartzSchedulerService {
-  val ORIENTDB_URI = "PLOCAL:${system.installdir}/database/quartz"
+  val ORIENTDB_URI = "PLOCAL:${system.datadir}/database/quartz"
   val ORIENTDB_USER = "sooperdooper"
   val ORIENTDB_PASSWORD = "sooperdooper"
   val PERSISTED_SCHEDULER_NAME = "SmartSpacesSchedulerPersisted"

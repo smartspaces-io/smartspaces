@@ -19,7 +19,6 @@ package io.smartspaces.api.system.internal.osgi;
 
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.event.observable.EventObservableRegistry;
-import io.smartspaces.event.observable.StandardEventObservableRegistry;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.scope.ManagedScope;
@@ -39,7 +38,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * A {@link SmartSpacesEnvironment} which lives in an OSGi container.
+ * A {@link SmartSpacesEnvironment} that lives in an OSGi container.
  *
  * @author Keith M. Hughes
  */
@@ -84,11 +83,11 @@ public class OsgiSmartSpacesEnvironment
    * The service registry.
    */
   private ServiceRegistry serviceRegistry = new StandardServiceRegistry(this);
-  
+
   /**
    * The event observable registry.
    */
-  private EventObservableRegistry eventObservableRegistry = new StandardEventObservableRegistry();
+  private EventObservableRegistry eventObservableRegistry;
 
   /**
    * The platform logging provider.
@@ -137,7 +136,8 @@ public class OsgiSmartSpacesEnvironment
 
   @Override
   public ExtendedLog getLog(String logName, String level, String filename) {
-    // TODO(keith): make this generate extended logs, though they will need to
+    // TODO(keith): make this generate extended logs, though they will need
+    // to
     // be in a map.
     StandardExtendedLog log = logs.get(logName);
     if (log == null) {
@@ -169,7 +169,7 @@ public class OsgiSmartSpacesEnvironment
   public ServiceRegistry getServiceRegistry() {
     return serviceRegistry;
   }
-  
+
   @Override
   public EventObservableRegistry getEventObservableRegistry() {
     return eventObservableRegistry;
@@ -239,5 +239,10 @@ public class OsgiSmartSpacesEnvironment
   @Override
   public void setContainerManagedScope(ManagedScope containerManagedScope) {
     this.containerManagedScope = containerManagedScope;
+  }
+
+  @Override
+  public void setEventObservableRegistry(EventObservableRegistry eventObservableRegistry) {
+    this.eventObservableRegistry = eventObservableRegistry;
   }
 }

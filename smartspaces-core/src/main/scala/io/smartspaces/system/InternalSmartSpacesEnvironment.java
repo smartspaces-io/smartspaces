@@ -18,6 +18,7 @@
 package io.smartspaces.system;
 
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.event.observable.EventObservableRegistry;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.scope.ManagedScope;
 import io.smartspaces.system.core.logging.LoggingProvider;
@@ -26,8 +27,8 @@ import io.smartspaces.time.provider.TimeProvider;
 import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * A Smart spaces environment giving access to portions of the
- * environment for modification.
+ * A Smart spaces environment giving access to portions of the environment for
+ * modification.
  *
  * @author Keith M. Hughes
  */
@@ -45,8 +46,8 @@ public interface InternalSmartSpacesEnvironment {
    * Set the network type for Smart Spaces.
    *
    * <p>
-   * This allows distinguishing between Smart Spaces networks, e.g.
-   * localdev, prod, fredbot.
+   * This allows distinguishing between Smart Spaces networks, e.g. localdev,
+   * prod, fredbot.
    *
    * @param networkType
    *          the network type
@@ -103,4 +104,12 @@ public interface InternalSmartSpacesEnvironment {
    *          the container managed scope
    */
   void setContainerManagedScope(ManagedScope containerManagedScope);
+
+  /**
+   * Set the event observable registry.
+   * 
+   * @param eventObservableRegistry
+   *          the registry
+   */
+  void setEventObservableRegistry(EventObservableRegistry eventObservableRegistry);
 }

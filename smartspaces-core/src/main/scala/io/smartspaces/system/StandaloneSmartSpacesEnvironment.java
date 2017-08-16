@@ -69,6 +69,7 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
     environment.log = new StandardExtendedLog("container", new Jdk14Logger("test.smartspaces"));
     environment.serviceRegistry = new StandardServiceRegistry(environment);
     environment.timeProvider = new SettableTimeProvider();
+    environment.eventObservableRegistry = new StandardEventObservableRegistry(environment.log);
     environment.managedResources = new StandardManagedResources(environment.log);
     environment.managedTasks =
         new StandardManagedTasks(environment.executorService, environment.log);
@@ -107,7 +108,7 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
   /**
    * The event observable registry.
    */
-  private EventObservableRegistry eventObservableRegistry = new StandardEventObservableRegistry();
+  private EventObservableRegistry eventObservableRegistry;
 
   /**
    * The time provider.

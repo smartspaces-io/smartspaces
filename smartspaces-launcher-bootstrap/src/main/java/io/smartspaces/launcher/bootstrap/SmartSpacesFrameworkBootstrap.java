@@ -384,7 +384,7 @@ public class SmartSpacesFrameworkBootstrap {
        */
       private void stopContainer() {
         try {
-          rootBundleContext.getBundle(0).stop();
+          framework.stop();
         } catch (BundleException e) {
           e.printStackTrace();
         }

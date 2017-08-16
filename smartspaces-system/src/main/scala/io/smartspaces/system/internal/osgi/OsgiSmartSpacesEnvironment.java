@@ -88,7 +88,7 @@ public class OsgiSmartSpacesEnvironment
   /**
    * The event observable registry.
    */
-  private EventObservableRegistry eventObservableRegistry = new StandardEventObservableRegistry();
+  private EventObservableRegistry eventObservableRegistry;
 
   /**
    * The platform logging provider.
@@ -239,5 +239,10 @@ public class OsgiSmartSpacesEnvironment
   @Override
   public void setContainerManagedScope(ManagedScope containerManagedScope) {
     this.containerManagedScope = containerManagedScope;
+  }
+
+  @Override
+  public void setEventObservableRegistry(EventObservableRegistry eventObservableRegistry) {
+    this.eventObservableRegistry = eventObservableRegistry;
   }
 }

@@ -92,15 +92,20 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
         if (data.isObject(channelId)) {
           log.info(s"Processing channel data ${channelId}")
 
-          val sensedMeasurementType = sensorDetail.get.getSensorChannelDetail(channelId).get.measurementType
-          val sensorValueProcessor = sensorValuesProcessors.get(sensedMeasurementType.externalId)
-          if (sensorValueProcessor.isDefined) {
-            data.down(channelId)
-            sensorValueProcessor.get.processData(measurementTimestamp, sensor, sensedEntity, processorContext,
-              channelId, data);
-            data.up
+          val sensorChannelDetail = sensorDetail.get.getSensorChannelDetail(channelId)
+          if (sensorChannelDetail.isDefined) {
+            val sensedMeasurementType = sensorChannelDetail.get.measurementType
+            val sensorValueProcessor = sensorValuesProcessors.get(sensedMeasurementType.externalId)
+            if (sensorValueProcessor.isDefined) {
+              data.down(channelId)
+              sensorValueProcessor.get.processData(measurementTimestamp, sensor, sensedEntity, processorContext,
+                channelId, data);
+              data.up
+            } else {
+              log.warn(s"Got unknown sensed type with no apparent processor ${sensedMeasurementType}")
+            }
           } else {
-            log.warn(s"Got unknown sensed type with no apparent processor ${sensedMeasurementType}")
+              log.warn(s"Got unknown channel ID ${channelId}")
           }
         }
 

@@ -821,4 +821,17 @@ public interface FileSupport {
    *          the file path of the file
    */
   void loadPropertiesFile(Properties properties, String filePath);
+
+  /**
+   * Create a buffered writer for the given file.
+   * 
+   * <p>
+   * It will be properly flushed and closed.
+   * 
+   * @param file
+   *          the file to be written to
+   * @param writer
+   *          the writer that will write the content
+   */
+  void writeFile(File file, BufferedFileWriter writer);
 }

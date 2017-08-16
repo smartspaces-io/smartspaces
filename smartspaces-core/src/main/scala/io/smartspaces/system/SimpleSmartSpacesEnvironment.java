@@ -40,7 +40,8 @@ import java.util.concurrent.ScheduledExecutorService;
  *
  * @author Keith M. Hughes
  */
-public class SimpleSmartSpacesEnvironment implements SmartSpacesEnvironment {
+public class SimpleSmartSpacesEnvironment
+    implements SmartSpacesEnvironment {
 
   /**
    * The system configuration.
@@ -66,11 +67,11 @@ public class SimpleSmartSpacesEnvironment implements SmartSpacesEnvironment {
    * The service registry.
    */
   private ServiceRegistry serviceRegistry;
-  
+
   /**
    * The event observable registry.
    */
-  private EventObservableRegistry eventObservableRegistry = new StandardEventObservableRegistry();
+  private EventObservableRegistry eventObservableRegistry;
 
   /**
    * The time provider.
@@ -139,7 +140,7 @@ public class SimpleSmartSpacesEnvironment implements SmartSpacesEnvironment {
   public ServiceRegistry getServiceRegistry() {
     return serviceRegistry;
   }
-  
+
   @Override
   public EventObservableRegistry getEventObservableRegistry() {
     return eventObservableRegistry;
@@ -231,4 +232,15 @@ public class SimpleSmartSpacesEnvironment implements SmartSpacesEnvironment {
   public void setContainerManagedScope(ManagedScope containerManagedScope) {
     this.containerManagedScope = containerManagedScope;
   }
+
+  /**
+   * Set the event observable registry.
+   * 
+   * @param eventObservableRegistry
+   *          the event observable registry
+   */
+  public void setEventObservableRegistry(EventObservableRegistry eventObservableRegistry) {
+    this.eventObservableRegistry = eventObservableRegistry;
+  }
+
 }

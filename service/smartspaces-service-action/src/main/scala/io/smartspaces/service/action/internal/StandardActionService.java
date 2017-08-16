@@ -61,6 +61,7 @@ public class StandardActionService extends BaseSupportedService implements Actio
 
   @Override
   public void registerActionSource(String sourceName, Version sourceVersion, ActionSource source) {
+	getSpaceEnvironment().getLog().formatInfo("Registered action source %s", sourceName);
     sources.addResource(sourceName, sourceVersion, source);
   }
 

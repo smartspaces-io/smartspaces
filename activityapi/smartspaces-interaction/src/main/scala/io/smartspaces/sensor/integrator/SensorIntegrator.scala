@@ -22,6 +22,9 @@ import io.smartspaces.sensor.entity.model.query.SensedEntityModelQueryProcessor
 import io.smartspaces.sensor.messaging.input.MqttSensorInput
 import io.smartspaces.sensor.messaging.input.SensorInput
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
+import io.smartspaces.sensor.entity.SensorRegistry
+import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel
+import io.smartspaces.data.entity.ValueRegistry
 
 /**
  * The sensor integration layer.
@@ -37,6 +40,21 @@ trait SensorIntegrator extends ManagedResource {
    * The sensor query processor.
    */
   def queryProcessor: SensedEntityModelQueryProcessor
+  
+  /**
+   * The sensor registry for the integrator.
+   */
+  def sensorRegistry: SensorRegistry
+  
+  /**
+   * The value registry being used by the integrator
+   */
+  def valueRegistry: ValueRegistry
+
+  /**
+   * The complete set of models of sensors and sensed entities.
+   */
+  def completeSensedEntityModel: CompleteSensedEntityModel
 
   /**
    * The description importer

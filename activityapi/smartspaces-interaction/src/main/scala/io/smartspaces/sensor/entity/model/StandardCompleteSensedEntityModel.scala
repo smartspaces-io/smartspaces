@@ -42,7 +42,8 @@ import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
  *
  * @author Keith M. Hughes
  */
-class StandardCompleteSensedEntityModel(val sensorRegistry: SensorRegistry, 
+class StandardCompleteSensedEntityModel(
+    override val sensorRegistry: SensorRegistry, 
     override val eventEmitter: SensorProcessingEventEmitter,
     override val log: ExtendedLog, 
     private val spaceEnvironment: SmartSpacesEnvironment) extends CompleteSensedEntityModel {

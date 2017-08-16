@@ -17,11 +17,38 @@
 
 package io.smartspaces.system.bootstrap.osgi;
 
+import java.io.File;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.logging.Log;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.framework.wiring.FrameworkWiring;
+import org.ros.log.RosLogFactory;
+import org.ros.master.uri.MasterUriProvider;
+import org.ros.master.uri.StaticMasterUriProvider;
+import org.ros.master.uri.SwitchableMasterUriProvider;
+import org.ros.osgi.common.RosEnvironment;
+import org.ros.osgi.common.SimpleRosEnvironment;
+
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.FileSystemConfigurationStorageManager;
 import io.smartspaces.configuration.SystemConfigurationStorageManager;
 import io.smartspaces.evaluation.ExpressionEvaluatorFactory;
 import io.smartspaces.evaluation.SimpleExpressionEvaluatorFactory;
+import io.smartspaces.event.observable.StandardEventObservableRegistry;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.resource.managed.ManagedResource;
@@ -48,32 +75,6 @@ import io.smartspaces.time.provider.NtpTimeProvider;
 import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.concurrency.DefaultScheduledExecutorService;
 import io.smartspaces.util.net.InetAddressFactory;
-
-import org.apache.commons.logging.Log;
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.framework.wiring.FrameworkWiring;
-import org.ros.log.RosLogFactory;
-import org.ros.master.uri.MasterUriProvider;
-import org.ros.master.uri.StaticMasterUriProvider;
-import org.ros.master.uri.SwitchableMasterUriProvider;
-import org.ros.osgi.common.RosEnvironment;
-import org.ros.osgi.common.SimpleRosEnvironment;
-
-import java.io.File;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Activate general services needed by a Smart Spaces container.
@@ -131,7 +132,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    * The platform logging provider.
    */
   private LoggingProvider loggingProvider;
-  
+
   /**
    * The container log.
    */
@@ -190,13 +191,12 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
     try {
       getCoreServices();
-      
+
       containerLog = new StandardExtendedLog("container", loggingProvider.getLog());
 
       ManagedResources managedResources = new StandardManagedResources(containerLog);
 
-      ManagedTasks managedTasks =
-          new StandardManagedTasks(executorService, containerLog);
+      ManagedTasks managedTasks = new StandardManagedTasks(executorService, containerLog);
 
       containerManagedScope = new StandardManagedScope(managedResources, managedTasks);
       containerManagedScope.startup();
@@ -207,10 +207,9 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
       registerOsgiServices();
 
-      spaceEnvironment.getLog()
-          .formatInfo("Base system startup. Smart Spaces Version %s",
-              spaceEnvironment.getSystemConfiguration().getPropertyString(
-                  SmartSpacesEnvironment.CONFIGURATION_NAME_SMARTSPACES_VERSION));
+      spaceEnvironment.getLog().formatInfo("Base system startup. Smart Spaces Version %s",
+          spaceEnvironment.getSystemConfiguration()
+              .getPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_SMARTSPACES_VERSION));
     } catch (Exception e) {
       spaceEnvironment.getLog().error("Could not start up smartspaces system", e);
     }
@@ -320,6 +319,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     spaceEnvironment.setNetworkType(
         containerProperties.get(SmartSpacesEnvironment.CONFIGURATION_NAME_NETWORK_TYPE));
     spaceEnvironment.setContainerManagedScope(containerManagedScope);
+    spaceEnvironment.setEventObservableRegistry(new StandardEventObservableRegistry(containerLog));
 
     setupSystemConfiguration(containerProperties, containerLog);
 

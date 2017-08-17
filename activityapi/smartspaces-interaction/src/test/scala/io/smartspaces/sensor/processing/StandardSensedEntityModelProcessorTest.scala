@@ -115,7 +115,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     processor.addSensorValueProcessor(sensorValueProcessor)
 
     val measurementType =
-      new SimpleMeasurementTypeDescription("foo", sensorValueType, null, null, null, null)
+      new SimpleMeasurementTypeDescription("foo", sensorValueType, null, null, null, null, null)
 
     val builder = new StandardDynamicObjectBuilder()
 

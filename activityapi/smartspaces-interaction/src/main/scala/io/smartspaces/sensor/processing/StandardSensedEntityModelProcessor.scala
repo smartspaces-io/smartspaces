@@ -54,7 +54,7 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
 
     val previous = sensorValuesProcessors.put(processor.sensorValueType, processor)
     if (previous.isDefined) {
-      log.warn("A sensor processor for ${processor.sensorValueType} has just been replaced")
+      log.warn(s"A sensor processor for ${processor.sensorValueType} has just been replaced")
     }
 
     this
@@ -65,7 +65,7 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
 
     val messageType = data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
 
-    log.info(s"Updating model with message type ${messageType} from sensor ${sensor} for entity ${sensedEntity}")
+    log.info(s"Updating model with message type ${messageType} from sensor ${sensor.sensorEntityDescription.externalId} for entity ${sensedEntity.sensedEntityDescription.externalId}")
 
     messageType match {
       case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT =>
@@ -90,13 +90,12 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
       // appropriate values.
       data.getProperties().foreach((channelId) => {
         if (data.isObject(channelId)) {
-          log.info(s"Processing channel data ${channelId}")
-
           val sensorChannelDetail = sensorDetail.get.getSensorChannelDetail(channelId)
           if (sensorChannelDetail.isDefined) {
             val sensedMeasurementType = sensorChannelDetail.get.measurementType
             val sensorValueProcessor = sensorValuesProcessors.get(sensedMeasurementType.externalId)
             if (sensorValueProcessor.isDefined) {
+              log.info(s"Using sensor processor ${sensorValueProcessor.get}")
               data.down(channelId)
               sensorValueProcessor.get.processData(measurementTimestamp, sensor, sensedEntity, processorContext,
                 channelId, data);

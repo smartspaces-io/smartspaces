@@ -23,7 +23,14 @@ import scala.collection.mutable.ArrayBuffer
  *
  * @author Keith M. Hughes
  */
-case class SimpleMeasurementTypeDescription(val id: String, val externalId: String, val displayName: String, val displayDescription: String, val valueType: String, val aliases: Set[String]) extends MeasurementTypeDescription {
+case class SimpleMeasurementTypeDescription(
+    override val id: String, 
+    override val externalId: String, 
+    override val displayName: String, 
+    override val displayDescription: String, 
+    override val processingType: String, 
+    override val valueType: String, 
+    override val aliases: Set[String]) extends MeasurementTypeDescription {
 
   /**
    * The measurement units for this type.

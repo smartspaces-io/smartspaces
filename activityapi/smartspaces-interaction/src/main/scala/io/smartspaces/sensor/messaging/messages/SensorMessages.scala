@@ -54,6 +54,11 @@ object SensorMessages {
   val SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE = "value"
 
   /**
+   * The field name for the addition field in the data field.
+   */
+  val SENSOR_MESSAGE_FIELD_NAME_DATA_ADDITION = "addition"
+
+  /**
    * The field name for the type field in the data field.
    */
   val SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE = "type"

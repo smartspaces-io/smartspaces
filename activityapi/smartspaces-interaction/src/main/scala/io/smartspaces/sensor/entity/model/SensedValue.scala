@@ -54,4 +54,9 @@ trait SensedValue[+T <: Any] {
    * @return the value of the sensor
    */
   val value: T
+  
+  /**
+   * Additional value from the sensor, if any.
+   */
+  val additional: Option[Any]
 }

@@ -36,6 +36,7 @@ import io.smartspaces.sensor.entity.model.query.StandardSensedEntityModelQueryPr
 import io.smartspaces.sensor.messaging.input.MqttSensorInput
 import io.smartspaces.sensor.messaging.input.SensorInput
 import io.smartspaces.sensor.messaging.input.StandardMqttSensorInput
+import io.smartspaces.sensor.messaging.messages.StandardSensorData
 import io.smartspaces.sensor.processing.SensedEntitySensorHandler
 import io.smartspaces.sensor.processing.SensedEntitySensorListener
 import io.smartspaces.sensor.processing.SensorProcessor
@@ -60,6 +61,7 @@ import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.time.TimeFrequency
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
+import io.smartspaces.sensor.processing.value.StatefulMarkerSensorSensorValueProcessor
 
 /**
  * The sensor integration layer.
@@ -115,7 +117,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
     ContactCategoricalValue, PresenceCategoricalValue, ActiveCategoricalValue)
 
   override def valueRegistry: ValueRegistry = _valueRegistry
-  
+
   override def queryProcessor: SensedEntityModelQueryProcessor = _queryProcessor
 
   override def sensorRegistry: SensorRegistry = _sensorRegistry
@@ -171,23 +173,31 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
       new StandardSensedEntityModelProcessor(completeSensedEntityModel, managedScope, log)
     modelProcessor.addSensorValueProcessor(new StandardBleProximitySensorValueProcessor())
     modelProcessor.addSensorValueProcessor(new SimpleMarkerSensorValueProcessor(unknownMarkerHandler))
-    sensorRegistry.getAllMeasurementTypes.foreach { measurementType =>
-      measurementType.valueType match {
-        case MeasurementTypeDescription.VALUE_TYPE_NUMERIC_CONTINUOUS =>
-          modelProcessor.addSensorValueProcessor(new NumericContinuousValueSensorValueProcessor(measurementType))
-        case mtype if mtype.startsWith(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE) =>
-          val categoricalVariableName = mtype.substring(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE.length())
-          log.info(s"Examining categorical variable ${categoricalVariableName}")
-          val categoricalVariable = _valueRegistry.getCategoricalValue(categoricalVariableName)
-          if (categoricalVariable.isDefined) {
-            modelProcessor.addSensorValueProcessor(new CategoricalValueSensorValueProcessor(measurementType, categoricalVariable.get))
-          } else {
-            log.warn(s"Unknown categorical variable ${categoricalVariableName}")
-          }
-        case mtype =>
-          log.warn(s"Unknown measurement type ${mtype}")
-      }
+
+    val statefulMarkerMeasurementType = _sensorRegistry.getMeasurementTypeByExternalId(StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL)
+    if (statefulMarkerMeasurementType.isDefined) {
+      modelProcessor.addSensorValueProcessor(new StatefulMarkerSensorSensorValueProcessor(statefulMarkerMeasurementType.get, unknownMarkerHandler))
+    } else {
+      log.warn(s"Could not find stateful marker measurement type ${StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL}")      
     }
+    
+    sensorRegistry.getAllMeasurementTypes.filter(_.processingType == StandardSensorData.MEASUREMENT_PROCESSING_TYPE_SIMPLE).
+      foreach { measurementType =>
+        measurementType.valueType match {
+          case MeasurementTypeDescription.VALUE_TYPE_NUMERIC_CONTINUOUS =>
+            modelProcessor.addSensorValueProcessor(new NumericContinuousValueSensorValueProcessor(measurementType))
+          case mtype if mtype.startsWith(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE) =>
+            val categoricalVariableName = mtype.substring(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE.length())
+            val categoricalVariable = _valueRegistry.getCategoricalValue(categoricalVariableName)
+            if (categoricalVariable.isDefined) {
+              modelProcessor.addSensorValueProcessor(new CategoricalValueSensorValueProcessor(measurementType, categoricalVariable.get))
+            } else {
+              log.warn(s"Unknown categorical variable ${categoricalVariableName}")
+            }
+          case mtype =>
+            log.warn(s"Unknown measurement type ${mtype}")
+        }
+      }
 
     sensorHandler.addSensedEntitySensorListener(modelProcessor)
 

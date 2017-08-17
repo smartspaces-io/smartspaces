@@ -24,6 +24,16 @@ package io.smartspaces.sensor.messaging.messages
 object StandardSensorData {
 
   /**
+   * The simple processing type for sensor measurements.
+   */
+  val MEASUREMENT_PROCESSING_TYPE_SIMPLE = "simple"
+
+  /**
+   * The special processing type for sensor measurements.
+   */
+  val MEASUREMENT_PROCESSING_TYPE_SPECIAL = "special"
+
+  /**
    * The type of a temperature sensor value.
    */
   val MEASUREMENT_TYPE_TEMPERATURE = "/sensor/measurement/temperature"
@@ -57,6 +67,16 @@ object StandardSensorData {
    * The type of a contact sensor value.
    */
   val MEASUREMENT_TYPE_CONTACT = "/sensor/measurement/contact"
+
+  /**
+   * The type of a stateful marker sensor value.
+   */
+  val MEASUREMENT_TYPE_MARKER_STATEFUL = "/sensor/measurement/marker/stateful"
+
+  /**
+   * The type of a simple marker sensor value.
+   */
+  val MEASUREMENT_TYPE_MARKER_SIMPLE = "/sensor/measurement/marker"
 
   /**
    * The type of a contact sensor.
@@ -102,6 +122,13 @@ object StandardSensorData {
    * The type of a simple marker sensor value.
    */
   val SENSOR_TYPE_MARKER_SIMPLE = "/sensor/type/marker"
+
+  /**
+   * The type of a stateful marker sensor value.
+   * 
+   * Stateful markers have the state in the value field and the ID of the item in the addition field.
+   */
+  val SENSOR_TYPE_MARKER_STATEFUL = "/sensor/type/marker/stateful"
   
   /**
    * A standard name for a marker channel (though not all marker channel names).

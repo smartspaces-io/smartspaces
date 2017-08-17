@@ -41,7 +41,7 @@ class SimpleMarkerSensorValueProcessor(unknownMarkerHandler: UnknownMarkerHandle
   /**
    * The type of the sensor value for this processor.
    */
-  override val sensorValueType = StandardSensorData.SENSOR_TYPE_MARKER_SIMPLE
+  override val sensorValueType = StandardSensorData.MEASUREMENT_TYPE_MARKER_SIMPLE
 
   override def processData(timestamp: Long, sensorModel: SensorEntityModel,
     sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,

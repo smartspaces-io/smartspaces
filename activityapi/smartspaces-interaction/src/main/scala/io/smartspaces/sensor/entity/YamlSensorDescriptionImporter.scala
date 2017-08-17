@@ -60,6 +60,11 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   val SECTION_HEADER_MEASUREMENT_TYPES = "measurementTypes"
 
   /**
+   * The measurement type section field for the processing type for the measurement.
+   */
+  val SECTION_FIELD_MEASUREMENT_TYPES_PROCESSING_TYPE = "processingType"
+
+  /**
    * The measurement type section field for the value type for the measurement.
    */
   val SECTION_FIELD_MEASUREMENT_TYPES_VALUE_TYPE = "valueType"
@@ -235,7 +240,9 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
       val measurementType = new SimpleMeasurementTypeDescription(getNextId(),
         measurementTypeData.getRequiredString(ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         measurementTypeData.getRequiredString(ENTITY_DESCRIPTION_FIELD_NAME),
-        measurementTypeData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION), valueType,
+        measurementTypeData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION), 
+        measurementTypeData.getRequiredString(SECTION_FIELD_MEASUREMENT_TYPES_PROCESSING_TYPE), 
+        valueType,
         null)
 
       if (!MeasurementTypeDescription.VALUE_TYPE_ID.equals(valueType) && 

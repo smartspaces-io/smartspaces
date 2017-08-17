@@ -81,12 +81,10 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
    *       the type of the channel data
    * @param value
    *       the value of the channel data
-   * @param timestamp
-   *       a potential timestamp for the field
    *
    * @return this builder
    */
-  def addChannelData(channelId: String, channelType: String, value: String): StandardSensorMessageBuilder = {
+  def addChannelData(channelId: String, channelType: String, value: Any): StandardSensorMessageBuilder = {
     messageBuilder.newObject(channelId)
 
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, channelType)
@@ -106,16 +104,15 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
    *       the type of the channel data
    * @param value
    *       the value of the channel data
-   * @param timestamp
-   *       a potential timestamp for the field
    *
    * @return this builder
    */
-  def addChannelData(channelId: String, channelType: String, value: Double): StandardSensorMessageBuilder = {
+  def addChannelData(channelId: String, channelType: String, value: Any, addition: Any): StandardSensorMessageBuilder = {
     messageBuilder.newObject(channelId)
 
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, channelType)
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE, value)
+    messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_ADDITION, addition)
     
     messageBuilder.up
 

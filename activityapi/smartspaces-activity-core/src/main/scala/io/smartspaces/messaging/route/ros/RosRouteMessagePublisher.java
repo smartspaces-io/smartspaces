@@ -70,7 +70,7 @@ public class RosRouteMessagePublisher implements InternalRouteMessagePublisher {
   }
 
   @Override
-  public void writeOutputMessage(Map<String, Object> message) {
+  public void writeMessage(Map<String, Object> message) {
     publishers.publishMessage(messageEncoder.encode(message));
   }
 

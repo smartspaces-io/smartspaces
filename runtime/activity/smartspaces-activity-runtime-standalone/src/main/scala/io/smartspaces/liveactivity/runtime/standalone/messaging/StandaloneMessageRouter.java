@@ -190,8 +190,8 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   }
 
   @Override
-  public void writeOutputMessage(String outputChannelId, Map<String, Object> message) {
-    myMessageRouter.writeOutputMessage(outputChannelId, message);
+  public void writeMessage(String outputChannelId, Map<String, Object> message) {
+    myMessageRouter.writeMessage(outputChannelId, message);
   }
 
   @Override
@@ -386,8 +386,8 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     Map<String, Object> message = (Map<String, Object>) rawMessage;
 
     if (sendOnRoute) {
-      String channel = (String) messageObject.get("channel");
-      writeOutputMessage(channel, message);
+      String channelId = (String) messageObject.get("channel");
+      writeMessage(channelId, message);
     } else {
       Collection<String> channelIds = inputRoutesToChannels.get(route);
       if (channelIds != null) {
@@ -588,8 +588,8 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     }
 
     @Override
-    public void writeOutputMessage(String outputChannelId, Map<String, Object> message) {
-      sendOutputMessage(outputChannelId, MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE,
+    public void writeMessage(String outputChannelId, Map<String, Object> message) {
+      writeMessage(outputChannelId, MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE,
           MAPPER.toString(message));
     }
 
@@ -650,7 +650,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
      * @param message
      *          message to send
      */
-    private void sendOutputMessage(String channelName, String type, String message) {
+    private void writeMessage(String channelName, String type, String message) {
       try {
         Set<String> routes = outputChannelsToRoutes.get(channelName);
         if (routes == null) {
@@ -718,8 +718,8 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     }
 
     @Override
-    public void writeOutputMessage(Map<String, Object> message) {
-      StandaloneMessageRouter.this.writeOutputMessage(channelId, message);
+    public void writeMessage(Map<String, Object> message) {
+      StandaloneMessageRouter.this.writeMessage(channelId, message);
     }
   }
 }

@@ -184,8 +184,8 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
   }
 
   @Override
-  public void writeOutputMessage(String outputChannelId, Map<String, Object> message) {
-    messageRouter.writeOutputMessage(outputChannelId, message);
+  public void writeMessage(String outputChannelId, Map<String, Object> message) {
+    messageRouter.writeMessage(outputChannelId, message);
   }
 
   @Override

@@ -140,7 +140,7 @@ public interface MessageRouterActivityComponent extends PubSubActivityComponent 
    * @param message
    *          message to send
    */
-  void writeOutputMessage(String outputChannelId, Map<String, Object> message);
+  void writeMessage(String outputChannelId, Map<String, Object> message);
 
   /**
    * Register a new channel output topic route.

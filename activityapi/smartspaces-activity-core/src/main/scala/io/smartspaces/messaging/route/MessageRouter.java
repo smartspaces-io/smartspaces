@@ -96,7 +96,7 @@ public interface MessageRouter extends IncomingRouteMessageHandler {
    * @param message
    *          message to send
    */
-  void writeOutputMessage(String outputChannelId, Map<String, Object> message);
+  void writeMessage(String outputChannelId, Map<String, Object> message);
 
   /**
    * Is the given output channel ID already registered?

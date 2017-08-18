@@ -94,7 +94,7 @@ public class SmartSpacesMessagesSupport {
     if (type != null) {
       response.put(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE, type);
     }
-    
+
     response.put(SmartSpacesMessages.MESSAGE_ENVELOPE_RESULT,
         SmartSpacesMessages.MESSAGE_ENVELOPE_VALUE_RESULT_FAILURE);
 
@@ -176,7 +176,6 @@ public class SmartSpacesMessagesSupport {
         (Map<String, Object>) response.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
     return data;
   }
-  
 
   /**
    * Get a failure Smart Spaces message response.
@@ -204,13 +203,14 @@ public class SmartSpacesMessagesSupport {
    *
    * @return the Smart Spaces message response object
    */
-  public static DynamicObjectBuilder getFailureResponseAsBuilder(String type, String reason, String detail) {
+  public static DynamicObjectBuilder getFailureResponseAsBuilder(String type, String reason,
+      String detail) {
     DynamicObjectBuilder response = new StandardDynamicObjectBuilder();
 
     if (type != null) {
       response.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE, type);
     }
-    
+
     response.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_RESULT,
         SmartSpacesMessages.MESSAGE_ENVELOPE_VALUE_RESULT_FAILURE);
 
@@ -235,7 +235,46 @@ public class SmartSpacesMessagesSupport {
    *
    * @return the Smart Spaces message response object
    */
-  public static DynamicObjectBuilder getFailureResponseAsBuilder(String reason, Throwable throwable) {
-    return getFailureResponseAsBuilder(reason, SmartSpacesExceptionUtils.getExceptionDetail(throwable));
+  public static DynamicObjectBuilder getFailureResponseAsBuilder(String reason,
+      Throwable throwable) {
+    return getFailureResponseAsBuilder(reason,
+        SmartSpacesExceptionUtils.getExceptionDetail(throwable));
+  }
+
+  /**
+   * Create a new message builder that has no data portion.
+   * 
+   * @param type
+   *          the type of the message
+   * 
+   * @return the message builder with the proper type
+   */
+  public static DynamicObjectBuilder newMessageNoData(String type) {
+    DynamicObjectBuilder message = new StandardDynamicObjectBuilder();
+
+    message.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE  , type);
+
+    return message;
+  }
+
+  /**
+   * Create a new message builder.
+   * 
+   * <p>
+   * The returned builder will be in the data section.
+   * 
+   * @param type
+   *          the type of the message
+   * 
+   * @return the message builder with the proper type
+   */
+  public static DynamicObjectBuilder newMessage(String type) {
+    DynamicObjectBuilder message = new StandardDynamicObjectBuilder();
+
+    message.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE, type);
+
+    message.newObject(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
+
+    return message;
   }
 }

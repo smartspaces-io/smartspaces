@@ -19,12 +19,17 @@ package io.smartspaces.messaging.route;
 
 import java.util.Map;
 
+import io.smartspaces.messaging.MessageWriter;
+
 /**
  * A publisher for a message route.
+ * 
+ * <p>
+ * All registered publishers will be sent the message.
 s *
  * @author Keith M. Hughes
  */
-public interface RouteMessagePublisher {
+public interface RouteMessagePublisher extends MessageWriter<Map<String, Object>> {
 
   /**
    * Get the channel ID for the publisher.
@@ -32,12 +37,4 @@ public interface RouteMessagePublisher {
    * @return the channel ID
    */
   String getChannelId();
-
-  /**
-   * Publish a message to all registered publishers.
-   *
-   * @param message
-   *          The message to be published.
-   */
-  void writeOutputMessage(Map<String, Object> message);
 }

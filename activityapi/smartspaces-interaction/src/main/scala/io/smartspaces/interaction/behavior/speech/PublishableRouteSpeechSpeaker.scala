@@ -74,7 +74,7 @@ class PublishableRouteSpeechSpeaker(private val messagePublisher: RouteMessagePu
         val builder = new StandardDynamicObjectBuilder()
         builder.setProperty("content", content)
 
-        messagePublisher.writeOutputMessage(builder.toMap)
+        messagePublisher.writeMessage(builder.toMap)
       } catch {
         case e: InterruptedException =>
           log.warn("Sequential speech speaker interrupted in speech loop")

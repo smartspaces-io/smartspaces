@@ -78,17 +78,17 @@ trait StandardActivityRouting extends /* StandardActivityRos with */ StandardAct
     // Default is to do nothing.
   }
 
-  override def sendRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
+  override def writeRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
     try {
-      router.writeOutputMessage(channelId, message)
+      router.writeMessage(channelId, message)
     } catch {
       case e: Throwable => getLog().error(
         s"Could not write message on route output channel ${channelId}", e)
     }
   }
 
-  override def sendRouteMessage(channelId: String, message: DynamicObjectBuilder): Unit = {
-    sendRouteMessage(channelId, message.toMap())
+  override def writeRouteMessage(channelId: String, message: DynamicObjectBuilder): Unit = {
+    writeRouteMessage(channelId, message.toMap())
   }
 
   /**

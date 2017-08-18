@@ -48,7 +48,7 @@ trait RoutingActivityBehavior extends JsonActivityBehavior /* with RosActivityBe
    * @param message
    *          the message to sRouend
    */
-  def sendRouteMessage(channelName: String, message: Map[String, Object]): Unit
+  def writeRouteMessage(channelName: String, message: Map[String, Object]): Unit
 
   /**
    * Send an output message from a {@link DynamicObjectBuilder}.
@@ -58,7 +58,7 @@ trait RoutingActivityBehavior extends JsonActivityBehavior /* with RosActivityBe
    * @param message
    *          the message to send
    */
-  def sendRouteMessage(channelName: String ,  message: DynamicObjectBuilder): Unit
+  def writeRouteMessage(channelName: String ,  message: DynamicObjectBuilder): Unit
 
   /**
    * Get the router for the activity.

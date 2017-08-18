@@ -392,14 +392,14 @@ public class StandardMessageRouter implements MessageRouter {
   }
 
   @Override
-  public void writeOutputMessage(String outputChannelId, Map<String, Object> message) {
+  public void writeMessage(String outputChannelId, Map<String, Object> message) {
     try {
       protectedHandlerContext.enterHandler();
 
       if (outputChannelId != null) {
         RouteMessagePublisher output = outputPublishers.get(outputChannelId);
         if (output != null) {
-          output.writeOutputMessage(message);
+          output.writeMessage(message);
 
         } else {
           protectedHandlerContext.handleHandlerError(

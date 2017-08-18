@@ -209,7 +209,7 @@ public class EventPublisherSubject<T> extends Subject<T> {
       try {
         s.onNext(t);
       } catch (Throwable e) {
-        log.formatError("Error during onNext", e);
+        log.error("Error during onNext", e);
       }
     }
   }
@@ -231,7 +231,7 @@ public class EventPublisherSubject<T> extends Subject<T> {
       try {
         s.onError(t);
       } catch (Throwable e) {
-        log.formatError("Error during onError", e);
+        log.error("Error during onError", e);
       }
     }
   }
@@ -246,7 +246,7 @@ public class EventPublisherSubject<T> extends Subject<T> {
       try {
         s.onComplete();
       } catch (Throwable e) {
-        log.formatError("Error during onComplete", e);
+        log.error("Error during onComplete", e);
       }
     }
   }

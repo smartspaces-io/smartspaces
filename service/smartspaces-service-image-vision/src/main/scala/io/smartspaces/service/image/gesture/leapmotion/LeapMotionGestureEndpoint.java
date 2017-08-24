@@ -17,6 +17,14 @@
 
 package io.smartspaces.service.image.gesture.leapmotion;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.common.collect.Lists;
+
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.image.gesture.Gesture;
 import io.smartspaces.service.image.gesture.Gesture.GestureState;
 import io.smartspaces.service.image.gesture.GestureEndpoint;
@@ -32,15 +40,6 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.data.dynamic.DynamicObject;
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator;
 import io.smartspaces.util.geometry.Vector3;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.collect.Lists;
 
 /**
  * A gesture connection using the Leap Motion.
@@ -337,7 +336,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
   /**
    * The client's logger.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Construct a new leapd connection client on the default leapd websocket host
@@ -349,7 +348,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * @param log
    *          the client logger to use
    */
-  public LeapMotionGestureEndpoint(SmartSpacesEnvironment spaceEnvironment, Log log) {
+  public LeapMotionGestureEndpoint(SmartSpacesEnvironment spaceEnvironment, ExtendedLog log) {
     this(LEAPD_WEBSOCKET_HOST_DEFAULT, LEAPD_WEBSOCKET_PORT_DEFAULT, spaceEnvironment, log);
   }
 
@@ -366,7 +365,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    *          the client logger to use
    */
   public LeapMotionGestureEndpoint(String leapdWebsocketHost, int leapdWebsocketPort,
-      SmartSpacesEnvironment spaceEnvironment, Log log) {
+      SmartSpacesEnvironment spaceEnvironment, ExtendedLog log) {
     this.leapdWebsocketHost = leapdWebsocketHost;
     this.leapdWebsocketPort = leapdWebsocketPort;
     this.spaceEnvironment = spaceEnvironment;

@@ -17,8 +17,6 @@
 
 package io.smartspaces.service.image.vision.opencv.swing;
 
-import io.smartspaces.service.image.vision.opencv.MatUtils;
-
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ExecutionException;
@@ -26,8 +24,10 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
-import org.apache.commons.logging.Log;
 import org.opencv.core.Mat;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.image.vision.opencv.MatUtils;
 
 /**
  * A Swing JPanel which can display OpenCV Mat images.
@@ -49,7 +49,7 @@ public class OpenCvMatPanel extends JPanel {
   /**
    * Logger for the panel.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Construct a new panel.
@@ -60,7 +60,7 @@ public class OpenCvMatPanel extends JPanel {
    * @param log
    *          logger for the panel
    */
-  public OpenCvMatPanel(Log log) {
+  public OpenCvMatPanel(ExtendedLog log) {
     this(log, true);
   }
 
@@ -72,7 +72,7 @@ public class OpenCvMatPanel extends JPanel {
    * @param releaseAfterDraw
    *          {@code true} if the Mat should be released after it is drawn
    */
-  public OpenCvMatPanel(Log log, boolean releaseAfterDraw) {
+  public OpenCvMatPanel(ExtendedLog log, boolean releaseAfterDraw) {
     this.log = log;
     this.releaseAfterDraw = releaseAfterDraw;
   }

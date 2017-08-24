@@ -17,13 +17,12 @@
 
 package io.smartspaces.service.speech.synthesis.internal.freetts;
 
+import com.sun.speech.freetts.VoiceManager;
+
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.speech.synthesis.SpeechSynthesisPlayer;
 import io.smartspaces.service.speech.synthesis.SpeechSynthesisService;
-
-import org.apache.commons.logging.Log;
-
-import com.sun.speech.freetts.VoiceManager;
 
 /**
  * A speech synthesis service based on FreeTTS.
@@ -51,7 +50,7 @@ public class FreeTtsSpeechSynthesisService extends BaseSupportedService implemen
   }
 
   @Override
-  public SpeechSynthesisPlayer newPlayer(Log log) {
+  public SpeechSynthesisPlayer newPlayer(ExtendedLog log) {
     return new FreeTtsSpeechSynthesisPlayer(voiceManager, getSpaceEnvironment()
         .getExecutorService(), log);
   }

@@ -17,9 +17,8 @@
 
 package io.smartspaces.service.comm.twitter;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.SupportedService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A Twitter service.
@@ -53,5 +52,5 @@ public interface TwitterService extends SupportedService {
    * @return the connection, which will not be connected
    */
   TwitterConnection newTwitterConnection(String apiKey, String apiKeySecret,
-      String userAccessToken, String userAccessTokenSecret, Log log);
+      String userAccessToken, String userAccessTokenSecret, ExtendedLog log);
 }

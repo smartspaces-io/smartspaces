@@ -17,11 +17,10 @@
 
 package io.smartspaces.service.audio.player.test;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.audio.player.AudioTrackPlayer;
 import io.smartspaces.service.audio.player.AudioTrackPlayerService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * An {@link AudioTrackPlayerService} for {@link TestAudioTrackPlayer}
@@ -48,7 +47,7 @@ public class TestAudioTrackPlayerService extends BaseSupportedService implements
   }
 
   @Override
-  public AudioTrackPlayer newTrackPlayer(Log log) {
+  public AudioTrackPlayer newTrackPlayer(ExtendedLog log) {
     return new TestAudioTrackPlayer(testTrackLength, getSpaceEnvironment().getExecutorService(),
         log);
   }

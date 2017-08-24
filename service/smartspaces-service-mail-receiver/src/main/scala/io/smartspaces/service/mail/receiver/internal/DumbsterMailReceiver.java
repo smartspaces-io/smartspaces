@@ -17,13 +17,12 @@
 
 package io.smartspaces.service.mail.receiver.internal;
 
-import io.smartspaces.service.mail.receiver.MailReceiver;
-import io.smartspaces.service.mail.receiver.MailReceiverListener;
-
-import org.apache.commons.logging.Log;
-
 import com.dumbster.smtp.SmtpServer;
 import com.dumbster.smtp.SmtpServerFactory;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.mail.receiver.MailReceiver;
+import io.smartspaces.service.mail.receiver.MailReceiverListener;
 
 /**
  * A mail receiver which uses Dumbster to receive the messages.
@@ -50,7 +49,7 @@ public class DumbsterMailReceiver implements MailReceiver {
   /**
    * The logger to use.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Construct a mail receiver.
@@ -60,7 +59,7 @@ public class DumbsterMailReceiver implements MailReceiver {
    * @param log
    *          the logger to use
    */
-  public DumbsterMailReceiver(int port, Log log) {
+  public DumbsterMailReceiver(int port, ExtendedLog log) {
     this.port = port;
     this.log = log;
   }

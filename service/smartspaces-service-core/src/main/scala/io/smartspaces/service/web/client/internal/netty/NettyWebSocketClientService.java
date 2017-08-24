@@ -17,16 +17,15 @@
 
 package io.smartspaces.service.web.client.internal.netty;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.web.WebSocketHandler;
 import io.smartspaces.service.web.client.WebSocketClient;
 import io.smartspaces.service.web.client.WebSocketClientService;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A {@link WebSocketClientService} based on Netty.
@@ -42,7 +41,7 @@ public class NettyWebSocketClientService extends BaseSupportedService implements
   }
 
   @Override
-  public WebSocketClient newWebSocketClient(String uri, WebSocketHandler handler, Log log) {
+  public WebSocketClient newWebSocketClient(String uri, WebSocketHandler handler, ExtendedLog log) {
     try {
       URI u = new URI(uri);
 
@@ -53,7 +52,7 @@ public class NettyWebSocketClientService extends BaseSupportedService implements
   }
 
   @Override
-  public WebSocketClient newWebSocketClient(String uri, Log log) {
+  public WebSocketClient newWebSocketClient(String uri, ExtendedLog log) {
     return newWebSocketClient(uri, null, log);
   }
 }

@@ -17,13 +17,12 @@
 
 package io.smartspaces.service.comm.network.server.internal.netty;
 
+import java.nio.ByteOrder;
+
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.comm.network.server.UdpServerNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.server.UdpServerNetworkCommunicationEndpointService;
-
-import java.nio.ByteOrder;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A Netty based {@link UdpServerNetworkCommunicationEndpointService}.
@@ -39,13 +38,13 @@ public class NettyUdpServerNetworkCommunicationEndpointService extends BaseSuppo
   }
 
   @Override
-  public UdpServerNetworkCommunicationEndpoint newServer(int serverPort, Log log) {
+  public UdpServerNetworkCommunicationEndpoint newServer(int serverPort, ExtendedLog log) {
     return newServer(serverPort, ByteOrder.BIG_ENDIAN, log);
   }
 
   @Override
   public UdpServerNetworkCommunicationEndpoint newServer(int serverPort, ByteOrder byteOrder,
-      Log log) {
+      ExtendedLog log) {
     return new NettyUdpServerNetworkCommunicationEndpoint(serverPort, byteOrder,
         getSpaceEnvironment().getExecutorService(), log);
   }

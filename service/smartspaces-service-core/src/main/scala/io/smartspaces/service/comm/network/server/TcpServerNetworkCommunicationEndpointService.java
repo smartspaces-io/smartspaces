@@ -17,11 +17,10 @@
 
 package io.smartspaces.service.comm.network.server;
 
-import io.smartspaces.service.SupportedService;
-
 import java.nio.charset.Charset;
 
-import org.apache.commons.logging.Log;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.SupportedService;
 
 /**
  * A service for {@link TcpServerNetworkCommunicationEndpoint} instances.
@@ -50,5 +49,5 @@ public interface TcpServerNetworkCommunicationEndpointService extends SupportedS
    * @return the communication endpoint
    */
   TcpServerNetworkCommunicationEndpoint<String> newStringServer(byte[][] delimiters,
-      Charset charset, int serverPort, Log log);
+      Charset charset, int serverPort, ExtendedLog log);
 }

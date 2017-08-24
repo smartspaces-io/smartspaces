@@ -17,6 +17,11 @@
 
 package io.smartspaces.service.audio.player.jukebox.internal.simple;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.audio.player.AudioRepository;
 import io.smartspaces.service.audio.player.AudioTrackPlayer;
 import io.smartspaces.service.audio.player.BaseAudioTrackPlayerListener;
@@ -26,12 +31,6 @@ import io.smartspaces.service.audio.player.jukebox.support.BaseJukeboxOperation;
 import io.smartspaces.service.audio.player.jukebox.support.InternalAudioJukebox;
 import io.smartspaces.service.audio.player.jukebox.support.PlayTrackJukeboxOperation;
 import io.smartspaces.service.audio.player.jukebox.support.ShuffleJukeboxOperation;
-
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.collect.Lists;
 
 /**
  * a very basic audio jukebox.
@@ -59,7 +58,7 @@ public class SimpleAudioJukebox implements InternalAudioJukebox {
   /**
    * Logger for the jukebox.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Listeners for jukebox events.
@@ -76,7 +75,7 @@ public class SimpleAudioJukebox implements InternalAudioJukebox {
    * @param log
    *          the logger to use
    */
-  public SimpleAudioJukebox(AudioRepository musicRepository, AudioTrackPlayer trackPlayer, Log log) {
+  public SimpleAudioJukebox(AudioRepository musicRepository, AudioTrackPlayer trackPlayer, ExtendedLog log) {
     this.musicRepository = musicRepository;
     this.trackPlayer = trackPlayer;
     this.log = log;

@@ -17,14 +17,6 @@
 
 package io.smartspaces.service.web.server.internal.netty;
 
-import io.smartspaces.service.web.WebSocketConnection;
-import io.smartspaces.service.web.WebSocketHandler;
-import io.smartspaces.service.web.server.WebResourceAccessManager;
-import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
-
-import org.apache.commons.logging.Log;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
@@ -34,6 +26,14 @@ import org.jboss.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.web.WebSocketConnection;
+import io.smartspaces.service.web.WebSocketHandler;
+import io.smartspaces.service.web.server.WebResourceAccessManager;
+import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
+import io.smartspaces.util.data.json.JsonMapper;
+import io.smartspaces.util.data.json.StandardJsonMapper;
 
 /**
  * A {@link WebSocketConnection} for a Netty web socket server.
@@ -65,7 +65,7 @@ public class NettyWebServerWebSocketConnection implements WebSocketConnection {
   /**
    * Logger for this handler.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * The id for the user who initiated this socket connection.
@@ -100,7 +100,7 @@ public class NettyWebServerWebSocketConnection implements WebSocketConnection {
    */
   public NettyWebServerWebSocketConnection(Channel channel, String user,
       WebSocketServerHandshaker handshaker, WebServerWebSocketHandlerFactory handlerFactory,
-      WebResourceAccessManager accessManager, Log log) {
+      WebResourceAccessManager accessManager, ExtendedLog log) {
     this.channel = channel;
     this.handshaker = handshaker;
     this.accessManager = accessManager;

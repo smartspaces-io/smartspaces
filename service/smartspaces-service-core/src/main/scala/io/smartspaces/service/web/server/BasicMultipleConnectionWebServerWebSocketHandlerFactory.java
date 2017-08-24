@@ -17,14 +17,13 @@
 
 package io.smartspaces.service.web.server;
 
-import io.smartspaces.service.web.WebSocketConnection;
-
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.commons.logging.Log;
-
 import com.google.common.collect.Maps;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.web.WebSocketConnection;
 
 /**
  * A basic implementation of the
@@ -53,7 +52,7 @@ public class BasicMultipleConnectionWebServerWebSocketHandlerFactory implements
   /**
    * Log.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Construct a basic factory.
@@ -64,7 +63,7 @@ public class BasicMultipleConnectionWebServerWebSocketHandlerFactory implements
    *          the logger to use
    */
   public BasicMultipleConnectionWebServerWebSocketHandlerFactory(
-      MultipleConnectionWebSocketHandler clientHandler, Log log) {
+      MultipleConnectionWebSocketHandler clientHandler, ExtendedLog log) {
     this.clientHandler = clientHandler;
     this.log = log;
   }

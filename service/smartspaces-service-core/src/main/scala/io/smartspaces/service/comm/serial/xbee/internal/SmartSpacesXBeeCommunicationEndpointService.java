@@ -17,12 +17,11 @@
 
 package io.smartspaces.service.comm.serial.xbee.internal;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpointService;
 import io.smartspaces.service.comm.serial.xbee.XBeeCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.xbee.XBeeCommunicationEndpointService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * An XBee communications endpoint service using the Smart Spaces XBee library.
@@ -38,7 +37,7 @@ public class SmartSpacesXBeeCommunicationEndpointService extends BaseSupportedSe
   }
 
   @Override
-  public XBeeCommunicationEndpoint newXBeeCommunicationEndpoint(String portName, Log log) {
+  public XBeeCommunicationEndpoint newXBeeCommunicationEndpoint(String portName, ExtendedLog log) {
     SerialCommunicationEndpointService serialService =
         getSpaceEnvironment().getServiceRegistry().getRequiredService(
             SerialCommunicationEndpointService.SERVICE_NAME);

@@ -17,14 +17,15 @@
 
 package io.smartspaces.service.comm.network.server.internal.netty;
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.service.comm.network.server.TcpServerClientConnection;
-import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpoint;
-import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpointListener;
-import io.smartspaces.service.comm.network.server.TcpServerRequest;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicLong;
 
-import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
@@ -41,14 +42,14 @@ import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
 
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicLong;
+import com.google.common.collect.Lists;
+
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.comm.network.server.TcpServerClientConnection;
+import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpoint;
+import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpointListener;
+import io.smartspaces.service.comm.network.server.TcpServerRequest;
 
 /**
  * A Netty-based {@link TcpServerNetworkCommunicationEndpoint} using strings for
@@ -93,7 +94,7 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint
   /**
    * Logger for this endpoint.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * The collection of connections.
@@ -120,7 +121,7 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint
    *          the logger to use
    */
   public NettyStringTcpServerNetworkCommunicationEndpoint(ChannelBuffer[] delimiters,
-      Charset charset, int serverPort, ExecutorService executorService, Log log) {
+      Charset charset, int serverPort, ExecutorService executorService, ExtendedLog log) {
     this.delimiters = delimiters;
     this.charset = charset;
     this.serverPort = serverPort;

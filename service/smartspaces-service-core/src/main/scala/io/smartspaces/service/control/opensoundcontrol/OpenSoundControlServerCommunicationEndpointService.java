@@ -17,9 +17,8 @@
 
 package io.smartspaces.service.control.opensoundcontrol;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.SupportedService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A service for building a server for Open Sound Control.
@@ -43,5 +42,5 @@ public interface OpenSoundControlServerCommunicationEndpointService extends Supp
    *
    * @return the new endpoint
    */
-  OpenSoundControlServerCommunicationEndpoint newUdpEndpoint(int localPort, Log log);
+  OpenSoundControlServerCommunicationEndpoint newUdpEndpoint(int localPort, ExtendedLog log);
 }

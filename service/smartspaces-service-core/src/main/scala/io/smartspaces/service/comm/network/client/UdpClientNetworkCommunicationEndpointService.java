@@ -17,11 +17,10 @@
 
 package io.smartspaces.service.comm.network.client;
 
-import io.smartspaces.service.SupportedService;
-
 import java.nio.ByteOrder;
 
-import org.apache.commons.logging.Log;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.SupportedService;
 
 /**
  * A communication endpoint service for UDP clients.
@@ -46,7 +45,7 @@ public interface UdpClientNetworkCommunicationEndpointService extends SupportedS
    *
    * @return the communication endpoint
    */
-  UdpClientNetworkCommunicationEndpoint newClient(Log log);
+  UdpClientNetworkCommunicationEndpoint newClient(ExtendedLog log);
 
   /**
    * Create a new UDP client endpoint.
@@ -58,7 +57,7 @@ public interface UdpClientNetworkCommunicationEndpointService extends SupportedS
    *
    * @return the communication endpoint
    */
-  UdpClientNetworkCommunicationEndpoint newClient(ByteOrder byteOrder, Log log);
+  UdpClientNetworkCommunicationEndpoint newClient(ByteOrder byteOrder, ExtendedLog log);
 
   /**
    * Create a new UDP broadcast client endpoint.
@@ -70,5 +69,5 @@ public interface UdpClientNetworkCommunicationEndpointService extends SupportedS
    *
    * @return the communication endpoint
    */
-  UdpBroadcastClientNetworkCommunicationEndpoint newBroadcastClient(int port, Log log);
+  UdpBroadcastClientNetworkCommunicationEndpoint newBroadcastClient(int port, ExtendedLog log);
 }

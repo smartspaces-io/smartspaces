@@ -17,13 +17,12 @@
 
 package io.smartspaces.service.control.opensoundcontrol.internal;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.comm.network.server.UdpServerNetworkCommunicationEndpointService;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlConstants;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlServerCommunicationEndpoint;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlServerCommunicationEndpointService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A Smart Spaces implementation of an Open Sound Control Server Endpoint
@@ -40,7 +39,7 @@ public class SmartSpacesOpenSoundControlServerCommunicationEndpointService exten
   }
 
   @Override
-  public OpenSoundControlServerCommunicationEndpoint newUdpEndpoint(int localPort, Log log) {
+  public OpenSoundControlServerCommunicationEndpoint newUdpEndpoint(int localPort, ExtendedLog log) {
     UdpServerNetworkCommunicationEndpointService serverService =
         getSpaceEnvironment().getServiceRegistry().getRequiredService(
             UdpServerNetworkCommunicationEndpointService.SERVICE_NAME);

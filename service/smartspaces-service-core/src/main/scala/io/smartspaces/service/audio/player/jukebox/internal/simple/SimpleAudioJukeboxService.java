@@ -17,13 +17,12 @@
 
 package io.smartspaces.service.audio.player.jukebox.internal.simple;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.audio.player.AudioRepository;
 import io.smartspaces.service.audio.player.AudioTrackPlayerService;
 import io.smartspaces.service.audio.player.jukebox.AudioJukebox;
 import io.smartspaces.service.audio.player.jukebox.AudioJukeboxService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * An {@link AudioJukeboxService} which returns {@link SimpleAudioJukebox}
@@ -39,7 +38,7 @@ public class SimpleAudioJukeboxService extends BaseSupportedService implements A
   }
 
   @Override
-  public AudioJukebox newAudioJukebox(AudioRepository audioRepository, Log log) {
+  public AudioJukebox newAudioJukebox(AudioRepository audioRepository, ExtendedLog log) {
     AudioTrackPlayerService trackPlayerService =
         getSpaceEnvironment().getServiceRegistry().getRequiredService(
             AudioTrackPlayerService.SERVICE_NAME);

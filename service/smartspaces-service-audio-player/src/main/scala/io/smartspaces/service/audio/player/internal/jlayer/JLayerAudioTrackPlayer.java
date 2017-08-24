@@ -17,24 +17,22 @@
 
 package io.smartspaces.service.audio.player.internal.jlayer;
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.service.audio.player.FilePlayableAudioTrack;
-import io.smartspaces.service.audio.player.support.BaseAudioTrackPlayer;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.google.common.io.Closeables;
+
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.audio.player.FilePlayableAudioTrack;
+import io.smartspaces.service.audio.player.support.BaseAudioTrackPlayer;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.io.Closeables;
 
 /**
  * An audio track player which uses JLayer.
@@ -66,7 +64,7 @@ public class JLayerAudioTrackPlayer extends BaseAudioTrackPlayer {
    * @param log
    *          the logger to use
    */
-  public JLayerAudioTrackPlayer(ScheduledExecutorService executorService, Log log) {
+  public JLayerAudioTrackPlayer(ScheduledExecutorService executorService, ExtendedLog log) {
     super(log);
     this.executorService = executorService;
   }

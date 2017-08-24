@@ -17,12 +17,11 @@
 
 package io.smartspaces.service.comm.serial.xbee.internal;
 
-import io.smartspaces.service.comm.serial.xbee.XBeeCommunicationEndpoint;
-import io.smartspaces.service.comm.serial.xbee.XBeeResponseListener;
-
 import java.util.List;
 
-import org.apache.commons.logging.Log;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.comm.serial.xbee.XBeeCommunicationEndpoint;
+import io.smartspaces.service.comm.serial.xbee.XBeeResponseListener;
 
 /**
  * A parser for XBee response frames.
@@ -47,5 +46,5 @@ public interface ResponseXBeeFrameHandler {
    *           the read thread was interrupted
    */
   void handle(XBeeCommunicationEndpoint endpoint, EscapedXBeeFrameReader reader,
-      List<XBeeResponseListener> listeners, Log log) throws InterruptedException;
+      List<XBeeResponseListener> listeners, ExtendedLog log) throws InterruptedException;
 }

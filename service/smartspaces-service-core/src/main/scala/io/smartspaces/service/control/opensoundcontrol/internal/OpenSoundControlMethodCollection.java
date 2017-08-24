@@ -17,13 +17,12 @@
 
 package io.smartspaces.service.control.opensoundcontrol.internal;
 
-import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlIncomingMessage;
-import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlMethod;
-
-import org.apache.commons.logging.Log;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlIncomingMessage;
+import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlMethod;
 
 /**
  * A collection of OSC methods.
@@ -74,7 +73,7 @@ public class OpenSoundControlMethodCollection<M extends OpenSoundControlIncoming
    * @param log
    *          a logger to use
    */
-  public void handleMessage(M message, Log log) {
+  public void handleMessage(M message, ExtendedLog log) {
     for (OpenSoundControlMethod<M> method : methods) {
       try {
         method.invoke(message);

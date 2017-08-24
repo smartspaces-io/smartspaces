@@ -17,7 +17,21 @@
 
 package io.smartspaces.service.comm.network;
 
-import io.smartspaces.service.comm.network.WriteableUdpPacket;
+import java.net.InetSocketAddress;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.apache.commons.logging.impl.Jdk14Logger;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpointListener;
 import io.smartspaces.service.comm.network.client.internal.netty.NettyUdpClientNetworkCommunicationEndpointService;
@@ -27,20 +41,6 @@ import io.smartspaces.service.comm.network.server.UdpServerRequest;
 import io.smartspaces.service.comm.network.server.internal.netty.NettyUdpServerNetworkCommunicationEndpointService;
 import io.smartspaces.system.SimpleSmartSpacesEnvironment;
 
-import java.net.InetSocketAddress;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.Jdk14Logger;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 /**
  * A test for the Netty UDP socket client and server.
  *
@@ -48,14 +48,14 @@ import org.junit.Test;
  */
 public class NettyUdpSocketTest {
 
-  private Log log;
+  private ExtendedLog log;
   private ScheduledExecutorService threadPool;
   private NettyUdpClientNetworkCommunicationEndpointService clientService;
   private NettyUdpServerNetworkCommunicationEndpointService serverService;
 
   @Before
   public void setup() {
-    log = new Jdk14Logger("goober");
+    log = new StandardExtendedLog("goober", new Jdk14Logger("goober"));
 
     threadPool = Executors.newScheduledThreadPool(100);
 

@@ -17,13 +17,12 @@
 
 package io.smartspaces.service.comm.serial.xbee.internal;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.comm.serial.xbee.AtLocalResponseXBeeFrame;
 import io.smartspaces.service.comm.serial.xbee.AtRemoteResponseXBeeFrame;
 import io.smartspaces.service.comm.serial.xbee.RxIoSampleXBeeFrame;
 import io.smartspaces.service.comm.serial.xbee.RxResponseXBeeFrame;
 import io.smartspaces.service.comm.serial.xbee.TxStatusXBeeFrame;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A parser for XBee response frames.
@@ -48,7 +47,7 @@ public interface XBeeResponseFrameParser {
    *           the read thread was interrupted
    */
   AtLocalResponseXBeeFrame parseAtLocalResponse(EscapedXBeeFrameReader reader, int bytesLeft,
-      Log log) throws InterruptedException;
+      ExtendedLog log) throws InterruptedException;
 
   /**
    * Parse an AT Remote response.
@@ -66,7 +65,7 @@ public interface XBeeResponseFrameParser {
    *           the read thread was interrupted
    */
   AtRemoteResponseXBeeFrame parseAtRemoteResponse(EscapedXBeeFrameReader reader, int bytesLeft,
-      Log log) throws InterruptedException;
+		  ExtendedLog log) throws InterruptedException;
 
   /**
    * Parse an Transmit response.
@@ -83,7 +82,7 @@ public interface XBeeResponseFrameParser {
    * @throws InterruptedException
    *           the read thread was interrupted
    */
-  TxStatusXBeeFrame parseTxStatus(EscapedXBeeFrameReader reader, int bytesLeft, Log log)
+  TxStatusXBeeFrame parseTxStatus(EscapedXBeeFrameReader reader, int bytesLeft, ExtendedLog log)
       throws InterruptedException;
 
   /**
@@ -101,7 +100,7 @@ public interface XBeeResponseFrameParser {
    * @throws InterruptedException
    *           the read thread was interrupted
    */
-  RxResponseXBeeFrame parseRxResponse(EscapedXBeeFrameReader reader, int bytesLeft, Log log)
+  RxResponseXBeeFrame parseRxResponse(EscapedXBeeFrameReader reader, int bytesLeft, ExtendedLog log)
       throws InterruptedException;
 
   /**
@@ -119,6 +118,6 @@ public interface XBeeResponseFrameParser {
    * @throws InterruptedException
    *           the read thread was interrupted
    */
-  RxIoSampleXBeeFrame parseIoSampleResponse(EscapedXBeeFrameReader reader, int bytesLeft, Log log)
+  RxIoSampleXBeeFrame parseIoSampleResponse(EscapedXBeeFrameReader reader, int bytesLeft, ExtendedLog log)
       throws InterruptedException;
 }

@@ -17,18 +17,10 @@
 
 package io.smartspaces.service.web.client.internal.netty;
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.service.web.WebSocketHandler;
-import io.smartspaces.service.web.client.WebSocketClient;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
-
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.concurrent.Executor;
 
-import org.apache.commons.logging.Log;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
@@ -47,6 +39,14 @@ import org.jboss.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketVersion;
+
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.web.WebSocketHandler;
+import io.smartspaces.service.web.client.WebSocketClient;
+import io.smartspaces.util.data.json.JsonMapper;
+import io.smartspaces.util.data.json.StandardJsonMapper;
 
 /**
  * A {@link WebSocketClient} using Netty.
@@ -98,7 +98,7 @@ public class NettyWebSocketClient implements WebSocketClient {
   /**
    * Logger for the client.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * The netty channel for writing web socket data.
@@ -122,7 +122,7 @@ public class NettyWebSocketClient implements WebSocketClient {
    * @param log
    *          the log to use
    */
-  public NettyWebSocketClient(URI uri, WebSocketHandler handler, Executor threadPool, Log log) {
+  public NettyWebSocketClient(URI uri, WebSocketHandler handler, Executor threadPool, ExtendedLog log) {
     this.uri = uri;
     this.handler = handler;
     this.threadPool = threadPool;

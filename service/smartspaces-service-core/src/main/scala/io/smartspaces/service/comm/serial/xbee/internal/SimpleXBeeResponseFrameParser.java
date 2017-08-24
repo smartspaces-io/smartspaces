@@ -17,6 +17,10 @@
 
 package io.smartspaces.service.comm.serial.xbee.internal;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.comm.serial.xbee.AtLocalResponseXBeeFrame;
 import io.smartspaces.service.comm.serial.xbee.AtRemoteResponseXBeeFrame;
 import io.smartspaces.service.comm.serial.xbee.RxIoSampleXBeeFrame;
@@ -25,11 +29,6 @@ import io.smartspaces.service.comm.serial.xbee.TxStatusXBeeFrame;
 import io.smartspaces.service.comm.serial.xbee.XBeeAddress16;
 import io.smartspaces.service.comm.serial.xbee.XBeeAddress64;
 import io.smartspaces.service.comm.serial.xbee.XBeeApiConstants;
-
-import org.apache.commons.logging.Log;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A frame parser for escaped XBee API frames.
@@ -40,7 +39,7 @@ public class SimpleXBeeResponseFrameParser implements XBeeResponseFrameParser {
 
   @Override
   public AtLocalResponseXBeeFrame parseAtLocalResponse(EscapedXBeeFrameReader reader,
-      int bytesLeft, Log log) throws InterruptedException {
+      int bytesLeft, ExtendedLog log) throws InterruptedException {
     int frameId = reader.readByte();
 
     byte atCommandUpper = (byte) reader.readByte();
@@ -58,7 +57,7 @@ public class SimpleXBeeResponseFrameParser implements XBeeResponseFrameParser {
 
   @Override
   public AtRemoteResponseXBeeFrame parseAtRemoteResponse(EscapedXBeeFrameReader reader,
-      int bytesLeft, Log log) throws InterruptedException {
+      int bytesLeft, ExtendedLog log) throws InterruptedException {
     int frameId = reader.readByte();
 
     XBeeAddress64 address64 = parseXBeeAddress64(reader);
@@ -78,7 +77,7 @@ public class SimpleXBeeResponseFrameParser implements XBeeResponseFrameParser {
   }
 
   @Override
-  public TxStatusXBeeFrame parseTxStatus(EscapedXBeeFrameReader reader, int bytesLeft, Log log)
+  public TxStatusXBeeFrame parseTxStatus(EscapedXBeeFrameReader reader, int bytesLeft, ExtendedLog log)
       throws InterruptedException {
     int frameId = reader.readByte();
     XBeeAddress16 address16 = parseXBeeAddress16(reader);
@@ -93,7 +92,7 @@ public class SimpleXBeeResponseFrameParser implements XBeeResponseFrameParser {
   }
 
   @Override
-  public RxResponseXBeeFrame parseRxResponse(EscapedXBeeFrameReader reader, int bytesLeft, Log log)
+  public RxResponseXBeeFrame parseRxResponse(EscapedXBeeFrameReader reader, int bytesLeft, ExtendedLog log)
       throws InterruptedException {
     XBeeAddress64 address64 = parseXBeeAddress64(reader);
     XBeeAddress16 address16 = parseXBeeAddress16(reader);
@@ -109,7 +108,7 @@ public class SimpleXBeeResponseFrameParser implements XBeeResponseFrameParser {
 
   @Override
   public RxIoSampleXBeeFrame parseIoSampleResponse(EscapedXBeeFrameReader reader, int bytesLeft,
-      Log log) throws InterruptedException {
+		  ExtendedLog log) throws InterruptedException {
     XBeeAddress64 address64 = parseXBeeAddress64(reader);
     XBeeAddress16 address16 = parseXBeeAddress16(reader);
 

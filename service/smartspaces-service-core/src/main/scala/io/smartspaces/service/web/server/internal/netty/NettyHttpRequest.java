@@ -17,18 +17,6 @@
 
 package io.smartspaces.service.web.server.internal.netty;
 
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.service.web.server.HttpRequest;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
-import org.apache.commons.logging.Log;
-import org.jboss.netty.handler.codec.http.Cookie;
-import org.jboss.netty.handler.codec.http.CookieDecoder;
-
 import java.net.HttpCookie;
 import java.net.SocketAddress;
 import java.net.URI;
@@ -41,6 +29,20 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.jboss.netty.handler.codec.http.Cookie;
+import org.jboss.netty.handler.codec.http.CookieDecoder;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
+
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.web.server.HttpRequest;
 
 /**
  * An HTTP request that proxies the Netty HTTP request.
@@ -62,7 +64,7 @@ public class NettyHttpRequest implements HttpRequest {
   /**
    * The logger for this request.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * The headers for the request.
@@ -80,7 +82,7 @@ public class NettyHttpRequest implements HttpRequest {
    *          the logger for the request
    */
   public NettyHttpRequest(org.jboss.netty.handler.codec.http.HttpRequest request,
-      SocketAddress remoteAddress, Log log) {
+      SocketAddress remoteAddress, ExtendedLog log) {
     this.request = request;
     this.remoteAddress = remoteAddress;
     this.log = log;

@@ -17,11 +17,10 @@
 
 package io.smartspaces.service.audio.player.internal.jlayer;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.audio.player.AudioTrackPlayer;
 import io.smartspaces.service.audio.player.AudioTrackPlayerService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * An audio track player service for JLayer players.
@@ -37,7 +36,7 @@ public class JLayerAudioTrackPlayerService extends BaseSupportedService implemen
   }
 
   @Override
-  public AudioTrackPlayer newTrackPlayer(Log log) {
+  public AudioTrackPlayer newTrackPlayer(ExtendedLog log) {
     return new JLayerAudioTrackPlayer(getSpaceEnvironment().getExecutorService(), log);
   }
 }

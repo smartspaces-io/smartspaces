@@ -22,8 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.logging.Log;
-
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.xbee.AtLocalRequestXBeeFrame;
 import io.smartspaces.service.comm.serial.xbee.AtRemoteRequestXBeeFrame;
@@ -69,7 +68,7 @@ public class SmartSpacesXBeeCommunicationEndpoint implements XBeeCommunicationEn
   /**
    * Log for the endpoint.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * Loop for reading info from the XBee.
@@ -92,7 +91,7 @@ public class SmartSpacesXBeeCommunicationEndpoint implements XBeeCommunicationEn
    *          the logger to use
    */
   public SmartSpacesXBeeCommunicationEndpoint(SerialCommunicationEndpoint commEndpoint,
-      ScheduledExecutorService executorService, Log log) {
+      ScheduledExecutorService executorService, ExtendedLog log) {
     this.commEndpoint = commEndpoint;
     this.executorService = executorService;
     this.log = log;

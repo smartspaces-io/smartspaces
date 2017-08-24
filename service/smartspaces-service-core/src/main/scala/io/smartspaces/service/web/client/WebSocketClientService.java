@@ -17,10 +17,9 @@
 
 package io.smartspaces.service.web.client;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.SupportedService;
 import io.smartspaces.service.web.WebSocketHandler;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A service for obtaining web socket client instances.
@@ -46,7 +45,7 @@ public interface WebSocketClientService extends SupportedService {
    *
    * @return the web socket client
    */
-  WebSocketClient newWebSocketClient(String uri, WebSocketHandler handler, Log log);
+  WebSocketClient newWebSocketClient(String uri, WebSocketHandler handler, ExtendedLog log);
 
   /**
    * Create a new client.
@@ -58,5 +57,5 @@ public interface WebSocketClientService extends SupportedService {
    *
    * @return the web socket client
    */
-  WebSocketClient newWebSocketClient(String uri, Log log);
+  WebSocketClient newWebSocketClient(String uri, ExtendedLog log);
 }

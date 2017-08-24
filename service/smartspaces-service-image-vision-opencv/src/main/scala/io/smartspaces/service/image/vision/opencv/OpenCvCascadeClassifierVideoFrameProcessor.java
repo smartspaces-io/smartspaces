@@ -17,12 +17,9 @@
 
 package io.smartspaces.service.image.vision.opencv;
 
-import io.smartspaces.interaction.detection.DetectionEventListener;
-import io.smartspaces.service.image.video.BaseVideoFrameProcessor;
-import io.smartspaces.util.geometry.Rectangle2;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
@@ -31,8 +28,12 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.objdetect.CascadeClassifier;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.collect.Lists;
+
+import io.smartspaces.interaction.detection.DetectionEventListener;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.image.video.BaseVideoFrameProcessor;
+import io.smartspaces.util.geometry.Rectangle2;
 
 /**
  * A video frame listener that applies a cascade classifier to the video frame
@@ -61,7 +62,7 @@ public class OpenCvCascadeClassifierVideoFrameProcessor extends BaseVideoFramePr
   /**
    * Logger for the listener.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Construct a listener with the given classifier.
@@ -71,7 +72,7 @@ public class OpenCvCascadeClassifierVideoFrameProcessor extends BaseVideoFramePr
    * @param log
    *          the logger for the listener
    */
-  public OpenCvCascadeClassifierVideoFrameProcessor(CascadeClassifier classifier, Log log) {
+  public OpenCvCascadeClassifierVideoFrameProcessor(CascadeClassifier classifier, ExtendedLog log) {
     this.classifier = classifier;
     this.log = log;
   }

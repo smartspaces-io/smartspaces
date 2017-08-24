@@ -17,18 +17,18 @@
 
 package io.smartspaces.service.comm.network.client.internal.netty;
 
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.service.BaseSupportedService;
-import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpoint;
-import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpointService;
-
-import org.apache.commons.logging.Log;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
+
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.BaseSupportedService;
+import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpoint;
+import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpointService;
 
 /**
  * A Netty based {@link TcpClientNetworkCommunicationEndpointService}.
@@ -45,7 +45,7 @@ public class NettyTcpClientNetworkCommunicationEndpointService extends BaseSuppo
 
   @Override
   public TcpClientNetworkCommunicationEndpoint<String> newStringClient(byte[][] delimiters,
-      Charset charset, String remoteHost, int remotePort, Log log) {
+      Charset charset, String remoteHost, int remotePort, ExtendedLog log) {
     try {
       return newStringClient(delimiters, charset, InetAddress.getByName(remoteHost), remotePort,
           log);
@@ -56,7 +56,7 @@ public class NettyTcpClientNetworkCommunicationEndpointService extends BaseSuppo
 
   @Override
   public TcpClientNetworkCommunicationEndpoint<String> newStringClient(byte[][] delimiters,
-      Charset charset, InetAddress remoteAddr, int serverPort, Log log) {
+      Charset charset, InetAddress remoteAddr, int serverPort, ExtendedLog log) {
     int length = delimiters.length;
     ChannelBuffer[] delimiterBuffers = new ChannelBuffer[length];
     for (int i = 0; i < length; i++) {

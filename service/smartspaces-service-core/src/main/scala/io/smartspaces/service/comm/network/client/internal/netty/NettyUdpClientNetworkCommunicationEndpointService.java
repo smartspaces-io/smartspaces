@@ -17,14 +17,13 @@
 
 package io.smartspaces.service.comm.network.client.internal.netty;
 
+import java.nio.ByteOrder;
+
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.comm.network.client.UdpBroadcastClientNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpointService;
-
-import java.nio.ByteOrder;
-
-import org.apache.commons.logging.Log;
 
 /**
  * Netty implementation of the
@@ -41,18 +40,18 @@ public class NettyUdpClientNetworkCommunicationEndpointService extends BaseSuppo
   }
 
   @Override
-  public UdpClientNetworkCommunicationEndpoint newClient(Log log) {
+  public UdpClientNetworkCommunicationEndpoint newClient(ExtendedLog log) {
     return newClient(ByteOrder.BIG_ENDIAN, log);
   }
 
   @Override
-  public UdpClientNetworkCommunicationEndpoint newClient(ByteOrder byteOrder, Log log) {
+  public UdpClientNetworkCommunicationEndpoint newClient(ByteOrder byteOrder, ExtendedLog log) {
     return new NettyUdpClientNetworkCommunicationEndpoint(byteOrder, getSpaceEnvironment()
         .getExecutorService(), log);
   }
 
   @Override
-  public UdpBroadcastClientNetworkCommunicationEndpoint newBroadcastClient(int port, Log log) {
+  public UdpBroadcastClientNetworkCommunicationEndpoint newBroadcastClient(int port, ExtendedLog log) {
     return new NettyUdpBroadcastClientNetworkCommunicationEndpoint(port, getSpaceEnvironment()
         .getExecutorService(), log);
   }

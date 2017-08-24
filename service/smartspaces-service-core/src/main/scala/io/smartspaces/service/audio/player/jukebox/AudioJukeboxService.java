@@ -17,10 +17,9 @@
 
 package io.smartspaces.service.audio.player.jukebox;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.SupportedService;
 import io.smartspaces.service.audio.player.AudioRepository;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A service for obtaining {@link AudioJukebox} instances.
@@ -44,5 +43,5 @@ public interface AudioJukeboxService extends SupportedService {
    *
    * @return the new jukebox
    */
-  AudioJukebox newAudioJukebox(AudioRepository audioRepository, Log log);
+  AudioJukebox newAudioJukebox(AudioRepository audioRepository, ExtendedLog log);
 }

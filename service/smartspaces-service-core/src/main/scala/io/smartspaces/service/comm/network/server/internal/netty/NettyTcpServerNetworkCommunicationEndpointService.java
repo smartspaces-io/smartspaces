@@ -17,15 +17,15 @@
 
 package io.smartspaces.service.comm.network.server.internal.netty;
 
+import java.nio.charset.Charset;
+
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpointService;
-
-import java.nio.charset.Charset;
-
-import org.apache.commons.logging.Log;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 
 /**
  * A Netty based {@link TcpServerNetworkCommunicationEndpointService}.
@@ -42,7 +42,7 @@ public class NettyTcpServerNetworkCommunicationEndpointService extends BaseSuppo
 
   @Override
   public TcpServerNetworkCommunicationEndpoint<String> newStringServer(byte[][] delimiters,
-      Charset charset, int serverPort, Log log) {
+      Charset charset, int serverPort, ExtendedLog log) {
     int length = delimiters.length;
     ChannelBuffer[] delimiterBuffers = new ChannelBuffer[length];
     for (int i = 0; i < length; i++) {

@@ -27,20 +27,15 @@ import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FOUND;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.SmartSpacesExceptionUtils;
-import io.smartspaces.service.web.server.HttpAuthProvider;
-import io.smartspaces.service.web.server.HttpAuthResponse;
-import io.smartspaces.service.web.server.WebResourceAccessManager;
-import io.smartspaces.service.web.server.WebServer;
-import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
-import io.smartspaces.util.web.HttpConstants;
+import java.io.IOException;
+import java.net.HttpCookie;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import org.apache.commons.logging.Log;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -66,14 +61,19 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.jboss.netty.util.CharsetUtil;
 
-import java.io.IOException;
-import java.net.HttpCookie;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SmartSpacesExceptionUtils;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.web.server.HttpAuthProvider;
+import io.smartspaces.service.web.server.HttpAuthResponse;
+import io.smartspaces.service.web.server.WebResourceAccessManager;
+import io.smartspaces.service.web.server.WebServer;
+import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
+import io.smartspaces.util.web.HttpConstants;
 
 /**
  * A web socket server handler for Netty.
@@ -723,7 +723,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       isWebsocketChannel = webSocketConnections.containsKey(channel.getId());
     }
 
-    Log log = webServer.getLog();
+    ExtendedLog log = webServer.getLog();
     Throwable cause = e.getCause();
     if (isWebsocketChannel) {
       log.error("Exception caught in web server for web socket connections: " + cause.getMessage());

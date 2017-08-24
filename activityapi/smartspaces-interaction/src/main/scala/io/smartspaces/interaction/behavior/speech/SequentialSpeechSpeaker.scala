@@ -16,21 +16,20 @@
 
 package io.smartspaces.interaction.behavior.speech;
 
-import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.Future
+import java.util.concurrent.LinkedBlockingQueue
 
-import org.apache.commons.logging.Log;
-
-import io.smartspaces.service.speech.synthesis.SpeechSynthesisPlayer;
-import io.smartspaces.service.speech.synthesis.SpeechSynthesisService;
-import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.service.speech.synthesis.SpeechSynthesisPlayer
+import io.smartspaces.service.speech.synthesis.SpeechSynthesisService
+import io.smartspaces.system.SmartSpacesEnvironment
+import io.smartspaces.logging.ExtendedLog
 
 /**
  * The standard speech source that uses routes.
  *
  * @author Keith M. Hughes
  */
-class SequentialSpeechSpeaker(private val spaceEnvironment: SmartSpacesEnvironment, private val log: Log) extends SpeechSpeaker {
+class SequentialSpeechSpeaker(private val spaceEnvironment: SmartSpacesEnvironment, private val log: ExtendedLog) extends SpeechSpeaker {
 
   /**
    * The queue of text to speak.

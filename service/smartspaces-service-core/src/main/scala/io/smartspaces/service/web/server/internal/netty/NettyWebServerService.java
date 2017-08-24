@@ -17,6 +17,9 @@
 
 package io.smartspaces.service.web.server.internal.netty;
 
+import java.io.InputStream;
+import java.util.concurrent.ScheduledExecutorService;
+
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerService;
@@ -26,11 +29,6 @@ import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.web.MapExtensionMimeResolver;
 import io.smartspaces.util.web.MimeResolver;
-
-import org.apache.commons.logging.Log;
-
-import java.io.InputStream;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * A {@link WebServerService} which gives NETTY web servers.
@@ -125,7 +123,7 @@ public class NettyWebServerService extends BaseWebServerService {
    *
    * @return the resolver
    */
-  private MapExtensionMimeResolver newDefaultMimeResolver(Log log) {
+  private MapExtensionMimeResolver newDefaultMimeResolver(ExtendedLog log) {
     MapExtensionMimeResolver resolver = new MapExtensionMimeResolver();
 
     try {

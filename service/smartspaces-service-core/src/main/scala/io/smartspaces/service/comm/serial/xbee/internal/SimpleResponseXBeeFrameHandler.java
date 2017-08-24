@@ -17,6 +17,9 @@
 
 package io.smartspaces.service.comm.serial.xbee.internal;
 
+import java.util.List;
+
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.comm.serial.xbee.AtLocalResponseXBeeFrame;
 import io.smartspaces.service.comm.serial.xbee.AtRemoteResponseXBeeFrame;
 import io.smartspaces.service.comm.serial.xbee.RxIoSampleXBeeFrame;
@@ -25,10 +28,6 @@ import io.smartspaces.service.comm.serial.xbee.TxStatusXBeeFrame;
 import io.smartspaces.service.comm.serial.xbee.XBeeApiConstants;
 import io.smartspaces.service.comm.serial.xbee.XBeeCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.xbee.XBeeResponseListener;
-
-import java.util.List;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A parser that parses escaped API XBee frames.
@@ -44,7 +43,7 @@ public class SimpleResponseXBeeFrameHandler implements ResponseXBeeFrameHandler 
 
   @Override
   public void handle(XBeeCommunicationEndpoint endpoint, EscapedXBeeFrameReader reader,
-      List<XBeeResponseListener> listeners, Log log) throws InterruptedException {
+      List<XBeeResponseListener> listeners, ExtendedLog log) throws InterruptedException {
 
     int packetLength = reader.readPacketLength();
 
@@ -89,7 +88,7 @@ public class SimpleResponseXBeeFrameHandler implements ResponseXBeeFrameHandler 
    *          logger for errors
    */
   private void signalAtLocalResponse(XBeeCommunicationEndpoint endpoint,
-      AtLocalResponseXBeeFrame response, List<XBeeResponseListener> listeners, Log log) {
+      AtLocalResponseXBeeFrame response, List<XBeeResponseListener> listeners, ExtendedLog log) {
     for (XBeeResponseListener listener : listeners) {
       try {
         listener.onAtLocalXBeeResponse(endpoint, response);
@@ -112,7 +111,7 @@ public class SimpleResponseXBeeFrameHandler implements ResponseXBeeFrameHandler 
    *          logger for errors
    */
   private void signalAtRemoteResponse(XBeeCommunicationEndpoint endpoint,
-      AtRemoteResponseXBeeFrame response, List<XBeeResponseListener> listeners, Log log) {
+      AtRemoteResponseXBeeFrame response, List<XBeeResponseListener> listeners, ExtendedLog log) {
     for (XBeeResponseListener listener : listeners) {
       try {
         listener.onAtRemoteXBeeResponse(endpoint, response);
@@ -135,7 +134,7 @@ public class SimpleResponseXBeeFrameHandler implements ResponseXBeeFrameHandler 
    *          logger for errors
    */
   private void signalRxResponse(XBeeCommunicationEndpoint endpoint, RxResponseXBeeFrame response,
-      List<XBeeResponseListener> listeners, Log log) {
+      List<XBeeResponseListener> listeners, ExtendedLog log) {
     for (XBeeResponseListener listener : listeners) {
       try {
         listener.onRxXBeeResponse(endpoint, response);
@@ -158,7 +157,7 @@ public class SimpleResponseXBeeFrameHandler implements ResponseXBeeFrameHandler 
    *          logger for errors
    */
   private void signalRxIoResponse(XBeeCommunicationEndpoint endpoint, RxIoSampleXBeeFrame response,
-      List<XBeeResponseListener> listeners, Log log) {
+      List<XBeeResponseListener> listeners, ExtendedLog log) {
     for (XBeeResponseListener listener : listeners) {
       try {
         listener.onRxIoSampleXBeeResponse(endpoint, response);
@@ -181,7 +180,7 @@ public class SimpleResponseXBeeFrameHandler implements ResponseXBeeFrameHandler 
    *          logger for errors
    */
   private void signalTxStatus(XBeeCommunicationEndpoint endpoint, TxStatusXBeeFrame response,
-      List<XBeeResponseListener> listeners, Log log) {
+      List<XBeeResponseListener> listeners, ExtendedLog log) {
     for (XBeeResponseListener listener : listeners) {
       try {
         listener.onTxStatusXBeeResponse(endpoint, response);

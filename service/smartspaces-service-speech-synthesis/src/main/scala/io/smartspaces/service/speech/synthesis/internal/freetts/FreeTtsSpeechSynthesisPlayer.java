@@ -17,15 +17,14 @@
 
 package io.smartspaces.service.speech.synthesis.internal.freetts;
 
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.service.speech.synthesis.SpeechSynthesisPlayer;
-
 import java.util.concurrent.ScheduledExecutorService;
-
-import org.apache.commons.logging.Log;
 
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
+
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.speech.synthesis.SpeechSynthesisPlayer;
 
 /**
  * A speech synthesis player based on FreeTTS.
@@ -52,10 +51,10 @@ public class FreeTtsSpeechSynthesisPlayer implements SpeechSynthesisPlayer {
   /**
    * The log.
    */
-  private Log log;
+  private ExtendedLog log;
 
   public FreeTtsSpeechSynthesisPlayer(VoiceManager voiceManager,
-      ScheduledExecutorService executorService, Log log) {
+      ScheduledExecutorService executorService, ExtendedLog log) {
     this.voiceManager = voiceManager;
     this.executorService = executorService;
     this.log = log;

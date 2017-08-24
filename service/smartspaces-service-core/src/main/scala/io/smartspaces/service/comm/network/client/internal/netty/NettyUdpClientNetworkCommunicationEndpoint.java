@@ -17,18 +17,12 @@
 
 package io.smartspaces.service.comm.network.client.internal.netty;
 
-import io.smartspaces.service.comm.network.WriteableUdpPacket;
-import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpoint;
-import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpointListener;
-import io.smartspaces.service.comm.network.internal.netty.NettyWriteableUdpPacket;
-
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-import org.apache.commons.logging.Log;
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -45,6 +39,12 @@ import org.jboss.netty.channel.socket.DatagramChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
 
 import com.google.common.collect.Lists;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.comm.network.WriteableUdpPacket;
+import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpoint;
+import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpointListener;
+import io.smartspaces.service.comm.network.internal.netty.NettyWriteableUdpPacket;
 
 /**
  * A Netty-based {@link UdpClientNetworkCommunicationEndpoint}.
@@ -88,7 +88,7 @@ public class NettyUdpClientNetworkCommunicationEndpoint implements
   /**
    * Logger for this endpoint.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * Construct a new endpoint.
@@ -101,7 +101,7 @@ public class NettyUdpClientNetworkCommunicationEndpoint implements
    *          the logger to use
    */
   NettyUdpClientNetworkCommunicationEndpoint(ByteOrder byteOrder, ExecutorService executorService,
-      Log log) {
+      ExtendedLog log) {
     this.byteOrder = byteOrder;
     this.executorService = executorService;
     this.log = log;

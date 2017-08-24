@@ -17,12 +17,11 @@
 
 package io.smartspaces.service.audio.player.internal.binary;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.audio.player.AudioTrackPlayer;
 import io.smartspaces.service.audio.player.AudioTrackPlayerService;
 import io.smartspaces.util.process.NativeApplicationRunnerFactory;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A {@link AudioTrackPlayerService} which gives track players which are
@@ -54,7 +53,7 @@ public class NativeAudioTrackPlayerService extends BaseSupportedService implemen
   }
 
   @Override
-  public AudioTrackPlayer newTrackPlayer(Log log) {
+  public AudioTrackPlayer newTrackPlayer(ExtendedLog log) {
     return new NativeAudioTrackPlayer(runnerFactory, log);
   }
 }

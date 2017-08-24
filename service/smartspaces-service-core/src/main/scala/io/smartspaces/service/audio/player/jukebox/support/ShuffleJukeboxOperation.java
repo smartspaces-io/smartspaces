@@ -17,18 +17,17 @@
 
 package io.smartspaces.service.audio.player.jukebox.support;
 
-import io.smartspaces.service.audio.player.AudioRepository;
-import io.smartspaces.service.audio.player.FilePlayableAudioTrack;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.commons.logging.Log;
-
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.audio.player.AudioRepository;
+import io.smartspaces.service.audio.player.FilePlayableAudioTrack;
 
 /**
  * A {@link JukeboxOperation} which shuffles from the repository.
@@ -73,7 +72,7 @@ public class ShuffleJukeboxOperation extends BaseJukeboxOperation {
    *          the logger to use
    */
   public ShuffleJukeboxOperation(InternalAudioJukebox audioJukebox,
-      AudioRepository audioRepository, Log log) {
+      AudioRepository audioRepository, ExtendedLog log) {
     super(audioJukebox, log);
 
     this.audioRepository = audioRepository;

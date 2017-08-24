@@ -17,11 +17,10 @@
 
 package io.smartspaces.service.mail.receiver.internal;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.mail.receiver.MailReceiver;
 import io.smartspaces.service.mail.receiver.MailReceiverService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A {@link MailReceiverService} which uses Dumbster.
@@ -37,7 +36,7 @@ public class DumbsterMailReceiverService extends BaseSupportedService implements
   }
 
   @Override
-  public MailReceiver newMailReceiver(int port, Log log) {
+  public MailReceiver newMailReceiver(int port, ExtendedLog log) {
     return new DumbsterMailReceiver(port, log);
   }
 }

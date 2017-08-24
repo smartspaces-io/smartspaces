@@ -17,16 +17,12 @@
 
 package io.smartspaces.service.comm.network.client.internal.netty;
 
-import io.smartspaces.service.comm.network.client.UdpBroadcastClientNetworkCommunicationEndpoint;
-import io.smartspaces.service.comm.network.client.UdpBroadcastClientNetworkCommunicationEndpointListener;
-
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-import org.apache.commons.logging.Log;
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -42,6 +38,10 @@ import org.jboss.netty.channel.socket.DatagramChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
 
 import com.google.common.collect.Lists;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.comm.network.client.UdpBroadcastClientNetworkCommunicationEndpoint;
+import io.smartspaces.service.comm.network.client.UdpBroadcastClientNetworkCommunicationEndpointListener;
 
 /**
  * A Netty implementation of a
@@ -81,7 +81,7 @@ public class NettyUdpBroadcastClientNetworkCommunicationEndpoint implements
   /**
    * Logger for this endpoint.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * The datagram channel for this endpoint.
@@ -99,7 +99,7 @@ public class NettyUdpBroadcastClientNetworkCommunicationEndpoint implements
    *          the logger to use
    */
   public NettyUdpBroadcastClientNetworkCommunicationEndpoint(int port,
-      ExecutorService executorService, Log log) {
+      ExecutorService executorService, ExtendedLog log) {
     this.port = port;
     this.executorService = executorService;
     this.log = log;

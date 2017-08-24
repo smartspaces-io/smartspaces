@@ -23,7 +23,6 @@ import java.net.NetworkInterface;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.Jdk14Logger;
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -40,6 +39,9 @@ import org.jboss.netty.channel.socket.DatagramChannel;
 import org.jboss.netty.channel.socket.DatagramChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
 
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.logging.StandardExtendedLog;
+
 /**
  *
  * @author Keith M. Hughes
@@ -50,7 +52,7 @@ public class NettyUdpBroadcastMasterNetworkCommunicationEndpoint {
     ExecutorService executorService = Executors.newScheduledThreadPool(1000);
     NettyUdpBroadcastMasterNetworkCommunicationEndpoint endpoint =
         new NettyUdpBroadcastMasterNetworkCommunicationEndpoint(23867, executorService,
-            new Jdk14Logger("foo"));
+            new StandardExtendedLog("foo", new Jdk14Logger("foo")));
     endpoint.startup();
 
     Thread.sleep(1000);
@@ -81,7 +83,7 @@ public class NettyUdpBroadcastMasterNetworkCommunicationEndpoint {
   /**
    * Logger for this endpoint.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * The datagram channel for this endpoint.
@@ -104,7 +106,7 @@ public class NettyUdpBroadcastMasterNetworkCommunicationEndpoint {
    *          the logger to use
    */
   public NettyUdpBroadcastMasterNetworkCommunicationEndpoint(int port,
-      ExecutorService executorService, Log log) {
+      ExecutorService executorService, ExtendedLog log) {
     this.port = port;
     this.executorService = executorService;
     this.log = log;

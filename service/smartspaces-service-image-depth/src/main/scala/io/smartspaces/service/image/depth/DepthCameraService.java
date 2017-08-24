@@ -17,11 +17,12 @@
 
 package io.smartspaces.service.image.depth;
 
-import io.smartspaces.service.SupportedService;
-
 import java.util.List;
 
 import org.apache.commons.logging.Log;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.SupportedService;
 
 /**
  * A service for working with depth cameras.
@@ -50,7 +51,7 @@ public interface DepthCameraService extends SupportedService {
    *
    * @return a new depth camera endpoint
    */
-  UserTrackerDepthCameraEndpoint newUserTrackerDepthCameraEndpoint(Log log);
+  UserTrackerDepthCameraEndpoint newUserTrackerDepthCameraEndpoint(ExtendedLog log);
 
   /**
    * Get a new depth camera endpoint with the specified ID.
@@ -62,6 +63,6 @@ public interface DepthCameraService extends SupportedService {
    *
    * @return a new depth camera endpoint
    */
-  UserTrackerDepthCameraEndpoint newUserTrackerDepthCameraEndpoint(String cameraId, Log log);
+  UserTrackerDepthCameraEndpoint newUserTrackerDepthCameraEndpoint(String cameraId, ExtendedLog log);
 
 }

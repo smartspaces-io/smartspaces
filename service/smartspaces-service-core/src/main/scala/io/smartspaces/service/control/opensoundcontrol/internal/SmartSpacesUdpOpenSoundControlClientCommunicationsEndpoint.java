@@ -17,7 +17,10 @@
 
 package io.smartspaces.service.control.opensoundcontrol.internal;
 
+import java.net.InetSocketAddress;
+
 import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpointListener;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlClientCommunicationEndpoint;
@@ -25,10 +28,6 @@ import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlClientRes
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlConstants;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlIncomingMessage;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlOutgoingMessage;
-
-import java.net.InetSocketAddress;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A Smart Spaces implementation of an
@@ -63,7 +62,7 @@ public class SmartSpacesUdpOpenSoundControlClientCommunicationsEndpoint implemen
   /**
    * Log for the connection.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * Construct a new client.
@@ -77,7 +76,7 @@ public class SmartSpacesUdpOpenSoundControlClientCommunicationsEndpoint implemen
    */
   public SmartSpacesUdpOpenSoundControlClientCommunicationsEndpoint(
       InetSocketAddress remoteAddress, UdpClientNetworkCommunicationEndpoint udpClientEndpoint,
-      Log log) {
+      ExtendedLog log) {
     this.remoteAddress = remoteAddress;
     this.udpClientEndpoint = udpClientEndpoint;
     this.log = log;

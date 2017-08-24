@@ -17,9 +17,8 @@
 
 package io.smartspaces.service.audio.player;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.SupportedService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A factory for {@link AudioTrackPlayer} instances.
@@ -41,5 +40,5 @@ public interface AudioTrackPlayerService extends SupportedService {
    *
    * @return a track player ready to work.
    */
-  AudioTrackPlayer newTrackPlayer(Log log);
+  AudioTrackPlayer newTrackPlayer(ExtendedLog log);
 }

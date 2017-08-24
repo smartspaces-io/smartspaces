@@ -17,14 +17,13 @@
 
 package io.smartspaces.service.control.opensoundcontrol.internal;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.comm.network.server.UdpServerNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.server.UdpServerNetworkCommunicationEndpointListener;
 import io.smartspaces.service.comm.network.server.UdpServerRequest;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlServerCommunicationEndpoint;
 import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlServerRequestMethod;
 import io.smartspaces.service.control.opensoundcontrol.RespondableOpenSoundControlIncomingMessage;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A Open Sound Control server endpoint implementation by those crazy folks at
@@ -54,7 +53,7 @@ public class SmartSpacesOpenSoundControlServerCommunicationEndpoint implements
   /**
    * Log for the endpoint.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Construct a new endpoint.
@@ -65,7 +64,7 @@ public class SmartSpacesOpenSoundControlServerCommunicationEndpoint implements
    *          the logger
    */
   public SmartSpacesOpenSoundControlServerCommunicationEndpoint(
-      UdpServerNetworkCommunicationEndpoint udpServer, Log log) {
+      UdpServerNetworkCommunicationEndpoint udpServer, ExtendedLog log) {
     this.udpServer = udpServer;
     this.log = log;
 

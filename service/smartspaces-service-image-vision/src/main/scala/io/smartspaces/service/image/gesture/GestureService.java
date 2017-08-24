@@ -17,9 +17,8 @@
 
 package io.smartspaces.service.image.gesture;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.SupportedService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A service for getting gesture endpoints.
@@ -41,7 +40,7 @@ public interface GestureService extends SupportedService {
    *
    * @return a new gesture endpoint
    */
-  GestureEndpoint newGestureEndpoint(Log log);
+  GestureEndpoint newGestureEndpoint(ExtendedLog log);
 
   /**
    * Get a new gesture endpoint which connects at a given local host and port
@@ -56,5 +55,5 @@ public interface GestureService extends SupportedService {
    *
    * @return a new gesture endpoint
    */
-  GestureEndpoint newGestureEndpoint(String host, int port, Log log);
+  GestureEndpoint newGestureEndpoint(String host, int port, ExtendedLog log);
 }

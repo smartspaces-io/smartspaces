@@ -17,9 +17,8 @@
 
 package io.smartspaces.service.audio.player.jukebox.support;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.audio.player.FilePlayableAudioTrack;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A {@link JukeboxOperation} for playing a track.
@@ -44,7 +43,7 @@ public class PlayTrackJukeboxOperation extends BaseJukeboxOperation {
    *          the logger to use
    */
   public PlayTrackJukeboxOperation(InternalAudioJukebox audioJukebox, FilePlayableAudioTrack track,
-      Log log) {
+      ExtendedLog log) {
     super(audioJukebox, log);
 
     this.track = track;

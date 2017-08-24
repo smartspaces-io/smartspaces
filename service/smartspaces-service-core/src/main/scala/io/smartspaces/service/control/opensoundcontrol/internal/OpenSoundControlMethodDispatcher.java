@@ -17,13 +17,12 @@
 
 package io.smartspaces.service.control.opensoundcontrol.internal;
 
-import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlIncomingMessage;
-import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlMethod;
-
-import org.apache.commons.logging.Log;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlIncomingMessage;
+import io.smartspaces.service.control.opensoundcontrol.OpenSoundControlMethod;
 
 /**
  * Dispatch messages to an appropriate Open Sound Control method.
@@ -52,7 +51,7 @@ public class OpenSoundControlMethodDispatcher<M extends OpenSoundControlIncoming
   /**
    * The logger to use.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * Construct a new dispatcher.
@@ -60,7 +59,7 @@ public class OpenSoundControlMethodDispatcher<M extends OpenSoundControlIncoming
    * @param log
    *          the logger to use
    */
-  public OpenSoundControlMethodDispatcher(Log log) {
+  public OpenSoundControlMethodDispatcher(ExtendedLog log) {
     this.log = log;
   }
 

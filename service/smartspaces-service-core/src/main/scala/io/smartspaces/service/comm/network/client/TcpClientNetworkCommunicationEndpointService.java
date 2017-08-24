@@ -17,12 +17,11 @@
 
 package io.smartspaces.service.comm.network.client;
 
-import io.smartspaces.service.SupportedService;
-
 import java.net.InetAddress;
 import java.nio.charset.Charset;
 
-import org.apache.commons.logging.Log;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.SupportedService;
 
 /**
  * A service for {@link TcpClientNetworkCommunicationEndpoint} instances.
@@ -53,7 +52,7 @@ public interface TcpClientNetworkCommunicationEndpointService extends SupportedS
    * @return the communication endpoint
    */
   TcpClientNetworkCommunicationEndpoint<String> newStringClient(byte[][] delimiters,
-      Charset charset, String remoteHost, int remotePort, Log log);
+      Charset charset, String remoteHost, int remotePort, ExtendedLog log);
 
   /**
    * Create a new TCP client endpoint.
@@ -72,5 +71,5 @@ public interface TcpClientNetworkCommunicationEndpointService extends SupportedS
    * @return the communication endpoint
    */
   TcpClientNetworkCommunicationEndpoint<String> newStringClient(byte[][] delimiters,
-      Charset charset, InetAddress remoteHost, int remotePort, Log log);
+      Charset charset, InetAddress remoteHost, int remotePort, ExtendedLog log);
 }

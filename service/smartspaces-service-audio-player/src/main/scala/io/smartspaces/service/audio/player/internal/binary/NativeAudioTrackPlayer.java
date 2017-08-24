@@ -17,17 +17,16 @@
 
 package io.smartspaces.service.audio.player.internal.binary;
 
+import java.text.MessageFormat;
+
 import io.smartspaces.activity.binary.NativeActivityRunner;
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.audio.player.AudioTrackPlayer;
 import io.smartspaces.service.audio.player.FilePlayableAudioTrack;
 import io.smartspaces.service.audio.player.support.BaseAudioTrackPlayer;
 import io.smartspaces.util.process.NativeApplicationRunner;
 import io.smartspaces.util.process.NativeApplicationRunnerFactory;
-
-import java.text.MessageFormat;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A {@link AudioTrackPlayer} which uses a {@link NativeActivityRunner}.
@@ -71,7 +70,7 @@ public class NativeAudioTrackPlayer extends BaseAudioTrackPlayer {
    * @param log
    *          logger to use
    */
-  public NativeAudioTrackPlayer(NativeApplicationRunnerFactory runnerFactory, Log log) {
+  public NativeAudioTrackPlayer(NativeApplicationRunnerFactory runnerFactory, ExtendedLog log) {
     super(log);
     this.runnerFactory = runnerFactory;
   }

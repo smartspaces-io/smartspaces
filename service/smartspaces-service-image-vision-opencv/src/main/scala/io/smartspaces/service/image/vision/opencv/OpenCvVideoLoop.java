@@ -17,12 +17,12 @@
 
 package io.smartspaces.service.image.vision.opencv;
 
-import io.smartspaces.service.image.video.VideoLoop;
-import io.smartspaces.util.SmartSpacesUtilities;
-
-import org.apache.commons.logging.Log;
 import org.opencv.core.Mat;
 import org.opencv.highgui.VideoCapture;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.image.video.VideoLoop;
+import io.smartspaces.util.SmartSpacesUtilities;
 
 /**
  * A {@link VideoLoop} which grabs video frames using OpenCV and processes them.
@@ -49,7 +49,7 @@ public class OpenCvVideoLoop extends VideoLoop<Mat> {
   /**
    * Logger for the loop.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Construct a video loop.
@@ -59,7 +59,7 @@ public class OpenCvVideoLoop extends VideoLoop<Mat> {
    * @param log
    *          logger for the loop
    */
-  public OpenCvVideoLoop(int cameraId, Log log) {
+  public OpenCvVideoLoop(int cameraId, ExtendedLog log) {
     this.cameraId = cameraId;
     this.log = log;
   }

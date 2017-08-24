@@ -17,13 +17,12 @@
 
 package io.smartspaces.service.image.video;
 
-import io.smartspaces.SmartSpacesException;
-
-import org.apache.commons.logging.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
 
 /**
  * A video frame listener that gives a sequence of video frame listeners to be
@@ -44,7 +43,7 @@ public class CompositeVideoFrameProcessor<T> implements VideoFrameProcessor<T> {
   /**
    * Logger for the listener.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Construct a new composite listener.
@@ -52,7 +51,7 @@ public class CompositeVideoFrameProcessor<T> implements VideoFrameProcessor<T> {
    * @param log
    *          the logger to use
    */
-  public CompositeVideoFrameProcessor(Log log) {
+  public CompositeVideoFrameProcessor(ExtendedLog log) {
     this.log = log;
   }
 

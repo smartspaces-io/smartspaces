@@ -17,21 +17,20 @@
 
 package io.smartspaces.service.comm.serial.internal.rxtx;
 
+import java.io.IOException;
+import java.util.EnumMap;
+import java.util.Enumeration;
+
+import com.google.common.collect.Maps;
+
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpoint;
 import io.smartspaces.system.SmartSpacesEnvironment;
-
-import java.io.IOException;
-import java.util.EnumMap;
-import java.util.Enumeration;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.collect.Maps;
 
 /**
  * A serial endpoint using RXTX.
@@ -146,7 +145,7 @@ public class RxtxSerialCommunicationEndpoint implements SerialCommunicationEndpo
   /**
    * Logger for the connection.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * The space environment.
@@ -163,7 +162,7 @@ public class RxtxSerialCommunicationEndpoint implements SerialCommunicationEndpo
    * @param spaceEnvironment
    *          the space environment to use
    */
-  public RxtxSerialCommunicationEndpoint(String portName, Log log,
+  public RxtxSerialCommunicationEndpoint(String portName, ExtendedLog log,
       SmartSpacesEnvironment spaceEnvironment) {
     this.portName = portName;
     this.log = log;

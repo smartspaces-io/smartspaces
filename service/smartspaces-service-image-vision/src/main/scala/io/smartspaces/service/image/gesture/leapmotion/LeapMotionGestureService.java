@@ -17,11 +17,10 @@
 
 package io.smartspaces.service.image.gesture.leapmotion;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.image.gesture.GestureEndpoint;
 import io.smartspaces.service.image.gesture.GestureService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A gesture service using the Leap Motion hardware.
@@ -36,12 +35,12 @@ public class LeapMotionGestureService extends BaseSupportedService implements Ge
   }
 
   @Override
-  public GestureEndpoint newGestureEndpoint(Log log) {
+  public GestureEndpoint newGestureEndpoint(ExtendedLog log) {
     return new LeapMotionGestureEndpoint(getSpaceEnvironment(), log);
   }
 
   @Override
-  public GestureEndpoint newGestureEndpoint(String host, int port, Log log) {
+  public GestureEndpoint newGestureEndpoint(String host, int port, ExtendedLog log) {
     return new LeapMotionGestureEndpoint(host, port, getSpaceEnvironment(), log);
   }
 }

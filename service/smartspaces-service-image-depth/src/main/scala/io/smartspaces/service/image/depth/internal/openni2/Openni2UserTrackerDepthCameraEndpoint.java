@@ -17,9 +17,22 @@
 
 package io.smartspaces.service.image.depth.internal.openni2;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.bridj.IntValuedEnum;
+import org.bridj.Pointer;
+
+import com.google.common.collect.Lists;
+
 import io.smartspaces.interaction.model.entity.SimpleTrackedEntity;
 import io.smartspaces.interaction.model.entity.TrackedEntity;
 import io.smartspaces.interaction.model.entity.TrackedEntityListener;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.image.depth.UserTrackerDepthCameraEndpoint;
 import io.smartspaces.service.image.depth.internal.openni2.libraries.NiTE2Library;
 import io.smartspaces.service.image.depth.internal.openni2.libraries.NiTE2Library.NiteStatus;
@@ -31,19 +44,6 @@ import io.smartspaces.service.image.depth.internal.openni2.libraries.OpenNI2Libr
 import io.smartspaces.service.image.depth.internal.openni2.libraries.OpenNI2Library.OniDeviceHandle;
 import io.smartspaces.service.image.depth.internal.openni2.libraries.OpenNI2Library.OniStatus;
 import io.smartspaces.util.geometry.Vector3;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.commons.logging.Log;
-import org.bridj.IntValuedEnum;
-import org.bridj.Pointer;
-
-import com.google.common.collect.Lists;
 
 /**
  * A depth camera user tracking endpoint using OpenNI2 and NiTE2.
@@ -77,7 +77,7 @@ public class Openni2UserTrackerDepthCameraEndpoint implements UserTrackerDepthCa
   /**
    * Logger for this endpoint.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * The depth camera being used for this endpoint.
@@ -121,7 +121,7 @@ public class Openni2UserTrackerDepthCameraEndpoint implements UserTrackerDepthCa
    *          logger for the endpoint
    */
   public Openni2UserTrackerDepthCameraEndpoint(String cameraId,
-      ScheduledExecutorService executorService, Log log) {
+      ScheduledExecutorService executorService, ExtendedLog log) {
     this.cameraId = cameraId;
     this.executorService = executorService;
     this.log = log;

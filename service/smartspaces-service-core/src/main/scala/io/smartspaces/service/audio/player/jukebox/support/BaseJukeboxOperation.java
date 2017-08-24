@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.audio.player.jukebox.support;
 
-import org.apache.commons.logging.Log;
+import io.smartspaces.logging.ExtendedLog;
 
 /**
  * A base {@link JukeboxOperation} which provides some support for
@@ -35,7 +35,7 @@ public abstract class BaseJukeboxOperation implements JukeboxOperation {
   /**
    * Log where all should be written.
    */
-  protected final Log log;
+  protected final ExtendedLog log;
 
   /**
    * Construct the jukebox operation.
@@ -45,7 +45,7 @@ public abstract class BaseJukeboxOperation implements JukeboxOperation {
    * @param log
    *          the logger to use
    */
-  public BaseJukeboxOperation(InternalAudioJukebox audioJukebox, Log log) {
+  public BaseJukeboxOperation(InternalAudioJukebox audioJukebox, ExtendedLog log) {
     this.audioJukebox = audioJukebox;
     this.log = log;
   }

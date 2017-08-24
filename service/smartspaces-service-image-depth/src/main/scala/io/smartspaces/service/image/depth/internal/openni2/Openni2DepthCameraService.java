@@ -17,7 +17,14 @@
 
 package io.smartspaces.service.image.depth.internal.openni2;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bridj.IntValuedEnum;
+import org.bridj.Pointer;
+
 import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.image.depth.DepthCameraService;
 import io.smartspaces.service.image.depth.UserTrackerDepthCameraEndpoint;
@@ -26,13 +33,6 @@ import io.smartspaces.service.image.depth.internal.openni2.libraries.NiTE2Librar
 import io.smartspaces.service.image.depth.internal.openni2.libraries.OniDeviceInfo;
 import io.smartspaces.service.image.depth.internal.openni2.libraries.OpenNI2Library;
 import io.smartspaces.service.image.depth.internal.openni2.libraries.OpenNI2Library.OniStatus;
-
-import org.apache.commons.logging.Log;
-import org.bridj.IntValuedEnum;
-import org.bridj.Pointer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A depth camera service using OpenNI2.
@@ -82,7 +82,7 @@ public class Openni2DepthCameraService extends BaseSupportedService implements D
   }
 
   @Override
-  public UserTrackerDepthCameraEndpoint newUserTrackerDepthCameraEndpoint(Log log) {
+  public UserTrackerDepthCameraEndpoint newUserTrackerDepthCameraEndpoint(ExtendedLog log) {
     List<String> cameraIds = getDepthCamerasAvailable();
     if (cameraIds.isEmpty()) {
       throw new SimpleSmartSpacesException("No depth cameras available");
@@ -92,7 +92,7 @@ public class Openni2DepthCameraService extends BaseSupportedService implements D
   }
 
   @Override
-  public UserTrackerDepthCameraEndpoint newUserTrackerDepthCameraEndpoint(String cameraId, Log log) {
+  public UserTrackerDepthCameraEndpoint newUserTrackerDepthCameraEndpoint(String cameraId, ExtendedLog log) {
     return new Openni2UserTrackerDepthCameraEndpoint(cameraId, getSpaceEnvironment()
         .getExecutorService(), log);
   }

@@ -17,19 +17,12 @@
 
 package io.smartspaces.service.comm.network.server.internal.netty;
 
-import io.smartspaces.service.comm.network.WriteableUdpPacket;
-import io.smartspaces.service.comm.network.internal.netty.NettyWriteableUdpPacket;
-import io.smartspaces.service.comm.network.server.UdpServerNetworkCommunicationEndpoint;
-import io.smartspaces.service.comm.network.server.UdpServerNetworkCommunicationEndpointListener;
-import io.smartspaces.service.comm.network.server.UdpServerRequest;
-
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-import org.apache.commons.logging.Log;
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -46,6 +39,13 @@ import org.jboss.netty.channel.socket.DatagramChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
 
 import com.google.common.collect.Lists;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.comm.network.WriteableUdpPacket;
+import io.smartspaces.service.comm.network.internal.netty.NettyWriteableUdpPacket;
+import io.smartspaces.service.comm.network.server.UdpServerNetworkCommunicationEndpoint;
+import io.smartspaces.service.comm.network.server.UdpServerNetworkCommunicationEndpointListener;
+import io.smartspaces.service.comm.network.server.UdpServerRequest;
 
 /**
  * A Netty-based {@link UdpServerNetworkCommunicationEndpoint}.
@@ -89,7 +89,7 @@ public class NettyUdpServerNetworkCommunicationEndpoint implements
   /**
    * Logger for this endpoint.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Construct a new endpoint.
@@ -104,7 +104,7 @@ public class NettyUdpServerNetworkCommunicationEndpoint implements
    *          the logger to use
    */
   public NettyUdpServerNetworkCommunicationEndpoint(int serverPort, ByteOrder byteOrder,
-      ExecutorService executorService, Log log) {
+      ExecutorService executorService, ExtendedLog log) {
     this.serverPort = serverPort;
     this.byteOrder = byteOrder;
     this.executorService = executorService;

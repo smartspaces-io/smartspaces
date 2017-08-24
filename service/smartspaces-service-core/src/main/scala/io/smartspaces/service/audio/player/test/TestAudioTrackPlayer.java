@@ -17,15 +17,14 @@
 
 package io.smartspaces.service.audio.player.test;
 
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.audio.player.AudioTrackPlayer;
 import io.smartspaces.service.audio.player.FilePlayableAudioTrack;
 import io.smartspaces.service.audio.player.support.BaseAudioTrackPlayer;
 import io.smartspaces.util.SmartSpacesUtilities;
-
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A fake {@link AudioTrackPlayer}. It will merely write events on stdout.
@@ -59,7 +58,7 @@ public class TestAudioTrackPlayer extends BaseAudioTrackPlayer {
    * @param log
    *          the logger to use
    */
-  public TestAudioTrackPlayer(long trackLength, ScheduledExecutorService executorService, Log log) {
+  public TestAudioTrackPlayer(long trackLength, ScheduledExecutorService executorService, ExtendedLog log) {
     super(log);
     this.executorService = executorService;
     this.trackLength = trackLength;

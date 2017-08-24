@@ -17,9 +17,8 @@
 
 package io.smartspaces.service.speech.synthesis;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.SupportedService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A service for speech synthesis.
@@ -39,7 +38,7 @@ public interface SpeechSynthesisService extends SupportedService {
    * @param log
    *          the logger to use for this player
    */
-  SpeechSynthesisPlayer newPlayer(Log log);
+  SpeechSynthesisPlayer newPlayer(ExtendedLog log);
 
   /**
    * Get a new speed synthesis player.

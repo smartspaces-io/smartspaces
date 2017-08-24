@@ -17,15 +17,14 @@
 
 package io.smartspaces.service.audio.player.support;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.audio.player.AudioTrackPlayer;
 import io.smartspaces.service.audio.player.AudioTrackPlayerListener;
 import io.smartspaces.service.audio.player.FilePlayableAudioTrack;
-
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-
-import com.google.common.collect.Lists;
 
 /**
  * Useful support for implementations of an {@code AudioTrackPlayer}.
@@ -37,7 +36,7 @@ public abstract class BaseAudioTrackPlayer implements AudioTrackPlayer {
   /**
    * The log to use.
    */
-  protected Log log;
+  protected ExtendedLog log;
 
   /**
    * All listeners for the player.
@@ -50,7 +49,7 @@ public abstract class BaseAudioTrackPlayer implements AudioTrackPlayer {
    * @param log
    *          the logger to use
    */
-  public BaseAudioTrackPlayer(Log log) {
+  public BaseAudioTrackPlayer(ExtendedLog log) {
     this.log = log;
   }
 

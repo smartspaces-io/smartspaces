@@ -17,15 +17,14 @@
 
 package io.smartspaces.service.comm.twitter.internal.twitter4j;
 
-import io.smartspaces.service.BaseSupportedService;
-import io.smartspaces.service.comm.twitter.TwitterConnection;
-import io.smartspaces.service.comm.twitter.TwitterService;
-
-import org.apache.commons.logging.Log;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.BaseSupportedService;
+import io.smartspaces.service.comm.twitter.TwitterConnection;
+import io.smartspaces.service.comm.twitter.TwitterService;
 
 /**
  * A {@link TwitterService} using Twitter4j.
@@ -64,7 +63,7 @@ public class Twitter4jTwitterConnectionService extends BaseSupportedService impl
 
   @Override
   public TwitterConnection newTwitterConnection(String apiKey, String apiKeySecret,
-      String userAccessToken, String userAccessTokenSecret, Log log) {
+      String userAccessToken, String userAccessTokenSecret, ExtendedLog log) {
     Twitter4jTwitterConnection connection =
         new Twitter4jTwitterConnection(apiKey, apiKeySecret, userAccessToken,
             userAccessTokenSecret, log);

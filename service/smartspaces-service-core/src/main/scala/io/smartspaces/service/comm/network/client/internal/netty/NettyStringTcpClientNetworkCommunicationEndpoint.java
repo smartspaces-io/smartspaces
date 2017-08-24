@@ -17,13 +17,13 @@
 
 package io.smartspaces.service.comm.network.client.internal.netty;
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.messaging.MessageWriter;
-import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpoint;
-import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpointListener;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
@@ -41,12 +41,13 @@ import org.jboss.netty.handler.codec.frame.DelimiterBasedFrameDecoder;
 import org.jboss.netty.handler.codec.string.StringDecoder;
 import org.jboss.netty.handler.codec.string.StringEncoder;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
+import com.google.common.collect.Lists;
+
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.MessageWriter;
+import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpoint;
+import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpointListener;
 
 /**
  * A Netty-based {@link TcpClientNetworkCommunicationEndpoint}.
@@ -100,7 +101,7 @@ public class NettyStringTcpClientNetworkCommunicationEndpoint
   /**
    * Logger for this endpoint.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Timeout for connecting to the server, in milliseconds.
@@ -137,7 +138,7 @@ public class NettyStringTcpClientNetworkCommunicationEndpoint
    */
   public NettyStringTcpClientNetworkCommunicationEndpoint(ChannelBuffer[] delimiters,
       Charset charset, InetAddress remoteHost, int remotePort, ExecutorService executorService,
-      Log log) {
+      ExtendedLog log) {
     this.delimiters = delimiters;
     this.charset = charset;
     this.remoteHost = remoteHost;

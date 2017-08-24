@@ -18,9 +18,8 @@
 package io.smartspaces.service.comm.serial.xbee;
 
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.SupportedService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A service for obtaining XBee communication endpoints.
@@ -52,5 +51,5 @@ public interface XBeeCommunicationEndpointService extends SupportedService {
    *           the port has already been opened or no such port exists on the
    *           host
    */
-  XBeeCommunicationEndpoint newXBeeCommunicationEndpoint(String portName, Log log);
+  XBeeCommunicationEndpoint newXBeeCommunicationEndpoint(String portName, ExtendedLog log);
 }

@@ -17,11 +17,6 @@
 
 package io.smartspaces.service.web.client.internal.netty;
 
-import io.smartspaces.service.web.WebSocketHandler;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
-
-import org.apache.commons.logging.Log;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -35,6 +30,11 @@ import org.jboss.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.util.CharsetUtil;
+
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.service.web.WebSocketHandler;
+import io.smartspaces.util.data.json.JsonMapper;
+import io.smartspaces.util.data.json.StandardJsonMapper;
 
 /**
  * A Netty-based websocket client handler.
@@ -62,7 +62,7 @@ public class NettyWebSocketClientHandler extends SimpleChannelUpstreamHandler {
   /**
    * Log for this handler.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * Construct a new client handler.
@@ -75,7 +75,7 @@ public class NettyWebSocketClientHandler extends SimpleChannelUpstreamHandler {
    *          the logger
    */
   public NettyWebSocketClientHandler(WebSocketClientHandshaker handshaker,
-      WebSocketHandler handler, Log log) {
+      WebSocketHandler handler, ExtendedLog log) {
     this.handshaker = handshaker;
     this.handler = handler;
     this.log = log;

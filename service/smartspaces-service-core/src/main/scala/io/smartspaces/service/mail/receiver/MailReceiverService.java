@@ -17,9 +17,8 @@
 
 package io.smartspaces.service.mail.receiver;
 
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.SupportedService;
-
-import org.apache.commons.logging.Log;
 
 /**
  * A Smart Spaces service for receiving email.
@@ -43,5 +42,5 @@ public interface MailReceiverService extends SupportedService {
    *
    * @return the new mail receiver
    */
-  MailReceiver newMailReceiver(int port, Log log);
+  MailReceiver newMailReceiver(int port, ExtendedLog log);
 }

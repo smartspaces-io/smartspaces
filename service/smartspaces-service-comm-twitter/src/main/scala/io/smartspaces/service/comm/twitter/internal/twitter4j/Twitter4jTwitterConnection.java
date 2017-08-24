@@ -17,11 +17,14 @@
 
 package io.smartspaces.service.comm.twitter.internal.twitter4j;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.comm.twitter.TwitterConnection;
 import io.smartspaces.service.comm.twitter.TwitterConnectionListener;
-
-import org.apache.commons.logging.Log;
 import twitter4j.AsyncTwitter;
 import twitter4j.AsyncTwitterFactory;
 import twitter4j.Query;
@@ -32,10 +35,6 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterListener;
 import twitter4j.TwitterMethod;
 import twitter4j.conf.ConfigurationBuilder;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * A {@link TwitterConnection} using Twitter4J.
@@ -82,7 +81,7 @@ public class Twitter4jTwitterConnection implements TwitterConnection {
   /**
    * The logger for this endpoint.
    */
-  private Log log;
+  private ExtendedLog log;
 
   /**
    * Construct a twitter connection.
@@ -99,7 +98,7 @@ public class Twitter4jTwitterConnection implements TwitterConnection {
    *          the logger for this endpoint
    */
   public Twitter4jTwitterConnection(String apiKey, String apiKeySecret, String userAccessToken,
-      String userAccessTokenSecret, Log log) {
+      String userAccessTokenSecret, ExtendedLog log) {
     this.apiKey = apiKey;
     this.apiKeySecret = apiKeySecret;
     this.userAccessToken = userAccessToken;

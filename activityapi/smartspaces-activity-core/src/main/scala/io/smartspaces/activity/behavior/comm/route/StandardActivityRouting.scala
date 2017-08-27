@@ -68,27 +68,27 @@ trait StandardActivityRouting extends /* StandardActivityRos with */ StandardAct
    */
   private def handleNewRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
     try {
-      callOnNewIncomingMessage(channelId, message)
+      callOnNewRouteMessage(channelId, message)
     } catch {
       case e: Throwable => getLog().error("Could not process new route message", e)
     }
   }
 
-  override def onNewIncomingRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
+  override def onNewRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
     // Default is to do nothing.
   }
 
-  override def writeRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
+  override def sendRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
     try {
-      router.writeMessage(channelId, message)
+      router.sendMessage(channelId, message)
     } catch {
       case e: Throwable => getLog().error(
         s"Could not write message on route output channel ${channelId}", e)
     }
   }
 
-  override def writeRouteMessage(channelId: String, message: DynamicObjectBuilder): Unit = {
-    writeRouteMessage(channelId, message.toMap())
+  override def sendRouteMessage(channelId: String, message: DynamicObjectBuilder): Unit = {
+    sendRouteMessage(channelId, message.toMap())
   }
 
   /**
@@ -99,13 +99,13 @@ trait StandardActivityRouting extends /* StandardActivityRos with */ StandardAct
    * @param message
    *          the message
    */
-  private def callOnNewIncomingMessage(channelId: String, message: Map[String, Object]): Unit = {
+  private def callOnNewRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
     getLog().debug(s"In catch all message handler for channel ID ${channelId}")
     
     val invocation = getExecutionContext().enterMethod()
 
     try {
-      onNewIncomingRouteMessage(channelId, message)
+      onNewRouteMessage(channelId, message)
     } finally {
       getExecutionContext().exitMethod(invocation)
     }

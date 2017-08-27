@@ -33,32 +33,32 @@ trait RoutingActivityBehavior extends JsonActivityBehavior /* with RosActivityBe
   /**
    * A new message is coming in.
    *
-   * @param channelName
-   *          name of the input channel the message came in on
+   * @param channelId
+   *          the ID of the input channel the message came in on
    * @param message
    *          the message that came in
    */
-  def onNewIncomingRouteMessage(channelName: String, message: Map[String, Object]): Unit
+  def onNewRouteMessage(channelId: String, message: Map[String, Object]): Unit
 
   /**
    * Send an output message.
    *
-   * @param channelName
-   *          the name of the output channel to send the message on
+   * @param channelId
+   *          the ID of the output channel to send the message on
    * @param message
    *          the message to sRouend
    */
-  def writeRouteMessage(channelName: String, message: Map[String, Object]): Unit
+  def sendRouteMessage(channelId: String, message: Map[String, Object]): Unit
 
   /**
    * Send an output message from a {@link DynamicObjectBuilder}.
    *
-   * @param channelName
-   *          the name of the output channel to send the message on
+   * @param channelId
+   *          the I of the output channel to send the message on
    * @param message
    *          the message to send
    */
-  def writeRouteMessage(channelName: String ,  message: DynamicObjectBuilder): Unit
+  def sendRouteMessage(channelId: String ,  message: DynamicObjectBuilder): Unit
 
   /**
    * Get the router for the activity.

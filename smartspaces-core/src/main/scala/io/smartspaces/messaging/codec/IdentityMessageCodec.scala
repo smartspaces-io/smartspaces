@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,30 +14,16 @@
  * the License.
  */
 
-package io.smartspaces.service.web;
+package io.smartspaces.messaging.codec
 
 /**
- * Handle web socket requests.
- *
+ * A message codec that just passes the message through with no change.
+ * 
  * @author Keith M. Hughes
  */
-public interface WebSocketHandler {
-
-  /**
-   * The connection has just been made to the remote endpoint.
-   */
-  void onConnect();
-
-  /**
-   * The connection to the remote endpoint has been closed.
-   */
-  void onClose();
-
-  /**
-   * Data has been received from the remote endpoint. Process it.
-   *
-   * @param data
-   *          The data to process.
-   */
-  void onReceive(Object data);
+class IdentityMessageCodec[T] extends MessageCodec[T,T] {
+  
+  override def encode(out: T): T = out
+  
+  override def decode(in: T): T = in
 }

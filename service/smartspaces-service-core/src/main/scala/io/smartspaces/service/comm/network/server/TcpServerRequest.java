@@ -17,6 +17,8 @@
 
 package io.smartspaces.service.comm.network.server;
 
+import io.smartspaces.messaging.MessageSender;
+
 import java.net.InetSocketAddress;
 
 /**
@@ -28,7 +30,7 @@ import java.net.InetSocketAddress;
  *
  * @author Keith M. Hughes
  */
-public interface TcpServerRequest<T> {
+public interface TcpServerRequest<T> extends MessageSender<T> {
 
   /**
    * Get the address of the remote connection.
@@ -43,14 +45,6 @@ public interface TcpServerRequest<T> {
    * @return the message
    */
   T getMessage();
-
-  /**
-   * Write a response to the request.
-   *
-   * @param message
-   *          the response
-   */
-  void writeMessage(T message);
   
   /**
    * Get the client connection for this request.

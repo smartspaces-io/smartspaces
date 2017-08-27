@@ -17,6 +17,7 @@
 
 package io.smartspaces.service.comm.network.client;
 
+import io.smartspaces.messaging.MessageSender;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.service.comm.network.WriteableUdpPacket;
 
@@ -39,50 +40,60 @@ public interface UdpClientNetworkCommunicationEndpoint extends ManagedResource {
   ByteOrder getByteOrder();
 
   /**
-   * Get a byte buffer for the data in the proper endianness for the client.
+   * Get a byte buffer for the message in the proper endianness for the client.
    *
-   * @param data
-   *          the data to be wrapped by the buffer
+   * @param message
+   *          the message to be wrapped by the buffer
    *
    * @return a new byte buffer
    */
-  ByteBuffer newByteBuffer(byte[] data);
+  ByteBuffer newByteBuffer(byte[] message);
 
   /**
-   * Write a packet to the remote server.
-   *
+   * Create a new message sender for a given remote address.
+   * 
    * @param remoteAddress
-   *          the remote address to send the packet to
-   * @param data
-   *          data in the packet
+   *          the remote address
+   * 
+   * @return the new message sender
    */
-  void write(InetSocketAddress remoteAddress, byte[] data);
+  MessageSender<byte[]> newMessageSender(InetSocketAddress remoteAddress);
 
   /**
    * Write a packet to the remote server.
    *
    * @param remoteAddress
    *          the remote address to send the packet to
-   * @param data
-   *          data in the packet
+   * @param message
+   *          message in the packet
+   */
+  void sendMessage(InetSocketAddress remoteAddress, byte[] message);
+
+  /**
+   * Write a packet to the remote server.
+   *
+   * @param remoteAddress
+   *          the remote address to send the packet to
+   * @param message
+   *          message in the packet
    * @param length
    *          number of bytes to send from the array
    */
-  void write(InetSocketAddress remoteAddress, byte[] data, int length);
+  void sendMessage(InetSocketAddress remoteAddress, byte[] message, int length);
 
   /**
    * Write a packet to the remote server.
    *
    * @param remoteAddress
    *          the remote address to send the packet to
-   * @param data
-   *          data in the packet
+   * @param message
+   *          message in the packet
    * @param offset
    *          position of the first byte in the array to send
    * @param length
    *          number of bytes to send from the array
    */
-  void write(InetSocketAddress remoteAddress, byte[] data, int offset, int length);
+  void sendMessage(InetSocketAddress remoteAddress, byte[] message, int offset, int length);
 
   /**
    * Create a new UDP packet.

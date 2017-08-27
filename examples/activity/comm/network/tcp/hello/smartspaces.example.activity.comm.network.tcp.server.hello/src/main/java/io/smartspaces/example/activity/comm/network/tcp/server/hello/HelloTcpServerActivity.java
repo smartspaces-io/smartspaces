@@ -62,13 +62,13 @@ public class HelloTcpServerActivity extends BaseActivity {
       @Override
       public void onNewTcpConnection(TcpServerNetworkCommunicationEndpoint<String> endpoint,
           TcpServerClientConnection<String> connection) {
-        getLog().info("Got new client connection with ID " + connection.getConnectionId());
+        getLog().info("Got new client connection with ID " + connection.getChannelId());
       }
 
       @Override
       public void onCloseTcpConnection(TcpServerNetworkCommunicationEndpoint<String> endpoint,
           TcpServerClientConnection<String> connection) {
-        getLog().info("Got closed client connection with ID " + connection.getConnectionId());
+        getLog().info("Got closed client connection with ID " + connection.getChannelId());
       }
 
       @Override
@@ -92,6 +92,6 @@ public class HelloTcpServerActivity extends BaseActivity {
         request.getRemoteAddress(), message));
 
     String response = "Hey, the server got :" + message;
-    request.writeMessage(response);
+    request.sendMessage(response);
   }
 }

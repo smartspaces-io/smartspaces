@@ -53,7 +53,7 @@ public interface OpenSoundControlClientCommunicationEndpoint extends ManagedReso
    *
    * @return the new OSC message
    */
-  OpenSoundControlOutgoingMessage sendRequestMessage(String address, Object... arguments);
+  OpenSoundControlOutgoingMessage sendMessage(String address, Object... arguments);
 
   /**
    * Create a new outgoing OSC message.

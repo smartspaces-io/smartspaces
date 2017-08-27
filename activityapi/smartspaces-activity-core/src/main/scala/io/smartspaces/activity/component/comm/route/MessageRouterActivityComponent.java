@@ -19,6 +19,7 @@ package io.smartspaces.activity.component.comm.route;
 
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.component.comm.PubSubActivityComponent;
+import io.smartspaces.messaging.ChannelMessageSender;
 import io.smartspaces.messaging.route.MessageRouter;
 import io.smartspaces.messaging.route.RouteMessageListener;
 import io.smartspaces.messaging.route.RouteMessagePublisher;
@@ -34,7 +35,7 @@ import java.util.Set;
  *
  * @author Keith M. Hughes
  */
-public interface MessageRouterActivityComponent extends PubSubActivityComponent {
+public interface MessageRouterActivityComponent extends PubSubActivityComponent, ChannelMessageSender<Map<String, Object>> {
 
   /**
    * Name of the component.
@@ -127,20 +128,6 @@ public interface MessageRouterActivityComponent extends PubSubActivityComponent 
    * @return the default protocol for routes
    */
   String getDefaultRouteProtocol();
-
-  /**
-   * Send out a message on one of the output channels.
-   *
-   * <p>
-   * The message is dropped if there is no such channel, though it will be
-   * logged.
-   *
-   * @param outputChannelId
-   *          ID of the output channel
-   * @param message
-   *          message to send
-   */
-  void writeMessage(String outputChannelId, Map<String, Object> message);
 
   /**
    * Register a new channel output topic route.

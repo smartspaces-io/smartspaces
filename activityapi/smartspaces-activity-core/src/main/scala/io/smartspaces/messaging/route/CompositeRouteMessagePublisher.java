@@ -68,10 +68,10 @@ public class CompositeRouteMessagePublisher implements InternalRouteMessagePubli
   }
 
   @Override
-  public void writeMessage(Map<String, Object> message) {
+  public void sendMessage(Map<String, Object> message) {
     for (InternalRouteMessagePublisher publisher : publishers) {
       try {
-        publisher.writeMessage(message);
+        publisher.sendMessage(message);
       } catch (Throwable e) {
         log.error(String.format("Error while writing route message channel %s", channelId), e);
       }

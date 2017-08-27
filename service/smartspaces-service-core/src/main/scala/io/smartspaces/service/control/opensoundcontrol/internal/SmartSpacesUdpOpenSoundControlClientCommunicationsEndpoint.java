@@ -125,10 +125,10 @@ public class SmartSpacesUdpOpenSoundControlClientCommunicationsEndpoint implemen
   }
 
   @Override
-  public OpenSoundControlOutgoingMessage sendRequestMessage(String address, Object... arguments) {
+  public OpenSoundControlOutgoingMessage sendMessage(String address, Object... arguments) {
     OpenSoundControlOutgoingMessage message = newRequestMessage(address, arguments);
 
-    message.send();
+    message.sendMessage();
 
     return message;
   }

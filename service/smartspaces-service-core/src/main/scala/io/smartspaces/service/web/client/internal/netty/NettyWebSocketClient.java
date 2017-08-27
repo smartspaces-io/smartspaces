@@ -17,9 +17,12 @@
 
 package io.smartspaces.service.web.client.internal.netty;
 
-import java.net.InetSocketAddress;
-import java.net.URI;
-import java.util.concurrent.Executor;
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.codec.MessageCodec;
+import io.smartspaces.service.web.WebSocketMessageHandler;
+import io.smartspaces.service.web.client.WebSocketClient;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -40,20 +43,16 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketVersion;
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.service.web.WebSocketHandler;
-import io.smartspaces.service.web.client.WebSocketClient;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.util.concurrent.Executor;
 
 /**
  * A {@link WebSocketClient} using Netty.
  *
  * @author Keith M. Hughes
  */
-public class NettyWebSocketClient implements WebSocketClient {
+public class NettyWebSocketClient<M> implements WebSocketClient<M> {
 
   /**
    * The Netty Channel Pipeline name for the web socket handler.
@@ -76,19 +75,19 @@ public class NettyWebSocketClient implements WebSocketClient {
   public static final byte[] WEBSOCKET_PING_MESSAGE = new byte[] { 1, 2, 3, 4, 5, 6 };
 
   /**
-   * The JSON mapper.
-   */
-  private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
-
-  /**
    * The connection URI.
    */
   private final URI uri;
 
   /**
+   * The message codec to use.
+   */
+  private final MessageCodec<M, String> messageCodec;
+  
+  /**
    * The handler for messages.
    */
-  private WebSocketHandler handler;
+  private WebSocketMessageHandler<M> handler;
 
   /**
    * The threadpool to use for the connection.
@@ -117,14 +116,17 @@ public class NettyWebSocketClient implements WebSocketClient {
    *          URI for the websocket server connection
    * @param handler
    *          the handler for the client
+   * @param messageCodec
+   *          the message codec to useF
    * @param threadPool
    *          the threadpool to use
    * @param log
    *          the log to use
    */
-  public NettyWebSocketClient(URI uri, WebSocketHandler handler, Executor threadPool, ExtendedLog log) {
+  public NettyWebSocketClient(URI uri, WebSocketMessageHandler<M> handler, MessageCodec<M, String> messageCodec, Executor threadPool, ExtendedLog log) {
     this.uri = uri;
     this.handler = handler;
+    this.messageCodec = messageCodec;
     this.threadPool = threadPool;
     this.log = log;
   }
@@ -165,7 +167,7 @@ public class NettyWebSocketClient implements WebSocketClient {
           pipeline.addLast(CHANNEL_PIPELINE_NAME_DECODER, new HttpResponseDecoder());
           pipeline.addLast(CHANNEL_PIPELINE_NAME_ENCODER, new HttpRequestEncoder());
           pipeline.addLast(CHANNEL_PIPELINE_NAME_WEBSOCKET_HANDLER,
-              new NettyWebSocketClientHandler(handshaker, handler, log));
+              new NettyWebSocketClientHandler<M>(handshaker, handler, messageCodec, log));
           return pipeline;
         }
       });
@@ -184,7 +186,7 @@ public class NettyWebSocketClient implements WebSocketClient {
   }
 
   @Override
-  public void setWebSocketHandler(WebSocketHandler handler) {
+  public void setWebSocketHandler(WebSocketMessageHandler<M> handler) {
     if (bootstrap == null) {
       throw new SimpleSmartSpacesException("The web socket client is already running");
     }
@@ -193,20 +195,11 @@ public class NettyWebSocketClient implements WebSocketClient {
   }
 
   @Override
-  public void writeDataAsJson(Object data) {
+  public void sendMessage(M message) {
     try {
-      channel.write(new TextWebSocketFrame(MAPPER.toString(data)));
+      channel.write(new TextWebSocketFrame(messageCodec.encode(message)));
     } catch (Exception e) {
-      throw new SmartSpacesException("Could not write web socket client data", e);
-    }
-  }
-
-  @Override
-  public void writeDataAsString(String data) {
-    try {
-      channel.write(new TextWebSocketFrame(data));
-    } catch (Exception e) {
-      throw new SmartSpacesException("Could not write web socket client data", e);
+      throw new SmartSpacesException("Could not write web socket client message", e);
     }
   }
 

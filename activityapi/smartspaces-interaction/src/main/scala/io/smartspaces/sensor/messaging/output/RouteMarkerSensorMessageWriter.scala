@@ -32,12 +32,12 @@ class RouteMarkerSensorMessageWriter(sensorId: String, routeMessagePublisher: Ro
     
     message.addChannelData(StandardSensorData.SENSOR_CHANNEL_NAME_MARKER, StandardSensorData.SENSOR_TYPE_MARKER_SIMPLE, markerId)
     
-    routeMessagePublisher.writeMessage(message.toMap())
+    routeMessagePublisher.sendMessage(message.toMap())
   }
   
   override def sendHeartbeatMessage(): Unit = {
     val message = new StandardSensorMessageBuilder(sensorId, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_HEARTBEAT)
     
-    routeMessagePublisher.writeMessage(message.toMap())
+    routeMessagePublisher.sendMessage(message.toMap())
   }
 }

@@ -17,17 +17,6 @@
 
 buildscript {
   repositories {
-/*
-if (project.hasProperty("artifactory")) {
-      maven {
-        url "${artifactory_contextUrl}/plugins-release"
-        credentials {
-          username = "${artifactory_user}"
-          password = "${artifactory_password}"
-        }
-      }
-    }
-*/
     jcenter()
     mavenCentral()
   }
@@ -47,7 +36,7 @@ allprojects {
     // be pushed to production.
     //
     // Final versions should set the qualifier to null.
-    smartSpacesVersion = '0.9.0'
+    smartSpacesVersion = '0.10.0'
     smartSpacesVersionQualifier = 'SNAPSHOT'
 
     // These specify the layout of IS containers.

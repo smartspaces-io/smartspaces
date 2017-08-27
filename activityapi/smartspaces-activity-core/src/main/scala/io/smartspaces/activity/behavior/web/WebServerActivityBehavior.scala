@@ -19,10 +19,11 @@ package io.smartspaces.activity.behavior.web
 
 import io.smartspaces.activity.ActivityBehavior
 import io.smartspaces.activity.behavior.general.JsonActivityBehavior
+import io.smartspaces.activity.component.web.WebServerActivityComponent
 import io.smartspaces.service.web.server.WebServer
+
 import java.io.File
 import java.util.Map
-import io.smartspaces.activity.component.web.WebServerActivityComponent
 
 /**
  * Web server behavior for an activity.
@@ -47,16 +48,17 @@ trait WebServerActivityBehavior extends ActivityBehavior with JsonActivityBehavi
    * @return {@code true} if the web socket is connected.
    */
   def isWebSocketConnected(): Boolean
+  
   /**
    * A new web socket connection has been made.
    *
    * <p>
    * This method should be overridden if it should be handled.
    *
-   * @param connectionId
+   * @param channelId
    *          ID for the web socket connection
    */
-  def onNewWebSocketConnection(connectionId: String): Unit
+  def onNewWebSocketConnection(channelId: String): Unit
 
   /**
    * Web socket closed.
@@ -64,10 +66,10 @@ trait WebServerActivityBehavior extends ActivityBehavior with JsonActivityBehavi
    * <p>
    * This method should be overridden if it should be handled.
    *
-   * @param connectionId
+   * @param channelId
    *          ID for the web socket connection
    */
-  def onWebSocketClose(connectionId: String): Unit
+  def onWebSocketClose(channelId: String): Unit
 
   /**
    * Received a web socket call.
@@ -75,48 +77,30 @@ trait WebServerActivityBehavior extends ActivityBehavior with JsonActivityBehavi
    * <p>
    * This method should be overridden if it should be handled.
    *
-   * @param connectionId
+   * @param channelId
    *          ID for the web socket connection
-   * @param data
+   * @param message
    *          the data from the web socket call
    */
-  def onWebSocketReceive(connectionId: String, data: Object): Unit
+  def onNewWebSocketMessage(channelId: String, message: Map[String, Object]): Unit
 
   /**
    * Send a JSON result to the web socket.
    *
-   * @param connectionId
+   * @param channelId
    *          ID for the web socket connection
-   * @param data
-   *          the data to send
+   * @param message
+   *          the message to write
    */
-  def sendWebSocketJson(connectionId: String, data: Object): Unit
+  def sendWebSocketMessage(channelId: String, message: Map[String, Object]): Unit
 
   /**
    * Send a JSON result to all web socket connections.
    *
-   * @param data
-   *          the data to send
+   * @param message
+   *          the message to write
    */
-  def sendAllWebSocketJson(data: Object): Unit
-
-  /**
-   * Send a string to the web socket.
-   *
-   * @param connectionId
-   *          ID for the web socket connection
-   * @param data
-   *          the data to send
-   */
-  def sendWebSocketString(connectionId: String, data: String): Unit
-
-  /**
-   * Send a string to all web socket connections.
-   *
-   * @param data
-   *          the data to send
-   */
-  def sendAllWebSocketString(data: String): Unit
+  def sendWebSocketMessage(message: Map[String, Object]): Unit
 
   /**
    * Get the web server for the activity.

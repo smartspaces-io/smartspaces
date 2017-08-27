@@ -16,7 +16,7 @@
 
 package io.smartspaces.service.comm.network.server;
 
-import io.smartspaces.messaging.MessageWriter;
+import io.smartspaces.messaging.MessageSender;
 
 import java.net.SocketAddress;
 
@@ -28,19 +28,18 @@ import java.net.SocketAddress;
  * 
  * @author Keith M. Hughes
  */
-public interface TcpServerClientConnection<T> extends MessageWriter<T> {
+public interface TcpServerClientConnection<T> extends MessageSender<T> {
 
   /**
-   * Get the connection ID for the connection.
+   * Get the ID for the channel.
    * 
-   * @return the connection ID
+   * @return the channel ID
    */
-  String getConnectionId();
+  String getChannelId();
 
   /**
    * Is the connection open?
    * 
-   * @return {@code true} if the connection is open
    */
   boolean isOpen();
   

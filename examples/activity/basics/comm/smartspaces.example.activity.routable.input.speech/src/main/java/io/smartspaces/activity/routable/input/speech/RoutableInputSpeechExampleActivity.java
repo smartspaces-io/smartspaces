@@ -47,8 +47,8 @@ public class RoutableInputSpeechExampleActivity extends BaseRoutableActivity {
   }
 
   @Override
-  public void onNewIncomingRouteMessage(String channelName, Map<String, Object> message) {
-    if (isActivated() && "speech".equals(channelName)) {
+  public void onNewRouteMessage(String channelId, Map<String, Object> message) {
+    if (isActivated() && "speech".equals(channelId)) {
       String toSpeak = (String) message.get("message");
       if (toSpeak != null) {
         speechPlayer.speak(toSpeak, true);

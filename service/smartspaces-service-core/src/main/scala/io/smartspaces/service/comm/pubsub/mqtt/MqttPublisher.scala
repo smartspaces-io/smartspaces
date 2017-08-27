@@ -16,14 +16,14 @@
 
 package io.smartspaces.service.comm.pubsub.mqtt
 
-import io.smartspaces.messaging.MessageWriter
+import io.smartspaces.messaging.MessageSender
 
 /**
  * A listener for MQTT subscriber events.
  *
  * @author Keith M. Hughes
  */
-trait MqttPublisher extends MessageWriter[Array[Byte]] {
+trait MqttPublisher extends MessageSender[Array[Byte]] {
   
   /**
    * The MQTT topic.
@@ -51,7 +51,7 @@ trait MqttPublisher extends MessageWriter[Array[Byte]] {
    * @param retain
    *          [[code true]] if the message should be retained
    */
-  def writeMessage(message: Array[Byte], retain: Boolean): Unit
+  def sendMessage(message: Array[Byte], retain: Boolean): Unit
   
   /**
    * Is the publisher connected?

@@ -17,16 +17,21 @@
 
 package io.smartspaces.service.web;
 
+import io.smartspaces.messaging.MessageSender;
+
 /**
  * A web socket connection for a web socket server.
  *
  * <p>
  * There is a single instance of implementations of this class per web socket
  * connection.
+ * 
+ * @param <M>
+ *          the message type
  *
  * @author Keith M. Hughes
  */
-public interface WebSocketConnection {
+public interface WebSocketConnection<M> extends MessageSender<M> {
 
   /**
    * Is the connection still open?
@@ -39,22 +44,6 @@ public interface WebSocketConnection {
    * Close the connection.
    */
   void shutdown();
-
-  /**
-   * Write data out to the remote endpoint encoded as JSON.
-   *
-   * @param data
-   *          data to write
-   */
-  void writeDataAsJson(Object data);
-
-  /**
-   * Write data out to the remote endpoint encoded as a raw string.
-   *
-   * @param data
-   *          data to write
-   */
-  void writeDataAsString(String data);
 
   /**
    * Get the user id of the user who opened this socket connection.

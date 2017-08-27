@@ -24,7 +24,10 @@ import io.smartspaces.util.data.json.JsonMapper
 import io.smartspaces.activity.behavior.general.StandardActivityJson
 import io.smartspaces.activity.component.web.WebServerActivityComponent
 import io.smartspaces.service.web.server.WebServer
+
 import java.io.File
+import java.util.Map
+import io.smartspaces.messaging.codec.MapStringMessageCodec
 
 /**
  * An activity behavior for web server support.
@@ -34,17 +37,12 @@ import java.io.File
  *
  * @author Keith M. Hughes
  */
-trait StandardActivityWebServer extends WebServerActivityBehavior with StandardActivityJson with MultipleConnectionWebSocketHandler {
-
-  /**
-   * The JSON mapper.
-   */
-  private val  MAPPER: JsonMapper = StandardJsonMapper.INSTANCE
+trait StandardActivityWebServer extends WebServerActivityBehavior with StandardActivityJson with MultipleConnectionWebSocketHandler[Map[String, Object]] {
 
   /**
    * Web socket handler for the connection to the browser.
    */
-  private var webSocketFactory: io.smartspaces.service.web.server.MultipleConnectionWebServerWebSocketHandlerFactory = null
+  private var webSocketFactory: io.smartspaces.service.web.server.MultipleConnectionWebServerWebSocketHandlerFactory[Map[String, Object]] = null
 
   /**
    * The web server component.
@@ -52,14 +50,14 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
   private var webServerComponent: WebServerActivityComponent = null
 
   abstract override def commonActivitySetup(): Unit = {
-    webServerComponent = addActivityComponent(WebServerActivityComponent.COMPONENT_NAME);
+    webServerComponent = addActivityComponent(WebServerActivityComponent.COMPONENT_NAME)
 
-    webSocketFactory = new BasicMultipleConnectionWebServerWebSocketHandlerFactory(this, getLog());
-    webServerComponent.setWebSocketHandlerFactory(webSocketFactory);
+    webSocketFactory = new BasicMultipleConnectionWebServerWebSocketHandlerFactory(this, getLog())
+    webServerComponent.setWebSocketHandlerFactory(webSocketFactory)
   }
 
   override def addStaticContent(uriPrefix: String ,  baseDir: File): Unit =  {
-    webServerComponent.addStaticContent(uriPrefix, baseDir);
+    webServerComponent.addStaticContent(uriPrefix, baseDir)
   }
 
   override def isWebSocketConnected(): Boolean =  {
@@ -74,24 +72,16 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
     // Default is nothing to do.
   }
 
-  override def onWebSocketReceive(connectionId: String , data: Object): Unit =  {
+  override def onNewWebSocketMessage(connectionId: String , message: Map[String, Object]): Unit =  {
     // Default is to do nothing.
   }
 
-  override def sendWebSocketJson(connectionId: String , data: Object ): Unit =  {
-    webSocketFactory.sendJson(connectionId, data)
+  override def sendWebSocketMessage(connectionId: String , message: Map[String, Object]): Unit =  {
+    webSocketFactory.sendMessage(connectionId, message)
   }
 
-  override def sendAllWebSocketJson(data: Object): Unit =  {
-    webSocketFactory.sendJson(data)
-  }
-
-  override def sendWebSocketString(connectionId: String, data: String): Unit =  {
-    webSocketFactory.sendString(connectionId, data)
-  }
-
-  override def sendAllWebSocketString(data: String ): Unit =  {
-    webSocketFactory.sendString(data)
+  override def sendWebSocketMessage(message: Map[String, Object]): Unit =  {
+    webSocketFactory.sendMessage(message)
   }
 
   override def handleNewWebSocketConnection(connectionId: String ): Unit = {
@@ -104,11 +94,11 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
     }
   }
 
-  override def handleWebSocketReceive(connectionId: String ,  data: Object): Unit = {
+  override def handleNewWebSocketMessage(connectionId: String , message: Map[String, Object]): Unit = {
     val invocation = getExecutionContext().enterMethod()
 
     try {
-      onWebSocketReceive(connectionId, data)
+      onNewWebSocketMessage(connectionId, message)
     } finally {
       getExecutionContext().exitMethod(invocation)
     }

@@ -32,13 +32,13 @@ import io.smartspaces.activity.impl.web.BaseRoutableWebActivity;
 public class RoutableInputWebExampleActivity extends BaseRoutableWebActivity {
 
   @Override
-  public void onNewIncomingRouteMessage(String channelName, Map<String, Object> message) {
+  public void onNewRouteMessage(String channelName, Map<String, Object> message) {
     // There is only 1 channel for this activity, so don't bother checking
     // which one it is.
     if (isActivated()) {
       // In this example just pass through the message as is.
       // This is not always the best choice.
-      sendAllWebSocketJson(message);
+      sendWebSocketMessage(message);
     }
   }
 }

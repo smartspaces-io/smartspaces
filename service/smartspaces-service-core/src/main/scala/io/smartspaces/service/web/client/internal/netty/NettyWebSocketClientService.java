@@ -17,15 +17,16 @@
 
 package io.smartspaces.service.web.client.internal.netty;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.service.BaseSupportedService;
-import io.smartspaces.service.web.WebSocketHandler;
+import io.smartspaces.service.web.WebSocketMessageHandler;
 import io.smartspaces.service.web.client.WebSocketClient;
 import io.smartspaces.service.web.client.WebSocketClientService;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * A {@link WebSocketClientService} based on Netty.
@@ -41,18 +42,19 @@ public class NettyWebSocketClientService extends BaseSupportedService implements
   }
 
   @Override
-  public WebSocketClient newWebSocketClient(String uri, WebSocketHandler handler, ExtendedLog log) {
+  public <M> WebSocketClient<M> newWebSocketClient(String uri, WebSocketMessageHandler<M> handler, MessageCodec<M, String> messageCodec, ExtendedLog log) {
     try {
       URI u = new URI(uri);
 
-      return new NettyWebSocketClient(u, handler, getSpaceEnvironment().getExecutorService(), log);
+      return new NettyWebSocketClient<M>(u, handler, messageCodec, getSpaceEnvironment().getExecutorService(), log);
     } catch (URISyntaxException e) {
       throw new SmartSpacesException(String.format("Bad URI syntax for web socket URI: %s", uri), e);
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
-  public WebSocketClient newWebSocketClient(String uri, ExtendedLog log) {
-    return newWebSocketClient(uri, null, log);
+  public <M> WebSocketClient<M> newWebSocketClient(String uri, MessageCodec<M, String> messageCodec, ExtendedLog log) {
+    return newWebSocketClient(uri, null, messageCodec, log);
   }
 }

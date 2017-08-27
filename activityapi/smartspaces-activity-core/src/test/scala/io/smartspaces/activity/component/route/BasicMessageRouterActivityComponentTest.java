@@ -30,7 +30,6 @@ import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.provider.SettableTimeProvider;
 import io.smartspaces.time.provider.TimeProvider;
 
-import org.apache.commons.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -99,11 +98,11 @@ public class BasicMessageRouterActivityComponentTest {
 
     Mockito.when(activityComponentContext.canHandlerRun()).thenReturn(true);
 
-    // String channelName = "foo";
+    // String channelId = "foo";
     // GenericMessage message = Mockito.mock
-    // component.handleNewIncomingMessage(channelName, message);
+    // component.handleNewIncomingMessage(channelId, message);
     //
-    // Mockito.verify(messageListener).onNewRoutableInputMessage(channelName,
+    // Mockito.verify(messageListener).onNewRoutableInputMessage(channelId,
     // message);
     //
     // activityComponentContextInOrder.verify(activityComponentContext).enterHandler();
@@ -123,16 +122,16 @@ public class BasicMessageRouterActivityComponentTest {
 
     Mockito.when(activityComponentContext.canHandlerRun()).thenReturn(true);
 
-    String channelName = "foo";
+    String channelId = "foo";
     String message = "bar";
 
     // Exception e = new RuntimeException();
-    // Mockito.doThrow(e).when(messageListener).onNewRoutableInputMessage(channelName,
+    // Mockito.doThrow(e).when(messageListener).onNewRoutableInputMessage(channelId,
     // message);
     //
-    // component.handleNewIncomingMessage(channelName, message);
+    // component.handleNewIncomingMessage(channelId, message);
     //
-    // Mockito.verify(messageListener).onNewRoutableInputMessage(channelName,
+    // Mockito.verify(messageListener).onNewRoutableInputMessage(channelId,
     // message);
     //
     // activityComponentContextInOrder.verify(activityComponentContext).enterHandler();
@@ -152,12 +151,12 @@ public class BasicMessageRouterActivityComponentTest {
 
     Mockito.when(activityComponentContext.canHandlerRun()).thenReturn(false);
 
-    // String channelName = "foo";
+    // String channelId = "foo";
     // String message = "bar";
-    // component.handleNewIncomingMessage(channelName, message);
+    // component.handleNewIncomingMessage(channelId, message);
     //
     // Mockito.verify(messageListener, Mockito.never())
-    // .onNewRoutableInputMessage(channelName, message);
+    // .onNewRoutableInputMessage(channelId, message);
     //
     // Mockito.verify(activityComponentContext, Mockito.never()).enterHandler();
     // Mockito.verify(activityComponentContext, Mockito.never()).exitHandler();

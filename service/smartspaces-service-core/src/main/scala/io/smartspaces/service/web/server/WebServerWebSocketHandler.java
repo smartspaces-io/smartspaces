@@ -17,28 +17,16 @@
 
 package io.smartspaces.service.web.server;
 
-import io.smartspaces.service.web.WebSocketHandler;
+import io.smartspaces.messaging.MessageSender;
+import io.smartspaces.service.web.WebSocketMessageHandler;
 
 /**
- * A {@link WebSocketHandler} which can also send data
+ * A {@link WebSocketMessageHandler} which can also send data.
+ * 
+ * @param <M>
+ *          the type of the message being sent
  *
  * @author Keith M. Hughes
  */
-public interface WebServerWebSocketHandler extends WebSocketHandler {
-
-  /**
-   * Send data to the remote endpoint.
-   *
-   * @param data
-   *          The data to send.
-   */
-  void sendJson(Object data);
-
-  /**
-   * Send raw data to the remote endpoint.
-   *
-   * @param data
-   *          The data to send.
-   */
-  void sendString(String data);
+public interface WebServerWebSocketHandler<M> extends WebSocketMessageHandler<M>, MessageSender<M> {
 }

@@ -17,6 +17,7 @@
 
 package io.smartspaces.service.web.server;
 
+import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.service.web.WebSocketConnection;
 import io.smartspaces.service.web.WebSocketHandlerSupport;
 
@@ -26,25 +27,26 @@ import io.smartspaces.service.web.WebSocketHandlerSupport;
  *
  * @author Keith M. Hughes
  */
-public class WebServerWebSocketHandlerSupport extends WebSocketHandlerSupport implements
-    WebServerWebSocketHandler {
+public class WebServerWebSocketHandlerSupport<M> extends WebSocketHandlerSupport<M>
+    implements WebServerWebSocketHandler<M> {
 
   /**
    * The connection to the remote endpoint.
    */
-  protected WebSocketConnection connection;
-
-  public WebServerWebSocketHandlerSupport(WebSocketConnection connection) {
+  protected WebSocketConnection<M> connection;
+ 
+  /**
+   * Construct a new support message handler.
+   * 
+   * @param connection
+   *          the connection this is delegating to
+   */
+  public WebServerWebSocketHandlerSupport(WebSocketConnection<M> connection) {
     this.connection = connection;
   }
 
   @Override
-  public void sendJson(Object data) {
-    connection.writeDataAsJson(data);
-  }
-
-  @Override
-  public void sendString(String data) {
-    connection.writeDataAsString(data);
+  public void sendMessage(M message) {
+    connection.sendMessage(message);
   }
 }

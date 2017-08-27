@@ -29,6 +29,12 @@ trait SensedValueUpdater {
    *
    * @param sensor
    * 		the sensor that is providing the value
+   * @param channelId
+   *    ID of the channel the data came in on
+   * @param data
+   *    the data message for the sensor update
+   * @param timestamp
+   *    the timestamp of when the data came in
    */
-  def createSensedValue(sensor: SensorEntityDescription, channelName: String, data: DynamicObject, timestamp: Long): SensedValue[Any]
+  def createSensedValue(sensor: SensorEntityDescription, channelId: String, data: DynamicObject, timestamp: Long): SensedValue[Any]
 }

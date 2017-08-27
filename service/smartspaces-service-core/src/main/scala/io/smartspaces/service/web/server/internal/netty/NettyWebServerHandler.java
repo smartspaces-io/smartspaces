@@ -27,15 +27,20 @@ import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FOUND;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
-import java.io.IOException;
-import java.net.HttpCookie;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SmartSpacesExceptionUtils;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.codec.MessageCodec;
+import io.smartspaces.service.web.server.HttpAuthProvider;
+import io.smartspaces.service.web.server.HttpAuthResponse;
+import io.smartspaces.service.web.server.WebResourceAccessManager;
+import io.smartspaces.service.web.server.WebServer;
+import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
+import io.smartspaces.util.web.HttpConstants;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -61,19 +66,14 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.jboss.netty.util.CharsetUtil;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.SmartSpacesExceptionUtils;
-import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.service.web.server.HttpAuthProvider;
-import io.smartspaces.service.web.server.HttpAuthResponse;
-import io.smartspaces.service.web.server.WebResourceAccessManager;
-import io.smartspaces.service.web.server.WebServer;
-import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
-import io.smartspaces.util.web.HttpConstants;
+import java.io.IOException;
+import java.net.HttpCookie;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * A web socket server handler for Netty.
@@ -122,8 +122,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   /**
    * Map of Netty channel IDs to web socket handlers.
    */
-  private Map<Integer, NettyWebServerWebSocketConnection> webSocketConnections = Maps
-      .newConcurrentMap();
+  private Map<Integer, NettyWebServerWebSocketConnection<?>> webSocketConnections =
+      Maps.newConcurrentMap();
 
   /**
    * Map of Netty channel IDs to file uploads.
@@ -136,16 +136,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    * <p>
    * Not concurrent, so needs to be protected.
    */
-  private Map<String, WebSocketServerHandshakerFactory> webSocketHandshakerFactories = Maps
-      .newHashMap();
-
-  /**
-   * Factory for web socket handlers.
-   *
-   * <p>
-   * Can be null.
-   */
-  private WebServerWebSocketHandlerFactory webSocketHandlerFactory;
+  private Map<String, WebSocketServerHandshakerFactory> webSocketHandshakerFactories =
+      Maps.newHashMap();
 
   /**
    * The web server we are attached to.
@@ -161,6 +153,11 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    * The access manager for determining who gets access to a resource.
    */
   private WebResourceAccessManager accessManager;
+
+  /**
+   * The connection factory for web socket connections.
+   */
+  private NettyWebSocketConnectionFactory<?> nettyWebSocketConnectionFactory;
 
   /**
    * The lock for protecting access to channel data.
@@ -208,8 +205,9 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    *          the factory to use, can be {@code null} if don't want to handle
    *          web socket calls
    */
-  public void setWebSocketHandlerFactory(String webSocketUriPrefix,
-      WebServerWebSocketHandlerFactory webSocketHandlerFactory) {
+  public <M> void setWebSocketHandlerFactory(String webSocketUriPrefix,
+      WebServerWebSocketHandlerFactory<M> webSocketHandlerFactory,
+      MessageCodec<M, String> messageCodec) {
     if (webSocketUriPrefix != null) {
       webSocketUriPrefix = webSocketUriPrefix.trim();
       if (webSocketUriPrefix.startsWith(HttpConstants.URL_PATH_COMPONENT_SEPARATOR)) {
@@ -221,7 +219,9 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       fullWebSocketUriPrefix =
           HttpConstants.URL_PATH_COMPONENT_SEPARATOR + WebServer.WEBSOCKET_URI_PREFIX_DEFAULT;
     }
-    this.webSocketHandlerFactory = webSocketHandlerFactory;
+
+    nettyWebSocketConnectionFactory = new NettyWebSocketConnectionFactory<M>(messageCodec,
+        webSocketHandlerFactory, accessManager, webServer.getLog());
   }
 
   @Override
@@ -234,7 +234,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
     } else if (msg instanceof HttpChunk) {
       handleHttpChunk(ctx, (HttpChunk) msg);
     } else {
-      webServer.getLog().formatWarn("Web server received unknown frame %s", msg.getClass().getName());
+      webServer.getLog().formatWarn("Web server received unknown frame %s",
+          msg.getClass().getName());
     }
 
   }
@@ -265,15 +266,16 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   private void handleHttpRequest(ChannelHandlerContext ctx, HttpRequest req) throws Exception {
     // Before we actually allow handling of this http request, we will check to
     // see if it is properly authorized, if authorization is requested.
-    HttpAuthResponse response = null;
+    HttpAuthResponse authResponse = null;
     if (authProvider != null) {
-      response = authProvider.authorizeRequest(new NettyHttpRequest(req, ctx.getChannel().getRemoteAddress(), getWebServer().getLog()));
-      if ((response == null) || !response.authSuccessful()) {
-        if ((response == null) || response.redirectUrl() != null) {
-          sendHttpResponse(ctx, req, createRedirect(response.redirectUrl()), false, false);
+      authResponse = authProvider.authorizeRequest(
+          new NettyHttpRequest(req, ctx.getChannel().getRemoteAddress(), getWebServer().getLog()));
+      if ((authResponse == null) || !authResponse.authSuccessful()) {
+        if ((authResponse == null) || authResponse.redirectUrl() != null) {
+          sendHttpResponse(ctx, req, createRedirect(authResponse.redirectUrl()), false, false);
         } else {
-          webServer.getLog().warn(
-              String.format("Auth requested and no redict available for %s", req.getUri()));
+          webServer.getLog().formatWarn("Auth requested and no redict available for %s",
+              req.getUri());
           sendHttpResponse(ctx, req, new DefaultHttpResponse(HTTP_1_1, FORBIDDEN), false, false);
         }
         return;
@@ -281,23 +283,23 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
     }
 
     String user = null;
-    if (response != null) {
-      user = response.getUser();
+    if (authResponse != null) {
+      user = authResponse.getUser();
     }
 
-    if (handleWebGetRequest(ctx, req, response)) {
+    if (handleWebGetRequest(ctx, req, authResponse)) {
       // The method handled the request if the return value was true.
-    } else if (webSocketHandlerFactory != null && tryWebSocketUpgradeRequest(ctx, req, user)) {
+    } else if (nettyWebSocketConnectionFactory != null
+        && tryWebSocketUpgradeRequest(ctx, req, user)) {
       // The method handled the request if the return value was true.
-    } else if (handleWebPostRequest(ctx, req, response)) {
+    } else if (handleWebPostRequest(ctx, req, authResponse)) {
       // The method handled the request if the return value was true.
     } else {
       // Nothing we handle.
 
       HttpResponseStatus status = FORBIDDEN;
-      String message =
-          String.format("HTTP [%d] %s --> (No handlers for request)", status.getCode(),
-              req.getUri());
+      String message = String.format("HTTP [%d] %s --> (No handlers for request)", status.getCode(),
+          req.getUri());
       if (shouldWarnOnMissingFile(new URI(req.getUri()).getPath())) {
         webServer.getLog().warn(message);
       } else {
@@ -479,7 +481,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    * Get a handshaker factory for the incoming request.
    *
    * @param req
-   *          the request which has come in
+   *          the request that has come in
    *
    * @return the handshaker factory for the request
    */
@@ -521,9 +523,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    */
   private void completeWebSocketHandshake(String user, Channel channel,
       WebSocketServerHandshaker handshaker) {
-    NettyWebServerWebSocketConnection connection =
-        new NettyWebServerWebSocketConnection(channel, user, handshaker, webSocketHandlerFactory,
-            accessManager, webServer.getLog());
+    NettyWebServerWebSocketConnection<?> connection =
+        nettyWebSocketConnectionFactory.newWebSocketConnection(channel, user, handshaker);
 
     synchronized (channelLock) {
       webSocketConnections.put(channel.getId(), connection);
@@ -532,14 +533,13 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
     try {
       connection.getHandler().onConnect();
     } catch (Throwable e) {
-      getWebServer().getLog().error(
-          "Could not process a websocket onConnect message: "
-              + SmartSpacesExceptionUtils.getExceptionDetail(e));
+      getWebServer().getLog().error("Could not process a websocket onConnect message: "
+          + SmartSpacesExceptionUtils.getExceptionDetail(e));
     }
   }
 
   /**
-   * handle a chunk.
+   * Handle an HTTP chunk.
    *
    * @param context
    *          the channel event context
@@ -746,7 +746,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
     Channel channel = ctx.getChannel();
 
-    NettyWebServerWebSocketConnection handler;
+    NettyWebServerWebSocketConnection<?> handler;
     synchronized (channelLock) {
       handler = webSocketConnections.get(channel.getId());
     }
@@ -764,7 +764,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    *          the channel which is closing
    */
   private void webSocketChannelClosing(Channel channel) {
-    NettyWebServerWebSocketConnection handler;
+    NettyWebServerWebSocketConnection<?> handler;
     synchronized (channelLock) {
       handler = webSocketConnections.remove(channel.getId());
     }
@@ -772,9 +772,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       try {
         handler.getHandler().onClose();
       } catch (Throwable e) {
-        getWebServer().getLog().error(
-            String.format("Error while closing web socket connection: %s",
-                SmartSpacesExceptionUtils.getExceptionDetail(e)));
+        getWebServer().getLog().error(String.format("Error while closing web socket connection: %s",
+            SmartSpacesExceptionUtils.getExceptionDetail(e)));
       }
     }
   }
@@ -790,8 +789,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   public void sendError(ChannelHandlerContext ctx, HttpResponseStatus status) {
     HttpResponse response = new DefaultHttpResponse(HTTP_1_1, status);
     HttpHeaders.setHeader(response, CONTENT_TYPE, "text/plain; charset=UTF-8");
-    response.setContent(ChannelBuffers.copiedBuffer("Failure: " + status.toString() + "\r\n",
-        CharsetUtil.UTF_8));
+    response.setContent(
+        ChannelBuffers.copiedBuffer("Failure: " + status.toString() + "\r\n", CharsetUtil.UTF_8));
 
     // Close the connection as soon as the error message is sent.
     ctx.getChannel().write(response).addListener(ChannelFutureListener.CLOSE);
@@ -867,9 +866,67 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    */
   private boolean shouldWarnOnMissingFile(String uriPath) {
     int pos = uriPath.lastIndexOf(HttpConstants.URL_PATH_COMPONENT_SEPARATOR);
-    String filename =
-        pos >= 0 ? uriPath.substring(pos + HttpConstants.URL_PATH_COMPONENT_SEPARATOR.length())
-            : uriPath;
+    String filename = pos >= 0
+        ? uriPath.substring(pos + HttpConstants.URL_PATH_COMPONENT_SEPARATOR.length()) : uriPath;
     return !UNWARNED_MISSING_FILE_NAMES.contains(filename);
   }
+
+  /**
+   * A connection factory for web socket connections.
+   * 
+   * @author Keith M. Hughes
+   *
+   * @param <M>
+   *          the type of messages
+   */
+  private static class NettyWebSocketConnectionFactory<M> {
+
+    /**
+     * The message codec to use.
+     */
+    private MessageCodec<M, String> messageCodec;
+
+    /**
+     * the factory for web socket handlers.
+     */
+    private WebServerWebSocketHandlerFactory<M> handlerFactory;
+
+    /**
+     * The access manager for web resources.
+     */
+    private WebResourceAccessManager accessManager;
+
+    /**
+     * The logger to use.
+     */
+    private ExtendedLog log;
+
+    public NettyWebSocketConnectionFactory(MessageCodec<M, String> messageCodec,
+        WebServerWebSocketHandlerFactory<M> handlerFactory, WebResourceAccessManager accessManager,
+        ExtendedLog log) {
+      this.messageCodec = messageCodec;
+      this.handlerFactory = handlerFactory;
+      this.accessManager = accessManager;
+      this.log = log;
+    }
+
+    /**
+     * Create a new connection.
+     * 
+     * @param channel
+     *          the Netty channel
+     * @param user
+     *          the user for this connection
+     * @param handshaker
+     *          the handshaker
+     * 
+     * @return the new connection
+     */
+    public NettyWebServerWebSocketConnection<M> newWebSocketConnection(Channel channel, String user,
+        WebSocketServerHandshaker handshaker) {
+      return new NettyWebServerWebSocketConnection<M>(channel, user, handshaker, messageCodec,
+          handlerFactory, accessManager, log);
+    }
+  }
+
 }

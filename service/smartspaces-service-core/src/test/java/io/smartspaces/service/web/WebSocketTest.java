@@ -18,6 +18,7 @@
 package io.smartspaces.service.web;
 
 import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.codec.IdentityMessageCodec;
 import io.smartspaces.service.web.client.internal.netty.NettyWebSocketClient;
 import io.smartspaces.service.web.server.WebServerWebSocketHandler;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
@@ -34,9 +35,7 @@ import org.mockito.Mockito;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
@@ -59,7 +58,7 @@ public class WebSocketTest {
   private ExtendedLog log;
   private ScheduledExecutorService threadPool;
 
-  private WebSocketConnection serverConnection;
+  //private WebSocketConnection<String> serverConnection;
 
   @Before
   public void setup() {
@@ -75,7 +74,7 @@ public class WebSocketTest {
 
   @Test
   public void testWebSocketCommunication() throws Exception {
-    final String dataKey = "message";
+    IdentityMessageCodec<String> identityMessageCodec = new IdentityMessageCodec<String>();
 
     final CountDownLatch clientOpenning = new CountDownLatch(1);
     final CountDownLatch clientClosing = new CountDownLatch(1);
@@ -83,8 +82,8 @@ public class WebSocketTest {
     final AtomicBoolean onConnectCalledServer = new AtomicBoolean(false);
     final AtomicBoolean onCloseCalledServer = new AtomicBoolean(false);
 
-    final AtomicReference<WebServerWebSocketHandler> serverHandler =
-        new AtomicReference<WebServerWebSocketHandler>();
+    final AtomicReference<WebServerWebSocketHandler<String>> serverHandler =
+        new AtomicReference<WebServerWebSocketHandler<String>>();
 
     int port = 9001;
     String webSocketUriPrefix = "websockettest";
@@ -105,18 +104,16 @@ public class WebSocketTest {
     NettyWebServer server = new NettyWebServer(threadPool, log);
     server.setServerName("test-server");
     server.setPort(port);
-    server.setWebSocketHandlerFactory(webSocketUriPrefix, new WebServerWebSocketHandlerFactory() {
+    server.setWebSocketHandlerFactory(webSocketUriPrefix, new WebServerWebSocketHandlerFactory<String>() {
 
       @Override
-      public WebServerWebSocketHandler newWebSocketHandler(WebSocketConnection connection) {
-        WebServerWebSocketHandler handler = new WebServerWebSocketHandlerSupport(connection) {
+      public WebServerWebSocketHandler<String> newWebSocketHandler(WebSocketConnection<String> connection) {
+        WebServerWebSocketHandler<String> handler = new WebServerWebSocketHandlerSupport<String>(connection) {
 
           @Override
-          public void onReceive(Object data) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> d = (Map<String, Object>) data;
+          public void onNewMessage(String message) {
 
-            serverReceivedList.add((Integer) d.get(dataKey));
+            serverReceivedList.add(Integer.parseInt(message.substring(message.indexOf("-") + 1)));
           }
 
           @Override
@@ -134,12 +131,12 @@ public class WebSocketTest {
 
         return handler;
       }
-    });
+    }, identityMessageCodec);
     server.startup();
 
     Thread.sleep(2000);
 
-    WebSocketHandler clientHandler = new WebSocketHandler() {
+    WebSocketMessageHandler<String> clientHandler = new WebSocketMessageHandler<String>() {
 
       @Override
       public void onConnect() {
@@ -152,30 +149,24 @@ public class WebSocketTest {
       }
 
       @Override
-      public void onReceive(Object data) {
-        @SuppressWarnings("unchecked")
-        Map<String, Object> d = (Map<String, Object>) data;
-
-        clientReceivedList.add((Integer) d.get(dataKey));
+      public void onNewMessage(String message) {
+        clientReceivedList.add(Integer.parseInt(message.substring(message.indexOf("-") + 1)));
       }
     };
 
-    NettyWebSocketClient client = new NettyWebSocketClient(uri, clientHandler, threadPool, log);
+    NettyWebSocketClient<String> client = new NettyWebSocketClient<String>(uri, clientHandler, identityMessageCodec, threadPool, log);
     client.startup();
 
     Assert.assertTrue(clientOpenning.await(10, TimeUnit.SECONDS));
 
     Assert.assertTrue(client.isOpen());
 
-    Map<String, Object> data = new HashMap<>();
     for (Integer i : clientSentList) {
-      data.put("message", i);
-      client.writeDataAsJson(data);
+      client.sendMessage("message-"+i);
     }
 
     for (Integer i : serverSentList) {
-      data.put("message", i);
-      serverHandler.get().sendJson(data);
+      serverHandler.get().sendMessage("message-"+i);
     }
 
     client.ping();

@@ -69,6 +69,6 @@ class StandardTestClient(private val spaceEnvironment: SmartSpacesEnvironment, p
  
   def publishMessage(message: String): Unit = {
     spaceEnvironment.getLog.info(s"Publishing $message")
-    mqttMessageWriter.writeMessage(message.getBytes(DynamicObjectByteArrayCodec.CHARSET_DEFAULT))
+    mqttMessageWriter.sendMessage(message.getBytes(DynamicObjectByteArrayCodec.CHARSET_DEFAULT))
   }
 }

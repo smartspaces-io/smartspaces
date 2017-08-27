@@ -16,17 +16,18 @@
 
 package io.smartspaces.messaging.route;
 
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.messaging.ChannelMessageSender;
+
 import java.util.Map;
 import java.util.Set;
-
-import io.smartspaces.SmartSpacesException;
 
 /**
  * An element that can route messages in a protocol-independent manner.
  * 
  * @author Keith M. Hughes
  */
-public interface MessageRouter extends IncomingRouteMessageHandler {
+public interface MessageRouter extends IncomingRouteMessageHandler, ChannelMessageSender<Map<String,Object>> {
 
   /**
    * The default value for the route protocol default.
@@ -83,20 +84,6 @@ public interface MessageRouter extends IncomingRouteMessageHandler {
    * @return the default protocol for routes
    */
   String getDefaultRouteProtocol();
-
-  /**
-   * Send out a message on one of the output channels.
-   *
-   * <p>
-   * The message is dropped if there is no such channel, though it will be
-   * logged.
-   *
-   * @param outputChannelId
-   *          ID of the output channel
-   * @param message
-   *          message to send
-   */
-  void writeMessage(String outputChannelId, Map<String, Object> message);
 
   /**
    * Is the given output channel ID already registered?

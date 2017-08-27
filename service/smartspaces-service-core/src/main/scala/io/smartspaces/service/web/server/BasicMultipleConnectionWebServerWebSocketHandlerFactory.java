@@ -31,13 +31,13 @@ import io.smartspaces.service.web.WebSocketConnection;
  *
  * @author Keith M. Hughes
  */
-public class BasicMultipleConnectionWebServerWebSocketHandlerFactory implements
-    MultipleConnectionWebServerWebSocketHandlerFactory {
+public class BasicMultipleConnectionWebServerWebSocketHandlerFactory<M> implements
+    MultipleConnectionWebServerWebSocketHandlerFactory<M> {
 
   /**
    * The client handler.
    */
-  private final MultipleConnectionWebSocketHandler clientHandler;
+  private final MultipleConnectionWebSocketHandler<M> clientHandler;
 
   /**
    * A map from connect IDs to handlers.
@@ -45,9 +45,9 @@ public class BasicMultipleConnectionWebServerWebSocketHandlerFactory implements
   private final Map<String, MyWebServerWebSocketHandler> handlers = Maps.newConcurrentMap();
 
   /**
-   * Creator of connection IDs.
+   * Creator of channel IDs.
    */
-  private final AtomicLong connectionIdFactory = new AtomicLong(System.currentTimeMillis());
+  private final AtomicLong channelIdFactory = new AtomicLong(System.currentTimeMillis());
 
   /**
    * Log.
@@ -63,13 +63,13 @@ public class BasicMultipleConnectionWebServerWebSocketHandlerFactory implements
    *          the logger to use
    */
   public BasicMultipleConnectionWebServerWebSocketHandlerFactory(
-      MultipleConnectionWebSocketHandler clientHandler, ExtendedLog log) {
+      MultipleConnectionWebSocketHandler<M> clientHandler, ExtendedLog log) {
     this.clientHandler = clientHandler;
     this.log = log;
   }
 
   @Override
-  public WebServerWebSocketHandler newWebSocketHandler(WebSocketConnection connection) {
+  public WebServerWebSocketHandler<M> newWebSocketHandler(WebSocketConnection<M> connection) {
     return new MyWebServerWebSocketHandler(connection);
   }
 
@@ -79,36 +79,19 @@ public class BasicMultipleConnectionWebServerWebSocketHandlerFactory implements
   }
 
   @Override
-  public void sendJson(String connectionId, Object data) {
-    MyWebServerWebSocketHandler handler = handlers.get(connectionId);
+  public void sendMessage(String channelId, M data) {
+    MyWebServerWebSocketHandler handler = handlers.get(channelId);
     if (handler != null) {
-      handler.sendJson(data);
+      handler.sendMessage(data);
     } else {
-      log.error(String.format("Unknown web socket connection ID %s", connectionId));
+      log.error(String.format("Unknown web socket channel ID %s", channelId));
     }
   }
 
   @Override
-  public void sendJson(Object data) {
+  public void sendMessage(M message) {
     for (MyWebServerWebSocketHandler handler : handlers.values()) {
-      handler.sendJson(data);
-    }
-  }
-
-  @Override
-  public void sendString(String connectionId, String data) {
-    MyWebServerWebSocketHandler handler = handlers.get(connectionId);
-    if (handler != null) {
-      handler.sendString(data);
-    } else {
-      log.error(String.format("Unknown web socket connection ID %s", connectionId));
-    }
-  }
-
-  @Override
-  public void sendString(String data) {
-    for (MyWebServerWebSocketHandler handler : handlers.values()) {
-      handler.sendString(data);
+      handler.sendMessage(message);
     }
   }
 
@@ -118,7 +101,7 @@ public class BasicMultipleConnectionWebServerWebSocketHandlerFactory implements
    * @return the new connection ID
    */
   private String newConnectionId() {
-    return Long.toHexString(connectionIdFactory.getAndAdd(1));
+    return Long.toHexString(channelIdFactory.getAndAdd(1));
   }
 
   /**
@@ -126,12 +109,12 @@ public class BasicMultipleConnectionWebServerWebSocketHandlerFactory implements
    *
    * @author Keith M. Hughes
    */
-  public class MyWebServerWebSocketHandler extends WebServerWebSocketHandlerSupport {
+  public class MyWebServerWebSocketHandler extends WebServerWebSocketHandlerSupport<M> {
 
     /**
-     * The ID for the connection.
+     * The ID for the channel.
      */
-    private final String connectionId;
+    private final String channelId;
 
     /**
      * Construct a new web socket handler.
@@ -139,28 +122,28 @@ public class BasicMultipleConnectionWebServerWebSocketHandlerFactory implements
      * @param connection
      *          the web socket connection
      */
-    public MyWebServerWebSocketHandler(WebSocketConnection connection) {
+    public MyWebServerWebSocketHandler(WebSocketConnection<M> connection) {
       super(connection);
 
-      this.connectionId = newConnectionId();
-      handlers.put(connectionId, this);
+      this.channelId = newConnectionId();
+      handlers.put(channelId, this);
     }
 
     @Override
-    public void onReceive(Object data) {
-      clientHandler.handleWebSocketReceive(connectionId, data);
+    public void onNewMessage(M message) {
+      clientHandler.handleNewWebSocketMessage(channelId, message);
     }
 
     @Override
     public void onConnect() {
-      clientHandler.handleNewWebSocketConnection(connectionId);
+      clientHandler.handleNewWebSocketConnection(channelId);
     }
 
     @Override
     public void onClose() {
-      handlers.remove(connectionId);
+      handlers.remove(channelId);
 
-      clientHandler.handleWebSocketClose(connectionId);
+      clientHandler.handleWebSocketClose(channelId);
     }
   }
 }

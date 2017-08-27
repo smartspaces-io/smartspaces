@@ -17,10 +17,12 @@
 
 package io.smartspaces.util.messaging.ros;
 
-import java.util.Set;
+import io.smartspaces.messaging.MessageSender;
 
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.PublisherListener;
+
+import java.util.Set;
 
 /**
  * A collection of ROS publishers for a given message type.
@@ -30,7 +32,7 @@ import org.ros.node.topic.PublisherListener;
  *
  * @author Keith M. Hughes
  */
-public interface RosPublishers<T> extends PublisherListener<T> {
+public interface RosPublishers<T> extends PublisherListener<T>, MessageSender<T> {
 
   /**
    * Add a publisher listener to the collection.
@@ -57,14 +59,6 @@ public interface RosPublishers<T> extends PublisherListener<T> {
    *          the message type for all of the publishers
    */
   void addPublishers(ConnectedNode node, String messageType, Set<String> topicNames);
-
-  /**
-   * Publish a message to all registered publishers.
-   *
-   * @param message
-   *          The message to be published.
-   */
-  void publishMessage(T message);
 
   /**
    * Create an instance of the message.

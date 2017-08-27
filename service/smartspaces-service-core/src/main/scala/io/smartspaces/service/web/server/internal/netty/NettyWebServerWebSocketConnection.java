@@ -17,6 +17,13 @@
 
 package io.smartspaces.service.web.server.internal.netty;
 
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.codec.MessageCodec;
+import io.smartspaces.service.web.WebSocketConnection;
+import io.smartspaces.service.web.WebSocketMessageHandler;
+import io.smartspaces.service.web.server.WebResourceAccessManager;
+import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
+
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
@@ -27,25 +34,12 @@ import org.jboss.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 
-import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.service.web.WebSocketConnection;
-import io.smartspaces.service.web.WebSocketHandler;
-import io.smartspaces.service.web.server.WebResourceAccessManager;
-import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
-
 /**
  * A {@link WebSocketConnection} for a Netty web socket server.
  *
  * @author Keith M. Hughes
  */
-public class NettyWebServerWebSocketConnection implements WebSocketConnection {
-
-  /**
-   * The JSON mapper.
-   */
-  private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
+public class NettyWebServerWebSocketConnection<M> implements WebSocketConnection<M> {
 
   /**
    * The channel for this web socket handler.
@@ -60,7 +54,7 @@ public class NettyWebServerWebSocketConnection implements WebSocketConnection {
   /**
    * Business logic handler for the web socket call.
    */
-  private WebSocketHandler handler;
+  private WebSocketMessageHandler<M> handler;
 
   /**
    * Logger for this handler.
@@ -83,6 +77,11 @@ public class NettyWebServerWebSocketConnection implements WebSocketConnection {
   private StringBuilder continuationFrameData = new StringBuilder();
 
   /**
+   * A codec for translating the web socket messages.
+   */
+  private MessageCodec<M, String> messageCodec;
+
+  /**
    * Construct a new connection.
    *
    * @param channel
@@ -99,11 +98,13 @@ public class NettyWebServerWebSocketConnection implements WebSocketConnection {
    *          the logger for the connection
    */
   public NettyWebServerWebSocketConnection(Channel channel, String user,
-      WebSocketServerHandshaker handshaker, WebServerWebSocketHandlerFactory handlerFactory,
-      WebResourceAccessManager accessManager, ExtendedLog log) {
+      WebSocketServerHandshaker handshaker, MessageCodec<M, String> messageCodec,
+      WebServerWebSocketHandlerFactory<M> handlerFactory, WebResourceAccessManager accessManager,
+      ExtendedLog log) {
     this.channel = channel;
     this.handshaker = handshaker;
     this.accessManager = accessManager;
+    this.messageCodec = messageCodec;
     this.log = log;
     this.user = user;
     handler = handlerFactory.newWebSocketHandler(this);
@@ -177,7 +178,7 @@ public class NettyWebServerWebSocketConnection implements WebSocketConnection {
         continuationFrameData.setLength(0);
       }
 
-      handleTextData(text);
+      handleIncomingMessage(text);
     } else {
       // Text frames not labeled as final are the first frame received when
       // there is a continuation frame.
@@ -205,46 +206,37 @@ public class NettyWebServerWebSocketConnection implements WebSocketConnection {
     // All data coming in from the first text frame that was marked non final.
     continuationFrameData.append(frame.getText());
     if (frame.isFinalFragment()) {
-      handleTextData(continuationFrameData.toString());
+      handleIncomingMessage(continuationFrameData.toString());
       continuationFrameData.setLength(0);
     }
   }
 
   /**
-   * Handle the complete text from a frame.
+   * Handle the complete incoming message from a frame.
    *
    * <p>
    * This includes concatenated continuation frame data.
    *
-   * @param textData
+   * @param incomingMessage
    *          the complete data of the message
    */
-  private void handleTextData(String textData) {
+  private void handleIncomingMessage(String incomingMessage) {
     if (accessManager != null) {
-      if (!accessManager.allowWebsocketCall(getUser(), textData)) {
+      if (!accessManager.allowWebsocketCall(getUser(), incomingMessage)) {
         return;
       }
     }
     try {
-      handler.onReceive(MAPPER.parseObject(textData));
+      handler.onNewMessage(messageCodec.decode(incomingMessage));
     } catch (Exception e) {
       log.error("Could not process web socket frame", e);
     }
   }
 
   @Override
-  public void writeDataAsJson(Object data) {
+  public void sendMessage(M message) {
     try {
-      channel.write(new TextWebSocketFrame(MAPPER.toString(data)));
-    } catch (Exception e) {
-      log.error("Could not write JSON object on web socket", e);
-    }
-  }
-
-  @Override
-  public void writeDataAsString(String data) {
-    try {
-      channel.write(new TextWebSocketFrame(data));
+      channel.write(new TextWebSocketFrame(messageCodec.encode(message)));
     } catch (Exception e) {
       log.error("Could not write string data on web socket", e);
     }
@@ -267,7 +259,7 @@ public class NettyWebServerWebSocketConnection implements WebSocketConnection {
    *
    * @return the handler
    */
-  public WebSocketHandler getHandler() {
+  public WebSocketMessageHandler<M> getHandler() {
     return handler;
   }
 }

@@ -17,13 +17,22 @@
 
 package io.smartspaces.service.web.server;
 
+import io.smartspaces.messaging.ChannelMessageSender;
+import io.smartspaces.messaging.MessageSender;
+
 /**
  * A factory for web socket handlers that support multiple connections.
+ * 
+ * <p>
+ * Messages send to the non-channel message writer go to all connected web socket clients.
+ * 
+ * @param <M>
+ *          the message type for the web socket connections
  *
  * @author Keith M. Hughes
  */
-public interface MultipleConnectionWebServerWebSocketHandlerFactory extends
-    WebServerWebSocketHandlerFactory {
+public interface MultipleConnectionWebServerWebSocketHandlerFactory<M>
+    extends WebServerWebSocketHandlerFactory<M>, MessageSender<M>, ChannelMessageSender<M> {
 
   /**
    * Are there any web sockets connected?
@@ -31,40 +40,4 @@ public interface MultipleConnectionWebServerWebSocketHandlerFactory extends
    * @return {@code true} if there are any connections
    */
   boolean areWebSocketsConnected();
-
-  /**
-   * Send a JSON message to a specific web socket connection.
-   *
-   * @param connectionId
-   *          the ID of the connection
-   * @param data
-   *          the data to send
-   */
-  void sendJson(String connectionId, Object data);
-
-  /**
-   * Send a JSON message to all web socket connections.
-   *
-   * @param data
-   *          the data to send
-   */
-  void sendJson(Object data);
-
-  /**
-   * Send a string to a specific web socket connection.
-   *
-   * @param connectionId
-   *          the ID of the connection
-   * @param data
-   *          the data to send
-   */
-  void sendString(String connectionId, String data);
-
-  /**
-   * Send a string to all web socket connections.
-   *
-   * @param data
-   *          the data to send
-   */
-  void sendString(String data);
 }

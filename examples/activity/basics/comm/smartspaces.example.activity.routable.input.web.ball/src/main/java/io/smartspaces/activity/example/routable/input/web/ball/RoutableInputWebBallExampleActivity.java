@@ -30,28 +30,26 @@ import io.smartspaces.activity.impl.web.BaseRoutableWebActivity;
 public class RoutableInputWebBallExampleActivity extends BaseRoutableWebActivity {
 
   @Override
-  public void onNewIncomingRouteMessage(String channelName, Map<String, Object> message) {
-    if ("input1".equals(channelName) && isActivated()) {
-      sendAllWebSocketJson(message);
+  public void onNewRouteMessage(String channelId, Map<String, Object> message) {
+    if ("input1".equals(channelId) && isActivated()) {
+      sendWebSocketMessage(message);
     }
   }
 
   @Override
-  public void onNewWebSocketConnection(String connectionId) {
-    getLog().info("Got web socket connection from connection " + connectionId);
+  public void onNewWebSocketConnection(String channelId) {
+    getLog().info("Got web socket connection from connection " + channelId);
   }
 
   @Override
-  public void onWebSocketClose(String connectionId) {
-    getLog().info("Got web socket close from connection " + connectionId);
+  public void onWebSocketClose(String channelId) {
+    getLog().info("Got web socket close from connection " + channelId);
   }
 
   @Override
-  public void onWebSocketReceive(String connectionId, Object d) {
-    getLog().info("Got web socket data from connection " + connectionId);
+  public void onNewWebSocketMessage(String channelId,  Map<String, Object> message) {
+    getLog().info("Got web socket data from connection " + channelId);
 
-    @SuppressWarnings("unchecked")
-    Map<String, Object> data = (Map<String, Object>) d;
-    getLog().info(data);
+    getLog().info(message);
   }
 }

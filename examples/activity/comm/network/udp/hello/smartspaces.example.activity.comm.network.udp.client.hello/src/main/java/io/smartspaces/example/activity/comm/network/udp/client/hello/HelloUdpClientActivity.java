@@ -86,12 +86,12 @@ public class HelloUdpClientActivity extends BaseActivity {
 
   @Override
   public void onActivityActivate() {
-    udpClient.write(udpServerAddress, "Hey server, I just activated".getBytes());
+    udpClient.sendMessage(udpServerAddress, "Hey server, I just activated".getBytes());
   }
 
   @Override
   public void onActivityDeactivate() {
-    udpClient.write(udpServerAddress, "Hey server, I just deactivated".getBytes());
+    udpClient.sendMessage(udpServerAddress, "Hey server, I just deactivated".getBytes());
   }
 
   /**

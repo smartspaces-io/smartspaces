@@ -75,5 +75,5 @@ public interface RequestXBeeFrame {
    *
    * @return the frame that was added to
    */
-  RequestXBeeFrame write(XBeeCommunicationEndpoint commEndpoint);
+  RequestXBeeFrame sendMessage(XBeeCommunicationEndpoint commEndpoint);
 }

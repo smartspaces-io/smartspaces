@@ -17,6 +17,7 @@
 
 package io.smartspaces.service.web.server;
 
+import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.util.web.MimeResolver;
 
@@ -201,14 +202,19 @@ public interface WebServer extends ManagedResource {
   /**
    * Set the factory for creating web socket handlers.
    *
+   * @param <M>
+   *          the type of web socket messages
    * @param webSocketUriPrefix
    *          uri prefix for websocket handler
    * @param webSocketHandlerFactory
    *          the factory to use (can be {@code null} if don't want to handle
    *          web socket calls)
+   * @param messageCodec
+   *          the codec for web socket messages
    */
-  void setWebSocketHandlerFactory(String webSocketUriPrefix,
-      WebServerWebSocketHandlerFactory webSocketHandlerFactory);
+  <M> void setWebSocketHandlerFactory(String webSocketUriPrefix,
+      WebServerWebSocketHandlerFactory<M> webSocketHandlerFactory,
+      MessageCodec<M, String> messageCodec);
 
   /**
    * Get the name given to the server.

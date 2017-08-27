@@ -108,12 +108,12 @@ public class HelloTcpClientActivity extends BaseActivity {
 
   @Override
   public void onActivityActivate() {
-    tcpClient.write("Hey server, I just activated\n");
+    tcpClient.sendMessage("Hey server, I just activated\n");
   }
 
   @Override
   public void onActivityDeactivate() {
-    tcpClient.write("Hey server, I just deactivated\n");
+    tcpClient.sendMessage("Hey server, I just deactivated\n");
   }
 
   /**

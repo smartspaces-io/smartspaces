@@ -24,8 +24,10 @@ import io.smartspaces.activity.component.BaseActivityComponent;
 import io.smartspaces.activity.configuration.WebServerActivityResourceConfigurator;
 import io.smartspaces.activity.impl.StatusDetail;
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.codec.MapStringMessageCodec;
 import io.smartspaces.service.web.WebSocketConnection;
-import io.smartspaces.service.web.WebSocketHandler;
+import io.smartspaces.service.web.WebSocketMessageHandler;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
 import io.smartspaces.service.web.server.WebServer;
@@ -35,7 +37,6 @@ import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 import io.smartspaces.util.web.HttpConstants;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.logging.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,8 +50,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * @author Keith M. Hughes
  */
-public class BasicWebServerActivityComponent extends BaseActivityComponent implements
-    WebServerActivityComponent {
+public class BasicWebServerActivityComponent extends BaseActivityComponent
+    implements WebServerActivityComponent {
 
   /**
    * Web server for the app, if needed.
@@ -60,7 +61,7 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
   /**
    * Factory for web socket handlers.
    */
-  private WebServerWebSocketHandlerFactory webSocketHandlerFactory;
+  private WebServerWebSocketHandlerFactory<Map<String, Object>> webSocketHandlerFactory;
 
   /**
    * List of static content for the web server.
@@ -70,14 +71,14 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
   /**
    * List of dynamic GET content for the web server.
    */
-  private final List<DynamicContent<HttpDynamicRequestHandler>> dynamicGetContent = Lists
-      .newArrayList();
+  private final List<DynamicContent<HttpDynamicRequestHandler>> dynamicGetContent =
+      Lists.newArrayList();
 
   /**
    * List of dynamic POST content for the web server.
    */
-  private final List<DynamicContent<HttpDynamicPostRequestHandler>> dynamicPostContent = Lists
-      .newArrayList();
+  private final List<DynamicContent<HttpDynamicPostRequestHandler>> dynamicPostContent =
+      Lists.newArrayList();
 
   /**
    * Configurator for this component.
@@ -101,9 +102,8 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
 
     Activity activity = getComponentContext().getActivity();
 
-    WebServerService webServerService =
-        activity.getSpaceEnvironment().getServiceRegistry()
-            .getService(WebServerService.SERVICE_NAME);
+    WebServerService webServerService = activity.getSpaceEnvironment().getServiceRegistry()
+        .getService(WebServerService.SERVICE_NAME);
     webServer = webServerService.newWebServer(activity.getLog());
 
     configurator.configure(null, activity, webServer);
@@ -144,9 +144,8 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
     }
 
     if (getLog().isInfoEnabled()) {
-      getLog().info(
-          String.format("Web server activity component shut down in %s msecs",
-              System.currentTimeMillis() - start));
+      getLog().info(String.format("Web server activity component shut down in %s msecs",
+          System.currentTimeMillis() - start));
     }
   }
 
@@ -195,7 +194,7 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
 
   @Override
   public WebServerActivityComponent setWebSocketHandlerFactory(
-      WebServerWebSocketHandlerFactory webSocketHandlerFactory) {
+      WebServerWebSocketHandlerFactory<Map<String, Object>> webSocketHandlerFactory) {
     this.webSocketHandlerFactory = webSocketHandlerFactory;
 
     if (webServer != null) {
@@ -226,9 +225,8 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
    *          the base directory where the content will be found
    */
   private void addStaticContentHandler(String uriPrefix, File baseDir) {
-    Map<String, String> accessControlMap =
-        Collections.singletonMap(HttpConstants.ACCESS_CONTROL_ALLOW_ORIGIN,
-            HttpConstants.ACCESS_CONTROL_ORIGIN_WILDCARD);
+    Map<String, String> accessControlMap = Collections.singletonMap(
+        HttpConstants.ACCESS_CONTROL_ALLOW_ORIGIN, HttpConstants.ACCESS_CONTROL_ORIGIN_WILDCARD);
     Map<String, String> header =
         configurator.getCrossOriginAllowed() ? accessControlMap : HttpConstants.EMPTY_HEADER_MAP;
     webServer.addStaticContentHandler(uriPrefix, baseDir, header);
@@ -240,8 +238,8 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
     if (webServer != null) {
       webServer.addDynamicContentHandler(uriPrefix, usePath, handler);
     } else {
-      dynamicGetContent.add(new DynamicContent<HttpDynamicRequestHandler>(handler, uriPrefix,
-          usePath));
+      dynamicGetContent
+          .add(new DynamicContent<HttpDynamicRequestHandler>(handler, uriPrefix, usePath));
     }
 
     return this;
@@ -253,8 +251,8 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
     if (webServer != null) {
       webServer.addDynamicPostRequestHandler(uriPrefix, usePath, handler);
     } else {
-      dynamicPostContent.add(new DynamicContent<HttpDynamicPostRequestHandler>(handler, uriPrefix,
-          usePath));
+      dynamicPostContent
+          .add(new DynamicContent<HttpDynamicPostRequestHandler>(handler, uriPrefix, usePath));
     }
 
     return this;
@@ -263,9 +261,11 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
   /**
    * Set the web server web socket handler with the proper wrapped factory.
    */
+  @SuppressWarnings("unchecked")
   private void setWebServerWebSocketHandlerFactory() {
     webServer.setWebSocketHandlerFactory(configurator.getWebSocketUriPrefix(),
-        new MyWebServerWebSocketHandlerFactory(webSocketHandlerFactory, this));
+        new MyWebServerWebSocketHandlerFactory(webSocketHandlerFactory, this),
+        new MapStringMessageCodec());
   }
 
   /**
@@ -386,12 +386,12 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
    *
    * @author Keith M. Hughes
    */
-  public static class MyWebServerWebSocketHandlerFactory implements
-      WebServerWebSocketHandlerFactory {
+  public static class MyWebServerWebSocketHandlerFactory
+      implements WebServerWebSocketHandlerFactory<Map<String, Object>> {
     /**
      * The factory being delegated to.
      */
-    private final WebServerWebSocketHandlerFactory delegate;
+    private final WebServerWebSocketHandlerFactory<Map<String, Object>> delegate;
 
     /**
      * The component context this factory is part of.
@@ -406,15 +406,18 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
      * @param activityComponent
      *          hosting component
      */
-    public MyWebServerWebSocketHandlerFactory(WebServerWebSocketHandlerFactory delegate,
+    public MyWebServerWebSocketHandlerFactory(
+        WebServerWebSocketHandlerFactory<Map<String, Object>> delegate,
         BasicWebServerActivityComponent activityComponent) {
       this.delegate = delegate;
       this.activityComponent = activityComponent;
     }
 
     @Override
-    public WebServerWebSocketHandler newWebSocketHandler(WebSocketConnection proxy) {
-      WebServerWebSocketHandler handlerDelegate = delegate.newWebSocketHandler(proxy);
+    public WebServerWebSocketHandler<Map<String, Object>>
+        newWebSocketHandler(WebSocketConnection<Map<String, Object>> proxy) {
+      WebServerWebSocketHandler<Map<String, Object>> handlerDelegate =
+          delegate.newWebSocketHandler(proxy);
       return new MyWebServerWebSocketHandler(handlerDelegate, activityComponent);
     }
   }
@@ -429,22 +432,23 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
    *
    * @return the logger
    */
-  private Log getLog() {
+  private ExtendedLog getLog() {
     return getComponentContext().getActivity().getLog();
   }
 
   /**
-   * A {@link WebSocketHandler} which delegates to a web socket handler but
-   * ensures that the component is running.
+   * A {@link WebSocketMessageHandler} which delegates to a web socket handler
+   * but ensures that the component is running.
    *
    * @author Keith M. Hughes
    */
-  public static class MyWebServerWebSocketHandler implements WebServerWebSocketHandler {
+  public static class MyWebServerWebSocketHandler
+      implements WebServerWebSocketHandler<Map<String, Object>> {
 
     /**
      * The delegate to be protected.
      */
-    private final WebServerWebSocketHandler delegate;
+    private final WebServerWebSocketHandler<Map<String, Object>> delegate;
 
     /**
      * The component this handler is for.
@@ -464,7 +468,7 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
      * @param activityComponent
      *          the component being handled
      */
-    public MyWebServerWebSocketHandler(WebServerWebSocketHandler delegate,
+    public MyWebServerWebSocketHandler(WebServerWebSocketHandler<Map<String, Object>> delegate,
         BasicWebServerActivityComponent activityComponent) {
       this.delegate = delegate;
       this.activityComponent = activityComponent;
@@ -509,7 +513,7 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
     }
 
     @Override
-    public void onReceive(final Object data) {
+    public void onNewMessage(final Map<String, Object> message) {
       ActivityComponentContext activityComponentContext = activityComponent.getComponentContext();
       if (!activityComponentContext.canHandlerRun()) {
         return;
@@ -518,7 +522,7 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
       try {
         activityComponentContext.enterHandler();
 
-        delegate.onReceive(data);
+        delegate.onNewMessage(message);
       } catch (Throwable e) {
         activityComponent.handleError("Error during web socket data receive", e);
       } finally {
@@ -527,28 +531,14 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent imple
     }
 
     @Override
-    public void sendJson(final Object data) {
+    public void sendMessage(final Map<String, Object> message) {
       ActivityComponentContext activityComponentContext = activityComponent.getComponentContext();
       try {
         activityComponentContext.enterHandler();
 
-        delegate.sendJson(data);
+        delegate.sendMessage(message);
       } catch (Throwable e) {
-        activityComponent.handleError("Error during web socket JSON sending", e);
-      } finally {
-        activityComponentContext.exitHandler();
-      }
-    }
-
-    @Override
-    public void sendString(final String data) {
-      ActivityComponentContext activityComponentContext = activityComponent.getComponentContext();
-      try {
-        activityComponentContext.enterHandler();
-
-        delegate.sendString(data);
-      } catch (Throwable e) {
-        activityComponent.handleError("Error during web socket string sending", e);
+        activityComponent.handleError("Error while writing web socket message", e);
       } finally {
         activityComponentContext.exitHandler();
       }

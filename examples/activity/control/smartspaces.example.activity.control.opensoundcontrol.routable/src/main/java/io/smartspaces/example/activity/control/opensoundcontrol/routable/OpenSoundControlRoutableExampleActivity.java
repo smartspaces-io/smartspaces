@@ -164,7 +164,7 @@ public class OpenSoundControlRoutableExampleActivity extends BaseRoutableActivit
   }
 
   @Override
-  public void onNewIncomingRouteMessage(String channelName, Map<String, Object> message) {
+  public void onNewRouteMessage(String channelName, Map<String, Object> message) {
     getLog().debug("Got message on input channel " + channelName);
     int analog1 = (Integer) message.get(MESSAGE_FIELD_ANALOG);
     int analog2 = (Integer) message.get(MESSAGE_FIELD_ANALOG2);
@@ -188,7 +188,7 @@ public class OpenSoundControlRoutableExampleActivity extends BaseRoutableActivit
       analog2Maximum = analog2;
     }
 
-    controlEndpoint.sendRequestMessage(oscAddress1, analog1 * signalMultiplier + frequencyBase);
-    controlEndpoint.sendRequestMessage(oscAddress2, analog2 / analog2Maximum);
+    controlEndpoint.sendMessage(oscAddress1, analog1 * signalMultiplier + frequencyBase);
+    controlEndpoint.sendMessage(oscAddress2, analog2 / analog2Maximum);
   }
 }

@@ -162,7 +162,7 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint
     listeners.clear();
 
     if (bootstrap != null) {
-      closeAllConnections();
+      closeAllChannels();
 
       bootstrap.shutdown();
       bootstrap = null;
@@ -185,10 +185,10 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint
   }
 
   @Override
-  public void writeMessageAllConnections(String message) {
+  public void sendMessageAllChannels(String message) {
     for (InternalClientConnection clientConnection : clientConnections.values()) {
       try {
-        clientConnection.writeMessage(message);
+        clientConnection.sendMessage(message);
       } catch (Throwable e) {
         log.error("Could not write message to connection " + clientConnection, e);
       }
@@ -196,7 +196,7 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint
   }
 
   @Override
-  public void closeAllConnections() {
+  public void closeAllChannels() {
     for (InternalClientConnection clientConnection : clientConnections.values()) {
       try {
         clientConnection.close();
@@ -378,8 +378,8 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint
     }
 
     @Override
-    public void writeMessage(String response) {
-      clientConnection.writeMessage(response);
+    public void sendMessage(String response) {
+      clientConnection.sendMessage(response);
     }
 
     @Override
@@ -401,30 +401,30 @@ public class NettyStringTcpServerNetworkCommunicationEndpoint
     private Channel channel;
 
     /**
-     * The ID for the connection.
+     * The ID for the channel.
      */
-    private String connectionId;
+    private String channelId;
 
     /**
      * Construct a new connection.
      * 
      * @param channel
      *          the channel for the connection
-     * @param connectionId
-     *          the ID for the connection
+     * @param channelId
+     *          the ID for the channel
      */
-    public InternalClientConnection(Channel channel, String connectionId) {
+    public InternalClientConnection(Channel channel, String channelId) {
       this.channel = channel;
-      this.connectionId = connectionId;
+      this.channelId = channelId;
     }
 
     @Override
-    public String getConnectionId() {
-      return connectionId;
+    public String getChannelId() {
+      return channelId;
     }
 
     @Override
-    public void writeMessage(String message) {
+    public void sendMessage(String message) {
       if (isOpen()) {
         channel.write(message);
       } else {

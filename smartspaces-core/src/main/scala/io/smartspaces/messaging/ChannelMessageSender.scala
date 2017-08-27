@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2015 Google Inc.
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,23 +14,22 @@
  * the License.
  */
 
-package io.smartspaces.messaging;
+package io.smartspaces.messaging
 
 /**
- * A writer of messages.
+ * A message writer that specifies a particular channel to write to.
  *
  * @author Keith M. Hughes
  */
-trait MessageWriter[F] {
+trait ChannelMessageSender[M] {
 
   /**
-   * Send a message.
+   * Write a message to a particular channel.
    *
-   * <p>
-   * The message will be serialized properly for the channel.
-   *
+   * @param channelId
+   *        ID of the channel
    * @param message
-   *          the message to send
+   *        the message to write
    */
-  def writeMessage(message: F): Unit
+  def sendMessage(channelId: String, message: M): Unit
 }

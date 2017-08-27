@@ -17,6 +17,10 @@
 
 package io.smartspaces.service.web.client.internal.netty;
 
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.codec.MessageCodec;
+import io.smartspaces.service.web.WebSocketMessageHandler;
+
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -31,23 +35,16 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketFrame;
 import org.jboss.netty.util.CharsetUtil;
 
-import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.service.web.WebSocketHandler;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
-
 /**
  * A Netty-based websocket client handler.
+ * 
+ * @param <M>
+ *          the type of messages for handlers and writers
  *
  * @author Keith M. Hughes
  */
 
-public class NettyWebSocketClientHandler extends SimpleChannelUpstreamHandler {
-
-  /**
-   * The JSON mapper.
-   */
-  private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
+public class NettyWebSocketClientHandler<M> extends SimpleChannelUpstreamHandler {
 
   /**
    * The handshaker for the connection.
@@ -57,7 +54,12 @@ public class NettyWebSocketClientHandler extends SimpleChannelUpstreamHandler {
   /**
    * The user handler for the connection.
    */
-  private WebSocketHandler handler;
+  private WebSocketMessageHandler<M> handler;
+  
+  /**
+   * The message codec to use.
+   */
+  private MessageCodec<M, String> messageCodec;
 
   /**
    * Log for this handler.
@@ -75,9 +77,10 @@ public class NettyWebSocketClientHandler extends SimpleChannelUpstreamHandler {
    *          the logger
    */
   public NettyWebSocketClientHandler(WebSocketClientHandshaker handshaker,
-      WebSocketHandler handler, ExtendedLog log) {
+      WebSocketMessageHandler<M> handler, MessageCodec<M, String> messageCodec, ExtendedLog log) {
     this.handshaker = handshaker;
     this.handler = handler;
+    this.messageCodec = messageCodec;
     this.log = log;
   }
 
@@ -99,9 +102,8 @@ public class NettyWebSocketClientHandler extends SimpleChannelUpstreamHandler {
 
     if (e.getMessage() instanceof HttpResponse) {
       HttpResponse response = (HttpResponse) e.getMessage();
-      String message =
-          "Unexpected HttpResponse (status=" + response.getStatus() + ", content="
-              + response.getContent().toString(CharsetUtil.UTF_8) + ')';
+      String message = "Unexpected HttpResponse (status=" + response.getStatus() + ", content="
+          + response.getContent().toString(CharsetUtil.UTF_8) + ')';
       log.error(String.format("Web socket client: %s", message));
 
       throw new Exception(message);
@@ -111,7 +113,7 @@ public class NettyWebSocketClientHandler extends SimpleChannelUpstreamHandler {
     if (frame instanceof TextWebSocketFrame) {
       TextWebSocketFrame textFrame = (TextWebSocketFrame) frame;
       try {
-        handler.onReceive(MAPPER.parseObject(textFrame.getText()));
+        handler.onNewMessage(messageCodec.decode(textFrame.getText()));
       } catch (Exception e1) {
         log.error("Error while decoding JSON websocket message", e1);
       }

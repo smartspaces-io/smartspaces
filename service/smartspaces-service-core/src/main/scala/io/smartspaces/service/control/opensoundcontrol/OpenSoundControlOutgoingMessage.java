@@ -35,7 +35,7 @@ public interface OpenSoundControlOutgoingMessage {
   /**
    * Send the message.
    */
-  void send();
+  void sendMessage();
 
   /**
    * Write a string into the message.

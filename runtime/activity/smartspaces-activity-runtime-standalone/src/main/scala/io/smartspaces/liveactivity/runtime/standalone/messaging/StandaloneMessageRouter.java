@@ -190,8 +190,8 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   }
 
   @Override
-  public void writeMessage(String outputChannelId, Map<String, Object> message) {
-    myMessageRouter.writeMessage(outputChannelId, message);
+  public void sendMessage(String outputChannelId, Map<String, Object> message) {
+    myMessageRouter.sendMessage(outputChannelId, message);
   }
 
   @Override
@@ -387,7 +387,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
 
     if (sendOnRoute) {
       String channelId = (String) messageObject.get("channel");
-      writeMessage(channelId, message);
+      sendMessage(channelId, message);
     } else {
       Collection<String> channelIds = inputRoutesToChannels.get(route);
       if (channelIds != null) {
@@ -550,7 +550,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   private class MyMessageRouter implements MessageRouter {
 
     @Override
-    public void handleNewIncomingMessage(Object message, RouteMessageSubscriber subscriber) {
+    public void handleNewMessage(Object message, RouteMessageSubscriber subscriber) {
       // TODO Auto-generated method stub
 
     }
@@ -588,8 +588,8 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     }
 
     @Override
-    public void writeMessage(String outputChannelId, Map<String, Object> message) {
-      writeMessage(outputChannelId, MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE,
+    public void sendMessage(String outputChannelId, Map<String, Object> message) {
+      sendMessage(outputChannelId, MessageRouterSupportedMessageTypes.JSON_MESSAGE_TYPE,
           MAPPER.toString(message));
     }
 
@@ -643,20 +643,20 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     /**
      * Send an output message.
      *
-     * @param channelName
-     *          the channel name on which to send the message
+     * @param channelId
+     *          the channel ID on which to send the message
      * @param type
      *          type of message to send
      * @param message
      *          message to send
      */
-    private void writeMessage(String channelName, String type, String message) {
+    private void sendMessage(String channelId, String type, String message) {
       try {
-        Set<String> routes = outputChannelsToRoutes.get(channelName);
+        Set<String> routes = outputChannelsToRoutes.get(channelId);
         if (routes == null) {
-          getLog().error("Attempt to send on unregistered output channel " + channelName);
+          getLog().error("Attempt to send on unregistered output channel " + channelId);
           Set<String> unknown = Sets.newHashSet("unknown");
-          outputChannelsToRoutes.put(channelName, unknown);
+          outputChannelsToRoutes.put(channelId, unknown);
           routes = unknown;
         }
 
@@ -674,7 +674,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
           messageObject.put("message", baseMessage);
           messageObject.put("type", type);
           messageObject.put("route", route);
-          messageObject.put("channel", channelName);
+          messageObject.put("channel", channelId);
           messageObject.put(SOURCE_UUID_KEY, activity.getUuid());
           router.send(messageObject);
 
@@ -718,8 +718,8 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     }
 
     @Override
-    public void writeMessage(Map<String, Object> message) {
-      StandaloneMessageRouter.this.writeMessage(channelId, message);
+    public void sendMessage(Map<String, Object> message) {
+      StandaloneMessageRouter.this.sendMessage(channelId, message);
     }
   }
 }

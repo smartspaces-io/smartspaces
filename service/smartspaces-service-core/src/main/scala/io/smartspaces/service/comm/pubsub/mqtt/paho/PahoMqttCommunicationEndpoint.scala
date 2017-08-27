@@ -338,11 +338,11 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
    */
   private class MqttPublisherShim(override val mqttTopicName: String, override val qos: Int, override val retain: Boolean) extends MqttPublisher {
 
-    override def writeMessage(message: Array[Byte]): Unit = {
-      writeMessage(message, retain)
+    override def sendMessage(message: Array[Byte]): Unit = {
+      sendMessage(message, retain)
     }
 
-    override def writeMessage(message: Array[Byte], retain: Boolean): Unit = {
+    override def sendMessage(message: Array[Byte], retain: Boolean): Unit = {
       mqttClient.publish(mqttTopicName, message, qos, retain)
     }
     

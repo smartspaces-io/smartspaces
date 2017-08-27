@@ -120,14 +120,14 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val builder = new StandardDynamicObjectBuilder()
 
     builder.newObject(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
-    val channelName = "test"
-    builder.newObject(channelName)
+    val channelId = "test"
+    builder.newObject(channelId)
     builder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, sensorValueType)
 
     val timestamp: Long = 10000
     val sensorDetail = new SimpleSensorDetail("1", "foo", "foo", "foo", None, None)
     val channelDetail =
-      new SimpleSensorChannelDetail(sensorDetail, channelName, "glorp", "norp", measurementType, null)
+      new SimpleSensorChannelDetail(sensorDetail, channelId, "glorp", "norp", measurementType, null)
     sensorDetail.addSensorChannelDetail(channelDetail)
 
     val sensor =

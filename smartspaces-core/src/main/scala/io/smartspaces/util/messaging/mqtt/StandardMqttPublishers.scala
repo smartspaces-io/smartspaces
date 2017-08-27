@@ -80,7 +80,7 @@ class StandardMqttPublishers[T](messageEncoder: MessageEncoder[T, Array[Byte]], 
     }
   }
 
-  override def publishMessage(message: T): Unit = {
+  override def sendMessage(message: T): Unit = {
     val mqttMessage = new MqttMessage(messageEncoder.encode(message))
     mqttMessage.setQos(1)
 

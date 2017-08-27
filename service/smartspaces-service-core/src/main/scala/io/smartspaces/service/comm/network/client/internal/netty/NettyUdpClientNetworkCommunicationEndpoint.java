@@ -17,12 +17,14 @@
 
 package io.smartspaces.service.comm.network.client.internal.netty;
 
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.MessageSender;
+import io.smartspaces.service.comm.network.WriteableUdpPacket;
+import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpoint;
+import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpointListener;
+import io.smartspaces.service.comm.network.internal.netty.NettyWriteableUdpPacket;
 
+import com.google.common.collect.Lists;
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -38,13 +40,11 @@ import org.jboss.netty.channel.socket.DatagramChannel;
 import org.jboss.netty.channel.socket.DatagramChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioDatagramChannelFactory;
 
-import com.google.common.collect.Lists;
-
-import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.service.comm.network.WriteableUdpPacket;
-import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpoint;
-import io.smartspaces.service.comm.network.client.UdpClientNetworkCommunicationEndpointListener;
-import io.smartspaces.service.comm.network.internal.netty.NettyWriteableUdpPacket;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * A Netty-based {@link UdpClientNetworkCommunicationEndpoint}.
@@ -160,17 +160,22 @@ public class NettyUdpClientNetworkCommunicationEndpoint implements
   }
 
   @Override
-  public void write(InetSocketAddress remoteAddress, byte[] bytes) {
-    write(remoteAddress, bytes, bytes.length);
+  public MessageSender<byte[]> newMessageSender(final InetSocketAddress remoteAddress) {
+    return new UdpMessageSender(remoteAddress);
+  }
+  
+  @Override
+  public void sendMessage(InetSocketAddress remoteAddress, byte[] bytes) {
+    sendMessage(remoteAddress, bytes, bytes.length);
   }
 
   @Override
-  public void write(InetSocketAddress remoteAddress, byte[] bytes, int length) {
-    write(remoteAddress, bytes, 0, length);
+  public void sendMessage(InetSocketAddress remoteAddress, byte[] bytes, int length) {
+    sendMessage(remoteAddress, bytes, 0, length);
   }
 
   @Override
-  public void write(InetSocketAddress remoteAddress, byte[] bytes, int offset, int length) {
+  public void sendMessage(InetSocketAddress remoteAddress, byte[] bytes, int offset, int length) {
     ChannelBuffer cb = ChannelBuffers.copiedBuffer(bytes, offset, length);
     outputChannel.write(cb, remoteAddress);
   }
@@ -229,5 +234,20 @@ public class NettyUdpClientNetworkCommunicationEndpoint implements
       log.error("Error while handling UDP client message", e.getCause());
       e.getChannel().close();
     }
+  }
+  
+  public class UdpMessageSender implements MessageSender<byte[]> {
+    
+    private final InetSocketAddress remoteAddress;
+    
+    public UdpMessageSender(InetSocketAddress remoteAddress) {
+      this.remoteAddress = remoteAddress;
+    }
+
+    @Override
+    public void sendMessage(byte[] message) {
+      NettyUdpClientNetworkCommunicationEndpoint.this.sendMessage(remoteAddress, message);
+    }
+
   }
 }

@@ -102,7 +102,7 @@ public class BaseRequestXBeeFrame implements RequestXBeeFrame {
   }
 
   @Override
-  public RequestXBeeFrame write(XBeeCommunicationEndpoint xbeeEndpoint) {
+  public RequestXBeeFrame sendMessage(XBeeCommunicationEndpoint xbeeEndpoint) {
     checksum &= 0xff;
     checksum = 0xff - checksum;
     writeByte(checksum);

@@ -290,7 +290,7 @@ public class StandardMessageRouter implements MessageRouter {
             new MessageListener<GenericMessage>() {
               @Override
               public void onNewMessage(GenericMessage message) {
-                handleNewIncomingMessage(message, rosRouteMessageSubscriber);
+                handleNewMessage(message, rosRouteMessageSubscriber);
               }
             });
       } else if ("mqtt".equals(routeProtocol)) {
@@ -313,7 +313,7 @@ public class StandardMessageRouter implements MessageRouter {
 
               @Override
               public void messageArrived(String topic, MqttMessage message) throws Exception {
-                handleNewIncomingMessage(message.getPayload(), mqttRouteMessageSubscriber);
+                handleNewMessage(message.getPayload(), mqttRouteMessageSubscriber);
               }
             });
       }
@@ -335,7 +335,7 @@ public class StandardMessageRouter implements MessageRouter {
   }
 
   @Override
-  public void handleNewIncomingMessage(Object message, RouteMessageSubscriber subscriber) {
+  public void handleNewMessage(Object message, RouteMessageSubscriber subscriber) {
     if (!protectedHandlerContext.canHandlerRun()) {
       return;
     }
@@ -392,14 +392,14 @@ public class StandardMessageRouter implements MessageRouter {
   }
 
   @Override
-  public void writeMessage(String outputChannelId, Map<String, Object> message) {
+  public void sendMessage(String outputChannelId, Map<String, Object> message) {
     try {
       protectedHandlerContext.enterHandler();
 
       if (outputChannelId != null) {
         RouteMessagePublisher output = outputPublishers.get(outputChannelId);
         if (output != null) {
-          output.writeMessage(message);
+          output.sendMessage(message);
 
         } else {
           protectedHandlerContext.handleHandlerError(

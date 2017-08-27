@@ -42,7 +42,7 @@ class ObserverWebSocketNotifier(private val webServer: WebServerActivityBehavior
         val msg = new StandardDynamicObjectBuilder
         msg.setProperty("message", message).setProperty("author", "keith")
 
-        webServer.sendAllWebSocketJson(msg.toMap())
+        webServer.sendWebSocketMessage(msg.toMap())
       })
     }
 
@@ -55,7 +55,7 @@ class ObserverWebSocketNotifier(private val webServer: WebServerActivityBehavior
         val msg = new StandardDynamicObjectBuilder
         msg.setProperty("message", message).setProperty("author", "keith")
 
-        webServer.sendAllWebSocketJson(msg.toMap())
+        webServer.sendWebSocketMessage(msg.toMap())
       })
     }
   }

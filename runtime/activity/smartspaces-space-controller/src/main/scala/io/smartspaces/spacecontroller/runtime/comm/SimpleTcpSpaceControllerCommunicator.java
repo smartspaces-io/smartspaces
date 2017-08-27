@@ -612,7 +612,7 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
    *          the fully encoded status
    */
   private void publishFullyCodedControllerStatus(Map<String, Object> statusObject) {
-    controllerAdminServer.writeMessageAllConnections(messageCodec.encodeFinalMessage(statusObject));
+    controllerAdminServer.sendMessageAllChannels(messageCodec.encodeFinalMessage(statusObject));
   }
 
   /**
@@ -658,7 +658,7 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
       statusObject.put(StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_CONTROLLER_UUID,
           controllerControl.getControllerInfo().getUuid());
       controllerAdminServer
-          .writeMessageAllConnections(messageCodec.encodeFinalMessage(statusObject));
+          .sendMessageAllChannels(messageCodec.encodeFinalMessage(statusObject));
     }
   }
 }

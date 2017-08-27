@@ -831,7 +831,7 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
     public void sendControllerRequest(String request) {
       try {
         if (connectionLatch.await(controllerConnectionTimeWait, TimeUnit.MILLISECONDS)) {
-          controllerClient.write(request);
+          controllerClient.sendMessage(request);
         } else {
           remoteControllerClientListeners.signalSpaceControllerConnectFailed(spaceController,
               controllerConnectionTimeWait);

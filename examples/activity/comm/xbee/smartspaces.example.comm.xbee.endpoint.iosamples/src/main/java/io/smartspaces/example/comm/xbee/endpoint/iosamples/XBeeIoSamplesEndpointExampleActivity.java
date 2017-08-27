@@ -88,14 +88,14 @@ public class XBeeIoSamplesEndpointExampleActivity extends BaseActivity {
 
     // Configure DIO0 to be an analog input
     xbee.newAtLocalRequestXBeeFrame(XBeeApiConstants.AT_COMMAND_D0)
-        .add(XBeeApiConstants.IO_FUNCTION_ANALOG).write(xbee);
+        .add(XBeeApiConstants.IO_FUNCTION_ANALOG).sendMessage(xbee);
 
     // Configure DIO1 to be a digital input
     xbee.newAtLocalRequestXBeeFrame(XBeeApiConstants.AT_COMMAND_D1)
-        .add(XBeeApiConstants.IO_FUNCTION_DIGITAL_INPUT).write(xbee);
+        .add(XBeeApiConstants.IO_FUNCTION_DIGITAL_INPUT).sendMessage(xbee);
 
     // Want a sample every 1000 msec (1 second), which is 03e8 hex
-    xbee.newAtLocalRequestXBeeFrame(XBeeApiConstants.AT_COMMAND_IR).add16(0x03e8).write(xbee);
+    xbee.newAtLocalRequestXBeeFrame(XBeeApiConstants.AT_COMMAND_IR).add16(0x03e8).sendMessage(xbee);
 
     // Since DH and DL are left at 0, samples are only send to coordinator.
     // Set DH and DL to specify a destination.

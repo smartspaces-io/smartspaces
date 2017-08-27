@@ -19,7 +19,7 @@ package io.smartspaces.messaging.route;
 
 import java.util.Map;
 
-import io.smartspaces.messaging.MessageWriter;
+import io.smartspaces.messaging.MessageSender;
 
 /**
  * A publisher for a message route.
@@ -29,7 +29,7 @@ import io.smartspaces.messaging.MessageWriter;
 s *
  * @author Keith M. Hughes
  */
-public interface RouteMessagePublisher extends MessageWriter<Map<String, Object>> {
+public interface RouteMessagePublisher extends MessageSender<Map<String, Object>> {
 
   /**
    * Get the channel ID for the publisher.

@@ -31,5 +31,5 @@ public interface IncomingRouteMessageHandler {
    * @param subscriber
    *          the subscriber for the message.
    */
-  void handleNewIncomingMessage(Object message, RouteMessageSubscriber subscriber);
+  void handleNewMessage(Object message, RouteMessageSubscriber subscriber);
 }

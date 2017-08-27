@@ -41,29 +41,27 @@ public class JavaWebExampleActivity extends BaseWebActivity {
   }
 
   private void sendImageUrl(String imageUrl) {
-    Map<String, Object> data = new HashMap<>();
-    data.put("imageUrl", imageUrl);
+    Map<String, Object> message = new HashMap<>();
+    message.put("imageUrl", imageUrl);
 
     // Send data to all websocket connections
-    sendAllWebSocketJson(data);
+    sendWebSocketMessage(message);
   }
 
   @Override
-  public void onNewWebSocketConnection(String connectionId) {
-    getLog().info("Got web socket connection from connection " + connectionId);
+  public void onNewWebSocketConnection(String channelId) {
+    getLog().info("Got web socket connection from connection " + channelId);
   }
 
   @Override
-  public void onWebSocketClose(String connectionId) {
-    getLog().info("Got web socket close from connection " + connectionId);
+  public void onWebSocketClose(String channelId) {
+    getLog().info("Got web socket close from connection " + channelId);
   }
 
   @Override
-  public void onWebSocketReceive(String connectionId, Object d) {
-    getLog().info("Got web socket data from connection " + connectionId);
+  public void onNewWebSocketMessage(String channelId, Map<String, Object> message) {
+    getLog().info("Got web socket data from connection " + channelId);
 
-    @SuppressWarnings("unchecked")
-    Map<String, Object> data = (Map<String, Object>) d;
-    getLog().info(data);
+    getLog().info(message);
   }
 }

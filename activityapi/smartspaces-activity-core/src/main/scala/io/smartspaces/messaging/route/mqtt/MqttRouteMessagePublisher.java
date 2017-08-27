@@ -58,8 +58,8 @@ public class MqttRouteMessagePublisher implements InternalRouteMessagePublisher 
   }
 
   @Override
-  public void writeMessage(Map<String, Object> message) {
-    publishers.publishMessage(message);
+  public void sendMessage(Map<String, Object> message) {
+    publishers.sendMessage(message);
   }
 
   @Override

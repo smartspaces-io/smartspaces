@@ -18,25 +18,30 @@
 package io.smartspaces.service.web;
 
 /**
- * A useful support class for {@link WebSocketMessageHandler} instances
+ * Handle web socket requests.
+ * 
+ * @param <M>
+ *          the message type
  *
  * @author Keith M. Hughes
  */
-public class WebSocketHandlerSupport<M> implements WebSocketMessageHandler<M> {
+public interface WebSocketMessageHandler<M> {
 
- 
-  @Override
-  public void onConnect() {
-    // Default is nothing.
-  }
+  /**
+   * The connection has just been made to the remote endpoint.
+   */
+  void onConnect();
 
-  @Override
-  public void onClose() {
-    // Default is nothing.
-  }
+  /**
+   * The connection to the remote endpoint has been closed.
+   */
+  void onClose();
 
-  @Override
-  public void onNewMessage(M message) {
-    // Default is nothing.
-  }
+  /**
+   * Data has been received from the remote endpoint. Process it.
+   *
+   * @param data
+   *          The data to process.
+   */
+  void onNewMessage(M data);
 }

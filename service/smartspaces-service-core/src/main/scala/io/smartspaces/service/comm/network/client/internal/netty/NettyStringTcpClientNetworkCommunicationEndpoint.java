@@ -45,7 +45,7 @@ import com.google.common.collect.Lists;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.messaging.MessageWriter;
+import io.smartspaces.messaging.MessageSender;
 import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpointListener;
 
@@ -112,13 +112,6 @@ public class NettyStringTcpClientNetworkCommunicationEndpoint
    * The channel for communicating with the remote server.
    */
   private Channel remoteChannel;
-
-  private MessageWriter<String> messageWriter = new MessageWriter<String>() {
-    @Override
-    public void writeMessage(String message) {
-      write(message);
-    }
-  };
 
   /**
    * Construct the endpoint.
@@ -216,12 +209,7 @@ public class NettyStringTcpClientNetworkCommunicationEndpoint
   }
 
   @Override
-  public MessageWriter<String> getMessageWriter() {
-    return messageWriter;
-  }
-
-  @Override
-  public void write(String message) {
+  public void sendMessage(String message) {
     if (remoteChannel.isOpen()) {
       remoteChannel.write(message);
     } else {

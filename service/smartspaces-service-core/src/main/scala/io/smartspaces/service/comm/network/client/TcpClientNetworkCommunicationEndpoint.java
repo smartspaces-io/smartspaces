@@ -17,7 +17,7 @@
 
 package io.smartspaces.service.comm.network.client;
 
-import io.smartspaces.messaging.MessageWriter;
+import io.smartspaces.messaging.MessageSender;
 import io.smartspaces.resource.managed.ManagedResource;
 
 import java.net.InetAddress;
@@ -30,7 +30,7 @@ import java.net.InetAddress;
  *
  * @author Keith M. Hughes
  */
-public interface TcpClientNetworkCommunicationEndpoint<T> extends ManagedResource {
+public interface TcpClientNetworkCommunicationEndpoint<T> extends MessageSender<T>, ManagedResource {
 
   /**
    * Get the remote host being connected to.
@@ -41,7 +41,7 @@ public interface TcpClientNetworkCommunicationEndpoint<T> extends ManagedResourc
 
   /**
    * Get the remote port being connected.
-   *
+   * 
    * @return the remote port being connected to
    */
   int getRemotePort();
@@ -66,19 +66,10 @@ public interface TcpClientNetworkCommunicationEndpoint<T> extends ManagedResourc
   void removeListener(TcpClientNetworkCommunicationEndpointListener<T> listener);
 
   /**
-   * Send a message to the remote client.
-   *
-   * @param message
-   *          the message to send
-   */
-  void write(T message);
-
-  /**
    * Get a message writer for this client.
    * 
    * @return a message writer
    */
-  MessageWriter<T> getMessageWriter();
 
   /**
    * Set the connection timeout.

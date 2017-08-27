@@ -22,29 +22,31 @@ package io.smartspaces.service.web.server;
  *
  * @author Keith M. Hughes
  */
-public interface MultipleConnectionWebSocketHandler {
+public interface MultipleConnectionWebSocketHandler<M> {
 
   /**
    * A New web socket connection has come in.
    *
-   * @param connectionId
+   * @param channelId
    *          the ID of the connection
    */
-  void handleNewWebSocketConnection(String connectionId);
+  void handleNewWebSocketConnection(String channelId);
 
   /**
    * A web socket connection is closing.
    *
-   * @param connectionId
+   * @param channelId
    *          the ID of the connection
    */
-  void handleWebSocketClose(String connectionId);
+  void handleWebSocketClose(String channelId);
 
   /**
-   * Data has been sent to the web socket connection.
+   * A new message has been sent to the web socket connection.
    *
-   * @param connectionId
+   * @param channelId
    *          the ID of the connection that received the data
+   * @param message
+   *          the message that has arrived
    */
-  void handleWebSocketReceive(String connectionId, Object data);
+  void handleNewWebSocketMessage(String channelId, M message);
 }

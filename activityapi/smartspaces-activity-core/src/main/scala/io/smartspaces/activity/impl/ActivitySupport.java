@@ -30,8 +30,6 @@ import io.smartspaces.configuration.Configuration;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
-import org.apache.commons.logging.Log;
-
 /**
  * Common support for building an Smart Spaces activity.
  *

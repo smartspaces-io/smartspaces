@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2015 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,28 +15,23 @@
  * the License.
  */
 
-package io.smartspaces.service.web;
+package io.smartspaces.messaging;
 
 /**
- * A useful support class for {@link WebSocketMessageHandler} instances
+ * A writer of messages.
  *
  * @author Keith M. Hughes
  */
-public class WebSocketHandlerSupport<M> implements WebSocketMessageHandler<M> {
+trait MessageSender[F] {
 
- 
-  @Override
-  public void onConnect() {
-    // Default is nothing.
-  }
-
-  @Override
-  public void onClose() {
-    // Default is nothing.
-  }
-
-  @Override
-  public void onNewMessage(M message) {
-    // Default is nothing.
-  }
+  /**
+   * Send a message.
+   *
+   * <p>
+   * The message will be serialized properly for the channel.
+   *
+   * @param message
+   *          the message to send
+   */
+  def sendMessage(message: F): Unit
 }

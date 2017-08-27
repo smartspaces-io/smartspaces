@@ -19,14 +19,14 @@ package io.smartspaces.service.web.client;
 
 import io.smartspaces.resource.managed.ManagedResource;
 import io.smartspaces.service.web.WebSocketConnection;
-import io.smartspaces.service.web.WebSocketHandler;
+import io.smartspaces.service.web.WebSocketMessageHandler;
 
 /**
  * A web socket client.
  *
  * @author Keith M. Hughes
  */
-public interface WebSocketClient extends WebSocketConnection, ManagedResource {
+public interface WebSocketClient<M> extends WebSocketConnection<M>, ManagedResource {
 
   /**
    * Set the web socket handler to be used for callbacks.
@@ -37,7 +37,7 @@ public interface WebSocketClient extends WebSocketConnection, ManagedResource {
    * @param handler
    *          the handler
    */
-  void setWebSocketHandler(WebSocketHandler handler);
+  void setWebSocketHandler(WebSocketMessageHandler<M> handler);
 
   /**
    * Ping the server.

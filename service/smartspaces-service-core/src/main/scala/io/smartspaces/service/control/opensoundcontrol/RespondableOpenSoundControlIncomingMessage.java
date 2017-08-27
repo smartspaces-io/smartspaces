@@ -38,7 +38,7 @@ public interface RespondableOpenSoundControlIncomingMessage extends OpenSoundCon
    *
    * @return the new OSC message
    */
-  OpenSoundControlOutgoingMessage sendResponseMessage(String address, Object... arguments);
+  OpenSoundControlOutgoingMessage sendMessage(String address, Object... arguments);
 
   /**
    * Create a new OSC message that is a reply to the current message.

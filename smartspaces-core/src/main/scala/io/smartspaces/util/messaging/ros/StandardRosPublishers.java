@@ -109,7 +109,7 @@ public class StandardRosPublishers<T> implements RosPublishers<T> {
   }
 
   @Override
-  public synchronized void publishMessage(T message) {
+  public synchronized void sendMessage(T message) {
     for (Publisher<T> publisher : publishers) {
       publisher.publish(message);
     }

@@ -16,6 +16,8 @@
 
 package io.smartspaces.util.messaging.mqtt
 
+import io.smartspaces.messaging.MessageSender
+
 import java.util.Set
 
 /**
@@ -26,7 +28,7 @@ import java.util.Set
  *
  * @author Keith M. Hughes
  */
-trait MqttPublishers[T] {
+trait MqttPublishers[T] extends MessageSender[T] {
 
   /**
    * Add publishers to the collection.
@@ -37,14 +39,6 @@ trait MqttPublishers[T] {
    *          the topic names
    */
   def addPublishers(mqttClient: PahoMqttClient,  topicNames: Set[String]): Unit
-
-  /**
-   * Publish a message to all publishers.
-   * 
-   * @param message
-   *          the message to be published
-   */
-  def publishMessage( message: T): Unit
 
   /**
    * Shut down all publishers.

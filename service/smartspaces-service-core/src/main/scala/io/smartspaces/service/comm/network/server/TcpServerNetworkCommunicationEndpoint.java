@@ -61,10 +61,10 @@ public interface TcpServerNetworkCommunicationEndpoint<T> extends ManagedResourc
    * @param message
    *          the message to write
    */
-  void writeMessageAllConnections(T message);
+  void sendMessageAllChannels(T message);
 
   /**
    * Close all connected clients.
    */
-  void closeAllConnections();
+  void closeAllChannels();
 }

@@ -21,10 +21,13 @@ import io.smartspaces.service.web.WebSocketConnection;
 
 /**
  * A factory for web socket handlers.
+ * 
+ * @param <M>
+ *          the type of the messages from the web socket connection
  *
  * @author Keith M. Hughes
  */
-public interface WebServerWebSocketHandlerFactory {
+public interface WebServerWebSocketHandlerFactory<M> {
 
   /**
    * Create a new web socket handler.
@@ -34,5 +37,5 @@ public interface WebServerWebSocketHandlerFactory {
    *
    * @return a ready to use web socket handler
    */
-  WebServerWebSocketHandler newWebSocketHandler(WebSocketConnection connection);
+  WebServerWebSocketHandler<M> newWebSocketHandler(WebSocketConnection<M> connection);
 }

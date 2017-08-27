@@ -441,9 +441,9 @@ public class SmartSpacesOpenSoundControlMessageParser {
     }
 
     @Override
-    public OpenSoundControlOutgoingMessage sendResponseMessage(String address, Object... arguments) {
+    public OpenSoundControlOutgoingMessage sendMessage(String address, Object... arguments) {
       OpenSoundControlOutgoingMessage message = newResponseMessage(address, arguments);
-      message.send();
+      message.sendMessage();
 
       return message;
     }

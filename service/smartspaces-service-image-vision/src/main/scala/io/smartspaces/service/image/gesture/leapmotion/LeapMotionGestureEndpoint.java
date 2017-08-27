@@ -25,6 +25,7 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 
 import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.codec.MapStringMessageCodec;
 import io.smartspaces.service.image.gesture.Gesture;
 import io.smartspaces.service.image.gesture.Gesture.GestureState;
 import io.smartspaces.service.image.gesture.GestureEndpoint;
@@ -33,7 +34,7 @@ import io.smartspaces.service.image.gesture.GestureHandListener;
 import io.smartspaces.service.image.gesture.GestureListener;
 import io.smartspaces.service.image.gesture.GesturePointable;
 import io.smartspaces.service.image.gesture.GesturePointableListener;
-import io.smartspaces.service.web.WebSocketHandler;
+import io.smartspaces.service.web.WebSocketMessageHandler;
 import io.smartspaces.service.web.client.WebSocketClient;
 import io.smartspaces.service.web.client.WebSocketClientService;
 import io.smartspaces.system.SmartSpacesEnvironment;
@@ -311,7 +312,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
   /**
    * Websocket client for talking to the leapd server.
    */
-  private WebSocketClient webSocketClient;
+  private WebSocketClient<Map<String, Object>> webSocketClient;
 
   /**
    * Listeners for pointable events.
@@ -380,10 +381,10 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
 
     webSocketClient =
         service.newWebSocketClient("ws://" + leapdWebsocketHost + ":" + leapdWebsocketPort
-            + "/v4.json", new WebSocketHandler() {
+            + "/v4.json", new WebSocketMessageHandler<Map<String, Object>>() {
           @Override
-          public void onReceive(Object data) {
-            handleGestureData(data);
+          public void onNewMessage(Map<String, Object> message) {
+            handleGestureData(message);
           }
 
           @Override
@@ -396,7 +397,7 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
             // TODO Auto-generated method stub
 
           }
-        }, log);
+        }, new MapStringMessageCodec(), log);
     webSocketClient.startup();
   }
 
@@ -442,10 +443,10 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * Handle the initial connection to leapd.
    */
   private void handleLeapdConnect() {
-    Map<String, Object> data = new HashMap<>();
-    data.put(LEAPMOTION_NAME_CONFIGURATION_ENABLE_GESTURES, true);
-    data.put(LEAPMOTION_NAME_CONFIGURATION_ENABLE_BACKGROUND, true);
-    webSocketClient.writeDataAsJson(data);
+    Map<String, Object> message = new HashMap<>();
+    message.put(LEAPMOTION_NAME_CONFIGURATION_ENABLE_GESTURES, true);
+    message.put(LEAPMOTION_NAME_CONFIGURATION_ENABLE_BACKGROUND, true);
+    webSocketClient.sendMessage(message);
   }
 
   /**
@@ -454,42 +455,42 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
    * @param data
    *          the data from the Leap Motion
    */
-  private void handleGestureData(Object data) {
-    if (data != null) {
-      DynamicObject gdata = new StandardDynamicObjectNavigator(data);
-      processPointables(gdata);
-      processHands(gdata);
-      processGestures(gdata);
+  private void handleGestureData(Map<String, Object> message) {
+    if (message != null) {
+      DynamicObject gmessage = new StandardDynamicObjectNavigator(message);
+      processPointables(gmessage);
+      processHands(gmessage);
+      processGestures(gmessage);
     }
   }
 
   /**
    * Process any pointables in the data.
    *
-   * @param gdata
+   * @param gmessage
    *          the data from the Leap Motion
    */
-  private void processPointables(DynamicObject gdata) {
-    if (!pointableListeners.isEmpty() && gdata.containsProperty(LEAPMOTION_NAME_POINTABLES)) {
-      gdata.down(LEAPMOTION_NAME_POINTABLES);
-      int numPointables = gdata.getSize();
+  private void processPointables(DynamicObject gmessage) {
+    if (!pointableListeners.isEmpty() && gmessage.containsProperty(LEAPMOTION_NAME_POINTABLES)) {
+      gmessage.down(LEAPMOTION_NAME_POINTABLES);
+      int numPointables = gmessage.getSize();
       if (numPointables > 0) {
-        processPointables(gdata, numPointables);
+        processPointables(gmessage, numPointables);
       }
-      gdata.up();
+      gmessage.up();
     }
   }
 
   /**
    * There are pointables, so extract their data and send it to the listeners.
    *
-   * @param gdata
+   * @param gmessage
    *          the Leap Motion data
    * @param numPointables
    *          the number of pointables
    */
-  private void processPointables(DynamicObject gdata, int numPointables) {
-    Map<String, GesturePointable> pointables = getPointables(gdata, numPointables);
+  private void processPointables(DynamicObject gmessage, int numPointables) {
+    Map<String, GesturePointable> pointables = getPointables(gmessage, numPointables);
 
     for (GesturePointableListener listener : pointableListeners) {
       try {
@@ -503,40 +504,40 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
   /**
    * Get the data for all pointables.
    *
-   * @param gdata
+   * @param gmessage
    *          data from the Leap Motion
    * @param numPointables
    *          the number of pointables
    *
    * @return a map from pointable IDs to pointables
    */
-  private Map<String, GesturePointable> getPointables(DynamicObject gdata, int numPointables) {
+  private Map<String, GesturePointable> getPointables(DynamicObject gmessage, int numPointables) {
     Map<String, GesturePointable> pointables = new HashMap<>();
 
     for (int pos = 0; pos < numPointables; pos++) {
-      gdata.down(pos);
+      gmessage.down(pos);
 
-      gdata.down(LEAPMOTION_NAME_POINTABLE_DIRECTION);
-      Vector3 direction = new Vector3(gdata.getDouble(0), gdata.getDouble(1), gdata.getDouble(2));
-      gdata.up();
+      gmessage.down(LEAPMOTION_NAME_POINTABLE_DIRECTION);
+      Vector3 direction = new Vector3(gmessage.getDouble(0), gmessage.getDouble(1), gmessage.getDouble(2));
+      gmessage.up();
 
-      gdata.down(LEAPMOTION_NAME_POINTABLE_TIP_POSITION);
-      Vector3 tipPosition = new Vector3(gdata.getDouble(0), gdata.getDouble(1), gdata.getDouble(2));
-      gdata.up();
+      gmessage.down(LEAPMOTION_NAME_POINTABLE_TIP_POSITION);
+      Vector3 tipPosition = new Vector3(gmessage.getDouble(0), gmessage.getDouble(1), gmessage.getDouble(2));
+      gmessage.up();
 
-      gdata.down(LEAPMOTION_NAME_POINTABLE_TIP_VELOCITY);
-      Vector3 tipVelocity = new Vector3(gdata.getDouble(0), gdata.getDouble(1), gdata.getDouble(2));
-      gdata.up();
+      gmessage.down(LEAPMOTION_NAME_POINTABLE_TIP_VELOCITY);
+      Vector3 tipVelocity = new Vector3(gmessage.getDouble(0), gmessage.getDouble(1), gmessage.getDouble(2));
+      gmessage.up();
 
       GesturePointable pointable =
-          new GesturePointable(gdata.getInteger(LEAPMOTION_NAME_POINTABLE_ID).toString(),
+          new GesturePointable(gmessage.getInteger(LEAPMOTION_NAME_POINTABLE_ID).toString(),
               tipPosition, direction, tipVelocity,
-              gdata.getDouble(LEAPMOTION_NAME_POINTABLE_LENGTH),
-              gdata.getBoolean(LEAPMOTION_NAME_POINTABLE_TOOL));
+              gmessage.getDouble(LEAPMOTION_NAME_POINTABLE_LENGTH),
+              gmessage.getBoolean(LEAPMOTION_NAME_POINTABLE_TOOL));
 
       pointables.put(pointable.getId(), pointable);
 
-      gdata.up();
+      gmessage.up();
     }
     return pointables;
   }
@@ -544,30 +545,30 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
   /**
    * Process any hands in the data.
    *
-   * @param gdata
+   * @param gmessage
    *          the data from the Leap Motion
    */
-  private void processHands(DynamicObject gdata) {
-    if (!handListeners.isEmpty() && gdata.containsProperty(LEAPMOTION_NAME_HANDS)) {
-      gdata.down(LEAPMOTION_NAME_HANDS);
-      int numHands = gdata.getSize();
+  private void processHands(DynamicObject gmessage) {
+    if (!handListeners.isEmpty() && gmessage.containsProperty(LEAPMOTION_NAME_HANDS)) {
+      gmessage.down(LEAPMOTION_NAME_HANDS);
+      int numHands = gmessage.getSize();
       if (numHands > 0) {
-        processHands(gdata, numHands);
+        processHands(gmessage, numHands);
       }
-      gdata.up();
+      gmessage.up();
     }
   }
 
   /**
    * There are hands, so extract their data and send it to the listeners.
    *
-   * @param gdata
+   * @param gmessage
    *          the Leap Motion data
    * @param numHands
    *          the number of hands
    */
-  private void processHands(DynamicObject gdata, int numHands) {
-    Map<String, GestureHand> hands = getHands(gdata, numHands);
+  private void processHands(DynamicObject gmessage, int numHands) {
+    Map<String, GestureHand> hands = getHands(gmessage, numHands);
 
     for (GestureHandListener listener : handListeners) {
       try {
@@ -581,50 +582,50 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
   /**
    * Get the data for all hands.
    *
-   * @param gdata
+   * @param gmessage
    *          data from the Leap Motion
    * @param numHands
    *          the number of hands
    *
    * @return a map from hand IDs to hands
    */
-  private Map<String, GestureHand> getHands(DynamicObject gdata, int numHands) {
+  private Map<String, GestureHand> getHands(DynamicObject gmessage, int numHands) {
     Map<String, GestureHand> hands = new HashMap<>();
 
     for (int pos = 0; pos < numHands; pos++) {
-      gdata.down(pos);
+      gmessage.down(pos);
 
-      gdata.down(LEAPMOTION_NAME_HAND_DIRECTION);
-      Vector3 direction = new Vector3(gdata.getDouble(0), gdata.getDouble(1), gdata.getDouble(2));
-      gdata.up();
+      gmessage.down(LEAPMOTION_NAME_HAND_DIRECTION);
+      Vector3 direction = new Vector3(gmessage.getDouble(0), gmessage.getDouble(1), gmessage.getDouble(2));
+      gmessage.up();
 
-      gdata.down(LEAPMOTION_NAME_HAND_PALM_POSITION);
+      gmessage.down(LEAPMOTION_NAME_HAND_PALM_POSITION);
       Vector3 palmPosition =
-          new Vector3(gdata.getDouble(0), gdata.getDouble(1), gdata.getDouble(2));
-      gdata.up();
+          new Vector3(gmessage.getDouble(0), gmessage.getDouble(1), gmessage.getDouble(2));
+      gmessage.up();
 
-      gdata.down(LEAPMOTION_NAME_HAND_PALM_NORMAL);
-      Vector3 palmNormal = new Vector3(gdata.getDouble(0), gdata.getDouble(1), gdata.getDouble(2));
-      gdata.up();
+      gmessage.down(LEAPMOTION_NAME_HAND_PALM_NORMAL);
+      Vector3 palmNormal = new Vector3(gmessage.getDouble(0), gmessage.getDouble(1), gmessage.getDouble(2));
+      gmessage.up();
 
-      gdata.down(LEAPMOTION_NAME_HAND_PALM_VELOCITY);
+      gmessage.down(LEAPMOTION_NAME_HAND_PALM_VELOCITY);
       Vector3 palmVelocity =
-          new Vector3(gdata.getDouble(0), gdata.getDouble(1), gdata.getDouble(2));
-      gdata.up();
+          new Vector3(gmessage.getDouble(0), gmessage.getDouble(1), gmessage.getDouble(2));
+      gmessage.up();
 
-      gdata.down(LEAPMOTION_NAME_HAND_SPHERE_CENTER);
+      gmessage.down(LEAPMOTION_NAME_HAND_SPHERE_CENTER);
       Vector3 sphereCenter =
-          new Vector3(gdata.getDouble(0), gdata.getDouble(1), gdata.getDouble(2));
-      gdata.up();
+          new Vector3(gmessage.getDouble(0), gmessage.getDouble(1), gmessage.getDouble(2));
+      gmessage.up();
 
       GestureHand hand =
-          new GestureHand(gdata.getInteger(LEAPMOTION_NAME_HAND_ID).toString(), palmPosition,
+          new GestureHand(gmessage.getInteger(LEAPMOTION_NAME_HAND_ID).toString(), palmPosition,
               palmVelocity, palmNormal, direction, sphereCenter,
-              gdata.getDouble(LEAPMOTION_NAME_HAND_SPHERE_RADIUS));
+              gmessage.getDouble(LEAPMOTION_NAME_HAND_SPHERE_RADIUS));
 
       hands.put(hand.getId(), hand);
 
-      gdata.up();
+      gmessage.up();
     }
 
     return hands;
@@ -633,30 +634,30 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
   /**
    * Process any gestures in the data.
    *
-   * @param gdata
+   * @param gmessage
    *          the data from the Leap Motion
    */
-  private void processGestures(DynamicObject gdata) {
-    if (!gestureListeners.isEmpty() && gdata.containsProperty(LEAPMOTION_NAME_GESTURES)) {
-      gdata.down(LEAPMOTION_NAME_GESTURES);
-      int numGestures = gdata.getSize();
+  private void processGestures(DynamicObject gmessage) {
+    if (!gestureListeners.isEmpty() && gmessage.containsProperty(LEAPMOTION_NAME_GESTURES)) {
+      gmessage.down(LEAPMOTION_NAME_GESTURES);
+      int numGestures = gmessage.getSize();
       if (numGestures > 0) {
-        processGestures(gdata, numGestures);
+        processGestures(gmessage, numGestures);
       }
-      gdata.up();
+      gmessage.up();
     }
   }
 
   /**
    * There are gestures, so extract their data and send it to the listeners.
    *
-   * @param gdata
+   * @param gmessage
    *          the Leap Motion data
    * @param numGestures
    *          the number of gestures
    */
-  private void processGestures(DynamicObject gdata, int numGestures) {
-    Map<String, Gesture> gestures = getGestures(gdata, numGestures);
+  private void processGestures(DynamicObject gmessage, int numGestures) {
+    Map<String, Gesture> gestures = getGestures(gmessage, numGestures);
 
     for (GestureListener listener : gestureListeners) {
       try {
@@ -670,28 +671,28 @@ public class LeapMotionGestureEndpoint implements GestureEndpoint {
   /**
    * Get the data for all gestures.
    *
-   * @param gdata
+   * @param gmessage
    *          data from the Leap Motion
    * @param numGestures
    *          the number of gestures
    *
    * @return the map of gesture IDs to gestures
    */
-  private Map<String, Gesture> getGestures(DynamicObject gdata, int numGestures) {
+  private Map<String, Gesture> getGestures(DynamicObject gmessage, int numGestures) {
     Map<String, Gesture> gestures = new HashMap<>();
 
     for (int pos = 0; pos < numGestures; pos++) {
-      gdata.down(pos);
+      gmessage.down(pos);
 
       Gesture gesture =
-          new Gesture(gdata.getInteger(LEAPMOTION_NAME_GESTURE_ID).toString(),
-              gdata.getString(LEAPMOTION_NAME_GESTURE_TYPE),
-              LEAP_MOTION_TO_GESTURE_STATES.get(gdata.getString(LEAPMOTION_NAME_GESTURE_STATE)),
-              gdata.getDouble(LEAPMOTION_NAME_GESTURE_DURATION));
+          new Gesture(gmessage.getInteger(LEAPMOTION_NAME_GESTURE_ID).toString(),
+              gmessage.getString(LEAPMOTION_NAME_GESTURE_TYPE),
+              LEAP_MOTION_TO_GESTURE_STATES.get(gmessage.getString(LEAPMOTION_NAME_GESTURE_STATE)),
+              gmessage.getDouble(LEAPMOTION_NAME_GESTURE_DURATION));
 
       gestures.put(gesture.getId(), gesture);
 
-      gdata.up();
+      gmessage.up();
     }
 
     return gestures;

@@ -117,7 +117,7 @@ public class XBeeIoSamplesCoordinatorExampleActivity extends BaseActivity {
     //
     // Using the escape code for the frame ID to make sure escapes are
     // happening properly.
-    xbee.newAtLocalRequestXBeeFrame(XBeeApiConstants.AT_COMMAND_AP, 0x7d).write(xbee);
+    xbee.newAtLocalRequestXBeeFrame(XBeeApiConstants.AT_COMMAND_AP, 0x7d).sendMessage(xbee);
 
     getLog().info("Wrote AT command");
 
@@ -125,7 +125,7 @@ public class XBeeIoSamplesCoordinatorExampleActivity extends BaseActivity {
     XBeeAddress64 remoteAddress =
         xbee.newXBeeAddress64(getConfiguration().getRequiredPropertyString(
             CONFIGURATION_PROPERTY_XBEE_REMOTE_ADDRESS64));
-    xbee.newTxRequestXBeeFrame(remoteAddress, 0x03, 0, 0).add16(1234).write(xbee);
+    xbee.newTxRequestXBeeFrame(remoteAddress, 0x03, 0, 0).add16(1234).sendMessage(xbee);
 
     getLog().info("Wrote TX request");
 
@@ -133,19 +133,19 @@ public class XBeeIoSamplesCoordinatorExampleActivity extends BaseActivity {
 
     // Configure DIO0 to be an analog input
     xbee.newAtRemoteRequestXBeeFrame(remoteAddress, XBeeApiConstants.AT_COMMAND_D0, 0)
-        .add(XBeeApiConstants.IO_FUNCTION_ANALOG).write(xbee);
+        .add(XBeeApiConstants.IO_FUNCTION_ANALOG).sendMessage(xbee);
 
     SmartSpacesUtilities.delay(1000);
 
     // Configure DIO1 to be a digital input
     xbee.newAtRemoteRequestXBeeFrame(remoteAddress, XBeeApiConstants.AT_COMMAND_D1, 0)
-        .add(XBeeApiConstants.IO_FUNCTION_DIGITAL_INPUT).write(xbee);
+        .add(XBeeApiConstants.IO_FUNCTION_DIGITAL_INPUT).sendMessage(xbee);
 
     SmartSpacesUtilities.delay(1000);
 
     // Want a sample every 1000 msec (1 second), which is 03e8 hex
     xbee.newAtRemoteRequestXBeeFrame(remoteAddress, XBeeApiConstants.AT_COMMAND_IR, 0)
-        .add16(0x03e8).write(xbee);
+        .add16(0x03e8).sendMessage(xbee);
 
     // Since DH and DL are left at 0, samples are only send to coordinator.
     // Set DH and DL to specify a destination.

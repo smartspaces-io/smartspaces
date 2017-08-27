@@ -26,6 +26,7 @@ import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * An activity component which creates a web server.
@@ -111,13 +112,15 @@ public interface WebServerActivityComponent extends ActivityComponent {
    * . But if called both before and after, the second call will be the one
    * used.
    *
+   * @param <M>
+   *          the type of messages coming over the 
    * @param webSocketHandlerFactory
    *          the webSocketHandlerFactory to set
    *
    * @return the web server component this method was called on
    */
   WebServerActivityComponent setWebSocketHandlerFactory(
-      WebServerWebSocketHandlerFactory webSocketHandlerFactory);
+      WebServerWebSocketHandlerFactory<Map<String, Object>> webSocketHandlerFactory);
 
   /**
    * Add static content for the web server to serve.

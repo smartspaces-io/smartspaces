@@ -101,7 +101,7 @@ public class SmartSpacesOpenSoundControlOutgoingMessage implements OpenSoundCont
   }
 
   @Override
-  public void send() {
+  public void sendMessage() {
     message.write(remoteAddress);
   }
 

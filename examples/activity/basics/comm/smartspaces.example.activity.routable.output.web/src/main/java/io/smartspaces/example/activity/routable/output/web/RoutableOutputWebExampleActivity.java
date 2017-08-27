@@ -33,16 +33,14 @@ import io.smartspaces.activity.impl.web.BaseRoutableWebActivity;
 public class RoutableOutputWebExampleActivity extends BaseRoutableWebActivity {
 
   @Override
-  public void onWebSocketReceive(String connectionId, Object d) {
-    getLog().info("Got web socket data from connection " + connectionId);
+  public void onNewWebSocketMessage(String channelId, Map<String, Object> message) {
+    getLog().info("Got web socket data from connection " + channelId);
 
-    @SuppressWarnings("unchecked")
-    Map<String, Object> data = (Map<String, Object>) d;
-    getLog().info(data);
+    getLog().info(message);
     if (isActivated()) {
       // In this example, just pass though the message as it came across.
       // This is not always the best choice.
-      sendRouteMessage("output1", data);
+      sendRouteMessage("output1", message);
     }
   }
 }

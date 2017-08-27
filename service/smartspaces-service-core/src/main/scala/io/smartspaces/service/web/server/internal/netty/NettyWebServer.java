@@ -22,6 +22,7 @@ import static org.jboss.netty.channel.Channels.pipeline;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.service.web.server.HttpAuthProvider;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
@@ -351,9 +352,9 @@ public class NettyWebServer implements WebServer {
   }
 
   @Override
-  public void setWebSocketHandlerFactory(String webSocketUriPrefix,
-      WebServerWebSocketHandlerFactory webSocketHandlerFactory) {
-    serverHandler.setWebSocketHandlerFactory(webSocketUriPrefix, webSocketHandlerFactory);
+  public <M> void setWebSocketHandlerFactory(String webSocketUriPrefix,
+      WebServerWebSocketHandlerFactory<M> webSocketHandlerFactory, MessageCodec<M, String> messageCodec) {
+    serverHandler.setWebSocketHandlerFactory(webSocketUriPrefix, webSocketHandlerFactory, messageCodec);
   }
 
   @Override

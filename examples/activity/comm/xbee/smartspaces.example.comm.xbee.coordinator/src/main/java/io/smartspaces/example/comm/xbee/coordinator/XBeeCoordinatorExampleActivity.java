@@ -117,7 +117,7 @@ public class XBeeCoordinatorExampleActivity extends BaseActivity {
     //
     // Using the escape code for the frame ID to make sure escapes are
     // happening properly.
-    xbee.newAtLocalRequestXBeeFrame(XBeeApiConstants.AT_COMMAND_AP, 0x7d).write(xbee);
+    xbee.newAtLocalRequestXBeeFrame(XBeeApiConstants.AT_COMMAND_AP, 0x7d).sendMessage(xbee);
 
     getLog().info("Wrote AT command");
 
@@ -125,7 +125,7 @@ public class XBeeCoordinatorExampleActivity extends BaseActivity {
     XBeeAddress64 remoteAddress =
         xbee.newXBeeAddress64(getConfiguration().getRequiredPropertyString(
             CONFIGURATION_PROPERTY_XBEE_REMOTE_ADDRESS64));
-    xbee.newTxRequestXBeeFrame(remoteAddress, 0x03, 0, 0).add16(1234).write(xbee);
+    xbee.newTxRequestXBeeFrame(remoteAddress, 0x03, 0, 0).add16(1234).sendMessage(xbee);
 
     getLog().info("Wrote TX request");
   }

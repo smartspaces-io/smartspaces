@@ -126,7 +126,7 @@ public class NettyUdpServicesTest {
     serverEndpoint.startup();
 
     clientEndpoint.startup();
-    clientEndpoint.write(remoteAddress, requestBytes);
+    clientEndpoint.sendMessage(remoteAddress, requestBytes);
 
     Assert.assertTrue("Response took too long", countdownLatch.await(5, TimeUnit.SECONDS));
     Assert.assertEquals(expectedRequestMessage, receivedRequestMessage.get());

@@ -506,6 +506,18 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
       throw new DynamicObjectSmartSpacesException("Could not go up, was at root or blocked");
     }
   }
+  
+  @Override
+  public DynamicObject top() {
+    if (!blocks.isEmpty()) {
+      resetToBlock(false);
+    } else if (!nav.isEmpty()) {
+      nav.setSize(0);
+      setCurrentAsObject(root);
+    }
+    
+    return this;
+  }
 
   /**
    * Set the current item for the navigator as an object.

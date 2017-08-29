@@ -546,6 +546,13 @@ public interface DynamicObject {
   DynamicObject up() throws DynamicObjectSmartSpacesException;
 
   /**
+   * Move up to as far as can currently be gone.
+   *
+   * @return this dynamic object
+   */
+  DynamicObject top();
+
+  /**
    * Get an iterator for walking through the current object.
    *
    * <p>

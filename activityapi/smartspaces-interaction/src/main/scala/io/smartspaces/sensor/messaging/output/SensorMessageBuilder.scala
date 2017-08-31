@@ -59,10 +59,10 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
   messageBuilder.newObject(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
 
   /**
-   * Add in a timestamp.
+   * Add in a timestamp for all channels in the message.
    *
    * @param timestamp
-   *       the vtimestamp for the data
+   *       the timestamp for the data
    *
    * @return this builder
    */
@@ -104,6 +104,8 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
    *       the type of the channel data
    * @param value
    *       the value of the channel data
+   * @param addition
+   *       the additonal value
    *
    * @return this builder
    */
@@ -113,6 +115,61 @@ class StandardSensorMessageBuilder(sensorId: String, messageType: String) {
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, channelType)
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE, value)
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_ADDITION, addition)
+    
+    messageBuilder.up
+
+    this
+  }
+
+  /**
+   * Add in data for a channel.
+   *
+   * @param channelId
+   *       the ID of the channel
+   * @param channelType
+   *       the type of the channel data
+   * @param value
+   *       the value of the channel data
+   * @param timestamp
+   *       timestamp for the channel data
+   *
+   * @return this builder
+   */
+  def addChannelData(channelId: String, channelType: String, value: Any, timestamp: Long): StandardSensorMessageBuilder = {
+    messageBuilder.newObject(channelId)
+
+    messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, channelType)
+    messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE, value)
+    messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, timestamp)
+    
+    messageBuilder.up
+
+    this
+  }
+
+  /**
+   * Add in data for a channel.
+   *
+   * @param channelId
+   *       the ID of the channel
+   * @param channelType
+   *       the type of the channel data
+   * @param value
+   *       the value of the channel data
+   * @param addition
+   *       the additonal value
+   * @param timestamp
+   *       timestamp for the channel data
+   *
+   * @return this builder
+   */
+  def addChannelData(channelId: String, channelType: String, value: Any, addition: Any, timestamp: Long): StandardSensorMessageBuilder = {
+    messageBuilder.newObject(channelId)
+
+    messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, channelType)
+    messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE, value)
+    messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_ADDITION, addition)
+    messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, timestamp)
     
     messageBuilder.up
 

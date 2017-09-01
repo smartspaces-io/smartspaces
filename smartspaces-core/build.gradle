@@ -14,7 +14,18 @@
  * the License.
  */
 
+apply plugin: 'antlr'
+
+configurations {
+	compile {
+		extendsFrom = extendsFrom.findAll { it != configurations.antlr }
+	}
+}
+
 dependencies {
+  antlr "org.antlr:antlr4:4.7"
+  compile group: "org.antlr", name: "antlr4-runtime", version: "4.7"
+	
   compile project(':rosjava:rosjava_osgi')
   compile project(':smartspaces-bootstrap-core')
 

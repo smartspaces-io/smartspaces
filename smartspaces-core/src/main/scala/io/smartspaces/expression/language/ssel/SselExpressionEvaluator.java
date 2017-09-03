@@ -25,6 +25,7 @@ import io.smartspaces.expression.language.ssel.SmartspacesexpressionlanguagePars
 import io.smartspaces.expression.language.ssel.SmartspacesexpressionlanguageParserParser.FunctionCallContext;
 import io.smartspaces.expression.language.ssel.SmartspacesexpressionlanguageParserParser.FunctionNameContext;
 import io.smartspaces.expression.language.ssel.SmartspacesexpressionlanguageParserParser.IntegerContext;
+import io.smartspaces.expression.language.ssel.SmartspacesexpressionlanguageParserParser.StringContext;
 import io.smartspaces.expression.language.ssel.SmartspacesexpressionlanguageParserParser.SymbolContext;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -45,13 +46,12 @@ public class SselExpressionEvaluator {
     env.set("a.b.c", "glorp");
     SselExpressionEvaluator evaluator = new SselExpressionEvaluator(env);
 
-    Object result = evaluator.evaluate("foo($a.b.c,1)");
+    Object result = evaluator.evaluate("foo($a.b.c,1, \"fo\\\"op\", bar(1,\"2\"), 3)");
     System.out.println(result);
   }
 
   private EvaluationEnvironment evaluationEnvironment;
-  
-  
+
   public SselExpressionEvaluator(EvaluationEnvironment evaluationEnvironment) {
     this.evaluationEnvironment = evaluationEnvironment;
   }
@@ -77,57 +77,69 @@ public class SselExpressionEvaluator {
     }
   }
 
+  /**
+   * The ANTLR 4 visitor that walks an expression tree.
+   * 
+   * @author Keith M. Hughes
+   */
   class ExpressionVisitor extends SmartspacesexpressionlanguageParserBaseVisitor<Object> {
-    
+
     /**
      * The stack of function calls.
      */
     private Stack<FunctionCall> functions = new Stack<>();
-    
+
     @Override
-    public Object
-        visitSymbol(SymbolContext context) {
-      
-      String variableName = context.getText().substring(1);
-      System.out.println("Looking up " + variableName);
-      
-      return evaluationEnvironment.lookupVariableValue(variableName);
+    public Object visitSymbol(SymbolContext context) {
+
+      String symbol = context.getText().substring(1);
+
+      return evaluationEnvironment.lookupVariableValue(symbol);
     }
-    
+
     @Override
     public Object visitFunctionCall(FunctionCallContext context) {
-      
+
       functions.push(new FunctionCall());
-      
+
       visitChildren(context);
-      
+
       FunctionCall builtCall = functions.pop();
       System.out.println(builtCall);
-      
+
       return null;
     }
-    
+
     @Override
     public Object visitFunctionName(FunctionNameContext context) {
-      
+
       String functionName = context.getText();
-      System.out.println("Function name " + functionName);
+
       functions.peek().functionName_$eq(functionName);
-      
+
       return null;
     }
-    
+
     @Override
     public Object visitFunctionArgument(FunctionArgumentContext context) {
-      
+
       functions.peek().addArg(visitChildren(context));
-      
+
       return null;
     }
-    
+
     @Override
     public Object visitInteger(IntegerContext context) {
       return Long.parseLong(context.getText());
+    }
+
+    @Override
+    public Object visitString(StringContext context) {
+      String value = context.getText();
+      value = value.substring(1);
+      value = value.substring(0, value.length() - 1);
+
+      return value;
     }
   }
 }

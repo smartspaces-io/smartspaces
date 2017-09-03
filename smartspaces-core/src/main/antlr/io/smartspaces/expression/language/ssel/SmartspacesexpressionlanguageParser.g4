@@ -12,6 +12,8 @@
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
+ *
+ * Portions are from the Java Anlter4 grammar on GitHub, that is covered by the BSD License.
  */
 
 grammar SmartspacesexpressionlanguageParser ;
@@ -25,14 +27,22 @@ options {
 
 @header {
 
+
+
+
+
   package io.smartspaces.expression.language.ssel;
 
   //import ;
 
+
+
+
+
 }
 
 expression
-	:     constant
+	: constant
 	| symbol
 	| functionCall ;
 
@@ -49,10 +59,14 @@ functionArgument
 	: expression ;
 
 constant
-	:      integer ;
+	: integer
+	| string ;
 
 integer
 	: INTEGER ;
+
+string
+	: StringLiteral ;
 
 INTEGER
 	: Digits ;
@@ -75,8 +89,46 @@ WS
 FUNCTION_NAME
 	: NameComponent ;
 
-ENSYMBOL
-	: RightCurlyBrace ;
+StringLiteral
+	: '"' StringCharacters? '"' ;
+
+fragment HexNumeral
+	: '0' [xX] HexDigits ;
+
+fragment HexDigits
+	: HexDigit+ ;
+
+fragment HexDigit
+	: [0-9a-fA-F] ;
+
+fragment OctalDigits
+	: OctalDigit+ ;
+
+fragment OctalDigit
+	: [0-7] ;
+
+fragment StringCharacters
+	: StringCharacter+ ;
+
+fragment StringCharacter
+	: ~["\\]
+	| EscapeSequence ;
+
+fragment EscapeSequence
+	: '\\' [btnfr"'\\]
+	| OctalEscape
+	| UnicodeEscape ;
+
+fragment OctalEscape
+	: '\\' OctalDigit
+	| '\\' OctalDigit OctalDigit
+	| '\\' ZeroToThree OctalDigit OctalDigit ;
+
+fragment UnicodeEscape
+	: '\\' 'u' HexDigit HexDigit HexDigit HexDigit ;
+
+fragment ZeroToThree
+	: [0-3] ;
 
 fragment Comma
 	: ',' ;

@@ -23,8 +23,8 @@ configurations {
 }
 
 dependencies {
-  antlr "org.antlr:antlr4:4.7"
-  compile group: "org.antlr", name: "antlr4-runtime", version: "4.7"
+  antlr "org.antlr:antlr4:4.5.3"
+  compile group: "org.antlr", name: "antlr4-runtime", version: "4.5.3"
 	
   compile project(':rosjava:rosjava_osgi')
   compile project(':smartspaces-bootstrap-core')
@@ -71,9 +71,10 @@ dependencies {
   compile 'org.bouncycastle:bcpkix-jdk15on:1.56'
   
   provided "${project.ext.osgiContainerDependency}"
+}
 
-  testCompile 'junit:junit:4.8.2'
-  testCompile 'org.mockito:mockito-all:1.9.5'
+generateGrammarSource {
+	arguments += ["-visitor", "-long-messages"]
 }
 
 test {

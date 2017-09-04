@@ -16,7 +16,7 @@
 
 package io.smartspaces.sensor.messaging.output
 
-import io.smartspaces.messaging.route.RouteMessagePublisher
+import io.smartspaces.messaging.route.RouteMessageSender
 import io.smartspaces.sensor.messaging.messages.SensorMessages
 import io.smartspaces.sensor.messaging.messages.StandardSensorData
 
@@ -25,19 +25,19 @@ import io.smartspaces.sensor.messaging.messages.StandardSensorData
  *
  * @author Keith M. Hughes
  */
-class RouteMarkerSensorMessageWriter(sensorId: String, routeMessagePublisher: RouteMessagePublisher) extends MarkerSensorMessageWriter {
+class RouteMarkerSensorMessageSender(sensorId: String, messageSender: RouteMessageSender) extends MarkerSensorMessageSender {
 
-  override def sendMarkerMessage(markerId: String): Unit = {
-    val message = new StandardSensorMessageBuilder(sensorId, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
+  override def sendSimpleMarkerMessage(markerId: String): Unit = {
+    val message = StandardSensorMessageBuilder.newMeasurementMessage(sensorId)
     
     message.addChannelData(StandardSensorData.SENSOR_CHANNEL_NAME_MARKER, StandardSensorData.SENSOR_TYPE_MARKER_SIMPLE, markerId)
     
-    routeMessagePublisher.sendMessage(message.toMap())
+    messageSender.sendMessage(message.toMap())
   }
   
   override def sendHeartbeatMessage(): Unit = {
-    val message = new StandardSensorMessageBuilder(sensorId, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_HEARTBEAT)
+    val message = StandardSensorMessageBuilder.newHeartbeatMessage(sensorId)
     
-    routeMessagePublisher.sendMessage(message.toMap())
+    messageSender.sendMessage(message.toMap())
   }
 }

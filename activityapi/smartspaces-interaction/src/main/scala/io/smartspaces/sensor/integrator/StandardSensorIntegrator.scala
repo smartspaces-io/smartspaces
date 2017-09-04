@@ -161,7 +161,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
 
     sensorHandler.addSensedEntitySensorListener(new SensedEntitySensorListener() {
 
-      override def handleSensorData(handler: SensedEntitySensorHandler, timestamp: Long,
+      override def handleNewSensorData(handler: SensedEntitySensorHandler, timestamp: Long,
         sensor: SensorEntityModel, sensedEntity: SensedEntityModel,
         data: DynamicObject): Unit = {
         log.info(s"Got data at ${timestamp.toString} from sensor ${sensor} for entity ${sensedEntity}: ${data.asMap()}")

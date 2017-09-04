@@ -60,46 +60,69 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
     this
   }
 
-  override def handleSensorData(handler: SensedEntitySensorHandler, timestamp: Long,
-    sensor: SensorEntityModel, sensedEntity: SensedEntityModel, data: DynamicObject): Unit = {
+  override def handleNewSensorData(handler: SensedEntitySensorHandler, messageReceivedTimestamp: Long,
+    sensor: SensorEntityModel, sensedEntity: SensedEntityModel, message: DynamicObject): Unit = {
 
-    val messageType = data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
+    val messageType = message.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
 
     log.info(s"Updating model with message type ${messageType} from sensor ${sensor.sensorEntityDescription.externalId} for entity ${sensedEntity.sensedEntityDescription.externalId}")
 
     messageType match {
       case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT =>
-        handleMeasurement(handler, timestamp, sensor, sensedEntity, data)
+        handleMeasurement(handler, messageReceivedTimestamp, sensor, sensedEntity, message)
       case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_HEARTBEAT =>
-        handleHeartbeat(handler, timestamp, sensor, sensedEntity, data)
+        handleHeartbeat(handler, messageReceivedTimestamp, sensor, sensedEntity, message)
     }
   }
 
-  private def handleMeasurement(handler: SensedEntitySensorHandler, timestamp: Long,
-    sensor: SensorEntityModel, sensedEntity: SensedEntityModel, data: DynamicObject): Unit = {
+  /**
+   * Handle sensor data that has come in.
+   *
+   * @param handler
+   *          the handler the sensor data came in on
+   * @param messageReceivedTimestamp
+   *          the time the sensor event came in
+   * @param sensor
+   *          the sensor the data came in on
+   * @param sensedEntity
+   *          the entity the sensor gives data for
+   * @param message
+   *          the sensor message
+   */
+  private def handleMeasurement(
+      handler: SensedEntitySensorHandler, 
+      messageReceivedTimestamp: Long,
+      sensor: SensorEntityModel, 
+      sensedEntity: SensedEntityModel, 
+      message: DynamicObject): Unit = {
 
     // Go into the data fields.
-    data.down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
+    message.down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
 
     // If the message contained a timestamp, use it, otherwise use when the message came into the processor.
-    val measurementTimestamp = data.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, timestamp)
+    var measurementTimestamp = message.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, messageReceivedTimestamp)
 
     val sensorDetail = sensor.sensorEntityDescription.sensorDetail
     if (sensorDetail.isDefined) {
       // Go through every property in the data set, find its type, and then create
       // appropriate values.
-      data.getProperties().foreach((channelId) => {
-        if (data.isObject(channelId)) {
+      message.getProperties().foreach((channelId) => {
+        if (message.isObject(channelId)) {
           val sensorChannelDetail = sensorDetail.get.getSensorChannelDetail(channelId)
           if (sensorChannelDetail.isDefined) {
             val sensedMeasurementType = sensorChannelDetail.get.measurementType
             val sensorValueProcessor = sensorValuesProcessors.get(sensedMeasurementType.externalId)
             if (sensorValueProcessor.isDefined) {
               log.info(s"Using sensor processor ${sensorValueProcessor.get}")
-              data.down(channelId)
+              message.down(channelId)
+              
+              // Pick up the measurement timestamp from the channel data if it is there,
+              // otherwise use the last determined timestamp
+              measurementTimestamp = message.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, measurementTimestamp)
+
               sensorValueProcessor.get.processData(measurementTimestamp, sensor, sensedEntity, processorContext,
-                channelId, data);
-              data.up
+                channelId, message);
+              message.up
             } else {
               log.warn(s"Got unknown sensed type with no apparent processor ${sensedMeasurementType}")
             }
@@ -109,15 +132,29 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
         }
 
       })
-      data.up
+      message.up
     } else {
       log.warn(s"Got sensor with no sensor detail ${sensor.sensorEntityDescription}")
     }
   }
 
-  private def handleHeartbeat(handler: SensedEntitySensorHandler, timestamp: Long,
-    sensor: SensorEntityModel, sensedEntity: SensedEntityModel, data: DynamicObject): Unit = {
+  /**
+   * Handle sensor data that has come in.
+   *
+   * @param handler
+   *          the handler the sensor data came in on
+   * @param messageReceivedTimestamp
+   *          the time the sensor event came in
+   * @param sensor
+   *          the sensor the data came in on
+   * @param sensedEntity
+   *          the entity the sensor gives data for
+   * @param message
+   *          the sensor message
+   */
+  private def handleHeartbeat(handler: SensedEntitySensorHandler, messageReceivedTimestamp: Long,
+    sensor: SensorEntityModel, sensedEntity: SensedEntityModel, message: DynamicObject): Unit = {
 
-    sensor.updateHeartbeat(timestamp)
+    sensor.updateHeartbeat(messageReceivedTimestamp)
   }
 }

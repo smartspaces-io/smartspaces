@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2017 Keith M. Hughes
+ * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2015 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,17 +15,26 @@
  * the License.
  */
 
-package io.smartspaces.sensor.messaging.output
+package io.smartspaces.messaging.route;
+
+import java.util.Map;
+
+import io.smartspaces.messaging.MessageSender;
 
 /**
- * A writer for sensor messages.
+ * A message sender for a route.
  * 
+ * <p>
+ * All registered publishers will be sent the message.
+s *
  * @author Keith M. Hughes
  */
-trait SensorMessageWriter {
-  
+public interface RouteMessageSender extends MessageSender<Map<String, Object>> {
+
   /**
-   * Send a heartbeat message over the route for the sensor.
+   * Get the channel ID for the sender.
+   *
+   * @return the channel ID
    */
-  def sendHeartbeatMessage(): Unit 
+  String getChannelId();
 }

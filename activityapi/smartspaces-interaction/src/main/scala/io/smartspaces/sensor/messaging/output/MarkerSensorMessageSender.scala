@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2015 Google Inc.
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,26 +14,20 @@
  * the License.
  */
 
-package io.smartspaces.messaging.route;
-
-import java.util.Map;
-
-import io.smartspaces.messaging.MessageSender;
+package io.smartspaces.sensor.messaging.output
 
 /**
- * A publisher for a message route.
+ * A sender for marker messages.
  * 
- * <p>
- * All registered publishers will be sent the message.
-s *
  * @author Keith M. Hughes
  */
-public interface RouteMessagePublisher extends MessageSender<Map<String, Object>> {
-
+trait MarkerSensorMessageSender extends SensorMessageSender {
+  
   /**
-   * Get the channel ID for the publisher.
+   * Send a simple marker message over the route.
    *
-   * @return the channel ID
+   * @param markerId
+   *       the ID of the marker
    */
-  String getChannelId();
+  def sendSimpleMarkerMessage(markerId: String): Unit
 }

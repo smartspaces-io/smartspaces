@@ -50,6 +50,11 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   private final Stack<Object> nav = new Stack<>();
 
   /**
+   * Places where we cannot move up any further.
+   */
+  private final Stack<Integer> marks = new Stack<Integer>();
+
+  /**
    * Type of the current object.
    */
   private DynamicObjectType currentType;
@@ -190,7 +195,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
 
       nav.push(currentObject);
 
-      currentObject = newObject;
+      setCurrentAsObject(newObject);
     } else {
       // Must be an array
 
@@ -203,14 +208,13 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   @Override
   public DynamicObjectBuilder newArray(String name) {
     if (currentType == DynamicObjectType.OBJECT) {
-      List<Object> newObject = Lists.newArrayList();
+      List<Object> newArray = Lists.newArrayList();
 
-      currentObject.put(name, newObject);
+      currentObject.put(name, newArray);
 
       nav.push(currentObject);
 
-      currentArray = newObject;
-      currentType = DynamicObjectType.ARRAY;
+      setCurrentAsArray(newArray);
     } else {
       // Must be an array
 
@@ -223,13 +227,13 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   @Override
   public DynamicObjectBuilder newArray() {
     if (currentType == DynamicObjectType.ARRAY) {
-      List<Object> newObject = Lists.newArrayList();
+      List<Object> newArray = Lists.newArrayList();
 
-      currentArray.add(newObject);
+      currentArray.add(newArray);
 
       nav.push(currentArray);
 
-      currentArray = newObject;
+      setCurrentAsArray(newArray);
     } else {
       // Must be an object
 
@@ -248,8 +252,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
 
       nav.push(currentArray);
 
-      currentObject = newObject;
-      currentType = DynamicObjectType.OBJECT;
+      setCurrentAsObject(newObject);
     } else {
       // Must be an object
 
@@ -262,22 +265,48 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   @Override
   @SuppressWarnings("unchecked")
   public DynamicObjectBuilder up() {
-    if (!nav.isEmpty()) {
-      Object newObject = nav.pop();
+    if (!nav.isEmpty() && (marks.isEmpty() || marks.peek() < nav.size())) {
+      Object value = nav.pop();
 
-      if (newObject instanceof Map) {
-        currentArray = null;
-        currentObject = (Map<String, Object>) newObject;
-        currentType = DynamicObjectType.OBJECT;
-      } else {
-        currentObject = null;
-        currentArray = (List<Object>) newObject;
-        currentType = DynamicObjectType.ARRAY;
+      if (value instanceof Map) {
+        setCurrentAsObject(value);
+      } else if (value instanceof List) {
+        setCurrentAsArray(value);
       }
+
+      return this;
     } else {
       throw new DynamicObjectSmartSpacesException("Cannot move up in builder, nothing left");
     }
+  }
 
+  @Override
+  public DynamicObjectBuilder pushMark() {
+    marks.push(nav.size());
+
+    return this;
+  }
+
+  @Override
+  public DynamicObjectBuilder resetToMark(boolean remove) {
+    int pos;
+    if (remove) {
+      pos = marks.pop();
+    } else {
+      pos = marks.peek();
+    }
+
+    if (pos < nav.size()) {
+      Object value = nav.get(pos);
+      if (value instanceof Map) {
+        setCurrentAsObject(value);
+      } else if (value instanceof List) {
+        setCurrentAsArray(value);
+      }
+
+      nav.setSize(pos);
+    }
+    
     return this;
   }
 
@@ -294,6 +323,34 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   @Override
   public String toJson() {
     return JSON_MAPPER.toString(root);
+  }
+
+  /**
+   * Set the current item for the navigator as an object.
+   *
+   * @param value
+   *          what should become the new current position
+   */
+  @SuppressWarnings("unchecked")
+  private void setCurrentAsObject(Object value) {
+    currentType = DynamicObjectType.OBJECT;
+    currentObject = (Map<String, Object>) value;
+
+    currentArray = null;
+  }
+
+  /**
+   * Set the current item for the navigator as a map.
+   *
+   * @param value
+   *          what should become the new current position
+   */
+  @SuppressWarnings("unchecked")
+  private void setCurrentAsArray(Object value) {
+    currentType = DynamicObjectType.ARRAY;
+    currentArray = (List<Object>) value;
+
+    currentObject = null;
   }
 
   @Override

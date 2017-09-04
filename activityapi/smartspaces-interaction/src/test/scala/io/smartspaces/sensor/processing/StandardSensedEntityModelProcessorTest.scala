@@ -97,7 +97,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val sensedEntityModel =
       new SimpleSensedEntityModel(sensedEntity, completeSensedEntityModel)
 
-    processor.handleSensorData(handler, timestamp, sensorModel, sensedEntityModel, data)
+    processor.handleNewSensorData(handler, timestamp, sensorModel, sensedEntityModel, data)
 
     Mockito.verify(sensorValueProcessor, Mockito.never()).processData(Matchers.anyLong(),
       Matchers.any(classOf[SensorEntityModel]), Matchers.any(classOf[SensedEntityModel]),
@@ -143,7 +143,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
       .thenReturn(Option(sensedEntityModel))
 
     val data = builder.toDynamicObject()
-    processor.handleSensorData(handler, timestamp, sensorModel, sensedEntityModel, data)
+    processor.handleNewSensorData(handler, timestamp, sensorModel, sensedEntityModel, data)
 
     Mockito.verify(sensorValueProcessor, Mockito.times(1)).processData(timestamp, sensorModel,
       sensedEntityModel, processor.processorContext, channelDetail.id, data)

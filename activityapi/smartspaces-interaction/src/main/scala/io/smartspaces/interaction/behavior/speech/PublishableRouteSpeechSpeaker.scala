@@ -16,7 +16,7 @@
 
 package io.smartspaces.interaction.behavior.speech;
 
-import io.smartspaces.messaging.route.RouteMessagePublisher;
+import io.smartspaces.messaging.route.RouteMessageSender;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder;
 
@@ -30,7 +30,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * @author Keith M. Hughes
  */
-class PublishableRouteSpeechSpeaker(private val messagePublisher: RouteMessagePublisher,
+class PublishableRouteSpeechSpeaker(private val messageSender: RouteMessageSender,
     private val spaceEnvironment: SmartSpacesEnvironment, private val log: Log) extends SpeechSpeaker {
 
   /**
@@ -74,7 +74,7 @@ class PublishableRouteSpeechSpeaker(private val messagePublisher: RouteMessagePu
         val builder = new StandardDynamicObjectBuilder()
         builder.setProperty("content", content)
 
-        messagePublisher.sendMessage(builder.toMap)
+        messageSender.sendMessage(builder.toMap)
       } catch {
         case e: InterruptedException =>
           log.warn("Sequential speech speaker interrupted in speech loop")

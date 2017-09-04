@@ -17,17 +17,14 @@
 package io.smartspaces.sensor.messaging.output
 
 /**
- * A writer for marker messages.
+ * A sender for sensor messages.
  * 
  * @author Keith M. Hughes
  */
-trait MarkerSensorMessageWriter extends SensorMessageWriter {
+trait SensorMessageSender {
   
   /**
-   * Send a marker message over the route.
-   *
-   * @param markerId
-   *       the ID of the marker
+   * Send a heartbeat message over the route for the sensor.
    */
-  def sendMarkerMessage(markerId: String): Unit
+  def sendHeartbeatMessage(): Unit 
 }

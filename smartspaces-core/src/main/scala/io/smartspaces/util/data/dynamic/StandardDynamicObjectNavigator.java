@@ -47,7 +47,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   /**
    * Places where we cannot move up any further.
    */
-  private final Stack<Integer> blocks = new Stack<Integer>();
+  private final Stack<Integer> marks = new Stack<Integer>();
 
   /**
    * Type of the current object.
@@ -492,7 +492,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
   @Override
   public DynamicObject up() {
-    if (!nav.isEmpty() && (blocks.isEmpty() || blocks.peek() < nav.size())) {
+    if (!nav.isEmpty() && (marks.isEmpty() || marks.peek() < nav.size())) {
       Object value = nav.pop();
 
       if (value instanceof Map) {
@@ -509,8 +509,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   
   @Override
   public DynamicObject top() {
-    if (!blocks.isEmpty()) {
-      resetToBlock(false);
+    if (!marks.isEmpty()) {
+      resetToMark(false);
     } else if (!nav.isEmpty()) {
       nav.setSize(0);
       setCurrentAsObject(root);
@@ -651,22 +651,22 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   /**
    * Push a block. This prevents the user from going beyond a point.
    */
-  private void pushBlock() {
-    blocks.push(nav.size());
+  private void pushMark() {
+    marks.push(nav.size());
   }
 
   /**
-   * Pop a block and reset the nav to that point.
+   * Reset the nav to the last mark.
    *
-   * @param pop
-   *          if {code true} pop the block off
+   * @param remove
+   *          if {code true} remove the mark
    */
-  private void resetToBlock(boolean pop) {
+  private void resetToMark(boolean remove) {
     int pos;
-    if (pop) {
-      pos = blocks.pop();
+    if (remove) {
+      pos = marks.pop();
     } else {
-      pos = blocks.peek();
+      pos = marks.peek();
     }
 
     if (pos < nav.size()) {
@@ -731,7 +731,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
       properties = currentObject.keySet().iterator();
 
-      pushBlock();
+      pushMark();
     }
 
     @Override
@@ -740,7 +740,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
         return true;
       } else {
         if (!hasUnblocked) {
-          resetToBlock(true);
+          resetToMark(true);
           hasUnblocked = true;
         }
 
@@ -753,7 +753,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
       if (properties.hasNext()) {
         currentProperty = properties.next();
 
-        resetToBlock(false);
+        resetToMark(false);
 
         return entry;
       } else {
@@ -818,7 +818,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
       maxIndex = currentArray.size();
 
-      pushBlock();
+      pushMark();
     }
 
     @Override
@@ -827,7 +827,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
         return true;
       } else {
         if (!hasUnblocked) {
-          resetToBlock(true);
+          resetToMark(true);
           hasUnblocked = true;
         }
 
@@ -840,7 +840,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
       if (hasNext()) {
         currentIndex++;
 
-        resetToBlock(false);
+        resetToMark(false);
 
         return entry;
       } else {

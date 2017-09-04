@@ -210,7 +210,7 @@ public class StandardMessageRouter implements MessageRouter {
   }
 
   @Override
-  public RouteMessagePublisher registerOutputChannelTopic(RouteDescription routeDescription) {
+  public RouteMessageSender registerOutputChannelTopic(RouteDescription routeDescription) {
     String channelId = routeDescription.getChannelId();
     if (isOutputChannelRegistered(channelId)) {
       throw new SimpleSmartSpacesException("Output channel already registered: " + channelId);
@@ -387,7 +387,7 @@ public class StandardMessageRouter implements MessageRouter {
   }
 
   @Override
-  public RouteMessagePublisher getMessagePublisher(String outputChannelId) {
+  public RouteMessageSender getMessagePublisher(String outputChannelId) {
     return outputPublishers.get(outputChannelId);
   }
 
@@ -397,7 +397,7 @@ public class StandardMessageRouter implements MessageRouter {
       protectedHandlerContext.enterHandler();
 
       if (outputChannelId != null) {
-        RouteMessagePublisher output = outputPublishers.get(outputChannelId);
+        RouteMessageSender output = outputPublishers.get(outputChannelId);
         if (output != null) {
           output.sendMessage(message);
 

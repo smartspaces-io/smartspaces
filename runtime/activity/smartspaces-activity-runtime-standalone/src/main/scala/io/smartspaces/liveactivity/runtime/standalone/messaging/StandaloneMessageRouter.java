@@ -32,7 +32,7 @@ import io.smartspaces.messaging.route.MessageRouter;
 import io.smartspaces.messaging.route.MessageRouterSupportedMessageTypes;
 import io.smartspaces.messaging.route.RouteMessageListener;
 import io.smartspaces.messaging.route.RouteDescription;
-import io.smartspaces.messaging.route.RouteMessagePublisher;
+import io.smartspaces.messaging.route.RouteMessageSender;
 import io.smartspaces.messaging.route.RouteMessageSubscriber;
 import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.data.json.JsonMapper;
@@ -497,7 +497,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   }
 
   @Override
-  public synchronized RouteMessagePublisher registerOutputChannelTopic(String outputChannelId,
+  public synchronized RouteMessageSender registerOutputChannelTopic(String outputChannelId,
       Set<String> topicNames) {
     if (outputChannelsToRoutes.containsKey(outputChannelId)) {
       throw new SimpleSmartSpacesException("Output channel already registered: " + outputChannelId);
@@ -543,7 +543,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   }
 
   @Override
-  public RouteMessagePublisher getMessagePublisher(String outputChannelId) {
+  public RouteMessageSender getMessagePublisher(String outputChannelId) {
     return new StandaloneRouteMessagePublisher(outputChannelId);
   }
 
@@ -599,7 +599,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     }
 
     @Override
-    public RouteMessagePublisher registerOutputChannelTopic(RouteDescription routeDescription)
+    public RouteMessageSender registerOutputChannelTopic(RouteDescription routeDescription)
         throws SmartSpacesException {
       // TODO Auto-generated method stub
       return null;
@@ -635,7 +635,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     }
 
     @Override
-    public RouteMessagePublisher getMessagePublisher(String outputChannelId) {
+    public RouteMessageSender getMessagePublisher(String outputChannelId) {
       // TODO Auto-generated method stub
       return null;
     }
@@ -695,7 +695,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
    *
    * @author Keith M. Hughes
    */
-  private class StandaloneRouteMessagePublisher implements RouteMessagePublisher {
+  private class StandaloneRouteMessagePublisher implements RouteMessageSender {
 
     /**
      * The channel ID for the output channel.

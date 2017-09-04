@@ -44,6 +44,11 @@ object SensorMessages {
   val SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_HEARTBEAT = "heartbeat"
 
   /**
+   * The field value for a composite message for the message type field.
+   */
+  val SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_COMPOSITE = "composite"
+
+  /**
    * The field name for the data field.
    */
   val SENSOR_MESSAGE_FIELD_NAME_DATA = "data"
@@ -67,4 +72,9 @@ object SensorMessages {
    * The field name for the timestamp field in the data field.
    */
   val SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP = "timestamp"
+  
+  /**
+   * The field name for the messages field in the data field of a composite message.
+   */
+  val SENSOR_MESSAGE_FIELD_NAME_DATA_MESSAGES = "messages"
 }

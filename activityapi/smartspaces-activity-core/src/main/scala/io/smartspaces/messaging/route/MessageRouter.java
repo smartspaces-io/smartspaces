@@ -107,7 +107,7 @@ public interface MessageRouter extends IncomingRouteMessageHandler, ChannelMessa
    *           an unknown publisher protocol has been found or the channel has
    *           already been registered
    */
-  RouteMessagePublisher registerOutputChannelTopic(RouteDescription routeDescription)
+  RouteMessageSender registerOutputChannelTopic(RouteDescription routeDescription)
       throws SmartSpacesException;
 
   /**
@@ -155,7 +155,7 @@ public interface MessageRouter extends IncomingRouteMessageHandler, ChannelMessa
    * @return the output publisher, or {@code null} if none found for the
    *         specified ID
    */
-  RouteMessagePublisher getMessagePublisher(String outputChannelId);
+  RouteMessageSender getMessagePublisher(String outputChannelId);
 
   /**
    * Get all input channel IDs from the component.

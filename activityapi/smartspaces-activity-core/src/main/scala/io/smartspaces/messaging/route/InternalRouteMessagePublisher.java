@@ -23,7 +23,7 @@ package io.smartspaces.messaging.route;
  *
  * @author Keith M. Hughes
  */
-public interface InternalRouteMessagePublisher extends RouteMessagePublisher {
+public interface InternalRouteMessagePublisher extends RouteMessageSender {
 
   /**
    * Shut the publisher down.

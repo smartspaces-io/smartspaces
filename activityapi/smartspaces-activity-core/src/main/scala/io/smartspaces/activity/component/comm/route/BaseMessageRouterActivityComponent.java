@@ -23,7 +23,7 @@ import io.smartspaces.activity.impl.StatusDetail;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.messaging.route.MessageRouter;
 import io.smartspaces.messaging.route.RouteDescription;
-import io.smartspaces.messaging.route.RouteMessagePublisher;
+import io.smartspaces.messaging.route.RouteMessageSender;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.HashMultimap;
@@ -192,7 +192,7 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
   }
 
   @Override
-  public synchronized RouteMessagePublisher registerOutputChannelTopic(String channelId,
+  public synchronized RouteMessageSender registerOutputChannelTopic(String channelId,
       Set<String> topicNames) throws SmartSpacesException {
     if (outputRouteDescriptions.containsKey(channelId)) {
       throw new SimpleSmartSpacesException("Output channel already registered: " + channelId);
@@ -233,7 +233,7 @@ public abstract class BaseMessageRouterActivityComponent extends BaseActivityCom
    * 
    * @return the message publisher
    */
-  protected abstract RouteMessagePublisher
+  protected abstract RouteMessageSender
       internalRegisterOutputRoute(RouteDescription routeDescription);
 
   /**

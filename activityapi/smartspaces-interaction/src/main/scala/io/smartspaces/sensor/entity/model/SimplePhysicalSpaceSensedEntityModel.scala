@@ -36,32 +36,36 @@ class SimplePhysicalSpaceSensedEntityModel(
    */
   private val occupants: Set[PersonSensedEntityModel] = new HashSet
 
-  override def occupantEntered(person: PersonSensedEntityModel, timestamp: Long): PhysicalSpaceSensedEntityModel = {
+  override def occupantEntered(person: PersonSensedEntityModel, 
+      measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long): PhysicalSpaceSensedEntityModel = {
 
     val hasBeenAdded = occupants.add(person)
 
     if (hasBeenAdded) {
       person.physicalSpaceLocation = this
-      person.physicalSpaceLocationTimestamp = timestamp
+      person.physicalSpaceLocationTimestamp = measurementTimestamp
 
       val entered = scala.collection.immutable.HashSet(person)
 
-      models.eventEmitter.broadcastOccupancyEvent(PhysicalSpaceOccupancyLiveEvent.newEnteredOnlyEvent(this, entered, timestamp))
+      models.eventEmitter.broadcastOccupancyEvent(
+          PhysicalSpaceOccupancyLiveEvent.newEnteredOnlyEvent(this, entered, measurementTimestamp, sensorMessageReceivedTimestamp))
     }
 
     this
   }
 
-  override def occupantExited(person: PersonSensedEntityModel, timestamp: Long): PhysicalSpaceSensedEntityModel = {
+  override def occupantExited(person: PersonSensedEntityModel, 
+      measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long): PhysicalSpaceSensedEntityModel = {
     val wasHere = occupants.remove(person)
 
     if (wasHere) {
       person.physicalSpaceLocation = null
-      person.physicalSpaceLocationTimestamp = timestamp
+      person.physicalSpaceLocationTimestamp = measurementTimestamp
 
       val exited = scala.collection.immutable.HashSet(person)
 
-      models.eventEmitter.broadcastOccupancyEvent(PhysicalSpaceOccupancyLiveEvent.newExitedOnlyEvent(this, exited, timestamp))
+      models.eventEmitter.broadcastOccupancyEvent(
+          PhysicalSpaceOccupancyLiveEvent.newExitedOnlyEvent(this, exited, measurementTimestamp, sensorMessageReceivedTimestamp))
     }
 
     this

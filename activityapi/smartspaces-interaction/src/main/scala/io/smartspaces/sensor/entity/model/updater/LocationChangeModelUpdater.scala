@@ -33,8 +33,11 @@ trait LocationChangeModelUpdater {
    *             the new location
    * @param person
    *             the person
-   * @param timestamp
+   * @param measurementTimestamp
    *             the timestamp of when the location change took place
+   * @param sensorMessageReceivedTimestamp
+   *             the timestamp of when the sensor message was received
    */
-  def updateLocation(newLocation: PhysicalSpaceSensedEntityModel, person: PersonSensedEntityModel, timestamp: Long): Unit
+  def updateLocation(newLocation: PhysicalSpaceSensedEntityModel, person: PersonSensedEntityModel, 
+      measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long): Unit
 }

@@ -43,19 +43,20 @@ class StandardBleProximitySensorValueProcessor extends SensorValueProcessor {
   /**
    * The map from the BLE IDs to the trigger for that ID.
    */
-  private val userTriggers: Map[String, SimpleHysteresisThresholdValueTriggerWithData[Long]] = new HashMap
+  private val userTriggers: Map[String, SimpleHysteresisThresholdValueTriggerWithData[TriggerTimes]] = new HashMap
 
   /**
    * The map from the triggers to the models to be updated by that trigger.
    */
-  private val userTriggerToUpdaters: Map[SimpleHysteresisThresholdValueTriggerWithData[Long], SimplePersonPhysicalSpaceModelUpdater] =
+  private val userTriggerToUpdaters: Map[SimpleHysteresisThresholdValueTriggerWithData[TriggerTimes], 
+    SimplePersonPhysicalSpaceModelUpdater] =
     new HashMap
 
   /**
    * The listener for trigger events being shared across all triggers.
    */
-  private val triggerListener = new TriggerWithDataListener[Long]() {
-    override def onTrigger(trigger: TriggerWithData[Long], state: TriggerState, eventType: TriggerEventType): Unit = {
+  private val triggerListener = new TriggerWithDataListener[TriggerTimes]() {
+    override def onTrigger(trigger: TriggerWithData[TriggerTimes], state: TriggerState, eventType: TriggerEventType): Unit = {
       handleTrigger(trigger, state, eventType);
     }
   };
@@ -67,14 +68,15 @@ class StandardBleProximitySensorValueProcessor extends SensorValueProcessor {
 
   val sensorValueType = StandardSensorData.SENSOR_TYPE_PROXIMITY_BLE
 
-  override def processData(timestamp: Long, sensor: SensorEntityModel,
-    sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
-    channelId: String, data: DynamicObject) {
+  override def processData(measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long, 
+      sensor: SensorEntityModel,
+      sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
+      channelId: String, data: DynamicObject) {
     val markerId = "ble" + ":" + data.getRequiredString("id")
     val rssi = data.getDouble("rssi")
 
     val userTrigger = getTrigger(markerId, sensor, sensedEntityModel, processorContext)
-    userTrigger.update(rssi, timestamp)
+    userTrigger.update(rssi, new TriggerTimes(measurementTimestamp, sensorMessageReceivedTimestamp))
 
     val markedEntity = processorContext.completeSensedEntityModel.
       sensorRegistry.getMarkableEntityByMarkerId(markerId)
@@ -98,10 +100,10 @@ class StandardBleProximitySensorValueProcessor extends SensorValueProcessor {
    */
   private def getTrigger(markerId: String,
     sensor: SensorEntityModel, sensedEntityModel: SensedEntityModel,
-    processorContext: SensorValueProcessorContext): SimpleHysteresisThresholdValueTriggerWithData[Long] = {
+    processorContext: SensorValueProcessorContext): SimpleHysteresisThresholdValueTriggerWithData[TriggerTimes] = {
     val userTrigger = userTriggers.get(markerId)
     if (userTrigger.isEmpty) {
-      val newUserTrigger = new SimpleHysteresisThresholdValueTriggerWithData[Long](0)
+      val newUserTrigger = new SimpleHysteresisThresholdValueTriggerWithData[TriggerTimes](new TriggerTimes(0,0))
 
       val markerEntity = processorContext.completeSensedEntityModel.
         sensorRegistry.getMarkerEntityByMarkerId(markerId)
@@ -135,13 +137,21 @@ class StandardBleProximitySensorValueProcessor extends SensorValueProcessor {
    * @param triggerType
    *          the type of the state change
    */
-  private def handleTrigger(trigger: TriggerWithData[Long], state: TriggerState, eventType: TriggerEventType): Unit = {
-    val t = trigger.asInstanceOf[SimpleHysteresisThresholdValueTriggerWithData[Long]]
+  private def handleTrigger(trigger: TriggerWithData[TriggerTimes], state: TriggerState, eventType: TriggerEventType): Unit = {
+    val t = trigger.asInstanceOf[SimpleHysteresisThresholdValueTriggerWithData[TriggerTimes]]
     val modelUpdater = userTriggerToUpdaters.get(t).get
     if (eventType == TriggerEventType.RISING) {
-      modelUpdater.enterSpace(t.getData);
+      modelUpdater.enterSpace(t.getData.measurementTimestamp, t.getData.sensorMessageReceivedTimestamp);
     } else {
-      modelUpdater.exitSpace(t.getData);
+      modelUpdater.exitSpace(t.getData.measurementTimestamp, t.getData.sensorMessageReceivedTimestamp);
     }
   }
 }
+
+/**
+ * The measurement times of the BLE measurements.
+ * 
+ * @author Keith M. Hughes
+ */
+class TriggerTimes(val measurementTimestamp: Long, val sensorMessageReceivedTimestamp: Long)
+

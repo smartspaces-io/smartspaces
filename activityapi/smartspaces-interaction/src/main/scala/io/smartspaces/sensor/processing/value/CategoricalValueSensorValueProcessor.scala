@@ -35,18 +35,18 @@ class CategoricalValueSensorValueProcessor(val measurementType: MeasurementTypeD
   
   override val sensorValueType = measurementType.externalId
   
-  override def processData(timestamp: Long, sensorEntity: SensorEntityModel,
+  override def processData(measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long, sensorEntity: SensorEntityModel,
     sensedEntity: SensedEntityModel, processorContext: SensorValueProcessorContext,
     channelId: String, data: DynamicObject): Unit = {
     val value = new SimpleCategoricalValueSensedValue(
         sensorEntity, Option(channelId), measurementType,
         categoricalValue.fromLabel(data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)).get, 
-        timestamp)
+        measurementTimestamp, sensorMessageReceivedTimestamp)
 
     processorContext.log.info(value)
 
-    sensedEntity.updateSensedValue(value, timestamp)
-    sensorEntity.updateSensedValue(value, timestamp)
+    sensedEntity.updateSensedValue(value, measurementTimestamp)
+    sensorEntity.updateSensedValue(value, measurementTimestamp)
     
     processorContext.completeSensedEntityModel.eventEmitter.broadcastRawSensorEvent(new RawSensorLiveEvent(value, sensedEntity))
   }

@@ -31,12 +31,15 @@ trait PhysicalSpaceSensedEntityModel extends SensedEntityModel {
    *
    * @param person
    *          the person who entered
-   * @param timestamp
+   * @param measurementTimestamp
    * 				  the time the occupant exited the space
+   * @param sensorMessageReceivedTimestamp
+   *          the time the sensor message was received
    *
    * @return this model
    */
-  def occupantEntered(person: PersonSensedEntityModel, timestamp: Long): PhysicalSpaceSensedEntityModel
+  def occupantEntered(person: PersonSensedEntityModel,
+      measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long): PhysicalSpaceSensedEntityModel
 
   /**
    * An occupant has exited the physical space.
@@ -46,12 +49,15 @@ trait PhysicalSpaceSensedEntityModel extends SensedEntityModel {
    *
    * @param person
    *          the person who exited
-   * @param timestamp
+   * @param measurementTimestamp
    * 				  the time the occupant exited the space
+   * @param sensorMessageReceivedTimestamp
+   *          the time the sensor message was received
    *
    * @return this model
    */
-  def occupantExited(person: PersonSensedEntityModel, timestamp: Long): PhysicalSpaceSensedEntityModel
+  def occupantExited(person: PersonSensedEntityModel,
+      measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long): PhysicalSpaceSensedEntityModel
 
   /**
    * Get the current occupants of the space.

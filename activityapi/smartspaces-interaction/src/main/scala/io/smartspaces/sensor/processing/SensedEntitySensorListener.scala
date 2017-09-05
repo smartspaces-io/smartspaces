@@ -41,6 +41,7 @@ trait SensedEntitySensorListener {
    * @param message
    *          the sensor message
    */
-  def handleNewSensorData(handler: SensedEntitySensorHandler, messageReceivedTimestamp: Long,
-    sensor: SensorEntityModel, sensedEntity: SensedEntityModel, message: DynamicObject): Unit
+  def handleNewSensorData(handler: SensedEntitySensorHandler, 
+      messageReceivedTimestamp: Long,
+      sensor: SensorEntityModel, sensedEntity: SensedEntityModel, message: DynamicObject): Unit
 }

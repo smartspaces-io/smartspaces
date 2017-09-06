@@ -19,23 +19,23 @@ package io.smartspaces.sensor.entity.model.updater
 import io.smartspaces.sensor.entity.model.PhysicalSpaceSensedEntityModel
 import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
 
-
 /**
  * A model updater for a change from one location to another.
- * 
+ *
  * @author Keith M. Hughes
  */
 class SimpleLocationChangeModelUpdater extends LocationChangeModelUpdater {
-  
-  override def updateLocation(newLocation: PhysicalSpaceSensedEntityModel, person: PersonSensedEntityModel, timestamp: Long): Unit = {
-        val oldLocation = person.physicalSpaceLocation
+
+  override def updateLocation(newLocation: PhysicalSpaceSensedEntityModel, person: PersonSensedEntityModel,
+      measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long): Unit = {
+    val oldLocation = person.physicalSpaceLocation
     if (oldLocation != null) {
       if (oldLocation != newLocation) {
-        oldLocation.occupantExited(person, timestamp)
-        newLocation.occupantEntered(person, timestamp)
+        oldLocation.occupantExited(person, measurementTimestamp, sensorMessageReceivedTimestamp)
+        newLocation.occupantEntered(person, measurementTimestamp, sensorMessageReceivedTimestamp)
       }
     } else {
-      newLocation.occupantEntered(person, timestamp)
+      newLocation.occupantEntered(person, measurementTimestamp, sensorMessageReceivedTimestamp)
     }
   }
 }

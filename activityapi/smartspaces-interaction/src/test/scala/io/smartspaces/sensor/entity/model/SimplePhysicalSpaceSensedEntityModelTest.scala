@@ -62,8 +62,8 @@ class SimplePhysicalSpaceSensedEntityModelTest extends JUnitSuite {
   @Test def testSinglePersonEnters(): Unit = {
     val personModel = Mockito.mock(classOf[PersonSensedEntityModel])
 
-    model.occupantEntered(personModel, 100)
-    model.occupantEntered(personModel, 100)
+    model.occupantEntered(personModel, 100, 101)
+    model.occupantEntered(personModel, 100, 101)
 
     val argumentCaptor =
       ArgumentCaptor.forClass(classOf[PhysicalSpaceOccupancyLiveEvent])
@@ -83,9 +83,9 @@ class SimplePhysicalSpaceSensedEntityModelTest extends JUnitSuite {
   @Test def testSinglePersonEntersAndExits(): Unit = {
     val personModel = Mockito.mock(classOf[PersonSensedEntityModel])
 
-    model.occupantEntered(personModel, 100)
-    model.occupantExited(personModel, 100)
-    model.occupantExited(personModel, 100)
+    model.occupantEntered(personModel, 100, 101)
+    model.occupantExited(personModel, 100, 101)
+    model.occupantExited(personModel, 100, 101)
 
     val argumentCaptor =
       ArgumentCaptor.forClass(classOf[PhysicalSpaceOccupancyLiveEvent])

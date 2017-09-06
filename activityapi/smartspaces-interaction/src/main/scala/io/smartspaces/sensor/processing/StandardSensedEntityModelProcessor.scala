@@ -120,8 +120,10 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
               // otherwise use the last determined timestamp
               measurementTimestamp = message.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, measurementTimestamp)
 
-              sensorValueProcessor.get.processData(measurementTimestamp, sensor, sensedEntity, processorContext,
-                channelId, message);
+              sensorValueProcessor.get.processData(
+                  measurementTimestamp, messageReceivedTimestamp, 
+                  sensor, sensedEntity, processorContext,
+                  channelId, message);
               message.up
             } else {
               log.warn(s"Got unknown sensed type with no apparent processor ${sensedMeasurementType}")

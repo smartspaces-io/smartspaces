@@ -37,8 +37,10 @@ trait SensorValueProcessor {
   /**
    * Process the incoming data.
    *
-   * @param timestamp
-   *          when the data came in
+   * @param measurementTimestamp
+   *          the time of the sensor measurement
+   * @param sensorMessageReceivedTimestamp
+   *          the time when the sensor message was received
    * @param sensor
    *          the sensor platform that detected the data
    * @param sensedEntityModel
@@ -50,7 +52,7 @@ trait SensorValueProcessor {
    * @param data
    *          the data to process, should be inside the data field
    */
-  def processData(timestamp: Long, sensor: SensorEntityModel,
+  def processData(measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long, sensor: SensorEntityModel,
     sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
     channelId: String, data: DynamicObject): Unit
 }

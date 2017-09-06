@@ -44,10 +44,17 @@ trait SensedValue[+T <: Any] {
   val measurementTypeDescription: MeasurementTypeDescription
 
   /**
-   * The timestamp of when the value was last updated, in milliseconds since the epoch.
+   * The timestamp of when the measurement was taken, 
+   * in milliseconds since the epoch.
    */
-  val timestamp: Long
+  val measurementTimestamp: Long
 
+  /**
+   * The timestamp of when the sensor message was received, 
+   * in milliseconds since the epoch.
+   */
+  val sensorMessageReceivedTimestamp: Long
+  
   /**
    * The value of the sensor.
    *

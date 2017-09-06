@@ -51,8 +51,8 @@ class StatefulMarkerSensorSensorValueProcessor(
    */
   override val sensorValueType = StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL
 
-  override def processData(timestamp: Long, sensorEntity: SensorEntityModel,
-    sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
+  override def processData(measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long, 
+      sensorEntity: SensorEntityModel, sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
     channelId: String, data: DynamicObject): Unit = {
     val presenceLabel = data.getRequiredString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)
     val presence = PresenceCategoricalValue.fromLabel(presenceLabel)
@@ -67,7 +67,7 @@ class StatefulMarkerSensorSensorValueProcessor(
     val markerEntity = processorContext.completeSensedEntityModel.sensorRegistry.getMarkerEntityByMarkerId(markerId)
     if (markerEntity.isEmpty) {
       processorContext.log.warn(s"Detected unknown marker ID ${markerId}")
-      unknownMarkerHandler.handleUnknownMarker(markerId, timestamp)
+      unknownMarkerHandler.handleUnknownMarker(markerId, measurementTimestamp)
 
       return
     }
@@ -83,7 +83,7 @@ class StatefulMarkerSensorSensorValueProcessor(
     val person = personOption.get.asInstanceOf[PersonSensedEntityModel]
     val sensedLocation = sensedEntityModel.asInstanceOf[PhysicalSpaceSensedEntityModel]
 
-    sensorEntity.updateSensedValue(timestamp)
+    sensorEntity.updateSensedValue(measurementTimestamp)
 
     presence.get match {
       case PresenceCategoricalValueInstances.PRESENT =>
@@ -95,7 +95,9 @@ class StatefulMarkerSensorSensorValueProcessor(
     //modelUpdater.updateLocation(newLocation, person, timestamp)
     
     val value = new SimpleCategoricalValueSensedValue(
-        sensorEntity, Option(channelId), statefulMarkerMeasurementType, presence.get, Some(markerId), timestamp)
+        sensorEntity, Option(channelId), statefulMarkerMeasurementType, presence.get, 
+        Some(markerId), measurementTimestamp, sensorMessageReceivedTimestamp)
+    
     processorContext.completeSensedEntityModel.eventEmitter.broadcastRawSensorEvent(new RawSensorLiveEvent(value, sensedEntityModel))
   }
 }

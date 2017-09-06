@@ -99,9 +99,11 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
 
     processor.handleNewSensorData(handler, timestamp, sensorModel, sensedEntityModel, data)
 
-    Mockito.verify(sensorValueProcessor, Mockito.never()).processData(Matchers.anyLong(),
-      Matchers.any(classOf[SensorEntityModel]), Matchers.any(classOf[SensedEntityModel]),
-      Matchers.any(classOf[SensorValueProcessorContext]), Matchers.any(classOf[String]), Matchers.any(classOf[DynamicObject]))
+    Mockito.verify(sensorValueProcessor, Mockito.never()).processData(
+        Matchers.anyLong(), Matchers.anyLong(),
+        Matchers.any(classOf[SensorEntityModel]), Matchers.any(classOf[SensedEntityModel]),
+        Matchers.any(classOf[SensorValueProcessorContext]), 
+        Matchers.any(classOf[String]), Matchers.any(classOf[DynamicObject]))
   }
 
   /**
@@ -113,6 +115,9 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     Mockito.when(sensorValueProcessor.sensorValueType).thenReturn(sensorValueType)
 
     processor.addSensorValueProcessor(sensorValueProcessor)
+    
+    val measurementTimestamp: Long = 1000
+    val sensorMessageReceivedTimestamp: Long = 1001
 
     val measurementType =
       new SimpleMeasurementTypeDescription("foo", sensorValueType, null, null, null, null, null)
@@ -123,8 +128,8 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val channelId = "test"
     builder.newObject(channelId)
     builder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, sensorValueType)
+    builder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, measurementTimestamp)
 
-    val timestamp: Long = 10000
     val sensorDetail = new SimpleSensorDetail("1", "foo", "foo", "foo", None, None)
     val channelDetail =
       new SimpleSensorChannelDetail(sensorDetail, channelId, "glorp", "norp", measurementType, null)
@@ -143,9 +148,10 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
       .thenReturn(Option(sensedEntityModel))
 
     val data = builder.toDynamicObject()
-    processor.handleNewSensorData(handler, timestamp, sensorModel, sensedEntityModel, data)
+    processor.handleNewSensorData(handler, sensorMessageReceivedTimestamp, sensorModel, sensedEntityModel, data)
 
-    Mockito.verify(sensorValueProcessor, Mockito.times(1)).processData(timestamp, sensorModel,
-      sensedEntityModel, processor.processorContext, channelDetail.id, data)
+    Mockito.verify(sensorValueProcessor, Mockito.times(1)).processData(
+        measurementTimestamp, sensorMessageReceivedTimestamp, sensorModel,
+        sensedEntityModel, processor.processorContext, channelDetail.id, data)
   }
 }

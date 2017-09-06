@@ -30,12 +30,15 @@ class SimpleSensedValue[T <: Any](
     override val measurementTypeDescription: MeasurementTypeDescription,
     override val value: T,
     override val additional: Option[Any],
-    override val timestamp: Long) extends SensedValue[T] {
+    override val measurementTimestamp: Long,
+    override val sensorMessageReceivedTimestamp: Long) extends SensedValue[T] {
 
   override def toString() = {
-    "SimpleSensedValue [sensor=" + sensor + ", channelId=" +
-      channelId + ", measurementTypeDescription=" +
-      measurementTypeDescription + ", value=" + value + ", additional=" + additional + ", timestamp=" + timestamp + "]"
+    "SimpleSensedValue [sensor=" + sensor + ", channelId=" + channelId + 
+    ", measurementTypeDescription=" + measurementTypeDescription + 
+    ", value=" + value + ", additional=" + additional + 
+    ", measurementTimestamp=" + measurementTimestamp + 
+    ", sensorMessageReceivedTimestamp=" + sensorMessageReceivedTimestamp + "]"
   }
 }
 
@@ -45,14 +48,16 @@ class SimpleNumericContinuousSensedValue(
     measurementTypeDescription: MeasurementTypeDescription,
     value: Double,
     additional: Option[Any],
-    timestamp: Long) extends SimpleSensedValue[Double](sensor, channelId, measurementTypeDescription, value, additional, timestamp) {
+    measurementTimestamp: Long,
+    sensorMessageReceivedTimestamp: Long) extends SimpleSensedValue[Double](sensor, channelId, measurementTypeDescription, value, additional, measurementTimestamp, sensorMessageReceivedTimestamp) {
   def this(
     sensor: SensorEntityModel,
     channelId: Option[String],
     measurementTypeDescription: MeasurementTypeDescription,
     value: Double,
-    timestamp: Long) = {
-    this(sensor, channelId, measurementTypeDescription, value, None, timestamp)
+    measurementTimestamp: Long,
+    sensorMessageReceivedTimestamp: Long) = {
+    this(sensor, channelId, measurementTypeDescription, value, None, measurementTimestamp, sensorMessageReceivedTimestamp)
   }
 }
 
@@ -62,14 +67,16 @@ class SimpleCategoricalValueSensedValue(
     measurementTypeDescription: MeasurementTypeDescription,
     value: CategoricalValueInstance,
     additional: Option[Any],
-    timestamp: Long) extends SimpleSensedValue[CategoricalValueInstance](sensor, channelId, measurementTypeDescription, value, additional, timestamp) {
+    measurementTimestamp: Long,
+    sensorMessageReceivedTimestamp: Long) extends SimpleSensedValue[CategoricalValueInstance](sensor, channelId, measurementTypeDescription, value, additional, measurementTimestamp, sensorMessageReceivedTimestamp) {
   def this(
     sensor: SensorEntityModel,
     channelId: Option[String],
     measurementTypeDescription: MeasurementTypeDescription,
     value: CategoricalValueInstance,
-    timestamp: Long) = {
-    this(sensor, channelId, measurementTypeDescription, value, None, timestamp)
+    measurementTimestamp: Long,
+    sensorMessageReceivedTimestamp: Long) = {
+    this(sensor, channelId, measurementTypeDescription, value, None, measurementTimestamp, sensorMessageReceivedTimestamp)
   }
 }
 

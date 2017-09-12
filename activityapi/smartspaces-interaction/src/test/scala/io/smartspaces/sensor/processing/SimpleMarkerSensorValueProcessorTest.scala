@@ -77,7 +77,8 @@ class SimpleMarkerSensorValueProcessorTest {
    */
   @Test def testUnknownMarker(): Unit = {
     val markerId = "foo"
-    val timestamp: Long = 1000
+    val measurementTimestamp: Long = 1000
+    val sensorMessageReceivedTimestamp: Long = 1001
     val builder = new StandardDynamicObjectBuilder()
 
     builder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE, markerId)
@@ -87,9 +88,9 @@ class SimpleMarkerSensorValueProcessorTest {
     val sensorModel = Mockito.mock(classOf[SensorEntityModel])
     val sensedEntityModel = Mockito.mock(classOf[PhysicalSpaceLocatableSensedEntityModel])
 
-    processor.processData(timestamp, sensorModel, sensedEntityModel, context, "channelId", builder.toDynamicObject())
+    processor.processData(measurementTimestamp, sensorMessageReceivedTimestamp, sensorModel, sensedEntityModel, context, "channelId", builder.toDynamicObject())
 
-    Mockito.verify(unknownMarkerHandler, Mockito.times(1)).handleUnknownMarker(markerId, timestamp)
+    Mockito.verify(unknownMarkerHandler, Mockito.times(1)).handleUnknownMarker(markerId, measurementTimestamp)
   }
 
   /**
@@ -97,7 +98,8 @@ class SimpleMarkerSensorValueProcessorTest {
    */
   @Test def testKnownMarker(): Unit = {
     val markerId = "foo"
-    val timestamp: Long = 1000
+    val measurementTimestamp: Long = 1000
+    val sensorMessageReceivedTimestamp: Long = 1001
     val builder = new StandardDynamicObjectBuilder()
 
     builder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE, markerId)
@@ -113,12 +115,12 @@ class SimpleMarkerSensorValueProcessorTest {
     val sensorModel = Mockito.mock(classOf[SensorEntityModel])
     val sensedEntityModel = Mockito.mock(classOf[PhysicalSpaceSensedEntityModel])
 
-    processor.processData(timestamp, sensorModel, sensedEntityModel, context, "channelId", builder.toDynamicObject())
+    processor.processData(measurementTimestamp, sensorMessageReceivedTimestamp, sensorModel, sensedEntityModel, context, "channelId", builder.toDynamicObject())
 
-    Mockito.verify(unknownMarkerHandler, Mockito.times(0)).handleUnknownMarker(markerId, timestamp)
+    Mockito.verify(unknownMarkerHandler, Mockito.times(0)).handleUnknownMarker(markerId, measurementTimestamp)
     
-    Mockito.verify(sensorModel, Mockito.times(1)).updateSensedValue(timestamp)
+    Mockito.verify(sensorModel, Mockito.times(1)).updateSensedValue(measurementTimestamp)
     
-    modelUpdater.updateLocation(sensedEntityModel, personEntity, timestamp)
+    modelUpdater.updateLocation(sensedEntityModel, personEntity, measurementTimestamp, sensorMessageReceivedTimestamp)
   }
 }

@@ -25,7 +25,7 @@ import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.messaging.route.MessageRouter;
 import io.smartspaces.messaging.route.RouteDescription;
 import io.smartspaces.messaging.route.RouteMessageListener;
-import io.smartspaces.messaging.route.RouteMessagePublisher;
+import io.smartspaces.messaging.route.RouteMessageSender;
 import io.smartspaces.messaging.route.StandardMessageRouter;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.provider.TimeProvider;
@@ -194,7 +194,7 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
   }
 
   @Override
-  public RouteMessagePublisher getMessagePublisher(String outputChannelId) {
+  public RouteMessageSender getMessagePublisher(String outputChannelId) {
     return messageRouter.getMessagePublisher(outputChannelId);
   }
 
@@ -204,7 +204,7 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
   }
 
   @Override
-  protected RouteMessagePublisher internalRegisterOutputRoute(RouteDescription routeDescription) {
+  protected RouteMessageSender internalRegisterOutputRoute(RouteDescription routeDescription) {
     return messageRouter.registerOutputChannelTopic(routeDescription);
   }
 

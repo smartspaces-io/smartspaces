@@ -50,8 +50,9 @@ object PhysicalSpaceOccupancyLiveEvent {
    *          the timestamp of the event
    */
   def newEnteredOnlyEvent(physicalSpace: PhysicalSpaceSensedEntityModel,
-      entered: Set[PersonSensedEntityModel], timestamp: Long): PhysicalSpaceOccupancyLiveEvent = {
-    new PhysicalSpaceOccupancyLiveEvent(physicalSpace, entered, NO_OCCUPANTS_SET, timestamp)
+      entered: Set[PersonSensedEntityModel], 
+      measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long): PhysicalSpaceOccupancyLiveEvent = {
+    new PhysicalSpaceOccupancyLiveEvent(physicalSpace, entered, NO_OCCUPANTS_SET, measurementTimestamp, sensorMessageReceivedTimestamp)
   }
   
   /**
@@ -65,8 +66,9 @@ object PhysicalSpaceOccupancyLiveEvent {
    *          the timestamp of the event
    */
   def newExitedOnlyEvent(physicalSpace: PhysicalSpaceSensedEntityModel,
-      exited: Set[PersonSensedEntityModel], timestamp: Long): PhysicalSpaceOccupancyLiveEvent = {
-    new PhysicalSpaceOccupancyLiveEvent(physicalSpace, NO_OCCUPANTS_SET, exited, timestamp)
+      exited: Set[PersonSensedEntityModel], 
+      measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long): PhysicalSpaceOccupancyLiveEvent = {
+    new PhysicalSpaceOccupancyLiveEvent(physicalSpace, NO_OCCUPANTS_SET, exited, measurementTimestamp, sensorMessageReceivedTimestamp)
   }
 }
 
@@ -79,5 +81,6 @@ object PhysicalSpaceOccupancyLiveEvent {
  * @author Keith M. Hughes
  */
 class PhysicalSpaceOccupancyLiveEvent(val physicalSpace: PhysicalSpaceSensedEntityModel,
-    val entered: Set[PersonSensedEntityModel], val exited: Set[PersonSensedEntityModel], val timestamp: Long) {
+    val entered: Set[PersonSensedEntityModel], val exited: Set[PersonSensedEntityModel], 
+    val measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long) {
 }

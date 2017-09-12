@@ -27,9 +27,11 @@ import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.sensor.messaging.messages.SensorMessages
 import io.smartspaces.util.data.dynamic.DynamicObject
 
+import scala.collection.JavaConverters._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
+import io.smartspaces.resource.managed.IdempotentManagedResource
 
 /**
  * The standard implementation of a sensed entity sensor handler.
@@ -37,7 +39,7 @@ import scala.collection.mutable.Map
  * @author Keith M. Hughes
  */
 class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: CompleteSensedEntityModel, private val unknownSensedEntityHandler: UnknownSensedEntityHandler,
-    val log: ExtendedLog) extends SensedEntitySensorHandler {
+    val log: ExtendedLog) extends SensedEntitySensorHandler with IdempotentManagedResource {
 
   /**
    * The mapping from sensor to sensed entity.
@@ -65,14 +67,6 @@ class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: C
   private val sensedEntitySensorListeners: ArrayBuffer[SensedEntitySensorListener] =
     new ArrayBuffer
 
-  override def startup(): Unit = {
-    // Nothing to do.
-  }
-
-  override def shutdown(): Unit = {
-    // Nothing to do.
-  }
-
   override def addSensedEntitySensorListener(listener: SensedEntitySensorListener): SensedEntitySensorHandler = {
     sensedEntitySensorListeners += listener
 
@@ -93,6 +87,26 @@ class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: C
   }
 
   override def handleSensorData(timestamp: Long, data: DynamicObject): Unit = {
+    val messageType = data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
+
+    messageType match {
+      case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_COMPOSITE =>
+        handleCompositeSensorMessage(timestamp, data)
+      case _ =>
+        handleSingleSensorMessage(timestamp, data)
+    }
+  }
+
+  private def handleCompositeSensorMessage(timestamp: Long, data: DynamicObject): Unit = {
+    data.down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA).
+        down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_MESSAGES)
+        
+    data.getArrayEntries.asScala.foreach { (messageComponent) =>
+      handleSingleSensorMessage(timestamp, messageComponent.down())
+    }
+  }
+
+  private def handleSingleSensorMessage(timestamp: Long, data: DynamicObject): Unit = {
     val sensorId = data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_SENSOR)
 
     if (sensorId == null) {
@@ -132,7 +146,7 @@ class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: C
     completeSensedEntityModel.doVoidWriteTransaction { () =>
       sensedEntitySensorListeners.foreach((listener) => {
         try {
-          listener.handleSensorData(this, timestamp, sensor.get, sensedEntity.get, data);
+          listener.handleNewSensorData(this, timestamp, sensor.get, sensedEntity.get, data);
         } catch {
           case e: Throwable =>
             log.formatError(e, "Error during listener processing of physical based sensor data");

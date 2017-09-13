@@ -53,40 +53,40 @@ public class SimpleExpressionEvaluatorTest {
 
   @Test
   public void testSingleExistsSimple() {
-    assertEquals(evaluator.evaluateStringExpression("${today}"), TODAY_DATE);
+    assertEquals(evaluator.evaluateStringExpression("${$today}"), TODAY_DATE);
   }
 
   @Test
   public void leExistsEmbedded() {
-    assertEquals(evaluator.evaluateStringExpression("Foo ${today} bar"), "Foo " + TODAY_DATE
+    assertEquals(evaluator.evaluateStringExpression("Foo ${$today} bar"), "Foo " + TODAY_DATE
         + " bar");
   }
 
   @Test
   public void testSingleExistsStart() {
-    assertEquals(evaluator.evaluateStringExpression("${today} bar"), TODAY_DATE + " bar");
+    assertEquals(evaluator.evaluateStringExpression("${$today} bar"), TODAY_DATE + " bar");
   }
 
   @Test
   public void testSingleExistsEndsd() {
-    assertEquals(evaluator.evaluateStringExpression("Foo ${today}"), "Foo " + TODAY_DATE);
+    assertEquals(evaluator.evaluateStringExpression("Foo ${$today}"), "Foo " + TODAY_DATE);
   }
 
   @Test
   public void testDouble() {
-    assertEquals(evaluator.evaluateStringExpression("${nameFirst} Foo ${today}"), NAME_FIRST
+    assertEquals(evaluator.evaluateStringExpression("${$nameFirst} Foo ${$today}"), NAME_FIRST
         + " Foo " + TODAY_DATE);
   }
 
   @Test
   public void testMissingSingle() {
-    assertEquals(evaluator.evaluateStringExpression("${nameLast}"), "${nameLast}");
+    assertEquals(evaluator.evaluateStringExpression("${$nameLast}"), "${$nameLast}");
   }
 
   @Test
   public void testSingleError() {
     try {
-      evaluator.evaluateStringExpression("${nameFirst");
+      evaluator.evaluateStringExpression("${$nameFirst");
       fail();
     } catch (EvaluationSmartSpacesException e) {
 
@@ -95,13 +95,13 @@ public class SimpleExpressionEvaluatorTest {
 
   @Test
   public void testDoubleOneMissing() {
-    assertEquals(evaluator.evaluateStringExpression("${nameLast} Foo ${today}"), "${nameLast} Foo "
+    assertEquals(evaluator.evaluateStringExpression("${$nameLast} Foo ${$today}"), "${$nameLast} Foo "
         + TODAY_DATE);
   }
 
   @Test
   public void testDoubleError() {
-    assertEquals(evaluator.evaluateStringExpression("${nameFirst Foo ${today}"),
-        "${nameFirst Foo ${today}");
+    assertEquals(evaluator.evaluateStringExpression("${$nameFirst Foo ${$today}"),
+        "${$nameFirst Foo ${$today}");
   }
 }

@@ -99,7 +99,7 @@ public class BaseActivityTest {
 
     log = Mockito.mock(ExtendedLog.class);
     activityRuntime = Mockito.mock(ActivityRuntime.class);
-    configuration = new SimpleConfiguration(null);
+    configuration = SimpleConfiguration.newConfiguration();
     executionContext = Mockito.mock(ActivityExecutionContext.class);
 
     component = Mockito.spy(new MyBaseActivityComponent("component1"));

@@ -27,7 +27,7 @@ public class SimpleExpressionEvaluator extends BaseExpressionEvaluator {
   @Override
   public String evaluateStringExpression(String initial) {
     // I don't know if the short-circuit is needed, but will leave for now
-    // and check by profiling  later.
+    // and check by profiling later.
     int exprPos = initial.indexOf("${");
     if (exprPos == -1) {
       return initial;
@@ -44,14 +44,14 @@ public class SimpleExpressionEvaluator extends BaseExpressionEvaluator {
 
         endExpr = initial.indexOf("}", endExpr);
         if (endExpr == -1) {
-          throw new EvaluationSmartSpacesException(String.format(
-              "Expression in string doesn't end with }: %s", initial.substring(exprPos)));
+          throw new EvaluationSmartSpacesException(String
+              .format("Expression in string doesn't end with }: %s", initial.substring(exprPos)));
         }
 
         String internalExpression = initial.substring(exprPos, endExpr);
         Object value = evaluateSymbolValue(internalExpression);
         if (value == null || value.equals(internalExpression))
-          buffer.append("${$").append(internalExpression).append("}");
+          buffer.append("${").append(internalExpression).append("}");
         else
           buffer.append(value.toString());
 
@@ -79,6 +79,11 @@ public class SimpleExpressionEvaluator extends BaseExpressionEvaluator {
    */
   private String evaluateSymbolValue(String expression) throws EvaluationSmartSpacesException {
     String rawValue = environment.lookupSymbolValue(expression.substring(1));
-    return evaluateStringExpression(rawValue);
+    if (rawValue != null) {
+      return evaluateStringExpression(rawValue);
+
+    } else {
+      return null;
+    }
   }
 }

@@ -49,12 +49,12 @@ public class SselExpressionEvaluator extends BaseExpressionEvaluator {
     env.setSymbolValue("a.b.c", "45dbf5e6-5cf3-11e7-953d-c48e8ff54e35");
     env.addFunctionDefinition(new ConcatStringFunctionDefinition());
     env.addFunctionDefinition(new ReplaceAllStringFunctionDefinition());
-    
+
     SselExpressionEvaluator evaluator = new SselExpressionEvaluator();
     evaluator.setEvaluationEnvironment(env);
 
-    String result =
-        evaluator.evaluateStringExpression(" foo ${concat(\"s\", replaceAll($a.b.c, \"-\", \"_s\"))} bar ${$a.b.c}");
+    String result = evaluator.evaluateStringExpression(
+        " foo ${concat(\"s\", replaceAll($a.b.c, \"-\", \"_s\"))} bar ${$a.b.c}");
     System.out.println(result);
   }
 
@@ -104,7 +104,7 @@ public class SselExpressionEvaluator extends BaseExpressionEvaluator {
    * 
    * @param expression
    *          the expression
-   *          
+   * 
    * @return the value
    */
   private Object evaluateSselExpression(String expression) {
@@ -142,7 +142,11 @@ public class SselExpressionEvaluator extends BaseExpressionEvaluator {
    */
   private String evaluateSymbolValue(String symbolName) throws EvaluationSmartSpacesException {
     String rawValue = environment.lookupSymbolValue(symbolName);
-    return evaluateStringExpression(rawValue);
+    if (rawValue != null) {
+      return evaluateStringExpression(rawValue);
+    } else {
+      return null;
+    }
   }
 
   /**

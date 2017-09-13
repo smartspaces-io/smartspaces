@@ -79,7 +79,7 @@ public class BasicMessageRouterActivityComponentTest {
     log = Mockito.mock(ExtendedLog.class);
     Mockito.when(activity.getLog()).thenReturn(log);
 
-    configuration = new SimpleConfiguration(new SimpleExpressionEvaluator());
+    configuration = SimpleConfiguration.newConfiguration();
 
     component = new BasicMessageRouterActivityComponent();
     component.setRoutableInputMessageListener(messageListener);

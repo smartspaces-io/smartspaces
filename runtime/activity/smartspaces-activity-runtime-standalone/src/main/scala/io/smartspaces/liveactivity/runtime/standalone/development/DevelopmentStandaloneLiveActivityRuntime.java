@@ -23,7 +23,7 @@ import io.smartspaces.activity.ActivityStatus;
 import io.smartspaces.activity.component.comm.route.MessageRouterActivityComponent;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.evaluation.ExpressionEvaluatorFactory;
-import io.smartspaces.evaluation.SimpleExpressionEvaluatorFactory;
+import io.smartspaces.expression.language.ssel.SselExpressionEvaluatorFactory;
 import io.smartspaces.liveactivity.runtime.LiveActivityRuntimeComponentFactory;
 import io.smartspaces.liveactivity.runtime.LiveActivityRuntimeListener;
 import io.smartspaces.liveactivity.runtime.LiveActivityStatusPublisher;
@@ -342,7 +342,7 @@ public class DevelopmentStandaloneLiveActivityRuntime implements ManagedResource
     managedResources.addResource(activityInstallationManager);
 
     // TODO(keith): Consider placing in runtime component factory.
-    ExpressionEvaluatorFactory expressionEvaluatorFactory = new SimpleExpressionEvaluatorFactory();
+    ExpressionEvaluatorFactory expressionEvaluatorFactory = new SselExpressionEvaluatorFactory();
 
     DevelopmentPropertyFileLiveActivityConfigurationManager configurationManager =
         new DevelopmentPropertyFileLiveActivityConfigurationManager(expressionEvaluatorFactory,

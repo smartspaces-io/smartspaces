@@ -25,7 +25,60 @@ package io.smartspaces.evaluation;
 public class SimpleExpressionEvaluator extends BaseExpressionEvaluator {
 
   @Override
-  public Object evaluateExpression(String expression) throws EvaluationSmartSpacesException {
-    return environment.lookupVariableValue(expression);
+  public String evaluateStringExpression(String initial) {
+    // I don't know if the short-circuit is needed, but will leave for now
+    // and check by profiling  later.
+    int exprPos = initial.indexOf("${");
+    if (exprPos == -1) {
+      return initial;
+    } else {
+      // Store the first part of the string that has no variables.
+      StringBuffer buffer = new StringBuffer();
+
+      // For now there will never be a ${ or } in the middle of an
+      // expression.
+      int endExpr = 0;
+      do {
+        buffer.append(initial.substring(endExpr, exprPos));
+        exprPos += 2;
+
+        endExpr = initial.indexOf("}", endExpr);
+        if (endExpr == -1) {
+          throw new EvaluationSmartSpacesException(String.format(
+              "Expression in string doesn't end with }: %s", initial.substring(exprPos)));
+        }
+
+        String internalExpression = initial.substring(exprPos, endExpr);
+        Object value = evaluateSymbolValue(internalExpression);
+        if (value == null || value.equals(internalExpression))
+          buffer.append("${$").append(internalExpression).append("}");
+        else
+          buffer.append(value.toString());
+
+        endExpr++;
+        exprPos = initial.indexOf("${", endExpr);
+      } while (exprPos != -1);
+
+      buffer.append(initial.substring(endExpr));
+
+      return buffer.toString();
+    }
+  }
+
+  /**
+   * Evaluate a symbol value.
+   *
+   * @param expression
+   *          the expression to evaluate in whatever expression language is
+   *          being supported.
+   *
+   * @return The value of the expression.
+   *
+   * @throws EvaluationSmartSpacesException
+   *           An evaluation error of some sort occurred.
+   */
+  private String evaluateSymbolValue(String expression) throws EvaluationSmartSpacesException {
+    String rawValue = environment.lookupSymbolValue(expression.substring(1));
+    return evaluateStringExpression(rawValue);
   }
 }

@@ -19,6 +19,7 @@ package io.smartspaces.configuration;
 
 import io.smartspaces.evaluation.ExpressionEvaluator;
 import io.smartspaces.evaluation.SimpleExpressionEvaluator;
+import io.smartspaces.expression.language.ssel.SselExpressionEvaluatorFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,10 +43,9 @@ public class SimpleConfiguration extends BaseConfiguration {
    * @return the newly created configuration
    */
   public static SimpleConfiguration newConfiguration() {
-    ExpressionEvaluator expressionEvaluator = new SimpleExpressionEvaluator();
-
+    ExpressionEvaluator expressionEvaluator = new SselExpressionEvaluatorFactory().newEvaluator();
+ 
     SimpleConfiguration configuration = new SimpleConfiguration(expressionEvaluator);
-    expressionEvaluator.setEvaluationEnvironment(configuration);
 
     return configuration;
   }

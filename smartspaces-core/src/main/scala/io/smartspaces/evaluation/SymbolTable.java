@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,21 +17,29 @@
 package io.smartspaces.evaluation;
 
 /**
- * An {@link ExpressionEvaluatorFactory} which returns instances of
- * {@link SimpleExpressionEvaluator}.
- *
+ * A table of symbols and their values.
+ * 
  * @author Keith M. Hughes
  */
-public class SimpleExpressionEvaluatorFactory extends BaseExpressionEvaluatorFactory {
+public interface SymbolTable<T> {
 
-  @Override
-  public ExpressionEvaluator newEvaluator() {
-    EvaluationEnvironment environment = newEvaluationEnvironment();
-
-    SimpleExpressionEvaluator evaluator = new SimpleExpressionEvaluator();
-    evaluator.setEvaluationEnvironment(environment);
-    
-    return evaluator;
-  }
+  /**
+   * Look up the value of a variable.
+   *
+   * @param symbolName
+   *          the name of the symbol to lookup
+   *
+   * @return the value of the symbol, or {@code null} if not found
+   */
+  T lookupSymbolValue(String symbolName);
+  
+  /**
+   * Set the value of a variable.
+   *
+   * @param symbolName
+   *          the name of the symbol
+   * @param value
+   *          the value of the symbol
+   */
+  void setSymbolValue(String symbolName, T value);
 }
-

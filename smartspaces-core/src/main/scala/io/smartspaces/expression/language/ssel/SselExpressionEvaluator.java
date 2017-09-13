@@ -17,9 +17,12 @@
 package io.smartspaces.expression.language.ssel;
 
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.evaluation.EvaluationEnvironment;
+import io.smartspaces.evaluation.BaseExpressionEvaluator;
+import io.smartspaces.evaluation.EvaluationSmartSpacesException;
 import io.smartspaces.evaluation.FunctionCall;
 import io.smartspaces.evaluation.SimpleEvaluationEnvironment;
+import io.smartspaces.evaluation.function.ConcatStringFunctionDefinition;
+import io.smartspaces.evaluation.function.ReplaceAllStringFunctionDefinition;
 import io.smartspaces.expression.language.ssel.SmartspacesexpressionlanguageParserParser.ExpressionContext;
 import io.smartspaces.expression.language.ssel.SmartspacesexpressionlanguageParserParser.FunctionArgumentContext;
 import io.smartspaces.expression.language.ssel.SmartspacesexpressionlanguageParserParser.FunctionCallContext;
@@ -39,24 +42,72 @@ import java.util.Stack;
  * 
  * @author Keith M. Hughes
  */
-public class SselExpressionEvaluator {
+public class SselExpressionEvaluator extends BaseExpressionEvaluator {
 
   public static void main(String[] args) {
     SimpleEvaluationEnvironment env = new SimpleEvaluationEnvironment();
-    env.set("a.b.c", "glorp");
-    SselExpressionEvaluator evaluator = new SselExpressionEvaluator(env);
+    env.setSymbolValue("a.b.c", "45dbf5e6-5cf3-11e7-953d-c48e8ff54e35");
+    env.addFunctionDefinition(new ConcatStringFunctionDefinition());
+    env.addFunctionDefinition(new ReplaceAllStringFunctionDefinition());
+    
+    SselExpressionEvaluator evaluator = new SselExpressionEvaluator();
+    evaluator.setEvaluationEnvironment(env);
 
-    Object result = evaluator.evaluate("foo($a.b.c,1, \"fo\\\"op\", bar(1,\"2\"), 3)");
+    String result =
+        evaluator.evaluateStringExpression(" foo ${concat(\"s\", replaceAll($a.b.c, \"-\", \"_s\"))} bar ${$a.b.c}");
     System.out.println(result);
   }
 
-  private EvaluationEnvironment evaluationEnvironment;
+  @Override
+  public String evaluateStringExpression(String expression) {
+    // I don't know if the short-circuit is needed, but will leave for now
+    // and check by profiling later.
+    int exprPos = expression.indexOf("${");
+    if (exprPos == -1) {
+      return expression;
+    } else {
+      // Store the first part of the string that has no variables.
+      StringBuffer buffer = new StringBuffer();
 
-  public SselExpressionEvaluator(EvaluationEnvironment evaluationEnvironment) {
-    this.evaluationEnvironment = evaluationEnvironment;
+      // For now there will never be a ${ or } in the middle of an
+      // expression.
+      int endExpr = 0;
+      do {
+        buffer.append(expression.substring(endExpr, exprPos));
+        exprPos += 2;
+
+        endExpr = expression.indexOf("}", endExpr);
+        if (endExpr == -1) {
+          throw new EvaluationSmartSpacesException(String.format(
+              "Expression in string doesn't end with }: %s", expression.substring(exprPos)));
+        }
+
+        String internalExpression = expression.substring(exprPos, endExpr);
+        Object value = evaluateSselExpression(internalExpression);
+        if (value == null || value.equals(expression))
+          buffer.append("${").append(internalExpression).append("}");
+        else
+          buffer.append(value.toString());
+
+        endExpr++;
+        exprPos = expression.indexOf("${", endExpr);
+      } while (exprPos != -1);
+
+      buffer.append(expression.substring(endExpr));
+
+      return buffer.toString();
+    }
   }
 
-  public Object evaluate(String expression) {
+  /**
+   * Evaluate an SSEL expression.
+   * 
+   * @param expression
+   *          the expression
+   *          
+   * @return the value
+   */
+  private Object evaluateSselExpression(String expression) {
     ANTLRInputStream inputStream = new ANTLRInputStream(expression);
 
     SmartspacesexpressionlanguageParserLexer lexer =
@@ -68,9 +119,9 @@ public class SselExpressionEvaluator {
     ExpressionContext expressionContext = parser.expression();
 
     if (expressionContext.exception == null) {
-
       ExpressionVisitor visitor = new ExpressionVisitor();
-      return visitor.visit(expressionContext);
+      Object value = visitor.visit(expressionContext);
+      return value.toString();
     } else {
       throw new SmartSpacesException("Could not parse expression " + expression,
           expressionContext.exception);
@@ -78,11 +129,28 @@ public class SselExpressionEvaluator {
   }
 
   /**
+   * Evaluate a symbol value.
+   *
+   * @param symbolName
+   *          the expression to evaluate in whatever expression language is
+   *          being supported.
+   *
+   * @return The value of the expression.
+   *
+   * @throws EvaluationSmartSpacesException
+   *           An evaluation error of some sort occurred.
+   */
+  private String evaluateSymbolValue(String symbolName) throws EvaluationSmartSpacesException {
+    String rawValue = environment.lookupSymbolValue(symbolName);
+    return evaluateStringExpression(rawValue);
+  }
+
+  /**
    * The ANTLR 4 visitor that walks an expression tree.
    * 
    * @author Keith M. Hughes
    */
-  class ExpressionVisitor extends SmartspacesexpressionlanguageParserBaseVisitor<Object> {
+  private class ExpressionVisitor extends SmartspacesexpressionlanguageParserBaseVisitor<Object> {
 
     /**
      * The stack of function calls.
@@ -92,9 +160,9 @@ public class SselExpressionEvaluator {
     @Override
     public Object visitSymbol(SymbolContext context) {
 
-      String symbol = context.getText().substring(1);
+      String symbolName = context.getText().substring(1);
 
-      return evaluationEnvironment.lookupVariableValue(symbol);
+      return evaluateSymbolValue(symbolName);
     }
 
     @Override
@@ -105,9 +173,9 @@ public class SselExpressionEvaluator {
       visitChildren(context);
 
       FunctionCall builtCall = functions.pop();
-      System.out.println(builtCall);
+      Object result = getEvaluationEnvironment().evaluateFunctionCall(builtCall);
 
-      return null;
+      return result;
     }
 
     @Override

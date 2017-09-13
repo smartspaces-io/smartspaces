@@ -16,7 +16,8 @@
 
 package io.smartspaces.evaluation
 
-import scala.collection.mutable.ListBuffer
+import java.util.ArrayList
+import java.util.List
 
 /**
  * A function call to be evaluated.
@@ -33,16 +34,16 @@ class FunctionCall {
   /**
    * The arguments in the function call.
    */
-  private val args: ListBuffer[Any] = new ListBuffer
+  val args: List[Object] = new ArrayList
   
   /**
    * Add in a new argument.
    * 
-   * @param arg
+   * @param _arg
    *         the new argument
    */
-  def addArg(arg: Any): FunctionCall = {
-    args.append(arg)
+  def addArg(arg: Object): FunctionCall = {
+    args.add(arg)
     
     this
   }

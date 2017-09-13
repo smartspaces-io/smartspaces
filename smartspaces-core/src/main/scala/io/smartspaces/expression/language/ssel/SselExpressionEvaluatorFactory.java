@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,24 +14,27 @@
  * the License.
  */
 
-package io.smartspaces.evaluation;
+package io.smartspaces.expression.language.ssel;
+
+import io.smartspaces.evaluation.BaseExpressionEvaluatorFactory;
+import io.smartspaces.evaluation.EvaluationEnvironment;
+import io.smartspaces.evaluation.ExpressionEvaluator;
 
 /**
- * An {@link ExpressionEvaluatorFactory} which returns instances of
- * {@link SimpleExpressionEvaluator}.
- *
+ * A factory for SmartSpaces Expression Language evaluators.
+ * 
  * @author Keith M. Hughes
  */
-public class SimpleExpressionEvaluatorFactory extends BaseExpressionEvaluatorFactory {
+public class SselExpressionEvaluatorFactory extends BaseExpressionEvaluatorFactory {
 
   @Override
   public ExpressionEvaluator newEvaluator() {
     EvaluationEnvironment environment = newEvaluationEnvironment();
 
-    SimpleExpressionEvaluator evaluator = new SimpleExpressionEvaluator();
+    SselExpressionEvaluator evaluator = new SselExpressionEvaluator();
     evaluator.setEvaluationEnvironment(environment);
     
     return evaluator;
   }
-}
 
+}

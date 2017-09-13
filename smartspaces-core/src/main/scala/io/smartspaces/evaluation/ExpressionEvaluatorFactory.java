@@ -27,10 +27,7 @@ public interface ExpressionEvaluatorFactory {
   /**
    * Create a new expression evaluator.
    *
-   * @param environment
-   *          the environment for evaluating values.
-   *
-   * @return
+   * @return the expression evaluator
    */
   ExpressionEvaluator newEvaluator();
 }

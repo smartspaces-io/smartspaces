@@ -17,6 +17,7 @@ package io.smartspaces.configuration;
 
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.evaluation.ExpressionEvaluator;
+import io.smartspaces.evaluation.SymbolTable;
 
 import java.util.List;
 import java.util.Map;
@@ -336,4 +337,14 @@ public interface Configuration {
    *          the map to add things into
    */
   void addCollapsedEntries(Map<String, String> map);
+  
+  /**
+   * Make the configuration appear as a symbol table.
+   * 
+   * <p>
+   * All lookups will happen as a string property lookup.
+   * 
+   * @return the configuration as a symbol table
+   */
+  SymbolTable<String> asSymbolTable();
 }

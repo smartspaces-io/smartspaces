@@ -16,11 +16,13 @@
 package io.smartspaces.configuration;
 
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.evaluation.EvaluationEnvironment;
-import io.smartspaces.evaluation.EvaluationSmartSpacesException;
 import io.smartspaces.evaluation.ExpressionEvaluator;
+import io.smartspaces.evaluation.SymbolTable;
 import io.smartspaces.util.data.json.JsonMapper;
 import io.smartspaces.util.data.json.StandardJsonMapper;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,15 +31,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
 /**
  * Support for implementations of {@link Configuration}.
  *
  * @author Keith M. Hughes
  */
-public abstract class BaseConfiguration implements Configuration, EvaluationEnvironment {
+public abstract class BaseConfiguration implements Configuration {
 
   /**
    * The JSON mapper for JSON parsing.
@@ -75,6 +74,8 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
   public BaseConfiguration(ExpressionEvaluator expressionEvaluator, Configuration parent) {
     this.expressionEvaluator = expressionEvaluator;
     this.parent = parent;
+    
+    expressionEvaluator.getEvaluationEnvironment().addSymbolTable(asSymbolTable());
   }
 
   @Override
@@ -245,9 +246,9 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
    * expression.
    *
    * @param property
-   *          Name of the property.
+   *          name of the property
    *
-   * @return the value of the property, or null if not found
+   * @return the value of the property, or {@code null} if not found
    */
   private String getPropertyValue(String property) {
     String value = findProperty(property);
@@ -275,11 +276,6 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
   }
 
   @Override
-  public String lookupVariableValue(String variable) throws EvaluationSmartSpacesException {
-    return getPropertyValue(variable);
-  }
-
-  @Override
   public void setProperties(Map<String, String> values) {
     for (Entry<String, String> entry : values.entrySet()) {
       setProperty(entry.getKey(), entry.getValue());
@@ -293,5 +289,10 @@ public abstract class BaseConfiguration implements Configuration, EvaluationEnvi
     addCollapsedEntries(map);
 
     return map;
+  }
+
+  @Override
+  public SymbolTable<String> asSymbolTable() {
+    return new ConfigurationSymbolTableAdapter(this);
   }
 }

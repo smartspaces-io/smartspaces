@@ -17,36 +17,99 @@
 
 package io.smartspaces.evaluation;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * A standalone {@link EvaluationEnvironment}.
+ * A simple implemenation of an {@link EvaluationEnvironment}.
  *
  * @author Keith M. Hughes
- * @since Jul 25, 2012
  */
 public class SimpleEvaluationEnvironment implements EvaluationEnvironment {
 
   /**
-   * The map of values for the environment.
+   * The symbol tables that have been added to the evaluation environment.
    */
-  private Map<String, String> values = new HashMap<>();
+  private List<SymbolTable<String>> symbolTables = new ArrayList<>();
+
+  /**
+   * The root symbol table.
+   */
+  private SymbolTable<String> rootSymbolTable;
+
+  /**
+   * The function definitions for this environment.
+   */
+  private List<FunctionDefinition> functionDefinitions = new ArrayList<>();
+
+  /**
+   * Construct a new environment.
+   */
+  public SimpleEvaluationEnvironment() {
+    rootSymbolTable = new SimpleSymbolTable<>();
+
+    symbolTables.add(rootSymbolTable);
+  }
 
   @Override
-  public String lookupVariableValue(String variable) throws EvaluationSmartSpacesException {
-    return values.get(variable);
+  public EvaluationEnvironment addSymbolTable(SymbolTable<String> symbolTable) {
+
+    symbolTables.add(symbolTable);
+
+    return this;
+  }
+
+  @Override
+  public String lookupSymbolValue(String symbolName) {
+    for (SymbolTable<String> symbolTable : symbolTables) {
+      String value = symbolTable.lookupSymbolValue(symbolName);
+      if (value != null) {
+        return value;
+      }
+    }
+
+    return null;
+  }
+
+  @Override
+  public void setSymbolValue(String symbolName, String value) {
+    rootSymbolTable.setSymbolValue(symbolName, value);
+  }
+
+  @Override
+  public Object evaluateFunctionCall(FunctionCall functionCall)
+      throws EvaluationSmartSpacesException {
+    FunctionDefinition functionDefinition = findFunctionDefintionForCall(functionCall);
+    if (functionDefinition != null) {
+      return functionDefinition.evaluateFunctionCall(functionCall);
+    } else {
+      throw new EvaluationSmartSpacesException(
+          "Could not fund function definition for function " + functionCall.functionName());
+    }
+  }
+
+  @Override
+  public EvaluationEnvironment addFunctionDefinition(FunctionDefinition functionDefinition) {
+    functionDefinitions.add(functionDefinition);
+
+    return this;
   }
 
   /**
-   * Set the value of a variable.
-   *
-   * @param variable
-   *          the name of the variable
-   * @param value
-   *          the value of the variable
+   * Find a function definition for the current function.
+   * 
+   * @param functionCall
+   *          the function call
+   *          
+   * @return an appropriate function definition, or {@code null} if none found
    */
-  public void set(String variable, String value) {
-    values.put(variable, value);
+  private FunctionDefinition findFunctionDefintionForCall(FunctionCall functionCall) {
+    for (FunctionDefinition functionDefinition : functionDefinitions) {
+      if (functionDefinition.canEvaluateCall(functionCall)) {
+        return functionDefinition;
+      }
+    }
+
+    return null;
   }
 }

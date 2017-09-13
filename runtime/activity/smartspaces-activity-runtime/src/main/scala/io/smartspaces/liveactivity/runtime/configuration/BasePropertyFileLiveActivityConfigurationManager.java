@@ -97,7 +97,7 @@ public abstract class BasePropertyFileLiveActivityConfigurationManager implement
         new StandardLiveActivityConfiguration(baseConfigurationStorageManager,
             installedActivityConfigurationStorageManager, expressionEvaluator,
             spaceEnvironment.getSystemConfiguration());
-    expressionEvaluator.setEvaluationEnvironment(configuration);
+    expressionEvaluator.getEvaluationEnvironment().addSymbolTable(configuration.asSymbolTable());
 
     return configuration;
   }

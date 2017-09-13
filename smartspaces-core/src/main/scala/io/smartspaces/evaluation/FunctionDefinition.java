@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,21 +17,28 @@
 package io.smartspaces.evaluation;
 
 /**
- * An environment for evaluating expressions.
- *
+ * The definition of a function.
+ * 
  * @author Keith M. Hughes
  */
-public interface EvaluationEnvironment extends SymbolTable<String> {
-
+public interface FunctionDefinition {
+  
   /**
-   * Add a symbol table to the evaluation environment.
+   * Get the name of the function.
    * 
-   * @param symbolTable
-   *          the symbol table to add
-   * 
-   * @return this environment
+   * @return the name of the function
    */
-  EvaluationEnvironment addSymbolTable(SymbolTable<String> symbolTable);
+  String functionName();
+  
+  /**
+   * Can this function evaluate this call?
+   * 
+   * @param functionCall
+   *       the function call
+   *       
+   * @return {@code true} if can evaluate the call
+   */
+  boolean canEvaluateCall(FunctionCall functionCall);
 
   /**
    * Evaluate a function call.
@@ -40,20 +46,10 @@ public interface EvaluationEnvironment extends SymbolTable<String> {
    * @param functionCall
    *          the function call to evaluate
    *          
-   * @return the value of the call
+   * @return the value of the function call
    * 
    * @throws EvaluationSmartSpacesException
    *          something bad happened during evaluation
    */
   Object evaluateFunctionCall(FunctionCall functionCall) throws EvaluationSmartSpacesException;
-
-  /**
-   * Add a function definition.
-   * 
-   * @param functionDefinition
-   *          the function definition to add
-   *          
-   * @return this environment
-   */
-  EvaluationEnvironment addFunctionDefinition(FunctionDefinition functionDefinition);
 }

@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,22 +16,28 @@
 
 package io.smartspaces.evaluation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * An {@link ExpressionEvaluatorFactory} which returns instances of
- * {@link SimpleExpressionEvaluator}.
- *
+ * A simple implementation of a symbol table.
+ * 
  * @author Keith M. Hughes
  */
-public class SimpleExpressionEvaluatorFactory extends BaseExpressionEvaluatorFactory {
+public class SimpleSymbolTable<T> implements SymbolTable<T> {
+
+  /**
+   * The map of values for the environment.
+   */
+  private Map<String, T> values = new HashMap<>();
 
   @Override
-  public ExpressionEvaluator newEvaluator() {
-    EvaluationEnvironment environment = newEvaluationEnvironment();
+  public T lookupSymbolValue(String symbolName) {
+    return values.get(symbolName);
+  }
 
-    SimpleExpressionEvaluator evaluator = new SimpleExpressionEvaluator();
-    evaluator.setEvaluationEnvironment(environment);
-    
-    return evaluator;
+  @Override
+  public void setSymbolValue(String symbolName, T value) {
+    values.put(symbolName, value);
   }
 }
-

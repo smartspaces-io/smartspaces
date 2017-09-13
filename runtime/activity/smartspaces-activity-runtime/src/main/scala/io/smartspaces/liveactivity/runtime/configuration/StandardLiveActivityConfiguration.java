@@ -18,10 +18,12 @@
 package io.smartspaces.liveactivity.runtime.configuration;
 
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.configuration.ConfigurationSymbolTableAdapter;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.configuration.SingleConfigurationStorageManager;
 import io.smartspaces.evaluation.EvaluationSmartSpacesException;
 import io.smartspaces.evaluation.ExpressionEvaluator;
+import io.smartspaces.evaluation.SymbolTable;
 
 import java.util.List;
 import java.util.Map;
@@ -228,11 +230,6 @@ public class StandardLiveActivityConfiguration implements LiveActivityConfigurat
   }
 
   @Override
-  public String lookupVariableValue(String variable) throws EvaluationSmartSpacesException {
-    return temporary.lookupVariableValue(variable);
-  }
-
-  @Override
   public void clear() {
     // Clear the entire chain except the system configuration.
     for (Configuration current = temporary; current != systemConfiguration; current =
@@ -249,5 +246,10 @@ public class StandardLiveActivityConfiguration implements LiveActivityConfigurat
   @Override
   public void addCollapsedEntries(Map<String, String> map) {
     temporary.addCollapsedEntries(map);
+  }
+
+  @Override
+  public SymbolTable<String> asSymbolTable() {
+    return new ConfigurationSymbolTableAdapter(this);
   }
 }

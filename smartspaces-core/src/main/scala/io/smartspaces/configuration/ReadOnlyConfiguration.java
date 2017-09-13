@@ -17,6 +17,7 @@ package io.smartspaces.configuration;
 
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.evaluation.ExpressionEvaluator;
+import io.smartspaces.evaluation.SymbolTable;
 
 import java.util.List;
 import java.util.Map;
@@ -178,5 +179,10 @@ public class ReadOnlyConfiguration implements Configuration {
   @Override
   public void addCollapsedEntries(Map<String, String> map) {
     wrapped.addCollapsedEntries(map);
+  }
+
+  @Override
+  public SymbolTable<String> asSymbolTable() {
+    return new ConfigurationSymbolTableAdapter(this);
   }
 }

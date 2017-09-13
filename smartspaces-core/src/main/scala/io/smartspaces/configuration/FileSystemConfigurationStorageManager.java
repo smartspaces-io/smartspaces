@@ -73,15 +73,14 @@ public class FileSystemConfigurationStorageManager implements SystemConfiguratio
   public void startup() {
     ExpressionEvaluator evaluator = expressionEvaluatorFactory.newEvaluator();
     SimpleConfiguration sconfig = new SimpleConfiguration(evaluator);
-    evaluator.setEvaluationEnvironment(sconfig);
-
-    systemConfiguration = sconfig;
 
     if (configFolder != null) {
       for (File configFile : getConfigFiles()) {
-        loadConfigFile(systemConfiguration, configFile);
+        loadConfigFile(sconfig, configFile);
       }
     }
+
+    systemConfiguration = sconfig;
   }
 
   @Override
@@ -191,7 +190,7 @@ public class FileSystemConfigurationStorageManager implements SystemConfiguratio
    *          the smartspacesFilesystem to set
    */
   public void
-      setsmartspacesFilesystem(SmartSpacesFilesystem smartspacesFilesystem) {
+      setSmartspacesFilesystem(SmartSpacesFilesystem smartspacesFilesystem) {
     this.smartspacesFilesystem = smartspacesFilesystem;
   }
 

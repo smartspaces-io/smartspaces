@@ -31,6 +31,13 @@ public interface ExpressionEvaluator {
    *          the evaluation environment for the evaluator
    */
   void setEvaluationEnvironment(EvaluationEnvironment environment);
+  
+  /**
+   * Get the evaluation environment for the evaluator.
+   * 
+   * @return the evaluation environment
+   */
+  EvaluationEnvironment getEvaluationEnvironment();
 
   /**
    * Evaluate a string expression.
@@ -46,17 +53,4 @@ public interface ExpressionEvaluator {
    */
   String evaluateStringExpression(String initial) throws EvaluationSmartSpacesException;
 
-  /**
-   * Evaluate an expression.
-   *
-   * @param expression
-   *          the expression to evaluate in whatever expression language is
-   *          being supported.
-   *
-   * @return The value of the expression.
-   *
-   * @throws EvaluationSmartSpacesException
-   *           An evaluation error of some sort occurred.
-   */
-  Object evaluateExpression(String expression) throws EvaluationSmartSpacesException;
 }

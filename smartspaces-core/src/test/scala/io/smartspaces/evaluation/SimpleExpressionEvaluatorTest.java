@@ -43,9 +43,9 @@ public class SimpleExpressionEvaluatorTest {
   @Before
   public void setUp() {
     environment = mock(EvaluationEnvironment.class);
-    when(environment.lookupVariableValue(eq("today"))).thenReturn(TODAY_DATE);
-    when(environment.lookupVariableValue(eq("nameFirst"))).thenReturn(NAME_FIRST);
-    when(environment.lookupVariableValue(eq("one"))).thenReturn("1");
+    when(environment.lookupSymbolValue(eq("today"))).thenReturn(TODAY_DATE);
+    when(environment.lookupSymbolValue(eq("nameFirst"))).thenReturn(NAME_FIRST);
+    when(environment.lookupSymbolValue(eq("one"))).thenReturn("1");
 
     evaluator = new SimpleExpressionEvaluator();
     evaluator.setEvaluationEnvironment(environment);

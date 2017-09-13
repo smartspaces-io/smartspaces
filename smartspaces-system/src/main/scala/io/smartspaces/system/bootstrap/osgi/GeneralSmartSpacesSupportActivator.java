@@ -17,38 +17,12 @@
 
 package io.smartspaces.system.bootstrap.osgi;
 
-import java.io.File;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.logging.Log;
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.framework.wiring.FrameworkWiring;
-import org.ros.log.RosLogFactory;
-import org.ros.master.uri.MasterUriProvider;
-import org.ros.master.uri.StaticMasterUriProvider;
-import org.ros.master.uri.SwitchableMasterUriProvider;
-import org.ros.osgi.common.RosEnvironment;
-import org.ros.osgi.common.SimpleRosEnvironment;
-
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.FileSystemConfigurationStorageManager;
 import io.smartspaces.configuration.SystemConfigurationStorageManager;
 import io.smartspaces.evaluation.ExpressionEvaluatorFactory;
-import io.smartspaces.evaluation.SimpleExpressionEvaluatorFactory;
 import io.smartspaces.event.observable.StandardEventObservableRegistry;
+import io.smartspaces.expression.language.ssel.SselExpressionEvaluatorFactory;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.logging.StandardExtendedLog;
 import io.smartspaces.resource.managed.ManagedResource;
@@ -75,6 +49,32 @@ import io.smartspaces.time.provider.NtpTimeProvider;
 import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.util.concurrency.DefaultScheduledExecutorService;
 import io.smartspaces.util.net.InetAddressFactory;
+
+import org.apache.commons.logging.Log;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.framework.ServiceRegistration;
+import org.osgi.framework.wiring.FrameworkWiring;
+import org.ros.log.RosLogFactory;
+import org.ros.master.uri.MasterUriProvider;
+import org.ros.master.uri.StaticMasterUriProvider;
+import org.ros.master.uri.SwitchableMasterUriProvider;
+import org.ros.osgi.common.RosEnvironment;
+import org.ros.osgi.common.SimpleRosEnvironment;
+
+import java.io.File;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Activate general services needed by a Smart Spaces container.
@@ -116,7 +116,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
   /**
    * Factory for expression evaluators.
    */
-  private SimpleExpressionEvaluatorFactory expressionEvaluatorFactory;
+  private ExpressionEvaluatorFactory expressionEvaluatorFactory;
 
   /**
    * The system control for Smart Spaces.
@@ -366,7 +366,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
       if (host != null) {
         InetAddress ntpAddress = InetAddressFactory.newFromHostString(host);
         // TODO(keith): Make sure got valid address. Also, move copy of
-        // factory class into IS.
+        // factory class into SS.
         return new NtpTimeProvider(ntpAddress, NTP_UPDATE_PERIOD_SECONDS, TimeUnit.SECONDS,
             executorService, log);
       } else {
@@ -480,13 +480,13 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    *          the logger to use
    */
   private void setupSystemConfiguration(Map<String, String> containerProperties, Log log) {
-    expressionEvaluatorFactory = new SimpleExpressionEvaluatorFactory();
+    expressionEvaluatorFactory = new SselExpressionEvaluatorFactory();
 
     FileSystemConfigurationStorageManager fileSystemConfigurationStorageManager =
         new FileSystemConfigurationStorageManager();
     fileSystemConfigurationStorageManager.setLog(spaceEnvironment.getLog());
     fileSystemConfigurationStorageManager.setExpressionEvaluatorFactory(expressionEvaluatorFactory);
-    fileSystemConfigurationStorageManager.setsmartspacesFilesystem(filesystem);
+    fileSystemConfigurationStorageManager.setSmartspacesFilesystem(filesystem);
     fileSystemConfigurationStorageManager.setConfigFolder(configurationProvider.getConfigFolder());
 
     systemConfigurationStorageManager = fileSystemConfigurationStorageManager;

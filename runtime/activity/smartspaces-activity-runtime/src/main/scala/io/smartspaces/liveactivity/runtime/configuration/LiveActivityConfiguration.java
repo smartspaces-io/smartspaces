@@ -18,7 +18,6 @@
 package io.smartspaces.liveactivity.runtime.configuration;
 
 import io.smartspaces.configuration.LoadableConfiguration;
-import io.smartspaces.evaluation.EvaluationEnvironment;
 
 import java.util.Map;
 
@@ -27,7 +26,7 @@ import java.util.Map;
  *
  * @author Keith M. Hughes
  */
-public interface LiveActivityConfiguration extends LoadableConfiguration, EvaluationEnvironment {
+public interface LiveActivityConfiguration extends LoadableConfiguration {
 
   /**
    * Update the configuration.

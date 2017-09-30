@@ -240,13 +240,13 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
       val measurementType = new SimpleMeasurementTypeDescription(getNextId(),
         measurementTypeData.getRequiredString(ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         measurementTypeData.getRequiredString(ENTITY_DESCRIPTION_FIELD_NAME),
-        measurementTypeData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION), 
-        measurementTypeData.getRequiredString(SECTION_FIELD_MEASUREMENT_TYPES_PROCESSING_TYPE), 
+        measurementTypeData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
+        measurementTypeData.getRequiredString(SECTION_FIELD_MEASUREMENT_TYPES_PROCESSING_TYPE),
         valueType,
         null)
 
-      if (!MeasurementTypeDescription.VALUE_TYPE_ID.equals(valueType) && 
-          !valueType.startsWith(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE)) {
+      if (!MeasurementTypeDescription.VALUE_TYPE_ID.equals(valueType) &&
+        !valueType.startsWith(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE)) {
         val defaultUnitId =
           measurementTypeData.getRequiredString(SECTION_FIELD_MEASUREMENT_TYPES_DEFAULT_UNIT)
 
@@ -365,17 +365,19 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
    *          the data read from the input stream
    */
   def getPeople(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
-    data.down(SECTION_HEADER_PEOPLE)
+    if (data.containsProperty(SECTION_HEADER_PEOPLE)) {
+      data.down(SECTION_HEADER_PEOPLE)
 
-    data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
-      val itemData = entry.down()
+      data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
+        val itemData = entry.down()
 
-      sensorRegistry.registerSensedEntity(new SimplePersonSensedEntityDescription(getNextId(),
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_NAME),
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION)))
-    })
-    data.up()
+        sensorRegistry.registerSensedEntity(new SimplePersonSensedEntityDescription(getNextId(),
+          itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
+          itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_NAME),
+          itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION)))
+      })
+      data.up()
+    }
   }
 
   /**
@@ -446,18 +448,20 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
    *          the data read from the input stream
    */
   def getMarkers(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
-    data.down(SECTION_HEADER_MARKERS)
+    if (data.containsProperty(SECTION_HEADER_MARKERS)) {
+      data.down(SECTION_HEADER_MARKERS)
 
-    data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
-      val itemData = entry.down()
+      data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
+        val itemData = entry.down()
 
-      sensorRegistry.registerMarker(new SimpleMarkerEntityDescription(getNextId(),
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_NAME),
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_MARKER_ID)))
-    })
-    data.up()
+        sensorRegistry.registerMarker(new SimpleMarkerEntityDescription(getNextId(),
+          itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
+          itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_NAME),
+          itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
+          itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_MARKER_ID)))
+      })
+      data.up()
+    }
   }
 
   /**
@@ -514,17 +518,19 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
    *          the data read from the input stream
    */
   def getMarkerAssociations(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
-    data.down(SECTION_HEADER_MARkER_ASSOCIATIONS)
+    if (data.containsProperty(SECTION_HEADER_MARKERS) && data.containsProperty(SECTION_HEADER_MARkER_ASSOCIATIONS)) {
+      data.down(SECTION_HEADER_MARkER_ASSOCIATIONS)
 
-    data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
-      val itemData = entry.down()
+      data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
+        val itemData = entry.down()
 
-      sensorRegistry.associateMarkerWithMarkedEntity(
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_MARKER_ASSOCIATION_MARKER),
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_MARKER_ASSOCIATION_MARKED))
-    })
+        sensorRegistry.associateMarkerWithMarkedEntity(
+          itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_MARKER_ASSOCIATION_MARKER),
+          itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_MARKER_ASSOCIATION_MARKED))
+      })
 
-    data.up()
+      data.up()
+    }
   }
 
   /**
@@ -536,18 +542,20 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
    *          the data read from the input stream
    */
   def getEntityConfigurations(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
-    data.down(SECTION_HEADER_CONFIGURATIONS)
+    if (data.containsProperty(SECTION_HEADER_CONFIGURATIONS)) {
+      data.down(SECTION_HEADER_CONFIGURATIONS)
 
-    data.getObjectEntries().foreach((entry: ObjectDynamicObjectEntry) => {
-      val entityId = entry.getProperty()
+      data.getObjectEntries().foreach((entry: ObjectDynamicObjectEntry) => {
+        val entityId = entry.getProperty()
 
-      val configurationData = entry.getValue().down(entityId)
-      if (configurationData.isObject) {
-        sensorRegistry.addConfigurationData(entityId, configurationData.asMap().toMap)
-      }
-    })
+        val configurationData = entry.getValue().down(entityId)
+        if (configurationData.isObject) {
+          sensorRegistry.addConfigurationData(entityId, configurationData.asMap().toMap)
+        }
+      })
 
-    data.up()
+      data.up()
+    }
   }
 
   /**

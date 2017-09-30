@@ -186,13 +186,15 @@ public class StandardMasterRosContext implements MasterRosContext {
    */
   private void startupRosMasterController() {
     log.info("Starting up the Smart Spaces internal ROS Master");
-    
+
     rosMasterController = rosMasterControllerFactory.newInternalController();
     rosMasterController.setRosEnvironment(rosEnvironment);
 
     rosMasterController.addListener(new RosMasterControllerListener() {
       @Override
       public void onRosMasterStartup() {
+        log.info("Smart Spaces internal ROS Master started at "
+            + rosMasterController.getRosEnvironment().getMasterUri());
         // connectToRosMaster();
       }
 

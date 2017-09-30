@@ -18,16 +18,16 @@
 package io.smartspaces.util.messaging.ros;
 
 import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
 import org.ros.internal.node.topic.SubscriberIdentifier;
 import org.ros.node.ConnectedNode;
 import org.ros.node.topic.Publisher;
 import org.ros.node.topic.PublisherListener;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A collection of ROS publishers for a given message type.
@@ -52,7 +52,7 @@ public class StandardRosPublishers<T> implements RosPublishers<T> {
   /**
    * Logger for this collection.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * Construct a new publishers collection.
@@ -60,7 +60,7 @@ public class StandardRosPublishers<T> implements RosPublishers<T> {
    * @param log
    *          the logger to use
    */
-  public StandardRosPublishers(Log log) {
+  public StandardRosPublishers(ExtendedLog log) {
     this.log = log;
   }
 
@@ -76,8 +76,8 @@ public class StandardRosPublishers<T> implements RosPublishers<T> {
   @Override
   public synchronized void addPublishers(ConnectedNode node, String messageType,
       Set<String> topicNames) {
-    log.debug(String.format("Adding publishers for topic names %s with message type %s",
-        topicNames, messageType));
+    log.formatDebug("Adding publishers for topic names %s with message type %s",
+        topicNames, messageType);
 
     for (String topicName : topicNames) {
       boolean latch = false;
@@ -94,9 +94,9 @@ public class StandardRosPublishers<T> implements RosPublishers<T> {
         }
       }
 
-      log.debug(String.format("Adding publisher topic %s", topicName));
+      log.formatDebug("Adding publisher topic %s", topicName);
       Publisher<T> publisher = node.newPublisher(topicName, messageType);
-      log.debug(String.format("Added publisher topic %s", topicName));
+      log.formatDebug("Added publisher topic %s", topicName);
       publisher.addListener(this);
 
       for (PublisherListener<T> listener : publisherListeners) {
@@ -133,35 +133,35 @@ public class StandardRosPublishers<T> implements RosPublishers<T> {
 
   @Override
   public void onMasterRegistrationFailure(Publisher<T> publisher) {
-    log.warn(String.format("Publisher for topic %s has failed to register with the master",
-        publisher.getTopicName()));
+    log.formatWarn("Publisher for topic %s has failed to register with the master",
+        publisher.getTopicName());
   }
 
   @Override
   public void onMasterRegistrationSuccess(Publisher<T> publisher) {
-    log.debug(String.format("Publisher for topic %s has successfully registered with the master",
-        publisher.getTopicName()));
+    log.formatDebug("Publisher for topic %s has successfully registered with the master",
+        publisher.getTopicName());
   }
 
   @Override
   public void onMasterUnregistrationFailure(Publisher<T> publisher) {
-    log.warn(String.format("Publisher for topic %s has failed to unregister with the master",
-        publisher.getTopicName()));
+    log.formatWarn("Publisher for topic %s has failed to unregister with the master",
+        publisher.getTopicName());
   }
 
   @Override
   public void onMasterUnregistrationSuccess(Publisher<T> publisher) {
-    log.debug(String.format("Publisher for topic %s has successfully unregistered with the master",
-        publisher.getTopicName()));
+    log.formatDebug("Publisher for topic %s has successfully unregistered with the master",
+        publisher.getTopicName());
   }
 
   @Override
   public void onNewSubscriber(Publisher<T> publisher, SubscriberIdentifier subscriberIdentifier) {
-    log.debug(String.format("Publisher for topic %s has a new subscriber", publisher.getTopicName()));
+    log.formatDebug("Publisher for topic %s has a new subscriber", publisher.getTopicName());
   }
 
   @Override
   public void onShutdown(Publisher<T> publisher) {
-    log.debug(String.format("Publisher for topic %s has shut down", publisher.getTopicName()));
+    log.formatDebug("Publisher for topic %s has shut down", publisher.getTopicName());
   }
 }

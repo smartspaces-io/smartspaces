@@ -62,6 +62,7 @@ import io.smartspaces.time.TimeFrequency
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 import io.smartspaces.sensor.processing.value.StatefulMarkerSensorSensorValueProcessor
+import io.smartspaces.sensor.value.entity.MoistureCategoricalValue
 
 /**
  * The sensor integration layer.
@@ -114,7 +115,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
    * The value registry with a collection of base values.
    */
   private val _valueRegistry: ValueRegistry = StandardValueRegistry.registerCategoricalValues(
-    ContactCategoricalValue, PresenceCategoricalValue, ActiveCategoricalValue)
+    ContactCategoricalValue, PresenceCategoricalValue, ActiveCategoricalValue, MoistureCategoricalValue)
 
   override def valueRegistry: ValueRegistry = _valueRegistry
 

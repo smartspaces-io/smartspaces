@@ -210,7 +210,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
       override def run(): Unit = {
         completeSensedEntityModel.checkModels()
       }
-    }, TimeFrequency.timesPerHour(60.0), false)
+    }, TimeFrequency.timesPerHour(30.0), false)
 
     //    if (liveData) {
     //      if (sampleRecord) {

@@ -230,7 +230,7 @@ class StandardCompleteSensedEntityModel(
   private[model] def performModelCheck(): Unit = {
     val currentTime = spaceEnvironment.getTimeProvider.getCurrentTime
 
-    log.formatInfo("Performing sensor model check at " + currentTime)
+    log.debug(s"Performing sensor model check at ${currentTime}")
 
     getAllSensorEntityModels().filter(_.sensorEntityDescription.active).foreach {
       _.checkIfOfflineTransition(currentTime)

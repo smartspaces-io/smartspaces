@@ -20,12 +20,13 @@ package io.smartspaces.activity.behavior.comm.route
 import io.smartspaces.activity.behavior.comm.ros.StandardActivityRos
 import io.smartspaces.activity.behavior.general.StandardActivityJson
 import io.smartspaces.activity.component.comm.route.MessageRouterActivityComponent
-import io.smartspaces.messaging.route.RouteMessageListener
+import io.smartspaces.messaging.route.RouteMessageHandler
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
 import io.smartspaces.util.data.json.JsonMapper
 import io.smartspaces.util.data.json.StandardJsonMapper
 
 import java.util.Map
+import io.smartspaces.messaging.route.RouteMessageHandler
 
 /**
  * An activity behavior for Routing support.
@@ -51,8 +52,8 @@ trait StandardActivityRouting extends /* StandardActivityRos with */ StandardAct
     super.commonActivitySetup();
 
     router = addActivityComponent(MessageRouterActivityComponent.COMPONENT_NAME)
-    router.setRoutableInputMessageListener(new RouteMessageListener() {
-      override def onNewRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
+    router.setDefaultRoutableInputMessageHandler(new RouteMessageHandler() {
+      override def onNewMessage(channelId: String, message: Map[String, Object]): Unit = {
         handleNewRouteMessage(channelId, message);
       }
     });

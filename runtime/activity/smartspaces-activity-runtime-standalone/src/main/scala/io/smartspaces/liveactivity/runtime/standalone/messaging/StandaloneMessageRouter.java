@@ -30,7 +30,7 @@ import io.smartspaces.liveactivity.runtime.standalone.messaging.MessageUtils.Mes
 import io.smartspaces.messaging.route.InternalRouteMessagePublisher;
 import io.smartspaces.messaging.route.MessageRouter;
 import io.smartspaces.messaging.route.MessageRouterSupportedMessageTypes;
-import io.smartspaces.messaging.route.RouteMessageListener;
+import io.smartspaces.messaging.route.RouteMessageHandler;
 import io.smartspaces.messaging.route.RouteDescription;
 import io.smartspaces.messaging.route.RouteMessageSender;
 import io.smartspaces.messaging.route.RouteMessageSubscriber;
@@ -107,12 +107,12 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   /**
    * A route input message listener for those not handled explicitly.
    */
-  private RouteMessageListener messageListener;
+  private RouteMessageHandler defaultMessageHandler;
 
   /**
    * Route input message listeners keyed by the channel ID they are supposed to handle.
    */
-  private Map<String, RouteMessageListener> messageListeners = new HashMap<>();
+  private Map<String, RouteMessageHandler> messageHandlers = new HashMap<>();
 
   /**
    * Output for tracing received messages.
@@ -175,13 +175,13 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   }
 
   @Override
-  public void setRoutableInputMessageListener(RouteMessageListener messageListener) {
-    this.messageListener = messageListener;
+  public void setDefaultRoutableInputMessageHandler(RouteMessageHandler messageHandler) {
+    this.defaultMessageHandler = messageHandler;
   }
 
   @Override
-  public void addRoutableInputMessageListener(String channelId, RouteMessageListener messageListener) {
-	messageListeners.put(channelId, messageListener);
+  public void addRoutableInputMessageHandler(String channelId, RouteMessageHandler messageHandler) {
+	messageHandlers.put(channelId, messageHandler);
   }
 
 @Override
@@ -205,7 +205,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     timeProvider = getComponentContext().getActivity().getSpaceEnvironment().getTimeProvider();
     activity = getComponentContext().getActivity();
     router = getStandaloneRouter();
-    messageListener = (RouteMessageListener) activity;
+    defaultMessageHandler = (RouteMessageHandler) activity;
   }
 
   @Override
@@ -241,7 +241,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
       }
     } finally {
       activity = null;
-      messageListener = null;
+      defaultMessageHandler = null;
       playbackRunner = null;
     }
   }
@@ -392,7 +392,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
       Collection<String> channelIds = inputRoutesToChannels.get(route);
       if (channelIds != null) {
         for (String channelId : channelIds) {
-          messageListener.onNewRouteMessage(channelId, message);
+          defaultMessageHandler.onNewMessage(channelId, message);
         }
       }
     }
@@ -556,18 +556,18 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
     }
 
     @Override
-    public void setRoutableInputMessageListener(RouteMessageListener messageListener) {
+    public void setDefaultRoutableInputMessageHandler(RouteMessageHandler messageHandler) {
       // TODO Auto-generated method stub
     }
 
     @Override
-	public void addRoutableInputMessageListener(String channelId, RouteMessageListener messageListener) {
+	public void addRoutableInputMessageHandler(String channelId, RouteMessageHandler messageHandler) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void addRoutableInputMessageListeners(Map<String, RouteMessageListener> messageListeners) {
+	public void addRoutableInputMessageHandlers(Map<String, RouteMessageHandler> messageHandlers) {
 		// TODO Auto-generated method stub
 	}
 

@@ -21,7 +21,7 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.component.comm.PubSubActivityComponent;
 import io.smartspaces.messaging.ChannelMessageSender;
 import io.smartspaces.messaging.route.MessageRouter;
-import io.smartspaces.messaging.route.RouteMessageListener;
+import io.smartspaces.messaging.route.RouteMessageHandler;
 import io.smartspaces.messaging.route.RouteMessageSender;
 
 import com.google.common.collect.ImmutableList;
@@ -54,26 +54,26 @@ public interface MessageRouterActivityComponent extends PubSubActivityComponent,
   //List<String> BASE_COMPONENT_DEPENDENCIES = ImmutableList.of(RosActivityComponent.COMPONENT_NAME);
 
   /**
-   * Set the message listener for the component for messages not caught by explicit listeners.
+   * Set the message handler for the component for messages not caught by explicit listeners.
    * 
-   * @param messageListener
-   *          the message listener
+   * @param messageHandler
+   *          the message handler
    */
-  void setRoutableInputMessageListener(RouteMessageListener messageListener);
+  void setDefaultRoutableInputMessageHandler(RouteMessageHandler messageHandler);
 
   /**
-   * Set the message listener for the component for messages for a specific channel ID.
+   * Set the message handler for the component for messages for a specific channel ID.
    * 
    * <p>
-   * There can only be one message listener per channel ID registered here. Additional registrations will delete
+   * There can only be one message handler per channel ID registered here. Additional registrations will delete
    * the previous one.
    * 
    * @param channelId
-   *          ID of the channel for this specific listener
-   * @param messageListener
-   *          the message listener
+   *          ID of the channel for this specific handler
+   * @param messageHandler
+   *          the message handler
    */
-  void addRoutableInputMessageListener(String channelId, RouteMessageListener messageListener);
+  void addRoutableInputMessageHandler(String channelId, RouteMessageHandler messageHandler);
 
   /**
    * Separator for configuration values which allow multiple values.

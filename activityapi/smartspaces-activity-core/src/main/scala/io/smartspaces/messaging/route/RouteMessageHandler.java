@@ -18,24 +18,15 @@
 package io.smartspaces.messaging.route;
 
 import io.smartspaces.activity.component.comm.route.MessageRouterActivityComponent;
+import io.smartspaces.messaging.ChannelMessageHandler;
 
 import java.util.Map;
 
 /**
- * A listener for input messages from a {@link MessageRouterActivityComponent}
+ * A handler for input messages from a {@link MessageRouterActivityComponent}
  * input topics.
  *
  * @author Keith M. Hughes
  */
-public interface RouteMessageListener {
-
-  /**
-   * A new message has come in.
-   *
-   * @param channelId
-   *          the ID of the channel the message came in on
-   * @param message
-   *          the message which has come in
-   */
-  void onNewRouteMessage(String channelId, Map<String, Object> message);
+public interface RouteMessageHandler extends ChannelMessageHandler<Map<String, Object>> {
 }

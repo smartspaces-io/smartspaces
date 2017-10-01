@@ -17,7 +17,7 @@
 package io.smartspaces.sensor.messaging.input
 
 import io.smartspaces.logging.ExtendedLog
-import io.smartspaces.messaging.route.RouteMessageListener
+import io.smartspaces.messaging.route.RouteMessageHandler
 import io.smartspaces.resource.managed.IdempotentManagedResource
 import io.smartspaces.sensor.processing.SensorProcessor
 import io.smartspaces.system.SmartSpacesEnvironment
@@ -30,7 +30,7 @@ import java.util.Map
  *
  * @author Keith M. Hughes
  */
-class RouteMessageSensorInput(log: ExtendedLog, spaceEnvironment: SmartSpacesEnvironment) extends SensorInput with RouteMessageListener with IdempotentManagedResource {
+class RouteMessageSensorInput(log: ExtendedLog, spaceEnvironment: SmartSpacesEnvironment) extends SensorInput with RouteMessageHandler with IdempotentManagedResource {
 
   /**
    * The sensor processor to use.
@@ -41,7 +41,7 @@ class RouteMessageSensorInput(log: ExtendedLog, spaceEnvironment: SmartSpacesEnv
     this.sensorProcessor = sensorProcessor
   }
   
-  override def onNewRouteMessage(channelId: String, message: Map[String, Object]): Unit = {
+  override def onNewMessage(channelId: String, message: Map[String, Object]): Unit = {
     log.info(s"Got sensor message on route with channel ID ${channelId} ${message}")
 
     val currentTime = spaceEnvironment.getTimeProvider().getCurrentTime()

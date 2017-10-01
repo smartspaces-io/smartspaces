@@ -24,7 +24,7 @@ import io.smartspaces.handler.ProtectedHandlerContext;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.messaging.route.MessageRouter;
 import io.smartspaces.messaging.route.RouteDescription;
-import io.smartspaces.messaging.route.RouteMessageListener;
+import io.smartspaces.messaging.route.RouteMessageHandler;
 import io.smartspaces.messaging.route.RouteMessageSender;
 import io.smartspaces.messaging.route.StandardMessageRouter;
 import io.smartspaces.system.SmartSpacesEnvironment;
@@ -51,12 +51,12 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
   /**
    * The catchall listener for input messages.
    */
-  private RouteMessageListener catchallMessageListener;
+  private RouteMessageHandler defaultMessageHandler;
 
   /**
    * The messages listeners for specific channel IDs.
    */
-  private Map<String, RouteMessageListener> messageListeners = new HashMap<>();
+  private Map<String, RouteMessageHandler> messageHandlers = new HashMap<>();
 
   /**
    * {@code true} if the component is "running", false otherwise.
@@ -94,17 +94,17 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
   }
 
   @Override
-  public void setRoutableInputMessageListener(RouteMessageListener messageListener) {
-    this.catchallMessageListener = messageListener;
+  public void setDefaultRoutableInputMessageHandler(RouteMessageHandler messageHandler) {
+    this.defaultMessageHandler = messageHandler;
   }
 
   @Override
-  public void addRoutableInputMessageListener(String channelId,
-      RouteMessageListener messageListener) {
+  public void addRoutableInputMessageHandler(String channelId,
+      RouteMessageHandler messageHandler) {
     if (running) {
-      messageRouter.addRoutableInputMessageListener(channelId, messageListener);
+      messageRouter.addRoutableInputMessageHandler(channelId, messageHandler);
     } else {
-      messageListeners.put(channelId, messageListener);
+      messageHandlers.put(channelId, messageHandler);
     }
   }
 
@@ -129,8 +129,8 @@ public class BasicMessageRouterActivityComponent extends BaseMessageRouterActivi
         PubSubActivityComponent.CONFIGURATION_NAME_ACTIVITY_PUBSUB_NODE_NAME));
 
     // messageRouter.setRosNode(rosActivityComponent.getNode());
-    messageRouter.setRoutableInputMessageListener(catchallMessageListener);
-    messageRouter.addRoutableInputMessageListeners(messageListeners);
+    messageRouter.setDefaultRoutableInputMessageHandler(defaultMessageHandler);
+    messageRouter.addRoutableInputMessageHandlers(messageHandlers);
 
     messageRouter.setMqttBrokerDescriptionDefault(getMqttBrokerDescription());
   }

@@ -80,15 +80,15 @@ public class StandardMessageRouter implements MessageRouter {
   private String defaultRouteProtocol = DEFAULT_ROUTE_PROTOCOL_DEFAULT;
 
   /**
-   * The listener for input messages for messages not explicitly handled
-   * {@see #messageListeners}.
+   * The handler for input messages for messages not explicitly handled
+   * {@see #messageHandlers}.
    */
-  private RouteMessageListener messageListener;
+  private RouteMessageHandler defaultMessageHandler;
 
   /**
    * The messages listeners for specific channel IDs.
    */
-  private Map<String, RouteMessageListener> messageListeners = new HashMap<>();
+  private Map<String, RouteMessageHandler> messageListeners = new HashMap<>();
 
   /**
    * All input topic channel IDs mapped to their subscribers.
@@ -355,7 +355,7 @@ public class StandardMessageRouter implements MessageRouter {
       // Send the message out to the listener.
       Map<String, Object> msg = subscriber.decodeMessage(message);
 
-      getAppropriateMessageListener(channelId).onNewRouteMessage(channelId, msg);
+      getAppropriateMessageListener(channelId).onNewMessage(channelId, msg);
 
       if (log.isTraceEnabled()) {
         log.trace(String.format("Exiting route message handler invocation %s after %dms",
@@ -377,12 +377,12 @@ public class StandardMessageRouter implements MessageRouter {
    * 
    * @return the appropriate listener
    */
-  private RouteMessageListener getAppropriateMessageListener(String channelId) {
-    RouteMessageListener listener = messageListeners.get(channelId);
-    if (listener != null) {
-      return listener;
+  private RouteMessageHandler getAppropriateMessageListener(String channelId) {
+    RouteMessageHandler handler = messageListeners.get(channelId);
+    if (handler != null) {
+      return handler;
     } else {
-      return messageListener;
+      return defaultMessageHandler;
     }
   }
 
@@ -500,19 +500,19 @@ public class StandardMessageRouter implements MessageRouter {
   }
 
   @Override
-  public void setRoutableInputMessageListener(RouteMessageListener messageListener) {
-    this.messageListener = messageListener;
+  public void setDefaultRoutableInputMessageHandler(RouteMessageHandler messageHandler) {
+    this.defaultMessageHandler = messageHandler;
   }
 
   @Override
-  public void addRoutableInputMessageListener(String channelId,
-      RouteMessageListener messageListener) {
+  public void addRoutableInputMessageHandler(String channelId,
+      RouteMessageHandler messageListener) {
     messageListeners.put(channelId, messageListener);
   }
 
   @Override
-  public void addRoutableInputMessageListeners(Map<String, RouteMessageListener> messageListeners) {
-    messageListeners.putAll(messageListeners);
+  public void addRoutableInputMessageHandlers(Map<String, RouteMessageHandler> messageHandlers) {
+    messageListeners.putAll(messageHandlers);
   }
 
   /**

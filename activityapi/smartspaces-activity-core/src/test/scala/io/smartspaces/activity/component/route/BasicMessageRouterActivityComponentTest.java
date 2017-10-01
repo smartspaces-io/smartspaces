@@ -25,7 +25,7 @@ import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.evaluation.SimpleExpressionEvaluator;
 import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.messaging.route.RouteMessageListener;
+import io.smartspaces.messaging.route.RouteMessageHandler;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.provider.SettableTimeProvider;
 import io.smartspaces.time.provider.TimeProvider;
@@ -44,7 +44,7 @@ public class BasicMessageRouterActivityComponentTest {
 
   private BasicMessageRouterActivityComponent component;
 
-  private RouteMessageListener messageListener;
+  private RouteMessageHandler messageHandler;
   private ActivityComponentContext activityComponentContext;
   private Configuration configuration;
   private RosActivityBehavior activity;
@@ -59,7 +59,7 @@ public class BasicMessageRouterActivityComponentTest {
 
   @Before
   public void setup() {
-    messageListener = Mockito.mock(RouteMessageListener.class);
+    messageHandler = Mockito.mock(RouteMessageHandler.class);
 
     activityComponentContext = Mockito.mock(ActivityComponentContext.class);
     activityComponentContextInOrder = Mockito.inOrder(activityComponentContext);
@@ -82,7 +82,7 @@ public class BasicMessageRouterActivityComponentTest {
     configuration = SimpleConfiguration.newConfiguration();
 
     component = new BasicMessageRouterActivityComponent();
-    component.setRoutableInputMessageListener(messageListener);
+    component.setDefaultRoutableInputMessageHandler(messageHandler);
   }
 
   /**

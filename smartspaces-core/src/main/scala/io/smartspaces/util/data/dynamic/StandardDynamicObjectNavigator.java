@@ -135,7 +135,18 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
   @Override
   public Integer getInteger(String propertyName) {
-    return (Integer) getObjectProperty(propertyName);
+    Object value = getObjectProperty(propertyName);
+    if (value != null) {
+      if (value instanceof Integer) {
+        return (Integer) value;
+      } else {
+        throw new DynamicObjectSmartSpacesException(
+            String.format("Property with name %s is not convertable to an Integer: %s", propertyName,
+                value.toString()));
+      }
+    } else {
+      return null;
+    }
   }
 
   @Override
@@ -159,7 +170,13 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   public Long getLong(String propertyName) {
     Object value = getObjectProperty(propertyName);
     if (value != null) {
-      return ((Number) value).longValue();
+      if (value instanceof Number) {
+        return ((Number) value).longValue();
+      } else {
+        throw new DynamicObjectSmartSpacesException(
+            String.format("Property with name %s is not convertable to a Long: %s", propertyName,
+                value.toString()));
+      }
     } else {
       return null;
     }
@@ -186,7 +203,13 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   public Double getDouble(String propertyName) {
     Object value = getObjectProperty(propertyName);
     if (value != null) {
-      return ((Number) value).doubleValue();
+      if (value instanceof Number) {
+        return ((Number) value).doubleValue();
+      } else {
+        throw new DynamicObjectSmartSpacesException(
+            String.format("Property with name %s is not convertable to a Double: %s", propertyName,
+                value.toString()));
+      }
     } else {
       return null;
     }
@@ -211,7 +234,14 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
 
   @Override
   public Boolean getBoolean(String propertyName) {
-    return (Boolean) getObjectProperty(propertyName);
+    Object value = getObjectProperty(propertyName);
+    if (value instanceof Boolean) {
+      return (Boolean) getObjectProperty(propertyName);
+    } else {
+      throw new DynamicObjectSmartSpacesException(
+          String.format("Property with name %s is not convertable to a Boolean: %s", propertyName,
+              value.toString()));
+    }
   }
 
   @Override
@@ -350,14 +380,14 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   @Override
   public boolean isObject(String propertyName) {
     Object position = getObjectProperty(propertyName);
-    
+
     return position instanceof Map;
   }
 
   @Override
   public boolean isObject(int index) {
     Object position = getArrayIndex(index);
-    
+
     return position instanceof Map;
   }
 
@@ -378,14 +408,14 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   @Override
   public boolean isArray(String propertyName) {
     Object position = getObjectProperty(propertyName);
-    
+
     return position instanceof List;
   }
 
   @Override
   public boolean isArray(int index) {
     Object position = getArrayIndex(index);
-    
+
     return position instanceof List;
   }
 
@@ -506,7 +536,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
       throw new DynamicObjectSmartSpacesException("Could not go up, was at root or blocked");
     }
   }
-  
+
   @Override
   public DynamicObject top() {
     if (!marks.isEmpty()) {
@@ -515,7 +545,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
       nav.setSize(0);
       setCurrentAsObject(root);
     }
-    
+
     return this;
   }
 

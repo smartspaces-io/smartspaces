@@ -42,7 +42,7 @@ public interface MultipleConnectionWebSocketHandler<M> {
 
   /**
    * A new message has been sent to the web socket connection.
-   *
+   *     
    * @param channelId
    *          the ID of the connection that received the data
    * @param message

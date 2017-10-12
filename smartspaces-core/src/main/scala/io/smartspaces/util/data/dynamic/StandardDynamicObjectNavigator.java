@@ -141,8 +141,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
         return (Integer) value;
       } else {
         throw new DynamicObjectSmartSpacesException(
-            String.format("Property with name %s is not convertable to an Integer: %s", propertyName,
-                value.toString()));
+            String.format("Property with name %s is not convertable to an Integer (class %s): %s",
+                propertyName, value.getClass().getName(), value.toString()));
       }
     } else {
       return null;
@@ -174,8 +174,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
         return ((Number) value).longValue();
       } else {
         throw new DynamicObjectSmartSpacesException(
-            String.format("Property with name %s is not convertable to a Long: %s", propertyName,
-                value.toString()));
+            String.format("Property with name %s is not convertable to a Long (class %s): %s", propertyName,
+                value.getClass().getName(), value.toString()));
       }
     } else {
       return null;
@@ -207,8 +207,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
         return ((Number) value).doubleValue();
       } else {
         throw new DynamicObjectSmartSpacesException(
-            String.format("Property with name %s is not convertable to a Double: %s", propertyName,
-                value.toString()));
+            String.format("Property with name %s is not convertable to a Double (class %s): %s", propertyName,
+                value.getClass().getName(), value.toString()));
       }
     } else {
       return null;
@@ -235,19 +235,23 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   @Override
   public Boolean getBoolean(String propertyName) {
     Object value = getObjectProperty(propertyName);
-    if (value instanceof Boolean) {
-      return (Boolean) getObjectProperty(propertyName);
+    if (value != null) {
+      if (value instanceof Boolean) {
+        return (Boolean) getObjectProperty(propertyName);
+      } else {
+        throw new DynamicObjectSmartSpacesException(
+            String.format("Property with name %s is not convertable to a Boolean (class %s): %s", propertyName,
+                value.getClass().getName(), value.toString()));
+      }
     } else {
-      throw new DynamicObjectSmartSpacesException(
-          String.format("Property with name %s is not convertable to a Boolean: %s", propertyName,
-              value.toString()));
+      return null;
     }
   }
 
   @Override
   public Boolean getBoolean(String propertyName, boolean defaultValue) {
-    Object value = getObjectProperty(propertyName);
-    return (value != null) ? (Boolean) value : defaultValue;
+    Boolean value = getBoolean(propertyName);
+    return (value != null) ? value : defaultValue;
   }
 
   @Override

@@ -24,6 +24,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -261,7 +262,7 @@ public class HttpClientRestWebClient implements RestWebClient {
           HttpEntity entity = response.getEntity();
           return entity != null ? EntityUtils.toString(entity, charset) : null;
         } else {
-          throw new ClientProtocolException("Unexpected response status: " + status);
+          throw new HttpResponseException(status, "Unexpected response status: " + status);
         }
       }
     };

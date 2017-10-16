@@ -38,7 +38,7 @@ import io.smartspaces.sensor.messaging.input.SensorInput
 import io.smartspaces.sensor.messaging.input.StandardMqttSensorInput
 import io.smartspaces.sensor.messaging.messages.StandardSensorData
 import io.smartspaces.sensor.processing.SensedEntitySensorHandler
-import io.smartspaces.sensor.processing.SensedEntitySensorListener
+import io.smartspaces.sensor.processing.SensedEntitySensorMessageHandler
 import io.smartspaces.sensor.processing.SensorProcessor
 import io.smartspaces.sensor.processing.StandardFilePersistenceSensorHandler
 import io.smartspaces.sensor.processing.StandardFilePersistenceSensorInput
@@ -63,6 +63,8 @@ import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 import io.smartspaces.sensor.processing.value.StatefulMarkerSensorSensorValueProcessor
 import io.smartspaces.sensor.value.entity.MoistureCategoricalValue
+import io.smartspaces.sensor.processing.value.SensorValueProcessorRegistry
+import io.smartspaces.sensor.processing.value.StandardSensorValueProcessorRegistry
 
 /**
  * The sensor integration layer.
@@ -116,6 +118,11 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
    */
   private val _valueRegistry: ValueRegistry = StandardValueRegistry.registerCategoricalValues(
     ContactCategoricalValue, PresenceCategoricalValue, ActiveCategoricalValue, MoistureCategoricalValue)
+    
+  /**
+   * The registry for sensor value processors.
+   */
+  private var sensorValueProcessorRegistry: SensorValueProcessorRegistry = _
 
   override def valueRegistry: ValueRegistry = _valueRegistry
 
@@ -126,9 +133,38 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
   override def completeSensedEntityModel: CompleteSensedEntityModel = _completeSensedEntityModel
 
   override def onStartup(): Unit = {
-    _sensorRegistry = new InMemorySensorRegistry()
+    _sensorRegistry = new InMemorySensorRegistry(log)
 
     descriptionImporter.importDescriptions(sensorRegistry)
+    
+    sensorValueProcessorRegistry = new StandardSensorValueProcessorRegistry(log)
+    sensorValueProcessorRegistry.addSensorValueProcessor(new StandardBleProximitySensorValueProcessor())
+    sensorValueProcessorRegistry.addSensorValueProcessor(new SimpleMarkerSensorValueProcessor(unknownMarkerHandler))
+
+    val statefulMarkerMeasurementType = _sensorRegistry.getMeasurementTypeByExternalId(StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL)
+    if (statefulMarkerMeasurementType.isDefined) {
+      sensorValueProcessorRegistry.addSensorValueProcessor(new StatefulMarkerSensorSensorValueProcessor(statefulMarkerMeasurementType.get, unknownMarkerHandler))
+    } else {
+      log.warn(s"Could not find stateful marker measurement type ${StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL}")      
+    }
+    
+    sensorRegistry.getAllMeasurementTypes.filter(_.processingType == StandardSensorData.MEASUREMENT_PROCESSING_TYPE_SIMPLE).
+      foreach { measurementType =>
+        measurementType.valueType match {
+          case MeasurementTypeDescription.VALUE_TYPE_NUMERIC_CONTINUOUS =>
+            sensorValueProcessorRegistry.addSensorValueProcessor(new NumericContinuousValueSensorValueProcessor(measurementType))
+          case mtype if mtype.startsWith(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE) =>
+            val categoricalVariableName = mtype.substring(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE.length())
+            val categoricalVariable = _valueRegistry.getCategoricalValue(categoricalVariableName)
+            if (categoricalVariable.isDefined) {
+              sensorValueProcessorRegistry.addSensorValueProcessor(new CategoricalValueSensorValueProcessor(measurementType, categoricalVariable.get))
+            } else {
+              log.warn(s"Unknown categorical variable ${categoricalVariableName}")
+            }
+          case mtype =>
+            log.warn(s"Unknown measurement type ${mtype}")
+        }
+      }
 
     _completeSensedEntityModel =
       new StandardCompleteSensedEntityModel(_sensorRegistry, eventEmitter, log, spaceEnvironment)
@@ -138,69 +174,25 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
 
     sensorProcessor = new StandardSensorProcessor(managedScope, log)
 
-    val sampleFile = new File("/var/tmp/sensordata.json")
-    val liveData = true
-    val sampleRecord = false
-
-    var persistedSensorInput: StandardFilePersistenceSensorInput = null
-
-    if (liveData) {
-
-      if (sampleRecord) {
-        val persistenceHandler = new StandardFilePersistenceSensorHandler(sampleFile)
-        sensorProcessor.addSensorHandler(persistenceHandler)
-      }
-    } else {
-      persistedSensorInput = new StandardFilePersistenceSensorInput(sampleFile)
-      sensorProcessor.addSensorInput(persistedSensorInput)
-    }
-
     val sensorHandler =
       new StandardSensedEntitySensorHandler(completeSensedEntityModel, unknownSensedEntityHandler, log)
     sensorRegistry.getSensorSensedEntityAssociations.foreach((association) =>
       sensorHandler.associateSensorWithEntity(association.sensor, association.sensedEntity))
 
-    sensorHandler.addSensedEntitySensorListener(new SensedEntitySensorListener() {
+    sensorHandler.addSensedEntitySensorMessageHandler(new SensedEntitySensorMessageHandler() {
 
-      override def handleNewSensorData(handler: SensedEntitySensorHandler, timestamp: Long,
+      override def handleNewSensorMessage(handler: SensedEntitySensorHandler, timestamp: Long,
         sensor: SensorEntityModel, sensedEntity: SensedEntityModel,
-        data: DynamicObject): Unit = {
-        log.info(s"Got data at ${timestamp.toString} from sensor ${sensor} for entity ${sensedEntity}: ${data.asMap()}")
+        message: DynamicObject): Unit = {
+        log.info(s"Got message at ${timestamp.toString} from sensor ${sensor} for entity ${sensedEntity}: ${message.asMap()}")
 
       }
     })
 
     val modelProcessor =
-      new StandardSensedEntityModelProcessor(completeSensedEntityModel, managedScope, log)
-    modelProcessor.addSensorValueProcessor(new StandardBleProximitySensorValueProcessor())
-    modelProcessor.addSensorValueProcessor(new SimpleMarkerSensorValueProcessor(unknownMarkerHandler))
+      new StandardSensedEntityModelProcessor(sensorValueProcessorRegistry, completeSensedEntityModel, managedScope, log)
 
-    val statefulMarkerMeasurementType = _sensorRegistry.getMeasurementTypeByExternalId(StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL)
-    if (statefulMarkerMeasurementType.isDefined) {
-      modelProcessor.addSensorValueProcessor(new StatefulMarkerSensorSensorValueProcessor(statefulMarkerMeasurementType.get, unknownMarkerHandler))
-    } else {
-      log.warn(s"Could not find stateful marker measurement type ${StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL}")      
-    }
-    
-    sensorRegistry.getAllMeasurementTypes.filter(_.processingType == StandardSensorData.MEASUREMENT_PROCESSING_TYPE_SIMPLE).
-      foreach { measurementType =>
-        measurementType.valueType match {
-          case MeasurementTypeDescription.VALUE_TYPE_NUMERIC_CONTINUOUS =>
-            modelProcessor.addSensorValueProcessor(new NumericContinuousValueSensorValueProcessor(measurementType))
-          case mtype if mtype.startsWith(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE) =>
-            val categoricalVariableName = mtype.substring(MeasurementTypeDescription.VALUE_TYPE_PREFIX_CATEGORICAL_VARIABLE.length())
-            val categoricalVariable = _valueRegistry.getCategoricalValue(categoricalVariableName)
-            if (categoricalVariable.isDefined) {
-              modelProcessor.addSensorValueProcessor(new CategoricalValueSensorValueProcessor(measurementType, categoricalVariable.get))
-            } else {
-              log.warn(s"Unknown categorical variable ${categoricalVariableName}")
-            }
-          case mtype =>
-            log.warn(s"Unknown measurement type ${mtype}")
-        }
-      }
-
-    sensorHandler.addSensedEntitySensorListener(modelProcessor)
+    sensorHandler.addSensedEntitySensorMessageHandler(modelProcessor)
 
     sensorProcessor.addSensorHandler(sensorHandler)
 
@@ -211,30 +203,6 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
         completeSensedEntityModel.checkModels()
       }
     }, TimeFrequency.timesPerHour(30.0), false)
-
-    //    if (liveData) {
-    //      if (sampleRecord) {
-    //        // Recording
-    //        SmartSpacesUtilities.delay(1000L * 60 * 2 * 10)
-    //        //spaceEnvironment.shutdown()
-    //
-    //      }
-    //    } else {
-    //      // Playing back
-    //      val latch = new CountDownLatch(1)
-    //      val playableSensorInput = persistedSensorInput
-    //      spaceEnvironment.getExecutorService().submit(new Runnable() {
-    //
-    //        override def run(): Unit = {
-    //          playableSensorInput.play()
-    //          latch.countDown()
-    //        }
-    //      })
-    //
-    //      latch.await()
-    //
-    //      //spaceEnvironment.shutdown()
-    //    } 
   }
 
   override def addMqttSensorInput(mqttBrokerDecription: MqttBrokerDescription, clientId: String): MqttSensorInput = {

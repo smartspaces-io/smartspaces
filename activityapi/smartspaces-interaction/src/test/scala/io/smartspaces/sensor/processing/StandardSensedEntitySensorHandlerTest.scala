@@ -48,7 +48,7 @@ class StandardSensedEntitySensorHandlerTest extends JUnitSuite {
 
   @Mock var unknownSensedEntityHandler: UnknownSensedEntityHandler = null
 
-  @Mock var sensedEntitySensorListener: SensedEntitySensorListener = null
+  @Mock var sensedEntitySensorListener: SensedEntitySensorMessageHandler = null
 
   @Mock var log: ExtendedLog = null
 
@@ -57,7 +57,7 @@ class StandardSensedEntitySensorHandlerTest extends JUnitSuite {
 
     handler = new StandardSensedEntitySensorHandler(allModels, unknownSensedEntityHandler, log)
     handler.sensorProcessor = sensorProcessor
-    handler.addSensedEntitySensorListener(sensedEntitySensorListener)
+    handler.addSensedEntitySensorMessageHandler(sensedEntitySensorListener)
   }
 
   /**

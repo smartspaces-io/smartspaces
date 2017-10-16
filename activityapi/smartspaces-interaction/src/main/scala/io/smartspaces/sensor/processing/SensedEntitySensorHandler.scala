@@ -34,7 +34,7 @@ trait SensedEntitySensorHandler extends SensorHandler {
    *
    * @return this handler
    */
-  def addSensedEntitySensorListener(listener: SensedEntitySensorListener): SensedEntitySensorHandler
+  def addSensedEntitySensorMessageHandler(listener: SensedEntitySensorMessageHandler): SensedEntitySensorHandler
 
   /**
    * Add sensor descriptions to the handler.

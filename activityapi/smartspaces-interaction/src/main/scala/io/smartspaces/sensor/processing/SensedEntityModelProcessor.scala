@@ -25,13 +25,4 @@ import io.smartspaces.sensor.processing.value.SensorValueProcessor
  */
 trait SensedEntityModelProcessor {
 
-  /**
-   * Add in a new value processor for sensor values.
-   * 
-   * @param processor
-   *          the value processor to add
-   * 
-   * @return this model processor
-   */
-   def addSensorValueProcessor(processor: SensorValueProcessor): SensedEntityModelProcessor
 }

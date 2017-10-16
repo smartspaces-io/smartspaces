@@ -41,7 +41,7 @@ trait SensorChannelDetail extends Displayable {
   /**
    * The ID of the channel.
    */
-  val id: String
+  val channelId: String
   
   /**
    * The type of the channel measurement.

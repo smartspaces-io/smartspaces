@@ -29,38 +29,26 @@ import io.smartspaces.util.data.dynamic.DynamicObject
 import scala.collection.JavaConversions.iterableAsScalaIterable
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
+import io.smartspaces.sensor.processing.value.SensorValueProcessorRegistry
 
 /**
  * A sensor processor that will update sensed entity models.
  *
  * @author Keith M. Hughes
  */
-class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: CompleteSensedEntityModel,
-  private val managedScope: ManagedScope, private val log: ExtendedLog)
-    extends SensedEntityModelProcessor with SensedEntitySensorListener {
-
-  /**
-   * The map of sensor types to sensor processors.
-   */
-  private val sensorValuesProcessors: Map[String, SensorValueProcessor] = new HashMap
+class StandardSensedEntityModelProcessor(
+    private val sensorValueProcessorRegistry: SensorValueProcessorRegistry, 
+    private val completeSensedEntityModel: CompleteSensedEntityModel,
+    private val managedScope: ManagedScope, 
+    private val log: ExtendedLog)
+    extends SensedEntityModelProcessor with SensedEntitySensorMessageHandler {
 
   /**
    * The context for sensor value processors.
    */
   val processorContext = new SensorValueProcessorContext(completeSensedEntityModel, managedScope, log)
 
-  override def addSensorValueProcessor(processor: SensorValueProcessor): SensedEntityModelProcessor = {
-    log.info(s"Adding sensor processor for ${processor.sensorValueType}")
-
-    val previous = sensorValuesProcessors.put(processor.sensorValueType, processor)
-    if (previous.isDefined) {
-      log.warn(s"A sensor processor for ${processor.sensorValueType} has just been replaced")
-    }
-
-    this
-  }
-
-  override def handleNewSensorData(handler: SensedEntitySensorHandler, messageReceivedTimestamp: Long,
+  override def handleNewSensorMessage(handler: SensedEntitySensorHandler, messageReceivedTimestamp: Long,
     sensor: SensorEntityModel, sensedEntity: SensedEntityModel, message: DynamicObject): Unit = {
 
     val messageType = message.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
@@ -71,7 +59,7 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
       case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT =>
         handleMeasurement(handler, messageReceivedTimestamp, sensor, sensedEntity, message)
       case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_HEARTBEAT =>
-        handleHeartbeat(handler, messageReceivedTimestamp, sensor, sensedEntity, message)
+        handleHeartbeat(handler, messageReceivedTimestamp, sensor, message)
     }
   }
 
@@ -111,7 +99,7 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
           val sensorChannelDetail = sensorDetail.get.getSensorChannelDetail(channelId)
           if (sensorChannelDetail.isDefined) {
             val sensedMeasurementType = sensorChannelDetail.get.measurementType
-            val sensorValueProcessor = sensorValuesProcessors.get(sensedMeasurementType.externalId)
+            val sensorValueProcessor = sensorValueProcessorRegistry.getSensorValueProcessor(sensedMeasurementType.externalId)
             if (sensorValueProcessor.isDefined) {
               log.info(s"Using sensor processor ${sensorValueProcessor.get}")
               message.down(channelId)
@@ -149,13 +137,11 @@ class StandardSensedEntityModelProcessor(private val completeSensedEntityModel: 
    *          the time the sensor event came in
    * @param sensor
    *          the sensor the data came in on
-   * @param sensedEntity
-   *          the entity the sensor gives data for
    * @param message
    *          the sensor message
    */
   private def handleHeartbeat(handler: SensedEntitySensorHandler, messageReceivedTimestamp: Long,
-    sensor: SensorEntityModel, sensedEntity: SensedEntityModel, message: DynamicObject): Unit = {
+    sensor: SensorEntityModel, message: DynamicObject): Unit = {
 
     sensor.updateHeartbeat(messageReceivedTimestamp)
   }

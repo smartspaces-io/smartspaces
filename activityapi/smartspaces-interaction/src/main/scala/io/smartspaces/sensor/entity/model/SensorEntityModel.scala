@@ -21,7 +21,7 @@ import org.apache.commons.logging.Log
 
 /**
  * The model of a sensor.
- * 
+ *
  * <p>
  * The sensor is considered online or offline by whether or not the sensor has sent either a
  * heartbeat or a sensor message within a specified rime window. The time window for a given
@@ -45,16 +45,36 @@ trait SensorEntityModel {
    * The model that is being sensed by this sensor.
    */
   var sensedEntityModel: Option[SensedEntityModel]
-  
+
   /**
    * When this model was created.
    */
   val modelCreationTime: Long
-  
+
   /**
    * Is the sensor online?
    */
   var online: Boolean
+
+  /**
+   * Add in a new sensor channel entity model to the sensor model.
+   * 
+   * @param sensorChannelEntityModel
+   *          the new channel model
+   *          
+   * TODO(keith): Potentially move into another interface or make a builder for these things so they are unmodifiable.
+   */
+  def addSensorChannelEntityModel(sensorChannelEntityModel: SensorChannelEntityModel): Unit
+  
+  /**
+   * Get a sensor channel entity model for a given channel ID.
+   *
+   * @param channelId
+   *          the ID of the channel
+   *
+   * @return the channel model, if any
+   */
+  def getSensorChannelEntityModel(channelId: String): Option[SensorChannelEntityModel]
 
   /**
    * Get the value of a sensed property by its type ID.
@@ -106,8 +126,8 @@ trait SensorEntityModel {
    * @return the last time
    */
   def getLastUpdate(): Option[Long]
-  
-   /**
+
+  /**
    * Get the last heartbeat update for the model.
    *
    * @return the last time
@@ -116,11 +136,11 @@ trait SensorEntityModel {
 
   /**
    * Check to see if the sensor is still considered online.
-   * 
+   *
    * <p>
    * This method will change the {@link #online} status and emit an event
    * if the sensor has become offline
-   * 
+   *
    * @param currentTime
    * 				the current time to check against
    */

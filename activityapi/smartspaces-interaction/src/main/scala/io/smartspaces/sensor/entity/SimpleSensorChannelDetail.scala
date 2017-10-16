@@ -31,5 +31,5 @@ package io.smartspaces.sensor.entity
  *
  * @author Keith M. Hughes
  */
-case class SimpleSensorChannelDetail(val sensorDetail: SensorDetail, val id: String, val displayName: String, val displayDescription: String, val measurementType: MeasurementTypeDescription, val measurementUnit: MeasurementUnitDescription) extends SensorChannelDetail {
+case class SimpleSensorChannelDetail(val sensorDetail: SensorDetail, val channelId: String, val displayName: String, val displayDescription: String, val measurementType: MeasurementTypeDescription, val measurementUnit: MeasurementUnitDescription) extends SensorChannelDetail {
 }

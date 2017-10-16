@@ -36,6 +36,8 @@ import io.smartspaces.event.observable.EventObservableRegistry
 import io.smartspaces.event.observable.ObservableCreator
 import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
 import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
+import io.smartspaces.sensor.entity.SensorSensedEntityAssociation
+import io.smartspaces.sensor.entity.model.SimpleSensorChannelEntityModel
 
 /**
  * A collection of sensed entity models.
@@ -94,12 +96,11 @@ class StandardCompleteSensedEntityModel(
   private val markerIdToPersonModels: Map[String, PersonSensedEntityModel] = new HashMap
 
   /**
-   * The readwrite lock for the
+   * The readwrite lock for read/write transactions.
    */
   private val readWriteLock = new ReentrantReadWriteLock
 
   override def prepare(): Unit = {
- 
     createModelsFromDescriptions()
   }
 
@@ -158,11 +159,13 @@ class StandardCompleteSensedEntityModel(
     externalIdToSensedEntityModels.put(externalId, model)
   }
 
-  override def associateSensorWithSensed(association: SimpleSensorSensedEntityAssociation): Unit = {
+  override def associateSensorWithSensed(association: SensorSensedEntityAssociation): Unit = {
     val sensor = externalIdToSensorEntityModels.get(association.sensor.externalId)
     val sensed = externalIdToSensedEntityModels.get(association.sensedEntity.externalId)
+    
+    val channelModel = new SimpleSensorChannelEntityModel(association.sensorChannelDetail, sensor.get, sensed.get)
 
-    sensor.get.sensedEntityModel = sensed
+    sensor.get.addSensorChannelEntityModel(channelModel)
     sensed.get.sensorEntityModel = sensor
   }
 

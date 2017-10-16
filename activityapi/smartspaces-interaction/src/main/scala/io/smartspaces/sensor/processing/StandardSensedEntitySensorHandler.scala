@@ -64,11 +64,11 @@ class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: C
   /**
    * The listeners for physical based sensor events.
    */
-  private val sensedEntitySensorListeners: ArrayBuffer[SensedEntitySensorListener] =
+  private val sensedEntitySensorMessageHandlers: ArrayBuffer[SensedEntitySensorMessageHandler] =
     new ArrayBuffer
 
-  override def addSensedEntitySensorListener(listener: SensedEntitySensorListener): SensedEntitySensorHandler = {
-    sensedEntitySensorListeners += listener
+  override def addSensedEntitySensorMessageHandler(listener: SensedEntitySensorMessageHandler): SensedEntitySensorHandler = {
+    sensedEntitySensorMessageHandlers += listener
 
     this
   }
@@ -144,9 +144,9 @@ class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: C
     }
 
     completeSensedEntityModel.doVoidWriteTransaction { () =>
-      sensedEntitySensorListeners.foreach((listener) => {
+      sensedEntitySensorMessageHandlers.foreach((handler) => {
         try {
-          listener.handleNewSensorData(this, timestamp, sensor.get, sensedEntity.get, data);
+          handler.handleNewSensorMessage(this, timestamp, sensor.get, sensedEntity.get, data);
         } catch {
           case e: Throwable =>
             log.formatError(e, "Error during listener processing of physical based sensor data");

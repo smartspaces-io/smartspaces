@@ -16,17 +16,18 @@
 
 package io.smartspaces.sensor.entity
 
+import io.smartspaces.logging.ExtendedLog
+
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Map
-import io.smartspaces.SmartSpacesException
 
 /**
  * A sensor registry totally contained in memory.
  *
  * @author Keith M. Hughes
  */
-class InMemorySensorRegistry extends SensorRegistry {
+class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
 
   /**
    * A map of persistence IDs to their measurement types.
@@ -243,26 +244,34 @@ class InMemorySensorRegistry extends SensorRegistry {
     idToSensed.values.toList
   }
 
-  override def associateSensorWithSensedEntity(sensorExternalId: String, sensedEntityExternalId: String): SensorRegistry = {
+  override def associateSensorWithSensedEntity(sensorExternalId: String, sensorChannelId: String, sensedEntityExternalId: String): SensorRegistry = {
     // TODO(keith) Decide what to do if neither exists
     val sensor = externalIdToSensor.get(sensorExternalId)
     val sensedEntity = externalIdToSensed.get(sensedEntityExternalId)
     
     if (sensor.isEmpty) {
-      throw new SmartSpacesException(s"Sensor external ID ${sensorExternalId} not found when associating sensor with sensed entity");
+      log.warn(s"Sensor external ID ${sensorExternalId} not found when associating sensor with sensed entity")
+      return this
+    }
+    
+    val sensorChannelDetail = sensor.get.sensorDetail.get.getSensorChannelDetail(sensorChannelId)
+    if (sensorChannelId.isEmpty) {
+      log.warn(s"Sensor channel ID ${sensorChannelId} in sensor detail for sensor external ID ${sensorExternalId} not found when associating sensor with sensed entity")
+      return this
     }
     
     if (sensedEntity.isEmpty) {
-      throw new SmartSpacesException(s"Sensed entity external ID ${sensedEntityExternalId} not found when associating sensor with sensed entity");
+      log.warn(s"Sensed entity external ID ${sensedEntityExternalId} not found when associating sensor with sensed entity")
+      return this
     }
 
     sensorSensedEntityAssociations +=
-      new SimpleSensorSensedEntityAssociation(sensor.get, sensedEntity.get)
+      new SimpleSensorSensedEntityAssociation(sensor.get, sensorChannelDetail.get, sensedEntity.get)
 
     this
   }
 
-  override def getSensorSensedEntityAssociations(): scala.collection.immutable.List[SimpleSensorSensedEntityAssociation] = {
+  override def getSensorSensedEntityAssociations(): scala.collection.immutable.List[SensorSensedEntityAssociation] = {
     sensorSensedEntityAssociations.toList
   }
 
@@ -272,11 +281,13 @@ class InMemorySensorRegistry extends SensorRegistry {
     val markedEntity = externalIdToMarkable.get(markedEntityExternalId)
     
     if (marker.isEmpty) {
-      throw new SmartSpacesException(s"Marker ID ${markerExternalId} not found when associating marker with marked entity");
+      log.warn(s"Marker ID ${markerExternalId} not found when associating marker with marked entity")
+      return this
     }
     
     if (markedEntity.isEmpty) {
-      throw new SmartSpacesException(s"Marked entity ID ${markedEntityExternalId} not found when associating marker with marked entity");
+      log.warn(s"Marked entity ID ${markedEntityExternalId} not found when associating marker with marked entity")
+      return this
     }
     
 

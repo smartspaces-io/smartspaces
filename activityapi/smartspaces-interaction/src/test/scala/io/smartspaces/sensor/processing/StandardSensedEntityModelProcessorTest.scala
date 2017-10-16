@@ -41,6 +41,7 @@ import org.mockito.MockitoAnnotations
 import org.scalatest.junit.JUnitSuite
 import io.smartspaces.scope.ManagedScope
 import io.smartspaces.sensor.processing.value.SensorValueProcessorContext
+import io.smartspaces.sensor.processing.value.StandardSensorValueProcessorRegistry
 
 /**
  * Tests for the {@link StandardSensedEntityModelProcessor}.
@@ -50,6 +51,8 @@ import io.smartspaces.sensor.processing.value.SensorValueProcessorContext
 class StandardSensedEntityModelProcessorTest extends JUnitSuite {
 
   var processor: StandardSensedEntityModelProcessor = _
+  
+  var sensorValueProcessorRegistry: StandardSensorValueProcessorRegistry = _
 
   @Mock var completeSensedEntityModel: CompleteSensedEntityModel = _
 
@@ -62,7 +65,8 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
   @Before def setup(): Unit = {
     MockitoAnnotations.initMocks(this)
 
-    processor = new StandardSensedEntityModelProcessor(completeSensedEntityModel, managedScope, log)
+    sensorValueProcessorRegistry = new StandardSensorValueProcessorRegistry(log)
+    processor = new StandardSensedEntityModelProcessor(sensorValueProcessorRegistry, completeSensedEntityModel, managedScope, log)
   }
 
   /**
@@ -74,7 +78,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val sensorValueType = "sensor.type"
     Mockito.when(sensorValueProcessor.sensorValueType).thenReturn(sensorValueType)
 
-    processor.addSensorValueProcessor(sensorValueProcessor)
+    sensorValueProcessorRegistry.addSensorValueProcessor(sensorValueProcessor)
 
     val builder = new StandardDynamicObjectBuilder()
 
@@ -97,7 +101,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val sensedEntityModel =
       new SimpleSensedEntityModel(sensedEntity, completeSensedEntityModel)
 
-    processor.handleNewSensorData(handler, timestamp, sensorModel, sensedEntityModel, data)
+    processor.handleNewSensorMessage(handler, timestamp, sensorModel, sensedEntityModel, data)
 
     Mockito.verify(sensorValueProcessor, Mockito.never()).processData(
         Matchers.anyLong(), Matchers.anyLong(),
@@ -114,7 +118,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val sensorValueType = "sensor.type"
     Mockito.when(sensorValueProcessor.sensorValueType).thenReturn(sensorValueType)
 
-    processor.addSensorValueProcessor(sensorValueProcessor)
+    sensorValueProcessorRegistry.addSensorValueProcessor(sensorValueProcessor)
     
     val measurementTimestamp: Long = 1000
     val sensorMessageReceivedTimestamp: Long = 1001
@@ -148,10 +152,10 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
       .thenReturn(Option(sensedEntityModel))
 
     val data = builder.toDynamicObject()
-    processor.handleNewSensorData(handler, sensorMessageReceivedTimestamp, sensorModel, sensedEntityModel, data)
+    processor.handleNewSensorMessage(handler, sensorMessageReceivedTimestamp, sensorModel, sensedEntityModel, data)
 
     Mockito.verify(sensorValueProcessor, Mockito.times(1)).processData(
         measurementTimestamp, sensorMessageReceivedTimestamp, sensorModel,
-        sensedEntityModel, processor.processorContext, channelDetail.id, data)
+        sensedEntityModel, processor.processorContext, channelDetail.channelId, data)
   }
 }

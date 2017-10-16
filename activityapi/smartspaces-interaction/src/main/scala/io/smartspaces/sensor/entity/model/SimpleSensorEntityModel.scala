@@ -35,6 +35,11 @@ class SimpleSensorEntityModel(val sensorEntityDescription: SensorEntityDescripti
   private val sensedValues: Map[String, SensedValue[Any]] = new HashMap
 
   /**
+   * The sensor channel models indexed by the channel ID.
+   */
+  private val sensorChannelModels: Map[String, SensorChannelEntityModel] = new HashMap
+
+  /**
    * The model that is being sensed by this sensor.
    */
   var sensedEntityModel: Option[SensedEntityModel] = None
@@ -61,6 +66,14 @@ class SimpleSensorEntityModel(val sensorEntityDescription: SensorEntityDescripti
    * The time of the last heartbeat update.
    */
   private var lastHeartbeatUpdate: Option[Long] = None
+
+  override def addSensorChannelEntityModel(sensorChannelModel: SensorChannelEntityModel): Unit = {
+    sensorChannelModels.put(sensorChannelModel.sensorChannelDetail.channelId, sensorChannelModel)
+  }
+  
+  override def getSensorChannelEntityModel(channelId: String): Option[SensorChannelEntityModel] = {
+    sensorChannelModels.get(channelId)
+  }
 
   override def getSensedValue(valueTypeId: String): Option[SensedValue[Any]] = {
     // TODO(keith): Needs some sort of concurrency block

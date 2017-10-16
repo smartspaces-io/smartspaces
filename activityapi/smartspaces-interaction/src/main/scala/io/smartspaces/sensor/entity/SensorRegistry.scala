@@ -306,19 +306,21 @@ trait SensorRegistry {
    *
    * @param sensorExternalId
    *          the external ID of the sensor
+   * @param sensorChannelId
+   *          the ID of the sensor channel for the sensed entity
    * @param sensedEntityExternalId
    *          the external ID of the sensed entity
    *
    * @returns this registry
    */
-  def associateSensorWithSensedEntity(sensorExternalId: String, sensedEntityExternalId: String): SensorRegistry
+  def associateSensorWithSensedEntity(sensorExternalId: String, sensorChannelId: String, sensedEntityExternalId: String): SensorRegistry
 
   /**
    * Get the associations between sensors and their sensed entities.
    *
    * @return the associations as an unmodifiable list
    */
-  def getSensorSensedEntityAssociations(): List[SimpleSensorSensedEntityAssociation]
+  def getSensorSensedEntityAssociations(): List[SensorSensedEntityAssociation]
 
   /**
    * Add in configuration data for a given entity.

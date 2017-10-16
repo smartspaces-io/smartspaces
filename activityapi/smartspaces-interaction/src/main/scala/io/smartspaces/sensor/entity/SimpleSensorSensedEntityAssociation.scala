@@ -17,9 +17,38 @@
 package io.smartspaces.sensor.entity
 
 /**
- * An association between a sensor and the entity it senses.
+ * An association between a sensor channel and the entity it senses.
  *
  * @author Keith M. Hughes
  */
-case class SimpleSensorSensedEntityAssociation(val sensor: SensorEntityDescription, val sensedEntity: SensedEntityDescription) {
+trait SensorSensedEntityAssociation {
+
+  /**
+   * The sensor description.
+   */
+  val sensor: SensorEntityDescription
+
+  /**
+   * The sensor channel from the sensor to be associated with the sensed entity.
+   */
+  val sensorChannelDetail: SensorChannelDetail
+
+  /**
+   * The entity being sensed by the sensor channel.
+   */
+  val sensedEntity: SensedEntityDescription
 }
+
+/**
+ * An association between a sensor channel and the entity it senses.
+ *
+ * @author Keith M. Hughes
+ */
+case class SimpleSensorSensedEntityAssociation(
+
+  override val sensor: SensorEntityDescription,
+
+  override val sensorChannelDetail: SensorChannelDetail,
+
+  override val sensedEntity: SensedEntityDescription
+) extends SensorSensedEntityAssociation

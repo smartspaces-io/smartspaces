@@ -20,10 +20,7 @@ import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.entity.SensedEntityDescription
 import io.smartspaces.sensor.entity.SensorEntityDescription
 import io.smartspaces.sensor.entity.SensorRegistry
-import io.smartspaces.sensor.entity.SimpleSensorSensedEntityAssociation
-import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
-import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
-import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
+import io.smartspaces.sensor.entity.SensorSensedEntityAssociation
 import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
 
 /**
@@ -75,7 +72,7 @@ trait CompleteSensedEntityModel {
    * @param association
    * 		the association to add
    */
-  def associateSensorWithSensed(association: SimpleSensorSensedEntityAssociation): Unit
+  def associateSensorWithSensed(association: SensorSensedEntityAssociation): Unit
 
   /**
    * Get the sensor entity model for a given entity ID.

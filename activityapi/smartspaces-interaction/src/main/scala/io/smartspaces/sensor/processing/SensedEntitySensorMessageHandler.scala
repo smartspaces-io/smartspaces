@@ -21,11 +21,11 @@ import io.smartspaces.sensor.entity.model.SensedEntityModel
 import io.smartspaces.sensor.entity.model.SensorEntityModel
 
 /**
- * A listener for sensor events for sensed entities.
+ * A handler for sensor sensor for sensed entities.
  *
  * @author Keith M. Hughes
  */
-trait SensedEntitySensorListener {
+trait SensedEntitySensorMessageHandler {
 
   /**
    * Handle sensor data that has come in.
@@ -41,7 +41,7 @@ trait SensedEntitySensorListener {
    * @param message
    *          the sensor message
    */
-  def handleNewSensorData(handler: SensedEntitySensorHandler, 
+  def handleNewSensorMessage(handler: SensedEntitySensorHandler, 
       messageReceivedTimestamp: Long,
       sensor: SensorEntityModel, sensedEntity: SensedEntityModel, message: DynamicObject): Unit
 }

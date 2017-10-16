@@ -39,6 +39,6 @@ case class SimpleSensorDetail(val id: String, val externalId: String, val displa
   }
 
   override def getSensorChannelDetail(id: String): Option[SensorChannelDetail] = {
-    channelDetails.find(_.id == id)
+    channelDetails.find(_.channelId == id)
   }
 }

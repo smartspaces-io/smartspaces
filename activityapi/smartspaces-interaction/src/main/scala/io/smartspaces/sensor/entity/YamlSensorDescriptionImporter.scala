@@ -193,6 +193,11 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   val ENTITY_DESCRIPTION_FIELD_SENSOR_ASSOCIATION_SENSED = "sensed"
 
   /**
+   * The field in a sensor association for the channel IDs.
+   */
+  val ENTITY_DESCRIPTION_FIELD_SENSOR_ASSOCIATION_SENSOR_CHANNEL_IDS = "sensorChannelIds"
+
+  /**
    * The section header for the configuration section of the file.
    */
   val SECTION_HEADER_CONFIGURATIONS = "configurations"
@@ -501,10 +506,25 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
 
     data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
       val itemData = entry.down()
+      
+      val sensorExternalId = itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_SENSOR_ASSOCIATION_SENSOR)
+      val sensedExternalId = itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_SENSOR_ASSOCIATION_SENSED)
+      val sensorChannelIds = itemData.getString(ENTITY_DESCRIPTION_FIELD_SENSOR_ASSOCIATION_SENSOR_CHANNEL_IDS, "*")
+      
+      val channelIds = if (sensorChannelIds == "*") {
+          val sensor = sensorRegistry.getSensorByExternalId(sensorExternalId)
+          if (sensor.isDefined) {
+            sensor.get.sensorDetail.get.getAllSensorChannelDetails().map(_.channelId)
+            
+          } else {
+            log.warn(s"Could not find sensor with ID ${sensorExternalId} in sensor association")
+            return
+          }
+      } else {
+          sensorChannelIds.split(':').toList
+      }
 
-      sensorRegistry.associateSensorWithSensedEntity(
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_SENSOR_ASSOCIATION_SENSOR),
-        itemData.getRequiredString(ENTITY_DESCRIPTION_FIELD_SENSOR_ASSOCIATION_SENSED))
+      channelIds.foreach { sensorRegistry.associateSensorWithSensedEntity(sensorExternalId, _, sensedExternalId) }
     })
     data.up()
   }

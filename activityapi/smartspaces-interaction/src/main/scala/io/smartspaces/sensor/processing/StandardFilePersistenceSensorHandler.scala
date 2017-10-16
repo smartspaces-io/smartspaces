@@ -100,7 +100,7 @@ class StandardFilePersistenceSensorHandler(private val outputFile: File) extends
     saveData()
   }
 
-  override def handleSensorData(timestamp: Long, data: DynamicObject): Unit = {
+  override def handleSensorMessage(timestamp: Long, data: DynamicObject): Unit = {
     val sample: Map[String, Object] = new HashMap
     samples.add(sample)
 

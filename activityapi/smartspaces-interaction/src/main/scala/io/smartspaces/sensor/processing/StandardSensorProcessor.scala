@@ -58,7 +58,7 @@ class StandardSensorProcessor(val managedScope: ManagedScope, val log: ExtendedL
   override def processSensorData(timestamp: Long, sensorDataEvent: DynamicObject): Unit = {
     sensorHandlers.foreach(handler => {
       try {
-        handler.handleSensorData(timestamp, sensorDataEvent)
+        handler.handleSensorMessage(timestamp, sensorDataEvent)
       } catch {
         case e: Throwable => log.error("Could not process sensor data event", e)
       }

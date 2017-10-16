@@ -27,25 +27,12 @@ import io.smartspaces.sensor.entity.SensorEntityDescription
 trait SensedEntitySensorHandler extends SensorHandler {
 
   /**
-   * Add a sensor listener to the handler.
+   * Add a sensor message handler to the handler.
    *
-   * @param listener
-   *          the listener to add
-   *
-   * @return this handler
-   */
-  def addSensedEntitySensorMessageHandler(listener: SensedEntitySensorMessageHandler): SensedEntitySensorHandler
-
-  /**
-   * Add sensor descriptions to the handler.
-   *
-   * @param sensor
-   *          the sensor description
-   * @param sensedEntity
-   *          the entity being sensed
+   * @param messageHandler
+   *          the message handler to add
    *
    * @return this handler
    */
-  def associateSensorWithEntity(sensor: SensorEntityDescription,
-    sensedEntity: SensedEntityDescription): SensedEntitySensorHandler
+  def addSensedEntitySensorMessageHandler(messageHandler: SensedEntitySensorMessageHandler): SensedEntitySensorHandler
 }

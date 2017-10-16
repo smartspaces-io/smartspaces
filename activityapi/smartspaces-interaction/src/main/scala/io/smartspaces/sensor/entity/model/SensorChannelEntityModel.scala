@@ -46,7 +46,7 @@ trait SensorChannelEntityModel {
  * @author Keith M. Hughes
  */
 class SimpleSensorChannelEntityModel(
-  override val sensorChannelDetail: SensorChannelDetail,
   override val sensorModel: SensorEntityModel,
+  override val sensorChannelDetail: SensorChannelDetail,
   override val sensedEntityModel: SensedEntityModel
 ) extends SensorChannelEntityModel 

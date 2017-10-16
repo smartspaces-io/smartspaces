@@ -42,6 +42,9 @@ import org.scalatest.junit.JUnitSuite
 import io.smartspaces.scope.ManagedScope
 import io.smartspaces.sensor.processing.value.SensorValueProcessorContext
 import io.smartspaces.sensor.processing.value.StandardSensorValueProcessorRegistry
+import io.smartspaces.sensor.entity.model.SimpleSensorChannelEntityModel
+import io.smartspaces.sensor.messaging.output.StandardSensorMessageBuilder
+import io.smartspaces.sensor.entity.SensorEntityDescription
 
 /**
  * Tests for the {@link StandardSensedEntityModelProcessor}.
@@ -70,44 +73,23 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
   }
 
   /**
-   * Test using the sensor value processor when can't find the sensed entity
-   * model.
+   * Test using the sensor value processor for a heartbeat message.
    */
-  @Test def testModelNoValueUpdate(): Unit = {
-    val sensorValueProcessor: SensorValueProcessor = Mockito.mock(classOf[SensorValueProcessor])
-    val sensorValueType = "sensor.type"
-    Mockito.when(sensorValueProcessor.sensorValueType).thenReturn(sensorValueType)
+  @Test def testHeartbeat(): Unit = {
+    val sensorDescription: SensorEntityDescription = Mockito.mock(classOf[SensorEntityDescription])
+    Mockito.when(sensorDescription.externalId).thenReturn("1")
+    val sensorModel: SensorEntityModel = Mockito.mock(classOf[SensorEntityModel])
+    Mockito.when(sensorModel.sensorEntityDescription).thenReturn(sensorDescription)
 
-    sensorValueProcessorRegistry.addSensorValueProcessor(sensorValueProcessor)
+    val builder = StandardSensorMessageBuilder.newHeartbeatMessage("1")
 
-    val builder = new StandardDynamicObjectBuilder()
-
-    builder.newObject(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
-
-    val data = builder.toDynamicObject()
+    val data = builder.messageBuilder.toDynamicObject()
 
     val timestamp: Long = 10000
-    val sensorDetail = new SimpleSensorDetail("1", "foo", "foo", "foo", None, None)
-    val channelDetail =
-      new SimpleSensorChannelDetail(sensorDetail, "test", "glorp", "norp", null, null)
-    sensorDetail.addSensorChannelDetail(channelDetail)
 
-    val sensor =
-      new SimpleSensorEntityDescription("1", "foo", "foo", "foo", Option.apply(sensorDetail), None, None)
-    val sensorModel = new SimpleSensorEntityModel(sensor, completeSensedEntityModel, 0)
-
-    val sensedEntity =
-      new SimplePhysicalSpaceSensedEntityDescription("2", "foo", "foo", "foo", None)
-    val sensedEntityModel =
-      new SimpleSensedEntityModel(sensedEntity, completeSensedEntityModel)
-
-    processor.handleNewSensorMessage(handler, timestamp, sensorModel, sensedEntityModel, data)
-
-    Mockito.verify(sensorValueProcessor, Mockito.never()).processData(
-        Matchers.anyLong(), Matchers.anyLong(),
-        Matchers.any(classOf[SensorEntityModel]), Matchers.any(classOf[SensedEntityModel]),
-        Matchers.any(classOf[SensorValueProcessorContext]), 
-        Matchers.any(classOf[String]), Matchers.any(classOf[DynamicObject]))
+    processor.handleNewSensorMessage(handler, timestamp, sensorModel, data)
+    
+    Mockito.verify(sensorModel).updateHeartbeat(timestamp)
   }
 
   /**
@@ -117,6 +99,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val sensorValueProcessor = Mockito.mock(classOf[SensorValueProcessor])
     val sensorValueType = "sensor.type"
     Mockito.when(sensorValueProcessor.sensorValueType).thenReturn(sensorValueType)
+    val sensorValue: Long = 1234
 
     sensorValueProcessorRegistry.addSensorValueProcessor(sensorValueProcessor)
     
@@ -126,15 +109,9 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val measurementType =
       new SimpleMeasurementTypeDescription("foo", sensorValueType, null, null, null, null, null)
 
-    val builder = new StandardDynamicObjectBuilder()
-
-    builder.newObject(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
-    val channelId = "test"
-    builder.newObject(channelId)
-    builder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, sensorValueType)
-    builder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, measurementTimestamp)
 
     val sensorDetail = new SimpleSensorDetail("1", "foo", "foo", "foo", None, None)
+    val channelId = "test"
     val channelDetail =
       new SimpleSensorChannelDetail(sensorDetail, channelId, "glorp", "norp", measurementType, null)
     sensorDetail.addSensorChannelDetail(channelDetail)
@@ -148,11 +125,15 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val sensedEntityModel =
       new SimpleSensedEntityModel(sensedEntity, completeSensedEntityModel)
 
-    Mockito.when(completeSensedEntityModel.getSensedEntityModelByExternalId(sensedEntity.externalId))
-      .thenReturn(Option(sensedEntityModel))
+    val sensorChannelModel = new SimpleSensorChannelEntityModel(sensorModel, channelDetail, sensedEntityModel)
+    sensorModel.addSensorChannelEntityModel(sensorChannelModel)
 
-    val data = builder.toDynamicObject()
-    processor.handleNewSensorMessage(handler, sensorMessageReceivedTimestamp, sensorModel, sensedEntityModel, data)
+    val builder = StandardSensorMessageBuilder.newMeasurementMessage(sensor.externalId)
+
+    builder.addChannelData(channelId, sensorValueType, sensorValue, measurementTimestamp)
+
+    val data = builder.messageBuilder.toDynamicObject()
+    processor.handleNewSensorMessage(handler, sensorMessageReceivedTimestamp, sensorModel, data)
 
     Mockito.verify(sensorValueProcessor, Mockito.times(1)).processData(
         measurementTimestamp, sensorMessageReceivedTimestamp, sensorModel,

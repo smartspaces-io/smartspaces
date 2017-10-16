@@ -117,13 +117,13 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
 
       mqttClient.setCallback(new MqttCallbackExtended() {
         override def connectComplete(reconnect: Boolean, serverURI: String): Unit = {
-          log.info(s"MQTT connection successful to ${mqttBrokerDescription.brokerAddress}")
+          log.info(s"MQTT client ${mqttClientId} connection successful to ${mqttBrokerDescription.brokerAddress}")
 
           brokerConnectSuccessful(reconnect)
         }
 
         override def connectionLost(cause: Throwable): Unit = {
-          log.warn(s"Lost MQTT connection to ${mqttBrokerDescription.brokerAddress}", cause)
+          log.warn(s"Lost MQTT client ${mqttClientId} connection to ${mqttBrokerDescription.brokerAddress}", cause)
 
           brokerConnectLost()
         }
@@ -133,7 +133,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
         }
 
         override def messageArrived(topic: String, message: MqttMessage): Unit = {
-          log.info("Received top level MQTT message")
+          log.info(s"Received top level MQTT client ${mqttClientId} message")
           //handleMessageArrived(topic, message)
         }
       })
@@ -152,17 +152,17 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
 
       mqttClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
         override def onSuccess(token: IMqttToken): Unit = {
-          log.info("MQTT broker connect is successful on token " + token)
+          log.info(s"MQTT client ${mqttClientId} broker connect is successful on token " + token)
         }
 
         override def onFailure(token: IMqttToken, cause: Throwable): Unit = {
-          log.error("MQTT broker connect has failure on token " + token, cause)
+          log.error(s"MQTT client ${mqttClientId} broker connect has failure on token " + token, cause)
 
           brokerConnectFailure()
         }
       })
     } catch {
-      case e: Throwable => throw new SmartSpacesException("Error when connecting to MQTT broker", e)
+      case e: Throwable => throw new SmartSpacesException(s"Error when connecting to MQTT client ${mqttClientId} broker", e)
     }
   }
 
@@ -171,7 +171,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       try {
         mqttClient.disconnect()
       } catch {
-        case e: Throwable => log.error("Could not disconnect the MQTT client", e)
+        case e: Throwable => log.error(s"Could not disconnect the MQTT client ${mqttClientId} client", e)
       }
       mqttClient = null
     }
@@ -252,7 +252,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       try {
         listener.onMqttConnectionSuccessful(this, reconnect)
       } catch {
-        case e: Throwable => log.error("MQTT connection listener failed on connectionSuccessful", e)
+        case e: Throwable => log.error(s"MQTT client ${mqttClientId} connection listener failed on connectionSuccessful", e)
       }
     }
   }
@@ -265,7 +265,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       try {
         listener.onMqttConnectionLost(this)
       } catch {
-        case e: Throwable => log.error("MQTT connection listener failed on connectionLost", e)
+        case e: Throwable => log.error(s"MQTT client ${mqttClientId} connection listener failed on connectionLost", e)
       }
     }
   }
@@ -278,7 +278,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       try {
         listener.onMqttConnectionFailure(this)
       } catch {
-        case e: Throwable => log.error("MQTT connection listener failed on connectionLost", e)
+        case e: Throwable => log.error(s"MQTT client ${mqttClientId} connection listener failed on connectionLost", e)
       }
     }
   }
@@ -313,12 +313,12 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
      * Subscribe the subscriber to the broker.
      */
     def subscribe(): Unit = {
-      log.info("Subscribing to MQTT topic " + subscribedTopicName)
+      log.info(s"MQTT client ${mqttClientId} subscribing to topic ${subscribedTopicName}")
 
       try {
         mqttClient.subscribe(subscribedTopicName, qos, this)
       } catch {
-        case e: MqttException => throw new SmartSpacesException(s"Could not subscribe to MQTT topic ${subscribedTopicName}", e)
+        case e: MqttException => throw new SmartSpacesException(s"MQTT client ${mqttClientId} could not subscribe to topic ${subscribedTopicName}", e)
       }
     }
 
@@ -326,7 +326,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       try {
         listener.handleMessage(PahoMqttCommunicationEndpoint.this, incomingTopicName, message.getPayload())
       } catch {
-        case e: Throwable => log.error(s"Error while handling MQTT message on topic ${subscribedTopicName}", e)
+        case e: Throwable => log.error(s"Error while handling MQTT client ${mqttClientId} message on topic ${subscribedTopicName}", e)
       }
     }
   }

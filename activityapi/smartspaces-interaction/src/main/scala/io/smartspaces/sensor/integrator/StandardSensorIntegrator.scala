@@ -176,15 +176,13 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
 
     val sensorHandler =
       new StandardSensedEntitySensorHandler(completeSensedEntityModel, unknownSensedEntityHandler, log)
-    sensorRegistry.getSensorSensedEntityAssociations.foreach((association) =>
-      sensorHandler.associateSensorWithEntity(association.sensor, association.sensedEntity))
 
     sensorHandler.addSensedEntitySensorMessageHandler(new SensedEntitySensorMessageHandler() {
 
       override def handleNewSensorMessage(handler: SensedEntitySensorHandler, timestamp: Long,
-        sensor: SensorEntityModel, sensedEntity: SensedEntityModel,
+        sensor: SensorEntityModel,
         message: DynamicObject): Unit = {
-        log.info(s"Got message at ${timestamp.toString} from sensor ${sensor} for entity ${sensedEntity}: ${message.asMap()}")
+        log.info(s"Got message at ${timestamp.toString} from sensor ${sensor}: ${message.asMap()}")
 
       }
     })

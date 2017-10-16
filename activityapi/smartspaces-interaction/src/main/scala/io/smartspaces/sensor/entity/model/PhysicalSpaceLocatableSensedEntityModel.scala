@@ -24,7 +24,7 @@ package io.smartspaces.sensor.entity.model
 trait PhysicalSpaceLocatableSensedEntityModel extends SensedEntityModel {
 
   /**
-   * The physical location of the entity.
+   * The current physical location of the entity.
    */
   var physicalSpaceLocation: PhysicalSpaceSensedEntityModel
   

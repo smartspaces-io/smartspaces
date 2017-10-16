@@ -16,28 +16,20 @@
 
 package io.smartspaces.sensor.entity.model
 
-import io.smartspaces.event.observable.EventPublisherSubject
+import java.util.concurrent.locks.ReentrantReadWriteLock
+
+import scala.collection.mutable.HashMap
+import scala.collection.mutable.Map
+
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.entity.PersonSensedEntityDescription
 import io.smartspaces.sensor.entity.PhysicalSpaceSensedEntityDescription
 import io.smartspaces.sensor.entity.SensedEntityDescription
 import io.smartspaces.sensor.entity.SensorEntityDescription
 import io.smartspaces.sensor.entity.SensorRegistry
-import io.smartspaces.sensor.entity.SimpleSensorSensedEntityAssociation
-
-import java.util.concurrent.locks.ReentrantReadWriteLock
-
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.Map
-import io.smartspaces.system.SmartSpacesEnvironment
-import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
-import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
-import io.smartspaces.event.observable.EventObservableRegistry
-import io.smartspaces.event.observable.ObservableCreator
-import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
-import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
 import io.smartspaces.sensor.entity.SensorSensedEntityAssociation
-import io.smartspaces.sensor.entity.model.SimpleSensorChannelEntityModel
+import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
+import io.smartspaces.system.SmartSpacesEnvironment
 
 /**
  * A collection of sensed entity models.
@@ -163,7 +155,7 @@ class StandardCompleteSensedEntityModel(
     val sensor = externalIdToSensorEntityModels.get(association.sensor.externalId)
     val sensed = externalIdToSensedEntityModels.get(association.sensedEntity.externalId)
     
-    val channelModel = new SimpleSensorChannelEntityModel(association.sensorChannelDetail, sensor.get, sensed.get)
+    val channelModel = new SimpleSensorChannelEntityModel(sensor.get, association.sensorChannelDetail, sensed.get)
 
     sensor.get.addSensorChannelEntityModel(channelModel)
     sensed.get.sensorEntityModel = sensor

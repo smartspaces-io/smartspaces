@@ -42,21 +42,6 @@ class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: C
     val log: ExtendedLog) extends SensedEntitySensorHandler with IdempotentManagedResource {
 
   /**
-   * The mapping from sensor to sensed entity.
-   */
-  private val sensorToSensedEntity: EntityMapper = new MemoryEntityMapper
-
-  /**
-   * The sensors being handled, keyed by their ID.
-   */
-  private val sensors: Map[String, SensorEntityModel] = new HashMap
-
-  /**
-   * The entities being sensed, keyed by their ID.
-   */
-  private val sensedEntities: Map[String, SensedEntityModel] = new HashMap
-
-  /**
    * The sensor processor the sensor input is running under.
    */
   var sensorProcessor: SensorProcessor = null
@@ -73,51 +58,37 @@ class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: C
     this
   }
 
-  override def associateSensorWithEntity(sensor: SensorEntityDescription,
-    sensedEntity: SensedEntityDescription): SensedEntitySensorHandler = {
-
-    val sensorModel = completeSensedEntityModel.getSensorEntityModelByExternalId(sensor.externalId)
-    sensors.put(sensor.externalId, sensorModel.get)
-
-    val sensedModel = completeSensedEntityModel.getSensedEntityModelByExternalId(sensedEntity.externalId)
-    sensedEntities.put(sensedEntity.externalId, sensedModel.get)
-    sensorToSensedEntity.put(sensor.externalId, sensedEntity.externalId)
-
-    this
-  }
-
-  override def handleSensorData(timestamp: Long, data: DynamicObject): Unit = {
-    val messageType = data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
+  override def handleSensorMessage(timestamp: Long, message: DynamicObject): Unit = {
+    val messageType = message.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
 
     messageType match {
       case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_COMPOSITE =>
-        handleCompositeSensorMessage(timestamp, data)
+        handleCompositeSensorMessage(timestamp, message)
       case _ =>
-        handleSingleSensorMessage(timestamp, data)
+        handleSingleSensorMessage(timestamp, message)
     }
   }
 
-  private def handleCompositeSensorMessage(timestamp: Long, data: DynamicObject): Unit = {
-    data.down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA).
+  private def handleCompositeSensorMessage(timestamp: Long, message: DynamicObject): Unit = {
+    message.down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA).
         down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_MESSAGES)
         
-    data.getArrayEntries.asScala.foreach { (messageComponent) =>
+    message.getArrayEntries.asScala.foreach { (messageComponent) =>
       handleSingleSensorMessage(timestamp, messageComponent.down())
     }
   }
 
-  private def handleSingleSensorMessage(timestamp: Long, data: DynamicObject): Unit = {
-    val sensorId = data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_SENSOR)
+  private def handleSingleSensorMessage(timestamp: Long, message: DynamicObject): Unit = {
+    val sensorId = message.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_SENSOR)
 
     if (sensorId == null) {
       log.warn("Got data from unknown sensor, the sensor ID is missing")
       return
     }
 
-    val sensor = sensors.get(sensorId)
+    val sensor = completeSensedEntityModel.getSensorEntityModelByExternalId(sensorId)
     if (sensor.isEmpty) {
-      log.formatWarn("Got data from unregistered sensor %s, the data is %s", sensorId,
-        data.asMap())
+      log.warn(s"Got data from unregistered sensor ${sensorId}, the data is ${message.asMap}")
       unknownSensedEntityHandler.handleUnknownSensor(sensorId)
 
       return
@@ -127,29 +98,17 @@ class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: C
       return
     }
 
-    val sensedEntityId = sensorToSensedEntity.get(sensorId)
-    if (sensedEntityId.isEmpty) {
-      log.formatWarn("Got data from sensor %s with no registered sensed entity: %s", sensorId,
-        data.asMap())
-      return
-    }
-
-    // No need to confirm sensed entity, we would not have a sensed entity ID
-    // unless there was an entity registered.
-    val sensedEntity = sensedEntities.get(sensedEntityId.get)
-
     if (log.isDebugEnabled()) {
-      log.formatDebug("Got data from sensor %s for sensed entity %s: %s", sensor, sensedEntity,
-        data.asMap());
+      log.debug(s"Got data from sensor ${sensor}: ${message.asMap}")
     }
 
     completeSensedEntityModel.doVoidWriteTransaction { () =>
       sensedEntitySensorMessageHandlers.foreach((handler) => {
         try {
-          handler.handleNewSensorMessage(this, timestamp, sensor.get, sensedEntity.get, data);
+          handler.handleNewSensorMessage(this, timestamp, sensor.get, message)
         } catch {
           case e: Throwable =>
-            log.formatError(e, "Error during listener processing of physical based sensor data");
+            log.formatError(e, "Error during listener processing of physical based sensor data")
         }
       })
     }

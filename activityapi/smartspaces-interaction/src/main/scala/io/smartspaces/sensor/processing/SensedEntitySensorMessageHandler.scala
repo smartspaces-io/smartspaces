@@ -36,12 +36,10 @@ trait SensedEntitySensorMessageHandler {
    *          the time the sensor event came in
    * @param sensor
    *          the sensor the data came in on
-   * @param sensedEntity
-   *          the entity the sensor gives data for
    * @param message
    *          the sensor message
    */
   def handleNewSensorMessage(handler: SensedEntitySensorHandler, 
       messageReceivedTimestamp: Long,
-      sensor: SensorEntityModel, sensedEntity: SensedEntityModel, message: DynamicObject): Unit
+      sensor: SensorEntityModel, message: DynamicObject): Unit
 }

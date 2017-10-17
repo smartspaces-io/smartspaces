@@ -27,7 +27,8 @@ import io.smartspaces.SmartSpacesException;
 public class EvaluationSmartSpacesException extends SmartSpacesException {
 
   /**
-   *
+   * Construct an evaluation exception.
+   * 
    * @param message
    *          the message for the exception.
    */
@@ -36,10 +37,11 @@ public class EvaluationSmartSpacesException extends SmartSpacesException {
   }
 
   /**
+   * Construct an evaluation exception.
+   * 
    *
    * @param message
    *          the message of the exception
-   *
    * @param cause
    *          the cause of the exception
    */

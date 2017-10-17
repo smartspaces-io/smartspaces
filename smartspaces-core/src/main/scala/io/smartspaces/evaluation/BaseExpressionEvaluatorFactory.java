@@ -16,8 +16,13 @@
 
 package io.smartspaces.evaluation;
 
+import io.smartspaces.evaluation.function.AllOfFunctionDefinition;
 import io.smartspaces.evaluation.function.ConcatStringFunctionDefinition;
+import io.smartspaces.evaluation.function.CondFunctionDefinition;
+import io.smartspaces.evaluation.function.EqualsFunctionDefinition;
+import io.smartspaces.evaluation.function.NoneOfFunctionDefinition;
 import io.smartspaces.evaluation.function.ReplaceAllStringFunctionDefinition;
+import io.smartspaces.evaluation.function.SomeOfFunctionDefinition;
 
 /**
  * The base class for implementing expression evaluator factories.
@@ -36,6 +41,12 @@ public abstract class BaseExpressionEvaluatorFactory implements ExpressionEvalua
     
     environment.addFunctionDefinition(new ConcatStringFunctionDefinition());
     environment.addFunctionDefinition(new ReplaceAllStringFunctionDefinition());
+    environment.addFunctionDefinition(new AllOfFunctionDefinition());
+    environment.addFunctionDefinition(new SomeOfFunctionDefinition());
+    environment.addFunctionDefinition(new NoneOfFunctionDefinition());
+    environment.addFunctionDefinition(new CondFunctionDefinition());
+    environment.addFunctionDefinition(new EqualsFunctionDefinition());
+    
     return environment;
   }
 }

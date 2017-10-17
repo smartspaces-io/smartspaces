@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple implemenation of an {@link EvaluationEnvironment}.
+ * A simple implementation of an {@link EvaluationEnvironment}.
  *
  * @author Keith M. Hughes
  */
@@ -81,10 +81,11 @@ public class SimpleEvaluationEnvironment implements EvaluationEnvironment {
       throws EvaluationSmartSpacesException {
     FunctionDefinition functionDefinition = findFunctionDefintionForCall(functionCall);
     if (functionDefinition != null) {
-      return functionDefinition.evaluateFunctionCall(functionCall);
+      Object result = functionDefinition.evaluateFunctionCall(functionCall);
+      return result;
     } else {
       throw new EvaluationSmartSpacesException(
-          "Could not fund function definition for function " + functionCall.functionName());
+          "Could not find function definition for function " + functionCall.functionName());
     }
   }
 

@@ -58,5 +58,4 @@ public class ConcatStringFunctionDefinition implements FunctionDefinition {
     
     return builder.toString();
   }
-
 }

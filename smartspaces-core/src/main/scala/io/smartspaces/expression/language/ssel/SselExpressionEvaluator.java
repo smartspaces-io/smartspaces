@@ -21,7 +21,7 @@ import io.smartspaces.evaluation.BaseExpressionEvaluator;
 import io.smartspaces.evaluation.EvaluationSmartSpacesException;
 import io.smartspaces.evaluation.FunctionCall;
 import io.smartspaces.evaluation.SimpleEvaluationEnvironment;
-import io.smartspaces.evaluation.function.ConcatStringFunctionDefinition;
+import io.smartspaces.evaluation.function.CondFunctionDefinition;
 import io.smartspaces.evaluation.function.ReplaceAllStringFunctionDefinition;
 import io.smartspaces.expression.language.ssel.SmartspacesexpressionlanguageParserParser.ExpressionContext;
 import io.smartspaces.expression.language.ssel.SmartspacesexpressionlanguageParserParser.FunctionArgumentContext;
@@ -46,15 +46,17 @@ public class SselExpressionEvaluator extends BaseExpressionEvaluator {
 
   public static void main(String[] args) {
     SimpleEvaluationEnvironment env = new SimpleEvaluationEnvironment();
-    env.setSymbolValue("a.b.c", "45dbf5e6-5cf3-11e7-953d-c48e8ff54e35");
-    env.addFunctionDefinition(new ConcatStringFunctionDefinition());
+    env.setSymbolValue("com.inhabitech.hestia.mode.production", "false");
+    env.setSymbolValue("com.inhabitech.hestia.central.mqtt.broker.production", "prod");
+    env.setSymbolValue("com.inhabitech.hestia.central.mqtt.broker.development", "dev");
+    env.addFunctionDefinition(new CondFunctionDefinition());
     env.addFunctionDefinition(new ReplaceAllStringFunctionDefinition());
 
     SselExpressionEvaluator evaluator = new SselExpressionEvaluator();
     evaluator.setEvaluationEnvironment(env);
 
     String result = evaluator.evaluateStringExpression(
-        " foo ${concat(\"s\", replaceAll($a.b.c, \"-\", \"_s\"))} bar ${$a.b.c}");
+        "${cond($com.inhabitech.hestia.mode.production, $com.inhabitech.hestia.central.mqtt.broker.production, $com.inhabitech.hestia.central.mqtt.broker.development)}");
     System.out.println(result);
   }
 

@@ -24,7 +24,7 @@ import org.scalatest.junit.JUnitSuite
 /**
  * Test for the SmartSpaces Expression Language evaluator.
  */
-class SselExpressionEvaluatorTest  extends JUnitSuite {
+class SselExpressionEvaluatorTest extends JUnitSuite {
   
   @Test def testEvaluation(): Unit = {
     val value = "glorp"

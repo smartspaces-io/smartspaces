@@ -87,23 +87,22 @@ class StandardSensedEntityModelProcessor(
     // If the message contained a timestamp, use it, otherwise use when the message came into the processor.
     var measurementTimestamp = message.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, messageReceivedTimestamp)
 
-    val sensorDetail = sensor.sensorEntityDescription.sensorDetail
-    if (sensorDetail.isDefined) {
-      // Go through every property in the data set, find its type, and then create
-      // appropriate values.
-      message.getProperties().foreach((channelId) => {
+    // Go through every property in the data set, find its type, and then create
+    // appropriate values.
+    message.getProperties().foreach((channelId) => {
+      if (!SensorMessages.SENSOR_MESSAGE_DATA_NON_CHANNEL_FIELDS.contains(channelId)) {
         val sensorChannelModel = sensor.getSensorChannelEntityModel(channelId)
         if (sensorChannelModel.isDefined) {
           val sensedMeasurementType = sensorChannelModel.get.sensorChannelDetail.measurementType
           val sensorValueProcessor = sensorValueProcessorRegistry.getSensorValueProcessor(sensedMeasurementType.externalId)
           if (sensorValueProcessor.isDefined) {
-            log.info(s"Using sensor processor ${sensorValueProcessor.get}")
             message.down(channelId)
 
             // Pick up the measurement timestamp from the channel data if it is there,
             // otherwise use the last determined timestamp
             measurementTimestamp = message.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, measurementTimestamp)
 
+            log.info(s"Processing sensor message for channel ${sensorChannelModel.get}")
             sensorValueProcessor.get.processData(
               measurementTimestamp, messageReceivedTimestamp,
               sensor, sensorChannelModel.get.sensedEntityModel, processorContext,
@@ -115,11 +114,9 @@ class StandardSensedEntityModelProcessor(
         } else {
           log.warn(s"Got unknown channel ID ${channelId}")
         }
-      })
-      message.up
-    } else {
-      log.warn(s"Got sensor with no sensor detail ${sensor.sensorEntityDescription}")
-    }
+      }
+    })
+    message.up
   }
 
   /**

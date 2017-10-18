@@ -126,7 +126,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
       new SimpleSensedEntityModel(sensedEntity, completeSensedEntityModel)
 
     val sensorChannelModel = new SimpleSensorChannelEntityModel(sensorModel, channelDetail, sensedEntityModel)
-    sensorModel.addSensorChannelEntityModel(sensorChannelModel)
+    sensorModel.addSensorChannelModel(sensorChannelModel)
 
     val builder = StandardSensorMessageBuilder.newMeasurementMessage(sensor.externalId)
 

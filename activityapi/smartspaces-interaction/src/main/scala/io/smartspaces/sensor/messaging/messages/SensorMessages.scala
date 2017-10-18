@@ -77,4 +77,9 @@ object SensorMessages {
    * The field name for the messages field in the data field of a composite message.
    */
   val SENSOR_MESSAGE_FIELD_NAME_DATA_MESSAGES = "messages"
+  
+  /**
+   * A collection of fields in a sensor data packet that are not channels.
+   */
+  val SENSOR_MESSAGE_DATA_NON_CHANNEL_FIELDS = Set(SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP)
 }

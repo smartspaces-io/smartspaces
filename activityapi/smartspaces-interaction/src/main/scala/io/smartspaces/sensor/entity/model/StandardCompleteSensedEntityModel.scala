@@ -156,9 +156,9 @@ class StandardCompleteSensedEntityModel(
     val sensed = externalIdToSensedEntityModels.get(association.sensedEntity.externalId)
     
     val channelModel = new SimpleSensorChannelEntityModel(sensor.get, association.sensorChannelDetail, sensed.get)
-
-    sensor.get.addSensorChannelEntityModel(channelModel)
-    sensed.get.sensorEntityModel = sensor
+    
+    sensor.get.addSensorChannelModel(channelModel)
+    sensed.get.addSensorChannelModel(channelModel)
   }
 
   override def getSensorEntityModelById(id: String): Option[SensorEntityModel] = {

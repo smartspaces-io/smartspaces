@@ -523,7 +523,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
       } else {
           sensorChannelIds.split(':').toList
       }
-
+      
       channelIds.foreach { sensorRegistry.associateSensorWithSensedEntity(sensorExternalId, _, sensedExternalId) }
     })
     data.up()

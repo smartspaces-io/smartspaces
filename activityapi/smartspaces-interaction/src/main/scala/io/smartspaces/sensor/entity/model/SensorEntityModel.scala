@@ -64,7 +64,7 @@ trait SensorEntityModel {
    *          
    * TODO(keith): Potentially move into another interface or make a builder for these things so they are unmodifiable.
    */
-  def addSensorChannelEntityModel(sensorChannelEntityModel: SensorChannelEntityModel): Unit
+  def addSensorChannelModel(sensorChannelEntityModel: SensorChannelEntityModel): Unit
   
   /**
    * Get a sensor channel entity model for a given channel ID.

@@ -49,4 +49,9 @@ class SimpleSensorChannelEntityModel(
   override val sensorModel: SensorEntityModel,
   override val sensorChannelDetail: SensorChannelDetail,
   override val sensedEntityModel: SensedEntityModel
-) extends SensorChannelEntityModel 
+) extends SensorChannelEntityModel {
+    
+  override def toString(): String = {
+    s"sensrModel: ${sensorModel.sensorEntityDescription.externalId}, sensorChannelDetail: ${sensorChannelDetail.channelId}, sensedEntityModel: ${sensedEntityModel.sensedEntityDescription.externalId}"
+  }
+}

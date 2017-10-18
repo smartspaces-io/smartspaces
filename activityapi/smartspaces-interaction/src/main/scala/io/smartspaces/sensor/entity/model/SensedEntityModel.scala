@@ -36,9 +36,19 @@ trait SensedEntityModel {
   val sensedEntityDescription: SensedEntityDescription
   
   /**
-   * The sensor model that is sensing this entity.
+   * Add a sensor channel model that is sensing this entity.
+   * 
+   * @param sensorChannelModel
+   *          the channel model to add
    */
-  var sensorEntityModel: Option[SensorEntityModel]
+  def addSensorChannelModel(sensorChannelModel: SensorChannelEntityModel): Unit
+  
+  /**
+   * Get all sensor channel models associated with this entity.
+   * 
+   * @return all associated sensor channel models
+   */
+  def getAllSensorChannelModels(): List[SensorChannelEntityModel]
 
   /**
    * Get the value of a sensed property by the value type ID.

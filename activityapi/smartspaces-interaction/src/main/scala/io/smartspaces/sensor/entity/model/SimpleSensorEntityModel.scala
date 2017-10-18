@@ -67,7 +67,7 @@ class SimpleSensorEntityModel(val sensorEntityDescription: SensorEntityDescripti
    */
   private var lastHeartbeatUpdate: Option[Long] = None
 
-  override def addSensorChannelEntityModel(sensorChannelModel: SensorChannelEntityModel): Unit = {
+  override def addSensorChannelModel(sensorChannelModel: SensorChannelEntityModel): Unit = {
     sensorChannelModels.put(sensorChannelModel.sensorChannelDetail.channelId, sensorChannelModel)
   }
   

@@ -29,21 +29,29 @@ import scala.collection.mutable.Map
 class SimpleSensedEntityModel(val sensedEntityDescription: SensedEntityDescription,
     val allModels: CompleteSensedEntityModel) extends SensedEntityModel {
   
- /**
-   * The sensor model that is sensing this entity.
-   */
-  var sensorEntityModel: Option[SensorEntityModel] = None
-
   /**
    * The values being sensed keyed by the value name.
    */
   private val sensedValues: Map[String, SensedValue[Any]] = new HashMap
+  
+  /**
+   * The sensor channels associated with this sensed item.
+   */
+  private var sensorChannelModels: List[SensorChannelEntityModel] = List()
 
   /**
    * The time of the last update.
    */
   private var lastUpdate: Long = 0
-
+  
+  override def addSensorChannelModel(sensorChannelModel: SensorChannelEntityModel): Unit = {
+    sensorChannelModels = sensorChannelModel :: sensorChannelModels
+  }
+  
+  override def getAllSensorChannelModels(): List[SensorChannelEntityModel] = {
+    sensorChannelModels
+  }
+  
   override def getSensedValue(valueTypeId: String): Option[SensedValue[Any]] = {
     // TODO(keith): Needs some sort of concurrency block
     sensedValues.get(valueTypeId)
@@ -56,7 +64,7 @@ class SimpleSensedEntityModel(val sensedEntityDescription: SensedEntityDescripti
   override def updateSensedValue[T <: Any](value: SensedValue[T], timestamp: Long): Unit = {
     // TODO(keith): Needs some sort of concurrency block
     lastUpdate = timestamp
-    sensedValues.put(value.measurementTypeDescription.id, value);
+    sensedValues.put(value.measurementTypeDescription.externalId, value);
   }
   
   override def getLastUpdate(): Long = {

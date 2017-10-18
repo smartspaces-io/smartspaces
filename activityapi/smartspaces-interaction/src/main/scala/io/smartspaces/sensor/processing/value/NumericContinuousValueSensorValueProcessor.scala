@@ -43,8 +43,6 @@ class NumericContinuousValueSensorValueProcessor(
         data.getDouble(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE), 
         measurementTimestamp, sensorMessageReceivedTimestamp)
 
-    processorContext.log.info(value)
-
     sensedEntity.updateSensedValue(value, measurementTimestamp)
     sensorEntity.updateSensedValue(value, measurementTimestamp)
     

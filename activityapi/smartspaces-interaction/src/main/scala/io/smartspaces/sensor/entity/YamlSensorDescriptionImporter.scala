@@ -165,7 +165,7 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
   /**
    * The section header for the marker association of the file.
    */
-  val SECTION_HEADER_MARkER_ASSOCIATIONS = "markerAssociations"
+  val SECTION_HEADER_MARKER_ASSOCIATIONS = "markerAssociations"
 
   /**
    * The field in a marker association for the marker ID.
@@ -538,8 +538,8 @@ class YamlSensorDescriptionImporter(configuration: Map[String, Object], log: Ext
    *          the data read from the input stream
    */
   def getMarkerAssociations(sensorRegistry: SensorRegistry, data: DynamicObject): Unit = {
-    if (data.containsProperty(SECTION_HEADER_MARKERS) && data.containsProperty(SECTION_HEADER_MARkER_ASSOCIATIONS)) {
-      data.down(SECTION_HEADER_MARkER_ASSOCIATIONS)
+    if (data.containsProperty(SECTION_HEADER_MARKERS) && data.containsProperty(SECTION_HEADER_MARKER_ASSOCIATIONS)) {
+      data.down(SECTION_HEADER_MARKER_ASSOCIATIONS)
 
       data.getArrayEntries().foreach((entry: ArrayDynamicObjectEntry) => {
         val itemData = entry.down()

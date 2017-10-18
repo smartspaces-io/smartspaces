@@ -43,8 +43,6 @@ class CategoricalValueSensorValueProcessor(val measurementType: MeasurementTypeD
         categoricalValue.fromLabel(data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)).get, 
         measurementTimestamp, sensorMessageReceivedTimestamp)
 
-    processorContext.log.info(value)
-
     sensedEntity.updateSensedValue(value, measurementTimestamp)
     sensorEntity.updateSensedValue(value, measurementTimestamp)
     

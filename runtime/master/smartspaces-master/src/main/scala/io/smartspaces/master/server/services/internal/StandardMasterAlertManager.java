@@ -17,6 +17,14 @@
 
 package io.smartspaces.master.server.services.internal;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.master.event.BaseMasterEventListener;
 import io.smartspaces.master.event.MasterEventListener;
@@ -27,15 +35,7 @@ import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.service.alert.AlertService;
 import io.smartspaces.spacecontroller.SpaceControllerState;
 import io.smartspaces.system.SmartSpacesEnvironment;
-
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import io.smartspaces.tasks.ManagedTask;
 
 /**
  * A basic implementation of a {@link MasterAlertManager}.
@@ -104,7 +104,7 @@ public class StandardMasterAlertManager implements MasterAlertManager {
   /**
    * Control for the alert manager.
    */
-  private ScheduledFuture<?> alertWatcherControl;
+  private ManagedTask alertWatcherControl;
 
   /**
    * Number of milliseconds the alert watcher waits before scanning for activity
@@ -142,7 +142,7 @@ public class StandardMasterAlertManager implements MasterAlertManager {
   public void startup() {
     masterEventManager.addListener(masterEventListener);
 
-    alertWatcherControl = spaceEnvironment.getExecutorService().scheduleAtFixedRate(new Runnable() {
+    alertWatcherControl = spaceEnvironment.getContainerManagedScope().scheduleAtFixedRate(new Runnable() {
       @Override
       public void run() {
         scan();
@@ -157,7 +157,7 @@ public class StandardMasterAlertManager implements MasterAlertManager {
     masterEventManager.removeListener(masterEventListener);
 
     if (alertWatcherControl != null) {
-      alertWatcherControl.cancel(true);
+      alertWatcherControl.cancel();
       alertWatcherControl = null;
     }
   }

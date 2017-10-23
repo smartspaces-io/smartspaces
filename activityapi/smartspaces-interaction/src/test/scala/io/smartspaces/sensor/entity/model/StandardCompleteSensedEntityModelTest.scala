@@ -16,21 +16,23 @@
 
 package io.smartspaces.sensor.entity.model
 
-import io.smartspaces.event.observable.EventObservableRegistry
-import io.smartspaces.logging.ExtendedLog
-import io.smartspaces.sensor.entity.SensorEntityDescription
-import io.smartspaces.sensor.entity.SensorRegistry
-import io.smartspaces.system.SmartSpacesEnvironment
-import io.smartspaces.time.provider.SettableTimeProvider
-
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.scalatest.junit.JUnitSuite
+
 import io.smartspaces.event.observable.EventObservableRegistry
+import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.sensor.entity.SensorEntityDescription
+import io.smartspaces.sensor.entity.SensorRegistry
+import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
 import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
+import io.smartspaces.system.SmartSpacesEnvironment
+import io.smartspaces.time.provider.SettableTimeProvider
 
 /**
  * Test the {@link #StandardCompleteSensedEntityModel}.
@@ -61,10 +63,16 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
     allModels = new StandardCompleteSensedEntityModel(sensorRegistry, eventEmitter, log, spaceEnvironment)
   }
 
-  @Test def testModelUpdate(): Unit = {
+  /**
+   * Test that a simple sensor model happens and that no event is emitted.
+   */
+  @Test def testModelCheckNoEvent(): Unit = {
     val sensorModel = Mockito.mock(classOf[SensorEntityModel])
     val sensorDescription = Mockito.mock(classOf[SensorEntityDescription])
     Mockito.when(sensorModel.sensorEntityDescription).thenReturn(sensorDescription)
+
+    val checkTime = 12345l
+    Mockito.when(sensorModel.checkIfOfflineTransition(checkTime)).thenReturn(false)
 
     val externalId = "foo"
 
@@ -75,11 +83,49 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
 
     allModels.registerSensorModel(sensorModel)
 
-    val checkTime = 12345l
     timeProvider.setCurrentTime(checkTime)
 
     allModels.performModelCheck()
 
     Mockito.verify(sensorModel).checkIfOfflineTransition(checkTime)
+    
+    
+    val argumentCaptor = ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
+    Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+  }
+
+  /**
+   * Test that a simple sensor model happens and that an event is emitted when the sensor goes offline
+   */
+  @Test def testModelCheckWithEvent(): Unit = {
+    val sensorModel = Mockito.mock(classOf[SensorEntityModel])
+    val sensorDescription = Mockito.mock(classOf[SensorEntityDescription])
+    Mockito.when(sensorModel.sensorEntityDescription).thenReturn(sensorDescription)
+
+    val checkTime = 12345l
+    Mockito.when(sensorModel.checkIfOfflineTransition(checkTime)).thenReturn(true)
+
+    val externalId = "foo"
+
+    Mockito.when(sensorDescription.externalId).thenReturn(externalId)
+    Mockito.when(sensorDescription.active).thenReturn(true)
+
+    val offlineTime = 10000l
+    timeProvider.setCurrentTime(offlineTime)
+
+    allModels.registerSensorModel(sensorModel)
+
+    timeProvider.setCurrentTime(checkTime)
+
+    allModels.performModelCheck()
+
+    Mockito.verify(sensorModel).checkIfOfflineTransition(checkTime)
+    
+    val argumentCaptor = ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
+    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+
+    val event = argumentCaptor.getValue
+    Assert.assertEquals(sensorModel, event.sensorModel)
+    Assert.assertEquals(checkTime, event.timestamp)
   }
 }

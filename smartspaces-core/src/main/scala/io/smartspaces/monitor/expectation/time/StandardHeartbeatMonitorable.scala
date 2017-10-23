@@ -114,8 +114,73 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
   override def online(): Boolean = _online
   
   
+  override def checkIfOfflineTransition(currentTime: Long): Boolean = {
+    // Only check if the model thinks it is online and there was an update time,
+    // otherwise we want the initial 
+    if (_online) {
+      if (stateUpdateTimeLimit.isDefined) {
+        // The only way we would ever be considered online is if there was a lastUpdate,
+        // so the .get will work.
+        _online = !isTimeout(currentTime, _lastUpdateTime.get, stateUpdateTimeLimit.get)
+      } else if (heartbeatUpdateTimeLimit.isDefined) {
+        // If this sensor requires a heartbeat, the heartbeat time can be checked.
+        
+        val updateToUse = if (_lastUpdateTime.isDefined) { if (_lastHeartbeatUpdate.isDefined) Math.max(_lastUpdateTime.get, _lastHeartbeatUpdate.get) else _lastUpdateTime.get } else _lastHeartbeatUpdate.get
+        _online = !isTimeout(currentTime, updateToUse, heartbeatUpdateTimeLimit.get)
+      }
+
+      // We knew online was true, so if now offline, then transitioned.
+      if (!_online) {
+        signalOffline(currentTime)
+      }
+      
+      !_online
+    } else {
+      // Now, we are considered offline. If we have never been updated then we can check at the
+      // time of birth of the model. otherwise no need to check.
+      if (!offlineSignaled) {
+        if (stateUpdateTimeLimit.isDefined) {
+          if (isTimeout(currentTime, _lastUpdateTime.getOrElse(itemCreationTime), stateUpdateTimeLimit.get)) {
+            signalOffline(currentTime)
+            
+            true
+          } else {
+            false
+          }
+        } else if (heartbeatUpdateTimeLimit.isDefined) {
+          // If this sensor requires a heartbeat, the heartbeat time can be checked.
+          if (isTimeout(currentTime, _lastHeartbeatUpdate.getOrElse(itemCreationTime), heartbeatUpdateTimeLimit.get)) {
+            signalOffline(currentTime)
+            
+            true
+          } else {
+            false
+          }
+        } else {
+          false
+        }
+      } else {
+        false
+      }
+    }
+  }
+
+  /**
+   * Signal that the sensor has gone offline.
+   *
+   * @param currentTime
+   * 		the time when the sensor was detected offline
+   */
+  private def signalOffline(currentTime: Long): Unit = {
+    offlineSignaled = true
+  }
+  
+  def heartbeatUpdateTimeLimit: Option[Long] = None
+  
+  def stateUpdateTimeLimit: Option[Long] = None
+  
   /**
    * REMOVE AFTER REFACTOR COMPLETE
    */
-  def online_=(o: Boolean) = this._online = o
+  def setOnline(o: Boolean): Unit = this._online = o
 }

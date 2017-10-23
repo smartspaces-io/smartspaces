@@ -30,6 +30,7 @@ import io.smartspaces.sensor.entity.SensorRegistry
 import io.smartspaces.sensor.entity.SensorSensedEntityAssociation
 import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
 import io.smartspaces.system.SmartSpacesEnvironment
+import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
 
 /**
  * A collection of sensed entity models.
@@ -227,8 +228,10 @@ class StandardCompleteSensedEntityModel(
 
     log.debug(s"Performing sensor model check at ${currentTime}")
 
-    getAllSensorEntityModels().filter(_.sensorEntityDescription.active).foreach {
-      _.checkIfOfflineTransition(currentTime)
+    getAllSensorEntityModels().filter(_.sensorEntityDescription.active).foreach { (sensor) =>
+      if (sensor.checkIfOfflineTransition(currentTime)) {
+        eventEmitter.broadcastSensorOfflineEvent(new SensorOfflineEvent(sensor, currentTime))
+      }
     }
   }
 

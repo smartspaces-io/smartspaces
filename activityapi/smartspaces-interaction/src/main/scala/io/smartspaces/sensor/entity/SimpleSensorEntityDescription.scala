@@ -21,9 +21,14 @@ package io.smartspaces.sensor.entity
  *
  * @author Keith M. Hughes
  */
-class SimpleSensorEntityDescription(override val id: String, override val externalId: String, override val displayName: String, val description: String, val sensorDetail: Option[SensorDetail], 
-    override val sensorUpdateTimeLimit: Option[Long], override val sensorHeartbeatUpdateTimeLimit: Option[Long]) extends SimpleEntityDescription(id, externalId, displayName, description)
-    with SensorEntityDescription {
+class SimpleSensorEntityDescription(
+    override val id: String, 
+    override val externalId: String, 
+    override val displayName: String, 
+    val description: String, 
+    val sensorDetail: Option[SensorDetail], 
+    override val sensorStateUpdateTimeLimit: Option[Long], 
+    override val sensorHeartbeatUpdateTimeLimit: Option[Long]) extends SimpleEntityDescription(id, externalId, displayName, description) with SensorEntityDescription {
 
   override var active: Boolean = true
 }

@@ -65,186 +65,26 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
   @Test def testOfflineFromInitialUpdateTimeout(): Unit = {
     val timeoutTime = 1000l
 
-    Mockito.when(sensorEntityDescription.sensorUpdateTimeLimit).thenReturn(Option(timeoutTime))
+    Mockito.when(sensorEntityDescription.sensorStateUpdateTimeLimit).thenReturn(Option(timeoutTime))
     Mockito.when(sensorEntityDescription.sensorHeartbeatUpdateTimeLimit).thenReturn(None)
 
     //The model starts offline until proven online
     Assert.assertFalse(model.online)
 
-    val argumentCaptor =
-      ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
+//    val argumentCaptor =
+//      ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
 
     // Model didn't change from short change
     val transition1 = model.checkIfOfflineTransition(modelCreationTime + timeoutTime / 2)
     Assert.assertFalse(transition1)
     Assert.assertFalse(model.online)
-    Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
+    //Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     // Now trigger it from no signal from model start.
     val offlineTime = modelCreationTime + timeoutTime + 1
     var transition2 = model.checkIfOfflineTransition(offlineTime)
     Assert.assertTrue(transition2)
     Assert.assertFalse(model.online)
-    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
-
-    val event = argumentCaptor.getValue
-    Assert.assertEquals(model, event.sensorModel)
-    Assert.assertEquals(offlineTime, event.timestamp)
-  }
-
-  /**
-   * Test to see if offline happens when there has been no update time.
-   */
-  @Test def testOfflineFromOnlineUpdate(): Unit = {
-    val lastUpdate = 30000
-    val timeoutTime = 1000l
-
-    Mockito.when(sensorEntityDescription.sensorUpdateTimeLimit).thenReturn(Option(timeoutTime))
-    Mockito.when(sensorEntityDescription.sensorHeartbeatUpdateTimeLimit).thenReturn(None)
-
-    // Set the model online and last update time
-    model.online = true
-    model.setLastUpdateTime(lastUpdate)
-
-    val argumentCaptor =
-      ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
-
-    // Model didn't change from short change
-    val transition1 = model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
-    Assert.assertFalse(transition1)
-    Assert.assertTrue(model.online)
-    Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
-
-    // Now trigger it
-    var offlineTime = lastUpdate + timeoutTime + 1
-    var transition2 = model.checkIfOfflineTransition(offlineTime)
-    Assert.assertTrue(transition2)
-    Assert.assertFalse(model.online)
-    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
-
-    val event = argumentCaptor.getValue
-    Assert.assertEquals(model, event.sensorModel)
-    Assert.assertEquals(offlineTime, event.timestamp)
-  }
-
-  /**
-   * Test to see if offline happens when there has been no update time.
-   */
-  @Test def testOfflineFromInitialHeartbeatTimeout(): Unit = {
-    val timeoutTime = 1000l
-
-    Mockito.when(sensorEntityDescription.sensorUpdateTimeLimit).thenReturn(None)
-    Mockito.when(sensorEntityDescription.sensorHeartbeatUpdateTimeLimit).thenReturn(Option(timeoutTime))
-
-    //The model starts offline until proven online
-    Assert.assertFalse(model.online)
-
-    val argumentCaptor =
-      ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
-
-    // Model didn't change from short change
-    val transition1 = model.checkIfOfflineTransition(modelCreationTime + timeoutTime / 2)
-    Assert.assertFalse(transition1)
-    Assert.assertFalse(model.online)
-    Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
-
-    // Now trigger it from no signal from model start.
-    val offlineTime = modelCreationTime + timeoutTime + 1
-    val transition2 = model.checkIfOfflineTransition(offlineTime)
-    Assert.assertTrue(transition2)
-    Assert.assertFalse(model.online)
-    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
-
-    val event = argumentCaptor.getValue
-    Assert.assertEquals(model, event.sensorModel)
-    Assert.assertEquals(offlineTime, event.timestamp)
-  }
-
-  /**
-   * Test to see if offline happens when there has been a heartbeat limit but no sensor update limit.
-   */
-  @Test def testOfflineFromOnlineHeartbeat(): Unit = {
-    val lastUpdate = 30000
-    val timeoutTime = 1000l
-
-    Mockito.when(sensorEntityDescription.sensorUpdateTimeLimit).thenReturn(None)
-    Mockito.when(sensorEntityDescription.sensorHeartbeatUpdateTimeLimit).thenReturn(Option(timeoutTime))
-
-    // Set the model online and last update time
-    model.online = true
-    model.setLastHeartbeatUpdateTime(lastUpdate)
-
-    val argumentCaptor =
-      ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
-
-    // Model didn't change from short change
-    val transition1 = model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
-    Assert.assertFalse(transition1)
-    Assert.assertTrue(model.online)
-    Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
-
-    // Now trigger it
-    var offlineTime = lastUpdate + timeoutTime + 1
-    val transition2 = model.checkIfOfflineTransition(offlineTime)
-    Assert.assertTrue(transition2)
-    Assert.assertFalse(model.online)
-    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
-
-    val event = argumentCaptor.getValue
-    Assert.assertEquals(model, event.sensorModel)
-    Assert.assertEquals(offlineTime, event.timestamp)
-  }
-
-  /**
-   * Test to see if offline happens when there has been a heartbeat limit but it comes from a sensor update limit.
-   */
-  @Test def testOfflineFromOnlineHeartbeatFromSensor(): Unit = {
-    val lastUpdate = 30000
-    val timeoutTime = 1000l
-
-    Mockito.when(sensorEntityDescription.sensorUpdateTimeLimit).thenReturn(None)
-    Mockito.when(sensorEntityDescription.sensorHeartbeatUpdateTimeLimit).thenReturn(Option(timeoutTime))
-
-    // Set the model online and last update time
-    model.online = true
-    model.setLastHeartbeatUpdateTime(lastUpdate/2)
-    model.setLastUpdateTime(lastUpdate)
-
-    val argumentCaptor =
-      ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
-
-    // Model didn't change from short change
-    model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
-    Assert.assertTrue(model.online)
-    Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
-
-    // Now trigger it
-    var offlineTime = lastUpdate + timeoutTime + 1
-    model.checkIfOfflineTransition(offlineTime)
-    Assert.assertFalse(model.online)
-    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
-
-    val event = argumentCaptor.getValue
-    Assert.assertEquals(model, event.sensorModel)
-    Assert.assertEquals(offlineTime, event.timestamp)
-  }
-
-  /**
-   * Test a model heartbeat update and confirm that it makes the sensor model online, and properly
-   * records when it happened.
-   *
-   */
-  @Test def testHeartbeatUpdate(): Unit = {
-    val currentTime = 10000l
-
-    model.online = false
-
-    Assert.assertTrue(model.lastHeartbeatUpdate().isEmpty)
-
-    model.updateHeartbeat(currentTime)
-
-    Assert.assertEquals(currentTime, model.lastHeartbeatUpdate().get)
-    Assert.assertTrue(model.online)
   }
 
   /**
@@ -262,7 +102,7 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
 
     val currentTime = 10000l
 
-    model.online = false
+    model.setOnline(false)
 
     Assert.assertTrue(model.lastUpdateTime().isEmpty)
 

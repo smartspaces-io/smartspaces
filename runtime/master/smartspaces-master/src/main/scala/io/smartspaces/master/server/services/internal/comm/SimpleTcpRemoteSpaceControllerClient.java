@@ -191,7 +191,7 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
   @Override
   public void configureSpaceController(ActiveSpaceController controller) {
     ConfigurationRequest request = new ConfigurationRequest();
-    SpaceControllerConfiguration configuration = controller.getSpaceController().getConfiguration();
+    SpaceControllerConfiguration configuration = controller.spaceController().getConfiguration();
     if (configuration != null) {
       for (ConfigurationParameter parameter : configuration.getParameters()) {
         ConfigurationParameterRequest newParameter = new ConfigurationParameterRequest();
@@ -670,7 +670,7 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
    */
   private SpaceControllerCommunicator getCommunicator(ActiveSpaceController controller,
       boolean create) {
-    String controllerHostName = controller.getSpaceController().getHostId();
+    String controllerHostName = controller.spaceController().getHostId();
     synchronized (controllerCommunicators) {
       SpaceControllerCommunicator communicator = controllerCommunicators.get(controllerHostName);
       spaceEnvironment.getLog().info(communicator);
@@ -697,7 +697,7 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
    *          The controller
    */
   private void shutdownCommunicator(ActiveSpaceController controller) {
-    String hostId = controller.getSpaceController().getHostId();
+    String hostId = controller.spaceController().getHostId();
     SpaceControllerCommunicator communicator = null;
     synchronized (controllerCommunicators) {
       communicator = controllerCommunicators.remove(hostId);
@@ -706,7 +706,7 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
     if (communicator != null) {
       communicator.shutdown();
       log.formatInfo("Communicator for controller %s shutdown and removed",
-          controller.getSpaceController().getUuid());
+          controller.spaceController().getUuid());
     }
   }
 
@@ -779,7 +779,7 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
      *          the remote node
      */
     public void startup() {
-      SpaceController controller = spaceController.getSpaceController();
+      SpaceController controller = spaceController.spaceController();
       controllerClient = tcpClientService.newStringClient(
           StandardMasterSpaceControllerCodec.DELIMITERS, StandardMasterSpaceControllerCodec.CHARSET,
           controller.getHostName(), controller.getHostControlPort(), log);

@@ -36,11 +36,13 @@ import io.smartspaces.master.server.services.SpaceControllerRepository;
 import io.smartspaces.master.server.services.internal.DataBundleState;
 import io.smartspaces.master.server.services.model.ActiveLiveActivity;
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
-import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 import io.smartspaces.messaging.dynamic.SmartSpacesMessages;
+import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 import io.smartspaces.spacecontroller.SpaceControllerState;
 
 import com.google.common.collect.Lists;
+
+import scala.Option;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,7 +96,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
           .getActiveSpaceControllers(spaceControllers)) {
         Map<String, Object> controllerData = new HashMap<>();
 
-        SpaceController controller = acontroller.getSpaceController();
+        SpaceController controller = acontroller.spaceController();
         getSpaceControllerMasterApiData(controller, controllerData);
 
         responseData.add(controllerData);
@@ -119,7 +121,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
         .getActiveSpaceControllers(spaceControllers)) {
       Map<String, Object> controllerData = new HashMap<>();
 
-      SpaceController controller = acontroller.getSpaceController();
+      SpaceController controller = acontroller.spaceController();
       getSpaceControllerMasterApiData(controller, controllerData);
       getActiveSpaceControllerMasterApiData(acontroller, controllerData);
 
@@ -1401,9 +1403,9 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
     SpaceControllerState state = controller.getState();
     controllerData.put("state", state);
     controllerData.put("stateDescription", state.getDescription());
-    Date lastStateUpdateDate = controller.getLastStateUpdateDate();
+    Option<Date> lastStateUpdateDate = controller.getLastStateUpdateDate();
     controllerData.put("lastStateUpdateDate",
-        lastStateUpdateDate != null ? lastStateUpdateDate.toString() : null);
+        lastStateUpdateDate.isDefined() ? lastStateUpdateDate.get().toString() : null);
     DataBundleState dataBundleState = controller.getDataBundleState();
     controllerData.put("dataBundleState", dataBundleState.name());
     controllerData.put("dataBundleStateDescription", dataBundleState.getDescription());

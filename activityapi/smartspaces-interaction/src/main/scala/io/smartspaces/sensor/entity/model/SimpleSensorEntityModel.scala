@@ -1,5 +1,5 @@
 /*
-O * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2016 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -21,13 +21,17 @@ import io.smartspaces.sensor.entity.SensorEntityDescription
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
 import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
+import io.smartspaces.monitor.expectation.time.StandardHeartbeatMonitorable
 
 /**
  * The model of a sensor.
  *
  * @author Keith M. Hughes
  */
-class SimpleSensorEntityModel(val sensorEntityDescription: SensorEntityDescription, val allModels: CompleteSensedEntityModel, val modelCreationTime: Long) extends SensorEntityModel {
+class SimpleSensorEntityModel(
+    val sensorEntityDescription: SensorEntityDescription, 
+    val allModels: CompleteSensedEntityModel, 
+    override val itemCreationTime: Long) extends SensorEntityModel with StandardHeartbeatMonitorable {
 
   /**
    * The values being sensed keyed by the value name.
@@ -43,29 +47,6 @@ class SimpleSensorEntityModel(val sensorEntityDescription: SensorEntityDescripti
    * The model that is being sensed by this sensor.
    */
   var sensedEntityModel: Option[SensedEntityModel] = None
-
-  /**
-   * Is the sensor online?
-   *
-   * <p>
-   * Assume that it is offline until told otherwise.
-   */
-  var online: Boolean = false
-
-  /**
-   * {@code true} if there has been a signaling of going offline.
-   */
-  private var offlineSignaled: Boolean = false
-
-  /**
-   * The time of the last update.
-   */
-  private var lastUpdate: Option[Long] = None
-
-  /**
-   * The time of the last heartbeat update.
-   */
-  private var lastHeartbeatUpdate: Option[Long] = None
 
   override def addSensorChannelModel(sensorChannelModel: SensorChannelEntityModel): Unit = {
     sensorChannelModels.put(sensorChannelModel.sensorChannelDetail.channelId, sensorChannelModel)
@@ -85,117 +66,66 @@ class SimpleSensorEntityModel(val sensorEntityDescription: SensorEntityDescripti
   }
 
   override def updateSensedValue[T <: Any](value: SensedValue[T], timestamp: Long): Unit = {
-    updateSensedValue(timestamp)
+    stateUpdated(timestamp)
 
     sensedValues.put(value.measurementTypeDescription.externalId, value)
   }
-
-  override def updateSensedValue(timestamp: Long): Unit = {
-    lastUpdate = Option(timestamp)
-
-    updateHappened
-  }
-
-  override def getLastUpdate(): Option[Long] = {
-    lastUpdate
-  }
-
-  /**
-   * Set the last update time.
-   *
-   * <p>
-   * This is for testing.
-   */
-  private[model] def setLastUpdateTime(time: Long): Unit = {
-    lastUpdate = Option(time)
-  }
-  override def updateHeartbeat(timestamp: Long): Unit = {
-    lastHeartbeatUpdate = Option(timestamp)
-
-    updateHappened
-  }
-
-  override def getLastHeartbeatUpdate(): Option[Long] = {
-    lastHeartbeatUpdate
-  }
-
-  /**
-   * Set the last update time.
-   *
-   * <p>
-   * This is for testing.
-   */
-  private[model] def setLastHeartbeatUpdateTime(time: Long): Unit = {
-    lastHeartbeatUpdate = Option(time)
-  }
-
-  override def checkIfOfflineTransition(currentTime: Long): Unit = {
+  
+  override def checkIfOfflineTransition(currentTime: Long): Boolean = {
     // Only check if the model thinks it is online and there was an update time,
     // otherwise we want the initial 
-    if (online) {
-      val sensorUpdateTimeLimit = sensorEntityDescription.sensorUpdateTimeLimit
-      if (sensorUpdateTimeLimit.isDefined) {
+    if (_online) {
+      val updateTimeLimit = sensorEntityDescription.sensorUpdateTimeLimit
+      if (updateTimeLimit.isDefined) {
         // The only way we would ever be considered online is if there was a lastUpdate,
         // so the .get will work.
-        online = !isTimeout(currentTime, lastUpdate.get, sensorUpdateTimeLimit.get)
+        _online = !isTimeout(currentTime, _lastUpdateTime.get, updateTimeLimit.get)
       } else if (sensorEntityDescription.sensorHeartbeatUpdateTimeLimit.isDefined) {
         // If this sensor requires a heartbeat, the heartbeat time can be checked.
         
         // Would be lovely to have a magic function that could calculate the max of a series of options.
         val sensorHeartbeatUpdateTimeLimit = sensorEntityDescription.sensorHeartbeatUpdateTimeLimit
 
-        val updateToUse = if (lastUpdate.isDefined) { if (lastHeartbeatUpdate.isDefined) Math.max(lastUpdate.get, lastHeartbeatUpdate.get) else lastUpdate.get } else lastHeartbeatUpdate.get
-        online = !isTimeout(currentTime, updateToUse, sensorHeartbeatUpdateTimeLimit.get)
+        val updateToUse = if (_lastUpdateTime.isDefined) { if (_lastHeartbeatUpdate.isDefined) Math.max(_lastUpdateTime.get, _lastHeartbeatUpdate.get) else _lastUpdateTime.get } else _lastHeartbeatUpdate.get
+        _online = !isTimeout(currentTime, updateToUse, sensorHeartbeatUpdateTimeLimit.get)
       }
 
       // We knew online was true, so if now offline, then transitioned.
-      if (!online) {
+      if (!_online) {
         signalOffline(currentTime)
       }
+      
+      !_online
     } else {
       // Now, we are considered offline. If we have never been updated then we can check at the
       // time of birth of the model. otherwise no need to check.
       if (!offlineSignaled) {
         val sensorUpdateTimeLimit = sensorEntityDescription.sensorUpdateTimeLimit
         if (sensorUpdateTimeLimit.isDefined) {
-          if (isTimeout(currentTime, lastUpdate.getOrElse(modelCreationTime), sensorUpdateTimeLimit.get)) {
+          if (isTimeout(currentTime, _lastUpdateTime.getOrElse(itemCreationTime), sensorUpdateTimeLimit.get)) {
             signalOffline(currentTime)
+            
+            true
+          } else {
+            false
           }
-        } else if (sensorEntityDescription.sensorHeartbeatUpdateTimeLimit.isDefined){
+        } else if (sensorEntityDescription.sensorHeartbeatUpdateTimeLimit.isDefined) {
           // If this sensor requires a heartbeat, the heartbeat time can be checked.
-          println(sensorEntityDescription)
           val sensorHeartbeatUpdateTimeLimit = sensorEntityDescription.sensorHeartbeatUpdateTimeLimit
-          if (isTimeout(currentTime, lastHeartbeatUpdate.getOrElse(modelCreationTime), sensorHeartbeatUpdateTimeLimit.get)) {
+          if (isTimeout(currentTime, _lastHeartbeatUpdate.getOrElse(itemCreationTime), sensorHeartbeatUpdateTimeLimit.get)) {
             signalOffline(currentTime)
+            
+            true
+          } else {
+            false
           }
+        } else {
+          false
         }
+      } else {
+        false
       }
     }
-  }
-
-  /**
-   * Calculate a timeout online status based on time calculations.
-   *
-   * @param currentTime
-   *        the current time
-   * @param referenceTime
-   *        the time to be compared to, such as last update time or model creation time
-   * @param timeLimit
-   *        the maximum amount of time before it is decided to be offline
-   *
-   * @return {@code true} if there has been a timeout
-   */
-  private def isTimeout(currentTime: Long, referenceTime: Long, timeLimit: Long): Boolean = {
-    currentTime - referenceTime > timeLimit
-  }
-
-  /**
-   * An update happened.
-   */
-  private def updateHappened(): Unit = {
-    // The online status is definitely true if an update is coming in.
-    offlineSignaled = false
-    online = true
   }
 
   /**

@@ -38,11 +38,11 @@ object StandardSensorIncrementalMessageEncoder extends IncrementalMessageEncoder
     builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_SENSOR_ACTIVE, model.sensorEntityDescription.active)
     builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_SENSOR_ONLINE, model.online)
 
-    model.getLastHeartbeatUpdate().foreach { (date) =>
+    model.lastHeartbeatUpdate().foreach { (date) =>
       builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_SENSOR_HEARTBEAT_LAST, date)
     }
 
-    model.getLastUpdate().foreach { (date) =>
+    model.lastUpdateTime().foreach { (date) =>
       builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_SENSOR_UPDATE_LAST, date)
     }
 

@@ -176,8 +176,8 @@ public class MasterApiUtilities {
       Comparator<ActiveSpaceController> {
     @Override
     public int compare(ActiveSpaceController o1, ActiveSpaceController o2) {
-      return o1.getSpaceController().getName()
-          .compareToIgnoreCase(o2.getSpaceController().getName());
+      return o1.spaceController().getName()
+          .compareToIgnoreCase(o2.spaceController().getName());
     }
   }
 

@@ -80,7 +80,7 @@ public abstract class StandardMasterDataBundleManager implements MasterDataBundl
 
   @Override
   public void captureControllerDataBundle(ActiveSpaceController controller) {
-    String uuid = controller.getSpaceController().getUuid();
+    String uuid = controller.spaceController().getUuid();
     String destinationUri =
         resourceRepositoryServer.getResourceUri(
             ResourceCategory.RESOURCE_CATEGORY_DATA, uuid,
@@ -102,7 +102,7 @@ public abstract class StandardMasterDataBundleManager implements MasterDataBundl
 
   @Override
   public void restoreControllerDataBundle(ActiveSpaceController controller) {
-    String uuid = controller.getSpaceController().getUuid();
+    String uuid = controller.spaceController().getUuid();
     String sourceUri =
         resourceRepositoryServer.getResourceUri(
             ResourceCategory.RESOURCE_CATEGORY_DATA, uuid,

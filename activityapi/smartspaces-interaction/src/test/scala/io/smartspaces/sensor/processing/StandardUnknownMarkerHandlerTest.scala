@@ -25,7 +25,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
+import io.smartspaces.sensor.entity.model.event.UnknownEntitySeenEvent
 
 /**
  * Tests for the standard unknown marker handler.
@@ -55,7 +55,7 @@ class StandardUnknownMarkerHandlerTest extends JUnitSuite {
    */
   @Test def testAdd(): Unit = {
     val argumentCaptor =
-      ArgumentCaptor.forClass(classOf[UnknownMarkerSeenEvent])
+      ArgumentCaptor.forClass(classOf[UnknownEntitySeenEvent])
 
     val markerId1 = "foo1"
     val timestamp = 1000l
@@ -63,7 +63,7 @@ class StandardUnknownMarkerHandlerTest extends JUnitSuite {
 
     Mockito.verify(eventEmitter, Mockito.times(1)).broadcastUnknownMarkerSeenEvent(argumentCaptor.capture())
     val event = argumentCaptor.getValue
-    assertEquals(markerId1, event.markerId)
+    assertEquals(markerId1, event.entityId)
     assertEquals(timestamp, event.timestamp)
 
     val result = Set(markerId1)
@@ -75,7 +75,7 @@ class StandardUnknownMarkerHandlerTest extends JUnitSuite {
    */
   @Test def testAddSame(): Unit = {
     val argumentCaptor =
-      ArgumentCaptor.forClass(classOf[UnknownMarkerSeenEvent])
+      ArgumentCaptor.forClass(classOf[UnknownEntitySeenEvent])
 
     val markerId1 = "foo1"
     val timestamp = 1000l
@@ -84,7 +84,7 @@ class StandardUnknownMarkerHandlerTest extends JUnitSuite {
 
     Mockito.verify(eventEmitter, Mockito.times(1)).broadcastUnknownMarkerSeenEvent(argumentCaptor.capture())
     val event = argumentCaptor.getValue
-    assertEquals(markerId1, event.markerId)
+    assertEquals(markerId1, event.entityId)
     assertEquals(timestamp, event.timestamp)
 
     val result = Set(markerId1)
@@ -96,7 +96,7 @@ class StandardUnknownMarkerHandlerTest extends JUnitSuite {
    */
   @Test def testAddMultiple(): Unit = {
     val argumentCaptor =
-      ArgumentCaptor.forClass(classOf[UnknownMarkerSeenEvent])
+      ArgumentCaptor.forClass(classOf[UnknownEntitySeenEvent])
 
     val markerId1 = "foo1"
     val timestamp1 = 1000l
@@ -108,9 +108,9 @@ class StandardUnknownMarkerHandlerTest extends JUnitSuite {
 
     Mockito.verify(eventEmitter, Mockito.times(2)).broadcastUnknownMarkerSeenEvent(argumentCaptor.capture())
     val events = argumentCaptor.getAllValues
-    assertEquals(markerId1, events.get(0).markerId)
+    assertEquals(markerId1, events.get(0).entityId)
     assertEquals(timestamp1, events.get(0).timestamp)
-    assertEquals(markerId2, events.get(1).markerId)
+    assertEquals(markerId2, events.get(1).entityId)
     assertEquals(timestamp2, events.get(1).timestamp)
 
     val result = Set(markerId1, markerId2)

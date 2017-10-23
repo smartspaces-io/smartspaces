@@ -17,13 +17,14 @@
 package io.smartspaces.sensor.processing
 
 import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
-import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
+import io.smartspaces.sensor.entity.model.event.UnknownEntitySeenEvent
 import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
 import io.smartspaces.event.observable.EventPublisherSubject
 import io.smartspaces.event.observable.ObservableCreator
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.sensor.entity.model.event.RawSensorLiveEvent
+import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
 
 /**
  * An emitter of events from sensor processors.
@@ -91,9 +92,9 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
   /**
    * The creator for unknown marker seen observables.
    */
-  private val unknownMarkerSeenEventCreator: ObservableCreator[EventPublisherSubject[UnknownMarkerSeenEvent]] =
-    new ObservableCreator[EventPublisherSubject[UnknownMarkerSeenEvent]]() {
-      override def newObservable(): EventPublisherSubject[UnknownMarkerSeenEvent] = {
+  private val unknownMarkerSeenEventCreator: ObservableCreator[EventPublisherSubject[UnknownEntitySeenEvent]] =
+    new ObservableCreator[EventPublisherSubject[UnknownEntitySeenEvent]]() {
+      override def newObservable(): EventPublisherSubject[UnknownEntitySeenEvent] = {
         EventPublisherSubject.create(log)
       }
     }
@@ -101,7 +102,7 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
   /**
    * The subject for unknown marker seen events
    */
-  private var unknownMarkerSeenEventSubject: EventPublisherSubject[UnknownMarkerSeenEvent] =
+  private var unknownMarkerSeenEventSubject: EventPublisherSubject[UnknownEntitySeenEvent] =
       eventObservableRegistry.getObservable(UnknownMarkerSeenEvent.EVENT_TYPE,
         unknownMarkerSeenEventCreator)
 
@@ -118,8 +119,8 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
     sensorOfflineEventSubject.onNext(event)
   }
 
-  override def broadcastUnknownMarkerSeenEvent(event: UnknownMarkerSeenEvent): Unit = {
-    log.warn(s"Broadcasting unknown marker seen event ${event.markerId}")
+  override def broadcastUnknownMarkerSeenEvent(event: UnknownEntitySeenEvent): Unit = {
+    log.warn(s"Broadcasting unknown marker seen event ${event.entityId}")
     unknownMarkerSeenEventSubject.onNext(event)
   }
 }

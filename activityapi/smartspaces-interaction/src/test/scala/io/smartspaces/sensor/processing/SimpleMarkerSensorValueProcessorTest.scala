@@ -119,7 +119,7 @@ class SimpleMarkerSensorValueProcessorTest {
 
     Mockito.verify(unknownMarkerHandler, Mockito.times(0)).handleUnknownMarker(markerId, measurementTimestamp)
     
-    Mockito.verify(sensorModel, Mockito.times(1)).updateSensedValue(measurementTimestamp)
+    Mockito.verify(sensorModel, Mockito.times(1)).stateUpdated(measurementTimestamp)
     
     modelUpdater.updateLocation(sensedEntityModel, personEntity, measurementTimestamp, sensorMessageReceivedTimestamp)
   }

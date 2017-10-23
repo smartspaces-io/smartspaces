@@ -35,6 +35,6 @@ object UnknownMarkerSeenEvent {
  * 
  * @author Keith M. Hughes
  */
-class UnknownMarkerSeenEvent(val markerId: String, val timestamp: Long) {
+class UnknownEntitySeenEvent(val entityId: String, val timestamp: Long) {
   
 }

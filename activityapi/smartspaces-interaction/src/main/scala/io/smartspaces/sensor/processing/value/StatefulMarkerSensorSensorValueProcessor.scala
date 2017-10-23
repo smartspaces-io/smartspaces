@@ -83,7 +83,7 @@ class StatefulMarkerSensorSensorValueProcessor(
     val person = personOption.get.asInstanceOf[PersonSensedEntityModel]
     val sensedLocation = sensedEntityModel.asInstanceOf[PhysicalSpaceSensedEntityModel]
 
-    sensorEntity.updateSensedValue(measurementTimestamp)
+    sensorEntity.stateUpdated(measurementTimestamp)
 
     presence.get match {
       case PresenceCategoricalValueInstances.PRESENT =>

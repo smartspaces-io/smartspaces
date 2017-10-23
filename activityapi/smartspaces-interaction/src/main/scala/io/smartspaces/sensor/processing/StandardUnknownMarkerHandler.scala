@@ -18,7 +18,7 @@ package io.smartspaces.sensor.processing
 
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.Set
-import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
+import io.smartspaces.sensor.entity.model.event.UnknownEntitySeenEvent
 
 /**
  * The standard handler for markers seen that are unknown.
@@ -35,7 +35,7 @@ class StandardUnknownMarkerHandler(val eventEmitter: SensorProcessingEventEmitte
   override def handleUnknownMarker(markerId: String, timestamp: Long): Unit = {
     synchronized {
       if (unknownMarkerIds.add(markerId)) {
-        eventEmitter.broadcastUnknownMarkerSeenEvent(new UnknownMarkerSeenEvent(markerId, timestamp))
+        eventEmitter.broadcastUnknownMarkerSeenEvent(new UnknownEntitySeenEvent(markerId, timestamp))
       }
     }
   }

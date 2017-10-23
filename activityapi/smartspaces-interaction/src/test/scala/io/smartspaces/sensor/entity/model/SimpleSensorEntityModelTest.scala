@@ -75,13 +75,15 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
       ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
 
     // Model didn't change from short change
-    model.checkIfOfflineTransition(modelCreationTime + timeoutTime / 2)
+    val transition1 = model.checkIfOfflineTransition(modelCreationTime + timeoutTime / 2)
+    Assert.assertFalse(transition1)
     Assert.assertFalse(model.online)
     Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     // Now trigger it from no signal from model start.
     val offlineTime = modelCreationTime + timeoutTime + 1
-    model.checkIfOfflineTransition(offlineTime)
+    var transition2 = model.checkIfOfflineTransition(offlineTime)
+    Assert.assertTrue(transition2)
     Assert.assertFalse(model.online)
     Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
@@ -108,13 +110,15 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
       ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
 
     // Model didn't change from short change
-    model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
+    val transition1 = model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
+    Assert.assertFalse(transition1)
     Assert.assertTrue(model.online)
     Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     // Now trigger it
     var offlineTime = lastUpdate + timeoutTime + 1
-    model.checkIfOfflineTransition(offlineTime)
+    var transition2 = model.checkIfOfflineTransition(offlineTime)
+    Assert.assertTrue(transition2)
     Assert.assertFalse(model.online)
     Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
@@ -139,13 +143,15 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
       ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
 
     // Model didn't change from short change
-    model.checkIfOfflineTransition(modelCreationTime + timeoutTime / 2)
+    val transition1 = model.checkIfOfflineTransition(modelCreationTime + timeoutTime / 2)
+    Assert.assertFalse(transition1)
     Assert.assertFalse(model.online)
     Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     // Now trigger it from no signal from model start.
     val offlineTime = modelCreationTime + timeoutTime + 1
-    model.checkIfOfflineTransition(offlineTime)
+    val transition2 = model.checkIfOfflineTransition(offlineTime)
+    Assert.assertTrue(transition2)
     Assert.assertFalse(model.online)
     Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
@@ -172,13 +178,15 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
       ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
 
     // Model didn't change from short change
-    model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
+    val transition1 = model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
+    Assert.assertFalse(transition1)
     Assert.assertTrue(model.online)
     Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
     // Now trigger it
     var offlineTime = lastUpdate + timeoutTime + 1
-    model.checkIfOfflineTransition(offlineTime)
+    val transition2 = model.checkIfOfflineTransition(offlineTime)
+    Assert.assertTrue(transition2)
     Assert.assertFalse(model.online)
     Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
 
@@ -231,11 +239,11 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
 
     model.online = false
 
-    Assert.assertTrue(model.getLastHeartbeatUpdate().isEmpty)
+    Assert.assertTrue(model.lastHeartbeatUpdate().isEmpty)
 
     model.updateHeartbeat(currentTime)
 
-    Assert.assertEquals(currentTime, model.getLastHeartbeatUpdate().get)
+    Assert.assertEquals(currentTime, model.lastHeartbeatUpdate().get)
     Assert.assertTrue(model.online)
   }
 
@@ -256,11 +264,11 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
 
     model.online = false
 
-    Assert.assertTrue(model.getLastUpdate().isEmpty)
+    Assert.assertTrue(model.lastUpdateTime().isEmpty)
 
     model.updateSensedValue(value, currentTime)
 
-    Assert.assertEquals(currentTime, model.getLastUpdate().get)
+    Assert.assertEquals(currentTime, model.lastUpdateTime().get)
     Assert.assertEquals(List(value), model.getAllSensedValues())
     Assert.assertTrue(model.online)
   }

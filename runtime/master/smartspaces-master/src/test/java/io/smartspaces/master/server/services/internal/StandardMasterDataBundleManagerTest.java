@@ -97,13 +97,17 @@ public class StandardMasterDataBundleManagerTest {
     CopyableResourceListener resourceListener;
   }
 
+  static String combineArgs(Object[] arguments) {
+    return arguments[0] + TEST_URI_SEPARATOR + arguments[1] + TEST_URI_SEPARATOR + arguments[2];
+  }
+
   @Before
   @SuppressWarnings("unchecked")
   public void setup() {
     testResults = new TestResults();
 
     activeSpaceController = Mockito.mock(ActiveSpaceController.class, RETURNS_DEEP_STUBS);
-    when(activeSpaceController.getSpaceController().getUuid()).thenReturn(TEST_UUID);
+    when(activeSpaceController.spaceController().getUuid()).thenReturn(TEST_UUID);
 
     resourceRepositoryServer = Mockito.mock(ResourceRepositoryServer.class);
 
@@ -139,10 +143,6 @@ public class StandardMasterDataBundleManagerTest {
     masterDataBundleManager = new TestBasicMasterDataBundleManager();
     masterDataBundleManager.setRepositoryServer(resourceRepositoryServer);
     masterDataBundleManager.startup();
-  }
-
-  static String combineArgs(Object[] arguments) {
-    return arguments[0] + TEST_URI_SEPARATOR + arguments[1] + TEST_URI_SEPARATOR + arguments[2];
   }
 
   @After

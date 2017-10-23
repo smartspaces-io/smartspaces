@@ -68,7 +68,7 @@ class SimpleMarkerSensorValueProcessor(unknownMarkerHandler: UnknownMarkerHandle
     val person = personOption.get.asInstanceOf[PersonSensedEntityModel]
     val newLocation = sensedEntityModel.asInstanceOf[PhysicalSpaceSensedEntityModel]
 
-    sensorModel.updateSensedValue(measurementTimestamp)
+    sensorModel.stateUpdated(measurementTimestamp)
 
     processorContext.log.info(s"Detected marker ID ${markerId}, person ${person.sensedEntityDescription.externalId} entering ${newLocation}")
 

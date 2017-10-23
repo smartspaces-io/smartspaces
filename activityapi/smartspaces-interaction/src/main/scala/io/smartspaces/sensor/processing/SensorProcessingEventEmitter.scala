@@ -17,7 +17,7 @@
 package io.smartspaces.sensor.processing
 
 import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
-import io.smartspaces.sensor.entity.model.event.UnknownMarkerSeenEvent
+import io.smartspaces.sensor.entity.model.event.UnknownEntitySeenEvent
 import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
 import io.smartspaces.sensor.entity.model.event.RawSensorLiveEvent
 
@@ -58,5 +58,5 @@ trait SensorProcessingEventEmitter {
    * @param event
    * 		the event to broadcast
    */
-  def broadcastUnknownMarkerSeenEvent(event: UnknownMarkerSeenEvent): Unit
+  def broadcastUnknownMarkerSeenEvent(event: UnknownEntitySeenEvent): Unit
 }

@@ -22,6 +22,8 @@ import io.smartspaces.master.server.services.internal.DataBundleState;
 import io.smartspaces.spacecontroller.SpaceControllerState;
 import io.smartspaces.time.provider.TimeProvider;
 
+import scala.Option;
+
 import java.util.Date;
 
 /**
@@ -32,62 +34,32 @@ import java.util.Date;
  *
  * @author Keith M. Hughes
  */
-public class ActiveSpaceController {
-
-  /**
-   * The controller being represented.
-   */
-  private SpaceController controller;
+class ActiveSpaceController(var spaceController: SpaceController,  timeProvider: TimeProvider) {
 
   /**
    * Current known state of the controller.
    */
-  private SpaceControllerState state = SpaceControllerState.UNKNOWN;
+  private var state: SpaceControllerState = SpaceControllerState.UNKNOWN
 
   /**
    * Timestamp of the last update.
    */
-  private Long lastStateUpdate;
+  private var lastStateUpdate: Option[Long] = None
 
   /**
    * Current known data bundle state of the controller.
    */
-  private DataBundleState dataBundleState = DataBundleState.NO_REQUEST;
+  private var dataBundleState: DataBundleState = DataBundleState.NO_REQUEST;
 
   /**
    * Timestamp of the last data bundle state update.
    */
-  private Long lastDataBundleStateUpdate;
+  private var lastDataBundleStateUpdate:  Option[Long] = None
 
   /**
    * Last timestamp for a heartbeat.
    */
-  private Long lastHeartbeatTimestamp;
-
-  /**
-   * The time provider.
-   */
-  private TimeProvider timeProvider;
-
-  /**
-   * Create an active space controller for the given controller entry.
-   *
-   * @param controller
-   *          controller entry
-   * @param timeProvider
-   *          time provider for timestamps
-   */
-  public ActiveSpaceController(SpaceController controller, TimeProvider timeProvider) {
-    this.controller = controller;
-    this.timeProvider = timeProvider;
-  }
-
-  /**
-   * @return the controller
-   */
-  public SpaceController getSpaceController() {
-    return controller;
-  }
+  private var lastHeartbeatTimestamp: Option[Long]  = None
 
   /**
    * Update the controller object contained within.
@@ -95,18 +67,18 @@ public class ActiveSpaceController {
    * <p>
    * This allows this object access to merged data.
    *
-   * @param controller
+   * @param spaceController
    *          the potentially updated controller entity
    */
-  public void updateController(SpaceController controller) {
-    this.controller = controller;
+  def updateController( spaceController: SpaceController): Unit = {
+    this.spaceController = spaceController;
   }
 
   /**
    * @return the state
    */
-  public SpaceControllerState getState() {
-    return state;
+  def getState(): SpaceControllerState = {
+    return state
   }
 
   /**
@@ -115,10 +87,10 @@ public class ActiveSpaceController {
    * @param state
    *          the state to set
    */
-  public void setState(SpaceControllerState state) {
+  def setState( state: SpaceControllerState): Unit = {
     this.state = state;
 
-    lastStateUpdate = timeProvider.getCurrentTime();
+    lastStateUpdate = Some(timeProvider.getCurrentTime());
   }
 
   /**
@@ -127,8 +99,8 @@ public class ActiveSpaceController {
    * @return the lastStateUpdate, will be {@code null} if the controller has
    *         never been updated
    */
-  public Long getLastStateUpdate() {
-    return lastStateUpdate;
+  def  getLastStateUpdate(): Option[Long] = {
+    lastStateUpdate
   }
 
   /**
@@ -137,29 +109,29 @@ public class ActiveSpaceController {
    * @return the lastStateUpdate, will be {@code null} if the controller has
    *         never been updated
    */
-  public Date getLastStateUpdateDate() {
-    if (lastStateUpdate != null) {
-      return new Date(lastStateUpdate);
+  def  getLastStateUpdateDate(): Option[Date] = {
+    if (lastStateUpdate.isDefined) {
+      Some(new Date(lastStateUpdate.get))
     } else {
-      return null;
+      None
     }
   }
 
   /**
    * @return the data bundle state
    */
-  public DataBundleState getDataBundleState() {
-    return dataBundleState;
+  def getDataBundleState(): DataBundleState = {
+    dataBundleState
   }
 
   /**
    * @param dataBundleState
    *          the data bundle state to set
    */
-  public void setDataBundleState(DataBundleState dataBundleState) {
-    this.dataBundleState = dataBundleState;
+  def setDataBundleState( dataBundleState: DataBundleState) = {
+    this.dataBundleState = dataBundleState
 
-    lastDataBundleStateUpdate = timeProvider.getCurrentTime();
+    lastDataBundleStateUpdate = Some(timeProvider.getCurrentTime())
   }
 
   /**
@@ -168,8 +140,8 @@ public class ActiveSpaceController {
    * @return the lastDataBundleStateUpdate. Will be {@code null} if the
    *         controller has never been updated.
    */
-  public Long getLastDataBundleStateUpdate() {
-    return lastDataBundleStateUpdate;
+ def getLastDataBundleStateUpdate(): Option[Long] = {
+    lastDataBundleStateUpdate
   }
 
   /**
@@ -178,9 +150,9 @@ public class ActiveSpaceController {
    * @return the lastDataBundleStateUpdate. Will be {@code null} if the
    *         controller has never been updated.
    */
-  public Date getLastDataBundleStateUpdateDate() {
-    if (lastDataBundleStateUpdate != null) {
-      return new Date(lastDataBundleStateUpdate);
+  def getLastDataBundleStateUpdateDate(): Date = {
+    if (lastDataBundleStateUpdate.isDefined) {
+      return new Date(lastDataBundleStateUpdate.get);
     } else {
       return null;
     }
@@ -192,8 +164,8 @@ public class ActiveSpaceController {
    * @param heartbeatTime
    *          the new heartbeat time
    */
-  public void setHeartbeatTime(long heartbeatTime) {
-    lastHeartbeatTimestamp = heartbeatTime;
+  def updateHeartbeatTime(heartbeatTime: Long): Unit = {
+    lastHeartbeatTimestamp = Some(heartbeatTime)
   }
 
   /**
@@ -201,8 +173,8 @@ public class ActiveSpaceController {
    *
    * @return the last heartbeat time, or {@code null} if it has never been set
    */
-  public Long getLastHeartbeatTime() {
-    return lastHeartbeatTimestamp;
+  def getLastHeartbeatTime(): Option[Long] = {
+    lastHeartbeatTimestamp
   }
 
   /**
@@ -213,17 +185,17 @@ public class ActiveSpaceController {
    *
    * @return the time difference in milliseconds
    */
-  public Long timeSinceLastHeartbeat(long sampletime) {
-    if (lastHeartbeatTimestamp != null) {
-      return sampletime - lastHeartbeatTimestamp;
-    } else if (lastStateUpdate != null) {
+  def timeSinceLastHeartbeat(sampletime: Long): Option[Long] = {
+    if (lastHeartbeatTimestamp.isDefined) {
+      return Some(sampletime - lastHeartbeatTimestamp.get);
+    } else if (lastStateUpdate.isDefined) {
       // Since hasn't been a heartbeat, just go with the last time we had a
       // status update
-      return sampletime - lastStateUpdate;
+      return Some(sampletime - lastStateUpdate.get)
     } else {
       // Assumption... some day someone will update the state, so just say
       // everything is fine
-      return null;
+      return None;
     }
   }
 
@@ -232,8 +204,7 @@ public class ActiveSpaceController {
    *
    * @return a nice display name for the space controller
    */
-  public String getDisplayName() {
-    return String.format("UUID %s, host id %s, name %s", controller.getUuid(),
-        controller.getHostId(), controller.getName());
+  def getDisplayName(): String = {
+    s"UUID ${spaceController.getUuid}, host id ${spaceController.getHostId}, name ${spaceController.getName}"
   }
 }

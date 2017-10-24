@@ -79,6 +79,11 @@ public class BasicMultipleConnectionWebServerWebSocketHandlerFactory<M> implemen
   }
 
   @Override
+  public boolean isWebSocketConnected(String channelId) {
+    return handlers.containsKey(channelId);
+  }
+
+  @Override
   public void sendMessage(String channelId, M data) {
     MyWebServerWebSocketHandler handler = handlers.get(channelId);
     if (handler != null) {

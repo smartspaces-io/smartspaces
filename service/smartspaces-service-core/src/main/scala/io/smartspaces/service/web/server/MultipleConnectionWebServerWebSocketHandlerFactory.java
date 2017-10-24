@@ -24,7 +24,8 @@ import io.smartspaces.messaging.MessageSender;
  * A factory for web socket handlers that support multiple connections.
  * 
  * <p>
- * Messages send to the non-channel message writer go to all connected web socket clients.
+ * Messages send to the non-channel message writer go to all connected web
+ * socket clients.
  * 
  * @param <M>
  *          the message type for the web socket connections
@@ -40,4 +41,14 @@ public interface MultipleConnectionWebServerWebSocketHandlerFactory<M>
    * @return {@code true} if there are any connections
    */
   boolean areWebSocketsConnected();
+
+  /**
+   * Is the web socket for a given channel connected?
+   * 
+   * @param channelId
+   *          the channel of the ID to check
+   *
+   * @return {@code true} if there is a connection.
+   */
+  boolean isWebSocketConnected(String channelId);
 }

@@ -18,6 +18,7 @@
 package io.smartspaces.activity.behavior.web
 
 import io.smartspaces.service.web.server.BasicMultipleConnectionWebServerWebSocketHandlerFactory
+import io.smartspaces.service.web.server.MultipleConnectionWebServerWebSocketHandlerFactory
 import io.smartspaces.util.data.json.StandardJsonMapper
 import io.smartspaces.service.web.server.MultipleConnectionWebSocketHandler
 import io.smartspaces.util.data.json.JsonMapper
@@ -42,7 +43,7 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
   /**
    * Web socket handler for the connection to the browser.
    */
-  private var webSocketFactory: io.smartspaces.service.web.server.MultipleConnectionWebServerWebSocketHandlerFactory[Map[String, Object]] = null
+  private var webSocketFactory: MultipleConnectionWebServerWebSocketHandlerFactory[Map[String, Object]] = null
 
   /**
    * The web server component.
@@ -61,7 +62,11 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
   }
 
   override def isWebSocketConnected(): Boolean =  {
-    return webSocketFactory.areWebSocketsConnected();
+    return webSocketFactory.areWebSocketsConnected()
+  }
+
+  override def isWebSocketConnected(channelId: String): Boolean =  {
+    return webSocketFactory.isWebSocketConnected(channelId)
   }
 
   override def onNewWebSocketConnection(connectionId: String): Unit =  {
@@ -105,7 +110,7 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
   }
 
   override def handleWebSocketClose(connectionId: String ): Unit = {
-    val invocation = getExecutionContext().enterMethod();
+    val invocation = getExecutionContext().enterMethod()
 
     try {
       onWebSocketClose(connectionId)

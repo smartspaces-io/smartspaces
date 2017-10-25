@@ -153,7 +153,7 @@ The official repository is hosted at inhabitech.com.
 nexusUrl=https://eng.inhabitech.com:8082
 ```
 
-Some of the other properties are described later in the **Building*** section.
+Some of the other properties are described later in the **Building** section.
 
 # Building
 
@@ -169,48 +169,32 @@ The simplest way to start a build is to use the command
 This will clean everything out and place the Smart Spaces jar files in your
 local Maven repository.
 
-## Building installers:
+## Controlling Test Sizes
 
-If you want to build the installers, use the following command
+Automatic tests that take place during a build come in a variety of sizes.
+Small tests are run every time a build is done, while large tests are only done
+if explicitly asked for. The following shows how to run the large tests.
 
-```
-./gradlew createInstallers
-```
+...
+./gradlew -PtestSize=large clean install
+---
 
-This will create installers for the master, controller, and workbench. The
-installers will be found in
+## Building a dev instance
 
-```
-smartspaces_build/*/build/distributions
-```
+A dev instance of Smart Spaces is an installation of Smart Spaces that you are
+using for development work, either for Smart Spaces itself or for any
+Smart Spaces projects you are working on.
 
-where * can be master, controller, or workbench.
+A dev build of Smart Spaces will install the build into your development
+instance and not touch any databases, configuration files, or anything
+in the `startup` folder.
 
-## Building an Image:
-
-```
-./gradlew -PimageHome=path createImage
-```
-
-where path is the root folder which will receive the image.
-
-The image will contain a master, controller, and workbench.
-
-## Updating a Dev instance from an Smart Spaces Build:
-
-Add the following to your gradle.properties file.
+Add the following to your `gradle.properties` file.
 
 ```
 smartspaces.dev.home=/home/you/smartspaces
 smartspaces.dev.home.subdir.default=latest
 ```
-
-The value is where you have an instance of Smart Spaces that you use for
-developing and testing Smart Spaces activities. This folder should
-contain subfolders master, controller, workbench for each component of an
-Smart Spaces development environment.
-
-## Building your dev instance
 
 To build Smart Spaces and install updated files into your development
 instance, use
@@ -230,12 +214,31 @@ in addition to using latest, you can use the command
 
 which will copy everything into /home/you/smartspaces/mytest
 
-## Controlling Test Sizes
+## Building installers
 
-Automatic tests that take place during a build come in a variety of sizes.
-Small tests are run every time a build is done, while large tests are only done
-if explicitly asked for. The following shows how to run the large tests.
+If you want to build the installers, use the following command
 
-...
-./gradlew -PtestSize=large clean install
----
+```
+./gradlew createInstallers
+```
+
+This will create installers for the master, controller, and workbench. The
+installers will be found in
+
+```
+smartspaces_build/*/build/distributions
+```
+
+where * can be master, controller, or workbench.
+
+## Building an Image:
+
+This is only useful if using SpaceOperations.
+
+```
+./gradlew -PimageHome=path createImage
+```
+
+where path is the root folder which will receive the image.
+
+The image will contain a master, controller, and workbench.

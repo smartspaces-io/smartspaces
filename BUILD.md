@@ -32,7 +32,7 @@ folder `software/repos`.
 git clone https://github.com/smartspaces-io/smartspaces.git
 ```
 
-Nest you need the dependencies repository. There are a collection of
+Next you need the dependencies repository. There are a collection of
 dependencies that Smart Spaces has that cannot be
 easily pulled from repositories, particularly in the format that the
 Smart Spaces build system needs them in. These dependencies have been
@@ -45,6 +45,14 @@ folder as the SmartSpaces git repo.
 git clone https://github.com/smartspaces-io/smartspaces-dependencies.git
 ```
 
+The file system might then look something like this:
+
+```
+keith@inhabitecheng1:~/software/repos$ ls
+smartspaces               smartspaces-sandbox
+smartspaces-dependencies
+```
+
 # Other dependencies
 
 Smart Spaces has a collection of other dependencies needed to build it.
@@ -54,7 +62,7 @@ Smart Spaces has a collection of other dependencies needed to build it.
 Smart Spaces makes use of ROS, the Robot Operating System.
 
 Install ROS on your computer. Install from www.ros.org. I usually install the
-desktop full version, though ros-core is also sufficient.
+desktop full version, though `ros-core` is also sufficient.
 
 It doesn't particularly matter which version of ROS you use, though Smart Spaces
 has only been tested with versions Indigo and forward.

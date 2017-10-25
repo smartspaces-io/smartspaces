@@ -26,7 +26,7 @@ import io.smartspaces.activity.impl.BaseActivity
  */
 class SimpleScalaRoutableInputActivity extends BaseActivity with StandardActivityRouting {
 
-  override def onNewIncomingRouteMessage(channelName: String, message: Map[String, Object]): Unit = {
+  override def onNewRouteMessage(channelName: String, message: Map[String, Object]): Unit = {
     getLog().info("Got message on input channel " + channelName)
     getLog().info(message)
   }

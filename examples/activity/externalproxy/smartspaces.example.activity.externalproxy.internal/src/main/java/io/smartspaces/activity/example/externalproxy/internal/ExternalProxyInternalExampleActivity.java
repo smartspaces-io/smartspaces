@@ -19,6 +19,7 @@ package io.smartspaces.activity.example.externalproxy.internal;
 
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.impl.web.BaseRoutableWebActivity;
+import io.smartspaces.messaging.codec.MapStringMessageCodec;
 import io.smartspaces.service.web.WebSocketMessageHandler;
 import io.smartspaces.service.web.client.WebSocketClient;
 import io.smartspaces.service.web.client.WebSocketClientService;
@@ -75,9 +76,9 @@ public class ExternalProxyInternalExampleActivity extends BaseRoutableWebActivit
             WebSocketClientService.SERVICE_NAME);
 
     try {
-      URI u = new URI(String.format("ws://%s:%d/%s", proxyHost, proxyPort, "smartspaces"));
+      String url = new URI(String.format("ws://%s:%d/%s", proxyHost, proxyPort, "smartspaces")).toString();
 
-      WebSocketClient proxyClient = new NettyWebSocketClient(u, new WebSocketMessageHandler() {
+      WebSocketClient<Map<String, Object>> proxyClient = clientService.newWebSocketClient(url, new WebSocketMessageHandler<Map<String, Object>>() {
 
         @Override
         public void onClose() {
@@ -90,13 +91,10 @@ public class ExternalProxyInternalExampleActivity extends BaseRoutableWebActivit
         }
 
         @Override
-        public void onNewMessage(Object d) {
-          @SuppressWarnings("unchecked")
-          Map<String, Object> data = (Map<String, Object>) d;
-
+        public void onNewMessage(Map<String, Object> data) {
           sendRouteMessage("output1", data);
         }
-      }, getSpaceEnvironment().getExecutorService(), getLog());
+      }, new MapStringMessageCodec(), getLog());
 
       addManagedResource(proxyClient);
     } catch (URISyntaxException e) {

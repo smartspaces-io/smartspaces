@@ -190,6 +190,9 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
     File baseInstallDir = new File(baseInstallDirProperty);
 
     try {
+
+      executorService = new DefaultScheduledExecutorService();
+
       getCoreServices();
 
       containerLog = new StandardExtendedLog("container", loggingProvider.getLog());
@@ -305,8 +308,6 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
    */
   private void setupSpaceEnvironment(File baseInstallDir) {
     Map<String, String> containerProperties = configurationProvider.getInitialConfiguration();
-
-    executorService = new DefaultScheduledExecutorService();
 
     filesystem = new BasicSmartSpacesFilesystem(baseInstallDir);
     filesystem.startup();

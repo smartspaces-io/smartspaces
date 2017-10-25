@@ -118,8 +118,8 @@ public class StandardMasterAlertManager implements MasterAlertManager {
   /**
    * A mapping of controller UUIDs to the controller.
    */
-  private final Map<String, SpaceControllerAlertWatcher> spaceControllerWatchers = Maps
-      .newHashMap();
+  private final Map<String, SpaceControllerAlertWatcher> spaceControllerWatchers =
+      Maps.newHashMap();
 
   /**
    * The alert service to use.
@@ -145,12 +145,13 @@ public class StandardMasterAlertManager implements MasterAlertManager {
   public void startup() {
     masterEventManager.addListener(masterEventListener);
 
-    alertWatcherControl = spaceEnvironment.getContainerManagedScope().scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        scan();
-      }
-    }, alertWatcherDelay, alertWatcherDelay, TimeUnit.MILLISECONDS);
+    alertWatcherControl =
+        spaceEnvironment.getContainerManagedScope().scheduleAtFixedRate(new Runnable() {
+          @Override
+          public void run() {
+            scan();
+          }
+        }, alertWatcherDelay, alertWatcherDelay, TimeUnit.MILLISECONDS);
 
     spaceEnvironment.getLog().info("Master alert manager started");
   }
@@ -174,9 +175,8 @@ public class StandardMasterAlertManager implements MasterAlertManager {
     for (SpaceControllerAlertWatcher watcher : getSpaceControllerWatchers()) {
       if (watcher.checkIfOfflineTransition(currentTimestamp)) {
         ActiveSpaceController monitored = watcher.getMonitored();
-        Long time = (Long)monitored.timeSinceLastHeartbeat(currentTimestamp).get();
-		masterEventManager.signalSpaceControllerHeartbeatLost(monitored,
-            time);
+        Long time = (Long) monitored.timeSinceLastHeartbeat(currentTimestamp).get();
+        masterEventManager.signalSpaceControllerHeartbeatLost(monitored, time);
 
       }
     }
@@ -242,9 +242,8 @@ public class StandardMasterAlertManager implements MasterAlertManager {
    *          the space controller being shut down
    */
   private void processSpaceControllerShutdown(ActiveSpaceController activeSpaceController) {
-    spaceEnvironment.getLog().info(
-        String.format("Space controller signalled shutdown: %s",
-            activeSpaceController.getDisplayName()));
+    spaceEnvironment.getLog().info(String.format("Space controller signalled shutdown: %s",
+        activeSpaceController.getDisplayName()));
 
     // Remove heartbeat tester
     removeSpaceControllerWatcher(activeSpaceController);
@@ -266,8 +265,8 @@ public class StandardMasterAlertManager implements MasterAlertManager {
    */
   private void handleSpaceControllerHeartbeatLost(ActiveSpaceController activeSpaceController,
       long timeSinceLastHeartbeat) {
-    spaceEnvironment.getLog().warn(
-        String.format("Lost heartbeat for space controller for %d msec: %s",
+    spaceEnvironment.getLog()
+        .warn(String.format("Lost heartbeat for space controller for %d msec: %s",
             timeSinceLastHeartbeat, activeSpaceController.getDisplayName()));
 
     disconnectAndRaiseAlert(activeSpaceController, timeSinceLastHeartbeat);
@@ -312,13 +311,12 @@ public class StandardMasterAlertManager implements MasterAlertManager {
   private void raiseHeartbeatLostAlert(ActiveSpaceController activeSpaceController,
       long timeSinceLastHeartbeat) {
     try {
-      alertService.raiseAlert(ALERT_TYPE_CONTROLLER_TIMEOUT, activeSpaceController
-          .spaceController().getUuid(),
+      alertService.raiseAlert(ALERT_TYPE_CONTROLLER_TIMEOUT,
+          activeSpaceController.spaceController().getUuid(),
           createAlertMessage(activeSpaceController, timeSinceLastHeartbeat));
     } catch (Throwable e) {
-      spaceEnvironment.getLog().error(
-          String.format("Lost heartbeat alert for space controller: %s",
-              activeSpaceController.getDisplayName()), e);
+      spaceEnvironment.getLog().error(String.format("Lost heartbeat alert for space controller: %s",
+          activeSpaceController.getDisplayName()), e);
     }
   }
 
@@ -333,11 +331,11 @@ public class StandardMasterAlertManager implements MasterAlertManager {
   private void disconnectSpaceController(ActiveSpaceController activeSpaceController,
       boolean fromError) {
     try {
-      activeSpaceControllerManager.disconnectSpaceController(
-          activeSpaceController.spaceController(), fromError);
+      activeSpaceControllerManager
+          .disconnectSpaceController(activeSpaceController.spaceController(), fromError);
     } catch (Throwable e) {
-      spaceEnvironment.getLog().error(
-          String.format("Lost heartbeat disconnect for space controller: %s",
+      spaceEnvironment.getLog()
+          .error(String.format("Lost heartbeat disconnect for space controller: %s",
               activeSpaceController.getDisplayName()), e);
     }
   }
@@ -356,9 +354,8 @@ public class StandardMasterAlertManager implements MasterAlertManager {
       long timeSinceLastHeartbeat) {
     SpaceController controller = activeSpaceController.spaceController();
 
-    String message =
-        "No space controller heartbeat in %d milliseconds\n\n"
-            + "ID: %s\nUUID: %s\nName: %s\nHostId: %s\n";
+    String message = "No space controller heartbeat in %d milliseconds\n\n"
+        + "ID: %s\nUUID: %s\nName: %s\nHostId: %s\n";
     return String.format(message, timeSinceLastHeartbeat, controller.getId(), controller.getUuid(),
         controller.getName(), controller.getHostId());
   }
@@ -379,8 +376,8 @@ public class StandardMasterAlertManager implements MasterAlertManager {
     if (watcher != null) {
       watcher.updateHeartbeat(timestamp);
     } else {
-      spaceEnvironment.getLog().warn(
-          String.format("Master alert manager got heartbeat for unknown space controller %s",
+      spaceEnvironment.getLog()
+          .warn(String.format("Master alert manager got heartbeat for unknown space controller %s",
               activeSpaceController.spaceController().getUuid()));
     }
   }
@@ -510,8 +507,8 @@ public class StandardMasterAlertManager implements MasterAlertManager {
    * @param activeSpaceControllerManager
    *          the active space controller manager
    */
-  public void setActiveSpaceControllerManager(
-      ActiveSpaceControllerManager activeSpaceControllerManager) {
+  public void
+      setActiveSpaceControllerManager(ActiveSpaceControllerManager activeSpaceControllerManager) {
     this.activeSpaceControllerManager = activeSpaceControllerManager;
   }
 
@@ -530,7 +527,7 @@ public class StandardMasterAlertManager implements MasterAlertManager {
     /**
      * {@code true} if an alert has been sent.
      */
-    private  AtomicBoolean lost = new AtomicBoolean(false);
+    private AtomicBoolean lost = new AtomicBoolean(false);
 
     /**
      * Construct a new alert watcher.
@@ -540,7 +537,8 @@ public class StandardMasterAlertManager implements MasterAlertManager {
      * @param timestamp
      *          timestamp for the alert
      */
-    public SpaceControllerAlertWatcher(ActiveSpaceController activeSpaceController, long timestamp) {
+    public SpaceControllerAlertWatcher(ActiveSpaceController activeSpaceController,
+        long timestamp) {
       this.activeSpaceController = activeSpaceController;
       activeSpaceController.updateHeartbeatTime(timestamp);
     }
@@ -550,12 +548,12 @@ public class StandardMasterAlertManager implements MasterAlertManager {
      *
      * @param heartbeatTimestamp
      *          the new heartbeat
-     *          
+     * 
      * @return {@code true} if the heartbeat has been regained
      */
     public boolean updateHeartbeat(long heartbeatTimestamp) {
       activeSpaceController.updateHeartbeatTime(heartbeatTimestamp);
-      
+
       return lost.getAndSet(false);
     }
 
@@ -566,8 +564,10 @@ public class StandardMasterAlertManager implements MasterAlertManager {
      *          the time stamp to check against
      */
     public boolean checkIfOfflineTransition(long currentTimestamp) {
-      Option<Object> timeSinceLastHeartbeat = activeSpaceController.timeSinceLastHeartbeat(currentTimestamp);
-      if (timeSinceLastHeartbeat.isDefined() && (Long)timeSinceLastHeartbeat.get() > spaceControllerHeartbeatTime) {
+      Option<Object> timeSinceLastHeartbeat =
+          activeSpaceController.timeSinceLastHeartbeat(currentTimestamp);
+      if (timeSinceLastHeartbeat.isDefined()
+          && (Long) timeSinceLastHeartbeat.get() > spaceControllerHeartbeatTime) {
         return !lost.getAndSet(true);
       } else {
         return false;

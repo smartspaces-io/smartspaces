@@ -32,7 +32,7 @@ configurations {
 }
 
 dependencies {
-  izpack 'org.codehaus.izpack:izpack-ant:5.0.10'
+  izpack 'org.codehaus.izpack:izpack-ant:5.1.2'
 
   bootstrap project(":runtime:activity:smartspaces-space-controller")
 

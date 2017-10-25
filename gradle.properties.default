@@ -1,0 +1,13 @@
+smartspaces.dependencies.home=/home/keith/software/repos/smartspaces-dependencies
+
+smartspaces.dev.home=/home/keith/smartspaces
+smartspaces.dev.home.subdir.default=latest
+
+org.gradle.jvmargs=-Xms256m -Xmx1024m
+org.gradle.daemon=false
+
+nexusUrl=https://eng.inhabitech.com:8082
+
+# These are only if you have write access to the SmartSpaces Maven repo.
+#nexusUsername=
+#nexusPassword=

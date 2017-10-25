@@ -1,55 +1,98 @@
-#Requirements
+# Requirements
 
-- Smart Spaces uses the Gradle build tool. There is no need to download
-Gradle,it will be downloaded automatically by the build process.
-- The Smart Spaces Dependency git repo
-- Clone https://github.com/smartspaces-io/smartspaces-dependencies.git
-- The Android SDK
-- Create a file in the root folder of the Smart Spaces project called
-gradle.properties.
+This file will describe how to build Smart Spaces.
 
-This file should contain the following properties. Each of the properties
-ending in .home say where you have a package installed. The examples
-below give a fake place where each software package is installed, you will
-change these to match where you installed the particular packages.
+This process is not for the faint of heart and perhaps it is best to
+use the installers. But if you want to try the cutting edge, or perhaps
+have a desire to torture yourself, then this file is for you.
+
+The overall steps are:
+
+- Clone the Smart Spaces git repo and the the Smart Spaces Dependency git repo.
+- Set up the other dependencies.
+- Create a file in the root folder of the Smart Spaces project called gradle.properties.
+- Build
+
+Some folks have figured out how to build Smart Spaces on operating systems
+other than Linux in the past, though these folks are no longer interested
+in helping with this. Non-Linux builds are not officially supported.
+If you want to build
+on a Mac or Windows, it is suggested you use a virtual machine through Vagrant
+or some other package to build Smart Spaces.
+
+# The git repositories.
+
+It is assumed you know how to use git. If not, there are many good websites
+with excellent documentation.
+
+First clone the smartspaces repository. I typicall do this in a
+folder `software/repos`.
 
 ```
-android.sdk.home = /home/you/software/android/android-sdk-linux_86
-smartspaces.dependencies.home = /home/you/software/repos/smartspaces-dependencies
+git clone https://github.com/smartspaces-io/smartspaces.git
 ```
 
-- The Android controller is built for a given minimum version of Android.
-The following example shows building the Android controller for Ice Cream
-Sandwich.
+Nest you need the dependencies repository. There are a collection of
+dependencies that Smart Spaces has that cannot be
+easily pulled from repositories, particularly in the format that the
+Smart Spaces build system needs them in. These dependencies have been
+placed in a GitHub repository.
+
+You can place them in any folder you like, but I usually place them in the same
+folder as the SmartSpaces git repo.
 
 ```
-android.platform = android-16
+git clone https://github.com/smartspaces-io/smartspaces-dependencies.git
 ```
 
-- smartspaces.dependencies.home should point at where you have installed
-the git repo clone for the Smart Spaces Dependencies repo.
+# Other dependencies
 
-- Install ROS on your computer. Install from www.ros.org. I usually install the
-desktop full version, though there may be a smaller version that will work.
+Smart Spaces has a collection of other dependencies needed to build it.
+
+## ROS
+
+Smart Spaces makes use of ROS, the Robot Operating System.
+
+Install ROS on your computer. Install from www.ros.org. I usually install the
+desktop full version, though ros-core is also sufficient.
+
+It doesn't particularly matter which version of ROS you use, though Smart Spaces
+has only been tested with versions Indigo and forward.
+
+Make sure you follow all of the directions needed for the ROS install,
+particularly the changes documented for your `.bashrc` file.
 
 ```
 sudo apt-get install ros-indigo-desktop-full
 ```
 
-- Place your smartspaces repository on the ROS package path.
+You now need to make sure that the ROS packages can find the Smart Spaces
+code. To do this, you need to add Smart Spaces to the ROS package path.
 
-The recommended way to do this is to add the Smart Spaces folder to your
-ROS_PACKAGE_PATH.
+Your `.bashrc` should now contain a line like
+
+```
+source /opt/ros/indigo/setup.bash
+```
+Underneath this line add
+
+```
+export ROS_PACKAGE_PATH=`smartspacesrepo`:${ROS_PACKAGE_PATH}
+```
+
+where `smartspacesrepo` is the file path to the folder that is your clone of
+the smartspaces repository is.
 
 Another way to do this is to place the Smart Spaces repository in the ROS
-share directory, though this ties you to a ROS version.
+share directory, though this ties you to a ROS version and is not recommended.
 
 ```
 sudo mv smartspaces /opt/ros/indigo/share/
 ```
 
+## Smart Spaces documentation generation
 
-- The Smart Spaces documentation is built with the Python documentation 
+The Smart Spaces documentation is built with the Python documentation 
 system Sphinx. It uses Latex for building the PDF documentation. On Linux, make
 sure you install texlive, textlive-latex-extra, and texlive-fonts-*. You also
 need pygments.
@@ -59,15 +102,74 @@ sudo apt-get install python-sphinx texlive texlive-latex-extra texlive-fonts-*
 sudo pip install pygments
 ```
 
-- You may also want to install pthread library:
+You may also want to install pthread library:
 
 ```
 sudo apt-get install libevent-pthreads-2.0-5
 ```
 
-#Building
+# The gradle.properties file
 
-- Building installers:
+Smart Spaces uses the most excellent Gradle build system.
+
+There are some things that Gradle needs to know about your setup.
+These things go into the `gradle.properties` file at the root of your
+clone of the Smart Spaces repository.
+
+You can copy, and are advised to copy, the `gradle.properties.default` file
+to `gradle.properties` as a start.
+
+```
+cp gradle.properties.default gradle.properties
+```
+
+This file should contain the following properties. Each of the properties
+ending in .home say where you have a package installed. The examples
+below give a fake place where each software package is installed, you will
+change these to match where you installed the particular packages.
+
+`smartspaces.dependencies.home` should point at where you have installed
+the git repo clone for the Smart Spaces Dependencies repo.
+
+
+```
+smartspaces.dependencies.home = /home/you/software/repos/smartspaces-dependencies
+```
+
+It has not been easy to have the Smart Spaces build work properly with the
+Gradle build daemon, so it is best to tell Gradle not to use a daemon.
+
+```
+org.gradle.daemon=false
+```
+
+Smart Spaces does have a Maven repository where it stores some of its
+dependencies. The `nexusUrl` property specifies which Maven repository
+to look at for SmartSpaces information.
+
+The official repository is hosted at inhabitech.com.
+
+```
+nexusUrl=https://eng.inhabitech.com:8082
+```
+
+Some of the other properties are described later in the **Building*** section.
+
+# Building
+
+Smart Spaces uses the Gradle build tool. There is no need to download
+Gradle,it will be downloaded automatically by the build process.
+
+The simplest way to start a build is to use the command
+
+```
+./gradlew clean install
+```
+
+This will clean everything out and place the Smart Spaces jar files in your
+local Maven repository.
+
+## Building installers:
 
 If you want to build the installers, use the following command
 
@@ -84,7 +186,7 @@ smartspaces_build/*/build/distributions
 
 where * can be master, controller, or workbench.
 
-- Building an Image:
+## Building an Image:
 
 ```
 ./gradlew -PimageHome=path createImage
@@ -94,7 +196,7 @@ where path is the root folder which will receive the image.
 
 The image will contain a master, controller, and workbench.
 
-- Updating a Dev instance from an Smart Spaces Build:
+## Updating a Dev instance from an Smart Spaces Build:
 
 Add the following to your gradle.properties file.
 
@@ -108,7 +210,9 @@ developing and testing Smart Spaces activities. This folder should
 contain subfolders master, controller, workbench for each component of an
 Smart Spaces development environment.
 
-- To build Smart Spaces and install updated files into your development
+## Building your dev instance
+
+To build Smart Spaces and install updated files into your development
 instance, use
 
 ```
@@ -126,7 +230,7 @@ in addition to using latest, you can use the command
 
 which will copy everything into /home/you/smartspaces/mytest
 
-- Controlling Test Sizes
+## Controlling Test Sizes
 
 Automatic tests that take place during a build come in a variety of sizes.
 Small tests are run every time a build is done, while large tests are only done

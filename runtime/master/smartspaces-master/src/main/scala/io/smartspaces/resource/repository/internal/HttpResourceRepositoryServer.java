@@ -24,7 +24,7 @@ import io.smartspaces.resource.repository.ResourceCategory;
 import io.smartspaces.resource.repository.ResourceRepositoryServer;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
-import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
+import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
 import io.smartspaces.service.web.server.HttpPostBody;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
@@ -123,7 +123,7 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
     repositoryServer.setPort(repositoryPort);
     String webappPath = "/" + repositoryUrlPathPrefix;
 
-    repositoryServer.addDynamicContentHandler(webappPath, true, new HttpDynamicRequestHandler() {
+    repositoryServer.addDynamicGetContentHandler(webappPath, true, new HttpDynamicGetRequestHandler() {
       @Override
       public void handle(HttpRequest request, HttpResponse response) {
         handleResourceRequest(request, response);

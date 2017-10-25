@@ -18,7 +18,7 @@
 package io.smartspaces.service.web.server.handler.barcode;
 
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
+import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
 
@@ -40,7 +40,7 @@ import com.google.zxing.common.BitMatrix;
  *
  * @author Keith M. Hughes
  */
-public class ZXingBarcodeHttpDynamicRequestHandler implements HttpDynamicRequestHandler {
+public class ZXingBarcodeHttpDynamicRequestHandler implements HttpDynamicGetRequestHandler {
 
   /**
    * Query string parameter name for the content to be displayed.

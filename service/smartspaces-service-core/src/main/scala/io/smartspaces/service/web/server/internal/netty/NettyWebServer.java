@@ -25,7 +25,7 @@ import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.service.web.server.HttpAuthProvider;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
-import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
+import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
 import io.smartspaces.service.web.server.HttpStaticContentRequestHandler;
 import io.smartspaces.service.web.server.WebResourceAccessManager;
 import io.smartspaces.service.web.server.WebServer;
@@ -161,7 +161,7 @@ public class NettyWebServer implements WebServer {
   /**
    * The complete collection of dynamic GET request handlers.
    */
-  private List<HttpDynamicRequestHandler> dynamicGetRequestHandlers = new ArrayList<>();
+  private List<HttpDynamicGetRequestHandler> dynamicGetRequestHandlers = new ArrayList<>();
 
   /**
    * The complete collection of dynamic POST request handlers.
@@ -284,7 +284,7 @@ public class NettyWebServer implements WebServer {
 
   @Override
   public void addStaticContentHandler(String uriPrefix, File baseDir,
-      Map<String, String> extraHttpContentHeaders, String fallbackFilePath, HttpDynamicRequestHandler fallbackHandler) {
+      Map<String, String> extraHttpContentHeaders, String fallbackFilePath, HttpDynamicGetRequestHandler fallbackHandler) {
     if (!baseDir.exists()) {
       throw new SmartSpacesException(String.format("Cannot find web folder %s",
           baseDir.getAbsolutePath()));
@@ -309,14 +309,14 @@ public class NettyWebServer implements WebServer {
   }
 
   @Override
-  public void addDynamicContentHandler(String uriPrefix, boolean usePath,
-      HttpDynamicRequestHandler handler) {
-    addDynamicContentHandler(uriPrefix, usePath, handler, null);
+  public void addDynamicGetContentHandler(String uriPrefix, boolean usePath,
+      HttpDynamicGetRequestHandler handler) {
+    addDynamicGetContentHandler(uriPrefix, usePath, handler, null);
   }
 
   @Override
-  public void addDynamicContentHandler(String uriPrefix, boolean usePath,
-      HttpDynamicRequestHandler handler, Map<String, String> extraHttpContentHeaders) {
+  public void addDynamicGetContentHandler(String uriPrefix, boolean usePath,
+      HttpDynamicGetRequestHandler handler, Map<String, String> extraHttpContentHeaders) {
     serverHandler.addHttpGetRequestHandler(new NettyHttpDynamicGetRequestHandlerHandler(
         serverHandler, uriPrefix, usePath, handler, extraHttpContentHeaders));
     dynamicGetRequestHandlers.add(handler);
@@ -342,7 +342,7 @@ public class NettyWebServer implements WebServer {
   }
 
   @Override
-  public List<HttpDynamicRequestHandler> getDynamicRequestHandlers() {
+  public List<HttpDynamicGetRequestHandler> getDynamicRequestHandlers() {
     return Lists.newArrayList(dynamicGetRequestHandlers);
   }
 

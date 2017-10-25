@@ -21,7 +21,7 @@ import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.component.ActivityComponent;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
-import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
+import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 
@@ -160,7 +160,7 @@ public interface WebServerActivityComponent extends ActivityComponent {
    * @return the web server component this method was called on
    */
   WebServerActivityComponent addDynamicContent(String uriPrefix, boolean usePath,
-      HttpDynamicRequestHandler handler);
+      HttpDynamicGetRequestHandler handler);
 
   /**
    * Add dynamic content for the web server to serve.

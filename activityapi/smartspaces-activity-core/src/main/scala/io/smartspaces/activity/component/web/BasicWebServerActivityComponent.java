@@ -29,7 +29,7 @@ import io.smartspaces.messaging.codec.MapStringMessageCodec;
 import io.smartspaces.service.web.WebSocketConnection;
 import io.smartspaces.service.web.WebSocketMessageHandler;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
-import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
+import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerService;
 import io.smartspaces.service.web.server.WebServerWebSocketHandler;
@@ -71,7 +71,7 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
   /**
    * List of dynamic GET content for the web server.
    */
-  private final List<DynamicContent<HttpDynamicRequestHandler>> dynamicGetContent =
+  private final List<DynamicContent<HttpDynamicGetRequestHandler>> dynamicGetContent =
       Lists.newArrayList();
 
   /**
@@ -112,8 +112,8 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
       addStaticContentHandler(content.getUriPrefix(), content.getBaseDir());
     }
 
-    for (DynamicContent<HttpDynamicRequestHandler> content : dynamicGetContent) {
-      webServer.addDynamicContentHandler(content.getUriPrefix(), content.isUsePath(),
+    for (DynamicContent<HttpDynamicGetRequestHandler> content : dynamicGetContent) {
+      webServer.addDynamicGetContentHandler(content.getUriPrefix(), content.isUsePath(),
           content.getRequestHandler());
     }
 
@@ -234,12 +234,12 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
 
   @Override
   public WebServerActivityComponent addDynamicContent(String uriPrefix, boolean usePath,
-      HttpDynamicRequestHandler handler) {
+      HttpDynamicGetRequestHandler handler) {
     if (webServer != null) {
-      webServer.addDynamicContentHandler(uriPrefix, usePath, handler);
+      webServer.addDynamicGetContentHandler(uriPrefix, usePath, handler);
     } else {
       dynamicGetContent
-          .add(new DynamicContent<HttpDynamicRequestHandler>(handler, uriPrefix, usePath));
+          .add(new DynamicContent<HttpDynamicGetRequestHandler>(handler, uriPrefix, usePath));
     }
 
     return this;

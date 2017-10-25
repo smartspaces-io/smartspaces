@@ -18,11 +18,11 @@
 package io.smartspaces.service.web.server;
 
 /**
- * A handler for HTTP requests.
+ * A handler for HTTP GET requests.
  *
  * @author Keith M. Hughes
  */
-public interface HttpDynamicRequestHandler {
+public interface HttpDynamicGetRequestHandler {
 
   /**
    * Handle an HTTP request

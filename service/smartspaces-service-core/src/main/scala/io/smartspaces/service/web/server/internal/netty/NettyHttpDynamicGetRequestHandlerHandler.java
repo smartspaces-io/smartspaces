@@ -19,7 +19,7 @@ package io.smartspaces.service.web.server.internal.netty;
 
 import static org.jboss.netty.handler.codec.http.HttpHeaders.addHeader;
 
-import io.smartspaces.service.web.server.HttpDynamicRequestHandler;
+import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
@@ -44,7 +44,7 @@ public class NettyHttpDynamicGetRequestHandlerHandler implements NettyHttpGetReq
   /**
    * The handler which will handle the requests.
    */
-  private HttpDynamicRequestHandler requestHandler;
+  private HttpDynamicGetRequestHandler requestHandler;
 
   /**
    * The parent content handler for this handler.
@@ -76,7 +76,7 @@ public class NettyHttpDynamicGetRequestHandlerHandler implements NettyHttpGetReq
    *          any extra HTTP content headers to be added to the response
    */
   public NettyHttpDynamicGetRequestHandlerHandler(NettyWebServerHandler parentHandler,
-      String uriPrefixBase, boolean usePath, HttpDynamicRequestHandler requestHandler,
+      String uriPrefixBase, boolean usePath, HttpDynamicGetRequestHandler requestHandler,
       Map<String, String> extraHttpContentHeaders) {
     this.parentHandler = parentHandler;
 

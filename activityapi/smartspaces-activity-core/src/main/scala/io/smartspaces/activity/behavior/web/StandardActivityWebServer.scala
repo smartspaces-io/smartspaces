@@ -17,18 +17,17 @@
 
 package io.smartspaces.activity.behavior.web
 
-import io.smartspaces.service.web.server.BasicMultipleConnectionWebServerWebSocketHandlerFactory
-import io.smartspaces.service.web.server.MultipleConnectionWebServerWebSocketHandlerFactory
-import io.smartspaces.util.data.json.StandardJsonMapper
-import io.smartspaces.service.web.server.MultipleConnectionWebSocketHandler
-import io.smartspaces.util.data.json.JsonMapper
-import io.smartspaces.activity.behavior.general.StandardActivityJson
-import io.smartspaces.activity.component.web.WebServerActivityComponent
-import io.smartspaces.service.web.server.WebServer
-
 import java.io.File
 import java.util.Map
-import io.smartspaces.messaging.codec.MapStringMessageCodec
+
+import io.smartspaces.activity.behavior.general.StandardActivityJson
+import io.smartspaces.activity.component.web.WebServerActivityComponent
+import io.smartspaces.service.web.server.BasicMultipleConnectionWebServerWebSocketHandlerFactory
+import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler
+import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler
+import io.smartspaces.service.web.server.MultipleConnectionWebServerWebSocketHandlerFactory
+import io.smartspaces.service.web.server.MultipleConnectionWebSocketHandler
+import io.smartspaces.service.web.server.WebServer
 
 /**
  * An activity behavior for web server support.
@@ -48,17 +47,27 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
   /**
    * The web server component.
    */
-  private var webServerComponent: WebServerActivityComponent = null
+  private var _webServerComponent: WebServerActivityComponent = null
 
   abstract override def commonActivitySetup(): Unit = {
-    webServerComponent = addActivityComponent(WebServerActivityComponent.COMPONENT_NAME)
+    _webServerComponent = addActivityComponent(WebServerActivityComponent.COMPONENT_NAME)
 
     webSocketFactory = new BasicMultipleConnectionWebServerWebSocketHandlerFactory(this, getLog())
-    webServerComponent.setWebSocketHandlerFactory(webSocketFactory)
+    _webServerComponent.setWebSocketHandlerFactory(webSocketFactory)
   }
 
-  override def addStaticContent(uriPrefix: String ,  baseDir: File): Unit =  {
-    webServerComponent.addStaticContent(uriPrefix, baseDir)
+  override def addStaticContentHandler(uriPrefix: String ,  baseDir: File): Unit =  {
+    _webServerComponent.addStaticContent(uriPrefix, baseDir)
+  }
+  
+  override def addDynamicGetContentHandler(uriPrefix: String, usePath: Boolean,
+      handler: HttpDynamicGetRequestHandler): Unit = {
+    _webServerComponent.addDynamicContent(uriPrefix, usePath, handler)
+  }
+
+  override def addDynamicPostRequestHandler(uriPrefix: String, usePath: Boolean,
+      handler: HttpDynamicPostRequestHandler): Unit = {
+    _webServerComponent.addDynamicPostRequestHandler(uriPrefix, usePath, handler)
   }
 
   override def isWebSocketConnected(): Boolean =  {
@@ -119,11 +128,11 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
     }
   }
 
-  override def getWebServer():  WebServer = {
+  override def webServer():  WebServer = {
     webServerComponent.getWebServer()
   }  
   
-  override def getWebServerComponent(): WebServerActivityComponent = {
-    webServerComponent
+  override def webServerComponent(): WebServerActivityComponent = {
+    _webServerComponent
   }
 }

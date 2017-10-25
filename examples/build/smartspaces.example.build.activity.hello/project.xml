@@ -25,8 +25,8 @@
   <tasks>
     <task name="build" position="before" type="native">
       <native>
-        <executable-path>${project.home}/src/main/build/isbuild-pre.sh</executable-path>
-        <arg>${project.home}/build/generated-src/main/java</arg>
+        <executable-path>${$project.home}/src/main/build/isbuild-pre.sh</executable-path>
+        <arg>${$project.home}/build/generated-src/main/java</arg>
       </native>
     </task>
     <task name="build" position="after" type="native">
@@ -41,7 +41,7 @@
       <template><![CDATA[#!/bin/bash
 
 GREETING=Hello
-echo ${"$"}{GREETING}, my project home is ${"$"}{project.home}
+echo ${"$"}{GREETING}, my project home is ${"$"}{${"$"}project.home}
 
 echo ${project.identifyingName} version ${project.version}
 

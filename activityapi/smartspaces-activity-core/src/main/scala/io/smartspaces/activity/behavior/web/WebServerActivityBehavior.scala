@@ -38,5 +38,5 @@ trait WebServerActivityBehavior extends ActivityBehavior with CompleteWebServerB
    *
    * @return the web server activity component
    */
-  def getWebServerComponent(): WebServerActivityComponent
+  def webServerComponent(): WebServerActivityComponent
 }

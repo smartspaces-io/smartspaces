@@ -21,11 +21,11 @@ import java.util.Map
 
 /**
  * A behavior for web servers. Complete web servers have content and web socket behaviors.
- * 
+ *
  * @author Keith M. Hughes
  */
-trait CompleteWebServerBehavior {
-  
+trait CompleteWebServerBehavior extends MultipleConnectionWebSocketHandler[Map[String, Object]] {
+
   /**
    * Add static content for the web server to serve.
    *
@@ -34,7 +34,47 @@ trait CompleteWebServerBehavior {
    * @param baseDir
    *          the base directory where the content will be found
    */
-  def addStaticContent(uriPrefix: String, baseDir: File): Unit
+  def addStaticContentHandler(uriPrefix: String, baseDir: File): Unit
+
+  /**
+   * Add dynamic content for the web server to serve.
+   *
+   * <p>
+   * This can be called either before or after calling
+   * {@link BasicWebServerActivityComponent#configureComponent(Activity, Configuration)}
+   * . But if called both before and after, the second call will be the one
+   * used.
+   *
+   * @param uriPrefix
+   *          the URI prefix for this particular content
+   * @param usePath
+   *          {@code true} if the path will be used as part of request
+   *          processing
+   * @param handler
+   *          content handler being added
+   */
+  def addDynamicGetContentHandler(uriPrefix: String, usePath: Boolean,
+    handler: HttpDynamicGetRequestHandler): Unit
+
+  /**
+   * Add dynamic content for the web server to serve.
+   *
+   * <p>
+   * This can be called either before or after calling
+   * {@link BasicWebServerActivityComponent#configureComponent(Activity, Configuration)}
+   * . But if called both before and after, the second call will be the one
+   * used.
+   *
+   * @param uriPrefix
+   *          the URI prefix for this particular content
+   * @param usePath
+   *          {@code true} if the path will be used as part of request
+   *          processing
+   * @param handler
+   *          content handler being added
+   */
+  def addDynamicPostRequestHandler(uriPrefix: String, usePath: Boolean,
+    handler: HttpDynamicPostRequestHandler): Unit
 
   /**
    * Is the web socket connected to anything?
@@ -49,7 +89,7 @@ trait CompleteWebServerBehavior {
    * @return {@code true} if the web socket is connected.
    */
   def isWebSocketConnected(channelId: String): Boolean
-  
+
   /**
    * A new web socket connection has been made.
    *
@@ -108,5 +148,5 @@ trait CompleteWebServerBehavior {
    *
    * @return the web server
    */
-  def getWebServer(): WebServer
+  def webServer(): WebServer
 }

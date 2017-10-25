@@ -97,14 +97,14 @@ public interface WebServer extends ManagedResource {
    */
   void addStaticContentHandler(String uriPrefix, File baseDir,
       Map<String, String> extraHttpContentHeaders, String fallbackFilePath,
-      HttpDynamicRequestHandler fallbackHandler);
+      HttpDynamicGetRequestHandler fallbackHandler);
 
   /**
    * Add in a new dynamic content handler to the server.
    *
    * <p>
    * See
-   * {@link #addDynamicContentHandler(String, HttpDynamicRequestHandler, Map)},
+   * {@link #addDynamicGetContentHandler(String, HttpDynamicGetRequestHandler, Map)},
    * the content header map value will be {@code null}.
    *
    * @param uriPrefix
@@ -114,8 +114,8 @@ public interface WebServer extends ManagedResource {
    * @param handler
    *          dynamic request handler
    */
-  void addDynamicContentHandler(String uriPrefix, boolean usePath,
-      HttpDynamicRequestHandler handler);
+  void addDynamicGetContentHandler(String uriPrefix, boolean usePath,
+      HttpDynamicGetRequestHandler handler);
 
   /**
    * Add in a new dynamic content handler to the server.
@@ -134,15 +134,15 @@ public interface WebServer extends ManagedResource {
    *          extra HTTP content headers to add to all responses to the handler,
    *          can be {@code null}
    */
-  void addDynamicContentHandler(String uriPrefix, boolean usePath,
-      HttpDynamicRequestHandler handler, Map<String, String> extraHttpContentHeaders);
+  void addDynamicGetContentHandler(String uriPrefix, boolean usePath,
+      HttpDynamicGetRequestHandler handler, Map<String, String> extraHttpContentHeaders);
 
   /**
    * Add in a new dynamic POSt request handler to the server.
    *
    * <p>
    * See
-   * {@link #addDynamicContentHandler(String, HttpDynamicRequestHandler, Map)},
+   * {@link #addDynamicGetContentHandler(String, HttpDynamicGetRequestHandler, Map)},
    * the content header map value will be {@code null}.
    *
    * @param uriPrefix
@@ -189,7 +189,7 @@ public interface WebServer extends ManagedResource {
    * @return all dynamic request handlers in the order they were added to the
    *         server
    */
-  List<HttpDynamicRequestHandler> getDynamicRequestHandlers();
+  List<HttpDynamicGetRequestHandler> getDynamicRequestHandlers();
 
   /**
    * Get all dynamic POST request handlers.

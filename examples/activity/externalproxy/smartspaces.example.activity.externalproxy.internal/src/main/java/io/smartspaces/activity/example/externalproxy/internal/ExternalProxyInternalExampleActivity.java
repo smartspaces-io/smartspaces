@@ -19,7 +19,7 @@ package io.smartspaces.activity.example.externalproxy.internal;
 
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.impl.web.BaseRoutableWebActivity;
-import io.smartspaces.service.web.WebSocketHandler;
+import io.smartspaces.service.web.WebSocketMessageHandler;
 import io.smartspaces.service.web.client.WebSocketClient;
 import io.smartspaces.service.web.client.WebSocketClientService;
 import io.smartspaces.service.web.client.internal.netty.NettyWebSocketClient;
@@ -77,7 +77,7 @@ public class ExternalProxyInternalExampleActivity extends BaseRoutableWebActivit
     try {
       URI u = new URI(String.format("ws://%s:%d/%s", proxyHost, proxyPort, "smartspaces"));
 
-      WebSocketClient proxyClient = new NettyWebSocketClient(u, new WebSocketHandler() {
+      WebSocketClient proxyClient = new NettyWebSocketClient(u, new WebSocketMessageHandler() {
 
         @Override
         public void onClose() {
@@ -90,7 +90,7 @@ public class ExternalProxyInternalExampleActivity extends BaseRoutableWebActivit
         }
 
         @Override
-        public void onReceive(Object d) {
+        public void onNewMessage(Object d) {
           @SuppressWarnings("unchecked")
           Map<String, Object> data = (Map<String, Object>) d;
 
@@ -106,7 +106,7 @@ public class ExternalProxyInternalExampleActivity extends BaseRoutableWebActivit
 
   @Override
   public void onActivityStartup() {
-    getWebServer().addDynamicContentHandler("barcode", true,
+    webServer().addDynamicGetContentHandler("barcode", true,
         new ZXingBarcodeHttpDynamicRequestHandler() {
 
           @Override

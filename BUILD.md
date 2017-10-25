@@ -175,9 +175,9 @@ Automatic tests that take place during a build come in a variety of sizes.
 Small tests are run every time a build is done, while large tests are only done
 if explicitly asked for. The following shows how to run the large tests.
 
-...
+```
 ./gradlew -PtestSize=large clean install
----
+```
 
 ## Building a dev instance
 
@@ -203,16 +203,17 @@ instance, use
 ./gradlew installDev
 ```
 
-which will copy everything into /home/you/smartspaces/latest
+which will copy everything into `/home/you/smartspaces/latest`.
 
-If you are working with a couple of different containers, say one called mytest
-in addition to using latest, you can use the command
+If you are working with a couple of different containers, say one called
+`mytest`
+in addition to using `latest`, you can use the command
 
 ```
 ./gradlew -PdevHomeSubdir=mytest installDev
 ```
 
-which will copy everything into /home/you/smartspaces/mytest
+which will copy everything into `/home/you/smartspaces/mytest`.
 
 ## Building installers
 

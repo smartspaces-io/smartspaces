@@ -85,11 +85,15 @@ source /opt/ros/indigo/setup.bash
 Underneath this line add
 
 ```
-export ROS_PACKAGE_PATH=`smartspacesrepo`:${ROS_PACKAGE_PATH}
+export ROS_PACKAGE_PATH=smartspacesrepo:${ROS_PACKAGE_PATH}
 ```
 
 where `smartspacesrepo` is the file path to the folder that is your clone of
-the smartspaces repository is.
+the smartspaces repository is. In the example install above, this would be
+
+```
+export ROS_PACKAGE_PATH=/home/you/software/repos/smartspaces:${ROS_PACKAGE_PATH}
+```
 
 Another way to do this is to place the Smart Spaces repository in the ROS
 share directory, though this ties you to a ROS version and is not recommended.

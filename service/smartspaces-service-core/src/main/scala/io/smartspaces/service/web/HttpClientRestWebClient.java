@@ -209,9 +209,15 @@ public class HttpClientRestWebClient implements RestWebClient {
   public String performPost(String sourceUri, String postContent, Charset charset,
       Map<String, String> headers) throws SmartSpacesException {
 
+    return performPost(sourceUri, new StringEntity(postContent, charset.name()), charset, headers);
+  }
+
+  public String performPost(String sourceUri, HttpEntity postContent, Charset charset,
+      Map<String, String> headers) throws SmartSpacesException {
+
     try {
       HttpPost request = new HttpPost(sourceUri);
-      request.setEntity(new StringEntity(postContent, charset.name()));
+      request.setEntity(postContent);
 
       placeHeadersInRequest(headers, request);
 

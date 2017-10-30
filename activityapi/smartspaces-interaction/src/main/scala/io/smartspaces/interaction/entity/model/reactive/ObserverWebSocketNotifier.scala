@@ -23,6 +23,7 @@ import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
 import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 import io.smartspaces.event.observable.BaseObserver
+import io.smartspaces.service.web.server.CompleteWebServerBehavior
 
 /**
  * An RX Subscriber for physical location occupancy events that communicates over a web socket.
@@ -30,7 +31,7 @@ import io.smartspaces.event.observable.BaseObserver
  *
  * @author Keith M. Hughes
  */
-class ObserverWebSocketNotifier(private val webServer: WebServerActivityBehavior) extends BaseObserver[PhysicalSpaceOccupancyLiveEvent] {
+class ObserverWebSocketNotifier(private val webServer: CompleteWebServerBehavior) extends BaseObserver[PhysicalSpaceOccupancyLiveEvent] {
 
   override def onNext(event: PhysicalSpaceOccupancyLiveEvent): Unit = {
     val entered = event.entered

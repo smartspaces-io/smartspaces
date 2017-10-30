@@ -18,6 +18,13 @@ dependencies {
   compile project(':smartspaces-core')
   compile project(':service:smartspaces-service-core')
   
+  compile('com.google.inject:guice:4.1.0') {
+	  exclude module: 'aopalliance'
+	  exclude module: 'javax.inject'
+  }
+  compile 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.aopalliance:1.0_6'
+  compile 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.javax-inject:1_2'
+  
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
 }

@@ -301,6 +301,10 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
       return SslUtils.configureSSLSocketFactory(mqttBrokerDescription.caCertPath.get, mqttBrokerDescription.clientCertPath.get, mqttBrokerDescription.clientKeyPath.get)
     }
   }
+  
+  override def toString(): String = {
+    s"${getClass.getName}[ mqttClientId=${mqttClientId}, mqttBrokerDescription=${mqttBrokerDescription}] "
+  }
 
   /**
    * An MQTT subscriber that interfaces with the Paho client.

@@ -17,8 +17,13 @@
 
 package io.smartspaces.time.provider;
 
+import org.joda.time.DateTimeZone;
+
 /**
  * A {@link TimeProvider} where the time is set externally.
+ * 
+ * <p>
+ * The default date/time zone is UTC. Set to change.
  *
  * <p>
  * Usually used for testing.
@@ -31,6 +36,8 @@ public class SettableTimeProvider implements TimeProvider {
    * The time to return.
    */
   private long currentTime;
+
+  private DateTimeZone dateTimeZone = DateTimeZone.getDefault();
 
   @Override
   public void startup() {
@@ -55,5 +62,20 @@ public class SettableTimeProvider implements TimeProvider {
    */
   public void setCurrentTime(long currentTime) {
     this.currentTime = currentTime;
+  }
+
+  @Override
+  public DateTimeZone getPlatformDateTimeZone() {
+    return dateTimeZone;
+  }
+
+  /**
+   * Set the platform date/time zone.
+   * 
+   * @param dateTimeZone
+   *          the platform date/time zone
+   */
+  public void getPlatformDateTimeZone(DateTimeZone dateTimeZone) {
+    this.dateTimeZone = dateTimeZone;
   }
 }

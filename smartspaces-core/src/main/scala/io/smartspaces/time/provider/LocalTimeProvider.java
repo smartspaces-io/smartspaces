@@ -17,6 +17,8 @@
 
 package io.smartspaces.time.provider;
 
+import org.joda.time.DateTimeZone;
+
 /**
  * A {@link TimeProvider} which gets time from the machine's local clock.
  *
@@ -37,5 +39,10 @@ public class LocalTimeProvider implements TimeProvider {
   @Override
   public long getCurrentTime() {
     return System.currentTimeMillis();
+  }
+
+  @Override
+  public DateTimeZone getPlatformDateTimeZone() {
+    return DateTimeZone.getDefault();
   }
 }

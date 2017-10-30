@@ -19,6 +19,8 @@ package io.smartspaces.time.provider;
 
 import io.smartspaces.resource.managed.ManagedResource;
 
+import org.joda.time.DateTimeZone;
+
 /**
  * Get the time.
  *
@@ -33,4 +35,11 @@ public interface TimeProvider extends ManagedResource {
    *         midnight, Jan 1, 1970
    */
   long getCurrentTime();
+  
+  /**
+   * Get the platform's date/time zone.
+   * 
+   * @return the platform's date/time zone
+   */
+  DateTimeZone getPlatformDateTimeZone();
 }

@@ -20,19 +20,25 @@ import io.smartspaces.logging.ExtendedLog
 
 import java.io.File
 import java.util.Map
+import io.smartspaces.messaging.codec.MapStringMessageCodec
 
 /**
  * A standalone web server object that includes web socket functionality.
  * 
  * @author Keith M. Hughes
  */
-class StandardCompleteWebServer(private val _webServer: WebServer, private val log: ExtendedLog) extends CompleteWebServerBehavior {
+class StandardCompleteWebServer(
+    private val _webServer: WebServer, 
+    private val log: ExtendedLog) extends CompleteWebServerBehavior {
 
   /**
    * Web socket handler for the connection to the browser.
    */
-  private var webSocketFactory: MultipleConnectionWebServerWebSocketHandlerFactory[Map[String, Object]] = new BasicMultipleConnectionWebServerWebSocketHandlerFactory(this, log)
-
+  private var webSocketFactory: MultipleConnectionWebServerWebSocketHandlerFactory[Map[String, Object]] = 
+      new BasicMultipleConnectionWebServerWebSocketHandlerFactory(this, log)
+  // TODO(keith): make the websocket URI setable. For now using default.
+  _webServer.setWebSocketHandlerFactory(null, webSocketFactory, new MapStringMessageCodec())
+  
   override def addStaticContentHandler(uriPrefix: String, baseDir: File): Unit = {
     _webServer.addStaticContentHandler(uriPrefix, baseDir)
   }

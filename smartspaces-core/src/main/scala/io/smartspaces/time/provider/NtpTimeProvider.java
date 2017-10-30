@@ -17,6 +17,13 @@
 
 package io.smartspaces.time.provider;
 
+import com.google.common.base.Preconditions;
+import org.apache.commons.logging.Log;
+import org.apache.commons.net.ntp.NTPUDPClient;
+import org.apache.commons.net.ntp.TimeInfo;
+import org.joda.time.DateTimeZone;
+import org.ros.math.CollectionMath;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -25,12 +32,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.net.ntp.NTPUDPClient;
-import org.apache.commons.net.ntp.TimeInfo;
-import org.ros.math.CollectionMath;
-import com.google.common.base.Preconditions;
 
 /**
  * A {@link TimeProvider} which uses NTP.
@@ -174,5 +175,12 @@ public class NtpTimeProvider implements TimeProvider {
   public long getCurrentTime() {
     long currentTime = localTimeProvider.getCurrentTime();
     return currentTime + offset.get();
+  }
+
+  @Override
+  public DateTimeZone getPlatformDateTimeZone() {
+    // TODO(keith): not clear that this class is giving UTC since it is using the local time
+    // provider.
+    return DateTimeZone.UTC;
   }
 }

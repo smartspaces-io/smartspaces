@@ -19,6 +19,7 @@ package io.smartspaces.activity.component.web;
 
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.component.ActivityComponent;
+import io.smartspaces.activity.configuration.WebActivityConfiguration;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
@@ -44,6 +45,23 @@ public interface WebServerActivityComponent extends ActivityComponent {
    * Descriptive name of the component.
    */
   String COMPONENT_DESCRIPTION = "Web Server";
+
+  /**
+   * Configuration property name that specifies whether or not to enable the web server.
+   */
+  String CONFIGURATION_NAME_WEB_SERVER_ENABLE = WebActivityConfiguration.CONFIGURATION_NAME_PREFIX_WEBAPP + ".web.server.enable";
+
+  /**
+   * Configuration property default value for whether the web server should be enabled or not
+   */
+  boolean CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_ENABLE = true;
+  
+  /**
+   * Is the web server enabled?
+   * 
+   * @return {@code true} if the web server is enabled
+   */
+  boolean isWebServerEnabled();
 
   /**
    * Get the base URL for the web server.

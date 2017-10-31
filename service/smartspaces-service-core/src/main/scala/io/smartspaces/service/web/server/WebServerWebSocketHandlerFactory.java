@@ -37,5 +37,5 @@ public interface WebServerWebSocketHandlerFactory<M> {
    *
    * @return a ready to use web socket handler
    */
-  WebServerWebSocketHandler<M> newWebSocketHandler(WebSocketConnection<M> connection);
+  WebServerWebSocketMessageHandler<M> newWebSocketHandler(WebSocketConnection<M> connection);
 }

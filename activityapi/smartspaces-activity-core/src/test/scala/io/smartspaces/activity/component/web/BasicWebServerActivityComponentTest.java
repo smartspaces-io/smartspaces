@@ -20,7 +20,7 @@ package io.smartspaces.activity.component.web;
 import io.smartspaces.activity.SupportedActivity;
 import io.smartspaces.activity.component.ActivityComponentContext;
 import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.service.web.server.WebServerWebSocketHandler;
+import io.smartspaces.service.web.server.WebServerWebSocketMessageHandler;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +38,7 @@ import java.util.Map;
 public class BasicWebServerActivityComponentTest {
 
   private BasicWebServerActivityComponent activityComponent;
-  private WebServerWebSocketHandler<Map<String, Object>> delegate;
+  private WebServerWebSocketMessageHandler<Map<String, Object>> delegate;
   private ActivityComponentContext activityComponentContext;
   private BasicWebServerActivityComponent.MyWebServerWebSocketHandler handler;
   private InOrder activityComponentContextInOrder;
@@ -48,7 +48,7 @@ public class BasicWebServerActivityComponentTest {
   @SuppressWarnings("unchecked")
   @Before
   public void setup() {
-	delegate = Mockito.mock(WebServerWebSocketHandler.class);
+	delegate = Mockito.mock(WebServerWebSocketMessageHandler.class);
     activityComponentContext = Mockito.mock(ActivityComponentContext.class);
 
     activityComponent = Mockito.mock(BasicWebServerActivityComponent.class);

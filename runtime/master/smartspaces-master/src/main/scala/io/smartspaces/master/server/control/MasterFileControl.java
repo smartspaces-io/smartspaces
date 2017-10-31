@@ -17,7 +17,6 @@
 
 package io.smartspaces.master.server.control;
 
-import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.master.api.master.MasterApiAutomationManager;
 import io.smartspaces.master.api.master.MasterApiSpaceControllerManager;
 import io.smartspaces.master.server.services.ActivityRepository;
@@ -29,7 +28,6 @@ import io.smartspaces.util.io.directorywatcher.DirectoryWatcherListener;
 import io.smartspaces.util.io.directorywatcher.SimpleDirectoryWatcher;
 
 import java.io.File;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**

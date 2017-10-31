@@ -18,27 +18,23 @@
 package io.smartspaces.activity;
 
 /**
- * Configurator for various activity resources.
+ * Configure a resource for an activity.
  *
  * @param <T>
- *          the type of the item being configured
+ *          the type of the resource being configured
  *
  * @author Keith M. Hughes
  */
-public interface ActivityResourceConfigurator<T> {
+public interface ResourceConfigurator<T> {
 
   /**
-   * Configure a resource for an activity.
-   *
-   * <p>
-   * Configuration will come from the activity's
-   * {@link smartspaces.configuration.Configuration}.
+   * Configure a resource.
    *
    * @param resourceName
    *          the name of the resource, should be appropriate as a section of a
    *          configuration parameter name
-   * @param activity
-   *          the activity
+   * @param configuration
+   *          the configuration
    * @param resource
    *          the resource being configured
    */

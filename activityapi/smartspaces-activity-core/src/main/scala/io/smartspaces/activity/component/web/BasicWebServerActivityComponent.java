@@ -32,7 +32,8 @@ import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
 import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerService;
-import io.smartspaces.service.web.server.WebServerWebSocketHandler;
+import io.smartspaces.service.web.server.WebServerWebSocketMessageHandler;
+import io.smartspaces.time.provider.TimeProvider;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 import io.smartspaces.util.web.HttpConstants;
 
@@ -52,6 +53,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class BasicWebServerActivityComponent extends BaseActivityComponent
     implements WebServerActivityComponent {
+
+  /**
+   * {@code true} if the web server is enabled/
+   */
+  private boolean webServerEnabled;
 
   /**
    * Web server for the app, if needed.
@@ -98,45 +104,56 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
 
   @Override
   public void configureComponent(Configuration configuration) {
-    super.configureComponent(configuration);
+    webServerEnabled = configuration.getPropertyBoolean(
+        WebServerActivityComponent.CONFIGURATION_NAME_WEB_SERVER_ENABLE,
+        WebServerActivityComponent.CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_ENABLE);
 
-    Activity activity = getComponentContext().getActivity();
+    if (webServerEnabled) {
+      super.configureComponent(configuration);
 
-    WebServerService webServerService = activity.getSpaceEnvironment().getServiceRegistry()
-        .getService(WebServerService.SERVICE_NAME);
-    webServer = webServerService.newWebServer(activity.getLog());
+      Activity activity = getComponentContext().getActivity();
 
-    configurator.configure(null, activity, webServer);
+      WebServerService webServerService = activity.getSpaceEnvironment().getServiceRegistry()
+          .getService(WebServerService.SERVICE_NAME);
+      webServer = webServerService.newWebServer(activity.getLog());
 
-    for (StaticContent content : staticContent) {
-      addStaticContentHandler(content.getUriPrefix(), content.getBaseDir());
-    }
+      configurator.configure(null, activity, webServer);
 
-    for (DynamicContent<HttpDynamicGetRequestHandler> content : dynamicGetContent) {
-      webServer.addDynamicGetContentHandler(content.getUriPrefix(), content.isUsePath(),
-          content.getRequestHandler());
-    }
+      for (StaticContent content : staticContent) {
+        addStaticContentHandler(content.getUriPrefix(), content.getBaseDir());
+      }
 
-    for (DynamicContent<HttpDynamicPostRequestHandler> content : dynamicPostContent) {
-      webServer.addDynamicPostRequestHandler(content.getUriPrefix(), content.isUsePath(),
-          content.getRequestHandler());
-    }
+      for (DynamicContent<HttpDynamicGetRequestHandler> content : dynamicGetContent) {
+        webServer.addDynamicGetContentHandler(content.getUriPrefix(), content.isUsePath(),
+            content.getRequestHandler());
+      }
 
-    if (webSocketHandlerFactory != null) {
-      setWebServerWebSocketHandlerFactory();
+      for (DynamicContent<HttpDynamicPostRequestHandler> content : dynamicPostContent) {
+        webServer.addDynamicPostRequestHandler(content.getUriPrefix(), content.isUsePath(),
+            content.getRequestHandler());
+      }
+
+      if (webSocketHandlerFactory != null) {
+        setWebServerWebSocketHandlerFactory();
+      }
     }
   }
 
   @Override
   public void startupComponent() {
-    webServer.startup();
+    if (webServerEnabled) {
+      webServer.startup();
+    }
+
     getLog().info("web server component started up");
   }
 
   @Override
   public void shutdownComponent() {
-    long start = System.currentTimeMillis();
-    getLog().info("Shutting down web server activity component");
+    TimeProvider timeProvider =
+        getComponentContext().getActivity().getSpaceEnvironment().getTimeProvider();
+    long start = timeProvider.getCurrentTime();
+    getLog().formatInfo("Shutting down web server activity component");
 
     if (webServer != null) {
       webServer.shutdown();
@@ -144,9 +161,14 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
     }
 
     if (getLog().isInfoEnabled()) {
-      getLog().info(String.format("Web server activity component shut down in %s msecs",
-          System.currentTimeMillis() - start));
+      getLog().formatInfo("Web server activity component shut down in %s msecs",
+          timeProvider.getCurrentTime() - start);
     }
+  }
+
+  @Override
+  public boolean isWebServerEnabled() {
+    return webServerEnabled;
   }
 
   @Override
@@ -414,9 +436,9 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
     }
 
     @Override
-    public WebServerWebSocketHandler<Map<String, Object>>
+    public WebServerWebSocketMessageHandler<Map<String, Object>>
         newWebSocketHandler(WebSocketConnection<Map<String, Object>> proxy) {
-      WebServerWebSocketHandler<Map<String, Object>> handlerDelegate =
+      WebServerWebSocketMessageHandler<Map<String, Object>> handlerDelegate =
           delegate.newWebSocketHandler(proxy);
       return new MyWebServerWebSocketHandler(handlerDelegate, activityComponent);
     }
@@ -424,7 +446,9 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
 
   @Override
   public String getComponentStatusDetail() {
-    return String.format(StatusDetail.LINK_FORMAT, configurator.getWebInitialPage());
+    return isWebServerEnabled()
+        ? String.format(StatusDetail.LINK_FORMAT, configurator.getWebInitialPage())
+        : "Disabled";
   }
 
   /**
@@ -443,12 +467,12 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
    * @author Keith M. Hughes
    */
   public static class MyWebServerWebSocketHandler
-      implements WebServerWebSocketHandler<Map<String, Object>> {
+      implements WebServerWebSocketMessageHandler<Map<String, Object>> {
 
     /**
      * The delegate to be protected.
      */
-    private final WebServerWebSocketHandler<Map<String, Object>> delegate;
+    private final WebServerWebSocketMessageHandler<Map<String, Object>> delegate;
 
     /**
      * The component this handler is for.
@@ -468,7 +492,8 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
      * @param activityComponent
      *          the component being handled
      */
-    public MyWebServerWebSocketHandler(WebServerWebSocketHandler<Map<String, Object>> delegate,
+    public MyWebServerWebSocketHandler(
+        WebServerWebSocketMessageHandler<Map<String, Object>> delegate,
         BasicWebServerActivityComponent activityComponent) {
       this.delegate = delegate;
       this.activityComponent = activityComponent;

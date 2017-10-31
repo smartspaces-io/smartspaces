@@ -78,7 +78,7 @@ public interface HttpPostBody extends CopyableResource {
    * Get the content of the POST.
    * 
    * <p>
-   * This only returns a value if the was not a multipart .
+   * This only returns a value if the POST was not a multipart .
    * 
    * @return the content of the POST
    * 

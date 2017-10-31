@@ -220,7 +220,6 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
       Element parametersElement = configurationElement
           .getChild(ELEMENT_NAME_SPACE_CONTROLLER_CONFIGURATION_ROOT_PARAMETERS);
       if (parametersElement != null) {
-        @SuppressWarnings("unchecked")
         List<Element> parameterElements = parametersElement
             .getChildren(ELEMENT_NAME_SPACE_CONTROLLER_CONFIGURATION_INDIVIDUAL_PARAMETER);
         for (Element parameterElement : parameterElements) {
@@ -259,7 +258,6 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
     Element activitiesElement = rootElement.getChild(ELEMENT_NAME_ROOT_ACTIVITIES);
 
     if (activitiesElement != null) {
-      @SuppressWarnings("unchecked")
       List<Element> activityElements =
           activitiesElement.getChildren(ELEMENT_NAME_INDIVIDUAL_ACTIVITY);
       for (Element activityElement : activityElements) {
@@ -461,7 +459,6 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
       Element parametersElement =
           configurationElement.getChild(ELEMENT_NAME_ACTIVITY_CONFIGURATION_ROOT_PARAMETERS);
       if (parametersElement != null) {
-        @SuppressWarnings("unchecked")
         List<Element> parameterElements =
             parametersElement.getChildren(ELEMENT_NAME_ACTIVITY_CONFIGURATION_INDIVIDUAL_PARAMETER);
         for (Element parameterElement : parameterElements) {
@@ -547,7 +544,6 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
     Element groupLiveActivitiesElement =
         groupElement.getChild(ELEMENT_NAME_LIVE_ACTIVITY_GROUP_ROOT_GROUP_LIVE_ACTIVITIES);
     if (groupLiveActivitiesElement != null) {
-      @SuppressWarnings("unchecked")
       List<Element> groupLiveActivityElements = groupLiveActivitiesElement
           .getChildren(ELEMENT_NAME_LIVE_ACTIVITY_GROUP_INDIVIDUAL_GROUP_LIVE_ACTIVITY);
 
@@ -582,7 +578,6 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
     Element spacesElement = rootElement.getChild(ELEMENT_NAME_ROOT_SPACES);
 
     if (spacesElement != null) {
-      @SuppressWarnings("unchecked")
       List<Element> spaceElements = spacesElement.getChildren(ELEMENT_NAME_INDIVIDUAL_SPACE);
       for (Element spaceElement : spaceElements) {
         getSpace(spaceElement, activityRepository);
@@ -633,7 +628,6 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
   private void getSpaceSubspaces(Element spaceElement, Space space) {
     Element subspacesElement = spaceElement.getChild(ELEMENT_NAME_SPACE_ROOT_SUBSPACES);
     if (subspacesElement != null) {
-      @SuppressWarnings("unchecked")
       List<Element> subspaceElements =
           subspacesElement.getChildren(ELEMENT_NAME_SPACE_INDIVIDUAL_SUBSPACE);
       for (Element subspaceElement : subspaceElements) {
@@ -657,7 +651,6 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
     Element resourcesElement = rootElement.getChild(ELEMENT_NAME_ROOT_RESOURCES);
 
     if (resourcesElement != null) {
-      @SuppressWarnings("unchecked")
       List<Element> resourceElements =
           resourcesElement.getChildren(ELEMENT_NAME_INDIVIDUAL_RESOURCE);
       for (Element resourceElement : resourceElements) {
@@ -715,7 +708,6 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
   private void getSpaceLiveActivityGroups(Element spaceElement, Space space) {
     Element groupsElement = spaceElement.getChild(ELEMENT_NAME_SPACE_ROOT_LIVE_ACTIVITY_GROUPS);
     if (groupsElement != null) {
-      @SuppressWarnings("unchecked")
       List<Element> groupElements =
           groupsElement.getChildren(ELEMENT_NAME_SPACE_INDIVIDUAL_LIVE_ACTIVITY_GROUP);
       for (Element groupElement : groupElements) {
@@ -739,7 +731,6 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
     Element scriptsElement = rootElement.getChild(ELEMENT_NAME_ROOT_NAMED_SCRIPTS);
 
     if (scriptsElement != null) {
-      @SuppressWarnings("unchecked")
       List<Element> scriptElements =
           scriptsElement.getChildren(ELEMENT_NAME_INDIVIDUAL_NAMED_SCRIPT);
       for (Element scriptElement : scriptElements) {

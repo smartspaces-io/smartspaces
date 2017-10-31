@@ -350,7 +350,6 @@ public class JpaActivityRepository extends BaseActivityRepository {
     return new JpaSpace();
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public List<Space> getAllSpaces() {
     TypedQuery<Space> query = entityManager.createNamedQuery("spaceAll", Space.class);

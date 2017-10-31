@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import com.google.common.collect.Maps;
 
 import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.MessageSender;
 import io.smartspaces.service.web.WebSocketConnection;
 
 /**
@@ -31,8 +32,8 @@ import io.smartspaces.service.web.WebSocketConnection;
  *
  * @author Keith M. Hughes
  */
-public class BasicMultipleConnectionWebServerWebSocketHandlerFactory<M> implements
-    MultipleConnectionWebServerWebSocketHandlerFactory<M> {
+public class BasicMultipleConnectionWebServerWebSocketHandlerFactory<M>
+    implements MultipleConnectionWebServerWebSocketHandlerFactory<M> {
 
   /**
    * The client handler.
@@ -69,7 +70,7 @@ public class BasicMultipleConnectionWebServerWebSocketHandlerFactory<M> implemen
   }
 
   @Override
-  public WebServerWebSocketHandler<M> newWebSocketHandler(WebSocketConnection<M> connection) {
+  public WebServerWebSocketMessageHandler<M> newWebSocketHandler(WebSocketConnection<M> connection) {
     return new MyWebServerWebSocketHandler(connection);
   }
 
@@ -84,12 +85,17 @@ public class BasicMultipleConnectionWebServerWebSocketHandlerFactory<M> implemen
   }
 
   @Override
+  public MessageSender<M> getChannelMessageSender(String channelId) {
+    return handlers.get(channelId);
+  }
+
+  @Override
   public void sendMessage(String channelId, M data) {
-    MyWebServerWebSocketHandler handler = handlers.get(channelId);
-    if (handler != null) {
-      handler.sendMessage(data);
+    MessageSender<M> sender = getChannelMessageSender(channelId);
+    if (sender != null) {
+      sender.sendMessage(data);
     } else {
-      log.error(String.format("Unknown web socket channel ID %s", channelId));
+      log.formatError("Unknown web socket channel ID %s", channelId);
     }
   }
 

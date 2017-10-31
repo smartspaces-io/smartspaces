@@ -19,7 +19,7 @@ package io.smartspaces.activity.configuration;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.Activity;
-import io.smartspaces.activity.ActivityResourceConfigurator;
+import io.smartspaces.activity.ResourceConfigurator;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.system.SmartSpacesEnvironment;
@@ -34,7 +34,19 @@ import java.io.File;
  * @author Keith M. Hughes
  */
 public class WebServerActivityResourceConfigurator
-    implements ActivityResourceConfigurator<WebServer> {
+    implements ResourceConfigurator<WebServer> {
+
+  /**
+   * Configuration property suffix giving the port the web server should be
+   * started on.
+   */
+  public static final String CONFIGURATION_NAME_SUFFIX_WEB_SERVER_ENABLE = ".web.server.enable";
+
+  /**
+   * Configuration property suffix giving the port the web server should be
+   * started on.
+   */
+  public static final boolean CONFIGURATION_VALUE_DEFAULT_SUFFIX_WEB_SERVER_ENABLE = true;
 
   /**
    * Configuration property suffix giving the port the web server should be
@@ -113,6 +125,11 @@ public class WebServerActivityResourceConfigurator
   public static final boolean CONFIGURATION_VALUE_DEFAULT_WEB_SERVER_ENABLE_CROSS_ORIGIN = true;
 
   /**
+   * {@code true} if the web server should be enabled.
+   */
+  private boolean webServerEnable;
+
+  /**
    * The base URL that this web server works with (hostname and port).
    */
   private String webBaseUrl;
@@ -183,6 +200,9 @@ public class WebServerActivityResourceConfigurator
 
     Configuration configuration = activity.getConfiguration();
 
+    webServerEnable = configuration.getPropertyBoolean(
+        configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEB_SERVER_ENABLE,
+        CONFIGURATION_VALUE_DEFAULT_SUFFIX_WEB_SERVER_ENABLE);
     webSocketUriPrefix = configuration.getPropertyString(
         configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_WEB_SERVER_WEBSOCKET_URI);
 
@@ -257,11 +277,12 @@ public class WebServerActivityResourceConfigurator
     if (fileSupport.isDirectory(webContentBaseDir)) {
       String contentFallbackLocation = configuration.getPropertyString(
           configurationPrefix + CONFIGURATION_NAME_SUFFIX_WEBAPP_CONTENT_FALLBACK_LOCATION);
-      
+
       activity.getLog().formatInfo(
           "Adding static content directory for base webapp to webserver: %s with fallback content %s",
           webContentBaseDir.getAbsolutePath(), contentFallbackLocation);
-      webServer.addStaticContentHandler(webContentPath, webContentBaseDir, null, contentFallbackLocation, null);
+      webServer.addStaticContentHandler(webContentPath, webContentBaseDir, null,
+          contentFallbackLocation, null);
       System.out.println(webContentBaseDir);
     } else if (fileSupport.isFile(webContentBaseDir)) {
       activity.getLog().formatWarn(

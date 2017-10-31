@@ -21,12 +21,10 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.ros.node.ConnectedNode;
 import org.ros.node.Node;
-import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeListener;
 import org.ros.osgi.common.RosEnvironment;
 import org.ros.osgi.master.core.RosMasterController;
@@ -35,7 +33,6 @@ import org.ros.osgi.master.core.RosMasterControllerListener;
 import org.ros.osgi.master.core.internal.StandardRosMasterControllerFactory;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
 
 /**
  * A ROS context for the Smart Spaces Master.

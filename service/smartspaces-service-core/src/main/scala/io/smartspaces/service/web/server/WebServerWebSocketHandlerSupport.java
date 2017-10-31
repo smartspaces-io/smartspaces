@@ -23,12 +23,12 @@ import io.smartspaces.service.web.WebSocketHandlerSupport;
 
 /**
  * A support class which implements do nothing default methods for
- * {@link WebServerWebSocketHandler} classes.
+ * {@link WebServerWebSocketMessageHandler} classes.
  *
  * @author Keith M. Hughes
  */
 public class WebServerWebSocketHandlerSupport<M> extends WebSocketHandlerSupport<M>
-    implements WebServerWebSocketHandler<M> {
+    implements WebServerWebSocketMessageHandler<M> {
 
   /**
    * The connection to the remote endpoint.

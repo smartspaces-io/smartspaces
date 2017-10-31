@@ -73,8 +73,8 @@ when directly specified. Example: if --activity is supplied, the live activities
 inferred. However, if --live-activity is supplied, they will not be inferred.
 
 Usage:
-    isdo [-?]
-    isdo [--flag [VALUE]? ...] [PATH...]?
+    ssdo [-?]
+    ssdo [--flag [VALUE]? ...] [PATH...]?
 
 General Flags:
     --help|-?                       Show help.
@@ -193,11 +193,11 @@ Examples:
 
     Build and Run an Activity
 
-        isdo --build --upload --deploy --reactivate
+        ssdo --build --upload --deploy --reactivate
 
     Install an Exhibit
 
-        GROUP=`isdo --group-delete --group-create Example --lenient` && \\
+        GROUP=`ssdo --group-delete --group-create Example --lenient` && \\
         isdo --upload --path /path/to/exhibit && \\
         isdo -C C1 -A com.example.a -c A  -d --config a.conf  -ga -G $GROUP && \\
         isdo -C C1 -A com.example.b -c B1 -d --config b1.conf -ga -G $GROUP && \\

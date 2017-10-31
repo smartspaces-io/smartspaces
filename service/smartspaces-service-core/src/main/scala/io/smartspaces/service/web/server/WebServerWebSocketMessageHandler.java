@@ -28,5 +28,5 @@ import io.smartspaces.service.web.WebSocketMessageHandler;
  *
  * @author Keith M. Hughes
  */
-public interface WebServerWebSocketHandler<M> extends WebSocketMessageHandler<M>, MessageSender<M> {
+public interface WebServerWebSocketMessageHandler<M> extends WebSocketMessageHandler<M>, MessageSender<M> {
 }

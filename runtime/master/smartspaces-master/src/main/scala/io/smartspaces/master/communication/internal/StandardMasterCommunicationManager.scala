@@ -91,6 +91,8 @@ class StandardMasterCommunicationManager extends MasterCommunicationManager with
         zeroconfService.registerService(new StandardZeroconfServiceInfo(masterControlServerServiceType, zeroconfName, null, host, port, 0, 0))
       }
     })
+    
+    spaceEnvironment.getLog.info(s"Master Communication manager webserver at port ${webServer.getPort}")
   }
 
   override def onShutdown(): Unit = {

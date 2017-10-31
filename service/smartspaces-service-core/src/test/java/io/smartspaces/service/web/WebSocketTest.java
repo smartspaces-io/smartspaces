@@ -20,7 +20,7 @@ package io.smartspaces.service.web;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.messaging.codec.IdentityMessageCodec;
 import io.smartspaces.service.web.client.internal.netty.NettyWebSocketClient;
-import io.smartspaces.service.web.server.WebServerWebSocketHandler;
+import io.smartspaces.service.web.server.WebServerWebSocketMessageHandler;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerSupport;
 import io.smartspaces.service.web.server.internal.netty.NettyWebServer;
@@ -82,8 +82,8 @@ public class WebSocketTest {
     final AtomicBoolean onConnectCalledServer = new AtomicBoolean(false);
     final AtomicBoolean onCloseCalledServer = new AtomicBoolean(false);
 
-    final AtomicReference<WebServerWebSocketHandler<String>> serverHandler =
-        new AtomicReference<WebServerWebSocketHandler<String>>();
+    final AtomicReference<WebServerWebSocketMessageHandler<String>> serverHandler =
+        new AtomicReference<WebServerWebSocketMessageHandler<String>>();
 
     int port = 9001;
     String webSocketUriPrefix = "websockettest";
@@ -107,8 +107,8 @@ public class WebSocketTest {
     server.setWebSocketHandlerFactory(webSocketUriPrefix, new WebServerWebSocketHandlerFactory<String>() {
 
       @Override
-      public WebServerWebSocketHandler<String> newWebSocketHandler(WebSocketConnection<String> connection) {
-        WebServerWebSocketHandler<String> handler = new WebServerWebSocketHandlerSupport<String>(connection) {
+      public WebServerWebSocketMessageHandler<String> newWebSocketHandler(WebSocketConnection<String> connection) {
+        WebServerWebSocketMessageHandler<String> handler = new WebServerWebSocketHandlerSupport<String>(connection) {
 
           @Override
           public void onNewMessage(String message) {

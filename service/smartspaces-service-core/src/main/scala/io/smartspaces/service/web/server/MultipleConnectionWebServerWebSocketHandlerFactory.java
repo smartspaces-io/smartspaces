@@ -28,27 +28,37 @@ import io.smartspaces.messaging.MessageSender;
  * socket clients.
  * 
  * @param <M>
- *          the message type for the web socket connections
+ *            the message type for the web socket connections
  *
  * @author Keith M. Hughes
  */
 public interface MultipleConnectionWebServerWebSocketHandlerFactory<M>
-    extends WebServerWebSocketHandlerFactory<M>, MessageSender<M>, ChannelMessageSender<M> {
+		extends WebServerWebSocketHandlerFactory<M>, MessageSender<M>, ChannelMessageSender<M> {
 
-  /**
-   * Are there any web sockets connected?
-   *
-   * @return {@code true} if there are any connections
-   */
-  boolean areWebSocketsConnected();
+	/**
+	 * Are there any web sockets connected?
+	 *
+	 * @return {@code true} if there are any connections
+	 */
+	boolean areWebSocketsConnected();
 
-  /**
-   * Is the web socket for a given channel connected?
-   * 
-   * @param channelId
-   *          the channel of the ID to check
-   *
-   * @return {@code true} if there is a connection.
-   */
-  boolean isWebSocketConnected(String channelId);
+	/**
+	 * Is the web socket for a given channel connected?
+	 * 
+	 * @param channelId
+	 *            the ID of the channel to check
+	 *
+	 * @return {@code true} if there is a connection.
+	 */
+	boolean isWebSocketConnected(String channelId);
+
+	/**
+	 * Get the message sender associated with a particular channel ID.
+	 * 
+	 * @param channelId
+	 *            the ID of the channel of the handler
+	 *            
+	 * @return the handler, or {@code null} if no such handler
+	 */
+	MessageSender<M> getChannelMessageSender(String channelId);
 }

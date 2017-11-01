@@ -117,7 +117,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   }
 
   @Override
-  public Map<String, Object> saveActivity(SimpleActivity activityData,
+  public Map<String, Object> saveActivity(SimpleActivity activityDescription,
       InputStream activityContentStream) {
     try {
       Activity finalActivity = resourceRepositoryManager.addActivity(activityContentStream);
@@ -355,8 +355,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   }
 
   @Override
-  public Map<String, Object> getLiveActivityView(String id) {
-    LiveActivity liveactivity = activityRepository.getLiveActivityByTypedId(id);
+  public Map<String, Object> getLiveActivityView(String typedId) {
+    LiveActivity liveactivity = activityRepository.getLiveActivityByTypedId(typedId);
     if (liveactivity != null) {
       Map<String, Object> data = new HashMap<>();
 
@@ -364,13 +364,13 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
       return SmartSpacesMessagesSupport.getSuccessResponse(data);
     } else {
-      return getNoSuchLiveActivityResponse(id);
+      return getNoSuchLiveActivityResponse(typedId);
     }
   }
 
   @Override
-  public Map<String, Object> getLiveActivityFullView(String id) {
-    LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(id);
+  public Map<String, Object> getLiveActivityFullView(String typedId) {
+    LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(typedId);
     if (liveActivity != null) {
       Map<String, Object> responseData = new HashMap<>();
 
@@ -387,7 +387,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
       return SmartSpacesMessagesSupport.getSuccessResponse(responseData);
     } else {
-      return getNoSuchLiveActivityResponse(id);
+      return getNoSuchLiveActivityResponse(typedId);
     }
   }
 
@@ -398,14 +398,14 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   }
 
   @Override
-  public Map<String, Object> deleteLiveActivity(String id) {
-    LiveActivity liveActivity = activityRepository.getLiveActivityById(id);
+  public Map<String, Object> deleteLiveActivity(String typedId) {
+    LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(typedId);
     if (liveActivity != null) {
       activityRepository.deleteLiveActivity(liveActivity);
 
       return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
     } else {
-      return getNoSuchLiveActivityResponse(id);
+      return getNoSuchLiveActivityResponse(typedId);
     }
   }
 
@@ -467,8 +467,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   }
 
   @Override
-  public Map<String, Object> getLiveActivityConfiguration(String id) {
-    LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(id);
+  public Map<String, Object> getLiveActivityConfiguration(String typedId) {
+    LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(typedId);
     if (liveActivity != null) {
       Map<String, String> data = new HashMap<>();
 
@@ -481,21 +481,21 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
       return SmartSpacesMessagesSupport.getSuccessResponse(data);
     } else {
-      return getNoSuchLiveActivityResponse(id);
+      return getNoSuchLiveActivityResponse(typedId);
     }
   }
 
   @Override
-  public Map<String, Object> configureLiveActivity(String id, Map<String, String> map) {
-    LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(id);
+  public Map<String, Object> configureLiveActivity(String typedId, Map<String, String> newConfigurationMap) {
+    LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(typedId);
     if (liveActivity != null) {
-      if (saveLiveActivityConfiguration(liveActivity, map)) {
+      if (saveLiveActivityConfiguration(liveActivity, newConfigurationMap)) {
         activityRepository.saveLiveActivity(liveActivity);
       }
 
       return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
     } else {
-      return getNoSuchLiveActivityResponse(id);
+      return getNoSuchLiveActivityResponse(typedId);
     }
   }
 
@@ -563,23 +563,23 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    *
    * @param liveactivity
    *          the live activity being configured
-   * @param map
+   * @param newConfigurationMap
    *          the map representing the new configuration
    *
    * @return {@code true} if there was a change to the configuration
    */
-  private boolean saveLiveActivityConfiguration(LiveActivity liveactivity, Map<String, String> map) {
+  private boolean saveLiveActivityConfiguration(LiveActivity liveactivity, Map<String, String> newConfigurationMap) {
     ActivityConfiguration configuration = liveactivity.getConfiguration();
     if (configuration != null) {
-      return mergeActivityConfigurationParameters(map, configuration);
+      return mergeActivityConfigurationParameters(newConfigurationMap, configuration);
     } else {
       // No configuration. If nothing in submission, nothing has changed.
       // Otherwise add everything.
-      if (map.isEmpty()) {
+      if (newConfigurationMap.isEmpty()) {
         return false;
       }
 
-      newLiveActivityConfiguration(liveactivity, map);
+      newLiveActivityConfiguration(liveactivity, newConfigurationMap);
 
       return true;
     }
@@ -588,7 +588,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   /**
    * merge the values in the map with the configuration.
    *
-   * @param map
+   * @param newConfigurationMap
    *          map of new name/value pairs
    * @param configuration
    *          the configuration which may be changed
@@ -596,7 +596,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    * @return {@code true} if there were any parameters changed in the
    *         configuration
    */
-  private boolean mergeActivityConfigurationParameters(Map<String, String> map,
+  private boolean mergeActivityConfigurationParameters(Map<String, String> newConfigurationMap,
       ActivityConfiguration configuration) {
     boolean changed = false;
 
@@ -604,7 +604,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
     // Delete all items removed
     for (Entry<String, ConfigurationParameter> entry : existingMap.entrySet()) {
-      if (!map.containsKey(entry.getKey())) {
+      if (!newConfigurationMap.containsKey(entry.getKey())) {
         changed = true;
 
         configuration.removeParameter(entry.getValue());
@@ -614,7 +614,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
     // Now everything in the submitted map will be check. if the name exists
     // in the old configuration, we will try and change the value. if the
     // name doesn't exist, add it.
-    for (Entry<String, String> entry : map.entrySet()) {
+    for (Entry<String, String> entry : newConfigurationMap.entrySet()) {
       ConfigurationParameter parameter = existingMap.get(entry.getKey());
       if (parameter != null) {
         // Existed
@@ -661,20 +661,11 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   }
 
   @Override
-  public Map<String, Object> updateLiveActivityMetadata(String id, Object metadataCommandObj) {
-    if (!(metadataCommandObj instanceof Map)) {
-      return SmartSpacesMessagesSupport.getFailureResponse(
-          MasterApiMessages.MESSAGE_SPACE_CALL_ARGS_NOMAP,
-          MasterApiMessages.MESSAGE_SPACE_DETAIL_CALL_ARGS_NOMAP);
-    }
-
-    @SuppressWarnings("unchecked")
-    Map<String, Object> metadataCommand = (Map<String, Object>) metadataCommandObj;
-
+  public Map<String, Object> updateLiveActivityMetadata(String typedId, Map<String, Object> metadataCommand) {
     try {
-      LiveActivity activity = activityRepository.getLiveActivityByTypedId(id);
+      LiveActivity activity = activityRepository.getLiveActivityByTypedId(typedId);
       if (activity == null) {
-        return getNoSuchLiveActivityResponse(id);
+        return getNoSuchLiveActivityResponse(typedId);
       }
 
       String command = (String) metadataCommand.get(MasterApiMessages.MASTER_API_PARAMETER_COMMAND);

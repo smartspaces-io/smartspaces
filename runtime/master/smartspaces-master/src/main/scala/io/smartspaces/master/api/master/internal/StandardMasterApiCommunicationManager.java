@@ -22,7 +22,7 @@ import io.smartspaces.master.api.master.MasterApiActivityManager;
 import io.smartspaces.master.api.master.MasterApiAutomationManager;
 import io.smartspaces.master.api.master.MasterApiMasterSupportManager;
 import io.smartspaces.master.api.master.MasterApiSpaceControllerManager;
-import io.smartspaces.master.api.master.MasterWebsocketManager;
+import io.smartspaces.master.api.master.MasterApiCommunicationManager;
 import io.smartspaces.master.api.messages.MasterApiMessages;
 import io.smartspaces.master.communication.MasterCommunicationManager;
 import io.smartspaces.master.event.BaseMasterEventListener;
@@ -57,7 +57,7 @@ import java.io.File;
 import java.util.Map;
 
 /**
- * A basic {@link MasterWebsocketManager} implementation.
+ * A basic {@link MasterApiCommunicationManager} implementation.
  *
  * <p>
  * At the moment this only sends activity and controller events to anyone
@@ -65,8 +65,8 @@ import java.util.Map;
  *
  * @author Keith M. Hughes
  */
-public class StandardMasterWebsocketManager extends BaseMasterApiManager
-    implements MasterWebsocketManager, MultipleConnectionWebSocketHandler<Map<String, Object>> {
+public class StandardMasterApiCommunicationManager extends BaseMasterApiManager
+    implements MasterApiCommunicationManager, MultipleConnectionWebSocketHandler<Map<String, Object>> {
 
   /**
    * The file name prefix for an activity upload.
@@ -162,7 +162,7 @@ public class StandardMasterWebsocketManager extends BaseMasterApiManager
         new BasicMultipleConnectionWebServerWebSocketHandlerFactory<Map<String, Object>>(this,
             spaceEnvironment.getLog());
 
-    webServer.setWebSocketHandlerFactory(MasterWebsocketManager.MASTERAPI_WEBSOCKET_URI_PREFIX,
+    webServer.setWebSocketHandlerFactory(MasterApiCommunicationManager.MASTERAPI_WEBSOCKET_URI_PREFIX,
         webSocketHandlerFactory, new MapStringMessageCodec());
 
     masterEventManager.addListener(masterEventListener);

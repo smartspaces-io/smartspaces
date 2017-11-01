@@ -452,7 +452,7 @@
 	</bean>
 
 	<bean id="smartspaces.master.websocket"
-		class="io.smartspaces.master.api.master.internal.StandardMasterWebsocketManager"
+		class="io.smartspaces.master.api.master.internal.StandardMasterApiCommunicationManager"
 		destroy-method="shutdown" init-method="startup">
 	  <property name="masterEventManager" ref="smartspaces.master.event.manager" />
 

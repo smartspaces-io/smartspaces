@@ -43,14 +43,14 @@ public interface MasterApiActivityManager extends ManagedResource {
    * Includes saving the activity file in the activity repository. The method
    * also closes the input stream regardless of internal errors.
    *
-   * @param activity
-   *          the activity
+   * @param activityDescription
+   *          the activity description
    * @param activityContentStream
    *          the input stream containing the contents of the activity
    *
    * @return the master API message for the activity view for the activity
    */
-  Map<String, Object> saveActivity(SimpleActivity activity, InputStream activityContentStream);
+  Map<String, Object> saveActivity(SimpleActivity activityDescription, InputStream activityContentStream);
 
   /**
    * Get all activities that meet a filter.
@@ -58,7 +58,8 @@ public interface MasterApiActivityManager extends ManagedResource {
    * @param filter
    *          the filter, can be {@code null}
    *
-   * @return the master API message for all activities that meet the filter
+   * @return the Master API message for all activities that pass the filter, all
+   *         are returned if filter is {@code null)
    */
   Map<String, Object> getActivitiesByFilter(String filter);
 
@@ -96,7 +97,8 @@ public interface MasterApiActivityManager extends ManagedResource {
    * map</li>
    * <li>modify - data contains a map, replace just the fields found in the map
    * with the values found in the map</li>
-   * <li>delete - data contains a list of keys, remove all keys found in data</li>
+   * <li>delete - data contains a list of keys, remove all keys found in
+   * data</li>
    * </ul>
    *
    * @param id
@@ -104,7 +106,7 @@ public interface MasterApiActivityManager extends ManagedResource {
    * @param metadataCommandObj
    *          the modification command object
    *
-   * @return a JSON response object
+   * @return the master API response object
    */
   Map<String, Object> updateActivityMetadata(String id, Object metadataCommandObj);
 
@@ -114,29 +116,30 @@ public interface MasterApiActivityManager extends ManagedResource {
    * @param filter
    *          the filter, can be {@code null}
    *
-   * @return the master API message for all live activities that meet the filter
+   * @return the master API response message for all live activities that pass
+   *         the filter, all are returned if filter is {@code null)
    */
   Map<String, Object> getLiveActivitiesByFilter(String filter);
 
   /**
    * Get the view of a live activity.
    *
-   * @param id
-   *          ID for the live activity
+   * @param typedId
+   *          the typed ID for the live activity
    *
    * @return the master API message for the live activity view
    */
-  Map<String, Object> getLiveActivityView(String id);
+  Map<String, Object> getLiveActivityView(String typedId);
 
   /**
    * Get the full view of a live activity.
    *
-   * @param id
-   *          ID for the live activity
+   * @param typedId
+   *          the typed ID for the live activity
    *
-   * @return the master API message for the live activity fullview
+   * @return the master API message for the live activity full view
    */
-  Map<String, Object> getLiveActivityFullView(String id);
+  Map<String, Object> getLiveActivityFullView(String typedId);
 
   /**
    * Can live activities be created?
@@ -151,12 +154,12 @@ public interface MasterApiActivityManager extends ManagedResource {
    * <p>
    * Does nothing if there is no live activity with the given ID.
    *
-   * @param id
-   *          ID of the live activity
+   * @param typedId
+   *          the typed ID of the live activity
    *
    * @return API response to deletion
    */
-  Map<String, Object> deleteLiveActivity(String id);
+  Map<String, Object> deleteLiveActivity(String typedId);
 
   /**
    * Create a new live activity.
@@ -174,24 +177,24 @@ public interface MasterApiActivityManager extends ManagedResource {
   /**
    * Get the configuration of a live activity.
    *
-   * @param id
-   *          ID of the live activity
+   * @param typedId
+   *          the typed ID of the live activity
    *
    * @return the configuration
    */
-  Map<String, Object> getLiveActivityConfiguration(String id);
+  Map<String, Object> getLiveActivityConfiguration(String typedId);
 
   /**
    * Configure a live activity.
    *
-   * @param id
-   *          ID of the live activity
-   * @param map
+   * @param typedId
+   *          the typed ID of the live activity
+   * @param newConfigurationMap
    *          the new configuration
    *
    * @return API response
    */
-  Map<String, Object> configureLiveActivity(String id, Map<String, String> map);
+  Map<String, Object> configureLiveActivity(String typedId, Map<String, String> newConfigurationMap);
 
   /**
    * Edit a live activity.
@@ -271,7 +274,8 @@ public interface MasterApiActivityManager extends ManagedResource {
    * @param filter
    *          the filter for the group, can be {@code null}
    *
-   * @return the master API message for all groups
+   * @return the Master API message for all groups that pass the filter, all are
+   *         returned if filter is {@code null)
    */
   Map<String, Object> getLiveActivityGroupsByFilter(String filter);
 
@@ -286,17 +290,19 @@ public interface MasterApiActivityManager extends ManagedResource {
    * map</li>
    * <li>modify - data contains a map, replace just the fields found in the map
    * with the values found in the map</li>
-   * <li>delete - data contains a list of keys, remove all keys found in data</li>
+   * <li>delete - data contains a list of keys, remove all keys found in
+   * data</li>
    * </ul>
    *
-   * @param id
-   *          ID of the live activity
-   * @param metadataCommandObj
+   * @param typedId
+   *          typed ID of the live activity
+   * @param metadataCommand
    *          the modification command
    *
-   * @return a JSON response object
+   * @return the Master API response object
    */
-  Map<String, Object> updateLiveActivityMetadata(String id, Object metadataCommandObj);
+  Map<String, Object> updateLiveActivityMetadata(String typedId,
+      Map<String, Object> metadataCommand);
 
   /**
    * Delete an activity group from the activity repository.
@@ -322,7 +328,8 @@ public interface MasterApiActivityManager extends ManagedResource {
    * map</li>
    * <li>modify - data contains a map, replace just the fields found in the map
    * with the values found in the map</li>
-   * <li>delete - data contains a list of keys, remove all keys found in data</li>
+   * <li>delete - data contains a list of keys, remove all keys found in
+   * data</li>
    * </ul>
    *
    * @param id
@@ -330,7 +337,7 @@ public interface MasterApiActivityManager extends ManagedResource {
    * @param metadataCommandObj
    *          the modification command
    *
-   * @return a JSON response object
+   * @return the Master API response object
    */
   Map<String, Object> updateLiveActivityGroupMetadata(String id, Object metadataCommandObj);
 
@@ -341,7 +348,7 @@ public interface MasterApiActivityManager extends ManagedResource {
    * @param id
    *          ID for the activity
    *
-   * @return the master API message for the activity view
+   * @return the Master API message for the activity view
    */
   Map<String, Object> getActivityFullView(String id);
 
@@ -351,7 +358,8 @@ public interface MasterApiActivityManager extends ManagedResource {
    * @param filter
    *          the filter, can be {@code null}
    *
-   * @return the master API response
+   * @return the Master API response for spaces that pass the filter, all are
+   *         returned if filter is {@code null)
    */
   Map<String, Object> getSpacesByFilter(String filter);
 
@@ -361,7 +369,7 @@ public interface MasterApiActivityManager extends ManagedResource {
    * @param id
    *          ID of the space
    *
-   * @return the master API response
+   * @return the Master API response
    */
   Map<String, Object> getSpaceView(String id);
 
@@ -371,7 +379,7 @@ public interface MasterApiActivityManager extends ManagedResource {
    * @param id
    *          ID of the space
    *
-   * @return the master API response
+   * @return the Master API response
    */
   Map<String, Object> getSpaceFullView(String id);
 
@@ -381,7 +389,7 @@ public interface MasterApiActivityManager extends ManagedResource {
    * @param id
    *          ID of the space
    *
-   * @return the master API response
+   * @return the Master API response
    */
   Map<String, Object> getSpaceLiveActivityGroupView(String id);
 
@@ -394,7 +402,7 @@ public interface MasterApiActivityManager extends ManagedResource {
    * @param id
    *          ID of the space
    *
-   * @return the master API response
+   * @return the Master API response
    */
   Map<String, Object> deleteSpace(String id);
 
@@ -409,7 +417,8 @@ public interface MasterApiActivityManager extends ManagedResource {
    * map</li>
    * <li>modify - data contains a map, replace just the fields found in the map
    * with the values found in the map</li>
-   * <li>delete - data contains a list of keys, remove all keys found in data</li>
+   * <li>delete - data contains a list of keys, remove all keys found in
+   * data</li>
    * </ul>
    *
    * @param id
@@ -417,7 +426,7 @@ public interface MasterApiActivityManager extends ManagedResource {
    * @param metadataCommandObj
    *          the modification command
    *
-   * @return the master API response
+   * @return the Master API response
    */
   Map<String, Object> updateSpaceMetadata(String id, Object metadataCommandObj);
 }

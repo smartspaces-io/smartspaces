@@ -20,11 +20,11 @@ package io.smartspaces.master.api.master;
 import io.smartspaces.resource.managed.ManagedResource;
 
 /**
- * A websocket connection to the master.
+ * A communication manager that provides access to the Master API.
  *
  * @author Keith M. Hughes
  */
-public interface MasterWebsocketManager extends ManagedResource {
+public interface MasterApiCommunicationManager extends ManagedResource {
 
   /**
    * Prefix for the master API websocket endpoint.

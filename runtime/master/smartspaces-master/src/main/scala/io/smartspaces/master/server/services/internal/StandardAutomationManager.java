@@ -244,7 +244,7 @@ public class StandardAutomationManager implements AutomationManager {
 
         if (SmartSpacesMessagesSupport.isSuccessResponse(activityResponse)) {
           if (watchedFolder.endsWith(ACTIVITY_DEPLOY_DIRECTORY)) {
-            masterApiSpaceControllerManager.deployAllLiveActivityInstances(
+            masterApiSpaceControllerManager.deployAllActivityLiveActivities(
                 (String) SmartSpacesMessagesSupport.getResponseDataMap(activityResponse)
                     .get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID));
           }

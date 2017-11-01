@@ -248,7 +248,7 @@ public class MasterFileControl implements DirectoryWatcherListener {
       } else if (COMMAND_SPACE_CONTROLLERS_SOFT_RESTART_ALL.equalsIgnoreCase(command)) {
         masterApiSpaceControllerManager.softRestartAllSpaceControllers();
       } else if (COMMAND_SPACE_CONTROLLERS_SHUTDOWN_ALL_ACTIVITIES.equalsIgnoreCase(command)) {
-        masterApiSpaceControllerManager.shutdownAllActivitiesAllSpaceControllers();
+        masterApiSpaceControllerManager.shutdownAllLiveActivitiesAllSpaceControllers();
       } else if (command.startsWith(COMMAND_PREFIX_LIVE_ACTIVITY_GROUP_STARTUP)) {
         String id = command.substring(COMMAND_PREFIX_LIVE_ACTIVITY_GROUP_STARTUP.length());
 

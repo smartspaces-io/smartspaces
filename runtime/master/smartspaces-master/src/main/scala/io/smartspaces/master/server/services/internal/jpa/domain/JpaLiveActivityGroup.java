@@ -175,7 +175,7 @@ public class JpaLiveActivityGroup implements LiveActivityGroup {
   }
 
   @Override
-  public void clearActivities() {
+  public void clearLiveActivities() {
     synchronized (liveActivities) {
       liveActivities.clear();
     }

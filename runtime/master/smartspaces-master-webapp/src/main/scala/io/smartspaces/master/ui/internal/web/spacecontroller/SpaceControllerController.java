@@ -204,7 +204,7 @@ public class SpaceControllerController extends BaseActiveSpaceMasterController {
       method = RequestMethod.GET)
   public @ResponseBody Map<String, ? extends Object> shutdownAllAppsController(
       @PathVariable String id) {
-    return masterApiSpaceControllerManager.shutdownAllActivities(id);
+    return masterApiSpaceControllerManager.shutdownAllLiveActivities(id);
   }
 
   @RequestMapping(value = "/spacecontroller/{id}/status.json", method = RequestMethod.GET)
@@ -214,7 +214,7 @@ public class SpaceControllerController extends BaseActiveSpaceMasterController {
 
   @RequestMapping(value = "/spacecontroller/{id}/deploy.json", method = RequestMethod.GET)
   public @ResponseBody Map<String, ? extends Object> deployLiveActivities(@PathVariable String id) {
-    return masterApiSpaceControllerManager.deployAllActivityInstancesSpaceController(id);
+    return masterApiSpaceControllerManager.deployAllLiveActivitiesSpaceController(id);
   }
 
   @RequestMapping(value = "/spacecontroller/all/connect.html", method = RequestMethod.GET)
@@ -300,7 +300,7 @@ public class SpaceControllerController extends BaseActiveSpaceMasterController {
   @RequestMapping(value = "/spacecontroller/all/activities/shutdown.html",
       method = RequestMethod.GET)
   public String shutdownAllActivitiesAllControllers() {
-    masterApiSpaceControllerManager.shutdownAllActivitiesAllSpaceControllers();
+    masterApiSpaceControllerManager.shutdownAllLiveActivitiesAllSpaceControllers();
 
     return "redirect:/spacecontroller/all.html";
   }

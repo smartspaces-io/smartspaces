@@ -936,6 +936,40 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   }
 
   @Override
+  public Map<String, Object> createLiveActivityGroup(Map<String, Object> args) {
+
+    String name = (String) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_NAME);
+    if (name == null || name.trim().isEmpty()) {
+      return SmartSpacesMessagesSupport.getFailureResponse(
+          MasterApiMessages.MESSAGE_SPACE_CALL_ARGS_MISSING, "Missing argument "
+              + MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_NAME);
+    }
+
+    // This field is not required.
+    String description =
+        (String) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_DESCRIPTION);
+
+    LiveActivityGroup liveActivityGroup = activityRepository.newLiveActivityGroup();
+    liveActivityGroup.setName(name);;
+    liveActivityGroup.setDescription(description);
+    
+    @SuppressWarnings("unchecked")
+    List<String> typedIds = (List<String>) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_LIVE_ACTIVITY_IDS);
+    if (typedIds != null) {
+      for (String typedId : typedIds) {
+        LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(typedId);
+        if (liveActivity != null ) {
+          liveActivityGroup.addLiveActivity(liveActivity);
+        }
+      }
+    }
+    
+    liveActivityGroup = activityRepository.saveLiveActivityGroup(liveActivityGroup);
+
+    return SmartSpacesMessagesSupport.getSuccessResponse(getLiveActivityGroupApiData(liveActivityGroup));
+  }
+
+  @Override
   public Map<String, Object> getLiveActivityGroupView(String id) {
     LiveActivityGroup liveActivityGroup = activityRepository.getLiveActivityGroupById(id);
     if (liveActivityGroup != null) {

@@ -164,9 +164,6 @@ public interface MasterApiActivityManager extends ManagedResource {
   /**
    * Create a new live activity.
    *
-   * <p>
-   * Does nothing if there is no live activity with the given ID.
-   *
    * @param args
    *          the arguments for the live activity creation
    *
@@ -247,6 +244,16 @@ public interface MasterApiActivityManager extends ManagedResource {
    *          the JSON map to add the data into
    */
   void getLiveActivityStatusApiData(LiveActivity activity, Map<String, Object> data);
+
+  /**
+   * Create a new live activity group.
+   *
+   * @param args
+   *          the arguments for the live activity group creation
+   *
+   * @return API response to creation
+   */
+  Map<String, Object> createLiveActivityGroup(Map<String, Object> args);
 
   /**
    * Get the view of a live activity group.

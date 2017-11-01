@@ -72,7 +72,7 @@ public class StandardMasterApiControllerManagerTest {
   public void testLiveActivityTempClean() {
     String id = "1234";
     LiveActivity controller = Mockito.mock(LiveActivity.class);
-    Mockito.when(activityRepository.getLiveActivityById(id)).thenReturn(controller);
+    Mockito.when(activityRepository.getLiveActivityByTypedId(id)).thenReturn(controller);
 
     manager.cleanLiveActivityTempData(id);
 
@@ -87,7 +87,7 @@ public class StandardMasterApiControllerManagerTest {
   public void testLiveActivityPermanentClean() {
     String id = "1234";
     LiveActivity controller = Mockito.mock(LiveActivity.class);
-    Mockito.when(activityRepository.getLiveActivityById(id)).thenReturn(controller);
+    Mockito.when(activityRepository.getLiveActivityByTypedId(id)).thenReturn(controller);
 
     manager.cleanLiveActivityPermanentData(id);
 

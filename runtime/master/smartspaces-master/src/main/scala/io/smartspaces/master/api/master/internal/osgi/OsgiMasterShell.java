@@ -239,7 +239,7 @@ public class OsgiMasterShell {
 
     for (String id : args) {
       System.out.format("Shutting down all apps on controller %s\n", id);
-      masterApiSpaceControllerManager.shutdownAllActivities(id);
+      masterApiSpaceControllerManager.shutdownAllLiveActivities(id);
     }
   }
 

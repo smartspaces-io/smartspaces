@@ -219,6 +219,12 @@ public class MasterApiMessages {
       MASTER_API_COMMAND_LIVE_ACTIVITY_GROUP_VIEW + "/full";
 
   /**
+   * Master API command for creating a live activity group.
+   */
+  public static final String MASTER_API_COMMAND_LIVE_ACTIVITY_GROUP_CREATE =
+      MASTER_API_COMMAND_PREFIX_LIVE_ACTIVITY_GROUP + "/create";
+
+  /**
    * Master API command for deploying a live activity group.
    */
   public static final String MASTER_API_COMMAND_LIVE_ACTIVITY_GROUP_DEPLOY =
@@ -690,6 +696,11 @@ public class MasterApiMessages {
    * Parameter name for the ID of an activity in the Master API message.
    */
   public static final String MASTER_API_PARAMETER_NAME_ACTIVITY_ID = "activityId";
+
+  /**
+   * Parameter name for a list of IDs for live activities in the Master API message.
+   */
+  public static final String MASTER_API_PARAMETER_NAME_LIVE_ACTIVITY_IDS = "liveActivityIds";
 
   /**
    * Parameter name for the ID of a space controller in the Master API message.

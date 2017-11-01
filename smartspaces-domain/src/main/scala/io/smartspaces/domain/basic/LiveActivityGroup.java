@@ -126,7 +126,7 @@ public interface LiveActivityGroup extends PersistedObject, Serializable {
   /**
    * Clear all live activities from the group.
    */
-  void clearActivities();
+  void clearLiveActivities();
 
   /**
    * Set the metadata for the live activity group.

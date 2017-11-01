@@ -47,54 +47,54 @@ public interface MasterApiSpaceControllerManager {
   /**
    * Get the full view of a space controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the space controller
    *
    * @return the Master API view of the space controller
    */
-  Map<String, Object> getSpaceControllerFullView(String id);
+  Map<String, Object> getSpaceControllerFullView(String typedId);
 
   /**
    * Get the view of a space controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the space controller
    *
    * @return the Master API view of the space controller
    */
-  Map<String, Object> getSpaceControllerView(String id);
+  Map<String, Object> getSpaceControllerView(String typedId);
 
   /**
    * Get the configuration of a space controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the space controller
    *
    * @return the configuration
    */
-  Map<String, Object> getSpaceControllerConfiguration(String id);
+  Map<String, Object> getSpaceControllerConfiguration(String typedId);
 
   /**
    * Set the configuration for a space controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the space controller
    * @param map
    *          the new configuration
    *
    * @return API response
    */
-  Map<String, Object> setSpaceControllerConfiguration(String id, Map<String, String> map);
+  Map<String, Object> setSpaceControllerConfiguration(String typedId, Map<String, String> map);
 
   /**
    * Configure a space controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the space controller
    *
    * @return API response
    */
-  Map<String, Object> configureSpaceController(String id);
+  Map<String, Object> configureSpaceController(String typedId);
 
   /**
    * Modify a space controller's metadata.
@@ -110,54 +110,54 @@ public interface MasterApiSpaceControllerManager {
    * <li>delete - data contains a list of keys, remove all keys found in data</li>
    * </ul>
    *
-   * @param id
+   * @param typedId
    *          ID of the space controller
    * @param metadataCommandObj
    *          the modification command
    *
    * @return the master API response
    */
-  Map<String, Object> updateSpaceControllerMetadata(String id, Object metadataCommandObj);
+  Map<String, Object> updateSpaceControllerMetadata(String typedId, Object metadataCommandObj);
 
   /**
    * Delete a controller from the controller repository.
    *
-   * @param id
+   * @param typedId
    *          ID of the controller.
    *
    * @return the Master API response
    */
-  Map<String, Object> deleteSpaceController(String id);
+  Map<String, Object> deleteSpaceController(String typedId);
 
   /**
    * Shut down a set of controllers controllers.
    *
-   * @param ids
+   * @param typedIds
    *          IDs of the controllers
    *
    * @return the Master API response
    */
-  Map<String, Object> shutdownSpaceControllers(List<String> ids);
+  Map<String, Object> shutdownSpaceControllers(List<String> typedIds);
 
   /**
    * Hard restart a set of controllers controllers.
    *
-   * @param ids
+   * @param typedIds
    *          IDs of the controllers
    *
    * @return the Master API response
    */
-  Map<String, Object> hardRestartSpaceControllers(List<String> ids);
+  Map<String, Object> hardRestartSpaceControllers(List<String> typedIds);
 
   /**
    * Soft restart a set of controllers controllers.
    *
-   * @param ids
+   * @param typedIds
    *          IDs of the controllers
    *
    * @return the Master API response
    */
-  Map<String, Object> softRestartSpaceControllers(List<String> ids);
+  Map<String, Object> softRestartSpaceControllers(List<String> typedIds);
 
   /**
    * Connect to all controllers in the repository.
@@ -216,12 +216,12 @@ public interface MasterApiSpaceControllerManager {
    * <p>
    * Illegal controller IDs will be ignored.
    *
-   * @param ids
+   * @param typedIds
    *          IDs of all controllers
    *
    * @return the Master API response
    */
-  Map<String, Object> connectToSpaceControllers(List<String> ids);
+  Map<String, Object> connectToSpaceControllers(List<String> typedIds);
 
   /**
    * Disconnect from all controllers listed.
@@ -229,12 +229,12 @@ public interface MasterApiSpaceControllerManager {
    * <p>
    * Illegal controller IDs will be ignored.
    *
-   * @param ids
+   * @param typedIds
    *          IDs of all controllers
    *
    * @return the Master API response
    */
-  Map<String, Object> disconnectFromSpaceControllers(List<String> ids);
+  Map<String, Object> disconnectFromSpaceControllers(List<String> typedIds);
 
   /**
    * Get a status from all controllers listed.
@@ -242,22 +242,22 @@ public interface MasterApiSpaceControllerManager {
    * <p>
    * Illegal controller IDs will be ignored.
    *
-   * @param ids
+   * @param typedIds
    *          IDs of all controllers
    *
    * @return the Master API response
    */
-  Map<String, Object> statusSpaceControllers(List<String> ids);
+  Map<String, Object> statusSpaceControllers(List<String> typedIds);
 
   /**
    * Clean the temp data folder for the specified controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the controller to clean
    *
    * @return the Master API response
    */
-  Map<String, Object> cleanSpaceControllerTempData(String id);
+  Map<String, Object> cleanSpaceControllerTempData(String typedId);
 
   /**
    * Clean the temp data folder for all controllers.
@@ -269,12 +269,12 @@ public interface MasterApiSpaceControllerManager {
   /**
    * Clean the permanent data folder for the controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the controller to clean
    *
    * @return the Master API response
    */
-  Map<String, Object> cleanSpaceControllerPermanentData(String id);
+  Map<String, Object> cleanSpaceControllerPermanentData(String typedId);
 
   /**
    * Clean the permanent data folder for all controllers.
@@ -286,12 +286,12 @@ public interface MasterApiSpaceControllerManager {
   /**
    * Clean the temp data folder for all live activities on a controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the controller to clean
    *
    * @return the Master API response
    */
-  Map<String, Object> cleanSpaceControllerActivitiesTempData(String id);
+  Map<String, Object> cleanSpaceControllerActivitiesTempData(String typedId);
 
   /**
    * Clean the temp data folder for all live activities on all controllers.
@@ -303,12 +303,12 @@ public interface MasterApiSpaceControllerManager {
   /**
    * Clean the permanent data folder for all live activities on a controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the controller to clean
    *
    * @return the Master API response
    */
-  Map<String, Object> cleanSpaceControllerActivitiesPermanentData(String id);
+  Map<String, Object> cleanSpaceControllerActivitiesPermanentData(String typedId);
 
   /**
    * Clean the permanent data folder all live activities on all controllers.
@@ -320,22 +320,22 @@ public interface MasterApiSpaceControllerManager {
   /**
    * Capture the data bundle for the given controller ID.
    *
-   * @param id
+   * @param typedId
    *          Id of the target controller
    *
    * @return the Master API response
    */
-  Map<String, Object> captureDataSpaceController(String id);
+  Map<String, Object> captureDataSpaceController(String typedId);
 
   /**
    * Restore the data bundle for the given controller ID.
    *
-   * @param id
+   * @param typedId
    *          Id of the target controller
    *
    * @return the Master API response
    */
-  Map<String, Object> restoreDataSpaceController(String id);
+  Map<String, Object> restoreDataSpaceController(String typedId);
 
   /**
    * Capture the data bundle for all controllers.
@@ -354,39 +354,36 @@ public interface MasterApiSpaceControllerManager {
   /**
    * Shut down all activities on the specified controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the controller
    *
    * @return the Master API response
    */
-  Map<String, Object> shutdownAllActivities(String id);
+  Map<String, Object> shutdownAllLiveActivities(String typedId);
 
   /**
    * Shut down all activities on all controllers.
    *
    * @return the Master API response
    */
-  Map<String, Object> shutdownAllActivitiesAllSpaceControllers();
+  Map<String, Object> shutdownAllLiveActivitiesAllSpaceControllers();
 
   /**
-   * Deploy all activities which are on the specified controller.
+   * Deploy all live activities which are on the specified controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the controller
    *
    * @return the Master API response
    */
-  Map<String, Object> deployAllActivityInstancesSpaceController(String id);
+  Map<String, Object> deployAllLiveActivitiesSpaceController(String typedId);
 
   /**
-   * Deploy all activities which are on all controllers.
-   *
-   * @param id
-   *          ID of the controller
+   * Deploy all live activities which are on all controllers.
    *
    * @return the Master API response
    */
-  Map<String, Object> deployAllActivityInstancesAllSpaceControllers();
+  Map<String, Object> deployAllLiveActivitiesAllSpaceControllers();
 
   /**
    * Deploy all out of date live activities which are based on the specified
@@ -397,107 +394,107 @@ public interface MasterApiSpaceControllerManager {
    *
    * @return the Master API response
    */
-  Map<String, Object> deployAllLiveActivityInstances(String id);
+  Map<String, Object> deployAllActivityLiveActivities(String id);
 
   /**
    * Deploy the specified live activity to its controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the live activity
    *
    * @return the Master API response
    */
-  Map<String, Object> deployLiveActivity(String id);
+  Map<String, Object> deployLiveActivity(String typedId);
 
   /**
    * Delete the specified live activity from its controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the live activity
    *
    * @return the Master API response
    */
-  Map<String, Object> deleteLiveActivity(String id);
+  Map<String, Object> deleteLiveActivity(String typedId);
 
   /**
    * Configure a live activity on its controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the live activity
    *
    * @return the Master API response
    */
-  Map<String, Object> configureLiveActivity(String id);
+  Map<String, Object> configureLiveActivity(String typedId);
 
   /**
    * Start a live activity on its controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the live activity
    *
    * @return the Master API response
    */
-  Map<String, Object> startupLiveActivity(String id);
+  Map<String, Object> startupLiveActivity(String typedId);
 
   /**
    * Activate a live activity on its controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the live activity
    *
    * @return the Master API response
    */
-  Map<String, Object> activateLiveActivity(String id);
+  Map<String, Object> activateLiveActivity(String typedId);
 
   /**
    * Deactivate a live activity on its controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the live activity
    *
    * @return the Master API response
    */
-  Map<String, Object> deactivateLiveActivity(String id);
+  Map<String, Object> deactivateLiveActivity(String typedId);
 
   /**
    * Shut a live activity down on its controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the live activity
    *
    * @return the Master API response
    */
-  Map<String, Object> shutdownLiveActivity(String id);
+  Map<String, Object> shutdownLiveActivity(String typedId);
 
   /**
    * Status of a live activity on its controller.
    *
-   * @param id
+   * @param typedId
    *          ID of the live activity
    *
    * @return the Master API response
    */
-  Map<String, Object> statusLiveActivity(String id);
+  Map<String, Object> statusLiveActivity(String typedId);
 
   /**
    * Clean the permanent data folder for the live activity.
    *
-   * @param id
+   * @param typedId
    *          ID of the live activity to clean
    *
    * @return the Master API response
    */
-  Map<String, Object> cleanLiveActivityPermanentData(String id);
+  Map<String, Object> cleanLiveActivityPermanentData(String typedId);
 
   /**
    * Clean the temp data folder for the live activity.
    *
-   * @param id
+   * @param typedId
    *          ID of the live activity to clean
    *
    * @return the Master API response
    */
-  Map<String, Object> cleanLiveActivityTempData(String id);
+  Map<String, Object> cleanLiveActivityTempData(String typedId);
 
   /**
    * Deploy the specified activity group.

@@ -53,7 +53,7 @@ trait SensorProcessingEventEmitter {
   def broadcastSensorOfflineEvent(event: SensorOfflineEvent): Unit
 
   /**
-   * Broadcast a sensor offline event.
+   * Broadcast an unknown marker event.
    *
    * @param event
    * 		the event to broadcast

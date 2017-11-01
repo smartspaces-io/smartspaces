@@ -203,7 +203,7 @@ public interface ActivityRepository extends TypedIdRepository {
    * <p>
    * See {@link TypedId} for details.
    *
-   * @param typedIdString
+   * @param typedId
    *          the typed ID
    *
    * @return the activity with the given UUID or {@code null} if no such
@@ -212,7 +212,7 @@ public interface ActivityRepository extends TypedIdRepository {
    * @throws SmartSpacesException
    *           the type of the typed ID is unknown
    */
-  LiveActivity getLiveActivityByTypedId(String typedIdString) throws SmartSpacesException;
+  LiveActivity getLiveActivityByTypedId(String typedId) throws SmartSpacesException;
 
   /**
    * Get all live activities on a given controller.
@@ -340,9 +340,9 @@ public interface ActivityRepository extends TypedIdRepository {
    * time or to update edits to the activity group.
    *
    * @param liveActivityGroup
-   *          the activity group to save
+   *          the live activity group to save
    *
-   * @return the persisted activity group, use this one going forward
+   * @return the persisted live activity group, use this one going forward
    */
   LiveActivityGroup saveLiveActivityGroup(LiveActivityGroup liveActivityGroup);
 

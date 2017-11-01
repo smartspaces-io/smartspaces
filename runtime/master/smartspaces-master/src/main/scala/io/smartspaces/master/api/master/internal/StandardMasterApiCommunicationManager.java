@@ -247,8 +247,6 @@ public class StandardMasterApiCommunicationManager extends BaseMasterApiManager
         new CaptureMessageSender<Map<String, Object>>();
     
     try {
-      byte[] postBodyContent = postBody.getContent();
-      spaceEnvironment.getLog().info(new String(postBodyContent));
       masterApiCommandProcessor.handleApiCall(messageCodec.decode(postBody.getContent()), captureSender);
 
       response.setContentType(CommonMimeTypes.MIME_TYPE_APPLICATION_JSON);

@@ -115,12 +115,10 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
   }
 
   override def broadcastSensorOfflineEvent(event: SensorOfflineEvent): Unit = {
-    log.warn(s"Broadcasting sensor offline event ${event.sensorModel.sensorEntityDescription}")
     sensorOfflineEventSubject.onNext(event)
   }
 
   override def broadcastUnknownMarkerSeenEvent(event: UnknownEntitySeenEvent): Unit = {
-    log.warn(s"Broadcasting unknown marker seen event ${event.entityId}")
     unknownMarkerSeenEventSubject.onNext(event)
   }
 }

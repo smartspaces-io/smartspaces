@@ -304,7 +304,7 @@ public class StandardMasterApiCommandProcessor implements MasterApiCommandProces
           @Override
           public Map<String, Object> execute(Map<String, Object> commandArgs) {
             return masterApiSpaceControllerManager
-                .deployAllLiveActivityInstances(getEntityId(commandArgs));
+                .deployAllActivityLiveActivities(getEntityId(commandArgs));
           }
         });
     registerMasterApiCommandHandler(
@@ -477,6 +477,13 @@ public class StandardMasterApiCommandProcessor implements MasterApiCommandProces
    * Register all handlers for Live Activity Group commands.
    */
   private void registerLiveActivityGroupHandlers() {
+    registerMasterApiCommandHandler(
+        new MasterApiCommandHandler(MasterApiMessages.MASTER_API_COMMAND_LIVE_ACTIVITY_GROUP_CREATE) {
+          @Override
+          public Map<String, Object> execute(Map<String, Object> commandArgs) {
+            return masterApiActivityManager.createLiveActivityGroup(commandArgs);
+          }
+        });
     registerMasterApiCommandHandler(
         new MasterApiCommandHandler(MasterApiMessages.MASTER_API_COMMAND_LIVE_ACTIVITY_GROUP_ALL) {
           @Override
@@ -781,14 +788,14 @@ public class StandardMasterApiCommandProcessor implements MasterApiCommandProces
           @Override
           public Map<String, Object> execute(Map<String, Object> commandArgs) {
             return masterApiSpaceControllerManager
-                .deployAllActivityInstancesSpaceController(getEntityId(commandArgs));
+                .deployAllLiveActivitiesSpaceController(getEntityId(commandArgs));
           }
         });
     registerMasterApiCommandHandler(new MasterApiCommandHandler(
         MasterApiMessages.MASTER_API_COMMAND_SPACE_CONTROLLER_DEPLOY_ALL) {
       @Override
       public Map<String, Object> execute(Map<String, Object> commandArgs) {
-        return masterApiSpaceControllerManager.deployAllActivityInstancesAllSpaceControllers();
+        return masterApiSpaceControllerManager.deployAllLiveActivitiesAllSpaceControllers();
       }
     });
     registerMasterApiCommandHandler(new MasterApiCommandHandler(
@@ -882,7 +889,7 @@ public class StandardMasterApiCommandProcessor implements MasterApiCommandProces
         MasterApiMessages.MASTER_API_COMMAND_SPACE_CONTROLLER_LIVE_ACTIVITY_SHUTDOWN_ALL) {
       @Override
       public Map<String, Object> execute(Map<String, Object> commandArgs) {
-        return masterApiSpaceControllerManager.shutdownAllActivities(getEntityId(commandArgs));
+        return masterApiSpaceControllerManager.shutdownAllLiveActivities(getEntityId(commandArgs));
       }
     });
     registerMasterApiCommandHandler(new MasterApiCommandHandler(
@@ -910,7 +917,7 @@ public class StandardMasterApiCommandProcessor implements MasterApiCommandProces
         MasterApiMessages.MASTER_API_COMMAND_SPACE_CONTROLLER_ALL_LIVE_ACTIVITY_SHUTDOWN_ALL) {
       @Override
       public Map<String, Object> execute(Map<String, Object> commandArgs) {
-        return masterApiSpaceControllerManager.shutdownAllActivitiesAllSpaceControllers();
+        return masterApiSpaceControllerManager.shutdownAllLiveActivitiesAllSpaceControllers();
       }
     });
     registerMasterApiCommandHandler(new MasterApiCommandHandler(

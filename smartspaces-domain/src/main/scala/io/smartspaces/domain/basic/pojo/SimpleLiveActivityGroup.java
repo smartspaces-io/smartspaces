@@ -136,7 +136,7 @@ public class SimpleLiveActivityGroup extends SimpleObject implements LiveActivit
   }
 
   @Override
-  public void clearActivities() {
+  public void clearLiveActivities() {
     activities.clear();
   }
 

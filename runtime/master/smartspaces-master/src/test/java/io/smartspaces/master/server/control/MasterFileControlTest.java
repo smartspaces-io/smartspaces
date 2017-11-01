@@ -137,7 +137,7 @@ public class MasterFileControlTest {
   public void testShutdownAllActivitiesAllControllersCall() {
     fileControl.handleCommand(MasterFileControl.COMMAND_SPACE_CONTROLLERS_SHUTDOWN_ALL_ACTIVITIES);
 
-    verify(masterApiControllerManager, times(1)).shutdownAllActivitiesAllSpaceControllers();
+    verify(masterApiControllerManager, times(1)).shutdownAllLiveActivitiesAllSpaceControllers();
   }
 
   /**

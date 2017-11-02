@@ -52,8 +52,7 @@ import io.smartspaces.logging.ExtendedLog
  *
  * @author Keith M. Hughes
  */
-class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription, mqttClientId: String,
-    executor: ScheduledExecutorService, log: ExtendedLog) extends MqttCommunicationEndpoint with IdempotentManagedResource {
+class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription, mqttClientId: String, log: ExtendedLog) extends MqttCommunicationEndpoint with IdempotentManagedResource {
 
   /**
    * The default QoS value to be used.

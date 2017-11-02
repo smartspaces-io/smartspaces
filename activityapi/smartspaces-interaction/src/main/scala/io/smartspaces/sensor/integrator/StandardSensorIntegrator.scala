@@ -65,6 +65,7 @@ import io.smartspaces.sensor.processing.value.StatefulMarkerSensorSensorValuePro
 import io.smartspaces.sensor.value.entity.MoistureCategoricalValue
 import io.smartspaces.sensor.processing.value.SensorValueProcessorRegistry
 import io.smartspaces.sensor.processing.value.StandardSensorValueProcessorRegistry
+import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
 
 /**
  * The sensor integration layer.
@@ -118,7 +119,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
    */
   private val _valueRegistry: ValueRegistry = StandardValueRegistry.registerCategoricalValues(
     ContactCategoricalValue, PresenceCategoricalValue, ActiveCategoricalValue, MoistureCategoricalValue)
-    
+
   /**
    * The registry for sensor value processors.
    */
@@ -136,7 +137,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
     _sensorRegistry = new InMemorySensorRegistry(log)
 
     descriptionImporter.importDescriptions(sensorRegistry)
-    
+
     sensorValueProcessorRegistry = new StandardSensorValueProcessorRegistry(log)
     sensorValueProcessorRegistry.addSensorValueProcessor(new StandardBleProximitySensorValueProcessor())
     sensorValueProcessorRegistry.addSensorValueProcessor(new SimpleMarkerSensorValueProcessor(unknownMarkerHandler))
@@ -145,9 +146,9 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
     if (statefulMarkerMeasurementType.isDefined) {
       sensorValueProcessorRegistry.addSensorValueProcessor(new StatefulMarkerSensorSensorValueProcessor(statefulMarkerMeasurementType.get, unknownMarkerHandler))
     } else {
-      log.warn(s"Could not find stateful marker measurement type ${StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL}")      
+      log.warn(s"Could not find stateful marker measurement type ${StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL}")
     }
-    
+
     sensorRegistry.getAllMeasurementTypes.filter(_.processingType == StandardSensorData.MEASUREMENT_PROCESSING_TYPE_SIMPLE).
       foreach { measurementType =>
         measurementType.valueType match {
@@ -203,10 +204,9 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
     }, TimeFrequency.timesPerHour(30.0), false)
   }
 
-  override def addMqttSensorInput(mqttBrokerDecription: MqttBrokerDescription, clientId: String): MqttSensorInput = {
-    log.info(s"MQTT Broker URL ${mqttBrokerDecription.brokerAddress}")
-    var mqttSensorInput = new StandardMqttSensorInput(mqttBrokerDecription,
-      clientId, spaceEnvironment, log)
+  override def addMqttSensorInput(mqttEndpoint: MqttCommunicationEndpoint): MqttSensorInput = {
+    log.info(s"MQTT sensor input from MQTT broker at URL ${mqttEndpoint.getMqttBrokerDescription()}")
+    var mqttSensorInput = new StandardMqttSensorInput(mqttEndpoint, spaceEnvironment, log)
     sensorProcessor.addSensorInput(mqttSensorInput)
 
     return mqttSensorInput

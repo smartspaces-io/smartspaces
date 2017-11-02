@@ -17,12 +17,13 @@
 package io.smartspaces.service.comm.pubsub.mqtt
 
 import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.scope.ManagedScope
 import io.smartspaces.service.SupportedService
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 
 /**
  * A service for getting MQTT communication endpoints.
- * 
+ *
  * @author Keith M. Hughes
  */
 object MqttCommunicationEndpointService {
@@ -35,24 +36,47 @@ object MqttCommunicationEndpointService {
 
 /**
  * A service for getting MQTT communication endpoints.
- * 
+ *
  * @author Keith M. Hughes
  */
 trait MqttCommunicationEndpointService extends SupportedService {
 
   /**
+   * Construct a new endpoint scoped at the service level. The MQTT broker description must include a client ID.
+   *
+   * @param mqttBrokerDescription
+   *          the description of the MQTT broker
+   *
+   * @return the new endpoint
+   */
+
+  def newMqttCommunicationEndpoint(
+    mqttBrokerDescription: MqttBrokerDescription): MqttCommunicationEndpoint
+
+  /**
    * Construct a new endpoint.
-   * 
+   *
+   * If the broker description has a client ID, it will be used. Otherwise the client ID
+   * here will be used.
+   *
+   * If the broker description has a client ID, the client will be scoped to the service.
+   * otherwise the supplied scope will be used.
+   *
    * @param mqttBrokerDescription
    *          the description of the MQTT broker
    * @param mqttClientId
-   *          the ID for the MQTT client
+   *          the optional ID for the MQTT client
+   * @param managedScope
+   *          the optional managed scope
    * @param log
-   *          the log to use
-   * 
-   * @return The new endpoint
+   *          the optional log to use
+   *
+   * @return the new endpoint
    */
 
-   def newMqttCommunicationEndpoint(
-       mqttBrokerDescription: MqttBrokerDescription,  mqttClientId: String, log: ExtendedLog): MqttCommunicationEndpoint
+  def newMqttCommunicationEndpoint(
+    mqttBrokerDescription: MqttBrokerDescription,
+    mqttClientId: Option[String],
+    managedScope: Option[ManagedScope],
+    log: Option[ExtendedLog]): MqttCommunicationEndpoint
 }

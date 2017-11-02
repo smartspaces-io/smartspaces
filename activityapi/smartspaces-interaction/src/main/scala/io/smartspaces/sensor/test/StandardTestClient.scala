@@ -30,19 +30,19 @@ class StandardTestClient(private val spaceEnvironment: SmartSpacesEnvironment, p
    * The MQTT client endpoint.
    */
   private var mqttEndpoint: MqttCommunicationEndpoint = null
-  
+
   private var mqttMessageWriter: MqttPublisher = null
 
   override def onStartup(): Unit = {
     val service: MqttCommunicationEndpointService = spaceEnvironment.getServiceRegistry()
       .getRequiredService(MqttCommunicationEndpointService.SERVICE_NAME)
-    mqttEndpoint = service.newMqttCommunicationEndpoint(mqttBrokerDescription, "testclient", spaceEnvironment.getLog)
+    mqttEndpoint = service.newMqttCommunicationEndpoint(mqttBrokerDescription, Option("testclient"), Option(spaceEnvironment.getContainerManagedScope), Option(spaceEnvironment.getLog))
 
     mqttEndpoint.startup()
-    
+
     mqttMessageWriter = mqttEndpoint.createMessagePublisher(mqttTopicName, 0, false)
   }
-  
+
   override def onShutdown(): Unit = {
     mqttEndpoint.shutdown()
   }
@@ -56,7 +56,7 @@ class StandardTestClient(private val spaceEnvironment: SmartSpacesEnvironment, p
       "value": "nfc:04E17DDAC94880"}}}
 """)
   }
- 
+
   def goToKitchen(): Unit = {
     publishMessage("""
 { "sensor": "/sensornode/ESP_8C8E1C", 
@@ -66,7 +66,7 @@ class StandardTestClient(private val spaceEnvironment: SmartSpacesEnvironment, p
       "value": "nfc:04E17DDAC94880"}}}
 """)
   }
- 
+
   def publishMessage(message: String): Unit = {
     spaceEnvironment.getLog.info(s"Publishing $message")
     mqttMessageWriter.sendMessage(message.getBytes(DynamicObjectByteArrayCodec.CHARSET_DEFAULT))

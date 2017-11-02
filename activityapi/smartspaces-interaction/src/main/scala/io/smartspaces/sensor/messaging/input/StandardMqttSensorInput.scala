@@ -18,26 +18,26 @@ package io.smartspaces.sensor.messaging.input
 
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.messaging.codec.DynamicObjectByteArrayCodec
+import io.smartspaces.resource.managed.IdempotentManagedResource
+import io.smartspaces.scope.ManagedScope
 import io.smartspaces.sensor.processing.SensorProcessor
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpointService
-import io.smartspaces.service.comm.pubsub.mqtt.MqttSubscriberListener
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
 
 /**
  * A sensor input for sensor message over MQTT.
- * 
+ *
  * <p>
  * This sensor input allocates an MQTT client.
  *
  * @author Keith M. Hughes
  */
 class StandardMqttSensorInput(
-    private val mqttBrokerDescription: MqttBrokerDescription, 
-    private val mqttClientId: String,
-    private val spaceEnvironment: SmartSpacesEnvironment, 
-    private val log: ExtendedLog) extends MqttSensorInput {
+  private val mqttEndpoint: MqttCommunicationEndpoint,
+  private val spaceEnvironment: SmartSpacesEnvironment,
+  private val log: ExtendedLog) extends MqttSensorInput with IdempotentManagedResource {
 
   /**
    * The sensor processor the sensor input is running under.
@@ -45,35 +45,14 @@ class StandardMqttSensorInput(
   private var sensorProcessor: SensorProcessor = null
 
   /**
-   * The MQTT client endpoint.
-   */
-  private var mqttEndpoint: MqttCommunicationEndpoint = null
-  
-  /**
    * The listener for MQTT messages.
    */
-  private var mqttListener: StandardMqttListenerSensorInput = _
+  private val mqttListener: StandardMqttListenerSensorInput = new StandardMqttListenerSensorInput(spaceEnvironment.getTimeProvider, log)
 
   /**
    * The codec for translating messages.
    */
   private val codec = new DynamicObjectByteArrayCodec()
-
-  override def startup(): Unit = {
-    val service: MqttCommunicationEndpointService = spaceEnvironment.getServiceRegistry()
-      .getRequiredService(MqttCommunicationEndpointService.SERVICE_NAME)
-    mqttEndpoint = service.newMqttCommunicationEndpoint(mqttBrokerDescription, mqttClientId, log)
-
-    mqttEndpoint.startup()
-    
-    mqttListener = new StandardMqttListenerSensorInput(spaceEnvironment.getTimeProvider, log)
-  }
-
-  override def shutdown(): Unit = {
-    if (mqttEndpoint != null) {
-      mqttEndpoint.shutdown()
-    }
-  }
 
   override def setSensorProcessor(sensorProcessor: SensorProcessor): Unit = {
     mqttListener.setSensorProcessor(sensorProcessor)

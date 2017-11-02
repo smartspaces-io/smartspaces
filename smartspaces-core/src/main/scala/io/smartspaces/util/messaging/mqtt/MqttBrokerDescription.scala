@@ -27,12 +27,12 @@ import java.util.regex.Pattern
  * @author Keith M. Hughes
  */
 object MqttBrokerDescription {
-  
+
   /**
    * The value for memory persistence.
    */
   val VALUE_PERSISTENCE_PATH_MEMORY = "memory:"
-  
+
   /**
    * The default for the path for the persistence for MQTT messages.
    */
@@ -56,24 +56,35 @@ object MqttBrokerDescription {
 
       val brokerPort = matcher.group(3).toInt
 
-      val brokerDescription = new MqttBrokerDescription(brokerHost, brokerPort, isSsl)
+      var username: Option[String] = None
+      var password: Option[String] = None
+      var keystorePath: Option[String] = None
+      var keystorePassword: Option[String] = None
+      var caCertPath: Option[String] = None
+      var clientCertPath: Option[String] = None
+      var clientKeyPath: Option[String] = None
+      var autoreconnect: Option[Boolean] = None
+      var persistencePath: Option[String] = None
+      var brokerClientId: Option[String] = None
 
       val paramString = matcher.group(4)
       if (paramString != null) {
         val params = StandardJsonMapper.INSTANCE.parseObject(paramString.substring(1))
 
-        brokerDescription.username = Option(params.get("username").asInstanceOf[String])
-        brokerDescription.password = Option(params.get("password").asInstanceOf[String])
-        brokerDescription.keystorePath = Option(params.get("keystorePath").asInstanceOf[String])
-        brokerDescription.keystorePassword = Option(params.get("keystorePassword").asInstanceOf[String])
-        brokerDescription.caCertPath = Option(params.get("caCertPath").asInstanceOf[String])
-        brokerDescription.clientCertPath = Option(params.get("clientCertPath").asInstanceOf[String])
-        brokerDescription.clientKeyPath = Option(params.get("clientKeyPath").asInstanceOf[String])
-        brokerDescription.autoreconnect = Option(params.get("autoreconnect").asInstanceOf[Boolean])
-        brokerDescription.persistencePath = Option(params.get("persistencePath").asInstanceOf[String])
+        username = Option(params.get("username").asInstanceOf[String])
+        password = Option(params.get("password").asInstanceOf[String])
+        keystorePath = Option(params.get("keystorePath").asInstanceOf[String])
+        keystorePassword = Option(params.get("keystorePassword").asInstanceOf[String])
+        caCertPath = Option(params.get("caCertPath").asInstanceOf[String])
+        clientCertPath = Option(params.get("clientCertPath").asInstanceOf[String])
+        clientKeyPath = Option(params.get("clientKeyPath").asInstanceOf[String])
+        autoreconnect = Option(params.get("autoreconnect").asInstanceOf[Boolean])
+        persistencePath = Option(params.get("persistencePath").asInstanceOf[String])
+        brokerClientId = Option(params.get("brokerClientId").asInstanceOf[String])
       }
 
-      brokerDescription
+      new MqttBrokerDescription(brokerHost, brokerPort, isSsl, username, password, keystorePath, keystorePassword, caCertPath,
+        clientCertPath, clientKeyPath, autoreconnect, persistencePath, brokerClientId)
     } else {
       throw new SmartSpacesException(s"MQTT broker description has the wrong syntax: ${description}")
     }
@@ -85,75 +96,92 @@ object MqttBrokerDescription {
  *
  * @author Keith M. Hughes
  */
-class MqttBrokerDescription(val brokerHost: String, val brokerPort: Integer, val isSsl: Boolean) extends Equals {
+class MqttBrokerDescription(
+  val brokerHost: String, 
+  val brokerPort: Integer, 
+  val isSsl: Boolean, 
+
+  /**
+   * The username for the broker.
+   */
+  val username: Option[String], 
+
+  /**
+   * The password for the broker.
+   */
+  val password: Option[String], 
+
+  /**
+   * File path to the keystore if using SSL.
+   */
+  val keystorePath: Option[String], 
+
+  /**
+   * Password for the keystore if using SSL.
+   */
+  val keystorePassword: Option[String], 
+
+  /**
+   * File path to the certificate authority cert if using client certificate SSL.
+   */
+  val caCertPath: Option[String], 
+
+  /**
+   * File path to the client cert if using client certificate SSL.
+   */
+  val clientCertPath: Option[String], 
+
+  /**
+   * File path to the client private key if using client certificate SSL.
+   */
+  val clientKeyPath: Option[String], 
+
+  /**
+   * {@code true} if should reconnect automatically back to the broker.
+   */
+  val autoreconnect: Option[Boolean], 
+
+  /**
+   * The path to the persistence for MQTT retained messages.
+   */
+  val persistencePath: Option[String], 
+
+  /**
+   * The client ID for a client based on this broker description.
+   *
+   * used when the client should be shared amongst multiple users.
+   */
+  val brokerClientId: Option[String]) extends Equals {
 
   /**
    * The network address of the broker.
    */
   val brokerAddress = (if (isSsl) "ssl" else "tcp") + "://" + brokerHost + ":" + brokerPort
 
-  /**
-   * The username for the broker.
-   */
-  var username: Option[String] = None
-
-  /**
-   * The password for the broker.
-   */
-  var password: Option[String] = None
-
-  /**
-   * File path to the keystore if using SSL.
-   */
-  var keystorePath: Option[String] = None
-
-  /**
-   * Password for the keystore if using SSL.
-   */
-  var keystorePassword: Option[String] = None
-
-  /**
-   * File path to the certificate authority cert if using client certificate SSL.
-   */
-  var caCertPath: Option[String] = None
-
-  /**
-   * File path to the client cert if using client certificate SSL.
-   */
-  var clientCertPath: Option[String] = None
-
-  /**
-   * File path to the client private key if using client certificate SSL.
-   */
-  var clientKeyPath: Option[String] = None
-
-  /**
-   * {@code true} if should reconnect automatically back to the broker.
-   */
-  var autoreconnect: Option[Boolean] = None
-  
-  /**
-   * The path to the persistence for MQTT retained messages.
-   */
-  var persistencePath: Option[String] = None
+  override def toString(): String = {
+    s"${getClass.getName()}[broker: ${brokerAddress}, brokerClientId=${brokerClientId}]"
+  }
 
   def canEqual(other: Any) = {
-    other.isInstanceOf[MqttBrokerDescription]
+    other.isInstanceOf[io.smartspaces.util.messaging.mqtt.MqttBrokerDescription]
   }
 
   override def equals(other: Any) = {
     other match {
-      case that: MqttBrokerDescription => that.canEqual(MqttBrokerDescription.this) && brokerHost == that.brokerHost && brokerPort == that.brokerPort && isSsl == that.isSsl
+      case that: io.smartspaces.util.messaging.mqtt.MqttBrokerDescription => 
+        that.canEqual(MqttBrokerDescription.this) && 
+        brokerHost == that.brokerHost && 
+        brokerPort == that.brokerPort && 
+        isSsl == that.isSsl && 
+        brokerClientId == that.brokerClientId
       case _ => false
     }
   }
 
   override def hashCode() = {
     val prime = 41
-    prime * (prime * (prime + brokerHost.hashCode) + brokerPort.hashCode) + isSsl.hashCode
-  }
-  
-  override def toString(): String = {
-    s"${getClass.getName()}[broker: ${brokerAddress}]"
+    prime * (prime * (prime * (prime + brokerHost.hashCode) + 
+        brokerPort.hashCode) + isSsl.hashCode) + 
+        brokerClientId.hashCode
   }
 }

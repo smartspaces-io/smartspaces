@@ -52,9 +52,24 @@ public class SimpleEvaluationEnvironment implements EvaluationEnvironment {
   }
 
   @Override
+  public EvaluationEnvironment clearSymbolTables() {
+    symbolTables.clear();
+
+    return this;
+  }
+
+  @Override
   public EvaluationEnvironment addSymbolTable(SymbolTable<String> symbolTable) {
 
     symbolTables.add(symbolTable);
+
+    return this;
+  }
+
+  @Override
+  public EvaluationEnvironment addSymbolTableFront(SymbolTable<String> symbolTable) {
+
+    symbolTables.add(0, symbolTable);
 
     return this;
   }
@@ -101,7 +116,7 @@ public class SimpleEvaluationEnvironment implements EvaluationEnvironment {
    * 
    * @param functionCall
    *          the function call
-   *          
+   * 
    * @return an appropriate function definition, or {@code null} if none found
    */
   private FunctionDefinition findFunctionDefintionForCall(FunctionCall functionCall) {

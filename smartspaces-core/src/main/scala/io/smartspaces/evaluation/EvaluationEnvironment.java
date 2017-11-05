@@ -23,37 +23,54 @@ package io.smartspaces.evaluation;
  * @author Keith M. Hughes
  */
 public interface EvaluationEnvironment extends SymbolTable<String> {
+	
+	/**
+	 * Clear all symbol tables from the environment.
+	 * 
+	 * @return this environment
+	 */
+	EvaluationEnvironment clearSymbolTables();
 
-  /**
-   * Add a symbol table to the evaluation environment.
-   * 
-   * @param symbolTable
-   *          the symbol table to add
-   * 
-   * @return this environment
-   */
-  EvaluationEnvironment addSymbolTable(SymbolTable<String> symbolTable);
+	/**
+	 * Add a symbol table to the evaluation environment. It is added at the end.
+	 * 
+	 * @param symbolTable
+	 *            the symbol table to add
+	 * 
+	 * @return this environment
+	 */
+	EvaluationEnvironment addSymbolTable(SymbolTable<String> symbolTable);
 
-  /**
-   * Evaluate a function call.
-   * 
-   * @param functionCall
-   *          the function call to evaluate
-   *          
-   * @return the value of the call
-   * 
-   * @throws EvaluationSmartSpacesException
-   *          something bad happened during evaluation
-   */
-  Object evaluateFunctionCall(FunctionCall functionCall) throws EvaluationSmartSpacesException;
+    /**
+     * Add a symbol table to the evaluation environment. It is added to the front of the tables.
+     * 
+     * @param symbolTable
+     *            the symbol table to add
+     * 
+     * @return this environment
+     */
+    EvaluationEnvironment addSymbolTableFront(SymbolTable<String> symbolTable);
 
-  /**
-   * Add a function definition.
-   * 
-   * @param functionDefinition
-   *          the function definition to add
-   *          
-   * @return this environment
-   */
-  EvaluationEnvironment addFunctionDefinition(FunctionDefinition functionDefinition);
+	/**
+	 * Evaluate a function call.
+	 * 
+	 * @param functionCall
+	 *            the function call to evaluate
+	 * 
+	 * @return the value of the call
+	 * 
+	 * @throws EvaluationSmartSpacesException
+	 *             something bad happened during evaluation
+	 */
+	Object evaluateFunctionCall(FunctionCall functionCall) throws EvaluationSmartSpacesException;
+
+	/**
+	 * Add a function definition.
+	 * 
+	 * @param functionDefinition
+	 *            the function definition to add
+	 * 
+	 * @return this environment
+	 */
+	EvaluationEnvironment addFunctionDefinition(FunctionDefinition functionDefinition);
 }

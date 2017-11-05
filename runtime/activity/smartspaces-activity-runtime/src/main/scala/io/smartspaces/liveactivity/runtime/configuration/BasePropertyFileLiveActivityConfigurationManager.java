@@ -97,7 +97,8 @@ public abstract class BasePropertyFileLiveActivityConfigurationManager implement
         new StandardLiveActivityConfiguration(baseConfigurationStorageManager,
             installedActivityConfigurationStorageManager, expressionEvaluator,
             spaceEnvironment.getSystemConfiguration());
-    expressionEvaluator.getEvaluationEnvironment().addSymbolTable(configuration.asSymbolTable());
+    // TODO(keith): Given where we are, should the symbol tables be cleared?
+    expressionEvaluator.getEvaluationEnvironment().addSymbolTableFront(configuration.asSymbolTable());
 
     return configuration;
   }

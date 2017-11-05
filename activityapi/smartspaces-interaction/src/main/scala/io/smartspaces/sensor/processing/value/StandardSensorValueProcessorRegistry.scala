@@ -33,7 +33,7 @@ class StandardSensorValueProcessorRegistry(private val log: ExtendedLog) extends
   private val sensorValuesProcessors: Map[String, SensorValueProcessor] = new HashMap
   
   override def addSensorValueProcessor(processor: SensorValueProcessor): SensorValueProcessorRegistry = {
-    log.info(s"Adding sensor processor for ${processor.sensorValueType}")
+    log.debug(s"Adding sensor processor for ${processor.sensorValueType}")
 
     val previous = sensorValuesProcessors.put(processor.sensorValueType, processor)
     if (previous.isDefined) {

@@ -21,7 +21,15 @@ package io.smartspaces.sensor.entity
  * 
  * @author Keith M. Hughes
  */
-class SimplePhysicalSpaceSensedEntityDescription(id: String, externalId: String, displayName: String, description: String, val physicalSpaceType: Option[String])
+class SimplePhysicalSpaceSensedEntityDescription(
+    id: String, 
+    externalId: String, 
+    displayName: String, 
+    description: String, 
+    override val physicalSpaceType: Option[String],
+    override val containedIn: Set[String],
+    override val directlyConnectedTo: Set[String]
+    )
     extends SimpleEntityDescription(id, externalId, displayName, description)
     with PhysicalSpaceSensedEntityDescription {
 }

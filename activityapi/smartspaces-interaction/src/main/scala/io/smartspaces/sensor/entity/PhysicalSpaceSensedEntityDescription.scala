@@ -30,4 +30,18 @@ trait PhysicalSpaceSensedEntityDescription extends SensedEntityDescription {
    * The type of the physical space, if known.
    */
   val physicalSpaceType: Option[String]
+  
+  /**
+   * External IDs for all spaces this space is contained in.
+   * 
+   * The containing spaces will usually be the spaces that directly contain this one.
+   */
+  val containedIn: Set[String]
+  
+  /**
+   * External IDs for all spaces this space is directly connected to.
+   * 
+   * The containing spaces will usually be the spaces that directly contain this one.
+   */
+  val directlyConnectedTo: Set[String]
 }

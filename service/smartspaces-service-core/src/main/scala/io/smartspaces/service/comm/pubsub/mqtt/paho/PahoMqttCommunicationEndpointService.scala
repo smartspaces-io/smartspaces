@@ -35,13 +35,6 @@ class PahoMqttCommunicationEndpointService extends BaseSupportedService
   with MqttCommunicationEndpointService with IdempotentManagedResource {
 
   /**
-   * The managed scope for the service.
-   *
-   * TODO(keith): make a mixin
-   */
-  private var serviceManagedScope: ManagedScope = _
-
-  /**
    * Map of client IDs to endpoints.
    */
   private var endpoints: Map[String, MqttCommunicationEndpoint] = Map()
@@ -50,52 +43,28 @@ class PahoMqttCommunicationEndpointService extends BaseSupportedService
     MqttCommunicationEndpointService.SERVICE_NAME
   }
 
-  override def onStartup(): Unit = {
-    serviceManagedScope = StandardManagedScope.newManagedScope(
-      getSpaceEnvironment.getExecutorService,
-      getSpaceEnvironment.getLog)
-    serviceManagedScope.startup()
-  }
-
-  override def onShutdown(): Unit = {
-    serviceManagedScope.shutdown()
-  }
-
   override def newMqttCommunicationEndpoint(
-      mqttBrokerDescription: MqttBrokerDescription): MqttCommunicationEndpoint = {
-    newMqttCommunicationEndpoint( mqttBrokerDescription, None, None, None)
+    mqttBrokerDescription: MqttBrokerDescription): MqttCommunicationEndpoint = {
+    if (mqttBrokerDescription.brokerClientId.isDefined) {
+      newMqttCommunicationEndpoint(mqttBrokerDescription, mqttBrokerDescription.brokerClientId.get, getSpaceEnvironment.getLog)
+    } else {
+      throw new SmartSpacesException(s"Wanted an MQTT broker description global client ID but none defined. ${mqttBrokerDescription}")
+    }
   }
 
   override def newMqttCommunicationEndpoint(
     mqttBrokerDescription: MqttBrokerDescription,
-    mqttClientId: Option[String],
-    managedScope: Option[ManagedScope],
-    log: Option[ExtendedLog]): MqttCommunicationEndpoint = {
+    mqttClientId: String,
+    log: ExtendedLog): MqttCommunicationEndpoint = {
 
-    var finalMqttClientId: String = ""
-    var finalManagedScope: ManagedScope = null
-    var finalLog: ExtendedLog = getSpaceEnvironment.getLog
-
-    if (mqttClientId.isDefined) {
-      finalMqttClientId = mqttClientId.get
-      finalManagedScope = managedScope.get
-      finalLog = log.get
-    } else if (mqttBrokerDescription.brokerClientId.isDefined) {
-      finalMqttClientId = mqttBrokerDescription.brokerClientId.get
-      finalManagedScope = serviceManagedScope
-    } else {
-      throw new SmartSpacesException(s"MQTT communication endpoint cannot be created because of no client id, broker: ${mqttBrokerDescription}")
-    }
-
-    val lookedupEndpoint = endpoints.get(finalMqttClientId)
+    val lookedupEndpoint = endpoints.get(mqttClientId)
     if (lookedupEndpoint.isDefined) {
       lookedupEndpoint.get
     } else {
 
-      val endpoint = new PahoMqttCommunicationEndpoint(mqttBrokerDescription, finalMqttClientId, finalLog)
-      finalManagedScope.addResource(endpoint)
+      val endpoint = new PahoMqttCommunicationEndpoint(mqttBrokerDescription, mqttClientId, log)
 
-      endpoints = endpoints + (finalMqttClientId -> endpoint)
+      endpoints = endpoints + (mqttClientId -> endpoint)
 
       endpoint
     }

@@ -46,13 +46,17 @@ import scala.collection.immutable.List
 import javax.net.ssl.SSLSocketFactory
 import io.smartspaces.util.messaging.mqtt.MqttSubscriberDescription
 import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.resource.managed.UsageCountIdempotentManagedResource
 
 /**
  * An MQTT communication endpoint implemented with Paho.
  *
  * @author Keith M. Hughes
  */
-class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription, mqttClientId: String, log: ExtendedLog) extends MqttCommunicationEndpoint with IdempotentManagedResource {
+class PahoMqttCommunicationEndpoint(
+    mqttBrokerDescription: MqttBrokerDescription, 
+    mqttClientId: String, 
+    log: ExtendedLog) extends MqttCommunicationEndpoint with UsageCountIdempotentManagedResource {
 
   /**
    * The default QoS value to be used.
@@ -72,7 +76,7 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
   /**
    * The client persistence to use.
    */
-  private var persistence: MqttClientPersistence = null
+  private var mqttPersistence: MqttClientPersistence = null
 
   /**
    * The MQTT client.
@@ -103,16 +107,16 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
     try {
       val persistencePath = mqttBrokerDescription.persistencePath.getOrElse(MqttBrokerDescription.DEFAULT_PERSISTENCE_PATH)
       if (MqttBrokerDescription.VALUE_PERSISTENCE_PATH_MEMORY == persistencePath) {
-        persistence = new MemoryPersistence()
+        mqttPersistence = new MemoryPersistence()
       } else if (persistencePath.startsWith("file:")) {
         val fullPersistencePath = fileSupport.newFile(persistencePath.substring("file:".length)).getAbsolutePath
-        persistence = new MqttDefaultFilePersistence(fullPersistencePath)
+        mqttPersistence = new MqttDefaultFilePersistence(fullPersistencePath)
       } else {
         throw new SmartSpacesException(s"Don't understand MQTT persistence path ${persistencePath}")
       }
 
       mqttClient =
-        new MqttAsyncClient(mqttBrokerDescription.brokerAddress, mqttClientId, persistence)
+        new MqttAsyncClient(mqttBrokerDescription.brokerAddress, mqttClientId, mqttPersistence)
 
       mqttClient.setCallback(new MqttCallbackExtended() {
         override def connectComplete(reconnect: Boolean, serverURI: String): Unit = {
@@ -169,10 +173,13 @@ class PahoMqttCommunicationEndpoint(mqttBrokerDescription: MqttBrokerDescription
     if (mqttClient != null && mqttClient.isConnected()) {
       try {
         mqttClient.disconnect()
+        mqttClient.close()
       } catch {
-        case e: Throwable => log.error(s"Could not disconnect the MQTT client ${mqttClientId} client", e)
+        case e: Throwable => log.error(s"Could not close the MQTT client ${mqttClientId} client", e)
       }
       mqttClient = null
+      mqttPersistence.close()
+      mqttPersistence = null
     }
   }
 

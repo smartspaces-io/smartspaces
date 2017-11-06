@@ -183,8 +183,9 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
       override def handleNewSensorMessage(handler: SensedEntitySensorHandler, timestamp: Long,
         sensor: SensorEntityModel,
         message: DynamicObject): Unit = {
-        log.info(s"Got message at ${timestamp.toString} from sensor ${sensor}: ${message.asMap()}")
-
+        if (log.isDebugEnabled()) {
+          log.debug(s"Got message at ${timestamp.toString} from sensor ${sensor}: ${message.asMap()}")
+        }
       }
     })
 

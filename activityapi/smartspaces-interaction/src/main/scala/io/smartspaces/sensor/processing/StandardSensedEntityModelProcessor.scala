@@ -53,8 +53,10 @@ class StandardSensedEntityModelProcessor(
 
     val messageType = message.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
 
-    log.info(s"Updating model with message type ${messageType} from sensor ${sensor.sensorEntityDescription.externalId}")
-
+    if (log.isDebugEnabled()) {
+      log.debug(s"Updating model with message type ${messageType} from sensor ${sensor.sensorEntityDescription.externalId}")
+    }
+    
     messageType match {
       case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT =>
         handleMeasurement(handler, messageReceivedTimestamp, sensor, message)
@@ -102,7 +104,9 @@ class StandardSensedEntityModelProcessor(
             // otherwise use the last determined timestamp
             measurementTimestamp = message.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, measurementTimestamp)
 
-            log.info(s"Processing sensor message for channel ${sensorChannelModel.get}")
+            if (log.isDebugEnabled()) {
+              log.debug(s"Processing sensor message for channel ${sensorChannelModel.get}")
+            }
             sensorValueProcessor.get.processData(
               measurementTimestamp, messageReceivedTimestamp,
               sensor, sensorChannelModel.get.sensedEntityModel, processorContext,

@@ -36,7 +36,7 @@ class StandardTestClient(private val spaceEnvironment: SmartSpacesEnvironment, p
   override def onStartup(): Unit = {
     val service: MqttCommunicationEndpointService = spaceEnvironment.getServiceRegistry()
       .getRequiredService(MqttCommunicationEndpointService.SERVICE_NAME)
-    mqttEndpoint = service.newMqttCommunicationEndpoint(mqttBrokerDescription, Option("testclient"), Option(spaceEnvironment.getContainerManagedScope), Option(spaceEnvironment.getLog))
+    mqttEndpoint = service.newMqttCommunicationEndpoint(mqttBrokerDescription, "testclient", spaceEnvironment.getLog)
 
     mqttEndpoint.startup()
 

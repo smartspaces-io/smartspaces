@@ -268,7 +268,43 @@ trait SensorRegistry {
    * @return a collection of the entities
    */
   def getAllSensedEntities(): List[SensedEntityDescription]
+  
+  /**
+   * Get all physical spaces in the registry.
+   * 
+   * @return a collection of the entities
+   */
+  def getAllPhysicalSpaceSensedEntities(): List[PhysicalSpaceSensedEntityDescription]
 
+  /**
+   * Get the physical space sensed entity description by persistence ID.
+   *
+   * @param id
+   *          the sensed entity ID
+   *
+   * @return the description
+   */
+  def getPhysicalSpaceSensedEntity(id: String): Option[PhysicalSpaceSensedEntityDescription]
+
+  /**
+   * Get the physical space sensed entity description by external ID.
+   *
+   * @param externalId
+   *          the sensed entity ID
+   *
+   * @return the description
+   */
+  def getPhysicalSpaceSensedEntityByExternalId(externalId: String): Option[PhysicalSpaceSensedEntityDescription]
+
+  /**
+   * Get all sensor associations for a given sensed entity.
+   * 
+   * The list will be empty if the external ID is not for a sensed entity.
+   * 
+   * @return the list of associations
+   */
+  def getSensorsForSensedEntityByExternalId(externalId: String): List[SensorSensedEntityAssociation]
+  
   /**
    * Associate a marker with its marked entity.
    *

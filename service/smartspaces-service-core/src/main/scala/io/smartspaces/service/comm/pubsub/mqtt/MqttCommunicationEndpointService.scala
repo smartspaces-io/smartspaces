@@ -42,7 +42,7 @@ object MqttCommunicationEndpointService {
 trait MqttCommunicationEndpointService extends SupportedService {
 
   /**
-   * Construct a new endpoint scoped at the service level. The MQTT broker description must include a client ID.
+   * Construct a new endpoint. The MQTT broker description must include a client ID.
    *
    * @param mqttBrokerDescription
    *          the description of the MQTT broker
@@ -56,18 +56,12 @@ trait MqttCommunicationEndpointService extends SupportedService {
   /**
    * Construct a new endpoint.
    *
-   * If the broker description has a client ID, it will be used. Otherwise the client ID
-   * here will be used.
-   *
-   * If the broker description has a client ID, the client will be scoped to the service.
-   * otherwise the supplied scope will be used.
+   * The client ID here will be used, even if the broker description has a global client ID.
    *
    * @param mqttBrokerDescription
    *          the description of the MQTT broker
    * @param mqttClientId
-   *          the optional ID for the MQTT client
-   * @param managedScope
-   *          the optional managed scope
+   *          the ID for the MQTT client
    * @param log
    *          the optional log to use
    *
@@ -76,7 +70,6 @@ trait MqttCommunicationEndpointService extends SupportedService {
 
   def newMqttCommunicationEndpoint(
     mqttBrokerDescription: MqttBrokerDescription,
-    mqttClientId: Option[String],
-    managedScope: Option[ManagedScope],
-    log: Option[ExtendedLog]): MqttCommunicationEndpoint
+    mqttClientId: String,
+    log: ExtendedLog): MqttCommunicationEndpoint
 }

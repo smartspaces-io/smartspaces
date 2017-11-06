@@ -30,8 +30,8 @@ import io.smartspaces.resource.managed.IdempotentManagedResource
  * @author Keith M. Hughes
  */
 class StandardMqttListenerSensorInput(
-    private val timeProvider: TimeProvider, 
-    private val log: ExtendedLog) extends MqttSubscriberListener with SensorInput with IdempotentManagedResource {
+  private val timeProvider: TimeProvider,
+  private val log: ExtendedLog) extends MqttSubscriberListener with SensorInput with IdempotentManagedResource {
 
   /**
    * The sensor processor the sensor input is running under.
@@ -46,12 +46,14 @@ class StandardMqttListenerSensorInput(
   override def setSensorProcessor(sensorProcessor: SensorProcessor): Unit = {
     this.sensorProcessor = sensorProcessor
   }
-  
+
   override def handleMessage(endpoint: MqttCommunicationEndpoint, topicName: String,
     payload: Array[Byte]): Unit = {
 
     val message = codec.decode(payload)
-    log.formatDebug("Got sensor message on topic %s", topicName)
+    if (log.isDebugEnabled()) {
+      log.debug("Got sensor message on topic ${topicName}")
+    }
 
     // TODO(keith): Consider also checking message to see if it has a timestamp.
     // If so use it, otherwise use time provider.

@@ -90,6 +90,16 @@ class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
   private val externalIdToMarkable: Map[String, MarkableEntityDescription] = new HashMap
 
   /**
+   * A map of markable persistence IDs to their description.
+   */
+  private val idToPhysicalSpace: Map[String, PhysicalSpaceSensedEntityDescription] = new HashMap
+
+  /**
+   * A map of markable external IDs to their description.
+   */
+  private val externalIdToPhysicalSpace: Map[String, PhysicalSpaceSensedEntityDescription] = new HashMap
+
+  /**
    * A map of marker IDs to their description.
    */
   private val markerIdToMarker: Map[String, MarkerEntityDescription] = new HashMap
@@ -112,7 +122,7 @@ class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
   /**
    * The associations between sensors and what entity is being sensed by them.
    */
-  private val sensorSensedEntityAssociations: ListBuffer[SimpleSensorSensedEntityAssociation] =
+  private val sensorSensedEntityAssociations: ListBuffer[SensorSensedEntityAssociation] =
     new ListBuffer
 
   /**
@@ -229,6 +239,12 @@ class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
       externalIdToMarkable.put(sensedEntity.externalId, markable)
     }
 
+    if (sensedEntity.isInstanceOf[PhysicalSpaceSensedEntityDescription]) {
+      val physicalSpace = sensedEntity.asInstanceOf[PhysicalSpaceSensedEntityDescription]
+      idToPhysicalSpace.put(sensedEntity.id, physicalSpace)
+      externalIdToPhysicalSpace.put(sensedEntity.externalId, physicalSpace)
+    }
+
     this
   }
 
@@ -242,6 +258,18 @@ class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
 
   override def getAllSensedEntities(): scala.collection.immutable.List[SensedEntityDescription] = {
     idToSensed.values.toList
+  }
+
+  override def getAllPhysicalSpaceSensedEntities(): List[PhysicalSpaceSensedEntityDescription] = {
+    idToPhysicalSpace.values.toList
+  }
+
+  override def getPhysicalSpaceSensedEntity(id: String): Option[PhysicalSpaceSensedEntityDescription] = {
+    idToPhysicalSpace.get(id)
+  }
+
+  override def getPhysicalSpaceSensedEntityByExternalId(externalId: String): Option[PhysicalSpaceSensedEntityDescription] = {
+    externalIdToPhysicalSpace.get(externalId)
   }
 
   override def associateSensorWithSensedEntity(sensorExternalId: String, sensorChannelId: String, sensedEntityExternalId: String): SensorRegistry = {
@@ -275,6 +303,10 @@ class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
     sensorSensedEntityAssociations.toList
   }
 
+  override def getSensorsForSensedEntityByExternalId(externalId: String): scala.collection.immutable.List[SensorSensedEntityAssociation] = {
+    sensorSensedEntityAssociations.filter(_.sensedEntity.externalId == externalId).toList
+  }
+  
   override def associateMarkerWithMarkedEntity(markerExternalId: String, markedEntityExternalId: String): SensorRegistry = {
     // TODO(keith) Decide what to do if neither exists
     val marker = externalIdToMarker.get(markerExternalId)

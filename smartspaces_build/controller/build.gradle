@@ -43,13 +43,13 @@ dependencies {
   bootstrap project(":service:smartspaces-service-action")
   bootstrap project(":service:smartspaces-service-script")
   bootstrap project(":service:smartspaces-service-web")
-  bootstrap project(":service:smartspaces-service-audio-player")
-  bootstrap project(":service:smartspaces-service-speech-synthesis")
-  bootstrap project(":service:smartspaces-service-comm-chat")
-  bootstrap project(":service:smartspaces-service-comm-twitter")
-  bootstrap project(":service:smartspaces-service-mail-receiver")
-  bootstrap project(":service:smartspaces-service-mail-sender")
-  bootstrap project(":service:smartspaces-service-template")
+  //bootstrap project(":service:smartspaces-service-comm-chat")
+  //bootstrap project(":service:smartspaces-service-comm-twitter")
+  //bootstrap project(":service:smartspaces-service-mail-receiver")
+  //bootstrap project(":service:smartspaces-service-mail-sender")
+  //bootstrap project(":service:smartspaces-service-audio-player")
+  //bootstrap project(":service:smartspaces-service-template")
+  //bootstrap project(":service:smartspaces-service-speech-synthesis")
   
   // TODO(keith): Move this to the Karaf shell with SSH or make it switchable.
   bootstrap 'org.apache.felix:org.apache.felix.gogo.runtime:1.0.6'

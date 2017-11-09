@@ -276,8 +276,6 @@
 
 	  <property name="activeSpaceControllerManager" ref="smartspaces.master.controller.active" />
 
-	  <property name="alertService" ref="smartspaces.service.alert" />
-
 	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
@@ -355,8 +353,13 @@
 	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
-	<bean id="smartspaces.master.event.manager" class="io.smartspaces.master.event.StandardMasterEventManager">
+	<bean id="smartspaces.master.event.manager" 
+	    class="io.smartspaces.master.event.StandardMasterEventManager"
+	    destroy-method="shutdown" init-method="startup">
+	    
 	  <property name="log" ref="smartspaces.master.logger" />
+
+	  <property name="spaceEnvironment" ref="smartspaces.environment" />
 	</bean>
 
 	<bean id="smartspaces.master.api.activity" parent="txProxyTemplate">
@@ -560,9 +563,6 @@
 
 	<osgi:reference id="smartspaces.service.scheduler"
 		availability="mandatory" interface="io.smartspaces.service.scheduler.SchedulerService" />
-
-	<osgi:reference id="smartspaces.service.alert"
-		availability="mandatory" interface="io.smartspaces.service.alert.AlertService" />
 
 	<osgi:reference id="ros.environment" availability="mandatory"
 		interface="org.ros.osgi.common.RosEnvironment" />

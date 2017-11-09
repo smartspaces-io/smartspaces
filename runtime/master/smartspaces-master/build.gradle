@@ -23,7 +23,7 @@ dependencies {
 
   compile project(':runtime:master:smartspaces-database')
   compile project(':service:smartspaces-service-core')
-  compile project(':service:smartspaces-service-alert')
+  //compile project(':service:smartspaces-service-alert')
   compile project(':service:smartspaces-service-script')
   compile project(':service:smartspaces-service-scheduler')
   

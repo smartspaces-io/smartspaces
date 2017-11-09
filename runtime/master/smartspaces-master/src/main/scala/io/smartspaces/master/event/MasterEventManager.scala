@@ -15,21 +15,22 @@
  * the License.
  */
 
-package io.smartspaces.master.event;
+package io.smartspaces.master.event
 
-import io.smartspaces.activity.ActivityState;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
-import io.smartspaces.master.server.services.model.ActiveLiveActivity;
-import io.smartspaces.master.server.services.model.ActiveSpaceController;
-import io.smartspaces.spacecontroller.SpaceControllerState;
+import io.smartspaces.activity.ActivityState
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse
+import io.smartspaces.master.server.services.model.ActiveLiveActivity
+import io.smartspaces.master.server.services.model.ActiveSpaceController
+import io.smartspaces.resource.managed.ManagedResource
+import io.smartspaces.spacecontroller.SpaceControllerState
 
 /**
  * The manager for master events.
  *
  * @author Keith M. Hughes
  */
-public interface MasterEventManager {
+trait MasterEventManager extends ManagedResource {
 
   /**
    * Add in a new event listener.
@@ -37,7 +38,7 @@ public interface MasterEventManager {
    * @param listener
    *          the new listener
    */
-  void addListener(MasterEventListener listener);
+  def addListener(listener: MasterEventListener): Unit
 
   /**
    * Remove an event listener.
@@ -48,12 +49,12 @@ public interface MasterEventManager {
    * @param listener
    *          the listener to remove
    */
-  void removeListener(MasterEventListener listener);
+  def removeListener(listener: MasterEventListener): Unit
 
   /**
    * Clear all listeners from the manager.
    */
-  void removeAllListeners();
+  def removeAllListeners(): Unit
 
   /**
    * Send the live activity state change message to all listeners.
@@ -65,8 +66,8 @@ public interface MasterEventManager {
    * @param newState
    *          new state of the remote activity
    */
-  void signalLiveActivityRuntimeStateChange(ActiveLiveActivity liveActivity,
-      ActivityState oldState, ActivityState newState);
+  def signalLiveActivityRuntimeStateChange(
+    liveActivity: ActiveLiveActivity, oldState: ActivityState, newState: ActivityState): Unit
 
   /**
    * Send the live activity deletion message to all listeners.
@@ -76,7 +77,7 @@ public interface MasterEventManager {
    * @param result
    *          result of the deletion
    */
-  void signalLiveActivityDelete(ActiveLiveActivity liveActivity, LiveActivityDeleteResponse result);
+  def signalLiveActivityDelete(liveActivity: ActiveLiveActivity, result: LiveActivityDeleteResponse): Unit
 
   /**
    * Send the on deployment message to all listeners.
@@ -88,8 +89,9 @@ public interface MasterEventManager {
    * @param timestamp
    *          timestamp of the deployment
    */
-  void signalLiveActivityDeploy(ActiveLiveActivity liveActivity,
-      LiveActivityDeploymentResponse result, long timestamp);
+  def signalLiveActivityDeploy(
+    liveActivity: ActiveLiveActivity,
+    result: LiveActivityDeploymentResponse, timestamp: Long): Unit
 
   /**
    * Signal that the controller status has been updated.
@@ -99,8 +101,9 @@ public interface MasterEventManager {
    * @param state
    *          the new state
    */
-  void signalSpaceControllerStatusChange(ActiveSpaceController controller,
-      SpaceControllerState state);
+  def signalSpaceControllerStatusChange(
+    controller: ActiveSpaceController,
+    state: SpaceControllerState): Unit
 
   /**
    * Signal that a space controller status is shutting down.
@@ -108,7 +111,7 @@ public interface MasterEventManager {
    * @param controller
    *          the space controller
    */
-  void signalSpaceControllerShutdown(ActiveSpaceController controller);
+  def signalSpaceControllerShutdown(controller: ActiveSpaceController): Unit
 
   /**
    * Signal a space controller heartbeat.
@@ -119,7 +122,7 @@ public interface MasterEventManager {
    * @param timestamp
    *          timestamp of the heartbeat
    */
-  void signalSpaceControllerHeartbeat(ActiveSpaceController controller, long timestamp);
+  def signalSpaceControllerHeartbeat(controller: ActiveSpaceController, timestamp: Long): Unit
 
   /**
    * Signal that master has lost the heartbeat from a controller.
@@ -130,8 +133,9 @@ public interface MasterEventManager {
    *          the time since the last heartbeat that triggered the error, in
    *          milliseconds
    */
-  void signalSpaceControllerHeartbeatLost(ActiveSpaceController controller,
-      long timeSinceLastHeartbeat);
+  def signalSpaceControllerHeartbeatLost(
+    controller: ActiveSpaceController,
+    timeSinceLastHeartbeat: Long): Unit
 
   /**
    * Signal a space controller disconnection attempt.
@@ -139,7 +143,7 @@ public interface MasterEventManager {
    * @param controller
    *          the space controller
    */
-  void signalSpaceControllerDisconnectAttempted(ActiveSpaceController controller);
+  def signalSpaceControllerDisconnectAttempted(controller: ActiveSpaceController): Unit
 
   /**
    * Signal a space controller connection attempt.
@@ -147,7 +151,7 @@ public interface MasterEventManager {
    * @param controller
    *          the space controller
    */
-  void signalSpaceControllerConnectAttempted(ActiveSpaceController controller);
+  def signalSpaceControllerConnectAttempted(controller: ActiveSpaceController): Unit
 
   /**
    * Signal a space controller connection failure.
@@ -158,5 +162,13 @@ public interface MasterEventManager {
    *          the time waited for the space controller connection, in
    *          milliseconds
    */
-  void signalSpaceControllerConnectFailed(ActiveSpaceController controller, long waitedTime);
+  def signalSpaceControllerConnectFailed(controller: ActiveSpaceController, waitedTime: Long): Unit
+
+  /**
+   * Broadcast a space controller offline alert event.
+   * 
+   * @param event
+   *          the event to broadcast
+   */
+  def broadcastSpaceControllerOfflineAlertEvent(event: SpaceControllerConnectionLostAlertEvent): Unit
 }

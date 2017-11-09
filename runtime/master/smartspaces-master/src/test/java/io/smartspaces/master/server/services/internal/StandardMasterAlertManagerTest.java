@@ -26,7 +26,6 @@ import io.smartspaces.master.event.MasterEventManager;
 import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
 import io.smartspaces.master.server.services.MasterAlertManager;
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
-import io.smartspaces.service.alert.AlertService;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.time.provider.SettableTimeProvider;
 
@@ -49,8 +48,6 @@ public class StandardMasterAlertManagerTest {
   private SmartSpacesEnvironment spaceEnvironment;
 
   private SettableTimeProvider timeProvider;
-
-  private AlertService alertService;
 
   private MasterEventManager masterEventManager;
 
@@ -76,10 +73,8 @@ public class StandardMasterAlertManagerTest {
 
     activeSpaceControllerManager = Mockito.mock(ActiveSpaceControllerManager.class);
 
-    alertService = Mockito.mock(AlertService.class);
     alertManager = new StandardMasterAlertManager();
     alertManager.setSpaceEnvironment(spaceEnvironment);
-    alertManager.setAlertService(alertService);
     alertManager.setMasterEventManager(masterEventManager);
     alertManager.setActiveSpaceControllerManager(activeSpaceControllerManager);
   }
@@ -188,8 +183,9 @@ public class StandardMasterAlertManagerTest {
     Mockito.verify(executorService).execute(argument.capture());
     argument.getValue().run();
 
-    Mockito.verify(alertService, Mockito.times(1)).raiseAlert(
-        Mockito.eq(MasterAlertManager.ALERT_TYPE_CONTROLLER_TIMEOUT), Mockito.eq(uuid),
-        Mockito.anyString());
+    
+//    Mockito.verify(alertService, Mockito.times(1)).raiseAlert(
+//        Mockito.eq(MasterAlertManager.ALERT_TYPE_CONTROLLER_TIMEOUT), Mockito.eq(uuid),
+//        Mockito.anyString());
   }
 }

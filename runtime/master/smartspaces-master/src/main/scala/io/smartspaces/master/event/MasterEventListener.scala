@@ -15,21 +15,21 @@
  * the License.
  */
 
-package io.smartspaces.master.event;
+package io.smartspaces.master.event
 
-import io.smartspaces.activity.ActivityState;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
-import io.smartspaces.master.server.services.model.ActiveLiveActivity;
-import io.smartspaces.master.server.services.model.ActiveSpaceController;
-import io.smartspaces.spacecontroller.SpaceControllerState;
+import io.smartspaces.activity.ActivityState
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse
+import io.smartspaces.master.server.services.model.ActiveLiveActivity
+import io.smartspaces.master.server.services.model.ActiveSpaceController
+import io.smartspaces.spacecontroller.SpaceControllerState
 
 /**
  * A listener for events within the master.
  *
  * @author Keith M. Hughes
  */
-public interface MasterEventListener {
+trait MasterEventListener {
 
   /**
    * A space controller connection is being attempted.
@@ -37,7 +37,7 @@ public interface MasterEventListener {
    * @param controller
    *          the controller
    */
-  void onSpaceControllerConnectAttempted(ActiveSpaceController controller);
+  def onSpaceControllerConnectAttempted(controller: ActiveSpaceController): Unit
 
   /**
    * A space controller connection failed.
@@ -48,7 +48,7 @@ public interface MasterEventListener {
    *          the time waited for the space controller connection, in
    *          milliseconds
    */
-  void onSpaceControllerConnectFailed(ActiveSpaceController controller, long waitedTime);
+  def onSpaceControllerConnectFailed(controller: ActiveSpaceController, waitedTime: Long): Unit
 
   /**
    * A space controller disconnection is being attempted.
@@ -56,7 +56,7 @@ public interface MasterEventListener {
    * @param controller
    *          the controller
    */
-  void onSpaceControllerDisconnectAttempted(ActiveSpaceController controller);
+  def onSpaceControllerDisconnectAttempted(controller: ActiveSpaceController): Unit
 
   /**
    * A controller has sent a heartbeat.
@@ -67,7 +67,7 @@ public interface MasterEventListener {
    * @param timestamp
    *          timestamp of the heartbeat
    */
-  void onSpaceControllerHeartbeat(ActiveSpaceController controller, long timestamp);
+  def onSpaceControllerHeartbeat(controller: ActiveSpaceController, timestamp: Long): Unit
 
   /**
    * The master has lost the heartbeat from a controller.
@@ -78,8 +78,7 @@ public interface MasterEventListener {
    *          the time since the last heartbeat that triggered the error, in
    *          milliseconds
    */
-  void
-      onSpaceControllerHeartbeatLost(ActiveSpaceController controller, long timeSinceLastHeartbeat);
+  def onSpaceControllerHeartbeatLost(controller: ActiveSpaceController, timeSinceLastHeartbeat: Long): Unit
 
   /**
    * The controller status has been updated.
@@ -89,7 +88,7 @@ public interface MasterEventListener {
    * @param state
    *          the new state
    */
-  void onSpaceControllerStatusChange(ActiveSpaceController controller, SpaceControllerState state);
+  def onSpaceControllerStatusChange(controller: ActiveSpaceController, state: SpaceControllerState): Unit
 
   /**
    * The space controller is shutting down.
@@ -97,7 +96,7 @@ public interface MasterEventListener {
    * @param controller
    *          the space controller
    */
-  void onSpaceControllerShutdown(ActiveSpaceController controller);
+  def onSpaceControllerShutdown(controller: ActiveSpaceController): Unit
 
   /**
    * A live activity has been deployed.
@@ -109,8 +108,8 @@ public interface MasterEventListener {
    * @param timestamp
    *          timestamp of the event
    */
-  void onLiveActivityDeploy(ActiveLiveActivity liveActivity, LiveActivityDeploymentResponse result,
-      long timestamp);
+  def onLiveActivityDeploy(liveActivity: ActiveLiveActivity, result: LiveActivityDeploymentResponse,
+    timestamp: Long): Unit
 
   /**
    * A live activity has been deleted.
@@ -120,7 +119,7 @@ public interface MasterEventListener {
    * @param result
    *          result from the deletion attempt
    */
-  void onLiveActivityDelete(ActiveLiveActivity liveActivity, LiveActivityDeleteResponse result);
+  def onLiveActivityDelete(liveActivity: ActiveLiveActivity, result: LiveActivityDeleteResponse): Unit
 
   /**
    * A live activity has had a state change.
@@ -132,6 +131,6 @@ public interface MasterEventListener {
    * @param newState
    *          the new state
    */
-  void onLiveActivityStateChange(ActiveLiveActivity liveActivity, ActivityState oldState,
-      ActivityState newState);
+  def onLiveActivityStateChange(liveActivity: ActiveLiveActivity, oldState: ActivityState,
+    newState: ActivityState): Unit
 }

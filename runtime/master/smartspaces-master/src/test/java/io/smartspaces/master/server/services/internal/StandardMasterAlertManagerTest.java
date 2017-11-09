@@ -179,9 +179,9 @@ public class StandardMasterAlertManagerTest {
     Mockito.verify(activeSpaceControllerManager, Mockito.times(1)).disconnectSpaceController(
         controller, true);
 
-    ArgumentCaptor<Runnable> argument = ArgumentCaptor.forClass(Runnable.class);
-    Mockito.verify(executorService).execute(argument.capture());
-    argument.getValue().run();
+//    ArgumentCaptor<Runnable> argument = ArgumentCaptor.forClass(Runnable.class);
+//    Mockito.verify(executorService).execute(argument.capture());
+//    argument.getValue().run();
 
     
 //    Mockito.verify(alertService, Mockito.times(1)).raiseAlert(

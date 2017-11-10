@@ -35,7 +35,7 @@ import io.smartspaces.container.control.message.activity.LiveActivityDeleteResul
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult
 import io.smartspaces.activity.ActivityState
 import io.smartspaces.master.server.services.model.ActiveSpaceController
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult.ActivityDeployStatus
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult.LiveActivityDeploymentStatus
 
 /**
  * Tests for the standard master event manager.
@@ -169,7 +169,7 @@ class StandardMasterEventManagerTest extends JUnitSuite {
   @Test def signalLiveActivityDeploy(): Unit = {
     val liveActivity = new ActiveLiveActivity(null, null, null, null)
     val result = new LiveActivityDeploymentResult("bar", "bletch",
-      ActivityDeployStatus.SUCCESS, "foo", 100l)
+      LiveActivityDeploymentStatus.SUCCESS, "foo", 100l)
     val timestamp = 10l
 
     eventManager.signalLiveActivityDeploy(liveActivity, result, timestamp)

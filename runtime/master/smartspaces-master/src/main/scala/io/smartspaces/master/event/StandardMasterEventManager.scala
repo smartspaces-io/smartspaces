@@ -20,20 +20,19 @@ package io.smartspaces.master.event
 import io.smartspaces.activity.ActivityState
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse
+import io.smartspaces.event.observable.EventPublisherSubject
+import io.smartspaces.event.observable.ObservableCreator
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.master.server.services.model.ActiveLiveActivity
 import io.smartspaces.master.server.services.model.ActiveSpaceController
+import io.smartspaces.resource.managed.IdempotentManagedResource
 import io.smartspaces.spacecontroller.SpaceControllerState
 import io.smartspaces.system.SmartSpacesEnvironment
 
-import org.apache.commons.logging.Log
-
 import java.util.List
 import java.util.concurrent.CopyOnWriteArrayList
-import io.smartspaces.resource.managed.IdempotentManagedResource
-import scala.collection.JavaConverters._
-import io.smartspaces.event.observable.EventPublisherSubject
-import io.smartspaces.event.observable.ObservableCreator
+
+import scala.collection.JavaConverters.asScalaBufferConverter
 
 /**
  * A helper for messages to {@link MasterEventListener} instances.
@@ -48,14 +47,14 @@ class StandardMasterEventManager extends MasterEventManager with IdempotentManag
   private val listeners: List[MasterEventListener] = new CopyOnWriteArrayList()
 
   /**
-   * The creator for space controller offline observables.
+   * The subject for lost space controller connections.
    */
-  private var spaceControllerOfflineAlertEventCreator: ObservableCreator[EventPublisherSubject[SpaceControllerConnectionLostAlertEvent]] = _
+  private var spaceControllerConnectionLostAlertEventSubject: EventPublisherSubject[SpaceControllerConnectionLostAlertEvent] = _
 
   /**
-   * The subject for physical location occupancy events
+   * The subject for lost space controller connections.
    */
-  private var spaceControllerOfflineAlertEventSubject: EventPublisherSubject[SpaceControllerConnectionLostAlertEvent] = _
+  private var spaceControllerConnectionFailureAlertEventSubject: EventPublisherSubject[SpaceControllerConnectionFailureAlertEvent] = _
 
   /**
    * The logger for this manager.
@@ -68,17 +67,24 @@ class StandardMasterEventManager extends MasterEventManager with IdempotentManag
   private var spaceEnvironment: SmartSpacesEnvironment = _
 
   override def onStartup(): Unit = {
-    spaceControllerOfflineAlertEventCreator =
-      new ObservableCreator[EventPublisherSubject[SpaceControllerConnectionLostAlertEvent]]() {
-        override def newObservable(): EventPublisherSubject[SpaceControllerConnectionLostAlertEvent] = {
-          EventPublisherSubject.create(log)
-        }
-      }
 
-    spaceControllerOfflineAlertEventSubject =
+    spaceControllerConnectionLostAlertEventSubject =
       spaceEnvironment.getEventObservableRegistry.getObservable(
         SpaceControllerConnectionLostAlertEvent.EVENT_TYPE,
-        spaceControllerOfflineAlertEventCreator)
+        new ObservableCreator[EventPublisherSubject[SpaceControllerConnectionLostAlertEvent]]() {
+          override def newObservable(): EventPublisherSubject[SpaceControllerConnectionLostAlertEvent] = {
+            EventPublisherSubject.create(log)
+          }
+        })
+
+    spaceControllerConnectionFailureAlertEventSubject =
+      spaceEnvironment.getEventObservableRegistry.getObservable(
+        SpaceControllerConnectionFailureAlertEvent.EVENT_TYPE,
+        new ObservableCreator[EventPublisherSubject[SpaceControllerConnectionFailureAlertEvent]]() {
+          override def newObservable(): EventPublisherSubject[SpaceControllerConnectionFailureAlertEvent] = {
+            EventPublisherSubject.create(log)
+          }
+        })
   }
 
   override def addListener(listener: MasterEventListener): Unit = {
@@ -233,9 +239,13 @@ class StandardMasterEventManager extends MasterEventManager with IdempotentManag
       }
     }
   }
-  
-  override def broadcastSpaceControllerOfflineAlertEvent(event: SpaceControllerConnectionLostAlertEvent): Unit = {
-    spaceControllerOfflineAlertEventSubject.onNext(event)
+
+  override def broadcastSpaceControllerConnectionLostAlertEvent(event: SpaceControllerConnectionLostAlertEvent): Unit = {
+    spaceControllerConnectionLostAlertEventSubject.onNext(event)
+  }
+
+  override def broadcastSpaceControllerConnectionFailureAlertEvent(event: SpaceControllerConnectionFailureAlertEvent): Unit = {
+    spaceControllerConnectionFailureAlertEventSubject.onNext(event)
   }
 
   /**

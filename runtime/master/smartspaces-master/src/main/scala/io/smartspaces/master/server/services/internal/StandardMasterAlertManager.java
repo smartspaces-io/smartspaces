@@ -21,6 +21,7 @@ import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.master.event.BaseMasterEventListener;
 import io.smartspaces.master.event.MasterEventListener;
 import io.smartspaces.master.event.MasterEventManager;
+import io.smartspaces.master.event.SpaceControllerConnectionFailureAlertEvent;
 import io.smartspaces.master.event.SpaceControllerConnectionLostAlertEvent;
 import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
 import io.smartspaces.master.server.services.MasterAlertManager;
@@ -50,17 +51,17 @@ public class StandardMasterAlertManager implements MasterAlertManager {
   /**
    * The delay for handing a controller shut down event in milliseconds.
    */
-  public static final int CONTROLLER_SHUTDOWN_EVENT_HANDLING_DELAY = 500;
+  public static final long CONTROLLER_SHUTDOWN_EVENT_HANDLING_DELAY = 500;
 
   /**
    * Default number of milliseconds for space controller failure.
    */
-  public static final int SPACE_CONTROLLER_HEARTBEAT_TIME_DEFAULT = 30000;
+  public static final long SPACE_CONTROLLER_HEARTBEAT_TIME_DEFAULT = 30000;
 
   /**
    * The default number of milliseconds the watcher thread delays between scans.
    */
-  private static final int WATCHER_DELAY_DEFAULT = 1000;
+  private static final long WATCHER_DELAY_DEFAULT = 1000;
 
   /**
    * Number of milliseconds after not receiving a heartbeat for a space
@@ -198,7 +199,14 @@ public class StandardMasterAlertManager implements MasterAlertManager {
    */
   private void handleSpaceControllerConnectFailed(ActiveSpaceController activeSpaceController,
       long waitedTime) {
-    disconnectAndRaiseAlert(activeSpaceController, waitedTime);
+    removeSpaceControllerWatcher(activeSpaceController);
+    disconnectSpaceController(activeSpaceController, true);
+
+    SpaceController controller = activeSpaceController.spaceController();
+
+    masterEventManager.broadcastSpaceControllerConnectionFailureAlertEvent(
+        new SpaceControllerConnectionFailureAlertEvent(waitedTime, controller.getId(),
+            controller.getUuid(), controller.getName(), controller.getHostId()));
   }
 
   /**
@@ -263,25 +271,11 @@ public class StandardMasterAlertManager implements MasterAlertManager {
     spaceEnvironment.getLog().formatWarn("Lost heartbeat for space controller for %d msec: %s",
         timeSinceLastHeartbeat, activeSpaceController.getDisplayName());
 
-    disconnectAndRaiseAlert(activeSpaceController, timeSinceLastHeartbeat);
-  }
-
-  /**
-   * Disconnect from a space controller that has lost its connection and raise
-   * an alert.
-   *
-   * @param activeSpaceController
-   *          the space controller
-   * @param timeSinceLastHeartbeat
-   *          the time since the last connection acknowledgement
-   */
-  private void disconnectAndRaiseAlert(final ActiveSpaceController activeSpaceController,
-      final long timeSinceLastHeartbeat) {
     disconnectSpaceController(activeSpaceController, true);
 
     SpaceController controller = activeSpaceController.spaceController();
 
-    masterEventManager.broadcastSpaceControllerOfflineAlertEvent(
+    masterEventManager.broadcastSpaceControllerConnectionLostAlertEvent(
         new SpaceControllerConnectionLostAlertEvent(timeSinceLastHeartbeat, controller.getId(),
             controller.getUuid(), controller.getName(), controller.getHostId()));
   }
@@ -301,8 +295,8 @@ public class StandardMasterAlertManager implements MasterAlertManager {
           .disconnectSpaceController(activeSpaceController.spaceController(), fromError);
     } catch (Throwable e) {
       spaceEnvironment.getLog()
-          .error(String.format("Lost heartbeat disconnect for space controller: %s",
-              activeSpaceController.getDisplayName()), e);
+          .formatError(e, "Lost heartbeat disconnect for space controller: %s",
+              activeSpaceController.getDisplayName());
     }
   }
 
@@ -337,7 +331,7 @@ public class StandardMasterAlertManager implements MasterAlertManager {
    * @param activeSpaceController
    *          the space controller
    */
-  private void addSpaceControllerWatcher(ActiveSpaceController activeSpaceController) {
+  void addSpaceControllerWatcher(ActiveSpaceController activeSpaceController) {
     long timestamp = spaceEnvironment.getTimeProvider().getCurrentTime();
     synchronized (spaceControllerWatchers) {
       SpaceControllerAlertWatcher watcher =

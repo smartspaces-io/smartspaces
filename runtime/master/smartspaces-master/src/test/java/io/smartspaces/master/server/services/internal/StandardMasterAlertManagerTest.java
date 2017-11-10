@@ -19,22 +19,33 @@ package io.smartspaces.master.server.services.internal;
 
 import static org.mockito.Mockito.when;
 
+import io.smartspaces.activity.ActivityState;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse.ActivityDeployStatus;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.master.event.MasterEventManager;
+import io.smartspaces.master.event.SpaceControllerConnectionFailureAlertEvent;
+import io.smartspaces.master.event.SpaceControllerConnectionLostAlertEvent;
 import io.smartspaces.master.server.services.ActiveSpaceControllerManager;
-import io.smartspaces.master.server.services.MasterAlertManager;
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
+import io.smartspaces.spacecontroller.SpaceControllerState;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.time.provider.SettableTimeProvider;
+import io.smartspaces.time.provider.TimeProvider;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Unit tests for {@link StandardMasterAlertManager}.
@@ -45,25 +56,30 @@ public class StandardMasterAlertManagerTest {
 
   private StandardMasterAlertManager alertManager;
 
+  @Mock
   private SmartSpacesEnvironment spaceEnvironment;
 
-  private SettableTimeProvider timeProvider;
+  @Mock
+  private TimeProvider timeProvider;
 
+  @Mock
   private MasterEventManager masterEventManager;
-
-  private ActiveSpaceControllerManager activeSpaceControllerManager;
-
+  
+  @Mock
   private ScheduledExecutorService executorService;
 
+  @Mock
+  private ActiveSpaceControllerManager activeSpaceControllerManager;
+
+  @Mock
   private ExtendedLog log;
 
   @Before
   public void setup() {
+    MockitoAnnotations.initMocks(this);
     spaceEnvironment = Mockito.mock(SmartSpacesEnvironment.class);
-    timeProvider = new SettableTimeProvider();
-    when(spaceEnvironment.getTimeProvider()).thenReturn(timeProvider);
 
-    executorService = Mockito.mock(ScheduledExecutorService.class);
+    when(spaceEnvironment.getTimeProvider()).thenReturn(timeProvider);
     when(spaceEnvironment.getExecutorService()).thenReturn(executorService);
 
     log = Mockito.mock(ExtendedLog.class);
@@ -91,15 +107,15 @@ public class StandardMasterAlertManagerTest {
 
     ActiveSpaceController active = new ActiveSpaceController(controller, timeProvider);
 
-    int initialTimestamp = 1000;
-    timeProvider.setCurrentTime(initialTimestamp);
+    long initialTimestamp = 1000;
+    Mockito.when(timeProvider.getCurrentTime()).thenReturn(initialTimestamp);
     alertManager.getMasterEventListener().onSpaceControllerConnectAttempted(active);
     alertManager.scan();
 
     long maxHeartbeatTime = alertManager.getSpaceControllerHeartbeatTime();
     alertManager.getMasterEventListener().onSpaceControllerHeartbeat(active,
         initialTimestamp + maxHeartbeatTime - 1);
-    timeProvider.setCurrentTime(initialTimestamp + maxHeartbeatTime);
+    Mockito.when(timeProvider.getCurrentTime()).thenReturn(initialTimestamp + maxHeartbeatTime);
     alertManager.scan();
 
     Mockito.verify(masterEventManager, Mockito.never()).signalSpaceControllerHeartbeatLost(active,
@@ -112,7 +128,7 @@ public class StandardMasterAlertManagerTest {
   @Test
   public void testAlertManagerScanTrigger() {
     String uuid = "this.is.my.uuid";
-    int initialTimestamp = 1000;
+    long initialTimestamp = 1000;
 
     SpaceController controller = new SimpleSpaceController();
     controller.setUuid(uuid);
@@ -121,13 +137,13 @@ public class StandardMasterAlertManagerTest {
 
     ActiveSpaceController active = new ActiveSpaceController(controller, timeProvider);
 
-    timeProvider.setCurrentTime(initialTimestamp);
+    Mockito.when(timeProvider.getCurrentTime()).thenReturn(initialTimestamp);
     alertManager.getMasterEventListener().onSpaceControllerConnectAttempted(active);
     alertManager.scan();
 
     long maxHeartbeatTime = alertManager.getSpaceControllerHeartbeatTime();
 
-    timeProvider.setCurrentTime(initialTimestamp + maxHeartbeatTime + 1);
+    Mockito.when(timeProvider.getCurrentTime()).thenReturn(initialTimestamp + maxHeartbeatTime + 1);
     alertManager.scan();
 
     Mockito.verify(masterEventManager, Mockito.times(1)).signalSpaceControllerHeartbeatLost(active,
@@ -140,24 +156,24 @@ public class StandardMasterAlertManagerTest {
   @Test
   public void testAlertManagerScanNoTriggerFromDisconnect() {
     String uuid = "this.is.my.uuid";
-    int initialTimestamp = 1000;
+    long initialTimestamp = 1000;
     SpaceController controller = new SimpleSpaceController();
     controller.setUuid(uuid);
 
     ActiveSpaceController active = new ActiveSpaceController(controller, timeProvider);
 
-    timeProvider.setCurrentTime(initialTimestamp);
+    Mockito.when(timeProvider.getCurrentTime()).thenReturn(initialTimestamp);
     alertManager.getMasterEventListener().onSpaceControllerConnectAttempted(active);
     alertManager.scan();
 
     alertManager.getMasterEventListener().onSpaceControllerDisconnectAttempted(active);
     long maxHeartbeatTime = alertManager.getSpaceControllerHeartbeatTime();
 
-    timeProvider.setCurrentTime(initialTimestamp + maxHeartbeatTime + 1);
+    Mockito.when(timeProvider.getCurrentTime()).thenReturn(initialTimestamp + maxHeartbeatTime + 1);
     alertManager.scan();
 
-    Mockito.verify(masterEventManager, Mockito.never()).signalSpaceControllerHeartbeatLost(
-        Mockito.eq(active), Mockito.anyLong());
+    Mockito.verify(masterEventManager, Mockito.never())
+        .signalSpaceControllerHeartbeatLost(Mockito.eq(active), Mockito.anyLong());
   }
 
   /**
@@ -165,7 +181,7 @@ public class StandardMasterAlertManagerTest {
    * and that the controller is disconnected.
    */
   @Test
-  public void testAlertManagerTriggerFromMasterEvent() {
+  public void testConnectionLostTriggerFromMasterEvent() {
     String uuid = "this.is.my.uuid";
     SpaceController controller = new SimpleSpaceController();
     controller.setUuid(uuid);
@@ -174,18 +190,118 @@ public class StandardMasterAlertManagerTest {
 
     ActiveSpaceController active = new ActiveSpaceController(controller, timeProvider);
 
-    alertManager.getMasterEventListener().onSpaceControllerHeartbeatLost(active, 1000);
+    long timeSinceLastHeartbeat = 1000;
+    alertManager.getMasterEventListener().onSpaceControllerHeartbeatLost(active,
+        timeSinceLastHeartbeat);
 
-    Mockito.verify(activeSpaceControllerManager, Mockito.times(1)).disconnectSpaceController(
-        controller, true);
+    Mockito.verify(activeSpaceControllerManager, Mockito.times(1))
+        .disconnectSpaceController(controller, true);
 
-//    ArgumentCaptor<Runnable> argument = ArgumentCaptor.forClass(Runnable.class);
-//    Mockito.verify(executorService).execute(argument.capture());
-//    argument.getValue().run();
+    ArgumentCaptor<SpaceControllerConnectionLostAlertEvent> argument =
+        ArgumentCaptor.forClass(SpaceControllerConnectionLostAlertEvent.class);
+    Mockito.verify(masterEventManager)
+        .broadcastSpaceControllerConnectionLostAlertEvent(argument.capture());
+    SpaceControllerConnectionLostAlertEvent event = argument.getValue();
 
+    Assert.assertEquals(controller.getUuid(), event.controllerUuid());
+    Assert.assertEquals(controller.getHostId(), event.controllerHostId());
+    Assert.assertEquals(timeSinceLastHeartbeat, event.timeSinceLastHeartbeat());
+  }
+
+  /**
+   * Test that an alert is raised when an event comes in about a connection
+   * failure and that the controller is disconnected.
+   */
+  @Test
+  public void testConnectionFailureFromMasterEvent() {
+    String uuid = "this.is.my.uuid";
+    SpaceController controller = new SimpleSpaceController();
+    controller.setUuid(uuid);
+    controller.setHostId("foo");
+    controller.setName("howdy");
+
+    ActiveSpaceController active = new ActiveSpaceController(controller, timeProvider);
+
+    alertManager.addSpaceControllerWatcher(active);
+    Assert.assertEquals(active,  alertManager.getSpaceControllerWatcher(uuid).getMonitored());
+
+    long waitedTime = 1000;
+    alertManager.getMasterEventListener().onSpaceControllerConnectFailed(active, waitedTime);
+
+    Mockito.verify(activeSpaceControllerManager, Mockito.times(1))
+        .disconnectSpaceController(controller, true);
+
+    Assert.assertNull(alertManager.getSpaceControllerWatcher(uuid));
+
+    ArgumentCaptor<SpaceControllerConnectionFailureAlertEvent> argument =
+        ArgumentCaptor.forClass(SpaceControllerConnectionFailureAlertEvent.class);
+    Mockito.verify(masterEventManager)
+        .broadcastSpaceControllerConnectionFailureAlertEvent(argument.capture());
+    SpaceControllerConnectionFailureAlertEvent event = argument.getValue();
+
+    Assert.assertEquals(controller.getUuid(), event.controllerUuid());
+    Assert.assertEquals(controller.getHostId(), event.controllerHostId());
+    Assert.assertEquals(waitedTime, event.timeSinceLastHeartbeat());
+  }
+
+  @Test
+  public void testEventSpaceControllerConnectAttempted() {
+    String uuid = "this.is.my.uuid";
+    long initialTimestamp = 1000;
+
+    SpaceController controller = new SimpleSpaceController();
+    controller.setUuid(uuid);
+    controller.setHostId("hostess");
+    controller.setName("NumeroUno");
+
+    ActiveSpaceController active = new ActiveSpaceController(controller, timeProvider);
+
+    alertManager.getMasterEventListener().onSpaceControllerConnectAttempted(active);
     
-//    Mockito.verify(alertService, Mockito.times(1)).raiseAlert(
-//        Mockito.eq(MasterAlertManager.ALERT_TYPE_CONTROLLER_TIMEOUT), Mockito.eq(uuid),
-//        Mockito.anyString());
+    Assert.assertEquals(active,  alertManager.getSpaceControllerWatcher(uuid).getMonitored());
+  }
+
+  @Test
+  public void testEventSpaceControllerDisconnectAttempted() {
+    String uuid = "this.is.my.uuid";
+    long initialTimestamp = 1000;
+
+    SpaceController controller = new SimpleSpaceController();
+    controller.setUuid(uuid);
+    controller.setHostId("hostess");
+    controller.setName("NumeroUno");
+
+    ActiveSpaceController active = new ActiveSpaceController(controller, timeProvider);
+
+    alertManager.addSpaceControllerWatcher(active);
+    Assert.assertEquals(active,  alertManager.getSpaceControllerWatcher(uuid).getMonitored());
+
+    alertManager.getMasterEventListener().onSpaceControllerDisconnectAttempted(active);
+
+    Assert.assertNull(alertManager.getSpaceControllerWatcher(uuid));
+  }
+
+  @Test
+  public void testEventSpaceControllerShutdown() {
+    String uuid = "this.is.my.uuid";
+    long initialTimestamp = 1000;
+
+    SpaceController controller = new SimpleSpaceController();
+    controller.setUuid(uuid);
+    controller.setHostId("hostess");
+    controller.setName("NumeroUno");
+
+    ActiveSpaceController active = new ActiveSpaceController(controller, timeProvider);
+
+    alertManager.getMasterEventListener().onSpaceControllerShutdown(active);
+
+    ArgumentCaptor<Runnable> argument = ArgumentCaptor.forClass(Runnable.class);
+    Mockito.verify(executorService).schedule(argument.capture(), 
+        Matchers.eq(StandardMasterAlertManager.CONTROLLER_SHUTDOWN_EVENT_HANDLING_DELAY), 
+        Matchers.eq(TimeUnit.MILLISECONDS));
+    argument.getValue().run();
+    
+    Mockito.verify(activeSpaceControllerManager, Mockito.times(1))
+        .disconnectSpaceController(controller, false);
   }
 }

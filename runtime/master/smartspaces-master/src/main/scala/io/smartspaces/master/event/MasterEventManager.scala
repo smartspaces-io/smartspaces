@@ -166,9 +166,17 @@ trait MasterEventManager extends ManagedResource {
 
   /**
    * Broadcast a space controller offline alert event.
-   * 
+   *
    * @param event
    *          the event to broadcast
    */
-  def broadcastSpaceControllerOfflineAlertEvent(event: SpaceControllerConnectionLostAlertEvent): Unit
+  def broadcastSpaceControllerConnectionLostAlertEvent(event: SpaceControllerConnectionLostAlertEvent): Unit
+
+  /**
+   * Broadcast a space controller connection failure alert event.
+   *
+   * @param event
+   *          the event to broadcast
+   */
+  def broadcastSpaceControllerConnectionFailureAlertEvent(event: SpaceControllerConnectionFailureAlertEvent): Unit
 }

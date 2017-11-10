@@ -17,8 +17,8 @@
 
 package io.smartspaces.master.api.master.internal;
 
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse.ActivityDeployStatus;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult.LiveActivityDeploymentStatus;
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.SpaceController;
@@ -90,8 +90,8 @@ public class StandardMasterApiActivityManagerTest {
   @Test
   public void testActivityInstallSuccess() {
     String uuid = "foo";
-    LiveActivityDeploymentResponse result =
-        new LiveActivityDeploymentResponse("trans", uuid, ActivityDeployStatus.SUCCESS, null, 1111);
+    LiveActivityDeploymentResult result =
+        new LiveActivityDeploymentResult("trans", uuid, LiveActivityDeploymentStatus.SUCCESS, null, 1111);
     long timestamp = 1234567;
 
     LiveActivity liveActivity = Mockito.mock(LiveActivity.class);

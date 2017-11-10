@@ -18,8 +18,8 @@
 package io.smartspaces.master.event
 
 import io.smartspaces.activity.ActivityState
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult
 import io.smartspaces.master.server.services.model.ActiveLiveActivity
 import io.smartspaces.master.server.services.model.ActiveSpaceController
 import io.smartspaces.resource.managed.ManagedResource
@@ -77,7 +77,7 @@ trait MasterEventManager extends ManagedResource {
    * @param result
    *          result of the deletion
    */
-  def signalLiveActivityDelete(liveActivity: ActiveLiveActivity, result: LiveActivityDeleteResponse): Unit
+  def signalLiveActivityDelete(liveActivity: ActiveLiveActivity, result: LiveActivityDeleteResult): Unit
 
   /**
    * Send the on deployment message to all listeners.
@@ -91,7 +91,7 @@ trait MasterEventManager extends ManagedResource {
    */
   def signalLiveActivityDeploy(
     liveActivity: ActiveLiveActivity,
-    result: LiveActivityDeploymentResponse, timestamp: Long): Unit
+    result: LiveActivityDeploymentResult, timestamp: Long): Unit
 
   /**
    * Signal that the controller status has been updated.

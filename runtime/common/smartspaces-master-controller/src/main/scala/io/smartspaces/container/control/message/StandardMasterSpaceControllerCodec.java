@@ -18,9 +18,9 @@ package io.smartspaces.container.control.message;
 
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
 import io.smartspaces.container.control.message.activity.LiveActivityRuntimeStatus;
 import io.smartspaces.container.control.message.common.ConfigurationRequest;
 import io.smartspaces.container.control.message.activity.LiveActivityRuntimeRequest;
@@ -296,17 +296,17 @@ public class StandardMasterSpaceControllerCodec {
     return decodePayload(message, LiveActivityDeploymentRequest.class);
   }
 
-  public LiveActivityDeploymentResponse
+  public LiveActivityDeploymentResult
       decodeLiveActivityDeploymentResponse(Map<String, Object> message) {
-    return decodePayload(message, LiveActivityDeploymentResponse.class);
+    return decodePayload(message, LiveActivityDeploymentResult.class);
   }
 
   public LiveActivityDeleteRequest decodeLiveActivityDeleteRequest(Map<String, Object> message) {
     return decodePayload(message, LiveActivityDeleteRequest.class);
   }
 
-  public LiveActivityDeleteResponse decodeLiveActivityDeleteResponse(Map<String, Object> message) {
-    return decodePayload(message, LiveActivityDeleteResponse.class);
+  public LiveActivityDeleteResult decodeLiveActivityDeleteResponse(Map<String, Object> message) {
+    return decodePayload(message, LiveActivityDeleteResult.class);
   }
 
   public ContainerResourceDeploymentQueryRequest

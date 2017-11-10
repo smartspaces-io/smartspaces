@@ -18,8 +18,8 @@
 package io.smartspaces.master.event
 
 import io.smartspaces.activity.ActivityState
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult
 import io.smartspaces.master.server.services.model.ActiveLiveActivity
 import io.smartspaces.master.server.services.model.ActiveSpaceController
 import io.smartspaces.spacecontroller.SpaceControllerState
@@ -108,7 +108,7 @@ trait MasterEventListener {
    * @param timestamp
    *          timestamp of the event
    */
-  def onLiveActivityDeploy(liveActivity: ActiveLiveActivity, result: LiveActivityDeploymentResponse,
+  def onLiveActivityDeploy(liveActivity: ActiveLiveActivity, result: LiveActivityDeploymentResult,
     timestamp: Long): Unit
 
   /**
@@ -119,7 +119,7 @@ trait MasterEventListener {
    * @param result
    *          result from the deletion attempt
    */
-  def onLiveActivityDelete(liveActivity: ActiveLiveActivity, result: LiveActivityDeleteResponse): Unit
+  def onLiveActivityDelete(liveActivity: ActiveLiveActivity, result: LiveActivityDeleteResult): Unit
 
   /**
    * A live activity has had a state change.

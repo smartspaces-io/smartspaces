@@ -18,11 +18,11 @@
 package io.smartspaces.container.control.message.activity;
 
 /**
- * The response for an attempt to delete a live activity.
+ * The result for an attempt to delete a live activity.
  *
  * @author Keith M. Hughes
  */
-public class LiveActivityDeleteResponse {
+public class LiveActivityDeleteResult {
 
   /**
    * UUID of the live activity deleted.
@@ -47,7 +47,7 @@ public class LiveActivityDeleteResponse {
   /**
    * Construct the status.
    */
-  public LiveActivityDeleteResponse() {
+  public LiveActivityDeleteResult() {
   }
 
   /**
@@ -62,7 +62,7 @@ public class LiveActivityDeleteResponse {
    * @param statusDetail
    *          the details of the status, can be {@code null}
    */
-  public LiveActivityDeleteResponse(String uuid, LiveActivityDeleteStatus status, long timeDeleted,
+  public LiveActivityDeleteResult(String uuid, LiveActivityDeleteStatus status, long timeDeleted,
       String statusDetail) {
     this.uuid = uuid;
     this.status = status;

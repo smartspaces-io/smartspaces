@@ -18,8 +18,8 @@
 package io.smartspaces.master.server.services;
 
 import io.smartspaces.activity.ActivityState;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
 import io.smartspaces.master.server.services.internal.DataBundleState;
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.spacecontroller.SpaceControllerState;
@@ -115,7 +115,7 @@ public interface RemoteSpaceControllerClientListener {
    * @param result
    *          result of the install
    */
-  void onLiveActivityDeployment(String liveActivityUuid, LiveActivityDeploymentResponse result);
+  void onLiveActivityDeployment(String liveActivityUuid, LiveActivityDeploymentResult result);
 
   /**
    * An activity has been deleted.
@@ -125,7 +125,7 @@ public interface RemoteSpaceControllerClientListener {
    * @param result
    *          result of the delete
    */
-  void onLiveActivityDelete(String liveActivityUuid, LiveActivityDeleteResponse result);
+  void onLiveActivityDelete(String liveActivityUuid, LiveActivityDeleteResult result);
 
   /**
    * A remote activity has deployment status.

@@ -18,8 +18,8 @@
 package io.smartspaces.master.event
 
 import io.smartspaces.activity.ActivityState
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult
 import io.smartspaces.event.observable.EventPublisherSubject
 import io.smartspaces.event.observable.ObservableCreator
 import io.smartspaces.logging.ExtendedLog
@@ -197,7 +197,7 @@ class StandardMasterEventManager extends MasterEventManager with IdempotentManag
 
   override def signalLiveActivityDeploy(
     liveActivity: ActiveLiveActivity,
-    result: LiveActivityDeploymentResponse, timestamp: Long): Unit = {
+    result: LiveActivityDeploymentResult, timestamp: Long): Unit = {
     listeners.asScala.foreach { (listener) =>
       try {
         listener.onLiveActivityDeploy(liveActivity, result, timestamp)
@@ -212,7 +212,7 @@ class StandardMasterEventManager extends MasterEventManager with IdempotentManag
 
   override def signalLiveActivityDelete(
     liveActivity: ActiveLiveActivity,
-    result: LiveActivityDeleteResponse): Unit = {
+    result: LiveActivityDeleteResult): Unit = {
     listeners.asScala.foreach { (listener) =>
       try {
         listener.onLiveActivityDelete(liveActivity, result)

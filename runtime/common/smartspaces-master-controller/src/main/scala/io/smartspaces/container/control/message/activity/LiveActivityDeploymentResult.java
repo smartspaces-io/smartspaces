@@ -22,7 +22,7 @@ package io.smartspaces.container.control.message.activity;
  *
  * @author Keith M. Hughes
  */
-public class LiveActivityDeploymentResponse {
+public class LiveActivityDeploymentResult {
 
   /**
    * Transaction ID for the deployment.
@@ -37,7 +37,7 @@ public class LiveActivityDeploymentResponse {
   /**
    * Status of the deployment.
    */
-  private ActivityDeployStatus status;
+  private LiveActivityDeploymentStatus status;
 
   /**
    * Status detail of the deployment.
@@ -52,7 +52,7 @@ public class LiveActivityDeploymentResponse {
   /**
    * Construct a response.
    */
-  public LiveActivityDeploymentResponse() {
+  public LiveActivityDeploymentResult() {
   }
 
   /**
@@ -69,8 +69,8 @@ public class LiveActivityDeploymentResponse {
    * @param timeDeployed
    *          time the activity was deployed
    */
-  public LiveActivityDeploymentResponse(String transactionId, String uuid,
-      ActivityDeployStatus status, String statusDetail, long timeDeployed) {
+  public LiveActivityDeploymentResult(String transactionId, String uuid,
+      LiveActivityDeploymentStatus status, String statusDetail, long timeDeployed) {
     this.transactionId = transactionId;
     this.uuid = uuid;
     this.status = status;
@@ -121,7 +121,7 @@ public class LiveActivityDeploymentResponse {
    *
    * @return the status
    */
-  public ActivityDeployStatus getStatus() {
+  public LiveActivityDeploymentStatus getStatus() {
     return status;
   }
 
@@ -131,7 +131,7 @@ public class LiveActivityDeploymentResponse {
    * @param status
    *          the status
    */
-  public void setStatus(ActivityDeployStatus status) {
+  public void setStatus(LiveActivityDeploymentStatus status) {
     this.status = status;
   }
 
@@ -178,7 +178,7 @@ public class LiveActivityDeploymentResponse {
    *
    * @author Keith M. Hughes
    */
-  public enum ActivityDeployStatus {
+  public enum LiveActivityDeploymentStatus {
     /**
      * Deployment was a success.
      */
@@ -217,7 +217,7 @@ public class LiveActivityDeploymentResponse {
      * @param description
      *          description of the status
      */
-    private ActivityDeployStatus(boolean success, String description) {
+    private LiveActivityDeploymentStatus(boolean success, String description) {
       this.success = success;
       this.description = description;
     }

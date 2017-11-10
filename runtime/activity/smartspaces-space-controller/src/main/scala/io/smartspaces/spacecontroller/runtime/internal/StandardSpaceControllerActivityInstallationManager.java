@@ -19,11 +19,11 @@ package io.smartspaces.spacecontroller.runtime.internal;
 
 import io.smartspaces.SmartSpacesExceptionUtils;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse.LiveActivityDeleteStatus;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult.LiveActivityDeleteStatus;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse.ActivityDeployStatus;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult.LiveActivityDeploymentStatus;
 import io.smartspaces.liveactivity.runtime.installation.ActivityInstallationManager;
 import io.smartspaces.liveactivity.runtime.installation.ActivityInstallationManager.RemoveActivityResult;
 import io.smartspaces.spacecontroller.runtime.SpaceControllerActivityInstallationManager;
@@ -74,27 +74,27 @@ public class StandardSpaceControllerActivityInstallationManager implements
   }
 
   @Override
-  public LiveActivityDeploymentResponse handleDeploymentRequest(
+  public LiveActivityDeploymentResult handleDeploymentRequest(
       LiveActivityDeploymentRequest request) {
     String activityUri = request.getActivitySourceUri();
     String uuid = request.getUuid();
 
     // This will be usually set to the current possible error status.
-    ActivityDeployStatus status = null;
+    LiveActivityDeploymentStatus status = null;
     boolean success = true;
 
     Date installedDate = null;
 
     try {
-      status = ActivityDeployStatus.FAILURE_COPY;
+      status = LiveActivityDeploymentStatus.FAILURE_COPY;
       activityInstallationManager.copyActivity(uuid, activityUri);
 
-      status = ActivityDeployStatus.FAILURE_UNPACK;
+      status = LiveActivityDeploymentStatus.FAILURE_UNPACK;
       installedDate =
           activityInstallationManager.installActivity(uuid, request.getIdentifyingName(),
               request.getVersion());
 
-      status = ActivityDeployStatus.SUCCESS;
+      status = LiveActivityDeploymentStatus.SUCCESS;
     } catch (Exception e) {
       spaceEnvironment.getLog().error(String.format("Could not install live activity %s", uuid), e);
 
@@ -119,20 +119,20 @@ public class StandardSpaceControllerActivityInstallationManager implements
    *          date to mark it if successful
    * @return an appropriately filled out deployment status
    */
-  private LiveActivityDeploymentResponse createDeployResult(LiveActivityDeploymentRequest request,
-      ActivityDeployStatus status, boolean success, Date installedDate) {
+  private LiveActivityDeploymentResult createDeployResult(LiveActivityDeploymentRequest request,
+		  LiveActivityDeploymentStatus status, boolean success, Date installedDate) {
 
     long timeDeployed = 0;
     if (installedDate != null) {
       timeDeployed = installedDate.getTime();
     }
 
-    return new LiveActivityDeploymentResponse(request.getTransactionId(), request.getUuid(),
+    return new LiveActivityDeploymentResult(request.getTransactionId(), request.getUuid(),
         status, null, timeDeployed);
   }
 
   @Override
-  public LiveActivityDeleteResponse handleDeleteRequest(LiveActivityDeleteRequest request) {
+  public LiveActivityDeleteResult handleDeleteRequest(LiveActivityDeleteRequest request) {
     RemoveActivityResult result = RemoveActivityResult.FAILURE;
 
     String statusDetail = null;
@@ -161,7 +161,7 @@ public class StandardSpaceControllerActivityInstallationManager implements
    *
    * @return the response to be sent back
    */
-  public LiveActivityDeleteResponse createDeleteResponse(LiveActivityDeleteRequest request,
+  public LiveActivityDeleteResult createDeleteResponse(LiveActivityDeleteRequest request,
       RemoveActivityResult result, String statusDetail) {
     LiveActivityDeleteStatus status;
     switch (result) {
@@ -177,7 +177,7 @@ public class StandardSpaceControllerActivityInstallationManager implements
         status = LiveActivityDeleteStatus.FAILURE;
     }
 
-    return new LiveActivityDeleteResponse(request.getUuid(), status, spaceEnvironment
+    return new LiveActivityDeleteResult(request.getUuid(), status, spaceEnvironment
         .getTimeProvider().getCurrentTime(), statusDetail);
   }
 }

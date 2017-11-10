@@ -31,11 +31,11 @@ import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.spacecontroller.SpaceControllerState
 import io.smartspaces.master.server.services.model.ActiveLiveActivity
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult
 import io.smartspaces.activity.ActivityState
 import io.smartspaces.master.server.services.model.ActiveSpaceController
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse.ActivityDeployStatus
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult.ActivityDeployStatus
 
 /**
  * Tests for the standard master event manager.
@@ -168,7 +168,7 @@ class StandardMasterEventManagerTest extends JUnitSuite {
    */
   @Test def signalLiveActivityDeploy(): Unit = {
     val liveActivity = new ActiveLiveActivity(null, null, null, null)
-    val result = new LiveActivityDeploymentResponse("bar", "bletch",
+    val result = new LiveActivityDeploymentResult("bar", "bletch",
       ActivityDeployStatus.SUCCESS, "foo", 100l)
     val timestamp = 10l
 
@@ -183,7 +183,7 @@ class StandardMasterEventManagerTest extends JUnitSuite {
   @Test def testSignalLiveActivityDelete(): Unit = {
 
     val liveActivity = new ActiveLiveActivity(null, null, null, null)
-    val result = new LiveActivityDeleteResponse(null, null, 1000l, null)
+    val result = new LiveActivityDeleteResult(null, null, 1000l, null)
 
     eventManager.signalLiveActivityDelete(liveActivity, result)
 

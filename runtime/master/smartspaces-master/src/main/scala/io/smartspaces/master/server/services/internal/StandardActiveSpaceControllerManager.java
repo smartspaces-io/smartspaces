@@ -19,8 +19,8 @@ package io.smartspaces.master.server.services.internal;
 
 import io.smartspaces.SmartSpacesExceptionUtils;
 import io.smartspaces.activity.ActivityState;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
 import io.smartspaces.domain.basic.GroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
@@ -1163,7 +1163,7 @@ public class StandardActiveSpaceControllerManager
 
   @Override
   public void onLiveActivityDeployment(String liveActivityUuid,
-      LiveActivityDeploymentResponse result) {
+      LiveActivityDeploymentResult result) {
     ActiveLiveActivity active = getActiveActivityByUuid(liveActivityUuid);
     if (active != null) {
       if (result.getStatus().isSuccess()) {
@@ -1191,7 +1191,7 @@ public class StandardActiveSpaceControllerManager
   }
 
   @Override
-  public void onLiveActivityDelete(String liveActivityUuid, LiveActivityDeleteResponse result) {
+  public void onLiveActivityDelete(String liveActivityUuid, LiveActivityDeleteResult result) {
     ActiveLiveActivity active = getActiveActivityByUuid(liveActivityUuid);
     if (active != null) {
       switch (result.getStatus()) {

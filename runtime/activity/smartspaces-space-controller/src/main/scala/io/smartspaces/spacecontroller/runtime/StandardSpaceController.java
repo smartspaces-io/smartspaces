@@ -20,10 +20,10 @@ package io.smartspaces.spacecontroller.runtime;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.activity.ActivityStatus;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse.LiveActivityDeleteStatus;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult.LiveActivityDeleteStatus;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
@@ -551,18 +551,18 @@ public class StandardSpaceController extends BaseSpaceController
   }
 
   @Override
-  public LiveActivityDeploymentResponse installLiveActivity(LiveActivityDeploymentRequest request) {
+  public LiveActivityDeploymentResult installLiveActivity(LiveActivityDeploymentRequest request) {
     return spaceControllerActivityInstallManager.handleDeploymentRequest(request);
   }
 
   @Override
-  public LiveActivityDeleteResponse deleteLiveActivity(LiveActivityDeleteRequest request) {
+  public LiveActivityDeleteResult deleteLiveActivity(LiveActivityDeleteRequest request) {
     String uuid = request.getUuid();
     if (liveActivityRuntime.isLiveActivityRunning(uuid)) {
       getSpaceEnvironment().getLog().error(String
           .format("Attempt to delete live activity %s failed, live activity is running", uuid));
 
-      return new LiveActivityDeleteResponse(uuid, LiveActivityDeleteStatus.FAILURE,
+      return new LiveActivityDeleteResult(uuid, LiveActivityDeleteStatus.FAILURE,
           getSpaceEnvironment().getTimeProvider().getCurrentTime(),
           OPERATION_DETAIL_DELETION_FAIL_LIVE_ACTIVITY_RUNNING);
     } else {

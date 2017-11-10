@@ -23,9 +23,9 @@ import io.smartspaces.activity.ActivityState;
 import io.smartspaces.activity.ActivityStatus;
 import io.smartspaces.container.control.message.StandardMasterSpaceControllerCodec;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
 import io.smartspaces.container.control.message.activity.LiveActivityRuntimeRequestOperation;
 import io.smartspaces.container.control.message.activity.LiveActivityRuntimeStatus;
 import io.smartspaces.container.control.message.common.ConfigurationParameterRequest;
@@ -425,7 +425,7 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
     LiveActivityDeploymentRequest activityDeployRequest =
         messageCodec.decodeLiveActivityDeploymentRequest(requestObject);
 
-    LiveActivityDeploymentResponse activityDeployResponse =
+    LiveActivityDeploymentResult activityDeployResponse =
         controllerControl.installLiveActivity(activityDeployRequest);
 
     publishControllerStatus(
@@ -443,7 +443,7 @@ public class SimpleTcpSpaceControllerCommunicator implements SpaceControllerComm
     LiveActivityDeleteRequest liveActivityDeleteRequest =
         messageCodec.decodeLiveActivityDeleteRequest(requestObject);
 
-    LiveActivityDeleteResponse liveActivityDeleteResponse =
+    LiveActivityDeleteResult liveActivityDeleteResponse =
         controllerControl.deleteLiveActivity(liveActivityDeleteRequest);
 
     publishControllerStatus(

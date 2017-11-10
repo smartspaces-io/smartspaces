@@ -18,8 +18,8 @@
 package io.smartspaces.master.spacecontroller.client.internal;
 
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse.ActivityDeployStatus;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult.LiveActivityDeploymentStatus;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
@@ -139,7 +139,7 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
   }
 
   @Override
-  public void handleLiveDeployResult(LiveActivityDeploymentResponse response) {
+  public void handleLiveDeployResult(LiveActivityDeploymentResult response) {
     MasterActivityDeploymentRequestTracker tracker =
         deploymentTrackers.get(response.getTransactionId());
 
@@ -171,7 +171,7 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
    *          the response to send
    */
   private void finalizeActivityDeployment(MasterActivityDeploymentRequestTracker tracker,
-      LiveActivityDeploymentResponse response) {
+      LiveActivityDeploymentResult response) {
     updateDeploymentStatus(tracker, MasterActivityDeploymentRequestStatus.DEPLOYMENT_COMPLETE);
 
     deploymentTrackers.remove(response.getTransactionId());
@@ -246,9 +246,9 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
           break;
         case FAILURE:
           finalizeActivityDeployment(tracker,
-              new LiveActivityDeploymentResponse(tracker.getTransactionId(),
+              new LiveActivityDeploymentResult(tracker.getTransactionId(),
                   tracker.getDeploymentRequest().getUuid(),
-                  ActivityDeployStatus.STATUS_FAILURE_DEPENDENCIES_NOT_COMMITTED,
+                  LiveActivityDeploymentStatus.STATUS_FAILURE_DEPENDENCIES_NOT_COMMITTED,
                   response.getDetail(), spaceEnvironment.getTimeProvider().getCurrentTime()));
 
           break;

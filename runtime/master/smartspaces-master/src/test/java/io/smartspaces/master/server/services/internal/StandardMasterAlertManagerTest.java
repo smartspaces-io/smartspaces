@@ -20,9 +20,9 @@ package io.smartspaces.master.server.services.internal;
 import static org.mockito.Mockito.when;
 
 import io.smartspaces.activity.ActivityState;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse.ActivityDeployStatus;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult.LiveActivityDeploymentStatus;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
 import io.smartspaces.logging.ExtendedLog;

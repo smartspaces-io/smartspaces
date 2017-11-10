@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.configuration.SimpleConfiguration;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
 import io.smartspaces.liveactivity.runtime.LiveActivityRuntime;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.ServiceRegistry;
@@ -292,10 +292,10 @@ public class StandardSpaceControllerTest {
 
     LiveActivityDeleteRequest request = new LiveActivityDeleteRequest(uuid, "foo", "1.2.3", false);
 
-    LiveActivityDeleteResponse response = controller.deleteLiveActivity(request);
+    LiveActivityDeleteResult response = controller.deleteLiveActivity(request);
 
     assertEquals(uuid, response.getUuid());
-    assertEquals(LiveActivityDeleteResponse.LiveActivityDeleteStatus.FAILURE, response.getStatus());
+    assertEquals(LiveActivityDeleteResult.LiveActivityDeleteStatus.FAILURE, response.getStatus());
 
     verify(spaceControllerActivityInstallManager, times(0)).handleDeleteRequest(request);
   }

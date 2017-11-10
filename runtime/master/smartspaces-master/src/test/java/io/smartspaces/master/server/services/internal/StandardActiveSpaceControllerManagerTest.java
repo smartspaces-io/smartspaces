@@ -20,10 +20,10 @@ package io.smartspaces.master.server.services.internal;
 import static org.junit.Assert.assertEquals;
 
 import io.smartspaces.activity.ActivityState;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse.LiveActivityDeleteStatus;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse.ActivityDeployStatus;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult.LiveActivityDeleteStatus;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult.LiveActivityDeploymentStatus;
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
@@ -101,8 +101,8 @@ public class StandardActiveSpaceControllerManagerTest extends BaseSpaceTest {
   @Test
   public void testActivityDeploySuccess() {
     String activityUuid = "activity";
-    LiveActivityDeploymentResponse result =
-        new LiveActivityDeploymentResponse(null, activityUuid, ActivityDeployStatus.SUCCESS, null,
+    LiveActivityDeploymentResult result =
+        new LiveActivityDeploymentResult(null, activityUuid, LiveActivityDeploymentStatus.SUCCESS, null,
             timestamp);
 
     String spaceUuid = "space";
@@ -136,8 +136,8 @@ public class StandardActiveSpaceControllerManagerTest extends BaseSpaceTest {
   @Test
   public void testActivityDeployFailure() {
     String activityUuid = "activity";
-    LiveActivityDeploymentResponse result =
-        new LiveActivityDeploymentResponse(null, activityUuid, ActivityDeployStatus.FAILURE_COPY,
+    LiveActivityDeploymentResult result =
+        new LiveActivityDeploymentResult(null, activityUuid, LiveActivityDeploymentStatus.FAILURE_COPY,
             "bad", timestamp);
 
     String spaceUuid = "space";
@@ -193,8 +193,8 @@ public class StandardActiveSpaceControllerManagerTest extends BaseSpaceTest {
     active.setDeployState(null);
     active.setRuntimeState(null, null);
 
-    LiveActivityDeleteResponse deleteResponse =
-        new LiveActivityDeleteResponse(activityUuid, deleteStatus, 10000, null);
+    LiveActivityDeleteResult deleteResponse =
+        new LiveActivityDeleteResult(activityUuid, deleteStatus, 10000, null);
 
     activeControllerManager.onLiveActivityDelete(activityUuid, deleteResponse);
 
@@ -226,8 +226,8 @@ public class StandardActiveSpaceControllerManagerTest extends BaseSpaceTest {
     active.setDeployState(null);
     active.setRuntimeState(null, null);
 
-    LiveActivityDeleteResponse deleteResponse =
-        new LiveActivityDeleteResponse(activityUuid, deleteStatus, 10000, null);
+    LiveActivityDeleteResult deleteResponse =
+        new LiveActivityDeleteResult(activityUuid, deleteStatus, 10000, null);
 
     activeControllerManager.onLiveActivityDelete(activityUuid, deleteResponse);
 
@@ -264,8 +264,8 @@ public class StandardActiveSpaceControllerManagerTest extends BaseSpaceTest {
     active.setDeployState(null);
     active.setRuntimeState(null, null);
 
-    LiveActivityDeleteResponse deleteResponse =
-        new LiveActivityDeleteResponse(activityUuid, deleteStatus, 10000, null);
+    LiveActivityDeleteResult deleteResponse =
+        new LiveActivityDeleteResult(activityUuid, deleteStatus, 10000, null);
 
     activeControllerManager.onLiveActivityDelete(activityUuid, deleteResponse);
 

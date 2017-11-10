@@ -18,8 +18,8 @@
 package io.smartspaces.master.server.services;
 
 import io.smartspaces.activity.ActivityState;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
 import io.smartspaces.master.server.services.internal.DataBundleState;
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.spacecontroller.SpaceControllerState;
@@ -73,12 +73,12 @@ public class BaseRemoteSpaceControllerClientListener implements RemoteSpaceContr
   }
 
   @Override
-  public void onLiveActivityDeployment(String liveActivityUuid, LiveActivityDeploymentResponse result) {
+  public void onLiveActivityDeployment(String liveActivityUuid, LiveActivityDeploymentResult result) {
     // Default is do nothing
   }
 
   @Override
-  public void onLiveActivityDelete(String liveActivityUuid, LiveActivityDeleteResponse result) {
+  public void onLiveActivityDelete(String liveActivityUuid, LiveActivityDeleteResult result) {
     // Default is do nothing
   }
 

@@ -17,7 +17,7 @@
 
 package io.smartspaces.master.spacecontroller.client;
 
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
 import io.smartspaces.master.server.services.model.ActiveLiveActivity;
@@ -44,7 +44,7 @@ public interface RemoteActivityDeploymentManager extends ManagedResource {
    * @param status
    *          the status of the result
    */
-  void handleLiveDeployResult(LiveActivityDeploymentResponse status);
+  void handleLiveDeployResult(LiveActivityDeploymentResult status);
 
   /**
    * Handle a resource deployment query response.

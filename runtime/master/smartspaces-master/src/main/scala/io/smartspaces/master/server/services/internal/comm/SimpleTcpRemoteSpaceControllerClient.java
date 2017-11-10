@@ -20,9 +20,9 @@ package io.smartspaces.master.server.services.internal.comm;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.container.control.message.StandardMasterSpaceControllerCodec;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
 import io.smartspaces.container.control.message.activity.LiveActivityRuntimeRequest;
 import io.smartspaces.container.control.message.activity.LiveActivityRuntimeRequestOperation;
 import io.smartspaces.container.control.message.activity.LiveActivityRuntimeStatus;
@@ -455,14 +455,14 @@ public class SimpleTcpRemoteSpaceControllerClient implements RemoteSpaceControll
 
       case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_ACTIVITY_INSTALL:
 
-        LiveActivityDeploymentResponse deployResponse =
+        LiveActivityDeploymentResult deployResponse =
             messageCodec.decodeLiveActivityDeploymentResponse(statusObject);
         remoteActivityDeploymentManager.handleLiveDeployResult(deployResponse);
 
         break;
 
       case StandardMasterSpaceControllerCodec.CONTROLLER_MESSAGE_STATUS_TYPE_ACTIVITY_DELETE:
-        LiveActivityDeleteResponse liveActivityDeleteResponse =
+        LiveActivityDeleteResult liveActivityDeleteResponse =
             messageCodec.decodeLiveActivityDeleteResponse(statusObject);
         remoteControllerClientListeners.signalActivityDelete(liveActivityDeleteResponse.getUuid(),
             liveActivityDeleteResponse);

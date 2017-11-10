@@ -18,8 +18,8 @@
 package io.smartspaces.master.api.master.internal;
 
 import io.smartspaces.activity.ActivityState;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse.ActivityDeployStatus;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult.LiveActivityDeploymentStatus;
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.ActivityConfiguration;
 import io.smartspaces.domain.basic.ActivityDependency;
@@ -96,7 +96,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   private MasterEventListener masterEventListener = new BaseMasterEventListener() {
     @Override
     public void onLiveActivityDeploy(ActiveLiveActivity liveActivity,
-        LiveActivityDeploymentResponse result, long timestamp) {
+        LiveActivityDeploymentResult result, long timestamp) {
       handleLiveActivityInstallMasterEvent(liveActivity, result, timestamp);
     }
   };
@@ -1570,8 +1570,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    *          when the install was completed
    */
   private void handleLiveActivityInstallMasterEvent(ActiveLiveActivity liveActivity,
-      LiveActivityDeploymentResponse result, long timestamp) {
-    if (result.getStatus() == ActivityDeployStatus.SUCCESS) {
+      LiveActivityDeploymentResult result, long timestamp) {
+    if (result.getStatus() == LiveActivityDeploymentStatus.SUCCESS) {
       updateLiveActivityDeploymentTime(liveActivity, timestamp);
     }
   }

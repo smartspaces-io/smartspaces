@@ -18,8 +18,8 @@
 package io.smartspaces.master.event
 
 import io.smartspaces.activity.ActivityState
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult
 import io.smartspaces.master.server.services.model.ActiveLiveActivity
 import io.smartspaces.master.server.services.model.ActiveSpaceController
 import io.smartspaces.spacecontroller.SpaceControllerState
@@ -63,11 +63,11 @@ abstract class BaseMasterEventListener extends MasterEventListener {
   }
 
   override def onLiveActivityDeploy(liveActivity: ActiveLiveActivity,
-      result: LiveActivityDeploymentResponse , timestamp: Long): Unit = {
+      result: LiveActivityDeploymentResult , timestamp: Long): Unit = {
     // Default is do nothing.
   }
 
-  override def onLiveActivityDelete(liveActivity: ActiveLiveActivity, result: LiveActivityDeleteResponse): Unit = {
+  override def onLiveActivityDelete(liveActivity: ActiveLiveActivity, result: LiveActivityDeleteResult): Unit = {
     // Default is do nothing.
   }
 

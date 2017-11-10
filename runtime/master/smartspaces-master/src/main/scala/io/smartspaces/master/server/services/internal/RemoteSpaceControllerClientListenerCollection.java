@@ -18,8 +18,8 @@
 package io.smartspaces.master.server.services.internal;
 
 import io.smartspaces.activity.ActivityState;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.master.server.services.RemoteSpaceControllerClientListener;
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
@@ -237,7 +237,7 @@ public class RemoteSpaceControllerClientListenerCollection {
    * @param result
    *          the result of the deployment
    */
-  public void signalActivityDeployStatus(String uuid, LiveActivityDeploymentResponse result) {
+  public void signalActivityDeployStatus(String uuid, LiveActivityDeploymentResult result) {
     for (RemoteSpaceControllerClientListener listener : listeners) {
       try {
         listener.onLiveActivityDeployment(uuid, result);
@@ -257,7 +257,7 @@ public class RemoteSpaceControllerClientListenerCollection {
    * @param result
    *          result of the deletion
    */
-  public void signalActivityDelete(String liveActivityUuid, LiveActivityDeleteResponse result) {
+  public void signalActivityDelete(String liveActivityUuid, LiveActivityDeleteResult result) {
     for (RemoteSpaceControllerClientListener listener : listeners) {
       try {
         listener.onLiveActivityDelete(liveActivityUuid, result);

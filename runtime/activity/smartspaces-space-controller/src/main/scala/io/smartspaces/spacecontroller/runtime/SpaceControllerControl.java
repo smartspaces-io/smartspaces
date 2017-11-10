@@ -18,9 +18,9 @@
 package io.smartspaces.spacecontroller.runtime;
 
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeleteResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentRequest;
-import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResponse;
+import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentCommitResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
@@ -221,7 +221,7 @@ public interface SpaceControllerControl extends SpaceController {
    *
    * @return the deployment response
    */
-  LiveActivityDeploymentResponse installLiveActivity(LiveActivityDeploymentRequest request);
+  LiveActivityDeploymentResult installLiveActivity(LiveActivityDeploymentRequest request);
 
   /**
    * Delete a live activity.
@@ -231,5 +231,5 @@ public interface SpaceControllerControl extends SpaceController {
    *
    * @return the delete response
    */
-  LiveActivityDeleteResponse deleteLiveActivity(LiveActivityDeleteRequest request);
+  LiveActivityDeleteResult deleteLiveActivity(LiveActivityDeleteRequest request);
 }

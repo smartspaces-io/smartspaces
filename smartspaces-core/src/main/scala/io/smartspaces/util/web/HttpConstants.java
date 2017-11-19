@@ -61,10 +61,20 @@ public class HttpConstants {
   /**
    * Header key for origin access.
    */
-  public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+  public static final String HEADER_ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
 
   /**
    * Origin value for all origins.
    */
-  public static final String ACCESS_CONTROL_ORIGIN_WILDCARD = "*";
+  public static final String HEADER_VALUE_ACCESS_CONTROL_ORIGIN_WILDCARD = "*";
+
+  /**
+   * The authorization header.
+   */
+  public static final String HEADER_AUTHORIZATION = "authorization";
+
+  /**
+   * The authentication header value prefix for basic authorization.
+   */
+  public static final String HEADER_VALUE_PREFIX_AUTHORIZATION_BASIC = "basic";
 }

@@ -163,7 +163,7 @@ public class NettyHttpRequest implements HttpRequest {
     if (headers == null) {
       buildHeaders();
     }
-    if (headers.containsKey(key)) {
+    if (headers.containsKey(key.toLowerCase())) {
       return Sets.newHashSet(headers.get(key));
     }
 
@@ -177,7 +177,7 @@ public class NettyHttpRequest implements HttpRequest {
     headers = HashMultimap.create();
 
     for (Entry<String, String> header : request.headers()) {
-      headers.put(header.getKey(), header.getValue());
+      headers.put(header.getKey().toLowerCase(), header.getValue());
     }
   }
 

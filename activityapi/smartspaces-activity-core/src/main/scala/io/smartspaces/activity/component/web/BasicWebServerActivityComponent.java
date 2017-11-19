@@ -248,7 +248,7 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
    */
   private void addStaticContentHandler(String uriPrefix, File baseDir) {
     Map<String, String> accessControlMap = Collections.singletonMap(
-        HttpConstants.ACCESS_CONTROL_ALLOW_ORIGIN, HttpConstants.ACCESS_CONTROL_ORIGIN_WILDCARD);
+        HttpConstants.HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, HttpConstants.HEADER_VALUE_ACCESS_CONTROL_ORIGIN_WILDCARD);
     Map<String, String> header =
         configurator.getCrossOriginAllowed() ? accessControlMap : HttpConstants.EMPTY_HEADER_MAP;
     webServer.addStaticContentHandler(uriPrefix, baseDir, header);

@@ -162,15 +162,12 @@ public class NettyHttpPostBody implements HttpPostBody {
    * Complete processing of the file upload.
    */
   void completeNonChunked() {
-    if (decoder.isMultipart()) {
-
-      try {
-        for (InterfaceHttpData data : decoder.getBodyHttpDatas()) {
-          processHttpData(data);
-        }
-      } catch (Exception e) {
-        getLog().error("Error while completing HTTP chunked POST data", e);
+    try {
+      for (InterfaceHttpData data : decoder.getBodyHttpDatas()) {
+        processHttpData(data);
       }
+    } catch (Exception e) {
+      getLog().error("Error while completing HTTP chunked POST data", e);
     }
   }
 

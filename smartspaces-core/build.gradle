@@ -29,7 +29,7 @@ dependencies {
   compile project(':rosjava:rosjava_osgi')
   compile project(':smartspaces-bootstrap-core')
 
-  compile('com.google.guava:guava:19.0') {
+  compile('com.google.guava:guava:21.0') {
     exclude group: 'com.google.code.findbugs', module: 'jsr305'
   }
 

@@ -24,6 +24,11 @@ import java.util.Map;
 
 /**
  * The body of an HTTP POST.
+ * 
+ * <p>
+ * If the post is a form post, either content type {@code multipart/form-data} or
+ * {@code application/x-www-form-urlencoded}, then the {@linl #getParameters()} and file
+ * methods are available. Otherwise use {#link getContent()}.
  *
  * @author Keith M. Hughes
  */
@@ -37,9 +42,16 @@ public interface HttpPostBody extends CopyableResource {
   String getContentType();
   
   /**
-   * Is the POST a multipart post?
+   * Is the POST a form post?
    * 
-   * @return {@code true} if multipart
+   * @return {@code true} if form
+   */
+  boolean isFormPost();
+  
+  /**
+   * Is the POST a multipart form post?
+   * 
+   * @return {@code true} if multipart form
    */
   boolean isMultipart();
   
@@ -78,11 +90,11 @@ public interface HttpPostBody extends CopyableResource {
    * Get the content of the POST.
    * 
    * <p>
-   * This only returns a value if the POST was not a multipart .
+   * This only returns a value if the POST was not a form POST.
    * 
    * @return the content of the POST
    * 
-   * @throws SmartSpacesException this was a multipart POST.
+   * @throws SmartSpacesException this was a form POST.
    */
   byte[] getContent() throws SmartSpacesException;
 }

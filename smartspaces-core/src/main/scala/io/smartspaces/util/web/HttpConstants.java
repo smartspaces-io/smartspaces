@@ -54,14 +54,14 @@ public class HttpConstants {
   public static final String URL_QUERY_NAME_VALUE_SEPARATOR = "=";
 
   /**
-   * Empty map used when represending to additional headers.
+   * Empty map used when representing to additional headers.
    */
   public static final Map<String, String> EMPTY_HEADER_MAP = ImmutableMap.of();
 
   /**
    * Header key for origin access.
    */
-  public static final String HEADER_ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+  public static final String HEADER_NAME_ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
 
   /**
    * Origin value for all origins.
@@ -71,10 +71,20 @@ public class HttpConstants {
   /**
    * The authorization header.
    */
-  public static final String HEADER_AUTHORIZATION = "authorization";
+  public static final String HEADER_NAME_AUTHORIZATION = "authorization";
 
   /**
    * The authentication header value prefix for basic authorization.
    */
   public static final String HEADER_VALUE_PREFIX_AUTHORIZATION_BASIC = "basic";
+
+  /**
+   * The authentication header value prefix for bearer authorization.
+   */
+  public static final String HEADER_VALUE_PREFIX_AUTHORIZATION_BEARER = "bearer";
+
+  /**
+   * The authorization header.
+   */
+  public static final String HEADER_NAME_CONTENT_TYPE = "Content-Type";
 }

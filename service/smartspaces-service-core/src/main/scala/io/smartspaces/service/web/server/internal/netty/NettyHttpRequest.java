@@ -131,7 +131,7 @@ public class NettyHttpRequest implements HttpRequest {
   }
 
   @Override
-  public Log getLog() {
+  public ExtendedLog getLog() {
     return log;
   }
 

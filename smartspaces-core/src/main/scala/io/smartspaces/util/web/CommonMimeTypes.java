@@ -38,4 +38,14 @@ public class CommonMimeTypes {
    * The PNG MIME type.
    */
   public static final String MIME_TYPE_IMAGE_PNG = "image/png";
+
+  /**
+   * The multipart form data MIME type.
+   */
+  public static final String MIME_TYPE_FORM_MULTIPART = "multipart/form-data";
+
+  /**
+   * The URL Encoded form data MIME type.
+   */
+  public static final String MIME_TYPE_FORM_URLENCODED = "application/x-www-form-urlencoded";
 }

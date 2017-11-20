@@ -23,6 +23,8 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.web.server.HttpPostBody;
+import io.smartspaces.util.web.CommonMimeTypes;
+import io.smartspaces.util.web.HttpConstants;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -86,6 +88,11 @@ public class NettyHttpPostBody implements HttpPostBody {
   private Set<HttpCookie> cookies;
 
   /**
+   * {@code true} if this is a form post.
+   */
+  private boolean isForm;
+
+  /**
    * Create a new instance.
    *
    * @param nettyHttpRequest
@@ -107,6 +114,10 @@ public class NettyHttpPostBody implements HttpPostBody {
     this.handler = handler;
     this.webServerHandler = webServerHandler;
     this.cookies = cookies;
+
+    String contentType = nettyHttpRequest.headers().get(HttpConstants.HEADER_NAME_CONTENT_TYPE);
+    isForm = CommonMimeTypes.MIME_TYPE_FORM_MULTIPART.equals(contentType)
+        || CommonMimeTypes.MIME_TYPE_FORM_URLENCODED.equals(contentType);
   }
 
   /**
@@ -234,6 +245,11 @@ public class NettyHttpPostBody implements HttpPostBody {
   }
 
   @Override
+  public boolean isFormPost() {
+    return isForm;
+  }
+
+  @Override
   public boolean isMultipart() {
     return decoder.isMultipart();
   }
@@ -297,7 +313,7 @@ public class NettyHttpPostBody implements HttpPostBody {
 
   @Override
   public byte[] getContent() throws SmartSpacesException {
-    if (!isMultipart()) {
+    if (!isFormPost()) {
       ChannelBuffer content = nettyHttpRequest.getContent();
       int readableBytes = content.readableBytes();
 

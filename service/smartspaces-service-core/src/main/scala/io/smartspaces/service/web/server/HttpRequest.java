@@ -17,8 +17,9 @@
 
 package io.smartspaces.service.web.server;
 
+import io.smartspaces.logging.ExtendedLog;
+
 import com.google.common.collect.Multimap;
-import org.apache.commons.logging.Log;
 
 import java.net.HttpCookie;
 import java.net.SocketAddress;
@@ -59,7 +60,7 @@ public interface HttpRequest {
    *
    * @return the logger to use
    */
-  Log getLog();
+  ExtendedLog getLog();
 
   /**
    * Get the header for this request

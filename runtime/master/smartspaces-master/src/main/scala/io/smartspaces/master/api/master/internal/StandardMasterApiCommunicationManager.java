@@ -232,7 +232,7 @@ public class StandardMasterApiCommunicationManager extends BaseMasterApiManager
   }
 
   /**
-   * Handle an activity upload.
+   * Handle a Master API command call.
    *
    * @param request
    *          the HTTP request

@@ -588,7 +588,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       boolean setContentLength, boolean ignoreKeepAlive) {
     try {
       // Generate an error page if response status code is not OK (200).
-      if (res.getStatus().getCode() != HttpResponseStatus.OK.getCode()) {
+      if (res.getStatus().getCode() != HttpResponseStatus.OK.getCode() && !res.getContent().readable()) {
         res.setContent(ChannelBuffers.copiedBuffer(res.getStatus().toString(), CharsetUtil.UTF_8));
         setContentLength(res, res.getContent().readableBytes());
       }
@@ -603,7 +603,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
           || req.getMethod() == POST) {
         f.addListener(ChannelFutureListener.CLOSE);
       }
-    } catch (Exception e) {
+    } catch (Throwable e) {
       webServer.getLog().error("Error while sending HTTP response", e);
     }
   }

@@ -60,7 +60,7 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
       spaceEnvironment.getLog().error("Error while exporting master domain model", e);
 
       return SmartSpacesMessagesSupport
-          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
     }
   }
 
@@ -80,7 +80,7 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
       spaceEnvironment.getLog().error("Error while importing master domain model", e);
 
       return SmartSpacesMessagesSupport
-          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
     }
   }
 
@@ -103,7 +103,7 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
           fileSupport.getAbsolutePath(masterDomainFile));
 
       return SmartSpacesMessagesSupport
-          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
     }
   }
 
@@ -125,7 +125,7 @@ public class StandardMasterApiMasterSupportManager extends BaseMasterApiManager
           fileSupport.getAbsolutePath(masterDomainFile));
 
       return SmartSpacesMessagesSupport
-          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
     }
   }
 

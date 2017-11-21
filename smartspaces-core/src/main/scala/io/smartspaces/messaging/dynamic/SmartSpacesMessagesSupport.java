@@ -67,6 +67,18 @@ public class SmartSpacesMessagesSupport {
    *
    * @param reason
    *          the reason for the failure
+   *
+   * @return the Smart Spaces message response object
+   */
+  public static Map<String, Object> getFailureResponse(String reason) {
+    return getFailureResponse(null, reason, null);
+  }
+
+  /**
+   * Get a failure Smart Spaces message response.
+   *
+   * @param reason
+   *          the reason for the failure
    * @param detail
    *          details about the failure
    *

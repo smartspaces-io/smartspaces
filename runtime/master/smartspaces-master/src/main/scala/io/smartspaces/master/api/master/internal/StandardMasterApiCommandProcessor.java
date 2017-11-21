@@ -164,7 +164,7 @@ public class StandardMasterApiCommandProcessor implements MasterApiCommandProces
       log.formatError(e, "Error while performing Master API command %s", command);
 
       Map<String, Object> responseMessage = SmartSpacesMessagesSupport
-          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
       potentiallyAddRequestId(responseMessage, requestId);
 
       try {

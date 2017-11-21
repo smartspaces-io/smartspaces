@@ -166,7 +166,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
       spaceEnvironment.getLog().error("Attempt to get named script data failed", e);
 
       return SmartSpacesMessagesSupport.getFailureResponse(
-          MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+          MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
     }
   }
 
@@ -252,7 +252,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
         script.setMetadata(metadata);
       } else {
         return SmartSpacesMessagesSupport.getFailureResponse(
-            MasterApiMessages.MESSAGE_SPACE_COMMAND_UNKNOWN,
+            MasterApiMessages.MESSAGE_API_COMMAND_UNKNOWN,
             String.format("Unknown command %s", command));
       }
 
@@ -263,7 +263,7 @@ public class BasicMasterApiAutomationManager extends BaseMasterApiManager implem
       spaceEnvironment.getLog().error("Could not modify named script metadata", e);
 
       return SmartSpacesMessagesSupport.getFailureResponse(
-          MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+          MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
     }
   }
 

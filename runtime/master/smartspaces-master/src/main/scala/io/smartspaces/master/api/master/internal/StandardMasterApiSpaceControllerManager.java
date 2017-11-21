@@ -107,7 +107,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       spaceEnvironment.getLog().error("Attempt to get activity data failed", e);
 
       return SmartSpacesMessagesSupport
-          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
     }
   }
 
@@ -369,7 +369,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
         spaceController.setMetadata(metadata);
       } else {
         return SmartSpacesMessagesSupport.getFailureResponse(
-            MasterApiMessages.MESSAGE_SPACE_COMMAND_UNKNOWN,
+            MasterApiMessages.MESSAGE_API_COMMAND_UNKNOWN,
             String.format("Unknown space controller metadata update command %s", command));
       }
 
@@ -380,7 +380,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       spaceEnvironment.getLog().error("Could not modify space controller metadata", e);
 
       return SmartSpacesMessagesSupport
-          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
     }
   }
 
@@ -1218,7 +1218,7 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       spaceEnvironment.getLog().error("Could not modify activity metadata", e);
 
       return SmartSpacesMessagesSupport
-          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
     }
   }
 

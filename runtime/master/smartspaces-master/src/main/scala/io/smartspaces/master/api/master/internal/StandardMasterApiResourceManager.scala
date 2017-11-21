@@ -67,7 +67,7 @@ class StandardMasterApiResourceManager extends BaseMasterApiManager with MasterA
     } catch {
       case e: Throwable =>
         val response =
-          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE,
+          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE,
             e)
 
         logResponseError("Attempt to get resource data failed", response)
@@ -86,7 +86,7 @@ class StandardMasterApiResourceManager extends BaseMasterApiManager with MasterA
     } catch {
       case e: Throwable =>
         val response =
-          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE,
+          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE,
             e)
 
         logResponseError("Attempt to import resource failed", response)

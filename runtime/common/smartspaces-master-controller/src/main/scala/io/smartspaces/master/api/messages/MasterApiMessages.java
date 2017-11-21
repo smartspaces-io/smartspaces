@@ -834,12 +834,12 @@ public class MasterApiMessages {
   /**
    * Message key for unknown commands.
    */
-  public static final String MESSAGE_SPACE_COMMAND_UNKNOWN = "space.command.unknown";
+  public static final String MESSAGE_API_COMMAND_UNKNOWN = "api.command.unknown";
 
   /**
    * Message key for a call failing.
    */
-  public static final String MESSAGE_SPACE_CALL_FAILURE = "space.command.failure";
+  public static final String MESSAGE_API_CALL_FAILURE = "api.command.failure";
 
   /**
    * Message key for a call failing because live activities cannot be created.

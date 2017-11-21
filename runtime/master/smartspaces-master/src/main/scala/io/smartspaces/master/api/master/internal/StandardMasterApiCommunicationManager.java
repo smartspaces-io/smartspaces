@@ -218,7 +218,7 @@ public class StandardMasterApiCommunicationManager extends BaseMasterApiManager
       writeActivityUploadResponse(response, activityResponse);
     } catch (Throwable e) {
       Map<String, Object> failureResponse = SmartSpacesMessagesSupport
-          .getFailureResponse(MasterApiMessages.MESSAGE_SPACE_CALL_FAILURE, e);
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
 
       spaceEnvironment.getLog().error("Could not upload activity via Master API\n"
           + SmartSpacesMessagesSupport.getResponseDetail(failureResponse));

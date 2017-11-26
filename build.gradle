@@ -37,9 +37,9 @@ allprojects {
     //
     // Final versions should set the qualifier to null.
     smartSpacesVersion = '0.11.0'
-    smartSpacesVersionQualifier = 'SNAPSHOT'
+    smartSpacesVersionQualifier = null // 'SNAPSHOT'
 
-    // These specify the layout of IS containers.
+    // These specify the layout of SS containers.
     
     // Where the JVM system libraries go
     smartSpacesContainerSystemJava = 'lib/system/jvm'

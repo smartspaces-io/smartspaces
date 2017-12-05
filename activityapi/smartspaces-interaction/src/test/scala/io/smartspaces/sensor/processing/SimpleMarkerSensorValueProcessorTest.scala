@@ -19,7 +19,7 @@ package io.smartspaces.sensor.processing
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.entity.MarkerEntityDescription
 import io.smartspaces.sensor.entity.PersonSensedEntityDescription
-import io.smartspaces.sensor.entity.SensorRegistry
+import io.smartspaces.sensor.entity.SensorInstanceRegistry
 import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel
 import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
 import io.smartspaces.sensor.entity.model.PhysicalSpaceLocatableSensedEntityModel
@@ -53,7 +53,7 @@ class SimpleMarkerSensorValueProcessorTest {
 
   @Mock var log: ExtendedLog = _
 
-  @Mock var sensorRegistry: SensorRegistry = _
+  @Mock var sensorRegistry: SensorInstanceRegistry = _
   
   @Mock var modelUpdater: LocationChangeModelUpdater = _
   

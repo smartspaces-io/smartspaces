@@ -17,105 +17,11 @@
 package io.smartspaces.sensor.entity
 
 /**
- * A registry of known sensors and entities that are being sensed.
+ * A registry of known sensor instances and entities that are being sensed.
  *
  * @author Keith M. Hughes
  */
-trait SensorRegistry {
-
-  /**
-   * Register a measurement type with the registry.
-   *
-   * @param measurementType
-   *          the measurement type to add
-   *
-   * @return this registry
-   */
-  def registerMeasurementType(measurementType: MeasurementTypeDescription): SensorRegistry
-
-  /**
-   * Get a measurement type from the registry by persistence ID.
-   *
-   * @param id
-   *          id of the the measurement type
-   *
-   * @return the measurement type
-   */
-  def getMeasurementType(id: String): Option[MeasurementTypeDescription]
-
-  /**
-   * Get a measurement type from the registry by external ID.
-   *
-   * @param externalId
-   *          external id of the the measurement type
-   *
-   * @return the measurement type
-   */
-  def getMeasurementTypeByExternalId(externalId: String): Option[MeasurementTypeDescription]
-
-  /**
-   * Get all measurement types from the registry.
-   *
-   * @return all measurement types in the registry
-   */
-  def getAllMeasurementTypes(): List[MeasurementTypeDescription]
-
-  /**
-   * Get a measurement unit from the registry persistence ID.
-   *
-   * @param id
-   *          id of the the measurement unit
-   *
-   * @return the measurement unit
-   */
-  def getMeasurementUnit(id: String): Option[MeasurementUnitDescription]
-
-  /**
-   * Get a measurement unit from the registry persistence ID.
-   *
-   * @param id
-   *          id of the the measurement unit
-   *
-   * @return the measurement unit
-   */
-  def getMeasurementUnitByExternalId(id: String): Option[MeasurementUnitDescription]
-
-  /**
-   * Register a sensor detail with the registry.
-   *
-   * @param sensorDetail
-   *          the sensor detail to add
-   *
-   * @return this registry
-   */
-  def registerSensorDetail(sensorDetail: SensorDetail): SensorRegistry
-
-  /**
-   * Get a sensor detail from the registry persistence ID.
-   *
-   * @param id
-   *          id of the the sensor detail
-   *
-   * @return the sensor detail
-   */
-  def getSensorDetail(id: String): Option[SensorDetail]
-
-  /**
-   * Get a sensor detail from the registry external ID.
-   *
-   * @param externalId
-   *          external id of the the sensor detail
-   *
-   * @return the sensor detail
-   */
-  def getSensorDetailByExternalId(externalId: String): Option[SensorDetail]
-
-  /**
-   * Get all sensor details from the registry.
-   *
-   * @return all sensor details in the registry
-   */
-  def getAllSensorDetails(): List[SensorDetail]
+trait SensorInstanceRegistry {
 
   /**
    * Register a sensor with the registry.
@@ -125,7 +31,7 @@ trait SensorRegistry {
    *
    * @return this registry
    */
-  def registerSensor(sensor: SensorEntityDescription): SensorRegistry
+  def registerSensor(sensor: SensorEntityDescription): SensorInstanceRegistry
 
   /**
    * Get the sensor description by its persistence ID.
@@ -162,7 +68,7 @@ trait SensorRegistry {
    *
    * @return this registry
    */
-  def registerMarker(marker: MarkerEntityDescription): SensorRegistry
+  def registerMarker(marker: MarkerEntityDescription): SensorInstanceRegistry
 
   /**
    * Get the marker description by persistence ID.
@@ -240,7 +146,7 @@ trait SensorRegistry {
    *
    * @return this registry
    */
-  def registerSensedEntity(sensor: SensedEntityDescription): SensorRegistry
+  def registerSensedEntity(sensor: SensedEntityDescription): SensorInstanceRegistry
 
   /**
    * Get the sensed entity description by persistence ID.
@@ -315,7 +221,7 @@ trait SensorRegistry {
    *
    * @returns this registry
    */
-  def associateMarkerWithMarkedEntity(markerExternalId: String, markedEntityExternalId: String): SensorRegistry
+  def associateMarkerWithMarkedEntity(markerExternalId: String, markedEntityExternalId: String): SensorInstanceRegistry
 
   /**
    * Associate a marker with its marked entity.
@@ -328,7 +234,7 @@ trait SensorRegistry {
    * @returns this registry
    */
   def associateMarkerWithMarkedEntity(marker: MarkerEntityDescription,
-    markableEntity: MarkableEntityDescription): SensorRegistry
+    markableEntity: MarkableEntityDescription): SensorInstanceRegistry
 
   /**
    * Get the associations between markers and their marked entities.
@@ -349,7 +255,7 @@ trait SensorRegistry {
    *
    * @returns this registry
    */
-  def associateSensorWithSensedEntity(sensorExternalId: String, sensorChannelId: String, sensedEntityExternalId: String): SensorRegistry
+  def associateSensorWithSensedEntity(sensorExternalId: String, sensorChannelId: String, sensedEntityExternalId: String): SensorInstanceRegistry
 
   /**
    * Get the associations between sensors and their sensed entities.
@@ -371,7 +277,7 @@ trait SensorRegistry {
    *
    * @return this registry
    */
-  def addConfigurationData(entityId: String, configurationData: Map[String, AnyRef]): SensorRegistry
+  def addConfigurationData(entityId: String, configurationData: Map[String, AnyRef]): SensorInstanceRegistry
 
   /**
    * Get the configuration data for the given entity.

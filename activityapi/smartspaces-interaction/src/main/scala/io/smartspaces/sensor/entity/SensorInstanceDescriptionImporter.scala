@@ -17,19 +17,19 @@
 package io.smartspaces.sensor.entity
 
 /**
- * An importer for sensor descriptions into a registry.
+ * An importer for sensor instance descriptions into a registry.
  *
  * @author Keith M. Hughes
  */
-trait SensorDescriptionImporter {
+trait SensorInstanceDescriptionImporter {
 
   /**
-   * Import a description into a particular registry.
+   * Import a description into a particular instance registry.
    *
    * @param register
    *          the sensor registry
    *
    * @return this importer
    */
-  def importDescriptions(register: SensorRegistry): SensorDescriptionImporter
+  def importDescriptions(register: SensorInstanceRegistry): SensorInstanceDescriptionImporter
 }

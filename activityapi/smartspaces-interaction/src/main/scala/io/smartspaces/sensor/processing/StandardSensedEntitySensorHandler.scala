@@ -18,7 +18,7 @@ package io.smartspaces.sensor.processing
 
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.entity.EntityMapper
-import io.smartspaces.sensor.entity.MemoryEntityMapper
+import io.smartspaces.sensor.entity.InMemoryEntityMapper
 import io.smartspaces.sensor.entity.SensedEntityDescription
 import io.smartspaces.sensor.entity.SensorEntityDescription
 import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel

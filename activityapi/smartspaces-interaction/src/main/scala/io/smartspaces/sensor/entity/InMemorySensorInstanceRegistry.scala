@@ -27,37 +27,7 @@ import scala.collection.mutable.Map
  *
  * @author Keith M. Hughes
  */
-class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
-
-  /**
-   * A map of persistence IDs to their measurement types.
-   */
-  private val idToMeasurementType: Map[String, MeasurementTypeDescription] = new HashMap
-
-  /**
-   * A map of external IDs to their measurement types.
-   */
-  private val externalIdToMeasurementType: Map[String, MeasurementTypeDescription] = new HashMap
-
-  /**
-   * A map of persistence IDs to measurement units.
-   */
-  private val idToMeasurementUnit: Map[String, MeasurementUnitDescription] = new HashMap
-
-  /**
-   * A map of external IDs to measurement units.
-   */
-  private val externalIdToMeasurementUnit: Map[String, MeasurementUnitDescription] = new HashMap
-
-  /**
-   * A map of persistence IDs to sensor details.
-   */
-  private val idToSensorDetail: Map[String, SensorDetail] = new HashMap
-
-  /**
-   * A map of external IDs to sensor details.
-   */
-  private val externalIdToSensorDetail: Map[String, SensorDetail] = new HashMap
+class InMemorySensorInstanceRegistry(log: ExtendedLog) extends SensorInstanceRegistry {
 
   /**
    * A map of persistence sensor IDs to their description.
@@ -135,58 +105,7 @@ class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
    */
   private val configurations: Map[String, Map[String, AnyRef]] = new HashMap
 
-  override def registerMeasurementType(measurementType: MeasurementTypeDescription): SensorRegistry = {
-    idToMeasurementType.put(measurementType.id, measurementType)
-    externalIdToMeasurementType.put(measurementType.externalId, measurementType)
-
-    measurementType.getAllMeasurementUnits().foreach((unit) => {
-      idToMeasurementUnit.put(unit.id, unit)
-      externalIdToMeasurementUnit.put(unit.externalId, unit)
-    })
-
-    this
-  }
-
-  override def getMeasurementType(id: String): Option[MeasurementTypeDescription] = {
-    idToMeasurementType.get(id)
-  }
- 
-  override def getMeasurementTypeByExternalId(externalId: String): Option[MeasurementTypeDescription] = {
-    externalIdToMeasurementType.get(externalId)
-  }
- 
-  override def getAllMeasurementTypes(): List[MeasurementTypeDescription] = {
-    idToMeasurementType.values.toList
-  }
-
-  override def getMeasurementUnit(id: String): Option[MeasurementUnitDescription] = {
-    idToMeasurementUnit.get(id)
-  }
-
-  override def getMeasurementUnitByExternalId(externalId: String): Option[MeasurementUnitDescription] = {
-    externalIdToMeasurementUnit.get(externalId)
-  }
-
-  override def registerSensorDetail(sensorDetail: SensorDetail): SensorRegistry = {
-    idToSensorDetail.put(sensorDetail.id, sensorDetail)
-    externalIdToSensorDetail.put(sensorDetail.externalId, sensorDetail)
-    
-    this
-  }
-
-  override def getSensorDetail(id: String): Option[SensorDetail] = {
-    idToSensorDetail.get(id)
-  }
-
-  override def getSensorDetailByExternalId(externalId: String): Option[SensorDetail] = {
-    externalIdToSensorDetail.get(externalId)
-  }
-
-  override def getAllSensorDetails(): List[SensorDetail] = {
-    idToSensorDetail.values.toList
-  }
-
-  override def registerSensor(sensor: SensorEntityDescription): SensorRegistry = {
+  override def registerSensor(sensor: SensorEntityDescription): SensorInstanceRegistry = {
     idToSensor.put(sensor.id, sensor)
     externalIdToSensor.put(sensor.externalId, sensor)
 
@@ -205,7 +124,7 @@ class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
       idToSensor.values.toList
   }
   
-  override def registerMarker(marker: MarkerEntityDescription): SensorRegistry = {
+  override def registerMarker(marker: MarkerEntityDescription): SensorInstanceRegistry = {
     idToMarker.put(marker.id, marker)
     externalIdToMarker.put(marker.externalId, marker)
     markerIdToMarker.put(marker.markerId, marker)
@@ -229,7 +148,7 @@ class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
     externalIdToMarkable.get(externalId)
   }
 
-  override def registerSensedEntity(sensedEntity: SensedEntityDescription): SensorRegistry = {
+  override def registerSensedEntity(sensedEntity: SensedEntityDescription): SensorInstanceRegistry = {
     idToSensed.put(sensedEntity.id, sensedEntity)
     externalIdToSensed.put(sensedEntity.externalId, sensedEntity)
 
@@ -272,7 +191,7 @@ class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
     externalIdToPhysicalSpace.get(externalId)
   }
 
-  override def associateSensorWithSensedEntity(sensorExternalId: String, sensorChannelId: String, sensedEntityExternalId: String): SensorRegistry = {
+  override def associateSensorWithSensedEntity(sensorExternalId: String, sensorChannelId: String, sensedEntityExternalId: String): SensorInstanceRegistry = {
     // TODO(keith) Decide what to do if neither exists
     val sensor = externalIdToSensor.get(sensorExternalId)
     val sensedEntity = externalIdToSensed.get(sensedEntityExternalId)
@@ -307,7 +226,7 @@ class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
     sensorSensedEntityAssociations.filter(_.sensedEntity.externalId == externalId).toList
   }
   
-  override def associateMarkerWithMarkedEntity(markerExternalId: String, markedEntityExternalId: String): SensorRegistry = {
+  override def associateMarkerWithMarkedEntity(markerExternalId: String, markedEntityExternalId: String): SensorInstanceRegistry = {
     // TODO(keith) Decide what to do if neither exists
     val marker = externalIdToMarker.get(markerExternalId)
     val markedEntity = externalIdToMarkable.get(markedEntityExternalId)
@@ -327,7 +246,7 @@ class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
   }
 
   override def associateMarkerWithMarkedEntity(marker: MarkerEntityDescription,
-    markableEntity: MarkableEntityDescription): SensorRegistry = {
+    markableEntity: MarkableEntityDescription): SensorInstanceRegistry = {
     markerMarkedEntityAssociations +=
       new SimpleMarkerMarkedEntityAssociation(marker, markableEntity)
 
@@ -349,7 +268,7 @@ class InMemorySensorRegistry(log: ExtendedLog) extends SensorRegistry {
   }
 
   override def addConfigurationData(entityId: String,
-    configurationData: scala.collection.immutable.Map[String, AnyRef]): SensorRegistry = {
+    configurationData: scala.collection.immutable.Map[String, AnyRef]): SensorInstanceRegistry = {
     val map: Map[String, AnyRef] = getConfigurationMap(entityId)
 
     map ++= configurationData

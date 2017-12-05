@@ -28,7 +28,7 @@ import org.scalatest.junit.JUnitSuite
 import io.smartspaces.event.observable.EventObservableRegistry
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.entity.SensorEntityDescription
-import io.smartspaces.sensor.entity.SensorRegistry
+import io.smartspaces.sensor.entity.SensorInstanceRegistry
 import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
 import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
 import io.smartspaces.system.SmartSpacesEnvironment
@@ -42,7 +42,7 @@ import io.smartspaces.time.provider.SettableTimeProvider
 class StandardCompleteSensedEntityModelTest extends JUnitSuite {
   var allModels: StandardCompleteSensedEntityModel = null
 
-  @Mock var sensorRegistry: SensorRegistry = null
+  @Mock var sensorRegistry: SensorInstanceRegistry = null
 
   @Mock var eventObservableRegistry: EventObservableRegistry = null
   

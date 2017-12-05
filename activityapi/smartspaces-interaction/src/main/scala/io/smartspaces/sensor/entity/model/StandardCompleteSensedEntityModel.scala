@@ -26,7 +26,7 @@ import io.smartspaces.sensor.entity.PersonSensedEntityDescription
 import io.smartspaces.sensor.entity.PhysicalSpaceSensedEntityDescription
 import io.smartspaces.sensor.entity.SensedEntityDescription
 import io.smartspaces.sensor.entity.SensorEntityDescription
-import io.smartspaces.sensor.entity.SensorRegistry
+import io.smartspaces.sensor.entity.SensorInstanceRegistry
 import io.smartspaces.sensor.entity.SensorSensedEntityAssociation
 import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
 import io.smartspaces.system.SmartSpacesEnvironment
@@ -38,7 +38,7 @@ import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
  * @author Keith M. Hughes
  */
 class StandardCompleteSensedEntityModel(
-    override val sensorRegistry: SensorRegistry, 
+    override val sensorRegistry: SensorInstanceRegistry, 
     override val eventEmitter: SensorProcessingEventEmitter,
     override val log: ExtendedLog, 
     private val spaceEnvironment: SmartSpacesEnvironment) extends CompleteSensedEntityModel {

@@ -19,7 +19,7 @@ package io.smartspaces.sensor.entity.model
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.entity.SensedEntityDescription
 import io.smartspaces.sensor.entity.SensorEntityDescription
-import io.smartspaces.sensor.entity.SensorRegistry
+import io.smartspaces.sensor.entity.SensorInstanceRegistry
 import io.smartspaces.sensor.entity.SensorSensedEntityAssociation
 import io.smartspaces.sensor.processing.SensorProcessingEventEmitter
 
@@ -200,7 +200,7 @@ trait CompleteSensedEntityModel {
   /**
    * The sensor registry for the collection.
    */
-  val sensorRegistry: SensorRegistry
+  val sensorRegistry: SensorInstanceRegistry
 
   /**
    * Perform an operations within a read transaction.

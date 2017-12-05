@@ -17,16 +17,17 @@
 package io.smartspaces.sensor.integrator
 
 import io.smartspaces.resource.managed.ManagedResource
-import io.smartspaces.sensor.entity.SensorDescriptionImporter
+import io.smartspaces.sensor.entity.SensorInstanceDescriptionImporter
 import io.smartspaces.sensor.entity.model.query.SensedEntityModelQueryProcessor
 import io.smartspaces.sensor.messaging.input.MqttSensorInput
 import io.smartspaces.sensor.messaging.input.SensorInput
 import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
-import io.smartspaces.sensor.entity.SensorRegistry
+import io.smartspaces.sensor.entity.SensorInstanceRegistry
 import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel
 import io.smartspaces.data.entity.ValueRegistry
 import io.smartspaces.scope.ManagedScope
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
+import io.smartspaces.sensor.entity.SensorCommonRegistry
 
 /**
  * The sensor integration layer.
@@ -44,9 +45,14 @@ trait SensorIntegrator extends ManagedResource {
   def queryProcessor: SensedEntityModelQueryProcessor
 
   /**
-   * The sensor registry for the integrator.
+   * The sensor instance registry for the integrator.
    */
-  def sensorRegistry: SensorRegistry
+  def sensorInstanceRegistry: SensorInstanceRegistry
+
+  /**
+   * The sensor common registry for the integrator.
+   */
+  def sensorCommonRegistry: SensorCommonRegistry
 
   /**
    * The value registry being used by the integrator
@@ -61,7 +67,7 @@ trait SensorIntegrator extends ManagedResource {
   /**
    * The description importer
    */
-  var descriptionImporter: SensorDescriptionImporter
+  var sensorInstanceDescriptionImporter: SensorInstanceDescriptionImporter
 
   /**
    * Add in an MQTT sensor input.

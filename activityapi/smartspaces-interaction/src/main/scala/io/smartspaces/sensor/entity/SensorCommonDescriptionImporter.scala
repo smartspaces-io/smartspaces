@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,30 +16,21 @@
 
 package io.smartspaces.sensor.entity
 
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.Map
-
 /**
- * A memory based entity mapper.
+ * An importer for sensor common descriptions into a registry.
  *
  * @author Keith M. Hughes
  */
-class MemoryEntityMapper extends EntityMapper {
-
+trait SensorCommonDescriptionImporter {
+  
   /**
-   * The map of one type of entity to another.
+   * Import a description into a particular registry.
+   *
+   * @param register
+   *          the sensor common registry
+   *
+   * @return this importer
    */
-  private val map: Map[String, String] = new HashMap
+  def importDescriptions(register: SensorCommonRegistry): SensorCommonDescriptionImporter
 
-  override def put(entityIdFrom: String, entityIdTo: String): Unit = {
-    this.synchronized {
-      map.put(entityIdFrom, entityIdTo);
-    }
-  }
-
-  override def get(entityIdFrom: String): Option[String] = {
-    this.synchronized {
-      map.get(entityIdFrom)
-    }
-  }
 }

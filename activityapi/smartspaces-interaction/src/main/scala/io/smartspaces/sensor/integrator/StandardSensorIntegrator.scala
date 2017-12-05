@@ -16,19 +16,19 @@
 
 package io.smartspaces.sensor.integrator
 
-import java.io.File
-
 import io.smartspaces.data.entity.StandardValueRegistry
 import io.smartspaces.data.entity.ValueRegistry
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.resource.managed.IdempotentManagedResource
 import io.smartspaces.scope.ManagedScope
-import io.smartspaces.sensor.entity.InMemorySensorRegistry
+import io.smartspaces.sensor.entity.InMemorySensorCommonRegistry
+import io.smartspaces.sensor.entity.InMemorySensorInstanceRegistry
 import io.smartspaces.sensor.entity.MeasurementTypeDescription
-import io.smartspaces.sensor.entity.SensorDescriptionImporter
-import io.smartspaces.sensor.entity.SensorRegistry
+import io.smartspaces.sensor.entity.SensorCommonDescriptionImporter
+import io.smartspaces.sensor.entity.SensorCommonRegistry
+import io.smartspaces.sensor.entity.SensorInstanceDescriptionImporter
+import io.smartspaces.sensor.entity.SensorInstanceRegistry
 import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel
-import io.smartspaces.sensor.entity.model.SensedEntityModel
 import io.smartspaces.sensor.entity.model.SensorEntityModel
 import io.smartspaces.sensor.entity.model.StandardCompleteSensedEntityModel
 import io.smartspaces.sensor.entity.model.query.SensedEntityModelQueryProcessor
@@ -40,8 +40,6 @@ import io.smartspaces.sensor.messaging.messages.StandardSensorData
 import io.smartspaces.sensor.processing.SensedEntitySensorHandler
 import io.smartspaces.sensor.processing.SensedEntitySensorMessageHandler
 import io.smartspaces.sensor.processing.SensorProcessor
-import io.smartspaces.sensor.processing.StandardFilePersistenceSensorHandler
-import io.smartspaces.sensor.processing.StandardFilePersistenceSensorInput
 import io.smartspaces.sensor.processing.StandardSensedEntityModelProcessor
 import io.smartspaces.sensor.processing.StandardSensedEntitySensorHandler
 import io.smartspaces.sensor.processing.StandardSensorProcessingEventEmitter
@@ -52,20 +50,19 @@ import io.smartspaces.sensor.processing.UnknownMarkerHandler
 import io.smartspaces.sensor.processing.UnknownSensedEntityHandler
 import io.smartspaces.sensor.processing.value.CategoricalValueSensorValueProcessor
 import io.smartspaces.sensor.processing.value.NumericContinuousValueSensorValueProcessor
+import io.smartspaces.sensor.processing.value.SensorValueProcessorRegistry
 import io.smartspaces.sensor.processing.value.SimpleMarkerSensorValueProcessor
 import io.smartspaces.sensor.processing.value.StandardBleProximitySensorValueProcessor
+import io.smartspaces.sensor.processing.value.StandardSensorValueProcessorRegistry
+import io.smartspaces.sensor.processing.value.StatefulMarkerSensorSensorValueProcessor
 import io.smartspaces.sensor.value.entity.ActiveCategoricalValue
 import io.smartspaces.sensor.value.entity.ContactCategoricalValue
+import io.smartspaces.sensor.value.entity.MoistureCategoricalValue
 import io.smartspaces.sensor.value.entity.PresenceCategoricalValue
+import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.time.TimeFrequency
 import io.smartspaces.util.data.dynamic.DynamicObject
-import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
-import io.smartspaces.sensor.processing.value.StatefulMarkerSensorSensorValueProcessor
-import io.smartspaces.sensor.value.entity.MoistureCategoricalValue
-import io.smartspaces.sensor.processing.value.SensorValueProcessorRegistry
-import io.smartspaces.sensor.processing.value.StandardSensorValueProcessorRegistry
-import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
 
 /**
  * The sensor integration layer.
@@ -75,9 +72,14 @@ import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
 class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironment, private val managedScope: ManagedScope, private val log: ExtendedLog) extends SensorIntegrator with IdempotentManagedResource {
 
   /**
-   * The sensor registry for the integrator.
+   * The sensor instance registry for the integrator.
    */
-  private var _sensorRegistry: SensorRegistry = _
+  private var _sensorInstanceRegistry: SensorInstanceRegistry = _
+
+  /**
+   * The sensor common registry for the integrator.
+   */
+  private var _sensorCommonRegistry: SensorCommonRegistry = _
 
   /**
    * The complete set of models of sensors and sensed entities.
@@ -90,9 +92,14 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
   private var _queryProcessor: SensedEntityModelQueryProcessor = _
 
   /**
-   * The description importer
+   * The sensor common description importer
    */
-  var descriptionImporter: SensorDescriptionImporter = _
+  var sensorCommonDescriptionImporter: SensorCommonDescriptionImporter = _
+
+  /**
+   * The sensor instance description importer
+   */
+  var sensorInstanceDescriptionImporter: SensorInstanceDescriptionImporter = _
 
   /**
    * The collection of event emitters.
@@ -129,27 +136,33 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
 
   override def queryProcessor: SensedEntityModelQueryProcessor = _queryProcessor
 
-  override def sensorRegistry: SensorRegistry = _sensorRegistry
+  override def sensorCommonRegistry: SensorCommonRegistry = _sensorCommonRegistry
+
+  override def sensorInstanceRegistry: SensorInstanceRegistry = _sensorInstanceRegistry
 
   override def completeSensedEntityModel: CompleteSensedEntityModel = _completeSensedEntityModel
 
   override def onStartup(): Unit = {
-    _sensorRegistry = new InMemorySensorRegistry(log)
+    _sensorCommonRegistry = new InMemorySensorCommonRegistry(log)
 
-    descriptionImporter.importDescriptions(sensorRegistry)
+    sensorCommonDescriptionImporter.importDescriptions(sensorCommonRegistry)
+
+    _sensorInstanceRegistry = new InMemorySensorInstanceRegistry(log)
+
+    sensorInstanceDescriptionImporter.importDescriptions(sensorInstanceRegistry)
 
     sensorValueProcessorRegistry = new StandardSensorValueProcessorRegistry(log)
     sensorValueProcessorRegistry.addSensorValueProcessor(new StandardBleProximitySensorValueProcessor())
     sensorValueProcessorRegistry.addSensorValueProcessor(new SimpleMarkerSensorValueProcessor(unknownMarkerHandler))
 
-    val statefulMarkerMeasurementType = _sensorRegistry.getMeasurementTypeByExternalId(StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL)
+    val statefulMarkerMeasurementType = _sensorCommonRegistry.getMeasurementTypeByExternalId(StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL)
     if (statefulMarkerMeasurementType.isDefined) {
       sensorValueProcessorRegistry.addSensorValueProcessor(new StatefulMarkerSensorSensorValueProcessor(statefulMarkerMeasurementType.get, unknownMarkerHandler))
     } else {
       log.warn(s"Could not find stateful marker measurement type ${StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL}")
     }
 
-    sensorRegistry.getAllMeasurementTypes.filter(_.processingType == StandardSensorData.MEASUREMENT_PROCESSING_TYPE_SIMPLE).
+    _sensorCommonRegistry.getAllMeasurementTypes.filter(_.processingType == StandardSensorData.MEASUREMENT_PROCESSING_TYPE_SIMPLE).
       foreach { measurementType =>
         measurementType.valueType match {
           case MeasurementTypeDescription.VALUE_TYPE_NUMERIC_CONTINUOUS =>
@@ -168,7 +181,7 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
       }
 
     _completeSensedEntityModel =
-      new StandardCompleteSensedEntityModel(_sensorRegistry, eventEmitter, log, spaceEnvironment)
+      new StandardCompleteSensedEntityModel(_sensorInstanceRegistry, eventEmitter, log, spaceEnvironment)
     _completeSensedEntityModel.prepare()
 
     _queryProcessor = new StandardSensedEntityModelQueryProcessor(completeSensedEntityModel, unknownMarkerHandler, unknownSensedEntityHandler)

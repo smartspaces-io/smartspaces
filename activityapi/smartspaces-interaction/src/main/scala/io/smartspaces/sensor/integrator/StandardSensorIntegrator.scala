@@ -69,17 +69,12 @@ import io.smartspaces.util.data.dynamic.DynamicObject
  *
  * @author Keith M. Hughes
  */
-class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironment, private val managedScope: ManagedScope, private val log: ExtendedLog) extends SensorIntegrator with IdempotentManagedResource {
-
-  /**
-   * The sensor instance registry for the integrator.
-   */
-  private var _sensorInstanceRegistry: SensorInstanceRegistry = _
-
-  /**
-   * The sensor common registry for the integrator.
-   */
-  private var _sensorCommonRegistry: SensorCommonRegistry = _
+class StandardSensorIntegrator(
+    private val _sensorCommonRegistry: SensorCommonRegistry,
+    private var _sensorInstanceRegistry: SensorInstanceRegistry,
+    private val spaceEnvironment: SmartSpacesEnvironment, 
+    private val managedScope: ManagedScope, 
+    private val log: ExtendedLog) extends SensorIntegrator with IdempotentManagedResource {
 
   /**
    * The complete set of models of sensors and sensed entities.
@@ -90,16 +85,6 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
    * The processor for queries against the models.
    */
   private var _queryProcessor: SensedEntityModelQueryProcessor = _
-
-  /**
-   * The sensor common description importer
-   */
-  var sensorCommonDescriptionImporter: SensorCommonDescriptionImporter = _
-
-  /**
-   * The sensor instance description importer
-   */
-  var sensorInstanceDescriptionImporter: SensorInstanceDescriptionImporter = _
 
   /**
    * The collection of event emitters.
@@ -143,14 +128,6 @@ class StandardSensorIntegrator(private val spaceEnvironment: SmartSpacesEnvironm
   override def completeSensedEntityModel: CompleteSensedEntityModel = _completeSensedEntityModel
 
   override def onStartup(): Unit = {
-    _sensorCommonRegistry = new InMemorySensorCommonRegistry(log)
-
-    sensorCommonDescriptionImporter.importDescriptions(sensorCommonRegistry)
-
-    _sensorInstanceRegistry = new InMemorySensorInstanceRegistry(log)
-
-    sensorInstanceDescriptionImporter.importDescriptions(sensorInstanceRegistry)
-
     sensorValueProcessorRegistry = new StandardSensorValueProcessorRegistry(log)
     sensorValueProcessorRegistry.addSensorValueProcessor(new StandardBleProximitySensorValueProcessor())
     sensorValueProcessorRegistry.addSensorValueProcessor(new SimpleMarkerSensorValueProcessor(unknownMarkerHandler))

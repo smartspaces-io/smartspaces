@@ -65,11 +65,6 @@ trait SensorIntegrator extends ManagedResource {
   def completeSensedEntityModel: CompleteSensedEntityModel
 
   /**
-   * The description importer
-   */
-  var sensorInstanceDescriptionImporter: SensorInstanceDescriptionImporter
-
-  /**
    * Add in an MQTT sensor input.
    *
    * @param mqttEndpoint

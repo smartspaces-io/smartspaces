@@ -77,6 +77,11 @@ object SensorDescriptionConstants {
   val SECTION_HEADER_SENSOR_DETAILS = "sensorDetails"
 
   /**
+   * The field for the category usage for a sensor detail.
+   */
+  val SECTION_FIELD_SENSOR_DETAILS_CATEGORY_USAGE = "categoryUsage"
+
+  /**
    * The sensor details section field for the channels for the sensor detail.
    */
   val SECTION_FIELD_SENSOR_DETAILS_CHANNELS = "channels"

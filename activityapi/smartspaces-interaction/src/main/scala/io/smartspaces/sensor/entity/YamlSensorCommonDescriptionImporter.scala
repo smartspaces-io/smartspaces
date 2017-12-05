@@ -136,11 +136,13 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
         sensorHeartbeatUpdateTimeLimit = Option(sensorHeartbeatUpdateTimeLimitValue)
       }
 
+      val sensorUsageCategory = Option(sensorDetailData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_DETAILS_CATEGORY_USAGE))
+      
       val sensorDetail = new SimpleSensorDetail(getNextId(),
         sensorDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         sensorDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         sensorDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
-        sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit)
+        sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit, sensorUsageCategory)
 
       sensorDetailData.down(SensorDescriptionConstants.SECTION_FIELD_SENSOR_DETAILS_CHANNELS)
       data.getArrayEntries().asScala.foreach((channelDetailEntry: ArrayDynamicObjectEntry) => breakable {

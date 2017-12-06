@@ -71,7 +71,7 @@ import io.smartspaces.util.data.dynamic.DynamicObject
  */
 class StandardSensorIntegrator(
     private val _sensorCommonRegistry: SensorCommonRegistry,
-    private var _sensorInstanceRegistry: SensorInstanceRegistry,
+    private val _sensorInstanceRegistry: SensorInstanceRegistry,
     private val spaceEnvironment: SmartSpacesEnvironment, 
     private val managedScope: ManagedScope, 
     private val log: ExtendedLog) extends SensorIntegrator with IdempotentManagedResource {

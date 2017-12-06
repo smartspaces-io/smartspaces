@@ -97,6 +97,11 @@ object SensorDescriptionConstants {
   val SECTION_FIELD_SENSOR_DETAILS_CHANNELS_UNIT = "unit"
 
   /**
+   * The section header for the physical space types entries.
+   */
+  val SECTION_HEADER_PHYSICAL_SPACE_TYPES = "physicalSpaceTypes"
+
+  /**
    * The section header for the people section of the file.
    */
   val SECTION_HEADER_PEOPLE = "people"

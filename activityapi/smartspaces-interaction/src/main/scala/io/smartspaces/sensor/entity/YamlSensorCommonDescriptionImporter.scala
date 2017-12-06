@@ -16,7 +16,6 @@
 
 package io.smartspaces.sensor.entity
 
-
 import java.util.Map
 
 import scala.collection.JavaConverters._
@@ -48,6 +47,7 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
 
     getMeasurementTypes(sensorRegistry, data)
     getSensorDetails(sensorRegistry, data)
+    getPhysicalSpaceTypes(sensorRegistry, data)
 
     return this
   }
@@ -60,7 +60,7 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
    * @param data
    *          the data read from the input stream
    */
-  def getMeasurementTypes(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
+  private def getMeasurementTypes(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
     data.down(SensorDescriptionConstants.SECTION_HEADER_MEASUREMENT_TYPES)
 
     data.getArrayEntries().asScala.foreach((measurementTypeEntry: ArrayDynamicObjectEntry) => {
@@ -68,7 +68,8 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
 
       val valueType =
         measurementTypeData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_MEASUREMENT_TYPES_VALUE_TYPE)
-      val measurementType = new SimpleMeasurementTypeDescription(getNextId(),
+      val measurementType = new SimpleMeasurementTypeDescription(
+        getNextId(),
         measurementTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         measurementTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         measurementTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
@@ -118,7 +119,7 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
    * @param data
    *          the data read from the input stream
    */
-  def getSensorDetails(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
+  private def getSensorDetails(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
     data.down(SensorDescriptionConstants.SECTION_HEADER_SENSOR_DETAILS)
 
     data.getArrayEntries().asScala.foreach((sensorDetailEntry) => {
@@ -137,8 +138,9 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
       }
 
       val sensorUsageCategory = Option(sensorDetailData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_DETAILS_CATEGORY_USAGE))
-      
-      val sensorDetail = new SimpleSensorDetail(getNextId(),
+
+      val sensorDetail = new SimpleSensorDetail(
+        getNextId(),
         sensorDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         sensorDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         sensorDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
@@ -173,7 +175,8 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
           measurementUnit = measurementType.get.defaultUnit
         }
 
-        val channelDetail = new SimpleSensorChannelDetail(sensorDetail,
+        val channelDetail = new SimpleSensorChannelDetail(
+          sensorDetail,
           channelDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           channelDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           channelDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
@@ -187,6 +190,33 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
       sensorRegistry.registerSensorDetail(sensorDetail)
     })
     data.up()
+  }
+
+  /**
+   * Get all the physical space type data.
+   *
+   * @param sensorRegistry
+   *          the sensor registry to store the data in
+   * @param data
+   *          the data read from the input stream
+   */
+  private def getPhysicalSpaceTypes(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
+    if (data.containsProperty(SensorDescriptionConstants.SECTION_HEADER_PHYSICAL_SPACE_TYPES)) {
+      data.down(SensorDescriptionConstants.SECTION_HEADER_PHYSICAL_SPACE_TYPES)
+
+      data.getArrayEntries().asScala.foreach((physicalSpaceTypelEntry) => {
+        val physicalSpaceTypeData = physicalSpaceTypelEntry.down()
+
+        val physicalSpaceType = new SimplePhysicalSpaceType(
+          getNextId(),
+          physicalSpaceTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
+          physicalSpaceTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
+          physicalSpaceTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION))
+
+        sensorRegistry.registerPhysicalSpaceType(physicalSpaceType)
+      })
+      data.up()
+    }
   }
 
   /**

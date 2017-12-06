@@ -59,6 +59,16 @@ class InMemorySensorCommonRegistry(log: ExtendedLog) extends SensorCommonRegistr
    */
   private val externalIdToSensorDetail: Map[String, SensorDetail] = new HashMap
 
+  /**
+   * A map of persistence IDs to physical space types.
+   */
+  private val idToPhysicalSpaceType: Map[String, PhysicalSpaceType] = new HashMap
+
+  /**
+   * A map of external IDs to physical space typels.
+   */
+  private val externalIdToPhysicalSpaceType: Map[String, PhysicalSpaceType] = new HashMap
+
   override def registerMeasurementType(measurementType: MeasurementTypeDescription): SensorCommonRegistry = {
     idToMeasurementType.put(measurementType.id, measurementType)
     externalIdToMeasurementType.put(measurementType.externalId, measurementType)
@@ -108,6 +118,25 @@ class InMemorySensorCommonRegistry(log: ExtendedLog) extends SensorCommonRegistr
 
   override def getAllSensorDetails(): List[SensorDetail] = {
     idToSensorDetail.values.toList
+  }
+
+  override def registerPhysicalSpaceType(physicalSpaceType: PhysicalSpaceType): SensorCommonRegistry = {
+    idToPhysicalSpaceType.put(physicalSpaceType.id, physicalSpaceType)
+    externalIdToPhysicalSpaceType.put(physicalSpaceType.externalId, physicalSpaceType)
+    
+    this
+  }
+
+  override def getPhysicalSpaceType(id: String): Option[PhysicalSpaceType] = {
+    idToPhysicalSpaceType.get(id)
+  }
+
+  override def getPhysicalSpaceTypeByExternalId(externalId: String): Option[PhysicalSpaceType] = {
+    externalIdToPhysicalSpaceType.get(externalId)
+  }
+
+  override def getAllPhysicalSpaceTypes(): List[PhysicalSpaceType] = {
+    idToPhysicalSpaceType.values.toList
   }
 
 }

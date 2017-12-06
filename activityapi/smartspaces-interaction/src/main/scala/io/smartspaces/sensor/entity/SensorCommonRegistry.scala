@@ -117,4 +117,41 @@ trait SensorCommonRegistry {
    */
   def getAllSensorDetails(): List[SensorDetail]
 
+  /**
+   * Register a physical space type with the registry.
+   *
+   * @param physicalSpaceType
+   *          the physical space type to add
+   *
+   * @return this registry
+   */
+  def registerPhysicalSpaceType(physicalSpaceType: PhysicalSpaceType): SensorCommonRegistry
+
+  /**
+   * Get a physical space type from the registry persistence ID.
+   *
+   * @param id
+   *          id of the physical space type
+   *
+   * @return the physical space type if found
+   */
+  def getPhysicalSpaceType(id: String): Option[PhysicalSpaceType]
+
+  /**
+   * Get a physical space type from the registry external ID.
+   *
+   * @param externalId
+   *          external id of the the physical space type
+   *
+   * @return the physical space type if found
+   */
+  def getPhysicalSpaceTypeByExternalId(externalId: String): Option[PhysicalSpaceType]
+
+  /**
+   * Get all physical space types from the registry.
+   *
+   * @return all physical space types in the registry
+   */
+  def getAllPhysicalSpaceTypes(): List[PhysicalSpaceType]
+
 }

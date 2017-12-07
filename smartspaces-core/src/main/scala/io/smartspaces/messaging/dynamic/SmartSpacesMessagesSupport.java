@@ -57,7 +57,9 @@ public class SmartSpacesMessagesSupport {
   public static Map<String, Object> getSuccessResponse(Object data) {
     Map<String, Object> response = getSimpleSuccessResponse();
 
-    response.put(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA, data);
+    if (data != null) {
+      response.put(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA, data);
+    }
 
     return response;
   }
@@ -264,7 +266,7 @@ public class SmartSpacesMessagesSupport {
   public static DynamicObjectBuilder newMessageNoData(String type) {
     DynamicObjectBuilder message = new StandardDynamicObjectBuilder();
 
-    message.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE  , type);
+    message.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_TYPE, type);
 
     return message;
   }

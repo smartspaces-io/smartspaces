@@ -255,4 +255,12 @@ public class NettyHttpRequest implements HttpRequest {
 
     return portString.toString();
   }
+
+@Override
+public String toString() {
+  return "NettyHttpRequest [remoteAddress=" + getRemoteAddress() + ", uri=" + getUri() + ", headers="
+    + getHeaders() + ", cookies=" + getCookies() + "]";
+}
+  
+  
 }

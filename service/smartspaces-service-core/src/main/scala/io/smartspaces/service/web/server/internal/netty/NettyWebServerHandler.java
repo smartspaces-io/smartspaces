@@ -298,8 +298,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       // Nothing we handle.
 
       HttpResponseStatus status = FORBIDDEN;
-      String message = String.format("HTTP [%d] %s --> (No handlers for request)", status.getCode(),
-          req.getUri());
+      String message = String.format("HTTP [%d] %s from %s--> (No handlers for request)", status.getCode(),
+          req.getUri(), ctx.getChannel().getRemoteAddress());
       if (shouldWarnOnMissingFile(new URI(req.getUri()).getPath())) {
         webServer.getLog().warn(message);
       } else {
@@ -728,7 +728,9 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
     if (isWebsocketChannel) {
       log.error("Exception caught in web server for web socket connections: " + cause.getMessage());
     } else {
-      log.error("Exception caught in the web server", cause);
+      log.error(
+    	  String.format("Exception caught in the web server from request from %s", ctx.getChannel().getRemoteAddress()), 
+    	  cause);
     }
 
     // Can call close many times without negative effect.

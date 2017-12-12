@@ -20,6 +20,7 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Map
 import io.smartspaces.logging.ExtendedLog
+import javax.inject.Inject
 
 
 /**
@@ -27,7 +28,7 @@ import io.smartspaces.logging.ExtendedLog
  * 
  * @author Keith M. Hughes
  */
-class InMemorySensorCommonRegistry(log: ExtendedLog) extends SensorCommonRegistry {
+class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCommonRegistry {
   
   /**
    * A map of persistence IDs to their measurement types.

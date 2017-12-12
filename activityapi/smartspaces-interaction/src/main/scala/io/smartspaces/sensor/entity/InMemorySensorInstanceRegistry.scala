@@ -21,13 +21,14 @@ import io.smartspaces.logging.ExtendedLog
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Map
+import javax.inject.Inject
 
 /**
  * A sensor registry totally contained in memory.
  *
  * @author Keith M. Hughes
  */
-class InMemorySensorInstanceRegistry(log: ExtendedLog) extends SensorInstanceRegistry {
+class InMemorySensorInstanceRegistry @Inject()(log: ExtendedLog) extends SensorInstanceRegistry {
 
   /**
    * A map of persistence sensor IDs to their description.

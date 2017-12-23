@@ -36,58 +36,58 @@ public class EqualityTriggerStateMachineTest {
   public void testSimpleMachine() {
     final ArrayList<String> path = Lists.newArrayList();
 
-    EqualityTriggerStateMachine<TestStates, TestTransitions, StateMachineObject<TestStates, TestTransitions>> machine =
-        new EqualityTriggerStateMachineBuilder<TestStates, TestTransitions, StateMachineObject<TestStates, TestTransitions>>()
+    EqualityTriggerStateMachine<TestStates, TestTransitions, StateMachineObject<TestStates>> machine =
+        new EqualityTriggerStateMachineBuilder<TestStates, TestTransitions, StateMachineObject<TestStates>>()
             .addState(TestStates.A)
             .onEntry(
-                new StateMachineAction<TestStates, TestTransitions, StateMachineObject<TestStates, TestTransitions>>() {
+                new StateMachineAction<TestStates, TestTransitions, StateMachineObject<TestStates>>() {
                   @Override
-                  public void performAction(StateMachineObject<TestStates, TestTransitions> object) {
+                  public void performAction(StateMachineObject<TestStates> object) {
                     path.add("A.enter");
                   }
                 })
             .onExit(
-                new StateMachineAction<TestStates, TestTransitions, StateMachineObject<TestStates, TestTransitions>>() {
+                new StateMachineAction<TestStates, TestTransitions, StateMachineObject<TestStates>>() {
                   @Override
-                  public void performAction(StateMachineObject<TestStates, TestTransitions> object) {
+                  public void performAction(StateMachineObject<TestStates> object) {
                     path.add("A.exit");
                   }
                 })
             .transition(TestTransitions.T1, TestStates.B)
             .addState(TestStates.B)
             .onEntry(
-                new StateMachineAction<TestStates, TestTransitions, StateMachineObject<TestStates, TestTransitions>>() {
+                new StateMachineAction<TestStates, TestTransitions, StateMachineObject<TestStates>>() {
                   @Override
-                  public void performAction(StateMachineObject<TestStates, TestTransitions> object) {
+                  public void performAction(StateMachineObject<TestStates> object) {
                     path.add("B.enter");
                   }
                 })
             .onExit(
-                new StateMachineAction<TestStates, TestTransitions, StateMachineObject<TestStates, TestTransitions>>() {
+                new StateMachineAction<TestStates, TestTransitions, StateMachineObject<TestStates>>() {
                   @Override
-                  public void performAction(StateMachineObject<TestStates, TestTransitions> object) {
+                  public void performAction(StateMachineObject<TestStates> object) {
                     path.add("B.exit");
                   }
                 })
             .transition(TestTransitions.T2, TestStates.C)
             .addState(TestStates.C)
             .onEntry(
-                new StateMachineAction<TestStates, TestTransitions, StateMachineObject<TestStates, TestTransitions>>() {
+                new StateMachineAction<TestStates, TestTransitions, StateMachineObject<TestStates>>() {
                   @Override
-                  public void performAction(StateMachineObject<TestStates, TestTransitions> object) {
+                  public void performAction(StateMachineObject<TestStates> object) {
                     path.add("C.enter");
                   }
                 })
             .onExit(
-                new StateMachineAction<TestStates, TestTransitions, StateMachineObject<TestStates, TestTransitions>>() {
+                new StateMachineAction<TestStates, TestTransitions, StateMachineObject<TestStates>>() {
                   @Override
-                  public void performAction(StateMachineObject<TestStates, TestTransitions> object) {
+                  public void performAction(StateMachineObject<TestStates> object) {
                     path.add("C.exit");
                   }
                 }).build();
 
-    BaseStateMachineObject<TestStates, TestTransitions> stateObject =
-        new BaseStateMachineObject<TestStates, TestTransitions>();
+    BaseStateMachineObject<TestStates> stateObject =
+        new BaseStateMachineObject<TestStates>();
     machine.initialState(stateObject, TestStates.A);
 
     Assert.assertEquals(Lists.newArrayList("A.enter"), path);
@@ -107,8 +107,8 @@ public class EqualityTriggerStateMachineTest {
    */
   @Test(expected = SimpleSmartSpacesException.class)
   public void testFailBuild() {
-    EqualityTriggerStateMachine<TestStates, TestTransitions, StateMachineObject<TestStates, TestTransitions>> machine =
-        new EqualityTriggerStateMachineBuilder<TestStates, TestTransitions, StateMachineObject<TestStates, TestTransitions>>()
+    EqualityTriggerStateMachine<TestStates, TestTransitions, StateMachineObject<TestStates>> machine =
+        new EqualityTriggerStateMachineBuilder<TestStates, TestTransitions, StateMachineObject<TestStates>>()
             .addState(TestStates.A).transition(TestTransitions.T1, TestStates.B)
             .addState(TestStates.B).transition(TestTransitions.T2, TestStates.C).build();
   }

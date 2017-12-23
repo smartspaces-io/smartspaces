@@ -133,7 +133,7 @@ public class StateMachineObjectCollectionTest {
   }
 
   private static class MyStateMachineObject extends
-      BaseStateMachineObject<TestStates, TestTransitions> {
+      BaseStateMachineObject<TestStates> {
     private String name;
 
     private List<String> path = Lists.newArrayList();

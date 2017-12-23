@@ -123,6 +123,7 @@ allprojects {
 }
 
 subprojects {
+    task allDeps(type: DependencyReportTask) {}
   ext {
     extrasBuildFolder = "build/staging/controller/extras"
   }

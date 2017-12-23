@@ -23,7 +23,7 @@ import io.smartspaces.SimpleSmartSpacesException
  *
  * @author Keith M. Hughes
  */
-class EqualityTriggerStateMachineBuilder[S, T, SO <: StateMachineObject[S, T]] {
+class EqualityTriggerStateMachineBuilder[S, T, SO <: StateMachineObject[S]] {
 
   /**
    * The machine being built.

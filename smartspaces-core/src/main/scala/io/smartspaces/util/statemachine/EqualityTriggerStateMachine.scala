@@ -38,7 +38,7 @@ import java.util.Map.Entry
  *
  * @author Keith M. Hughes
  */
-class EqualityTriggerStateMachine[S, T, SO <: StateMachineObject[S, T]] extends StateMachine[S, T, SO] {
+class EqualityTriggerStateMachine[S, T, SO <: StateMachineObject[S]] extends StateMachine[S, T, SO] {
 
   /**
    * A map from states to the internal state object representation.
@@ -48,11 +48,10 @@ class EqualityTriggerStateMachine[S, T, SO <: StateMachineObject[S, T]] extends 
   override def initialState(stateObject: SO, initialState: S): Unit = {
     val currentInternalState = internalStates.get(initialState)
     if (currentInternalState != null) {
-      stateObject.setState(initialState);
-      currentInternalState.doEnterState(stateObject);
+      stateObject.setState(initialState)
+      currentInternalState.doEnterState(stateObject)
     } else {
-      throw new SmartSpacesException(String.format("Cannot set initial state %s",
-        initialState.toString));
+      throw new SmartSpacesException(s"Cannot set initial state ${initialState}")
     }
   }
 
@@ -65,14 +64,24 @@ class EqualityTriggerStateMachine[S, T, SO <: StateMachineObject[S, T]] extends 
       currentInternalState.getTransitionState(nextStateTransition)
 
     if (nextInternalState == null) {
-      throw new SimpleSmartSpacesException(String.format(
-        "There is no transition named %s from state %s", nextStateTransition.toString, currentState.toString))
+      throw new SimpleSmartSpacesException(
+        s"There is no transition named ${nextStateTransition} from state ${currentState}")
     }
 
     currentInternalState.doExitState(stateObject)
 
     stateObject.setState(nextInternalState.state.get)
     nextInternalState.doEnterState(stateObject)
+  }
+
+  override def getTransitions(state: S): List[T] = {
+    val currentInternalState = internalStates.get(state)
+    if (currentInternalState != null) {
+      
+      currentInternalState.getTransitions()
+    } else {
+      throw new SmartSpacesException(s"Cannot find state ${state} to get transitions")
+    }
   }
 
   /**
@@ -84,20 +93,19 @@ class EqualityTriggerStateMachine[S, T, SO <: StateMachineObject[S, T]] extends 
    * @return the internal state
    */
   private[statemachine] def addInternalState(state: S): InternalStateMachineState = {
-    var internalState = internalStates.get(state);
+    var internalState = internalStates.get(state)
     if (internalState != null) {
       if (internalState.state.isEmpty) {
         internalState.state = Option(state)
       } else {
-        throw new SimpleSmartSpacesException(String.format(
-          "State machine already contained state %s", state.toString));
+        throw new SimpleSmartSpacesException(s"State machine already contained state ${state}")
       }
     } else {
-      internalState = new InternalStateMachineState(Option(state));
-      internalStates.put(state, internalState);
+      internalState = new InternalStateMachineState(Option(state))
+      internalStates.put(state, internalState)
     }
 
-    return internalState;
+    internalState
   }
 
   /**
@@ -114,11 +122,11 @@ class EqualityTriggerStateMachine[S, T, SO <: StateMachineObject[S, T]] extends 
       // Don't want the state associated yet so we can fail validation if the
       // state was never
       // defined, only transitioned to.
-      internalState = new InternalStateMachineState();
-      internalStates.put(state, internalState);
+      internalState = new InternalStateMachineState()
+      internalStates.put(state, internalState)
     }
 
-    return internalState;
+    internalState
   }
 
   /**
@@ -130,8 +138,8 @@ class EqualityTriggerStateMachine[S, T, SO <: StateMachineObject[S, T]] extends 
   def validate (): Unit = {
     internalStates.entrySet().foreach { (internalState) =>
       if (internalState.getValue().state.isEmpty) {
-        throw new SimpleSmartSpacesException(String.format(
-          "State %s is not explicity defined", internalState.getKey().toString));
+        throw new SimpleSmartSpacesException(
+          s"State ${internalState.getKey()} is not explicity defined")
       }
     }
 
@@ -186,7 +194,7 @@ class EqualityTriggerStateMachine[S, T, SO <: StateMachineObject[S, T]] extends 
      */
     def doExitState (stateObject: SO) = {
       if (exitAction != null) {
-        exitAction.performAction(stateObject);
+        exitAction.performAction(stateObject)
       }
     }
 
@@ -211,10 +219,13 @@ class EqualityTriggerStateMachine[S, T, SO <: StateMachineObject[S, T]] extends 
      * @return the state associated with the transition, or {@code null} if none
      */
     def getTransitionState(transition: T): InternalStateMachineState = {
-      return transitionToState.get(transition)
+      transitionToState.get(transition)
+    }
+    
+    def getTransitions(): List[T] = {
+      transitionToState.keySet().toList
     }
   }
-
 }
 
 

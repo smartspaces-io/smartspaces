@@ -39,7 +39,8 @@ import java.util.concurrent.ConcurrentSkipListMap
  *
  * @author Keith M. Hughes
  */
-class StateMachineObjectCollection[K, S, T, SO <: StateMachineObject[S, T]](private val machine: StateMachine[S, T, SO]) {
+class StateMachineObjectCollection[K, S, T, SO <: StateMachineObject[S]](
+    private val machine: StateMachine[S, T, SO]) {
 
   /**
    * The collection of state machine objects.

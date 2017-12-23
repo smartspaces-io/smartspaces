@@ -35,7 +35,7 @@ import io.smartspaces.SmartSpacesException
  *
  * @author Keith M. Hughes
  */
-trait StateMachine[S, T, SO <: StateMachineObject[S, T]] {
+trait StateMachine[S, T, SO <: StateMachineObject[S]] {
 
   /**
    * Set the initial state for the state object.
@@ -60,4 +60,92 @@ trait StateMachine[S, T, SO <: StateMachineObject[S, T]] {
    * @throws SmartSpacesException
    */
   def transition(stateObject: SO ,  nextStateTransition: T): Unit
+  
+  /**
+   * Get the set of transitions leading out of a given state.
+   * 
+   * @param state
+   *       the state to get the transitions for
+   * 
+   * @return the list of transitions
+   */
+  def getTransitions(state: S): List[T]
 }
+
+
+/**
+ * An object which represents a state machine state.
+ *
+ * @param <S>
+ *          the type of the state indicator
+ *
+ * @author Keith M. Hughes
+ */
+trait StateMachineObject[S] {
+
+  /**
+   * Get the current state machine state of the object.
+   *
+   * @return the current state machine state of the object
+   */
+  def getState():  Option[S]
+
+  /**
+   * Set the current state machine state of the object.
+   *
+   * <p>
+   * This should only be called by the {@link StateMachine}.
+   *
+   * @param state
+   *          the new state machine state of the object
+   */
+  def setState( state: S): Unit
+}
+
+/**
+ * A base object for storing state machine state.
+ *
+ * @param <S>
+ *          type of the state indicator
+ *
+ * @author Keith M. Hughes
+ */
+class BaseStateMachineObject[S] extends StateMachineObject[S] {
+
+  /**
+   * The current state of the object.
+   */
+  private var state: Option[S] = None
+
+  override def getState(): Option[S] = {
+    return state
+  }
+
+  override def setState( state: S): Unit = {
+    this.state = Option(state)
+  }
+}
+
+/**
+ * An action to be performed during state machine transitions.
+ *
+ * @param <S>
+ *          the type of the state indicator
+ * @param <T>
+ *          the type of the transition indicator
+ * @param <SO>
+ *          the state machine object
+ *
+ * @author Keith M. Hughes
+ */
+trait StateMachineAction[S, T, SO <: StateMachineObject[S]] {
+
+  /**
+   * Perform the action.
+   *
+   * @param machineObject
+   *          the state machine state object
+   */
+  def performAction(machineObject: SO)
+}
+

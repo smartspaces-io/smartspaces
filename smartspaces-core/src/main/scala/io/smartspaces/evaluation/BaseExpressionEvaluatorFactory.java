@@ -21,6 +21,7 @@ import io.smartspaces.evaluation.function.ConcatStringFunctionDefinition;
 import io.smartspaces.evaluation.function.CondFunctionDefinition;
 import io.smartspaces.evaluation.function.EnvFunctionDefinition;
 import io.smartspaces.evaluation.function.EqualsFunctionDefinition;
+import io.smartspaces.evaluation.function.IsNullFunctionDefinition;
 import io.smartspaces.evaluation.function.NoneOfFunctionDefinition;
 import io.smartspaces.evaluation.function.ReplaceAllStringFunctionDefinition;
 import io.smartspaces.evaluation.function.SomeOfFunctionDefinition;
@@ -48,6 +49,7 @@ public abstract class BaseExpressionEvaluatorFactory implements ExpressionEvalua
     environment.addFunctionDefinition(new CondFunctionDefinition());
     environment.addFunctionDefinition(new EqualsFunctionDefinition());
     environment.addFunctionDefinition(new EnvFunctionDefinition());
+    environment.addFunctionDefinition(new IsNullFunctionDefinition());
     
     return environment;
   }

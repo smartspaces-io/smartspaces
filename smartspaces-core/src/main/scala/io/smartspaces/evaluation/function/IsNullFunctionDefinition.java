@@ -16,41 +16,35 @@
 
 package io.smartspaces.evaluation.function;
 
-import java.util.List;
-
 import io.smartspaces.evaluation.EvaluationSmartSpacesException;
 import io.smartspaces.evaluation.FunctionCall;
 import io.smartspaces.evaluation.FunctionDefinition;
 
 /**
- * The env function reads the value of an environment variable from the system.
+ * The isNull function is true if the argument is null.
  * 
  * @author Keith M. Hughes
  */
-public class EnvFunctionDefinition implements FunctionDefinition {
+public class IsNullFunctionDefinition implements FunctionDefinition {
 
-  /**
-   * The name of the function.
-   */
-  public static final String FUNCTION_NAME = "env";
+	/**
+	 * The name of the function.
+	 */
+	public static final String FUNCTION_NAME = "isNull";
 
-  @Override
-  public String functionName() {
-    return FUNCTION_NAME;
-  }
+	@Override
+	public String functionName() {
+		return FUNCTION_NAME;
+	}
 
-  @Override
-  public boolean canEvaluateCall(FunctionCall functionCall) {
-    return FUNCTION_NAME.equals(functionCall.functionName());
-  }
+	@Override
+	public boolean canEvaluateCall(FunctionCall functionCall) {
+		return FUNCTION_NAME.equals(functionCall.functionName()) && !functionCall.args().isEmpty();
+	}
 
-  @Override
-  public Object evaluateFunctionCall(FunctionCall functionCall)
-      throws EvaluationSmartSpacesException {
+	@Override
+	public Object evaluateFunctionCall(FunctionCall functionCall) throws EvaluationSmartSpacesException {
 
-    List<Object> args = functionCall.args();
-    String value = System.getenv(args.get(0).toString());
-
-    return value != null ? value : (args.size() > 1 ? args.get(1).toString() : null);
-  }
+		return functionCall.args().get(0) == null;
+	}
 }

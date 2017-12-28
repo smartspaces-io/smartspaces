@@ -22,7 +22,8 @@ package io.smartspaces.master.api.messages;
  * 
  * <p>
  * 
- * See {@link io.smartspaces.messaging.dynamic.SmartSpacesMessages} for the message envelopes.
+ * See {@link io.smartspaces.messaging.dynamic.SmartSpacesMessages} for the
+ * message envelopes.
  *
  * @author Keith M. Hughes
  */
@@ -41,14 +42,14 @@ public class MasterApiMessages {
   /**
    * Master API command for getting view data for all activities.
    */
-  public static final String MASTER_API_COMMAND_ACTIVITY_ALL = MASTER_API_COMMAND_PREFIX_ACTIVITY
-      + "/all";
+  public static final String MASTER_API_COMMAND_ACTIVITY_ALL =
+      MASTER_API_COMMAND_PREFIX_ACTIVITY + "/all";
 
   /**
    * Master API command for getting view data for an activity.
    */
-  public static final String MASTER_API_COMMAND_ACTIVITY_VIEW = MASTER_API_COMMAND_PREFIX_ACTIVITY
-      + "/view";
+  public static final String MASTER_API_COMMAND_ACTIVITY_VIEW =
+      MASTER_API_COMMAND_PREFIX_ACTIVITY + "/view";
 
   /**
    * Master API command for getting full view data for an activity.
@@ -292,32 +293,32 @@ public class MasterApiMessages {
   /**
    * Master API command for getting all spaces.
    */
-  public static final String MASTER_API_COMMAND_SPACE_ALL = MASTER_API_COMMAND_PREFIX_SPACE
-      + "/all";
+  public static final String MASTER_API_COMMAND_SPACE_ALL =
+      MASTER_API_COMMAND_PREFIX_SPACE + "/all";
 
   /**
    * Master API command for getting view data for a space.
    */
-  public static final String MASTER_API_COMMAND_SPACE_VIEW = MASTER_API_COMMAND_PREFIX_SPACE
-      + "/view";
+  public static final String MASTER_API_COMMAND_SPACE_VIEW =
+      MASTER_API_COMMAND_PREFIX_SPACE + "/view";
 
   /**
    * Master API command for getting full view data for a space.
    */
-  public static final String MASTER_API_COMMAND_SPACE_VIEW_FULL = MASTER_API_COMMAND_SPACE_VIEW
-      + "/full";
+  public static final String MASTER_API_COMMAND_SPACE_VIEW_FULL =
+      MASTER_API_COMMAND_SPACE_VIEW + "/full";
 
   /**
    * Master API command for deploying a space.
    */
-  public static final String MASTER_API_COMMAND_SPACE_DEPLOY = MASTER_API_COMMAND_PREFIX_SPACE
-      + "/deploy";
+  public static final String MASTER_API_COMMAND_SPACE_DEPLOY =
+      MASTER_API_COMMAND_PREFIX_SPACE + "/deploy";
 
   /**
    * Master API command for configuring a space.
    */
-  public static final String MASTER_API_COMMAND_SPACE_CONFIGURE = MASTER_API_COMMAND_PREFIX_SPACE
-      + "/configure";
+  public static final String MASTER_API_COMMAND_SPACE_CONFIGURE =
+      MASTER_API_COMMAND_PREFIX_SPACE + "/configure";
 
   /**
    * Master API command for setting metadata for a space.
@@ -328,32 +329,32 @@ public class MasterApiMessages {
   /**
    * Master API command for starting up a space.
    */
-  public static final String MASTER_API_COMMAND_SPACE_STARTUP = MASTER_API_COMMAND_PREFIX_SPACE
-      + "/startup";
+  public static final String MASTER_API_COMMAND_SPACE_STARTUP =
+      MASTER_API_COMMAND_PREFIX_SPACE + "/startup";
 
   /**
    * Master API command for activating a space.
    */
-  public static final String MASTER_API_COMMAND_SPACE_ACTIVATE = MASTER_API_COMMAND_PREFIX_SPACE
-      + "/activate";
+  public static final String MASTER_API_COMMAND_SPACE_ACTIVATE =
+      MASTER_API_COMMAND_PREFIX_SPACE + "/activate";
 
   /**
    * Master API command for deactivating a space.
    */
-  public static final String MASTER_API_COMMAND_SPACE_DEACTIVATE = MASTER_API_COMMAND_PREFIX_SPACE
-      + "/deactivate";
+  public static final String MASTER_API_COMMAND_SPACE_DEACTIVATE =
+      MASTER_API_COMMAND_PREFIX_SPACE + "/deactivate";
 
   /**
    * Master API command for shutting down a space.
    */
-  public static final String MASTER_API_COMMAND_SPACE_SHUTDOWN = MASTER_API_COMMAND_PREFIX_SPACE
-      + "/shutdown";
+  public static final String MASTER_API_COMMAND_SPACE_SHUTDOWN =
+      MASTER_API_COMMAND_PREFIX_SPACE + "/shutdown";
 
   /**
    * Master API command for getting the status for a space.
    */
-  public static final String MASTER_API_COMMAND_SPACE_STATUS = MASTER_API_COMMAND_PREFIX_SPACE
-      + "/status";
+  public static final String MASTER_API_COMMAND_SPACE_STATUS =
+      MASTER_API_COMMAND_PREFIX_SPACE + "/status";
 
   /**
    * Master API command for deleting the master's entry for a space.
@@ -643,8 +644,7 @@ public class MasterApiMessages {
   /**
    * Master API command for obtaining the Smart Spaces version.
    */
-  public static final String MASTER_API_COMMAND_SMART_SPACES_VERSION =
-      "/smartspaces/version";
+  public static final String MASTER_API_COMMAND_SMART_SPACES_VERSION = "/smartspaces/version";
 
   /**
    * Master API command for importing a master domain model.
@@ -698,7 +698,8 @@ public class MasterApiMessages {
   public static final String MASTER_API_PARAMETER_NAME_ACTIVITY_ID = "activityId";
 
   /**
-   * Parameter name for a list of IDs for live activities in the Master API message.
+   * Parameter name for a list of IDs for live activities in the Master API
+   * message.
    */
   public static final String MASTER_API_PARAMETER_NAME_LIVE_ACTIVITY_IDS = "liveActivityIds";
 
@@ -720,10 +721,11 @@ public class MasterApiMessages {
   public static final String MASTER_API_PARAMETER_NAME_SPACE_CONTROLLER_HOST_NAME = "hostName";
 
   /**
-   * Parameter name for the host control port of a space controller in the Master API
-   * message.
+   * Parameter name for the host control port of a space controller in the
+   * Master API message.
    */
-  public static final String MASTER_API_PARAMETER_NAME_SPACE_CONTROLLER_HOST_CONTROL_PORT = "hostControlPort";
+  public static final String MASTER_API_PARAMETER_NAME_SPACE_CONTROLLER_HOST_CONTROL_PORT =
+      "hostControlPort";
 
   /**
    * Parameter name for the mode of a space controller in the Master API
@@ -764,15 +766,13 @@ public class MasterApiMessages {
    * Status parameter name for the Smart Spaces version in the Master API
    * message.
    */
-  public static final String MASTER_API_PARAMETER_NAME_SMART_SPACES_VERSION =
-      "smartSpacesVersion";
+  public static final String MASTER_API_PARAMETER_NAME_SMART_SPACES_VERSION = "smartSpacesVersion";
 
   /**
-   * Status parameter value for an unknown Smart Spaces version in the
-   * Master API message.
+   * Status parameter value for an unknown Smart Spaces version in the Master
+   * API message.
    */
-  public static final String MASTER_API_PARAMETER_VALUE_SMART_SPACES_VERSION_UNKNOWN =
-      "Unknown";
+  public static final String MASTER_API_PARAMETER_VALUE_SMART_SPACES_VERSION_UNKNOWN = "Unknown";
 
   /**
    * Status parameter name for the status time in the Master API message.
@@ -903,4 +903,28 @@ public class MasterApiMessages {
    */
   public static final String MESSAGE_SPACE_DOMAIN_CONTROLLER_UNKNOWN =
       "space.domain.controller.unknown";
+
+  /**
+   * The metadata key for the type of an activity.
+   */
+  public static final String MASTER_API_METADATA_ACTIVITY_TYPE =
+      "space.activity.type";
+
+  /**
+   * The metadata key for the tag of an activity.
+   */
+  public static final String MASTER_API_METADATA_ACTIVITY_TAG =
+      "space.activity.tag";
+
+  /**
+   * The metadata key for the type of a live activity.
+   */
+  public static final String MASTER_API_METADATA_LIVE_ACTIVITY_TYPE =
+      "space.activity.live.type";
+
+  /**
+   * The metadata key for the type of a live activity group.
+   */
+  public static final String MASTER_API_METADATA_LIVE_ACTIVITY_GROUP_TYPE =
+      "space.activity.live.group.type";
 }

@@ -160,7 +160,9 @@ public class JpaActivityRepository extends BaseActivityRepository {
     newLiveActivity.setController(liveActivityTemplate.getController());
     newLiveActivity.setName(liveActivityTemplate.getName());
     newLiveActivity.setDescription(liveActivityTemplate.getDescription());
-
+    newLiveActivity.setMetadata(liveActivityTemplate.getMetadata());
+    newLiveActivity.setConfiguration(liveActivityTemplate.getConfiguration());
+    
     return saveLiveActivity(newLiveActivity);
   }
 
@@ -250,12 +252,12 @@ public class JpaActivityRepository extends BaseActivityRepository {
   }
 
   @Override
-  public LiveActivity saveLiveActivity(LiveActivity activity) {
-    if (activity.getId() != null) {
-      return entityManager.merge(activity);
+  public LiveActivity saveLiveActivity(LiveActivity liveActivity) {
+    if (liveActivity.getId() != null) {
+      return entityManager.merge(liveActivity);
     } else {
-      entityManager.persist(activity);
-      return activity;
+      entityManager.persist(liveActivity);
+      return liveActivity;
     }
   }
 

@@ -67,8 +67,8 @@ import java.util.Set;
  *
  * @author Keith M. Hughes
  */
-public class StandardMasterApiActivityManager extends BaseMasterApiManager implements
-    InternalMasterApiActivityManager {
+public class StandardMasterApiActivityManager extends BaseMasterApiManager
+    implements InternalMasterApiActivityManager {
 
   /**
    * Repository for activities.
@@ -122,11 +122,11 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
     try {
       Activity finalActivity = resourceRepositoryManager.addActivity(activityContentStream);
 
-      return SmartSpacesMessagesSupport.getSuccessResponse(extractBasicActivityApiData(finalActivity));
+      return SmartSpacesMessagesSupport
+          .getSuccessResponse(extractBasicActivityApiData(finalActivity));
     } catch (Throwable e) {
-      Map<String, Object> response =
-          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE,
-              e);
+      Map<String, Object> response = SmartSpacesMessagesSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
 
       logResponseError("Attempt to import activity data failed", response);
 
@@ -155,9 +155,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
       return SmartSpacesMessagesSupport.getSuccessResponse(responseData);
     } catch (Throwable e) {
-      Map<String, Object> response =
-          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE,
-              e);
+      Map<String, Object> response = SmartSpacesMessagesSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
 
       logResponseError("Attempt to get activity data failed", response);
 
@@ -279,16 +278,14 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
       if (MasterApiMessages.MASTER_API_COMMAND_METADATA_REPLACE.equals(command)) {
         @SuppressWarnings("unchecked")
         Map<String, Object> replacement =
-            (Map<String, Object>) metadataCommand
-                .get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
+            (Map<String, Object>) metadataCommand.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
         activity.setMetadata(replacement);
       } else if (MasterApiMessages.MASTER_API_COMMAND_METADATA_MODIFY.equals(command)) {
         Map<String, Object> metadata = activity.getMetadata();
 
         @SuppressWarnings("unchecked")
         Map<String, Object> modifications =
-            (Map<String, Object>) metadataCommand
-                .get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
+            (Map<String, Object>) metadataCommand.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
         for (Entry<String, Object> entry : modifications.entrySet()) {
           metadata.put(entry.getKey(), entry.getValue());
         }
@@ -315,9 +312,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
       return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
     } catch (Throwable e) {
-      Map<String, Object> response =
-          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE,
-              e);
+      Map<String, Object> response = SmartSpacesMessagesSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
 
       logResponseError("Could not modify activity metadata", response);
 
@@ -344,9 +340,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
       return SmartSpacesMessagesSupport.getSuccessResponse(responseData);
     } catch (Throwable e) {
-      Map<String, Object> response =
-          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE,
-              e);
+      Map<String, Object> response = SmartSpacesMessagesSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
 
       logResponseError("Attempt to get live activity data failed", response);
 
@@ -444,8 +439,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
     String name = (String) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_NAME);
     if (name == null || name.trim().isEmpty()) {
       return SmartSpacesMessagesSupport.getFailureResponse(
-          MasterApiMessages.MESSAGE_SPACE_CALL_ARGS_MISSING, "Missing argument "
-              + MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_NAME);
+          MasterApiMessages.MESSAGE_SPACE_CALL_ARGS_MISSING,
+          "Missing argument " + MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_NAME);
     }
 
     // This field is not required.
@@ -457,9 +452,23 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
     liveActivityTemplate.setController(spaceController);
     liveActivityTemplate.setName(name);
     liveActivityTemplate.setDescription(description);
+    
+    @SuppressWarnings("unchecked")
+    Map<String, Object> metadata =
+        (Map<String, Object>) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_METADATA);
+    if (metadata != null) {
+      liveActivityTemplate.setMetadata(metadata);
+    }
+
+    @SuppressWarnings("unchecked")
+    Map<String, String> configuration =
+        (Map<String, String>) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_CONFIG);
+    if (configuration != null) {
+      newLiveActivityConfiguration(liveActivityTemplate, configuration);
+    }
 
     LiveActivity newLiveActivity = activityRepository.newAndSaveLiveActivity(liveActivityTemplate);
-
+    
     Map<String, Object> responseData = new HashMap<>();
     extractLiveActivityApiData(newLiveActivity, responseData);
 
@@ -486,7 +495,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   }
 
   @Override
-  public Map<String, Object> configureLiveActivity(String typedId, Map<String, String> newConfigurationMap) {
+  public Map<String, Object> configureLiveActivity(String typedId,
+      Map<String, String> newConfigurationMap) {
     LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(typedId);
     if (liveActivity != null) {
       if (saveLiveActivityConfiguration(liveActivity, newConfigurationMap)) {
@@ -568,7 +578,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    *
    * @return {@code true} if there was a change to the configuration
    */
-  private boolean saveLiveActivityConfiguration(LiveActivity liveactivity, Map<String, String> newConfigurationMap) {
+  private boolean saveLiveActivityConfiguration(LiveActivity liveactivity,
+      Map<String, String> newConfigurationMap) {
     ActivityConfiguration configuration = liveactivity.getConfiguration();
     if (configuration != null) {
       return mergeActivityConfigurationParameters(newConfigurationMap, configuration);
@@ -661,7 +672,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   }
 
   @Override
-  public Map<String, Object> updateLiveActivityMetadata(String typedId, Map<String, Object> metadataCommand) {
+  public Map<String, Object> updateLiveActivityMetadata(String typedId,
+      Map<String, Object> metadataCommand) {
     try {
       LiveActivity activity = activityRepository.getLiveActivityByTypedId(typedId);
       if (activity == null) {
@@ -673,16 +685,14 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
       if (MasterApiMessages.MASTER_API_COMMAND_METADATA_REPLACE.equals(command)) {
         @SuppressWarnings("unchecked")
         Map<String, Object> replacement =
-            (Map<String, Object>) metadataCommand
-                .get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
+            (Map<String, Object>) metadataCommand.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
         activity.setMetadata(replacement);
       } else if (MasterApiMessages.MASTER_API_COMMAND_METADATA_MODIFY.equals(command)) {
         Map<String, Object> metadata = activity.getMetadata();
 
         @SuppressWarnings("unchecked")
         Map<String, Object> modifications =
-            (Map<String, Object>) metadataCommand
-                .get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
+            (Map<String, Object>) metadataCommand.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
         for (Entry<String, Object> entry : modifications.entrySet()) {
           metadata.put(entry.getKey(), entry.getValue());
         }
@@ -709,9 +719,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
       return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
     } catch (Throwable e) {
-      Map<String, Object> response =
-          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE,
-              e);
+      Map<String, Object> response = SmartSpacesMessagesSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
 
       logResponseError("Could not modify live activity metadata", response);
 
@@ -928,8 +937,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
     activeData.put("directRunning", active.isDirectRunning());
     activeData.put("directActivated", active.isDirectActivated());
     activeData.put("numberLiveActivityGroupRunning", active.getNumberLiveActivityGroupRunning());
-    activeData
-        .put("numberLiveActivityGroupActivated", active.getNumberLiveActivityGroupActivated());
+    activeData.put("numberLiveActivityGroupActivated",
+        active.getNumberLiveActivityGroupActivated());
     Date lastStateUpdateDate = active.getLastStateUpdateDate();
     activeData.put("lastStateUpdate",
         (lastStateUpdateDate != null) ? lastStateUpdateDate.toString() : null);
@@ -941,8 +950,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
     String name = (String) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_NAME);
     if (name == null || name.trim().isEmpty()) {
       return SmartSpacesMessagesSupport.getFailureResponse(
-          MasterApiMessages.MESSAGE_SPACE_CALL_ARGS_MISSING, "Missing argument "
-              + MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_NAME);
+          MasterApiMessages.MESSAGE_SPACE_CALL_ARGS_MISSING,
+          "Missing argument " + MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_NAME);
     }
 
     // This field is not required.
@@ -950,23 +959,33 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
         (String) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_DESCRIPTION);
 
     LiveActivityGroup liveActivityGroup = activityRepository.newLiveActivityGroup();
-    liveActivityGroup.setName(name);;
+    liveActivityGroup.setName(name);
+    ;
     liveActivityGroup.setDescription(description);
-    
+
     @SuppressWarnings("unchecked")
-    List<String> typedIds = (List<String>) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_LIVE_ACTIVITY_IDS);
+    List<String> typedIds =
+        (List<String>) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_LIVE_ACTIVITY_IDS);
     if (typedIds != null) {
       for (String typedId : typedIds) {
         LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(typedId);
-        if (liveActivity != null ) {
+        if (liveActivity != null) {
           liveActivityGroup.addLiveActivity(liveActivity);
         }
       }
     }
-    
+
+    @SuppressWarnings("unchecked")
+    Map<String, Object> metadata =
+        (Map<String, Object>) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_METADATA);
+    if (metadata != null) {
+      liveActivityGroup.setMetadata(metadata);
+    }
+
     liveActivityGroup = activityRepository.saveLiveActivityGroup(liveActivityGroup);
 
-    return SmartSpacesMessagesSupport.getSuccessResponse(getLiveActivityGroupApiData(liveActivityGroup));
+    return SmartSpacesMessagesSupport
+        .getSuccessResponse(getLiveActivityGroupApiData(liveActivityGroup));
   }
 
   @Override
@@ -1028,9 +1047,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
       return SmartSpacesMessagesSupport.getSuccessResponse(responseData);
     } catch (Throwable e) {
-      Map<String, Object> response =
-          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE,
-              e);
+      Map<String, Object> response = SmartSpacesMessagesSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
 
       logResponseError("Attempt to get live activity group data failed", response);
 
@@ -1110,8 +1128,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    *
    * @return list of the data for all the live activity groups
    */
-  private List<Map<String, Object>> extractLiveActivityGroups(
-      List<LiveActivityGroup> liveActivityGroups) {
+  private List<Map<String, Object>>
+      extractLiveActivityGroups(List<LiveActivityGroup> liveActivityGroups) {
     List<Map<String, Object>> result = new ArrayList<>();
 
     if (liveActivityGroups != null) {
@@ -1141,9 +1159,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
       return SmartSpacesMessagesSupport.getSuccessResponse(data);
     } catch (Throwable e) {
-      Map<String, Object> response =
-          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE,
-              e);
+      Map<String, Object> response = SmartSpacesMessagesSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
 
       logResponseError("Attempt to get all space data failed", response);
 
@@ -1185,16 +1202,14 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
       if (MasterApiMessages.MASTER_API_COMMAND_METADATA_REPLACE.equals(command)) {
         @SuppressWarnings("unchecked")
         Map<String, Object> replacement =
-            (Map<String, Object>) metadataCommand
-                .get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
+            (Map<String, Object>) metadataCommand.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
         space.setMetadata(replacement);
       } else if (MasterApiMessages.MASTER_API_COMMAND_METADATA_MODIFY.equals(command)) {
         Map<String, Object> metadata = space.getMetadata();
 
         @SuppressWarnings("unchecked")
         Map<String, Object> modifications =
-            (Map<String, Object>) metadataCommand
-                .get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
+            (Map<String, Object>) metadataCommand.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
         for (Entry<String, Object> entry : modifications.entrySet()) {
           metadata.put(entry.getKey(), entry.getValue());
         }
@@ -1221,9 +1236,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
       return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
     } catch (Throwable e) {
-      Map<String, Object> response =
-          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE,
-              e);
+      Map<String, Object> response = SmartSpacesMessagesSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
 
       logResponseError("Could not modify space metadata", response);
 
@@ -1418,8 +1432,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    *
    * @return the API data being collected
    */
-  private List<Map<String, Object>> getLiveActivityGroupsMasterApi(
-      List<? extends LiveActivityGroup> groups) {
+  private List<Map<String, Object>>
+      getLiveActivityGroupsMasterApi(List<? extends LiveActivityGroup> groups) {
     List<Map<String, Object>> response = new ArrayList<>();
 
     if (groups != null) {
@@ -1441,8 +1455,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    *
    * @return the API data being collected
    */
-  private List<Map<String, Object>> getLiveActivityGroupsLiveActivitiesMasterApi(
-      List<? extends LiveActivityGroup> groups) {
+  private List<Map<String, Object>>
+      getLiveActivityGroupsLiveActivitiesMasterApi(List<? extends LiveActivityGroup> groups) {
     List<Map<String, Object>> response = new ArrayList<>();
 
     if (groups != null) {
@@ -1465,7 +1479,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
   private void extractLiveActivityGroup(LiveActivityGroup group, Map<String, Object> data) {
     data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_ID, group.getId());
     data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_NAME, group.getName());
-    data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_DESCRIPTION, group.getDescription());
+    data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_DESCRIPTION,
+        group.getDescription());
     data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_METADATA, group.getMetadata());
   }
 
@@ -1491,16 +1506,14 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
       if (MasterApiMessages.MASTER_API_COMMAND_METADATA_REPLACE.equals(command)) {
         @SuppressWarnings("unchecked")
         Map<String, Object> replacement =
-            (Map<String, Object>) metadataCommand
-                .get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
+            (Map<String, Object>) metadataCommand.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
         group.setMetadata(replacement);
       } else if (MasterApiMessages.MASTER_API_COMMAND_METADATA_MODIFY.equals(command)) {
         Map<String, Object> metadata = group.getMetadata();
 
         @SuppressWarnings("unchecked")
         Map<String, Object> modifications =
-            (Map<String, Object>) metadataCommand
-                .get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
+            (Map<String, Object>) metadataCommand.get(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
         for (Entry<String, Object> entry : modifications.entrySet()) {
           metadata.put(entry.getKey(), entry.getValue());
         }
@@ -1527,9 +1540,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
 
       return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
     } catch (Throwable e) {
-      Map<String, Object> response =
-          SmartSpacesMessagesSupport.getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE,
-              e);
+      Map<String, Object> response = SmartSpacesMessagesSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
 
       logResponseError("Could not modify live activity group metadata", response);
 
@@ -1632,8 +1644,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager imple
    * @param activeSpaceControllerManager
    *          the active space controller manager
    */
-  public void setActiveSpaceControllerManager(
-      ActiveSpaceControllerManager activeSpaceControllerManager) {
+  public void
+      setActiveSpaceControllerManager(ActiveSpaceControllerManager activeSpaceControllerManager) {
     this.activeSpaceControllerManager = activeSpaceControllerManager;
   }
 }

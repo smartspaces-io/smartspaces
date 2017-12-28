@@ -243,6 +243,7 @@ public class StandardMasterApiCommunicationManager extends BaseMasterApiManager
    */
   private void handleMasterApiPostCommand(HttpRequest request, HttpPostBody postBody,
       HttpResponse response) {
+    spaceEnvironment.getLog().info("Got API request");
     CaptureMessageSender<Map<String, Object>> captureSender =
         new CaptureMessageSender<Map<String, Object>>();
     

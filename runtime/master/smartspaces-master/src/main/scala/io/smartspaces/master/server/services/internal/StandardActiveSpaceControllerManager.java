@@ -686,7 +686,7 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void deployActiveLiveActivityGroupChecked(ActiveLiveActivityGroup activeActivityGroup,
       Set<ActiveLiveActivity> deployedLiveActivities) {
-    spaceEnvironment.getLog().formatInfo("Requesting activity group %s deployment",
+    spaceEnvironment.getLog().formatInfo("Requesting live activity group %s deployment",
         activeActivityGroup.getActivityGroup().getId());
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
@@ -739,7 +739,7 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void configureActiveLiveActivityGroupChecked(ActiveLiveActivityGroup activeActivityGroup,
       Set<ActiveLiveActivity> configuredLiveActivities) {
-    spaceEnvironment.getLog().formatInfo("Requesting activity group %s configure",
+    spaceEnvironment.getLog().formatInfo("Requesting live activity group %s configure",
         activeActivityGroup.getActivityGroup().getId());
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
@@ -787,7 +787,7 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void startupActiveActivityGroup(ActiveLiveActivityGroup activeActivityGroup) {
     String groupId = activeActivityGroup.getActivityGroup().getId();
-    spaceEnvironment.getLog().formatInfo("Requesting activity group %s startup", groupId);
+    spaceEnvironment.getLog().formatInfo("Requesting live activity group %s startup", groupId);
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
@@ -814,7 +814,7 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void activateActiveActivityGroup(ActiveLiveActivityGroup activeActivityGroup) {
     String groupId = activeActivityGroup.getActivityGroup().getId();
-    spaceEnvironment.getLog().formatInfo("requesting activity group %s activation", groupId);
+    spaceEnvironment.getLog().formatInfo("Requesting live activity group %s activation", groupId);
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
@@ -841,7 +841,7 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void deactivateActiveActivityGroup(ActiveLiveActivityGroup activeActivityGroup) {
     String groupId = activeActivityGroup.getActivityGroup().getId();
-    spaceEnvironment.getLog().formatInfo("Requesting activity group %s deactivation", groupId);
+    spaceEnvironment.getLog().formatInfo("Requesting live activity group %s deactivation", groupId);
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
@@ -868,7 +868,7 @@ public class StandardActiveSpaceControllerManager
   @Override
   public void shutdownActiveActivityGroup(ActiveLiveActivityGroup activeActivityGroup) {
     String groupId = activeActivityGroup.getActivityGroup().getId();
-    spaceEnvironment.getLog().formatInfo("Requesting activity group %s shutdown", groupId);
+    spaceEnvironment.getLog().formatInfo("Requesting live activity group %s shutdown", groupId);
 
     for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {

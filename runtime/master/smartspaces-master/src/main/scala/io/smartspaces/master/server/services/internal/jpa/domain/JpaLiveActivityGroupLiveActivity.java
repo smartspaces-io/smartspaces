@@ -17,7 +17,7 @@
 
 package io.smartspaces.master.server.services.internal.jpa.domain;
 
-import io.smartspaces.domain.basic.GroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 
@@ -30,13 +30,13 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 /**
- * A JPA implementation of a {@link GroupLiveActivity}.
+ * A JPA implementation of a {@link LiveActivityGroupLiveActivity}.
  *
  * @author Keith M. Hughes
  */
 @Entity
 @Table(name = "group_live_activities")
-public class JpaGroupLiveActivity implements GroupLiveActivity {
+public class JpaLiveActivityGroupLiveActivity implements LiveActivityGroupLiveActivity {
 
   /**
    * For serialization.
@@ -47,19 +47,19 @@ public class JpaGroupLiveActivity implements GroupLiveActivity {
    * The activity group this activity is part of.
    */
   @ManyToOne(optional = false, fetch = FetchType.EAGER)
-  private JpaLiveActivityGroup activityGroup;
+  private JpaLiveActivityGroup liveActivityGroup;
 
   /**
    * The activity this represents.
    */
   @ManyToOne(optional = true, fetch = FetchType.EAGER)
-  private JpaLiveActivity activity;
+  private JpaLiveActivity liveActivity;
 
   /**
    * How the activity group depends on the activity.
    */
   @Enumerated(EnumType.STRING)
-  private GroupLiveActivityDependency dependency;
+  private LiveActivityGroupLiveActivityDependency dependency;
 
   /**
    * The database version. Used for detecting concurrent modifications.
@@ -67,48 +67,48 @@ public class JpaGroupLiveActivity implements GroupLiveActivity {
   @Version
   private long databaseVersion;
 
-  public JpaGroupLiveActivity() {
+  public JpaLiveActivityGroupLiveActivity() {
   }
 
-  JpaGroupLiveActivity(JpaLiveActivityGroup activityGroup, JpaLiveActivity activity,
-      GroupLiveActivityDependency dependency) {
-    this.activityGroup = activityGroup;
-    this.activity = activity;
+  JpaLiveActivityGroupLiveActivity(JpaLiveActivityGroup liveActivityGroup, JpaLiveActivity liveActivity,
+      LiveActivityGroupLiveActivityDependency dependency) {
+    this.liveActivityGroup = liveActivityGroup;
+    this.liveActivity = liveActivity;
     this.dependency = dependency;
   }
 
   @Override
-  public LiveActivityGroup getActivityGroup() {
-    return activityGroup;
+  public LiveActivityGroup getLiveActivityGroup() {
+    return liveActivityGroup;
   }
 
   @Override
-  public void setActivityGroup(LiveActivityGroup activityGroup) {
-    this.activityGroup = (JpaLiveActivityGroup) activityGroup;
+  public void setLiveActivityGroup(LiveActivityGroup activityGroup) {
+    this.liveActivityGroup = (JpaLiveActivityGroup) activityGroup;
   }
 
   @Override
-  public LiveActivity getActivity() {
-    return activity;
+  public LiveActivity getLiveActivity() {
+    return liveActivity;
   }
 
   @Override
-  public void setActivity(LiveActivity activity) {
-    this.activity = (JpaLiveActivity) activity;
+  public void setLiveActivity(LiveActivity activity) {
+    this.liveActivity = (JpaLiveActivity) activity;
   }
 
   @Override
-  public GroupLiveActivityDependency getDependency() {
+  public LiveActivityGroupLiveActivityDependency getDependency() {
     return dependency;
   }
 
   @Override
-  public void setDependency(GroupLiveActivityDependency dependency) {
+  public void setDependency(LiveActivityGroupLiveActivityDependency dependency) {
     this.dependency = dependency;
   }
 
   @Override
   public String toString() {
-    return "JpaGroupLiveActivity [activity=" + activity + ", dependency=" + dependency + "]";
+    return "JpaGroupLiveActivity [activity=" + liveActivity + ", dependency=" + dependency + "]";
   }
 }

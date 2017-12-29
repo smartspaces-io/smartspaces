@@ -19,8 +19,8 @@ package io.smartspaces.domain.basic.pojo;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.domain.basic.GroupLiveActivity;
-import io.smartspaces.domain.basic.GroupLiveActivity.GroupLiveActivityDependency;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependency;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.pojo.SimpleObject;
@@ -55,7 +55,7 @@ public class SimpleLiveActivityGroup extends SimpleObject implements LiveActivit
   /**
    * All activities installed in the activity group.
    */
-  private List<GroupLiveActivity> activities;
+  private List<LiveActivityGroupLiveActivity> activities;
 
   /**
    * The meta data for this live activity group.
@@ -90,29 +90,29 @@ public class SimpleLiveActivityGroup extends SimpleObject implements LiveActivit
   }
 
   @Override
-  public List<GroupLiveActivity> getLiveActivities() {
+  public List<LiveActivityGroupLiveActivity> getLiveActivities() {
     synchronized (activities) {
-      return new ArrayList<GroupLiveActivity>(activities);
+      return new ArrayList<LiveActivityGroupLiveActivity>(activities);
     }
   }
 
   @Override
   public LiveActivityGroup addLiveActivity(LiveActivity activity) throws SmartSpacesException {
-    return addLiveActivity(activity, GroupLiveActivityDependency.REQUIRED);
+    return addLiveActivity(activity, LiveActivityGroupLiveActivityDependency.REQUIRED);
   }
 
   @Override
   public LiveActivityGroup addLiveActivity(LiveActivity activity,
-      GroupLiveActivityDependency dependency) throws SmartSpacesException {
-    for (GroupLiveActivity ga : activities) {
-      if (ga.getActivity().equals(activity)) {
+      LiveActivityGroupLiveActivityDependency dependency) throws SmartSpacesException {
+    for (LiveActivityGroupLiveActivity ga : activities) {
+      if (ga.getLiveActivity().equals(activity)) {
         throw new SimpleSmartSpacesException("Group already contains activity");
       }
     }
 
-    GroupLiveActivity gactivity = new SimpleGroupLiveActivity();
-    gactivity.setActivity(activity);
-    gactivity.setActivityGroup(this);
+    LiveActivityGroupLiveActivity gactivity = new SimpleLiveActivityGroupLiveActivity();
+    gactivity.setLiveActivity(activity);
+    gactivity.setLiveActivityGroup(this);
     gactivity.setDependency(dependency);
 
     synchronized (activities) {
@@ -125,8 +125,8 @@ public class SimpleLiveActivityGroup extends SimpleObject implements LiveActivit
   @Override
   public void removeLiveActivity(LiveActivity activity) {
     synchronized (activities) {
-      for (GroupLiveActivity gactivity : activities) {
-        if (activity.equals(gactivity.getActivity())) {
+      for (LiveActivityGroupLiveActivity gactivity : activities) {
+        if (activity.equals(gactivity.getLiveActivity())) {
           activities.remove(activity);
 
           return;

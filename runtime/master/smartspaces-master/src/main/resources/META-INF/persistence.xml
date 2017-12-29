@@ -40,7 +40,7 @@
       io.smartspaces.master.server.services.internal.jpa.domain.JpaLiveActivityGroupMetadataItem
     </class>
     <class>
-      io.smartspaces.master.server.services.internal.jpa.domain.JpaGroupLiveActivity
+      io.smartspaces.master.server.services.internal.jpa.domain.JpaLiveActivityGroupLiveActivity
     </class>
     <class>
       io.smartspaces.master.server.services.internal.jpa.domain.JpaSpace

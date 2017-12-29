@@ -17,7 +17,7 @@
 
 package io.smartspaces.master.server.services.internal.support;
 
-import io.smartspaces.domain.basic.GroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 
@@ -223,25 +223,25 @@ public interface MasterDomainDescription {
 
   /**
    * The XML element name for the root live activity group's
-   * {@link GroupLiveActivity} collection element.
+   * {@link LiveActivityGroupLiveActivity} collection element.
    */
   String ELEMENT_NAME_LIVE_ACTIVITY_GROUP_ROOT_GROUP_LIVE_ACTIVITIES = "group-live-activities";
 
   /**
    * The XML element name for an individual live activity group's
-   * {@link GroupLiveActivity}.
+   * {@link LiveActivityGroupLiveActivity}.
    */
   String ELEMENT_NAME_LIVE_ACTIVITY_GROUP_INDIVIDUAL_GROUP_LIVE_ACTIVITY = "group-live-activity";
 
   /**
    * The XML attribute name of the live activity ID attribute in a
-   * {@link GroupLiveActivity}.
+   * {@link LiveActivityGroupLiveActivity}.
    */
   String ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_ID = "live-activity";
 
   /**
    * The XML attribute name of the dependency attribute in a
-   * {@link GroupLiveActivity}.
+   * {@link LiveActivityGroupLiveActivity}.
    */
   String ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_DEPENDENCY = "dependency";
 

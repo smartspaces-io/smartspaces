@@ -17,8 +17,8 @@
 
 package io.smartspaces.master.ui.internal.web.liveactivitygroup;
 
-import io.smartspaces.domain.basic.GroupLiveActivity;
-import io.smartspaces.domain.basic.GroupLiveActivity.GroupLiveActivityDependency;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependency;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.basic.pojo.SimpleLiveActivityGroup;
@@ -107,7 +107,7 @@ public class LiveActivityGroupForm implements Serializable {
       for (String liveActivityId : liveActivityIds) {
         LiveActivity activity = activityRepository.getLiveActivityById(liveActivityId);
         if (activity != null) {
-          destinationGroup.addLiveActivity(activity, GroupLiveActivityDependency.REQUIRED);
+          destinationGroup.addLiveActivity(activity, LiveActivityGroupLiveActivityDependency.REQUIRED);
         }
       }
     }
@@ -124,8 +124,8 @@ public class LiveActivityGroupForm implements Serializable {
     liveActivityGroup.setDescription(sourceGroup.getDescription());
 
     liveActivityIds = new ArrayList<>();
-    for (GroupLiveActivity activity : sourceGroup.getLiveActivities()) {
-      liveActivityIds.add(activity.getActivity().getId());
+    for (LiveActivityGroupLiveActivity activity : sourceGroup.getLiveActivities()) {
+      liveActivityIds.add(activity.getLiveActivity().getId());
     }
   }
 }

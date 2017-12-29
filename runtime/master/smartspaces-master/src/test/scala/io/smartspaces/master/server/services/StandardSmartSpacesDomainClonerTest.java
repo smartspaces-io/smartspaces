@@ -24,7 +24,7 @@ import static org.junit.Assert.fail;
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.ActivityConfiguration;
 import io.smartspaces.domain.basic.ConfigurationParameter;
-import io.smartspaces.domain.basic.GroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.basic.Space;
@@ -392,17 +392,17 @@ public class StandardSmartSpacesDomainClonerTest {
    */
   protected void compareGroupLiveActivities(LiveActivityGroup srcLiveActivityGroup,
       LiveActivityGroup clonedLiveActivityGroup) {
-    List<? extends GroupLiveActivity> srcGroupLiveActivities =
+    List<? extends LiveActivityGroupLiveActivity> srcGroupLiveActivities =
         srcLiveActivityGroup.getLiveActivities();
-    List<? extends GroupLiveActivity> clonedGroupLiveActivities =
+    List<? extends LiveActivityGroupLiveActivity> clonedGroupLiveActivities =
         clonedLiveActivityGroup.getLiveActivities();
     assertEquals(srcGroupLiveActivities.size(), clonedGroupLiveActivities.size());
     for (int i = 0; i < srcGroupLiveActivities.size(); ++i) {
-      GroupLiveActivity srcGroupLiveActivity = srcGroupLiveActivities.get(i);
-      GroupLiveActivity clonedGroupLiveActivity = clonedGroupLiveActivities.get(i);
+      LiveActivityGroupLiveActivity srcGroupLiveActivity = srcGroupLiveActivities.get(i);
+      LiveActivityGroupLiveActivity clonedGroupLiveActivity = clonedGroupLiveActivities.get(i);
       assertEquals(srcGroupLiveActivity.getDependency(), clonedGroupLiveActivity.getDependency());
-      compareLiveActivity(srcGroupLiveActivity.getActivity(),
-          clonedGroupLiveActivity.getActivity(), srcGroupLiveActivity.getActivity().getController());
+      compareLiveActivity(srcGroupLiveActivity.getLiveActivity(),
+          clonedGroupLiveActivity.getLiveActivity(), srcGroupLiveActivity.getLiveActivity().getController());
     }
   }
 

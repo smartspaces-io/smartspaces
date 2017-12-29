@@ -927,4 +927,10 @@ public class MasterApiMessages {
    */
   public static final String MASTER_API_METADATA_LIVE_ACTIVITY_GROUP_TYPE =
       "space.activity.live.group.type";
+
+  /**
+   * The metadata key for the type of a space controller.
+   */
+  public static final String MASTER_API_METADATA_SPACE_CONTROLLER_TYPE =
+      "space.spacecontroller.type";
 }

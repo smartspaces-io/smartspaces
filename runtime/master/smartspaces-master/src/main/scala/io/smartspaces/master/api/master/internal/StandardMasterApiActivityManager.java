@@ -24,7 +24,7 @@ import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.ActivityConfiguration;
 import io.smartspaces.domain.basic.ActivityDependency;
 import io.smartspaces.domain.basic.ConfigurationParameter;
-import io.smartspaces.domain.basic.GroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.basic.Space;
@@ -771,10 +771,10 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager
   }
 
   @Override
-  public Map<String, Object> configureSpaceController(String id, Map<String, String> map) {
+  public Map<String, Object> configureSpaceController(String id, Map<String, String> config) {
     SpaceController spaceController = spaceControllerRepository.getSpaceControllerById(id);
     if (spaceController != null) {
-      if (saveSpaceControllerConfiguration(spaceController, map)) {
+      if (saveSpaceControllerConfiguration(spaceController, config)) {
         spaceControllerRepository.saveSpaceController(spaceController);
       }
 
@@ -1007,8 +1007,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager
       responseData.put("liveactivitygroup", getLiveActivityGroupApiData(liveActivityGroup));
 
       List<LiveActivity> liveActivities = new ArrayList<>();
-      for (GroupLiveActivity gla : liveActivityGroup.getLiveActivities()) {
-        liveActivities.add(gla.getActivity());
+      for (LiveActivityGroupLiveActivity gla : liveActivityGroup.getLiveActivities()) {
+        liveActivities.add(gla.getLiveActivity());
       }
 
       Collections.sort(liveActivities, MasterApiUtilities.LIVE_ACTIVITY_BY_NAME_COMPARATOR);
@@ -1073,8 +1073,8 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager
     data.put("liveActivities", activityData);
 
     List<LiveActivity> liveActivities = new ArrayList<>();
-    for (GroupLiveActivity gactivity : liveActivityGroup.getLiveActivities()) {
-      liveActivities.add(gactivity.getActivity());
+    for (LiveActivityGroupLiveActivity gactivity : liveActivityGroup.getLiveActivities()) {
+      liveActivities.add(gactivity.getLiveActivity());
     }
     Collections.sort(liveActivities, MasterApiUtilities.LIVE_ACTIVITY_BY_NAME_COMPARATOR);
 

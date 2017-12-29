@@ -23,7 +23,7 @@ import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.ActivityConfiguration;
 import io.smartspaces.domain.basic.ActivityDependency;
 import io.smartspaces.domain.basic.ConfigurationParameter;
-import io.smartspaces.domain.basic.GroupLiveActivity.GroupLiveActivityDependency;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependency;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.basic.Resource;
@@ -554,7 +554,7 @@ public class JdomMasterDomainModelImporter implements MasterDomainDescription {
             .getAttributeValue(ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_DEPENDENCY);
 
         LiveActivity activity = liveActivities.get(myLiveActivityId);
-        GroupLiveActivityDependency dependency = GroupLiveActivityDependency.valueOf(myDependency);
+        LiveActivityGroupLiveActivityDependency dependency = LiveActivityGroupLiveActivityDependency.valueOf(myDependency);
 
         group.addLiveActivity(activity, dependency);
       }

@@ -19,7 +19,7 @@ package io.smartspaces.master.api.master.internal;
 
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.ConfigurationParameter;
-import io.smartspaces.domain.basic.GroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.basic.Space;
@@ -1062,8 +1062,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
     LiveActivityGroup group = activityRepository.getLiveActivityGroupById(id);
     if (group != null) {
 
-      for (GroupLiveActivity gla : group.getLiveActivities()) {
-        activeSpaceControllerManager.shutdownLiveActivity(gla.getActivity());
+      for (LiveActivityGroupLiveActivity gla : group.getLiveActivities()) {
+        activeSpaceControllerManager.shutdownLiveActivity(gla.getLiveActivity());
       }
 
       return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
@@ -1077,8 +1077,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
     LiveActivityGroup group = activityRepository.getLiveActivityGroupById(id);
     if (group != null) {
 
-      for (GroupLiveActivity gla : group.getLiveActivities()) {
-        statusLiveActivity(gla.getActivity().getId());
+      for (LiveActivityGroupLiveActivity gla : group.getLiveActivities()) {
+        statusLiveActivity(gla.getLiveActivity().getId());
       }
 
       return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
@@ -1116,8 +1116,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
    */
   private void statusSpace(Space space, Set<String> liveActivityIds) {
     for (LiveActivityGroup group : space.getActivityGroups()) {
-      for (GroupLiveActivity gla : group.getLiveActivities()) {
-        String id = gla.getActivity().getId();
+      for (LiveActivityGroupLiveActivity gla : group.getLiveActivities()) {
+        String id = gla.getLiveActivity().getId();
         if (liveActivityIds.add(id)) {
           statusLiveActivity(id);
         }
@@ -1309,8 +1309,8 @@ public class StandardMasterApiSpaceControllerManager extends BaseMasterApiManage
       generateLiveActivitiesStatusesApiResponse(LiveActivityGroup group) {
     List<Map<String, Object>> activities = new ArrayList<>();
 
-    for (GroupLiveActivity activity : group.getLiveActivities()) {
-      activities.add(generateApiLiveActivityStatus(activity.getActivity()));
+    for (LiveActivityGroupLiveActivity activity : group.getLiveActivities()) {
+      activities.add(generateApiLiveActivityStatus(activity.getLiveActivity()));
     }
 
     return activities;

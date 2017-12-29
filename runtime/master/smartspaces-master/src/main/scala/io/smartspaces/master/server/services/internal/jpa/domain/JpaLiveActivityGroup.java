@@ -19,8 +19,8 @@ package io.smartspaces.master.server.services.internal.jpa.domain;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.domain.basic.GroupLiveActivity;
-import io.smartspaces.domain.basic.GroupLiveActivity.GroupLiveActivityDependency;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependency;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 
@@ -90,9 +90,9 @@ public class JpaLiveActivityGroup implements LiveActivityGroup {
   /**
    * All live activities installed in the activity group.
    */
-  @OneToMany(targetEntity = JpaGroupLiveActivity.class, cascade = CascadeType.ALL,
+  @OneToMany(targetEntity = JpaLiveActivityGroupLiveActivity.class, cascade = CascadeType.ALL,
       fetch = FetchType.EAGER, orphanRemoval = true)
-  private List<JpaGroupLiveActivity> liveActivities = new ArrayList<>();
+  private List<JpaLiveActivityGroupLiveActivity> liveActivities = new ArrayList<>();
 
   /**
    * The metadata.
@@ -133,7 +133,7 @@ public class JpaLiveActivityGroup implements LiveActivityGroup {
   }
 
   @Override
-  public List<? extends GroupLiveActivity> getLiveActivities() {
+  public List<? extends LiveActivityGroupLiveActivity> getLiveActivities() {
     synchronized (liveActivities) {
       return Lists.newArrayList(liveActivities);
     }
@@ -141,21 +141,22 @@ public class JpaLiveActivityGroup implements LiveActivityGroup {
 
   @Override
   public LiveActivityGroup addLiveActivity(LiveActivity liveActivity) throws SmartSpacesException {
-    return addLiveActivity(liveActivity, GroupLiveActivityDependency.REQUIRED);
+    return addLiveActivity(liveActivity, LiveActivityGroupLiveActivityDependency.REQUIRED);
   }
 
   @Override
   public LiveActivityGroup addLiveActivity(LiveActivity liveActivity,
-      GroupLiveActivityDependency dependency) throws SmartSpacesException {
+      LiveActivityGroupLiveActivityDependency dependency) throws SmartSpacesException {
     synchronized (liveActivities) {
-      for (GroupLiveActivity ga : getLiveActivities()) {
-        if (ga.getActivity().equals(liveActivity)) {
-          throw new SimpleSmartSpacesException("Group already contains activity");
+      // If already added, just leave.
+      for (LiveActivityGroupLiveActivity gla : getLiveActivities()) {
+        if (gla.getLiveActivity().equals(liveActivity)) {
+          return this;
         }
       }
 
       liveActivities
-          .add(new JpaGroupLiveActivity(this, (JpaLiveActivity) liveActivity, dependency));
+          .add(new JpaLiveActivityGroupLiveActivity(this, (JpaLiveActivity) liveActivity, dependency));
     }
 
     return this;
@@ -164,8 +165,8 @@ public class JpaLiveActivityGroup implements LiveActivityGroup {
   @Override
   public void removeLiveActivity(LiveActivity liveActivity) {
     synchronized (liveActivities) {
-      for (GroupLiveActivity gactivity : liveActivities) {
-        if (liveActivity.equals(gactivity.getActivity())) {
+      for (LiveActivityGroupLiveActivity gactivity : liveActivities) {
+        if (liveActivity.equals(gactivity.getLiveActivity())) {
           liveActivities.remove(liveActivity);
 
           return;

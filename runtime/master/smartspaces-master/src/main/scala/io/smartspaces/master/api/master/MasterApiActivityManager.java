@@ -228,12 +228,12 @@ public interface MasterApiActivityManager extends ManagedResource {
    *
    * @param id
    *          ID of the space controller
-   * @param map
+   * @param config
    *          the new configuration
    *
    * @return API response
    */
-  Map<String, Object> configureSpaceController(String id, Map<String, String> map);
+  Map<String, Object> configureSpaceController(String id, Map<String, String> config);
 
   /**
    * Add in all data needed for the Master API response of the live activity.

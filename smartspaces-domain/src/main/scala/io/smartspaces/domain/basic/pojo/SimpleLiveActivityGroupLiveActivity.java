@@ -17,16 +17,16 @@
 
 package io.smartspaces.domain.basic.pojo;
 
-import io.smartspaces.domain.basic.GroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 
 /**
- * A POJO implementation of a {@link GroupLiveActivity}.
+ * A POJO implementation of a {@link LiveActivityGroupLiveActivity}.
  *
  * @author Keith M. Hughes
  */
-public class SimpleGroupLiveActivity implements GroupLiveActivity {
+public class SimpleLiveActivityGroupLiveActivity implements LiveActivityGroupLiveActivity {
 
   /**
    * For serialization.
@@ -46,35 +46,35 @@ public class SimpleGroupLiveActivity implements GroupLiveActivity {
   /**
    * How the activity group depends on the activity.
    */
-  private GroupLiveActivityDependency dependency;
+  private LiveActivityGroupLiveActivityDependency dependency;
 
   @Override
-  public LiveActivityGroup getActivityGroup() {
+  public LiveActivityGroup getLiveActivityGroup() {
     return activityGroup;
   }
 
   @Override
-  public void setActivityGroup(LiveActivityGroup activityGroup) {
+  public void setLiveActivityGroup(LiveActivityGroup activityGroup) {
     this.activityGroup = activityGroup;
   }
 
   @Override
-  public LiveActivity getActivity() {
+  public LiveActivity getLiveActivity() {
     return activity;
   }
 
   @Override
-  public void setActivity(LiveActivity activity) {
+  public void setLiveActivity(LiveActivity activity) {
     this.activity = activity;
   }
 
   @Override
-  public GroupLiveActivityDependency getDependency() {
+  public LiveActivityGroupLiveActivityDependency getDependency() {
     return dependency;
   }
 
   @Override
-  public void setDependency(GroupLiveActivityDependency dependency) {
+  public void setDependency(LiveActivityGroupLiveActivityDependency dependency) {
     this.dependency = dependency;
   }
 

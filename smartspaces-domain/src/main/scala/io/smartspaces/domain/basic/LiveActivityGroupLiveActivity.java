@@ -24,29 +24,29 @@ import java.io.Serializable;
  *
  * @author Keith M. Hughes
  */
-public interface GroupLiveActivity extends Serializable {
+public interface LiveActivityGroupLiveActivity extends Serializable {
 
   /**
    * Get the activity group this activity is part of.
    *
    * @return the live activity group
    */
-  LiveActivityGroup getActivityGroup();
+  LiveActivityGroup getLiveActivityGroup();
 
   /**
    * Set the activity group this activity is part of.
    *
-   * @param activityGroup
+   * @param liveActivityGroup
    *          the live activity group
    */
-  void setActivityGroup(LiveActivityGroup activityGroup);
+  void setLiveActivityGroup(LiveActivityGroup liveActivityGroup);
 
   /**
    * Get the activity this represents.
    *
    * @return the live activity
    */
-  LiveActivity getActivity();
+  LiveActivity getLiveActivity();
 
   /**
    * Set the live activity this represents.
@@ -54,14 +54,14 @@ public interface GroupLiveActivity extends Serializable {
    * @param activity
    *          the live activity
    */
-  void setActivity(LiveActivity activity);
+  void setLiveActivity(LiveActivity activity);
 
   /**
    * Get the dependency status of the activity in its containing activity group.
    *
    * @return the dependency status
    */
-  GroupLiveActivityDependency getDependency();
+  LiveActivityGroupLiveActivityDependency getDependency();
 
   /**
    * Set the dependency status of the activity in its containing activity group.
@@ -69,14 +69,14 @@ public interface GroupLiveActivity extends Serializable {
    * @param dependency
    *          the dependency
    */
-  void setDependency(GroupLiveActivityDependency dependency);
+  void setDependency(LiveActivityGroupLiveActivityDependency dependency);
 
   /**
    * The status of a live activity dependency in a live activity group.
    *
    * @author Keith M. Hughes
    */
-  public enum GroupLiveActivityDependency {
+  public enum LiveActivityGroupLiveActivityDependency {
 
     /**
      * The live activity is required in the group.
@@ -99,7 +99,7 @@ public interface GroupLiveActivity extends Serializable {
      * @param description
      *          the description
      */
-    GroupLiveActivityDependency(String description) {
+    LiveActivityGroupLiveActivityDependency(String description) {
       this.description = description;
     }
 

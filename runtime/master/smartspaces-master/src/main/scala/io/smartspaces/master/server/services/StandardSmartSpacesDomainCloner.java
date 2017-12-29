@@ -19,7 +19,7 @@ package io.smartspaces.master.server.services;
 
 import io.smartspaces.domain.basic.ActivityConfiguration;
 import io.smartspaces.domain.basic.ConfigurationParameter;
-import io.smartspaces.domain.basic.GroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.basic.Space;
@@ -173,8 +173,8 @@ public class StandardSmartSpacesDomainCloner implements SmartSpacesDomainCloner 
     clone.setDescription(src.getDescription());
     clone.setMetadata(src.getMetadata());
 
-    for (GroupLiveActivity activity : src.getLiveActivities()) {
-      LiveActivity activityClone = cloneLiveActivity(activity.getActivity());
+    for (LiveActivityGroupLiveActivity activity : src.getLiveActivities()) {
+      LiveActivity activityClone = cloneLiveActivity(activity.getLiveActivity());
       clone.addLiveActivity(activityClone, activity.getDependency());
     }
 

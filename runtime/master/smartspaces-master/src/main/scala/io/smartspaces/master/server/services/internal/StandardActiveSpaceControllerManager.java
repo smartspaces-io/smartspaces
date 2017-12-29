@@ -21,7 +21,7 @@ import io.smartspaces.SmartSpacesExceptionUtils;
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.container.control.message.activity.LiveActivityDeleteResult;
 import io.smartspaces.container.control.message.activity.LiveActivityDeploymentResult;
-import io.smartspaces.domain.basic.GroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.basic.Space;
@@ -689,9 +689,9 @@ public class StandardActiveSpaceControllerManager
     spaceEnvironment.getLog().formatInfo("Requesting live activity group %s deployment",
         activeActivityGroup.getActivityGroup().getId());
 
-    for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
+    for (LiveActivityGroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
-      ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getActivity());
+      ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getLiveActivity());
       try {
         attemptDeployActiveActivityFromGroup(activeLiveActivity, deployedLiveActivities);
       } catch (Throwable e) {
@@ -742,9 +742,9 @@ public class StandardActiveSpaceControllerManager
     spaceEnvironment.getLog().formatInfo("Requesting live activity group %s configure",
         activeActivityGroup.getActivityGroup().getId());
 
-    for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
+    for (LiveActivityGroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
-      ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getActivity());
+      ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getLiveActivity());
       try {
         attemptConfigureActiveActivityFromGroup(activeLiveActivity, configuredLiveActivities);
       } catch (Throwable e) {
@@ -789,9 +789,9 @@ public class StandardActiveSpaceControllerManager
     String groupId = activeActivityGroup.getActivityGroup().getId();
     spaceEnvironment.getLog().formatInfo("Requesting live activity group %s startup", groupId);
 
-    for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
+    for (LiveActivityGroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
-      ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getActivity());
+      ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getLiveActivity());
 
       spaceEnvironment.getLog().formatInfo("Starting up live activity %s from group %s",
           activeLiveActivity.getDisplayName(), groupId);
@@ -816,9 +816,9 @@ public class StandardActiveSpaceControllerManager
     String groupId = activeActivityGroup.getActivityGroup().getId();
     spaceEnvironment.getLog().formatInfo("Requesting live activity group %s activation", groupId);
 
-    for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
+    for (LiveActivityGroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
-      ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getActivity());
+      ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getLiveActivity());
 
       spaceEnvironment.getLog().formatInfo("Activating live activity %s from group %s",
           activeLiveActivity.getDisplayName(), groupId);
@@ -843,9 +843,9 @@ public class StandardActiveSpaceControllerManager
     String groupId = activeActivityGroup.getActivityGroup().getId();
     spaceEnvironment.getLog().formatInfo("Requesting live activity group %s deactivation", groupId);
 
-    for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
+    for (LiveActivityGroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
-      ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getActivity());
+      ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getLiveActivity());
 
       spaceEnvironment.getLog().formatInfo("Deactivating live activity %s from group %s",
           activeLiveActivity.getDisplayName(), groupId);
@@ -870,9 +870,9 @@ public class StandardActiveSpaceControllerManager
     String groupId = activeActivityGroup.getActivityGroup().getId();
     spaceEnvironment.getLog().formatInfo("Requesting live activity group %s shutdown", groupId);
 
-    for (GroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
+    for (LiveActivityGroupLiveActivity groupActivity : activeActivityGroup.getActivityGroup()
         .getLiveActivities()) {
-      ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getActivity());
+      ActiveLiveActivity activeLiveActivity = getActiveLiveActivity(groupActivity.getLiveActivity());
 
       spaceEnvironment.getLog().formatInfo("Shut down live activity %s from group %s",
           activeLiveActivity.getDisplayName(), groupId);

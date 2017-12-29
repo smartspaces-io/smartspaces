@@ -22,7 +22,7 @@ import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.ActivityConfiguration;
 import io.smartspaces.domain.basic.ActivityDependency;
 import io.smartspaces.domain.basic.ConfigurationParameter;
-import io.smartspaces.domain.basic.GroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.basic.Resource;
@@ -410,19 +410,19 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
    *          the XML element for the group
    */
   private void addLiveActivityGroupLiveActivities(LiveActivityGroup group, Element groupElement) {
-    List<? extends GroupLiveActivity> activities = group.getLiveActivities();
+    List<? extends LiveActivityGroupLiveActivity> activities = group.getLiveActivities();
     if (!activities.isEmpty()) {
       Element activitiesElement =
           new Element(ELEMENT_NAME_LIVE_ACTIVITY_GROUP_ROOT_GROUP_LIVE_ACTIVITIES);
       groupElement.addContent(activitiesElement);
 
-      for (GroupLiveActivity activity : activities) {
+      for (LiveActivityGroupLiveActivity activity : activities) {
         Element activityElement =
             new Element(ELEMENT_NAME_LIVE_ACTIVITY_GROUP_INDIVIDUAL_GROUP_LIVE_ACTIVITY);
         activitiesElement.addContent(activityElement);
 
         activityElement
-            .setAttribute(ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_ID, activity.getActivity().getId())
+            .setAttribute(ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_ID, activity.getLiveActivity().getId())
             .setAttribute(ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_DEPENDENCY,
                 activity.getDependency().name());
 

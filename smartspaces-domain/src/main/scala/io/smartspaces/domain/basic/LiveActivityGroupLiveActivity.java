@@ -57,36 +57,36 @@ public interface LiveActivityGroupLiveActivity extends Serializable {
   void setLiveActivity(LiveActivity activity);
 
   /**
-   * Get the dependency status of the activity in its containing activity group.
+   * Get the dependency type of the live activity in its containing activity group.
    *
    * @return the dependency status
    */
-  LiveActivityGroupLiveActivityDependency getDependency();
+  LiveActivityGroupLiveActivityDependencyType getDependencyType();
 
   /**
    * Set the dependency status of the activity in its containing activity group.
    *
-   * @param dependency
-   *          the dependency
+   * @param dependencyType
+   *          the dependency type
    */
-  void setDependency(LiveActivityGroupLiveActivityDependency dependency);
+  void setDependencyType(LiveActivityGroupLiveActivityDependencyType dependencyType);
 
   /**
    * The status of a live activity dependency in a live activity group.
    *
    * @author Keith M. Hughes
    */
-  public enum LiveActivityGroupLiveActivityDependency {
+  public enum LiveActivityGroupLiveActivityDependencyType {
 
     /**
      * The live activity is required in the group.
      */
-    REQUIRED("activity.group.activity.dependency.required"),
+    REQUIRED("live.activity.group.liveactivity.dependency.required"),
 
     /**
      * The live activity is optional in the group.
      */
-    OPTIONAL("activity.group.activity.dependency.optional");
+    OPTIONAL("liveactivity.group.liveactivity.dependency.optional");
 
     /**
      * Message ID for the description.
@@ -99,7 +99,7 @@ public interface LiveActivityGroupLiveActivity extends Serializable {
      * @param description
      *          the description
      */
-    LiveActivityGroupLiveActivityDependency(String description) {
+    LiveActivityGroupLiveActivityDependencyType(String description) {
       this.description = description;
     }
 

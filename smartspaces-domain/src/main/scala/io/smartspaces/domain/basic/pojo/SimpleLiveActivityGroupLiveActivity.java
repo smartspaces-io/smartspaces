@@ -36,46 +36,74 @@ public class SimpleLiveActivityGroupLiveActivity implements LiveActivityGroupLiv
   /**
    * The activity group this activity is part of.
    */
-  private LiveActivityGroup activityGroup;
+  private LiveActivityGroup liveActivityGroup;
 
   /**
    * The activity this represents.
    */
-  private LiveActivity activity;
+  private LiveActivity liveActivity;
 
   /**
    * How the activity group depends on the activity.
    */
-  private LiveActivityGroupLiveActivityDependency dependency;
+  private LiveActivityGroupLiveActivityDependencyType dependencyType;
+  
+  /**
+   * Construct a new live activity group live activity.
+   * 
+   * @param liveActivityGroup
+   *          the group this live activity is part of
+   * @param liveActivity
+   *          the live activity
+   * @param dependencyType
+   *          the dependency type of the live activity in the group
+   */
+  public SimpleLiveActivityGroupLiveActivity(LiveActivityGroup liveActivityGroup,
+      LiveActivity liveActivity, LiveActivityGroupLiveActivityDependencyType dependencyType) {
+    this.liveActivityGroup = liveActivityGroup;
+    this.liveActivity = liveActivity;
+    this.dependencyType = dependencyType;
+  }
+
+  /**
+   * Construct a new live activity group live activity with no arguments.
+   */
+  public SimpleLiveActivityGroupLiveActivity() {
+  }
 
   @Override
   public LiveActivityGroup getLiveActivityGroup() {
-    return activityGroup;
+    return liveActivityGroup;
   }
 
   @Override
   public void setLiveActivityGroup(LiveActivityGroup activityGroup) {
-    this.activityGroup = activityGroup;
+    this.liveActivityGroup = activityGroup;
   }
 
   @Override
   public LiveActivity getLiveActivity() {
-    return activity;
+    return liveActivity;
   }
 
   @Override
   public void setLiveActivity(LiveActivity activity) {
-    this.activity = activity;
+    this.liveActivity = activity;
   }
 
   @Override
-  public LiveActivityGroupLiveActivityDependency getDependency() {
-    return dependency;
+  public LiveActivityGroupLiveActivityDependencyType getDependencyType() {
+    return dependencyType;
   }
 
   @Override
-  public void setDependency(LiveActivityGroupLiveActivityDependency dependency) {
-    this.dependency = dependency;
+  public void setDependencyType(LiveActivityGroupLiveActivityDependencyType dependencyType) {
+    this.dependencyType = dependencyType;
   }
 
+  @Override
+  public String toString() {
+    return "SimpleLiveActivityGroupLiveActivity [liveActivityGroup=" + liveActivityGroup
+        + ", liveActivity=" + liveActivity + ", dependencyType=" + dependencyType + "]";
+  }
 }

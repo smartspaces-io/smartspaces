@@ -400,7 +400,7 @@ public class StandardSmartSpacesDomainClonerTest {
     for (int i = 0; i < srcGroupLiveActivities.size(); ++i) {
       LiveActivityGroupLiveActivity srcGroupLiveActivity = srcGroupLiveActivities.get(i);
       LiveActivityGroupLiveActivity clonedGroupLiveActivity = clonedGroupLiveActivities.get(i);
-      assertEquals(srcGroupLiveActivity.getDependency(), clonedGroupLiveActivity.getDependency());
+      assertEquals(srcGroupLiveActivity.getDependencyType(), clonedGroupLiveActivity.getDependencyType());
       compareLiveActivity(srcGroupLiveActivity.getLiveActivity(),
           clonedGroupLiveActivity.getLiveActivity(), srcGroupLiveActivity.getLiveActivity().getController());
     }

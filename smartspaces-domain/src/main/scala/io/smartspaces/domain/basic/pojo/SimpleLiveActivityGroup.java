@@ -20,7 +20,7 @@ package io.smartspaces.domain.basic.pojo;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
-import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependency;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependencyType;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.pojo.SimpleObject;
@@ -98,12 +98,12 @@ public class SimpleLiveActivityGroup extends SimpleObject implements LiveActivit
 
   @Override
   public LiveActivityGroup addLiveActivity(LiveActivity activity) throws SmartSpacesException {
-    return addLiveActivity(activity, LiveActivityGroupLiveActivityDependency.REQUIRED);
+    return addLiveActivity(activity, LiveActivityGroupLiveActivityDependencyType.REQUIRED);
   }
 
   @Override
   public LiveActivityGroup addLiveActivity(LiveActivity activity,
-      LiveActivityGroupLiveActivityDependency dependency) throws SmartSpacesException {
+      LiveActivityGroupLiveActivityDependencyType dependency) throws SmartSpacesException {
     for (LiveActivityGroupLiveActivity ga : activities) {
       if (ga.getLiveActivity().equals(activity)) {
         throw new SimpleSmartSpacesException("Group already contains activity");
@@ -113,7 +113,7 @@ public class SimpleLiveActivityGroup extends SimpleObject implements LiveActivit
     LiveActivityGroupLiveActivity gactivity = new SimpleLiveActivityGroupLiveActivity();
     gactivity.setLiveActivity(activity);
     gactivity.setLiveActivityGroup(this);
-    gactivity.setDependency(dependency);
+    gactivity.setDependencyType(dependency);
 
     synchronized (activities) {
       activities.add(gactivity);

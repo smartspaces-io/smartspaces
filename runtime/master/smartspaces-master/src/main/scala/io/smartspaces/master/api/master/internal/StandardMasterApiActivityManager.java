@@ -25,6 +25,7 @@ import io.smartspaces.domain.basic.ActivityConfiguration;
 import io.smartspaces.domain.basic.ActivityDependency;
 import io.smartspaces.domain.basic.ConfigurationParameter;
 import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependencyType;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.basic.Space;
@@ -32,6 +33,7 @@ import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.basic.SpaceControllerConfiguration;
 import io.smartspaces.domain.basic.pojo.SimpleActivity;
 import io.smartspaces.domain.basic.pojo.SimpleLiveActivity;
+import io.smartspaces.domain.basic.pojo.SimpleLiveActivityGroupLiveActivity;
 import io.smartspaces.expression.FilterExpression;
 import io.smartspaces.master.api.master.MasterApiUtilities;
 import io.smartspaces.master.api.messages.MasterApiMessages;
@@ -452,7 +454,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager
     liveActivityTemplate.setController(spaceController);
     liveActivityTemplate.setName(name);
     liveActivityTemplate.setDescription(description);
-    
+
     @SuppressWarnings("unchecked")
     Map<String, Object> metadata =
         (Map<String, Object>) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_ENTITY_METADATA);
@@ -468,7 +470,7 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager
     }
 
     LiveActivity newLiveActivity = activityRepository.newAndSaveLiveActivity(liveActivityTemplate);
-    
+
     Map<String, Object> responseData = new HashMap<>();
     extractLiveActivityApiData(newLiveActivity, responseData);
 
@@ -1006,13 +1008,14 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager
       Map<String, Object> responseData = new HashMap<>();
       responseData.put("liveactivitygroup", getLiveActivityGroupApiData(liveActivityGroup));
 
-      List<LiveActivity> liveActivities = new ArrayList<>();
+      List<LiveActivityGroupLiveActivity> liveActivities = new ArrayList<>();
       for (LiveActivityGroupLiveActivity gla : liveActivityGroup.getLiveActivities()) {
-        liveActivities.add(gla.getLiveActivity());
+        liveActivities.add(gla);
       }
 
-      Collections.sort(liveActivities, MasterApiUtilities.LIVE_ACTIVITY_BY_NAME_COMPARATOR);
-      responseData.put("liveactivities", extractLiveActivities(liveActivities));
+      Collections.sort(liveActivities,
+          MasterApiUtilities.LIVE_ACTIVITY_GROUP_LIVE_ACTIVITY_BY_NAME_COMPARATOR);
+      responseData.put("liveactivities", extractLiveActivityGroupLiveActivities(liveActivities));
 
       List<Space> spaces =
           Lists.newArrayList(activityRepository.getSpacesByLiveActivityGroup(liveActivityGroup));
@@ -1056,6 +1059,98 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager
     }
   }
 
+  @Override
+  public Map<String, Object> addLiveActivitiesToLiveActivityGroup(String id,
+      Map<String, Object> args) {
+    try {
+      LiveActivityGroup liveActivityGroup = activityRepository.getLiveActivityGroupById(id);
+      if (liveActivityGroup != null) {
+        List<SimpleLiveActivityGroupLiveActivity> liveActivities = new ArrayList<>();
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> liveActivityInfos = (List<Map<String, Object>>) args
+            .get(MasterApiMessages.MASTER_API_PARAMETER_NAME_LIVE_ACTIVITY_GROUP_LIVE_ACTIVITIES);
+        if (liveActivityInfos != null) {
+          for (Map<String, Object> liveActivityInfo : liveActivityInfos) {
+
+            String typedId = (String) liveActivityInfo
+                .get(MasterApiMessages.MASTER_API_PARAMETER_NAME_LIVE_ACTIVITY_ID);
+            String dependencyTypeString = (String) liveActivityInfo.getOrDefault(
+                MasterApiMessages.MASTER_API_PARAMETER_NAME_DEPENDENCY_TYPE,
+                LiveActivityGroupLiveActivityDependencyType.REQUIRED.name());
+
+            LiveActivityGroupLiveActivityDependencyType dependencyType =
+                LiveActivityGroupLiveActivityDependencyType
+                    .valueOf(dependencyTypeString.toUpperCase());
+            LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(typedId);
+            if (liveActivity != null) {
+              liveActivities
+                  .add(new SimpleLiveActivityGroupLiveActivity(null, liveActivity, dependencyType));
+            } else {
+              return getNoSuchLiveActivityResponse(typedId);
+            }
+          }
+
+          if (!liveActivities.isEmpty()) {
+            for (SimpleLiveActivityGroupLiveActivity gla : liveActivities) {
+              liveActivityGroup.addLiveActivity(gla.getLiveActivity(), gla.getDependencyType());
+            }
+           
+            activityRepository.saveLiveActivityGroup(liveActivityGroup);
+          }
+        }
+
+        return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
+      } else {
+        return getNoSuchLiveActivityGroupResponse(id);
+      }
+    } catch (Throwable e) {
+      Map<String, Object> response = SmartSpacesMessagesSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
+
+      logResponseError("Attempt to add live activities to live activity group data failed",
+          response);
+
+      return response;
+    }
+
+  }
+
+  @Override
+  public Map<String, Object> removeLiveActivitiesFromLiveActivityGroup(String id,
+      Map<String, Object> args) {
+    try {
+      LiveActivityGroup liveActivityGroup = activityRepository.getLiveActivityGroupById(id);
+      if (liveActivityGroup != null) {
+        @SuppressWarnings("unchecked")
+        List<String> typedIds =
+            (List<String>) args.get(MasterApiMessages.MASTER_API_PARAMETER_NAME_LIVE_ACTIVITY_IDS);
+        if (typedIds != null) {
+          for (String typedId : typedIds) {
+            LiveActivity liveActivity = activityRepository.getLiveActivityByTypedId(typedId);
+            if (liveActivity != null) {
+              liveActivityGroup.removeLiveActivity(liveActivity);
+            }
+          }
+        }
+
+        activityRepository.saveLiveActivityGroup(liveActivityGroup);
+
+        return SmartSpacesMessagesSupport.getSimpleSuccessResponse();
+      } else {
+        return getNoSuchLiveActivityGroupResponse(id);
+      }
+    } catch (Throwable e) {
+      Map<String, Object> response = SmartSpacesMessagesSupport
+          .getFailureResponse(MasterApiMessages.MESSAGE_API_CALL_FAILURE, e);
+
+      logResponseError("Attempt to remove live activities from live activity group data failed",
+          response);
+
+      return response;
+    }
+  }
+
   /**
    * Get the Master API response data describing a live activity group.
    *
@@ -1069,20 +1164,24 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager
 
     extractLiveActivityGroup(liveActivityGroup, data);
 
-    List<Map<String, Object>> activityData = new ArrayList<>();
-    data.put("liveActivities", activityData);
+    List<Map<String, Object>> liveActivitiesData = new ArrayList<>();
+    data.put("liveActivities", liveActivitiesData);
 
-    List<LiveActivity> liveActivities = new ArrayList<>();
+    List<LiveActivityGroupLiveActivity> liveActivities = new ArrayList<>();
     for (LiveActivityGroupLiveActivity gactivity : liveActivityGroup.getLiveActivities()) {
-      liveActivities.add(gactivity.getLiveActivity());
+      liveActivities.add(gactivity);
     }
-    Collections.sort(liveActivities, MasterApiUtilities.LIVE_ACTIVITY_BY_NAME_COMPARATOR);
+    Collections.sort(liveActivities,
+        MasterApiUtilities.LIVE_ACTIVITY_GROUP_LIVE_ACTIVITY_BY_NAME_COMPARATOR);
 
-    for (LiveActivity liveActivity : liveActivities) {
+    for (LiveActivityGroupLiveActivity liveActivity : liveActivities) {
       Map<String, Object> liveActivityData = new HashMap<>();
-      activityData.add(liveActivityData);
+      liveActivitiesData.add(liveActivityData);
 
-      extractLiveActivityApiData(liveActivity, liveActivityData);
+      extractLiveActivityApiData(liveActivity.getLiveActivity(), liveActivityData);
+
+      liveActivityData.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_DEPENDENCY_TYPE,
+          liveActivity.getDependencyType().name());
     }
 
     return data;
@@ -1096,6 +1195,32 @@ public class StandardMasterApiActivityManager extends BaseMasterApiManager
         MasterApiUtilities.LIVE_ACTIVITY_BY_NAME_COMPARATOR);
 
     return extractLiveActivities(liveActivitiesByController);
+  }
+
+  /**
+   * Extract the live activity data for all given live activities in a live
+   * activity group.
+   *
+   * @param liveActivities
+   *          the live activities
+   *
+   * @return list of the data for all live activities
+   */
+  private List<Map<String, Object>>
+      extractLiveActivityGroupLiveActivities(List<LiveActivityGroupLiveActivity> liveActivities) {
+    List<Map<String, Object>> result = new ArrayList<>();
+
+    if (liveActivities != null) {
+      for (LiveActivityGroupLiveActivity liveActivity : liveActivities) {
+        Map<String, Object> data = new HashMap<>();
+        extractLiveActivityApiData(liveActivity.getLiveActivity(), data);
+        data.put(MasterApiMessages.MASTER_API_PARAMETER_NAME_DEPENDENCY_TYPE,
+            liveActivity.getDependencyType().name());
+        result.add(data);
+      }
+    }
+
+    return result;
   }
 
   /**

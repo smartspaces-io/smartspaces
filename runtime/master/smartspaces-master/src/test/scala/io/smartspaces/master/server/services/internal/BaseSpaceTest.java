@@ -20,7 +20,7 @@ package io.smartspaces.master.server.services.internal;
 import static org.junit.Assert.assertEquals;
 import io.smartspaces.activity.ActivityState;
 import io.smartspaces.domain.basic.Activity;
-import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependency;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependencyType;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 import io.smartspaces.domain.basic.Space;
@@ -123,10 +123,10 @@ public class BaseSpaceTest {
    * @return
    */
   protected LiveActivityGroup liveActivityGroup(LiveActivity... apps) {
-    return liveActivityGroup(LiveActivityGroupLiveActivityDependency.REQUIRED, apps);
+    return liveActivityGroup(LiveActivityGroupLiveActivityDependencyType.REQUIRED, apps);
   }
 
-  protected LiveActivityGroup liveActivityGroup(LiveActivityGroupLiveActivityDependency dependency,
+  protected LiveActivityGroup liveActivityGroup(LiveActivityGroupLiveActivityDependencyType dependency,
       LiveActivity... apps) {
     SimpleLiveActivityGroup activityGroup = new SimpleLiveActivityGroup();
     for (LiveActivity iapp : apps)
@@ -145,7 +145,7 @@ public class BaseSpaceTest {
    * @return a live activity group containing the requested live activities
    */
   protected LiveActivityGroup liveActivityGroup(int... liveActivityIds) {
-    return liveActivityGroup(LiveActivityGroupLiveActivityDependency.REQUIRED, liveActivityIds);
+    return liveActivityGroup(LiveActivityGroupLiveActivityDependencyType.REQUIRED, liveActivityIds);
   }
 
   /**
@@ -157,10 +157,10 @@ public class BaseSpaceTest {
    * @return a live activity group containing the requested live activities
    */
   protected LiveActivityGroup liveActivityGroup(List<LiveActivity> liveActivities) {
-    return liveActivityGroup(LiveActivityGroupLiveActivityDependency.REQUIRED, liveActivities);
+    return liveActivityGroup(LiveActivityGroupLiveActivityDependencyType.REQUIRED, liveActivities);
   }
 
-  protected LiveActivityGroup liveActivityGroup(LiveActivityGroupLiveActivityDependency dependency,
+  protected LiveActivityGroup liveActivityGroup(LiveActivityGroupLiveActivityDependencyType dependency,
       int... appIds) {
     LiveActivityGroup activityGroup = new SimpleLiveActivityGroup();
     for (int id : appIds) {
@@ -180,7 +180,7 @@ public class BaseSpaceTest {
    *
    * @return the live activity group containing the live activities
    */
-  protected LiveActivityGroup liveActivityGroup(LiveActivityGroupLiveActivityDependency dependency,
+  protected LiveActivityGroup liveActivityGroup(LiveActivityGroupLiveActivityDependencyType dependency,
       List<LiveActivity> liveActivities) {
     LiveActivityGroup activityGroup = new SimpleLiveActivityGroup();
     for (LiveActivity liveActivity : liveActivities) {

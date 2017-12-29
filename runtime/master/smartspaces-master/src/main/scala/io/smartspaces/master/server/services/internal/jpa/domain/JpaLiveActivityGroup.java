@@ -20,7 +20,7 @@ package io.smartspaces.master.server.services.internal.jpa.domain;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
-import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependency;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependencyType;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
 
@@ -56,10 +56,10 @@ import javax.persistence.Version;
     @NamedQuery(name = "liveActivityGroupAll", query = "select g from JpaLiveActivityGroup g"),
     @NamedQuery(
         name = "liveActivityGroupByLiveActivity",
-        query = "select distinct gla.activityGroup from JpaGroupLiveActivity gla where gla.activity.id = :activity_id"),
+        query = "select distinct gla.liveActivityGroup from JpaLiveActivityGroupLiveActivity gla where gla.liveActivity.id = :live_activity_id"),
     @NamedQuery(
         name = "countLiveActivityGroupByLiveActivity",
-        query = "select count(distinct gla.activityGroup) from JpaGroupLiveActivity gla where gla.activity.id = :activity_id"), })
+        query = "select count(distinct gla.liveActivityGroup) from JpaLiveActivityGroupLiveActivity gla where gla.liveActivity.id = :live_activity_id"), })
 public class JpaLiveActivityGroup implements LiveActivityGroup {
 
   /**
@@ -141,12 +141,12 @@ public class JpaLiveActivityGroup implements LiveActivityGroup {
 
   @Override
   public LiveActivityGroup addLiveActivity(LiveActivity liveActivity) throws SmartSpacesException {
-    return addLiveActivity(liveActivity, LiveActivityGroupLiveActivityDependency.REQUIRED);
+    return addLiveActivity(liveActivity, LiveActivityGroupLiveActivityDependencyType.REQUIRED);
   }
 
   @Override
   public LiveActivityGroup addLiveActivity(LiveActivity liveActivity,
-      LiveActivityGroupLiveActivityDependency dependency) throws SmartSpacesException {
+      LiveActivityGroupLiveActivityDependencyType dependency) throws SmartSpacesException {
     synchronized (liveActivities) {
       // If already added, just leave.
       for (LiveActivityGroupLiveActivity gla : getLiveActivities()) {
@@ -210,6 +210,6 @@ public class JpaLiveActivityGroup implements LiveActivityGroup {
   @Override
   public String toString() {
     return "JpaLiveActivityGroup [id=" + id + ", name=" + name + ", description=" + description
-        + ", metadata=" + getMetadata() + ", activities=" + liveActivities + "]";
+        + ", metadata=" + getMetadata() + ", liveActivities=" + liveActivities + "]";
   }
 }

@@ -17,16 +17,17 @@
 
 package io.smartspaces.master.api.master;
 
+import java.util.Comparator;
+
 import io.smartspaces.domain.basic.Activity;
 import io.smartspaces.domain.basic.LiveActivity;
 import io.smartspaces.domain.basic.LiveActivityGroup;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity;
 import io.smartspaces.domain.basic.Resource;
 import io.smartspaces.domain.basic.Space;
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.domain.system.NamedScript;
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
-
-import java.util.Comparator;
 
 /**
  * Utilities for the master side for working with the master.
@@ -36,54 +37,61 @@ import java.util.Comparator;
 public class MasterApiUtilities {
 
   /**
-   * A comparator for controllers which orders by name.
+   * A comparator for controllers that orders by name.
    */
   public static final SpaceControllerByNameComparator SPACE_CONTROLLER_BY_NAME_COMPARATOR =
       new SpaceControllerByNameComparator();
 
   /**
-   * A comparator for activities which orders by name.
+   * A comparator for activities that orders by name.
    */
   public static final ActivityByNameAndVersionComparator ACTIVITY_BY_NAME_AND_VERSION_COMPARATOR =
       new ActivityByNameAndVersionComparator();
 
   /**
-   * A comparator for installed activities which orders by name.
+   * A comparator for live activities that orders by name.
    */
   public static final LiveActivityByNameComparator LIVE_ACTIVITY_BY_NAME_COMPARATOR =
       new LiveActivityByNameComparator();
 
   /**
-   * A comparator for live activity groups which orders by name.
+   * A comparator for live activity groups that orders by name.
    */
   public static final LiveActivityGroupByNameComparator LIVE_ACTIVITY_GROUP_BY_NAME_COMPARATOR =
       new LiveActivityGroupByNameComparator();
 
   /**
-   * A comparator for spaces which orders by name.
+   * A comparator for live activities for a live activity group that orders by
+   * name.
+   */
+  public static final LiveActivityGroupLiveActivityByNameComparator LIVE_ACTIVITY_GROUP_LIVE_ACTIVITY_BY_NAME_COMPARATOR =
+      new LiveActivityGroupLiveActivityByNameComparator();
+
+  /**
+   * A comparator for spaces that orders by name.
    */
   public static final SpaceByNameComparator SPACE_BY_NAME_COMPARATOR = new SpaceByNameComparator();
 
   /**
-   * A comparator for active controllers which orders by name.
+   * A comparator for active controllers that orders by name.
    */
   public static final ActiveControllerByNameComparator ACTIVE_CONTROLLER_BY_NAME_COMPARATOR =
       new ActiveControllerByNameComparator();
 
   /**
-   * A comparator for resources which orders by name.
+   * A comparator for resources that orders by name.
    */
   public static final ResourceByNameAndVersionComparator RESOURCE_BY_NAME_AND_VERSION_COMPARATOR =
       new ResourceByNameAndVersionComparator();
 
   /**
-   * A comparator for named scripts which orders by name.
+   * A comparator for named scripts that orders by name.
    */
   public static final NamedScriptByNameComparator NAMED_SCRIPT_BY_NAME_COMPARATOR =
       new NamedScriptByNameComparator();
 
   /**
-   * A comparator for installed activity which orders by name.
+   * A comparator for installed activity that orders by name.
    *
    * @author Keith M. Hughes
    */
@@ -95,7 +103,7 @@ public class MasterApiUtilities {
   }
 
   /**
-   * A comparator for resources which orders by name and then version.
+   * A comparator for resources that orders by name and then version.
    *
    * @author Keith M. Hughes
    */
@@ -113,7 +121,7 @@ public class MasterApiUtilities {
   }
 
   /**
-   * A comparator for activities which orders by name first then subsorts by
+   * A comparator for activities that orders by name first then subsorts by
    * version.
    *
    * @author Keith M. Hughes
@@ -132,7 +140,7 @@ public class MasterApiUtilities {
   }
 
   /**
-   * A comparator for live activities which orders by name.
+   * A comparator for live activities that orders by name.
    *
    * @author Keith M. Hughes
    */
@@ -144,7 +152,7 @@ public class MasterApiUtilities {
   }
 
   /**
-   * A comparator for live activity groups which orders by name.
+   * A comparator for live activity groups that orders by name.
    *
    * @author Keith M. Hughes
    */
@@ -156,7 +164,21 @@ public class MasterApiUtilities {
   }
 
   /**
-   * A comparator for spaces which orders by name.
+   * A comparator for live activities in a live activity group that orders by
+   * name.
+   *
+   * @author Keith M. Hughes
+   */
+  private static class LiveActivityGroupLiveActivityByNameComparator
+      implements Comparator<LiveActivityGroupLiveActivity> {
+    @Override
+    public int compare(LiveActivityGroupLiveActivity o1, LiveActivityGroupLiveActivity o2) {
+      return o1.getLiveActivity().getName().compareToIgnoreCase(o2.getLiveActivity().getName());
+    }
+  }
+
+  /**
+   * A comparator for spaces that orders by name.
    *
    * @author Keith M. Hughes
    */
@@ -168,21 +190,20 @@ public class MasterApiUtilities {
   }
 
   /**
-   * A comparator for active controllers which orders by name.
+   * A comparator for active controllers that orders by name.
    *
    * @author Keith M. Hughes
    */
-  private static class ActiveControllerByNameComparator implements
-      Comparator<ActiveSpaceController> {
+  private static class ActiveControllerByNameComparator
+      implements Comparator<ActiveSpaceController> {
     @Override
     public int compare(ActiveSpaceController o1, ActiveSpaceController o2) {
-      return o1.spaceController().getName()
-          .compareToIgnoreCase(o2.spaceController().getName());
+      return o1.spaceController().getName().compareToIgnoreCase(o2.spaceController().getName());
     }
   }
 
   /**
-   * A comparator for named scripts which orders by name.
+   * A comparator for named scripts that orders by name.
    *
    * @author Keith M. Hughes
    */

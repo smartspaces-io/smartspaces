@@ -424,7 +424,7 @@ public class JdomMasterDomainModelCreator implements MasterDomainDescription {
         activityElement
             .setAttribute(ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_ID, activity.getLiveActivity().getId())
             .setAttribute(ATTRIBUTE_NAME_GROUP_LIVE_ACTIVITY_DEPENDENCY,
-                activity.getDependency().name());
+                activity.getDependencyType().name());
 
       }
     }

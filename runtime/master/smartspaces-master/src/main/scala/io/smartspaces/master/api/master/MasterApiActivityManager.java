@@ -204,6 +204,31 @@ public interface MasterApiActivityManager extends ManagedResource {
   Map<String, Object> editLiveActivity(Map<String, Object> args);
 
   /**
+   * Modify a live activity's metadata.
+   *
+   * <p>
+   * The command map contains a field called command. This field will be one of
+   *
+   * <ul>
+   * <li>replace - data contains a map, replace the entire metadata map with the
+   * map</li>
+   * <li>modify - data contains a map, replace just the fields found in the map
+   * with the values found in the map</li>
+   * <li>delete - data contains a list of keys, remove all keys found in
+   * data</li>
+   * </ul>
+   *
+   * @param typedId
+   *          typed ID of the live activity
+   * @param metadataCommand
+   *          the modification command
+   *
+   * @return the Master API response object
+   */
+  Map<String, Object> updateLiveActivityMetadata(String typedId,
+      Map<String, Object> metadataCommand);
+
+  /**
    * Get basic information about a space controller.
    *
    * @param controller
@@ -287,29 +312,28 @@ public interface MasterApiActivityManager extends ManagedResource {
   Map<String, Object> getLiveActivityGroupsByFilter(String filter);
 
   /**
-   * Modify a live activity's metadata.
+   * Add live activities to a live activity group.
    *
-   * <p>
-   * The command map contains a field called command. This field will be one of
+   * @param id
+   *          ID of the live activity group
+   * @param args
+   *          the arguments for the operation
    *
-   * <ul>
-   * <li>replace - data contains a map, replace the entire metadata map with the
-   * map</li>
-   * <li>modify - data contains a map, replace just the fields found in the map
-   * with the values found in the map</li>
-   * <li>delete - data contains a list of keys, remove all keys found in
-   * data</li>
-   * </ul>
-   *
-   * @param typedId
-   *          typed ID of the live activity
-   * @param metadataCommand
-   *          the modification command
-   *
-   * @return the Master API response object
+   * @return API response to creation
    */
-  Map<String, Object> updateLiveActivityMetadata(String typedId,
-      Map<String, Object> metadataCommand);
+  Map<String, Object> addLiveActivitiesToLiveActivityGroup(String id, Map<String, Object> args);
+
+  /**
+   * Remove live activities from a live activity group.
+   *
+   * @param id
+   *          ID of the live activity group
+   * @param args
+   *          the arguments for the operation
+   *
+   * @return API response to creation
+   */
+  Map<String, Object> removeLiveActivitiesFromLiveActivityGroup(String id, Map<String, Object> args);
 
   /**
    * Delete an activity group from the activity repository.

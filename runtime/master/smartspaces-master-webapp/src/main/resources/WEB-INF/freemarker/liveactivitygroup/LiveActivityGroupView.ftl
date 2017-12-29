@@ -107,6 +107,7 @@ ${liveactivitygroup.description?html}
 <table>
 <tr>
   <th>Live Activity</th>
+  <th>Dependency Type</th>
   <th>Status</th>
   <th>Up To Date?</th>
 </tr>
@@ -114,6 +115,7 @@ ${liveactivitygroup.description?html}
 <#assign trCss = (liveactivity_index % 2 == 0)?string("even","odd")>
 <tr class="${trCss}">
 <td><a class="uglylink" onclick="return ugly.changePage('/smartspaces/liveactivity/${liveactivity.id}/view.html', event);">${liveactivity.name?html}</a></td>
+<td>${liveactivity.dependencyType}</td>
 <td>
 <#if liveactivity.active?has_content><div id="liveactivity-info-${liveactivity.uuid}">
   <span class="status-box status-box-inner liveactivity-status liveactivity-status-${liveactivity.active.runtimeState}"><@spring.message liveactivity.active.runtimeStateDescription /></span>

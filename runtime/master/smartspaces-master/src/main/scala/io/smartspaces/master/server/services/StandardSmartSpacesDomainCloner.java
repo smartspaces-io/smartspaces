@@ -175,7 +175,7 @@ public class StandardSmartSpacesDomainCloner implements SmartSpacesDomainCloner 
 
     for (LiveActivityGroupLiveActivity activity : src.getLiveActivities()) {
       LiveActivity activityClone = cloneLiveActivity(activity.getLiveActivity());
-      clone.addLiveActivity(activityClone, activity.getDependency());
+      clone.addLiveActivity(activityClone, activity.getDependencyType());
     }
 
     return clone;

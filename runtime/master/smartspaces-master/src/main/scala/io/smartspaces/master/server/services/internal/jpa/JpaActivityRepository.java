@@ -311,7 +311,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
   public List<LiveActivityGroup> getLiveActivityGroupsByLiveActivity(LiveActivity liveActivity) {
     TypedQuery<LiveActivityGroup> query =
         entityManager.createNamedQuery("liveActivityGroupByLiveActivity", LiveActivityGroup.class);
-    query.setParameter("activity_id", liveActivity.getId());
+    query.setParameter("live_activity_id", liveActivity.getId());
     List<LiveActivityGroup> results = query.getResultList();
     return results;
   }
@@ -320,7 +320,7 @@ public class JpaActivityRepository extends BaseActivityRepository {
   public long getNumberLiveActivityGroupsByLiveActivity(LiveActivity liveActivity) {
     TypedQuery<Long> query =
         entityManager.createNamedQuery("countLiveActivityGroupByLiveActivity", Long.class);
-    query.setParameter("activity_id", liveActivity.getId());
+    query.setParameter("live_activity_id", liveActivity.getId());
     List<Long> results = query.getResultList();
     return results.get(0);
   }

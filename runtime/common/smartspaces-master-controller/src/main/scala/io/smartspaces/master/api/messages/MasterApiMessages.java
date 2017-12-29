@@ -17,6 +17,8 @@
 
 package io.smartspaces.master.api.messages;
 
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependencyType;
+
 /**
  * Message components for the Master API.
  * 
@@ -274,16 +276,28 @@ public class MasterApiMessages {
       MASTER_API_COMMAND_PREFIX_LIVE_ACTIVITY_GROUP + "/status";
 
   /**
-   * Master API command for force shutting down a live activity.
+   * Master API command for force shutting down a live activity group.
    */
   public static final String MASTER_API_COMMAND_LIVE_ACTIVITY_GROUP_SHUTDOWN_FORCE =
       MASTER_API_COMMAND_PREFIX_LIVE_ACTIVITY_GROUP + "/shutdown/force";
 
   /**
-   * Master API command for deleting the master's entry for a live activity.
+   * Master API command for deleting the master's entry for a live activity group.
    */
   public static final String MASTER_API_COMMAND_LIVE_ACTIVITY_GROUP_DELETE_LOCAL =
       MASTER_API_COMMAND_PREFIX_LIVE_ACTIVITY_GROUP + "/delete/local";
+
+  /**
+   * Master API command for adding a collection of live activities to a live activity group.
+   */
+  public static final String MASTER_API_COMMAND_LIVE_ACTIVITY_GROUP_ADD_LIVE_ACTIVITIES =
+      MASTER_API_COMMAND_PREFIX_LIVE_ACTIVITY_GROUP + "/liveactivities/add";
+
+  /**
+   * Master API command for removing a collection of activities from a live activity group.
+   */
+  public static final String MASTER_API_COMMAND_LIVE_ACTIVITY_GROUP_REMOVE_LIVE_ACTIVITIES =
+      MASTER_API_COMMAND_PREFIX_LIVE_ACTIVITY_GROUP + "/liveactivities/remove";
 
   /**
    * Prefix for space commands.
@@ -698,10 +712,42 @@ public class MasterApiMessages {
   public static final String MASTER_API_PARAMETER_NAME_ACTIVITY_ID = "activityId";
 
   /**
+   * Parameter name for a live activity ID in the Master API
+   * message.
+   */
+  public static final String MASTER_API_PARAMETER_NAME_LIVE_ACTIVITY_ID = "liveActivityId";
+
+  /**
    * Parameter name for a list of IDs for live activities in the Master API
    * message.
    */
   public static final String MASTER_API_PARAMETER_NAME_LIVE_ACTIVITY_IDS = "liveActivityIds";
+
+  /**
+   * Parameter name for a connection of live activities to be added to a live activity group in the Master API
+   * message.
+   */
+  public static final String MASTER_API_PARAMETER_NAME_LIVE_ACTIVITY_GROUP_LIVE_ACTIVITIES = "liveActivities";
+
+  /**
+   * Parameter name for a dependency type, e.g. optional or required, the Master API
+   * message.
+   */
+  public static final String MASTER_API_PARAMETER_NAME_DEPENDENCY_TYPE = "dependencyType";
+
+  /**
+   * Parameter value for a required dependency type for the Master API
+   * message.
+   */
+  public static final String MASTER_API_PARAMETER_VALUE_DEPENDENCY_TYPE_REQUIRED = 
+      LiveActivityGroupLiveActivityDependencyType.REQUIRED.name();
+
+  /**
+   * Parameter value for an optional dependency type for the Master API
+   * message.
+   */
+  public static final String MASTER_API_PARAMETER_VALUE_DEPENDENCY_TYPE_OPTIONAL = 
+      LiveActivityGroupLiveActivityDependencyType.OPTIONAL.name();
 
   /**
    * Parameter name for the ID of a space controller in the Master API message.

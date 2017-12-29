@@ -513,6 +513,22 @@ public class StandardMasterApiCommandProcessor implements MasterApiCommandProces
       }
     });
     registerMasterApiCommandHandler(new MasterApiCommandHandler(
+        MasterApiMessages.MASTER_API_COMMAND_LIVE_ACTIVITY_GROUP_ADD_LIVE_ACTIVITIES) {
+      @Override
+      public Map<String, Object> execute(Map<String, Object> commandArgs) {
+        return masterApiActivityManager.addLiveActivitiesToLiveActivityGroup(getEntityId(
+            commandArgs), commandArgs);
+      }
+    });
+    registerMasterApiCommandHandler(new MasterApiCommandHandler(
+        MasterApiMessages.MASTER_API_COMMAND_LIVE_ACTIVITY_GROUP_REMOVE_LIVE_ACTIVITIES) {
+      @Override
+      public Map<String, Object> execute(Map<String, Object> commandArgs) {
+        return masterApiActivityManager.removeLiveActivitiesFromLiveActivityGroup(getEntityId(
+            commandArgs), commandArgs);
+      }
+    });
+    registerMasterApiCommandHandler(new MasterApiCommandHandler(
         MasterApiMessages.MASTER_API_COMMAND_LIVE_ACTIVITY_GROUP_CONFIGURE) {
       @Override
       public Map<String, Object> execute(Map<String, Object> commandArgs) {

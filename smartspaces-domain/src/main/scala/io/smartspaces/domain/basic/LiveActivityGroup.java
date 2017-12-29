@@ -19,7 +19,7 @@ package io.smartspaces.domain.basic;
 
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.domain.PersistedObject;
-import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependency;
+import io.smartspaces.domain.basic.LiveActivityGroupLiveActivity.LiveActivityGroupLiveActivityDependencyType;
 
 import java.io.Serializable;
 import java.util.List;
@@ -81,7 +81,7 @@ public interface LiveActivityGroup extends PersistedObject, Serializable {
    *
    * <p>
    * The activity will be required. See
-   * {@link LiveActivityGroupLiveActivityDependency#REQUIRED}.
+   * {@link LiveActivityGroupLiveActivityDependencyType#REQUIRED}.
    *
    * @param liveActivity
    *          the new live activity
@@ -110,7 +110,7 @@ public interface LiveActivityGroup extends PersistedObject, Serializable {
    *           the live activity was already in the group
    */
   LiveActivityGroup addLiveActivity(LiveActivity liveActivity,
-      LiveActivityGroupLiveActivityDependency dependency) throws SmartSpacesException;
+      LiveActivityGroupLiveActivityDependencyType dependency) throws SmartSpacesException;
 
   /**
    * Remove a live activity from the group.

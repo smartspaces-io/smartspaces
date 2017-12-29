@@ -35,7 +35,7 @@ import javax.persistence.Version;
  * @author Keith M. Hughes
  */
 @Entity
-@Table(name = "group_live_activities")
+@Table(name = "live_activity_group_live_activities")
 public class JpaLiveActivityGroupLiveActivity implements LiveActivityGroupLiveActivity {
 
   /**
@@ -59,7 +59,7 @@ public class JpaLiveActivityGroupLiveActivity implements LiveActivityGroupLiveAc
    * How the activity group depends on the activity.
    */
   @Enumerated(EnumType.STRING)
-  private LiveActivityGroupLiveActivityDependency dependency;
+  private LiveActivityGroupLiveActivityDependencyType dependencyType;
 
   /**
    * The database version. Used for detecting concurrent modifications.
@@ -71,10 +71,10 @@ public class JpaLiveActivityGroupLiveActivity implements LiveActivityGroupLiveAc
   }
 
   JpaLiveActivityGroupLiveActivity(JpaLiveActivityGroup liveActivityGroup, JpaLiveActivity liveActivity,
-      LiveActivityGroupLiveActivityDependency dependency) {
+      LiveActivityGroupLiveActivityDependencyType dependencyType) {
     this.liveActivityGroup = liveActivityGroup;
     this.liveActivity = liveActivity;
-    this.dependency = dependency;
+    this.dependencyType = dependencyType;
   }
 
   @Override
@@ -98,17 +98,17 @@ public class JpaLiveActivityGroupLiveActivity implements LiveActivityGroupLiveAc
   }
 
   @Override
-  public LiveActivityGroupLiveActivityDependency getDependency() {
-    return dependency;
+  public LiveActivityGroupLiveActivityDependencyType getDependencyType() {
+    return dependencyType;
   }
 
   @Override
-  public void setDependency(LiveActivityGroupLiveActivityDependency dependency) {
-    this.dependency = dependency;
+  public void setDependencyType(LiveActivityGroupLiveActivityDependencyType dependencyType) {
+    this.dependencyType = dependencyType;
   }
 
   @Override
   public String toString() {
-    return "JpaGroupLiveActivity [activity=" + liveActivity + ", dependency=" + dependency + "]";
+    return "JpaLiveActivityGroupLiveActivity [liveActivity=" + liveActivity + ", dependencyType=" + dependencyType + "]";
   }
 }

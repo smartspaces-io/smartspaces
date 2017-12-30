@@ -9,6 +9,13 @@ ${project.description?html}
   <identifyingName>${project.identifyingName}</identifyingName>
   <version>${project.version}</version>
 
+<#if project.metadata?has_content>
+  <metadata>
+<#list project.metadata?keys as metadataName>
+    <item name="${metadataName?html}" value="${project.metadata[metadataName]?string}" />
+</#list>
+  </metadata>
+</#if>
 <#if project.configurationProperties?has_content>
   <configuration>
 <#list project.configurationProperties as property>

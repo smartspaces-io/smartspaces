@@ -170,9 +170,14 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
   private static final String PROJECT_ELEMENT_NAME_METADATA_ITEM = "item";
 
   /**
-   * Project definition file element name for metadata.
+   * Project definition file element name for the name of a metadata item.
    */
   private static final String PROJECT_ATTRIBUTE_NAME_METADATA_ITEM_NAME = "name";
+
+  /**
+   * Project definition file element name for the value of a metadata item.
+   */
+  private static final String PROJECT_ATTRIBUTE_NAME_METADATA_ITEM_VALUE = "value";
 
   /**
    * Project definition file element name for dependencies.
@@ -547,7 +552,8 @@ public class JdomProjectReader extends JdomReader implements ProjectReader {
       for (Element itemElement : itemElements) {
         String name =
             getRequiredAttributeValue(itemElement, PROJECT_ATTRIBUTE_NAME_METADATA_ITEM_NAME);
-        String value = itemElement.getTextNormalize();
+        String value =
+            getRequiredAttributeValue(itemElement, PROJECT_ATTRIBUTE_NAME_METADATA_ITEM_VALUE);
         metadata.put(name, value);
       }
 

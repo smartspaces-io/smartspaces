@@ -160,7 +160,7 @@ public class JdomActivityDescriptionReader implements ActivityDescriptionReader 
       Map<String, Object> metadata = new HashMap<>();
       for (Element itemElement : itemElements) {
         String name = itemElement.getAttributeValue("name");
-        String value = itemElement.getTextNormalize();
+        String value = itemElement.getAttributeValue("value");
         metadata.put(name, value);
       }
 

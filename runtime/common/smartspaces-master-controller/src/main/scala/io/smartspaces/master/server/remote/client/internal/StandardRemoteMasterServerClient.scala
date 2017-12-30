@@ -176,6 +176,10 @@ class StandardRemoteMasterServerClient(spaceEnvironment: SmartSpacesEnvironment)
         controllerInfo.getName())
       registrationData.setProperty(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_DESCRIPTION,
         controllerInfo.getDescription())
+      if (controllerInfo.getMetadata != null) {
+        registrationData.newObject(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_METADATA)
+        registrationData.setProperties(controllerInfo.getMetadata)
+      }
 
       val sourceUri =
         new StringBuilder().append(HttpConstants.HTTP_URL_PREFIX).append(masterHostname)

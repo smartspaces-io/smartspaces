@@ -54,6 +54,11 @@ public interface SpaceController extends ManagedResource {
   String CONFIGURATION_NAME_CONTROLLER_DESCRIPTION = "smartspaces.spacecontroller.description";
 
   /**
+   * Configuration property giving the metadata of the controller.
+   */
+  String CONFIGURATION_NAME_CONTROLLER_METADATA = "smartspaces.spacecontroller.metadata";
+
+  /**
    * Specification for standard controller mode.
    */
   String CONFIGURATION_VALUE_STANDARD_CONTROLLER_MODE = "standard";

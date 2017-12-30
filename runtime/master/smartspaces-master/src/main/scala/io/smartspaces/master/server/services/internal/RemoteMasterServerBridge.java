@@ -17,6 +17,8 @@
 
 package io.smartspaces.master.server.services.internal;
 
+import java.util.Map;
+
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.container.data.SpaceControllerInformationValidator;
@@ -63,6 +65,7 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
 
   @Override
   public void onSpaceControllerRegistration(SpaceController registeringController) {
+    log.formatInfo("Got registering controller %s", registeringController);
     SpaceController spaceController =
         spaceControllerRepository.getSpaceControllerByUuid(registeringController.getUuid());
     if (spaceController == null) {
@@ -154,6 +157,10 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
       existingController.setHostName(registeringHostName);
       existingController.setHostControlPort(registeringHostControlPort);
 
+      if (!compareField(existingController.getMetadata(), registeringController.getMetadata())) {
+        existingController.setMetadata(registeringController.getMetadata());
+      }
+
       return spaceControllerRepository.saveSpaceController(existingController);
     } else {
       return existingController;
@@ -175,11 +182,12 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
     return !compareField(existingController.getHostName(), registeringController.getHostName())
         || existingController.getHostControlPort() != registeringController.getHostControlPort()
         || !compareField(existingController.getName(), registeringController.getName())
-        || !compareField(existingController.getHostId(), registeringController.getHostId());
+        || !compareField(existingController.getHostId(), registeringController.getHostId())
+        || !compareField(existingController.getMetadata(), registeringController.getMetadata());
   }
 
   /**
-   * Compare 2 string fields that handles {@code null} correctly.
+   * Compare 2 objects that handles {@code null} correctly.
    * 
    * @param s1
    *          the first field
@@ -188,7 +196,7 @@ public class RemoteMasterServerBridge implements RemoteMasterServerListener {
    * 
    * @return {@ code true} if the fields are equal
    */
-  private boolean compareField(String s1, String s2) {
+  private boolean compareField(Object s1, Object s2) {
     if (s1 != null) {
       return s1.equals(s2);
     } else {

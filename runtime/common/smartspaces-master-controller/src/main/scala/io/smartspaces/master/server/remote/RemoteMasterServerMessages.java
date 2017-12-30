@@ -78,6 +78,11 @@ public class RemoteMasterServerMessages {
   public static final String CONTROLLER_REGISTRATION_UUID = "uuid";
 
   /**
+   * The metadata field of the space controller registration.
+   */
+  public static final String CONTROLLER_REGISTRATION_METADATA = "metadata";
+
+  /**
    * The content type for responses from the remote master.
    */
   public static final String REMOTE_MASTER_RESPONSE_CONTENT_TYPE = "text/plain";

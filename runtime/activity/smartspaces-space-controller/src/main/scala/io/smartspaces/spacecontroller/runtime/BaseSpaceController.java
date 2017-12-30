@@ -22,6 +22,8 @@ import io.smartspaces.container.control.message.StandardMasterSpaceControllerCod
 import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
 import io.smartspaces.spacecontroller.SpaceController;
 import io.smartspaces.system.SmartSpacesEnvironment;
+import io.smartspaces.util.data.json.JsonMapper;
+import io.smartspaces.util.data.json.StandardJsonMapper;
 
 /**
  * Base implementation for a space controller.
@@ -39,6 +41,11 @@ public abstract class BaseSpaceController implements SpaceController {
    * The Smart Spaces environment being run under.
    */
   private final SmartSpacesEnvironment spaceEnvironment;
+
+  /**
+   * The JSON mapper to use.
+   */
+  private final JsonMapper jsonMapper = StandardJsonMapper.INSTANCE;
 
   /**
    * Construct a controller with the given space environment.
@@ -74,15 +81,21 @@ public abstract class BaseSpaceController implements SpaceController {
   private void obtainControllerInfo() {
     Configuration systemConfiguration = getSpaceEnvironment().getSystemConfiguration();
 
-    controllerInfo.setUuid(systemConfiguration.getPropertyString(CONFIGURATION_NAME_CONTROLLER_UUID));
+    controllerInfo
+        .setUuid(systemConfiguration.getPropertyString(CONFIGURATION_NAME_CONTROLLER_UUID));
     controllerInfo
         .setName(systemConfiguration.getPropertyString(CONFIGURATION_NAME_CONTROLLER_NAME, ""));
     controllerInfo.setDescription(
         systemConfiguration.getPropertyString(CONFIGURATION_NAME_CONTROLLER_DESCRIPTION, ""));
-    controllerInfo.setHostId(
-        systemConfiguration.getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOSTID));
-    controllerInfo.setHostName(systemConfiguration
-        .getPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_NAME));
+    controllerInfo.setHostId(systemConfiguration
+        .getRequiredPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOSTID));
+    controllerInfo.setHostName(
+        systemConfiguration.getPropertyString(SmartSpacesEnvironment.CONFIGURATION_NAME_HOST_NAME));
+    String metadataString =
+        systemConfiguration.getPropertyString(CONFIGURATION_NAME_CONTROLLER_METADATA);
+    if (metadataString != null) {
+      controllerInfo.setMetadata(jsonMapper.parseObject(metadataString));
+    }
     controllerInfo.setHostControlPort(systemConfiguration.getPropertyInteger(
         SpaceController.CONFIGURATION_NAME_CONTROLLER_HOST_CONTROL_PORT,
         StandardMasterSpaceControllerCodec.CONTROLLER_SERVER_PORT));

@@ -93,6 +93,7 @@ public class StandardRemoteMasterCommunicationHandler implements RemoteMasterCom
    * @param data
    *          the registration data
    */
+  @SuppressWarnings("unchecked")
   private void registerSpaceController(SocketAddress spaceControllerRemoteAddress,
       Map<String, Object> data) {
     SpaceController controller = new SimpleSpaceController();
@@ -110,6 +111,8 @@ public class StandardRemoteMasterCommunicationHandler implements RemoteMasterCom
     controller.setHostName(hostName);
     controller.setHostControlPort(
         (Integer) data.get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_HOST_CONTROL_PORT));
+    controller.setMetadata(
+        (Map<String,Object>) data.get(RemoteMasterServerMessages.CONTROLLER_REGISTRATION_METADATA));
 
     log.formatInfo("Controller %s (Host ID: %s, Host: %s:%d) is online.", controller.getUuid(),
         controller.getHostId(), controller.getHostName(), controller.getHostControlPort());

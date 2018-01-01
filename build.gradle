@@ -37,7 +37,7 @@ allprojects {
     //
     // Final versions should set the qualifier to null.
     smartSpacesVersion = '0.12.0'
-    smartSpacesVersionQualifier = 'SNAPSHOT'
+    smartSpacesVersionQualifier = null // 'SNAPSHOT'
 
     // These specify the layout of SS containers.
     

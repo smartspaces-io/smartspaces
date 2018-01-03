@@ -43,9 +43,9 @@ class StandardCompleteWebServer(
     _webServer.addStaticContentHandler(uriPrefix, baseDir)
   }
 
-  override def addDynamicGetContentHandler(uriPrefix: String, usePath: Boolean,
+  override def addDynamicGetRequestHandler(uriPrefix: String, usePath: Boolean,
     handler: HttpDynamicGetRequestHandler): Unit = {
-    _webServer.addDynamicGetContentHandler(uriPrefix, usePath, handler)
+    _webServer.addDynamicGetRequestHandler(uriPrefix, usePath, handler)
   }
 
   override def addDynamicPostRequestHandler(uriPrefix: String, usePath: Boolean,

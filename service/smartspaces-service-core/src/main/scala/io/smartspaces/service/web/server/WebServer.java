@@ -104,7 +104,7 @@ public interface WebServer extends ManagedResource {
    *
    * <p>
    * See
-   * {@link #addDynamicGetContentHandler(String, HttpDynamicGetRequestHandler, Map)},
+   * {@link #addDynamicGetRequestHandler(String, HttpDynamicGetRequestHandler, Map)},
    * the content header map value will be {@code null}.
    *
    * @param uriPrefix
@@ -114,7 +114,7 @@ public interface WebServer extends ManagedResource {
    * @param handler
    *          dynamic request handler
    */
-  void addDynamicGetContentHandler(String uriPrefix, boolean usePath,
+  void addDynamicGetRequestHandler(String uriPrefix, boolean usePath,
       HttpDynamicGetRequestHandler handler);
 
   /**
@@ -134,7 +134,7 @@ public interface WebServer extends ManagedResource {
    *          extra HTTP content headers to add to all responses to the handler,
    *          can be {@code null}
    */
-  void addDynamicGetContentHandler(String uriPrefix, boolean usePath,
+  void addDynamicGetRequestHandler(String uriPrefix, boolean usePath,
       HttpDynamicGetRequestHandler handler, Map<String, String> extraHttpContentHeaders);
 
   /**
@@ -142,7 +142,7 @@ public interface WebServer extends ManagedResource {
    *
    * <p>
    * See
-   * {@link #addDynamicGetContentHandler(String, HttpDynamicGetRequestHandler, Map)},
+   * {@link #addDynamicGetRequestHandler(String, HttpDynamicGetRequestHandler, Map)},
    * the content header map value will be {@code null}.
    *
    * @param uriPrefix

@@ -87,4 +87,9 @@ public class HttpConstants {
    * The authorization header.
    */
   public static final String HEADER_NAME_CONTENT_TYPE = "Content-Type";
+
+  /**
+   * The location header.
+   */
+  public static final String HEADER_NAME_LOCATION = "Location";
 }

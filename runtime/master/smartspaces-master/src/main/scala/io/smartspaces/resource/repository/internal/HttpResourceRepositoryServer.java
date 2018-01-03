@@ -123,7 +123,7 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
     repositoryServer.setPort(repositoryPort);
     String webappPath = "/" + repositoryUrlPathPrefix;
 
-    repositoryServer.addDynamicGetContentHandler(webappPath, true, new HttpDynamicGetRequestHandler() {
+    repositoryServer.addDynamicGetRequestHandler(webappPath, true, new HttpDynamicGetRequestHandler() {
       @Override
       public void handle(HttpRequest request, HttpResponse response) {
         handleResourceRequest(request, response);

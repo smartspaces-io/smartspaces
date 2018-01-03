@@ -70,7 +70,7 @@ public class StandardRemoteMasterCommunicationHandler implements RemoteMasterCom
 
   @Override
   public void register(MasterCommunicationManager masterCommunicationManager) {
-    masterCommunicationManager.getWebServer().addDynamicGetContentHandler(
+    masterCommunicationManager.getWebServer().addDynamicGetRequestHandler(
         RemoteMasterServerMessages.URI_PREFIX_MASTER_SPACECONTROLLER, true,
         new MyHttpDynamicRequestHandler());
   }

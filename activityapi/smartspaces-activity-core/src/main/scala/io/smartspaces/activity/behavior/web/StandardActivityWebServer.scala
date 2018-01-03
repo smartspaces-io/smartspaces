@@ -60,9 +60,9 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
     _webServerComponent.addStaticContent(uriPrefix, baseDir)
   }
   
-  override def addDynamicGetContentHandler(uriPrefix: String, usePath: Boolean,
+  override def addDynamicGetRequestHandler(uriPrefix: String, usePath: Boolean,
       handler: HttpDynamicGetRequestHandler): Unit = {
-    _webServerComponent.addDynamicContent(uriPrefix, usePath, handler)
+    _webServerComponent.addDynamicGetRequestHandler(uriPrefix, usePath, handler)
   }
 
   override def addDynamicPostRequestHandler(uriPrefix: String, usePath: Boolean,

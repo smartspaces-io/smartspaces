@@ -124,7 +124,7 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
       }
 
       for (DynamicContent<HttpDynamicGetRequestHandler> content : dynamicGetContent) {
-        webServer.addDynamicGetContentHandler(content.getUriPrefix(), content.isUsePath(),
+        webServer.addDynamicGetRequestHandler(content.getUriPrefix(), content.isUsePath(),
             content.getRequestHandler());
       }
 
@@ -255,10 +255,10 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
   }
 
   @Override
-  public WebServerActivityComponent addDynamicContent(String uriPrefix, boolean usePath,
+  public WebServerActivityComponent addDynamicGetRequestHandler(String uriPrefix, boolean usePath,
       HttpDynamicGetRequestHandler handler) {
     if (webServer != null) {
-      webServer.addDynamicGetContentHandler(uriPrefix, usePath, handler);
+      webServer.addDynamicGetRequestHandler(uriPrefix, usePath, handler);
     } else {
       dynamicGetContent
           .add(new DynamicContent<HttpDynamicGetRequestHandler>(handler, uriPrefix, usePath));

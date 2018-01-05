@@ -58,4 +58,20 @@ public interface YamlMapper {
    */
   Map<String, Object> parseObject(String object) throws SmartSpacesException;
 
+  /**
+   * Take a map and write it as a string.
+   *
+   * <p>
+   * Non 7-but ASCII characters will be escaped.
+   *
+   * @param data
+   *          the object to serialize as JSON
+   *
+   * @return the string
+   *
+   * @throws SmartSpacesException
+   *           the serialization failed
+   */
+  String toString(Map<String, Object> data) throws SmartSpacesException;
+
 }

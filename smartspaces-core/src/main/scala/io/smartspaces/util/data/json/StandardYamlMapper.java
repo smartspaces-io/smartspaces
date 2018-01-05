@@ -16,13 +16,16 @@
 
 package io.smartspaces.util.data.json;
 
-import io.smartspaces.SmartSpacesException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.common.collect.Lists;
 
-import java.io.InputStream;
-import java.util.Map;
+import io.smartspaces.SmartSpacesException;
 
 /**
  * The standard mapper from YAML objects.
@@ -46,7 +49,7 @@ public class StandardYamlMapper implements YamlMapper {
   private static final ObjectMapper MAPPER;
 
   static {
-    MAPPER = new ObjectMapper(new YAMLFactory());
+    MAPPER = new ObjectMapper(new YAMLFactory()); 
   }
 
   @Override
@@ -70,5 +73,13 @@ public class StandardYamlMapper implements YamlMapper {
       throw new SmartSpacesException("Could not parse YAML string", e);
     }
   }
-
+  
+  @Override
+  public String toString(Map<String, Object> data) throws SmartSpacesException {
+    try {
+      return MAPPER.writeValueAsString(data);
+    } catch (Throwable e) {
+      throw new SmartSpacesException("Could not serialize map as YAML string", e);
+    }
+  }
 }

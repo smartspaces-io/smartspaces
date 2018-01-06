@@ -19,7 +19,7 @@ package io.smartspaces.sensor.messaging.codec
 import io.smartspaces.messaging.codec.IncrementalMessageEncoder
 import io.smartspaces.messaging.codec.MessageEncoder
 import io.smartspaces.messaging.dynamic.SmartSpacesMessages
-import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyEvent
+import io.smartspaces.sensor.event.PhysicalSpaceOccupancyEvent
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 

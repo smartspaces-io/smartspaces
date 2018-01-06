@@ -19,7 +19,7 @@ package io.smartspaces.sensor.messaging.input
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.messaging.route.RouteMessageHandler
 import io.smartspaces.resource.managed.IdempotentManagedResource
-import io.smartspaces.sensor.processing.SensorProcessor
+import io.smartspaces.sensor.services.processing.SensorProcessor
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
 

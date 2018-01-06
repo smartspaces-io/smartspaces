@@ -19,8 +19,8 @@ package io.smartspaces.interaction.entity.model.reactive
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import io.smartspaces.activity.behavior.web.WebServerActivityBehavior
-import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
-import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
+import io.smartspaces.sensor.model.PersonSensedEntityModel
+import io.smartspaces.sensor.event.PhysicalSpaceOccupancyLiveEvent
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 import io.smartspaces.event.observable.BaseObserver
 import io.smartspaces.service.web.server.CompleteWebServerBehavior

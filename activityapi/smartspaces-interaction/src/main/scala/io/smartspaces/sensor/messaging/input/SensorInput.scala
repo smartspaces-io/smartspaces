@@ -17,7 +17,7 @@
 package io.smartspaces.sensor.messaging.input
 
 import io.smartspaces.resource.managed.ManagedResource
-import io.smartspaces.sensor.processing.SensorProcessor
+import io.smartspaces.sensor.services.processing.SensorProcessor
 
 /**
  * An aggregator for sensor data over a given communication channel.

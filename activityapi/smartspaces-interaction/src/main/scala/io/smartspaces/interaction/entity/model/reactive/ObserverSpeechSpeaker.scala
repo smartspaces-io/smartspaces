@@ -18,8 +18,8 @@ package io.smartspaces.interaction.entity.model.reactive
 
 import io.smartspaces.event.observable.BaseObserver
 import io.smartspaces.interaction.behavior.speech.SpeechSpeaker
-import io.smartspaces.sensor.entity.model.PersonSensedEntityModel
-import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
+import io.smartspaces.sensor.model.PersonSensedEntityModel
+import io.smartspaces.sensor.event.PhysicalSpaceOccupancyLiveEvent
 
 /**
  * A reactive observer for speech events.

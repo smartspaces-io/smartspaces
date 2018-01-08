@@ -56,7 +56,7 @@ class SimpleSensorEntityDescription(
     id: String, 
     externalId: String, 
     displayName: String, 
-    displayDescription: String, 
+    displayDescription: Option[String], 
     override val sensorDetail: Option[SensorDetailDescription], 
     override val sensorStateUpdateTimeLimit: Option[Long], 
     override val sensorHeartbeatUpdateTimeLimit: Option[Long]) extends SimpleEntityDescription(id, externalId, displayName, displayDescription) with SensorEntityDescription {

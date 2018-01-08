@@ -79,7 +79,7 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
         sensorRegistry.registerSensedEntity(new SimplePersonSensedEntityDescription(getNextId(),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
-          itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)))
+          Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION))))
       })
       data.up()
     }
@@ -135,7 +135,7 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
       val entity = new SimpleSensorEntityDescription(getNextId(),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
-        itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION), sensorDetail, sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit)
+        Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)), sensorDetail, sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit)
 
       entity.active = itemData.getBoolean(SensorDescriptionConstants.SECTION_FIELD_SENSORS_ACTIVE, SensorDescriptionConstants.SECTION_FIELD_DEFAULT_VALUE_SENSORS_ACTIVE)
 
@@ -162,7 +162,7 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
         sensorRegistry.registerMarker(new SimpleMarkerEntityDescription(getNextId(),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
-          itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
+          Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_ID)))
       })
       data.up()
@@ -202,8 +202,8 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
       sensorRegistry.registerSensedEntity(new SimplePhysicalSpaceSensedEntityDescription(getNextId(),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
-        itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
-        getOptionalString(itemData, SensorDescriptionConstants.SECTION_FIELD_PHYSICAL_SPACE_DETAILS_PHYSICAL_SPACE_TYPE), 
+        Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
+        Option(itemData.getString(SensorDescriptionConstants.SECTION_FIELD_PHYSICAL_SPACE_DETAILS_PHYSICAL_SPACE_TYPE)), 
         containedIn, directlyConnectedTo))
     })
 
@@ -303,9 +303,5 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
   private def getNextId(): String = {
     id = id + 1
     return Integer.toString(id)
-  }
-
-  private def getOptionalString(itemData: DynamicObject, fieldName: String): Option[String] = {
-    Option(itemData.getString(fieldName))
   }
 }

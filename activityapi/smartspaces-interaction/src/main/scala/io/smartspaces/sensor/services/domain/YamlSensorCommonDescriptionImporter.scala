@@ -77,7 +77,7 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
         getNextId(),
         measurementTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         measurementTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
-        measurementTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
+        Option(measurementTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
         measurementTypeData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_MEASUREMENT_TYPES_PROCESSING_TYPE),
         valueType,
         null)
@@ -95,7 +95,7 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
             new SimpleMeasurementUnitDescription(measurementType, getNextId(),
               measurementUnitData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
               measurementUnitData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
-              measurementUnitData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION))
+              Option(measurementUnitData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)))
 
           measurementType.addMeasurementUnit(measurementUnit)
 
@@ -148,7 +148,7 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
         getNextId(),
         sensorDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         sensorDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
-        sensorDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
+        Option(sensorDetailData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
         sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit, sensorUsageCategory)
 
       sensorDetailData.down(SensorDescriptionConstants.SECTION_FIELD_SENSOR_DETAILS_CHANNELS)
@@ -184,7 +184,7 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
           sensorDetail,
           channelDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           channelDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
-          channelDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION),
+          Option(channelDetailData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
           measurementType.get, measurementUnit)
 
         sensorDetail.addSensorChannelDetail(channelDetail)
@@ -216,7 +216,7 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
           getNextId(),
           physicalSpaceTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           physicalSpaceTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
-          physicalSpaceTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION))
+          Option(physicalSpaceTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)))
 
         sensorRegistry.registerPhysicalSpaceType(physicalSpaceType)
       })

@@ -31,5 +31,5 @@ trait DisplayableDescription {
   /**
    * The description of the entity.
    */
-  val displayDescription: String
+  val displayDescription: Option[String]
 }

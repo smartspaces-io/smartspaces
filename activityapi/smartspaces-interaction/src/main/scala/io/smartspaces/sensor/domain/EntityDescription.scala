@@ -18,7 +18,7 @@ package io.smartspaces.sensor.domain
 
 /**
  * The description of an entity.
- * 
+ *
  * @author Keith M. Hughes
  */
 trait EntityDescription extends DisplayableDescription {
@@ -39,7 +39,11 @@ trait EntityDescription extends DisplayableDescription {
  *
  * @author Keith M. Hughes
  */
-class SimpleEntityDescription(val id: String, val externalId: String, val displayName: String, val displayDescription: String) extends EntityDescription {
+class SimpleEntityDescription(
+  override val id: String,
+  override val externalId: String,
+  override val displayName: String,
+  override val displayDescription: Option[String]) extends EntityDescription {
 
   override def toString(): String = {
     "SimpleEntityDescription [id=" + id + ", externalId=" + externalId + ", displayName=" + displayName + ", description=" +

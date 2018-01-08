@@ -73,6 +73,6 @@ case class SimpleSensorChannelDetailDescription(
     override val sensorDetail: SensorDetailDescription, 
     override val channelId: String, 
     override val displayName: String, 
-    override val displayDescription: String, 
+    override val displayDescription: Option[String], 
     override val measurementType: MeasurementTypeDescription, 
     override val measurementUnit: MeasurementUnitDescription) extends SensorChannelDetailDescription

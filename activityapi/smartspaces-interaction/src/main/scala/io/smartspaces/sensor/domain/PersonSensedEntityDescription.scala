@@ -31,11 +31,14 @@ trait PersonSensedEntityDescription
  *
  * @author Keith M. Hughes
  */
-class SimplePersonSensedEntityDescription(id: String, externalId: String, displayName: String, description: String) extends SimpleEntityDescription(id, externalId, displayName, description)
+class SimplePersonSensedEntityDescription(
+    id: String, externalId: String, 
+    displayName: String, 
+    displayDescription: Option[String]) extends SimpleEntityDescription(id, externalId, displayName, displayDescription)
     with PersonSensedEntityDescription {
 
   override def toString(): String = {
     "SimplePersonSensedEntityDescription [id=" + id + ", displayName=" +
-      displayName + ", description=" + displayDescription + "]";
+      displayName + ", displayDescription=" + displayDescription + "]";
   }
 }

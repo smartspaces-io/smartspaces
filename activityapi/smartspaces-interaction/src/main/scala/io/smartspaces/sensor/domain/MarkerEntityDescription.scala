@@ -39,8 +39,8 @@ class SimpleMarkerEntityDescription(
   id: String,
   externalId: String,
   displayName: String,
-  description: String,
-  override val markerId: String) extends SimpleEntityDescription(id, externalId, displayName, description)
+  displayDescription: Option[String],
+  override val markerId: String) extends SimpleEntityDescription(id, externalId, displayName, displayDescription)
   with MarkerEntityDescription {
 
   override def toString(): String = {

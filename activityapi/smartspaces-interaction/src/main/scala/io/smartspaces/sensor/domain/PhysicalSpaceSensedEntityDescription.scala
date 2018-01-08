@@ -55,7 +55,7 @@ class SimplePhysicalSpaceSensedEntityDescription(
     id: String, 
     externalId: String, 
     displayName: String, 
-    description: String, 
+    description: Option[String], 
     override val physicalSpaceType: Option[String],
     override val containedIn: Set[String],
     override val directlyConnectedTo: Set[String]

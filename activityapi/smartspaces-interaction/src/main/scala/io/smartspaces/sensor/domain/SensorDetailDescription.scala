@@ -89,7 +89,7 @@ case class SimpleSensorDetailDescription(
     override val id: String, 
     override val externalId: String, 
     override val displayName: String, 
-    override val displayDescription: String, 
+    override val displayDescription: Option[String], 
     override val sensorUpdateTimeLimit: Option[Long], 
     override val sensorHeartbeatUpdateTimeLimit: Option[Long],
     override val usageCategory: Option[String]) extends SensorDetailDescription {

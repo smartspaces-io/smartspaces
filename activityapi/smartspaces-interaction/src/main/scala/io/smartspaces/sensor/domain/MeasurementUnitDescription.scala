@@ -49,4 +49,4 @@ case class SimpleMeasurementUnitDescription(
     override val id: String, 
     override val externalId: String, 
     override val displayName: String, 
-    override val displayDescription: String) extends MeasurementUnitDescription
+    override val displayDescription: Option[String]) extends MeasurementUnitDescription

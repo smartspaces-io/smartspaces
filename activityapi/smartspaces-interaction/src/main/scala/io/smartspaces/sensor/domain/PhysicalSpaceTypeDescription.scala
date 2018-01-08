@@ -45,5 +45,5 @@ case class SimplePhysicalSpaceTypeDescription(
   override val id: String,
   override val externalId: String,
   override val displayName: String,
-  override val displayDescription: String) extends PhysicalSpaceTypeDescription
+  override val displayDescription: Option[String]) extends PhysicalSpaceTypeDescription
 

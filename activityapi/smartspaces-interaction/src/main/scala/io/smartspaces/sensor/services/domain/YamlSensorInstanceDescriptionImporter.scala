@@ -239,7 +239,7 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
           if (sensorChannelIds == "*") {
             allChannelIds
           } else {
-            var toBeRemoved  = sensorChannelIds.split(':').toSet
+            var toBeRemoved  = sensorChannelIds.substring(1).split(':').toSet
             allChannelIds.filter(!toBeRemoved.contains(_))
           }
         } else {

@@ -76,7 +76,8 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
       data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
         val itemData = entry.down()
 
-        sensorRegistry.registerSensedEntity(new SimplePersonSensedEntityDescription(getNextId(),
+        sensorRegistry.registerSensedEntity(new SimplePersonSensedEntityDescription(
+          getNextId(),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION))))
@@ -132,7 +133,8 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
           sensorHeartbeatUpdateTimeLimit = None
         }
       }
-      val entity = new SimpleSensorEntityDescription(getNextId(),
+      val entity = new SimpleSensorEntityDescription(
+        getNextId(),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)), sensorDetail, sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit)
@@ -159,7 +161,8 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
       data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
         val itemData = entry.down()
 
-        sensorRegistry.registerMarker(new SimpleMarkerEntityDescription(getNextId(),
+        sensorRegistry.registerMarker(new SimpleMarkerEntityDescription(
+          getNextId(),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
@@ -182,7 +185,7 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
 
     data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
       val itemData = entry.down()
-      
+
       val containedIn: Set[String] = if (itemData.containsProperty(SensorDescriptionConstants.SECTION_FIELD_PHYSICAL_SPACE_DETAILS_CONTAINED_IN)) {
         val elements: java.util.List[String] = itemData.down(SensorDescriptionConstants.SECTION_FIELD_PHYSICAL_SPACE_DETAILS_CONTAINED_IN).asList()
         itemData.up
@@ -190,7 +193,7 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
       } else {
         Set()
       }
-      
+
       val directlyConnectedTo: Set[String] = if (itemData.containsProperty(SensorDescriptionConstants.SECTION_FIELD_PHYSICAL_SPACE_DETAILS_DIRECTLY_CONNECTED_TO)) {
         val elements: java.util.List[String] = itemData.down(SensorDescriptionConstants.SECTION_FIELD_PHYSICAL_SPACE_DETAILS_DIRECTLY_CONNECTED_TO).asList()
         itemData.up
@@ -199,11 +202,12 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
         Set()
       }
 
-      sensorRegistry.registerSensedEntity(new SimplePhysicalSpaceSensedEntityDescription(getNextId(),
+      sensorRegistry.registerSensedEntity(new SimplePhysicalSpaceSensedEntityDescription(
+        getNextId(),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
-        Option(itemData.getString(SensorDescriptionConstants.SECTION_FIELD_PHYSICAL_SPACE_DETAILS_PHYSICAL_SPACE_TYPE)), 
+        Option(itemData.getString(SensorDescriptionConstants.SECTION_FIELD_PHYSICAL_SPACE_DETAILS_PHYSICAL_SPACE_TYPE)),
         containedIn, directlyConnectedTo))
     })
 
@@ -223,24 +227,29 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
 
     data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
       val itemData = entry.down()
-      
+
       val sensorExternalId = itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_SENSOR_ASSOCIATION_SENSOR)
       val sensedExternalId = itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_SENSOR_ASSOCIATION_SENSED)
       val sensorChannelIds = itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_SENSOR_ASSOCIATION_SENSOR_CHANNEL_IDS, "*")
-      
-      val channelIds = if (sensorChannelIds == "*") {
-          val sensor = sensorRegistry.getSensorByExternalId(sensorExternalId)
-          if (sensor.isDefined) {
-            sensor.get.sensorDetail.get.getAllSensorChannelDetails().map(_.channelId)
-            
+
+      val channelIds = if (sensorChannelIds == "*" || sensorChannelIds.startsWith("-")) {
+        val sensor = sensorRegistry.getSensorByExternalId(sensorExternalId)
+        if (sensor.isDefined) {
+          var allChannelIds =sensor.get.sensorDetail.get.getAllSensorChannelDetails().map(_.channelId)
+          if (sensorChannelIds == "*") {
+            allChannelIds
           } else {
-            log.warn(s"Could not find sensor with ID ${sensorExternalId} in sensor association")
-            return
+            var toBeRemoved  = sensorChannelIds.split(':').toSet
+            allChannelIds.filter(!toBeRemoved.contains(_))
           }
+        } else {
+          log.warn(s"Could not find sensor with ID ${sensorExternalId} in sensor association")
+          return
+        }
       } else {
-          sensorChannelIds.split(':').toList
+        sensorChannelIds.split(':').toList
       }
-      
+
       channelIds.foreach { sensorRegistry.associateSensorWithSensedEntity(sensorExternalId, _, sensedExternalId) }
     })
     data.up()

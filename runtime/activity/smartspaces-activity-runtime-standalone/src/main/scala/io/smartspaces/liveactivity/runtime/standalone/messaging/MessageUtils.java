@@ -18,8 +18,8 @@
 package io.smartspaces.liveactivity.runtime.standalone.messaging;
 
 import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -229,7 +229,7 @@ public final class MessageUtils {
     /**
      * Json mapper for message conversion.
      */
-    private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
+    private static final JsonDataMapper MAPPER = StandardJsonDataMapper.INSTANCE;
 
     /**
      * Create a new message map from an existing map.

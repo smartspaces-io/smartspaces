@@ -18,8 +18,8 @@ package io.smartspaces.configuration;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.evaluation.ExpressionEvaluator;
 import io.smartspaces.evaluation.SymbolTable;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -41,7 +41,7 @@ public abstract class BaseConfiguration implements Configuration {
   /**
    * The JSON mapper for JSON parsing.
    */
-  private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
+  private static final JsonDataMapper MAPPER = StandardJsonDataMapper.INSTANCE;
 
   /**
    * Parent configuration to this configuration.

@@ -17,7 +17,7 @@
 package io.smartspaces.util.messaging.mqtt
 
 import io.smartspaces.SmartSpacesException
-import io.smartspaces.util.data.json.StandardJsonMapper
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper
 
 import java.util.regex.Pattern
 
@@ -69,7 +69,7 @@ object MqttBrokerDescription {
 
       val paramString = matcher.group(4)
       if (paramString != null) {
-        val params = StandardJsonMapper.INSTANCE.parseObject(paramString.substring(1))
+        val params = StandardJsonDataMapper.INSTANCE.parseObject(paramString.substring(1))
 
         username = Option(params.get("username").asInstanceOf[String])
         password = Option(params.get("password").asInstanceOf[String])

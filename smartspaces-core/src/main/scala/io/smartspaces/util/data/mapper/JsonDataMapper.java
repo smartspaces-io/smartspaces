@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,29 +15,16 @@
  * the License.
  */
 
-package io.smartspaces.messaging.route.ros;
-
-import java.nio.charset.Charset;
-
-import com.google.common.base.Charsets;
-
-import io.smartspaces.util.data.mapper.JsonDataMapper;
-import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
+package io.smartspaces.util.data.mapper;
 
 /**
- * The base class for ROS GenericMessage coders and decoders.
- * 
+ * A mapper to and from JSON objects.
+ *
+ * <p>
+ * These objects are considered thread-safe and can handle multiple conversions
+ * simultaneously.
+ *
  * @author Keith M. Hughes
  */
-public class MapGenericMessageCodec {
-
-  /**
-   * The JSON mapper for message translation.
-   */
-  protected static final JsonDataMapper MAPPER = StandardJsonDataMapper.INSTANCE;
-
-  /**
-   * The character set for the generic message encoding.
-   */
-  protected Charset charset = Charsets.UTF_8;
+public interface JsonDataMapper extends DataMapper {
 }

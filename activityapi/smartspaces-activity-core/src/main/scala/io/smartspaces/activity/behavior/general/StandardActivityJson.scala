@@ -16,8 +16,8 @@
 
 package io.smartspaces.activity.behavior.general
 
-import io.smartspaces.util.data.json.JsonMapper
-import io.smartspaces.util.data.json.StandardJsonMapper
+import io.smartspaces.util.data.mapper.JsonDataMapper
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper
 
 import java.util.Map
 
@@ -29,7 +29,7 @@ trait StandardActivityJson extends JsonActivityBehavior {
   /**
    * The JSON mapper.
    */
-  private val MAPPER: JsonMapper = StandardJsonMapper.INSTANCE
+  private val MAPPER: JsonDataMapper = StandardJsonDataMapper.INSTANCE
 
   override def jsonStringify(map: Map[String, Object]): String = {
     return MAPPER.toString(map)

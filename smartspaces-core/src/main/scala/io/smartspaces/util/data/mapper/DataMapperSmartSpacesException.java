@@ -15,16 +15,16 @@
  * the License.
  */
 
-package io.smartspaces.util.data.json;
+package io.smartspaces.util.data.mapper;
 
 import io.smartspaces.SmartSpacesException;
 
 /**
- * Exception for JSON operations.
+ * Exception for data mapper operations.
  *
  * @author Keith M. Hughes
  */
-public class JsonSmartSpacesException extends SmartSpacesException {
+public class DataMapperSmartSpacesException extends SmartSpacesException {
 
   /**
    * Construct a new exception.
@@ -32,7 +32,7 @@ public class JsonSmartSpacesException extends SmartSpacesException {
    * @param message
    *          the message for the exception
    */
-  public JsonSmartSpacesException(String message) {
+  public DataMapperSmartSpacesException(String message) {
     super(message);
   }
 
@@ -44,7 +44,7 @@ public class JsonSmartSpacesException extends SmartSpacesException {
    * @param e
    *          an exception created during the JSON operation
    */
-  public JsonSmartSpacesException(String message, Throwable e) {
+  public DataMapperSmartSpacesException(String message, Throwable e) {
     super(message, e);
   }
 }

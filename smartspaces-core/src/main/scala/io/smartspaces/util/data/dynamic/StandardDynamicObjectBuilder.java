@@ -16,11 +16,11 @@
 
 package io.smartspaces.util.data.dynamic;
 
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +37,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   /**
    * The mapper to and from JSON.
    */
-  private static final JsonMapper JSON_MAPPER = StandardJsonMapper.INSTANCE;
+  private static final JsonDataMapper JSON_MAPPER = StandardJsonDataMapper.INSTANCE;
 
   /**
    * The root object.

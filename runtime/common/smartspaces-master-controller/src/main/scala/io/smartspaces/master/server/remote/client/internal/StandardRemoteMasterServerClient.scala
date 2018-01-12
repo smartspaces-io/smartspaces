@@ -17,32 +17,25 @@
 
 package io.smartspaces.master.server.remote.client.internal
 
+import java.io.UnsupportedEncodingException
+import java.net.URLEncoder
+
+import com.google.common.base.Charsets
+
 import io.smartspaces.SimpleSmartSpacesException
 import io.smartspaces.SmartSpacesException
 import io.smartspaces.domain.basic.SpaceController
 import io.smartspaces.master.server.remote.RemoteMasterServerMessages
 import io.smartspaces.master.server.remote.client.RemoteMasterServerClient
-import io.smartspaces.service.comm.network.zeroconf.ZeroconfService
-import io.smartspaces.service.comm.network.zeroconf.ZeroconfService$
-import io.smartspaces.system.SmartSpacesEnvironment
-import io.smartspaces.util.data.json.JsonMapper
-import io.smartspaces.util.data.json.StandardJsonMapper
-import io.smartspaces.util.web.HttpClientHttpContentCopier
-import io.smartspaces.util.web.HttpConstants
-import io.smartspaces.util.web.HttpContentCopier
-
-import com.google.common.base.Charsets
-
-import java.io.UnsupportedEncodingException
-import java.net.URLEncoder
-import java.util.HashMap
-import java.util.Map
-import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
+import io.smartspaces.resource.managed.IdempotentManagedResource
 import io.smartspaces.service.comm.network.zeroconf.BaseZeroconfNotificationListener
+import io.smartspaces.service.comm.network.zeroconf.ZeroconfService
 import io.smartspaces.service.comm.network.zeroconf.ZeroconfServiceInfo
 import io.smartspaces.service.web.HttpClientRestWebClient
 import io.smartspaces.service.web.RestWebClient
-import io.smartspaces.resource.managed.IdempotentManagedResource
+import io.smartspaces.system.SmartSpacesEnvironment
+import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
+import io.smartspaces.util.web.HttpConstants
 
 /**
  * A client for talking to a remote Master Server.

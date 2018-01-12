@@ -17,7 +17,7 @@
 package io.smartspaces.util.messaging.mqtt
 
 import io.smartspaces.SmartSpacesException
-import io.smartspaces.util.data.json.StandardJsonMapper
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper
 
 /**
  * The description of an MQTT publisher.
@@ -37,7 +37,7 @@ object MqttPublisherDescription {
     val publisherDescription = new MqttPublisherDescription(topicName)
 
     if (mapposition != -1) {
-      val params = StandardJsonMapper.INSTANCE.parseObject(description.substring(mapposition + 1))
+      val params = StandardJsonDataMapper.INSTANCE.parseObject(description.substring(mapposition + 1))
 
       publisherDescription.qos = Option(params.get("qos").asInstanceOf[Integer])
       publisherDescription.retain = Option(params.get("retain").asInstanceOf[Boolean])

@@ -19,12 +19,13 @@ package io.smartspaces.util.data.dynamic;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import io.smartspaces.util.data.json.StandardJsonMapper;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.junit.Test;
+
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 
 /**
  * Abstract superclass that test basic operations for different types. Contains
@@ -115,7 +116,7 @@ public abstract class BaseDynamicPropertyTest<T> {
   public void serialize_noExceptions() {
     setFirst(first);
     map.put(secondKey, second);
-    new StandardJsonMapper().toString(map);
+    new StandardJsonDataMapper().toString(map);
   }
 
   @Test

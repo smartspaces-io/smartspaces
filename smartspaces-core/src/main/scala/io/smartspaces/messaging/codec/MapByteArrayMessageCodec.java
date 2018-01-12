@@ -21,8 +21,8 @@ import java.util.Map;
 
 import com.google.common.base.Charsets;
 
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 
 /**
  * A codec for translating between maps and byte arrays.
@@ -39,7 +39,7 @@ public class MapByteArrayMessageCodec implements MessageCodec<Map<String, Object
   /**
    * The JSON mapper for message translation.
    */
-  private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
+  private static final JsonDataMapper MAPPER = StandardJsonDataMapper.INSTANCE;
 
   /**
    * The character set for the generic message encoding.

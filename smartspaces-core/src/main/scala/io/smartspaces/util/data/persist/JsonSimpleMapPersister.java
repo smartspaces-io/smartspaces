@@ -19,8 +19,8 @@ package io.smartspaces.util.data.persist;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
@@ -39,7 +39,7 @@ public class JsonSimpleMapPersister implements SimpleMapPersister {
   /**
    * The JSON mapper.
    */
-  private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
+  private static final JsonDataMapper MAPPER = StandardJsonDataMapper.INSTANCE;
 
   /**
    * The read/write lock.

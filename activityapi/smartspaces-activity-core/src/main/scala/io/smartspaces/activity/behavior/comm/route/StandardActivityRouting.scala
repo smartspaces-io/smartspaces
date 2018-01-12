@@ -22,8 +22,8 @@ import io.smartspaces.activity.behavior.general.StandardActivityJson
 import io.smartspaces.activity.component.comm.route.MessageRouterActivityComponent
 import io.smartspaces.messaging.route.RouteMessageHandler
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
-import io.smartspaces.util.data.json.JsonMapper
-import io.smartspaces.util.data.json.StandardJsonMapper
+import io.smartspaces.util.data.mapper.JsonDataMapper
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper
 
 import java.util.Map
 import io.smartspaces.messaging.route.RouteMessageHandler
@@ -41,7 +41,7 @@ trait StandardActivityRouting extends /* StandardActivityRos with */ StandardAct
   /**
    * The JSON mapper.
    */
-  private val MAPPER: JsonMapper = StandardJsonMapper.INSTANCE
+  private val MAPPER: JsonDataMapper = StandardJsonDataMapper.INSTANCE
 
   /**
    * Router for input and output messages.

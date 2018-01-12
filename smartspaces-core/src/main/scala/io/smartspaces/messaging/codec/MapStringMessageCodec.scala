@@ -16,8 +16,8 @@
 
 package io.smartspaces.messaging.codec;
 
-import io.smartspaces.util.data.json.JsonMapper
-import io.smartspaces.util.data.json.StandardJsonMapper
+import io.smartspaces.util.data.mapper.JsonDataMapper
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper
 
 import java.util.Map
 
@@ -26,13 +26,13 @@ import java.util.Map
  * 
  * @author Keith M. Hughes
  */
-class MapStringMessageCodec(mapper: JsonMapper) extends MessageCodec[Map[String,Object], String]  {
+class MapStringMessageCodec(mapper: JsonDataMapper) extends MessageCodec[Map[String,Object], String]  {
   
   /**
    * Construct a codec with the standard JSON mapper.
    */
   def this() = {
-    this(StandardJsonMapper.INSTANCE)
+    this(StandardJsonDataMapper.INSTANCE)
   }
   
   override def encode(out: Map[String, Object]): String = {

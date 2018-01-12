@@ -29,8 +29,8 @@ import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 import io.smartspaces.util.web.HttpResponseCode;
 
 import com.google.common.collect.Lists;
@@ -51,7 +51,7 @@ public class StandardRemoteMasterCommunicationHandler implements RemoteMasterCom
   /**
    * The JSON mapper to use for the server.
    */
-  private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
+  private static final JsonDataMapper MAPPER = StandardJsonDataMapper.INSTANCE;
 
   /**
    * The space environment.

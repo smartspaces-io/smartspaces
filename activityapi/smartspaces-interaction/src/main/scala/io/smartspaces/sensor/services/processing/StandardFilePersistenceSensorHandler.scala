@@ -17,8 +17,8 @@
 package io.smartspaces.sensor.services.processing
 
 import io.smartspaces.util.data.dynamic.DynamicObject
-import io.smartspaces.util.data.json.JsonMapper
-import io.smartspaces.util.data.json.StandardJsonMapper
+import io.smartspaces.util.data.mapper.JsonDataMapper
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper
 import io.smartspaces.util.io.FileSupport
 import io.smartspaces.util.io.FileSupportImpl
 
@@ -72,7 +72,7 @@ class StandardFilePersistenceSensorHandler(private val outputFile: File) extends
   /**
    * The JSON mapper for serializing data.
    */
-  private val jsonMapper: JsonMapper = StandardJsonMapper.INSTANCE
+  private val jsonMapper: JsonDataMapper = StandardJsonDataMapper.INSTANCE
 
   /**
    * The sensor processor being run under.

@@ -18,8 +18,8 @@ package io.smartspaces.messaging.codec
 
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
-import io.smartspaces.util.data.json.JsonMapper
-import io.smartspaces.util.data.json.StandardJsonMapper
+import io.smartspaces.util.data.mapper.JsonDataMapper
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper
 
 import com.google.common.base.Charsets
 
@@ -48,7 +48,7 @@ class DynamicObjectByteArrayCodec(private val charset: Charset) extends MessageC
   /**
    * The JSON mapper for message translation.
    */
-  private val MAPPER: JsonMapper = StandardJsonMapper.INSTANCE;
+  private val MAPPER: JsonDataMapper = StandardJsonDataMapper.INSTANCE;
 
   /**
    * Construct a codec that supports JSON ended in charset

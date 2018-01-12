@@ -15,22 +15,25 @@
  * the License.
  */
 
-package io.smartspaces.util.data.json;
+package io.smartspaces.util.data.mapper;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Test the {@link JsonMapper}.
+ * Test the {@link JsonDataMapper}.
  *
  * @author Keith M. Hughes
  */
-public class StandardJsonMapperTest {
+public class StandardJsonDataMapperTest {
 
   private static final String TEST_JSON_I18N = "{\"foo\":\"\\u0164\\u0117\\u015F\\u0167\"}";
 
@@ -39,11 +42,11 @@ public class StandardJsonMapperTest {
    */
   public static final String TEST_VALUE_I18N = "\u0164\u0117\u015F\u0167";
 
-  private JsonMapper mapper;
+  private JsonDataMapper mapper;
 
   @Before
   public void setup() {
-    mapper = new StandardJsonMapper();
+    mapper = new StandardJsonDataMapper();
   }
 
   /**

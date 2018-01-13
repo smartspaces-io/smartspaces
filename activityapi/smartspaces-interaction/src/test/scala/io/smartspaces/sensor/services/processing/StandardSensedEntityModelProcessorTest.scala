@@ -48,7 +48,7 @@ import io.smartspaces.sensor.services.processing.value.StandardSensorValueProces
 class StandardSensedEntityModelProcessorTest extends JUnitSuite {
 
   var processor: StandardSensedEntityModelProcessor = _
-  
+
   var sensorValueProcessorRegistry: StandardSensorValueProcessorRegistry = _
 
   @Mock var completeSensedEntityModel: CompleteSensedEntityModel = _
@@ -56,7 +56,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
   @Mock var log: ExtendedLog = _
 
   @Mock var handler: SensedEntitySensorHandler = _
-  
+
   @Mock var managedScope: ManagedScope = _
 
   @Before def setup(): Unit = {
@@ -82,7 +82,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val timestamp: Long = 10000
 
     processor.handleNewSensorMessage(handler, timestamp, sensorModel, data)
-    
+
     Mockito.verify(sensorModel).updateHeartbeat(timestamp)
   }
 
@@ -96,13 +96,12 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val sensorValue: Long = 1234
 
     sensorValueProcessorRegistry.addSensorValueProcessor(sensorValueProcessor)
-    
+
     val measurementTimestamp: Long = 1000
     val sensorMessageReceivedTimestamp: Long = 1001
 
     val measurementType =
       new SimpleMeasurementTypeDescription("foo", sensorValueType, null, null, null, null, null)
-
 
     val sensorDetail = new SimpleSensorDetailDescription("1", "foo", "foo", Option("foo"), None, None, None)
     val channelId = "test"
@@ -111,7 +110,8 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     sensorDetail.addSensorChannelDetail(channelDetail)
 
     val sensor =
-      new SimpleSensorEntityDescription("2", "foo", "foo", Option("foo"), Option(sensorDetail), None, None)
+      new SimpleSensorEntityDescription("2", "foo", "foo", Option("foo"), 
+          Some(sensorDetail), "foo", None, None)
     val sensorModel = new SimpleSensorEntityModel(sensor, completeSensedEntityModel, 0)
 
     val sensedEntity =
@@ -130,7 +130,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     processor.handleNewSensorMessage(handler, sensorMessageReceivedTimestamp, sensorModel, data)
 
     Mockito.verify(sensorValueProcessor, Mockito.times(1)).processData(
-        measurementTimestamp, sensorMessageReceivedTimestamp, sensorModel,
-        sensedEntityModel, processor.processorContext, channelDetail.channelId, data)
+      measurementTimestamp, sensorMessageReceivedTimestamp, sensorModel,
+      sensedEntityModel, processor.processorContext, channelDetail.channelId, data)
   }
 }

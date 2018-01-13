@@ -112,9 +112,15 @@ object SensorDescriptionConstants {
   val SECTION_HEADER_SENSORS = "sensors"
 
   /**
-   * The section field for the measurement unit of a sensor channel.
+   * The section field for the details of the sensor type of a sensor.
    */
   val SECTION_FIELD_SENSORS_SENSOR_DETAIL = "sensorDetail"
+
+  /**
+   * The section field for the source of a sensor. The sourse is where the data comes from, e.g.
+   * an external provider.
+   */
+  val SECTION_FIELD_SENSORS_SENSOR_SOURCE = "sensorSource"
 
   /**
    * The section field for the update time limit for a sensor.

@@ -16,7 +16,6 @@
 
 package io.smartspaces.sensor.services.domain
 
-import java.util.Map
 import scala.collection.JavaConverters._
 import scala.util.control.Breaks.break
 import scala.util.control.Breaks.breakable
@@ -38,7 +37,7 @@ import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
  *
  * @author Keith M. Hughes
  */
-class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], log: ExtendedLog) extends SensorCommonDescriptionImporter {
+class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorCommonDescriptionExtractor {
 
   /**
    * The ID to be given to entities.
@@ -47,9 +46,7 @@ class YamlSensorCommonDescriptionImporter(configuration: Map[String, Object], lo
    */
   private var id: Integer = 0
 
-  override def importDescriptions(sensorRegistry: SensorCommonRegistry): SensorCommonDescriptionImporter = {
-    val data: DynamicObject = new StandardDynamicObjectNavigator(configuration)
-
+  override def extractDescriptions(data: DynamicObject, sensorRegistry: SensorCommonRegistry): SensorCommonDescriptionExtractor = {
     getMeasurementTypes(sensorRegistry, data)
     getSensorDetails(sensorRegistry, data)
     getPhysicalSpaceTypes(sensorRegistry, data)

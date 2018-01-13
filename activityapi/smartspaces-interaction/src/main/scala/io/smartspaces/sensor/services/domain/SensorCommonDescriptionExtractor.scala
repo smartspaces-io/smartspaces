@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2017 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,20 +16,25 @@
 
 package io.smartspaces.sensor.services.domain
 
+import io.smartspaces.util.data.dynamic.DynamicObject
+
 /**
- * An importer for sensor instance descriptions into a registry.
+ * An importer for sensor common descriptions into a registry.
  *
  * @author Keith M. Hughes
  */
-trait SensorInstanceDescriptionImporter {
-
+trait SensorCommonDescriptionExtractor {
+  
   /**
-   * Import a description into a particular instance registry.
+   * Import a description into a particular registry.
    *
+   * @param data
+   *          the data
    * @param register
-   *          the sensor registry
+   *          the sensor common registry
    *
    * @return this importer
    */
-  def importDescriptions(register: SensorInstanceRegistry): SensorInstanceDescriptionImporter
+  def extractDescriptions(data: DynamicObject, register: SensorCommonRegistry): SensorCommonDescriptionExtractor
+
 }

@@ -32,6 +32,11 @@ trait SensorEntityDescription extends EntityDescription {
   val sensorDetail: Option[SensorDetailDescription]
   
   /**
+   * The source of the sensor, e.g. from an external sensor relay and the name it has in that relay.
+   */
+  val sensorSource: String
+  
+  /**
    * The time limit on when a sensor update should happen, in milliseconds
    */
   val sensorStateUpdateTimeLimit: Option[Long]
@@ -58,6 +63,7 @@ class SimpleSensorEntityDescription(
     displayName: String, 
     displayDescription: Option[String], 
     override val sensorDetail: Option[SensorDetailDescription], 
+    override val sensorSource: String,
     override val sensorStateUpdateTimeLimit: Option[Long], 
     override val sensorHeartbeatUpdateTimeLimit: Option[Long]) extends SimpleEntityDescription(id, externalId, displayName, displayDescription) with SensorEntityDescription {
 

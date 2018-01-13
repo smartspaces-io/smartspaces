@@ -16,28 +16,29 @@
 
 package io.smartspaces.sensor.services.domain
 
-import java.util.Map
-import scala.collection.JavaConverters._
+import scala.collection.JavaConverters.asScalaBufferConverter
+import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+import scala.collection.JavaConverters.mapAsScalaMapConverter
 import scala.util.control.Breaks.break
 import scala.util.control.Breaks.breakable
+
 import io.smartspaces.logging.ExtendedLog
-import io.smartspaces.util.data.dynamic.DynamicObject
-import io.smartspaces.util.data.dynamic.DynamicObject.ArrayDynamicObjectEntry
-import io.smartspaces.util.data.dynamic.DynamicObject.ObjectDynamicObjectEntry
-import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
 import io.smartspaces.sensor.domain.SensorDetailDescription
 import io.smartspaces.sensor.domain.SimpleMarkerEntityDescription
 import io.smartspaces.sensor.domain.SimplePersonSensedEntityDescription
 import io.smartspaces.sensor.domain.SimplePhysicalSpaceSensedEntityDescription
 import io.smartspaces.sensor.domain.SimpleSensorEntityDescription
+import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.util.data.dynamic.DynamicObject.ArrayDynamicObjectEntry
+import io.smartspaces.util.data.dynamic.DynamicObject.ObjectDynamicObjectEntry
 
 /**
  * A YAML-based sensor instance description importer.
  *
  * @author Keith M. Hughes
  */
-class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRegistry, configuration: Map[String, Object], log: ExtendedLog) extends SensorInstanceDescriptionImporter {
+class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCommonRegistry, log: ExtendedLog) extends SensorInstanceDescriptionExtractor {
 
   /**
    * The ID to be given to entities.
@@ -46,9 +47,7 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
    */
   private var id: Integer = 0
 
-  override def importDescriptions(sensorRegistry: SensorInstanceRegistry): SensorInstanceDescriptionImporter = {
-    val data: DynamicObject = new StandardDynamicObjectNavigator(configuration)
-
+  override def extractDescriptions(data: DynamicObject, sensorRegistry: SensorInstanceRegistry): SensorInstanceDescriptionExtractor = {
     getSensors(sensorRegistry, data)
     getPeople(sensorRegistry, data)
     getMarkers(sensorRegistry, data)
@@ -137,7 +136,10 @@ class YamlSensorInstanceDescriptionImporter(sensorCommonRegistry: SensorCommonRe
         getNextId(),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
-        Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)), sensorDetail, sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit)
+        Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
+        sensorDetail, 
+        itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_SOURCE),
+        sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit)
 
       entity.active = itemData.getBoolean(SensorDescriptionConstants.SECTION_FIELD_SENSORS_ACTIVE, SensorDescriptionConstants.SECTION_FIELD_DEFAULT_VALUE_SENSORS_ACTIVE)
 

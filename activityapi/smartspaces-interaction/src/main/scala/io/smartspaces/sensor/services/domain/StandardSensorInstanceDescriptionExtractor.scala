@@ -24,7 +24,7 @@ import scala.util.control.Breaks.breakable
 
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
-import io.smartspaces.sensor.domain.SensorDetailDescription
+import io.smartspaces.sensor.domain.SensorTypeDescription
 import io.smartspaces.sensor.domain.SimpleMarkerEntityDescription
 import io.smartspaces.sensor.domain.SimplePersonSensedEntityDescription
 import io.smartspaces.sensor.domain.SimplePhysicalSpaceSensedEntityDescription
@@ -99,10 +99,10 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
     data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => breakable {
       val itemData = entry.down()
 
-      var sensorDetail: Option[SensorDetailDescription] = None
-      var sensorDetailId = itemData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_DETAIL)
+      var sensorDetail: Option[SensorTypeDescription] = None
+      var sensorDetailId = itemData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_TYPE)
       if (sensorDetailId != null) {
-        sensorDetail = sensorCommonRegistry.getSensorDetailByExternalId(sensorDetailId)
+        sensorDetail = sensorCommonRegistry.getSensorTypeByExternalId(sensorDetailId)
         if (sensorDetail.isEmpty) {
           // TODO(keith): Some sort of error.
           break
@@ -237,7 +237,7 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
       val channelIds = if (sensorChannelIds == "*" || sensorChannelIds.startsWith("-")) {
         val sensor = sensorRegistry.getSensorByExternalId(sensorExternalId)
         if (sensor.isDefined) {
-          var allChannelIds =sensor.get.sensorDetail.get.getAllSensorChannelDetails().map(_.channelId)
+          var allChannelIds =sensor.get.sensorType.get.getAllSensorChannelDetails().map(_.channelId)
           if (sensorChannelIds == "*") {
             allChannelIds
           } else {

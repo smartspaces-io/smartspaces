@@ -29,7 +29,7 @@ import io.smartspaces.sensor.domain.SensorEntityDescription
 import io.smartspaces.sensor.domain.SimpleMeasurementTypeDescription
 import io.smartspaces.sensor.domain.SimplePhysicalSpaceSensedEntityDescription
 import io.smartspaces.sensor.domain.SimpleSensorChannelDetailDescription
-import io.smartspaces.sensor.domain.SimpleSensorDetailDescription
+import io.smartspaces.sensor.domain.SimpleSensorTypeDescription
 import io.smartspaces.sensor.domain.SimpleSensorEntityDescription
 import io.smartspaces.sensor.messaging.output.StandardSensorMessageBuilder
 import io.smartspaces.sensor.model.CompleteSensedEntityModel
@@ -103,7 +103,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val measurementType =
       new SimpleMeasurementTypeDescription("foo", sensorValueType, null, null, null, null, null)
 
-    val sensorDetail = new SimpleSensorDetailDescription("1", "foo", "foo", Option("foo"), None, None, None)
+    val sensorDetail = new SimpleSensorTypeDescription("1", "foo", "foo", Option("foo"), None, None, None)
     val channelId = "test"
     val channelDetail =
       new SimpleSensorChannelDetailDescription(sensorDetail, channelId, "glorp", Option("norp"), measurementType, null)

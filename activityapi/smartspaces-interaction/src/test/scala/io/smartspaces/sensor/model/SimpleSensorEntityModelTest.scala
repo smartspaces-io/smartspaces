@@ -26,7 +26,7 @@ import org.mockito.MockitoAnnotations
 import org.scalatest.junit.JUnitSuite
 
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
-import io.smartspaces.sensor.domain.SensorDetailDescription
+import io.smartspaces.sensor.domain.SensorTypeDescription
 import io.smartspaces.sensor.domain.SensorEntityDescription
 import io.smartspaces.sensor.event.SensorOfflineEvent
 import io.smartspaces.sensor.services.processing.SensorProcessingEventEmitter
@@ -45,7 +45,7 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
   
   @Mock var eventEmitter: SensorProcessingEventEmitter = null
 
-  @Mock var sensorDetail: SensorDetailDescription = null
+  @Mock var sensorDetail: SensorTypeDescription = null
 
   val modelCreationTime = 123456l
 
@@ -54,7 +54,7 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
    
     Mockito.when(allModels.eventEmitter).thenReturn(eventEmitter)
 
-    Mockito.when(sensorEntityDescription.sensorDetail).thenReturn(Option(sensorDetail))
+    Mockito.when(sensorEntityDescription.sensorType).thenReturn(Option(sensorDetail))
 
     model = new SimpleSensorEntityModel(sensorEntityDescription, allModels, modelCreationTime)
   }

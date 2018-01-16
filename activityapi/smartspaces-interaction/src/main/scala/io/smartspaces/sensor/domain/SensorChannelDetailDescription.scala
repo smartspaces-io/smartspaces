@@ -36,7 +36,7 @@ trait SensorChannelDetailDescription extends DisplayableDescription {
   /**
    * The sensor detail this channel is part of.
    */
-  val sensorDetail: SensorDetailDescription
+  val sensorDetail: SensorTypeDescription
    
   /**
    * The ID of the channel.
@@ -70,7 +70,7 @@ trait SensorChannelDetailDescription extends DisplayableDescription {
  * @author Keith M. Hughes
  */
 case class SimpleSensorChannelDetailDescription(
-    override val sensorDetail: SensorDetailDescription, 
+    override val sensorDetail: SensorTypeDescription, 
     override val channelId: String, 
     override val displayName: String, 
     override val displayDescription: Option[String], 

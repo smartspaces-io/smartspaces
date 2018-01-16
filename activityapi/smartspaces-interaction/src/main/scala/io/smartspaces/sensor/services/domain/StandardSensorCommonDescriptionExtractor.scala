@@ -27,7 +27,7 @@ import io.smartspaces.sensor.domain.SimpleMeasurementTypeDescription
 import io.smartspaces.sensor.domain.SimpleMeasurementUnitDescription
 import io.smartspaces.sensor.domain.SimplePhysicalSpaceTypeDescription
 import io.smartspaces.sensor.domain.SimpleSensorChannelDetailDescription
-import io.smartspaces.sensor.domain.SimpleSensorDetailDescription
+import io.smartspaces.sensor.domain.SimpleSensorTypeDescription
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.data.dynamic.DynamicObject.ArrayDynamicObjectEntry
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
@@ -48,7 +48,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
   override def extractDescriptions(data: DynamicObject, sensorRegistry: SensorCommonRegistry): SensorCommonDescriptionExtractor = {
     getMeasurementTypes(sensorRegistry, data)
-    getSensorDetails(sensorRegistry, data)
+    getSensorTypes(sensorRegistry, data)
     getPhysicalSpaceTypes(sensorRegistry, data)
 
     return this
@@ -114,46 +114,46 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
   }
 
   /**
-   * Get all the sensor details data.
+   * Get all the sensor type data.
    *
    * @param sensorRegistry
    *          the sensor registry to store the data in
    * @param data
    *          the data read from the input stream
    */
-  private def getSensorDetails(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
-    data.down(SensorDescriptionConstants.SECTION_HEADER_SENSOR_DETAILS)
+  private def getSensorTypes(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
+    data.down(SensorDescriptionConstants.SECTION_HEADER_SENSOR_TYPES)
 
     data.getArrayEntries().asScala.foreach((sensorDetailEntry) => {
-      val sensorDetailData = sensorDetailEntry.down()
+      val sensorTypeData = sensorDetailEntry.down()
 
       var sensorUpdateTimeLimit: Option[Long] = None
-      val sensorUpdateTimeLimitValue: java.lang.Long = sensorDetailData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT)
+      val sensorUpdateTimeLimitValue: java.lang.Long = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT)
       if (sensorUpdateTimeLimitValue != null) {
         sensorUpdateTimeLimit = Option(sensorUpdateTimeLimitValue)
       }
 
       var sensorHeartbeatUpdateTimeLimit: Option[Long] = None
-      val sensorHeartbeatUpdateTimeLimitValue: java.lang.Long = sensorDetailData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_HEARTBEAT_UPDATE_TIME_LIMIT)
+      val sensorHeartbeatUpdateTimeLimitValue: java.lang.Long = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_HEARTBEAT_UPDATE_TIME_LIMIT)
       if (sensorHeartbeatUpdateTimeLimitValue != null) {
         sensorHeartbeatUpdateTimeLimit = Option(sensorHeartbeatUpdateTimeLimitValue)
       }
 
-      val sensorUsageCategory = Option(sensorDetailData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_DETAILS_CATEGORY_USAGE))
+      val sensorUsageCategory = Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE))
 
-      val sensorDetail = new SimpleSensorDetailDescription(
+      val sensorDetail = new SimpleSensorTypeDescription(
         getNextId(),
-        sensorDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
-        sensorDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
-        Option(sensorDetailData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
+        sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
+        sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
+        Option(sensorTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
         sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit, sensorUsageCategory)
 
-      sensorDetailData.down(SensorDescriptionConstants.SECTION_FIELD_SENSOR_DETAILS_CHANNELS)
+      sensorTypeData.down(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CHANNELS)
       data.getArrayEntries().asScala.foreach((channelDetailEntry: ArrayDynamicObjectEntry) => breakable {
         val channelDetailData = channelDetailEntry.down()
 
         val measurementTypeId =
-          channelDetailData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_DETAILS_CHANNELS_TYPE)
+          channelDetailData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CHANNELS_TYPE)
         val measurementType = sensorRegistry.getMeasurementTypeByExternalId(measurementTypeId)
         if (measurementType.isEmpty) {
           // TODO(keith): Some sort of error message
@@ -162,7 +162,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
         var measurementUnit: MeasurementUnitDescription = null
         val measurementUnitId =
-          channelDetailData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_DETAILS_CHANNELS_UNIT)
+          channelDetailData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CHANNELS_UNIT)
         if (measurementUnitId != null) {
           var measurementUnitOption = sensorRegistry.getMeasurementUnitByExternalId(measurementUnitId)
           if (measurementUnitOption.isEmpty) {
@@ -189,7 +189,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
         channelDetailData.up()
       })
 
-      sensorRegistry.registerSensorDetail(sensorDetail)
+      sensorRegistry.registerSensorType(sensorDetail)
     })
     data.up()
   }

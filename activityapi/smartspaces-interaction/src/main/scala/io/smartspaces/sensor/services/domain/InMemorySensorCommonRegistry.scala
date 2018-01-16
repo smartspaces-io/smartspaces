@@ -23,7 +23,7 @@ import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
 import io.smartspaces.sensor.domain.PhysicalSpaceTypeDescription
-import io.smartspaces.sensor.domain.SensorDetailDescription
+import io.smartspaces.sensor.domain.SensorTypeDescription
 import javax.inject.Inject
 
 
@@ -55,14 +55,14 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
   private val externalIdToMeasurementUnit: Map[String, MeasurementUnitDescription] = new HashMap
 
   /**
-   * A map of persistence IDs to sensor details.
+   * A map of persistence IDs to sensor types.
    */
-  private val idToSensorDetail: Map[String, SensorDetailDescription] = new HashMap
+  private val idToSensorType: Map[String, SensorTypeDescription] = new HashMap
 
   /**
-   * A map of external IDs to sensor details.
+   * A map of external IDs to sensor types.
    */
-  private val externalIdToSensorDetail: Map[String, SensorDetailDescription] = new HashMap
+  private val externalIdToSensorType: Map[String, SensorTypeDescription] = new HashMap
 
   /**
    * A map of persistence IDs to physical space types.
@@ -106,23 +106,23 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
     externalIdToMeasurementUnit.get(externalId)
   }
 
-  override def registerSensorDetail(sensorDetail: SensorDetailDescription): SensorCommonRegistry = {
-    idToSensorDetail.put(sensorDetail.id, sensorDetail)
-    externalIdToSensorDetail.put(sensorDetail.externalId, sensorDetail)
+  override def registerSensorType(sensorDetail: SensorTypeDescription): SensorCommonRegistry = {
+    idToSensorType.put(sensorDetail.id, sensorDetail)
+    externalIdToSensorType.put(sensorDetail.externalId, sensorDetail)
     
     this
   }
 
-  override def getSensorDetail(id: String): Option[SensorDetailDescription] = {
-    idToSensorDetail.get(id)
+  override def getSensorType(id: String): Option[SensorTypeDescription] = {
+    idToSensorType.get(id)
   }
 
-  override def getSensorDetailByExternalId(externalId: String): Option[SensorDetailDescription] = {
-    externalIdToSensorDetail.get(externalId)
+  override def getSensorTypeByExternalId(externalId: String): Option[SensorTypeDescription] = {
+    externalIdToSensorType.get(externalId)
   }
 
-  override def getAllSensorDetails(): List[SensorDetailDescription] = {
-    idToSensorDetail.values.toList
+  override def getAllSensorTypes(): List[SensorTypeDescription] = {
+    idToSensorType.values.toList
   }
 
   override def registerPhysicalSpaceType(physicalSpaceType: PhysicalSpaceTypeDescription): SensorCommonRegistry = {

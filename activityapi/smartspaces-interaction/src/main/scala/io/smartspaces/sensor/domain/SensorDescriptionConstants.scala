@@ -72,29 +72,29 @@ object SensorDescriptionConstants {
     "measurementUnits"
 
   /**
-   * The section header for the sensor details entries.
+   * The section header for the sensor types entries.
    */
-  val SECTION_HEADER_SENSOR_DETAILS = "sensorDetails"
+  val SECTION_HEADER_SENSOR_TYPES = "sensorTypes"
 
   /**
-   * The field for the category usage for a sensor detail.
+   * The field for the category usage for a sensor type.
    */
-  val SECTION_FIELD_SENSOR_DETAILS_CATEGORY_USAGE = "categoryUsage"
+  val SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE = "categoryUsage"
 
   /**
-   * The sensor details section field for the channels for the sensor detail.
+   * The sensor types section field for the channels for the sensor type.
    */
-  val SECTION_FIELD_SENSOR_DETAILS_CHANNELS = "channels"
+  val SECTION_FIELD_SENSOR_TYPES_CHANNELS = "channels"
 
   /**
    * The section field for the measurement type of a sensor channel.
    */
-  val SECTION_FIELD_SENSOR_DETAILS_CHANNELS_TYPE = "type"
+  val SECTION_FIELD_SENSOR_TYPES_CHANNELS_TYPE = "type"
 
   /**
    * The section field for the measurement unit of a sensor channel.
    */
-  val SECTION_FIELD_SENSOR_DETAILS_CHANNELS_UNIT = "unit"
+  val SECTION_FIELD_SENSOR_TYPES_CHANNELS_UNIT = "unit"
 
   /**
    * The section header for the physical space types entries.
@@ -112,9 +112,9 @@ object SensorDescriptionConstants {
   val SECTION_HEADER_SENSORS = "sensors"
 
   /**
-   * The section field for the details of the sensor type of a sensor.
+   * The section field for the the sensor type of a sensor.
    */
-  val SECTION_FIELD_SENSORS_SENSOR_DETAIL = "sensorDetail"
+  val SECTION_FIELD_SENSORS_SENSOR_TYPE = "sensorType"
 
   /**
    * The section field for the source of a sensor. The sourse is where the data comes from, e.g.

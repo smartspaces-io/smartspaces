@@ -27,9 +27,9 @@ package io.smartspaces.sensor.domain
 trait SensorEntityDescription extends EntityDescription {
 
   /**
-   * The sensor detail for the sensor.
+   * The sensor type for the sensor.
    */
-  val sensorDetail: Option[SensorDetailDescription]
+  val sensorType: Option[SensorTypeDescription]
   
   /**
    * The source of the sensor, e.g. from an external sensor relay and the name it has in that relay.
@@ -62,7 +62,7 @@ class SimpleSensorEntityDescription(
     externalId: String, 
     displayName: String, 
     displayDescription: Option[String], 
-    override val sensorDetail: Option[SensorDetailDescription], 
+    override val sensorType: Option[SensorTypeDescription], 
     override val sensorSource: String,
     override val sensorStateUpdateTimeLimit: Option[Long], 
     override val sensorHeartbeatUpdateTimeLimit: Option[Long]) extends SimpleEntityDescription(id, externalId, displayName, displayDescription) with SensorEntityDescription {

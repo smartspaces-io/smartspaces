@@ -16,16 +16,14 @@
 
 package io.smartspaces.util.data.dynamic;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import io.smartspaces.util.data.mapper.JsonDataMapper;
-import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 
 /**
  * A basic builder for dynamic objects.
@@ -189,7 +187,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   @Override
   public DynamicObjectBuilder newObject(String name) {
     if (currentType == DynamicObjectType.OBJECT) {
-      Map<String, Object> newObject = Maps.newHashMap();
+      Map<String, Object> newObject = new HashMap<>();
 
       currentObject.put(name, newObject);
 
@@ -208,7 +206,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   @Override
   public DynamicObjectBuilder newArray(String name) {
     if (currentType == DynamicObjectType.OBJECT) {
-      List<Object> newArray = Lists.newArrayList();
+      List<Object> newArray = new ArrayList<>();
 
       currentObject.put(name, newArray);
 
@@ -227,7 +225,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   @Override
   public DynamicObjectBuilder newArray() {
     if (currentType == DynamicObjectType.ARRAY) {
-      List<Object> newArray = Lists.newArrayList();
+      List<Object> newArray = new ArrayList<>();
 
       currentArray.add(newArray);
 
@@ -246,7 +244,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   @Override
   public DynamicObjectBuilder newObject() {
     if (currentType == DynamicObjectType.ARRAY) {
-      Map<String, Object> newObject = Maps.newHashMap();
+      Map<String, Object> newObject = new HashMap<>();
 
       currentArray.add(newObject);
 

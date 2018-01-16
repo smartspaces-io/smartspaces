@@ -19,11 +19,11 @@ package io.smartspaces.sensor.domain
 import scala.collection.mutable.ArrayBuffer
 
 /**
- * Details about a sensor.
+ * Type information about a sensor.
  * 
  * @author Keith M. Hughes
  */
-trait SensorDetailDescription extends DisplayableDescription {
+trait SensorTypeDescription extends DisplayableDescription {
   
   /**
    * The ID of the sensor detail.
@@ -85,14 +85,14 @@ trait SensorDetailDescription extends DisplayableDescription {
  *
  * @author Keith M. Hughes
  */
-case class SimpleSensorDetailDescription(
+case class SimpleSensorTypeDescription(
     override val id: String, 
     override val externalId: String, 
     override val displayName: String, 
     override val displayDescription: Option[String], 
     override val sensorUpdateTimeLimit: Option[Long], 
     override val sensorHeartbeatUpdateTimeLimit: Option[Long],
-    override val usageCategory: Option[String]) extends SensorDetailDescription {
+    override val usageCategory: Option[String]) extends SensorTypeDescription {
 
   /**
    * The measurement units for this type.

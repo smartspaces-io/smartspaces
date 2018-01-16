@@ -19,7 +19,7 @@ package io.smartspaces.sensor.services.domain
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
 import io.smartspaces.sensor.domain.PhysicalSpaceTypeDescription
-import io.smartspaces.sensor.domain.SensorDetailDescription
+import io.smartspaces.sensor.domain.SensorTypeDescription
 
 /**
  * A registry of known sensor common information.
@@ -86,41 +86,41 @@ trait SensorCommonRegistry {
   def getMeasurementUnitByExternalId(id: String): Option[MeasurementUnitDescription]
 
   /**
-   * Register a sensor detail with the registry.
+   * Register a sensor type with the registry.
    *
-   * @param sensorDetail
-   *          the sensor detail to add
+   * @param sensorType
+   *          the sensor type to add
    *
    * @return this registry
    */
-  def registerSensorDetail(sensorDetail: SensorDetailDescription): SensorCommonRegistry
+  def registerSensorType(sensorType: SensorTypeDescription): SensorCommonRegistry
 
   /**
-   * Get a sensor detail from the registry persistence ID.
+   * Get a sensor type from the registry persistence ID.
    *
    * @param id
-   *          id of the the sensor detail
+   *          id of the the sensor type
    *
-   * @return the sensor detail
+   * @return the sensor type
    */
-  def getSensorDetail(id: String): Option[SensorDetailDescription]
+  def getSensorType(id: String): Option[SensorTypeDescription]
 
   /**
-   * Get a sensor detail from the registry external ID.
+   * Get a sensor type from the registry external ID.
    *
    * @param externalId
-   *          external id of the the sensor detail
+   *          external id of the the sensor type
    *
-   * @return the sensor detail
+   * @return the sensor type
    */
-  def getSensorDetailByExternalId(externalId: String): Option[SensorDetailDescription]
+  def getSensorTypeByExternalId(externalId: String): Option[SensorTypeDescription]
 
   /**
-   * Get all sensor details from the registry.
+   * Get all sensor types from the registry.
    *
-   * @return all sensor details in the registry
+   * @return all sensor types in the registry
    */
-  def getAllSensorDetails(): List[SensorDetailDescription]
+  def getAllSensorTypes(): List[SensorTypeDescription]
 
   /**
    * Register a physical space type with the registry.

@@ -173,6 +173,16 @@ object SensorDescriptionConstants {
   val ENTITY_DESCRIPTION_FIELD_MARKER_ID = "markerId"
 
   /**
+   * The field in a marker entity description for the marker source.
+   */
+  val ENTITY_DESCRIPTION_FIELD_MARKER_SOURCE = "markerSource"
+
+  /**
+   * The field in a marker entity description for the marker type.
+   */
+  val ENTITY_DESCRIPTION_FIELD_MARKER_TYPE = "markerType"
+
+  /**
    * The section header for the marker association of the file.
    */
   val SECTION_HEADER_MARKER_ASSOCIATIONS = "markerAssociations"

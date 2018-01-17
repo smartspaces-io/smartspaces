@@ -168,6 +168,8 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
+          itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_SOURCE),
+          itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_TYPE),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_ID)))
       })
       data.up()

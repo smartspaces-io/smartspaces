@@ -25,6 +25,16 @@ package io.smartspaces.sensor.domain
 trait MarkerEntityDescription extends EntityDescription {
 
   /**
+   * The source of the marker data feed. 
+   */
+  val markerSource: String
+  
+  /**
+   * The type of the marker, i.e. the exact hardware specification.
+   */
+  val markerType: String
+  
+  /**
    * The ID the marker will use for identification.
    */
   val markerId: String
@@ -40,6 +50,8 @@ class SimpleMarkerEntityDescription(
   externalId: String,
   displayName: String,
   displayDescription: Option[String],
+  override val markerSource: String,
+  override val markerType: String,
   override val markerId: String) extends SimpleEntityDescription(id, externalId, displayName, displayDescription)
   with MarkerEntityDescription {
 

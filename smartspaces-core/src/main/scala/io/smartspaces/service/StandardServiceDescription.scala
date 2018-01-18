@@ -24,7 +24,9 @@ import java.util.Map
  * 
  * @author Keith M. Hughes
  */
-class StandardServiceDescription(override val name: String, override val metadata: Map[String, Object]) extends ServiceDescription with Equals {
+case class StandardServiceDescription(
+    override val name: String, 
+    override val metadata: Map[String, Object]) extends ServiceDescription with Equals {
   
   /**
    * Construct a description without metadata.

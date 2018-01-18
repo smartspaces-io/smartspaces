@@ -53,7 +53,7 @@ trait CompleteWebServerBehavior extends MultipleConnectionWebSocketHandler[Map[S
    * @param handler
    *          content handler being added
    */
-  def addDynamicGetContentHandler(uriPrefix: String, usePath: Boolean,
+  def addDynamicGetRequestHandler(uriPrefix: String, usePath: Boolean,
     handler: HttpDynamicGetRequestHandler): Unit
 
   /**

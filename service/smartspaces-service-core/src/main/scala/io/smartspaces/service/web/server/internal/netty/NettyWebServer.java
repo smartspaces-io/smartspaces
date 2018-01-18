@@ -309,13 +309,13 @@ public class NettyWebServer implements WebServer {
   }
 
   @Override
-  public void addDynamicGetContentHandler(String uriPrefix, boolean usePath,
+  public void addDynamicGetRequestHandler(String uriPrefix, boolean usePath,
       HttpDynamicGetRequestHandler handler) {
-    addDynamicGetContentHandler(uriPrefix, usePath, handler, null);
+    addDynamicGetRequestHandler(uriPrefix, usePath, handler, null);
   }
 
   @Override
-  public void addDynamicGetContentHandler(String uriPrefix, boolean usePath,
+  public void addDynamicGetRequestHandler(String uriPrefix, boolean usePath,
       HttpDynamicGetRequestHandler handler, Map<String, String> extraHttpContentHeaders) {
     serverHandler.addHttpGetRequestHandler(new NettyHttpDynamicGetRequestHandlerHandler(
         serverHandler, uriPrefix, usePath, handler, extraHttpContentHeaders));

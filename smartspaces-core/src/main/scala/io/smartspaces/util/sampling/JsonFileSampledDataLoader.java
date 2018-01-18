@@ -21,8 +21,8 @@ import io.smartspaces.util.data.dynamic.DynamicObject;
 import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder;
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 
@@ -45,7 +45,7 @@ public class JsonFileSampledDataLoader implements SampledDataLoader {
   /**
    * The JSON mapper to use for serializing and deserializing the data.
    */
-  private static final JsonMapper JSON_MAPPER = StandardJsonMapper.INSTANCE;
+  private static final JsonDataMapper JSON_MAPPER = StandardJsonDataMapper.INSTANCE;
 
   /**
    * The file support to use for this class.

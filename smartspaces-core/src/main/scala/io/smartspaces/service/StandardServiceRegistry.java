@@ -135,6 +135,8 @@ public class StandardServiceRegistry implements ServiceRegistry {
   }
 
   private void registerService(Service service, boolean startup) {
+    spaceEnvironment.getLog().formatInfo("Registering service with name %s and dependencies %s", 
+        service.getName(), service.getDependencies());
     List<ServiceNotifications> notifications = new ArrayList<>();
 
     lock.writeLock().lock();

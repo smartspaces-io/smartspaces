@@ -16,18 +16,15 @@
 
 package io.smartspaces.sensor.integrator
 
+import io.smartspaces.data.entity.ValueRegistry
 import io.smartspaces.resource.managed.ManagedResource
-import io.smartspaces.sensor.entity.SensorInstanceDescriptionImporter
-import io.smartspaces.sensor.entity.model.query.SensedEntityModelQueryProcessor
+import io.smartspaces.sensor.services.domain.SensorCommonRegistry
+import io.smartspaces.sensor.services.domain.SensorInstanceRegistry
 import io.smartspaces.sensor.messaging.input.MqttSensorInput
 import io.smartspaces.sensor.messaging.input.SensorInput
-import io.smartspaces.util.messaging.mqtt.MqttBrokerDescription
-import io.smartspaces.sensor.entity.SensorInstanceRegistry
-import io.smartspaces.sensor.entity.model.CompleteSensedEntityModel
-import io.smartspaces.data.entity.ValueRegistry
-import io.smartspaces.scope.ManagedScope
+import io.smartspaces.sensor.model.CompleteSensedEntityModel
+import io.smartspaces.sensor.services.query.SensedEntityModelQueryProcessor
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
-import io.smartspaces.sensor.entity.SensorCommonRegistry
 
 /**
  * The sensor integration layer.

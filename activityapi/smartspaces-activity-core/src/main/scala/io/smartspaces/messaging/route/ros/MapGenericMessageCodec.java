@@ -20,8 +20,8 @@ import java.nio.charset.Charset;
 
 import com.google.common.base.Charsets;
 
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 
 /**
  * The base class for ROS GenericMessage coders and decoders.
@@ -33,7 +33,7 @@ public class MapGenericMessageCodec {
   /**
    * The JSON mapper for message translation.
    */
-  protected static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
+  protected static final JsonDataMapper MAPPER = StandardJsonDataMapper.INSTANCE;
 
   /**
    * The character set for the generic message encoding.

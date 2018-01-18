@@ -35,9 +35,9 @@ dependencies {
 
   compile 'io.netty:netty:3.9.3.Final'
 
-  compile 'com.fasterxml.jackson.core:jackson-core:2.6.1'
-  compile 'com.fasterxml.jackson.core:jackson-databind:2.6.1'
-  compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.6.1'
+  compile 'com.fasterxml.jackson.core:jackson-core:2.9.0'
+  compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
+  compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.0'
   
   compile('org.apache.httpcomponents:httpcore-osgi:4.4.5') {
 	  transitive=false

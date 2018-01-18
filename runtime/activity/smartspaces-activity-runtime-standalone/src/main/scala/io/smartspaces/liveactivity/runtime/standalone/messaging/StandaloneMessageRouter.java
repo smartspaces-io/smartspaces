@@ -35,8 +35,8 @@ import io.smartspaces.messaging.route.RouteDescription;
 import io.smartspaces.messaging.route.RouteMessageSender;
 import io.smartspaces.messaging.route.RouteMessageSubscriber;
 import io.smartspaces.time.provider.TimeProvider;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
@@ -62,7 +62,7 @@ public class StandaloneMessageRouter extends BaseMessageRouterActivityComponent 
   /**
    * Json mapper for message conversion.
    */
-  private static final JsonMapper MAPPER = StandardJsonMapper.INSTANCE;
+  private static final JsonDataMapper MAPPER = StandardJsonDataMapper.INSTANCE;
 
   /**
    * Key for message delay field.

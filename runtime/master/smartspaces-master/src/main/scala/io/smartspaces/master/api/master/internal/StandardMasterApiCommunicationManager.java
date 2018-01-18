@@ -44,8 +44,8 @@ import io.smartspaces.service.web.server.MultipleConnectionWebServerWebSocketHan
 import io.smartspaces.service.web.server.MultipleConnectionWebSocketHandler;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
 import io.smartspaces.util.web.CommonMimeTypes;
@@ -152,7 +152,7 @@ public class StandardMasterApiCommunicationManager extends BaseMasterApiManager
   /**
    * The JSON mapper to use.
    */
-  private JsonMapper jsonMapper = StandardJsonMapper.INSTANCE;
+  private JsonDataMapper jsonMapper = StandardJsonDataMapper.INSTANCE;
 
   @Override
   public void startup() {

@@ -18,7 +18,7 @@ package io.smartspaces.monitor.expectation.time
 
 /**
  * A standard mixin for giving an item heartbeat functionality.
- * 
+ *
  * @author Keith M. Hughes
  */
 trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
@@ -90,7 +90,7 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
   /* protected[time] */ def setLastUpdateTime(time: Long): Unit = {
     _lastUpdateTime = Option(time)
   }
-  
+
   override def updateHeartbeat(timestamp: Long): Unit = {
     _lastHeartbeatUpdate = Option(timestamp)
 
@@ -112,11 +112,10 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
   }
 
   override def online(): Boolean = _online
-  
-  
+
   override def checkIfOfflineTransition(currentTime: Long): Boolean = {
     // Only check if the model thinks it is online and there was an update time,
-    // otherwise we want the initial 
+    // otherwise we want the initial
     if (_online) {
       if (stateUpdateTimeLimit.isDefined) {
         // The only way we would ever be considered online is if there was a lastUpdate,
@@ -124,8 +123,17 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
         _online = !isTimeout(currentTime, _lastUpdateTime.get, stateUpdateTimeLimit.get)
       } else if (heartbeatUpdateTimeLimit.isDefined) {
         // If this sensor requires a heartbeat, the heartbeat time can be checked.
+
+        val updateToUse = if (_lastUpdateTime.isDefined) {
+          if (_lastHeartbeatUpdate.isDefined) {
+            Math.max(_lastUpdateTime.get, _lastHeartbeatUpdate.get)
+          } else {
+            _lastUpdateTime.get
+          }
+        } else {
+          _lastHeartbeatUpdate.get
+        }
         
-        val updateToUse = if (_lastUpdateTime.isDefined) { if (_lastHeartbeatUpdate.isDefined) Math.max(_lastUpdateTime.get, _lastHeartbeatUpdate.get) else _lastUpdateTime.get } else _lastHeartbeatUpdate.get
         _online = !isTimeout(currentTime, updateToUse, heartbeatUpdateTimeLimit.get)
       }
 
@@ -133,7 +141,7 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
       if (!_online) {
         signalOffline(currentTime)
       }
-      
+
       !_online
     } else {
       // Now, we are considered offline. If we have never been updated then we can check at the
@@ -142,7 +150,7 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
         if (stateUpdateTimeLimit.isDefined) {
           if (isTimeout(currentTime, _lastUpdateTime.getOrElse(itemCreationTime), stateUpdateTimeLimit.get)) {
             signalOffline(currentTime)
-            
+
             true
           } else {
             false
@@ -151,7 +159,7 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
           // If this sensor requires a heartbeat, the heartbeat time can be checked.
           if (isTimeout(currentTime, _lastHeartbeatUpdate.getOrElse(itemCreationTime), heartbeatUpdateTimeLimit.get)) {
             signalOffline(currentTime)
-            
+
             true
           } else {
             false
@@ -174,11 +182,11 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
   private def signalOffline(currentTime: Long): Unit = {
     offlineSignaled = true
   }
-  
+
   def heartbeatUpdateTimeLimit: Option[Long] = None
-  
+
   def stateUpdateTimeLimit: Option[Long] = None
-  
+
   /**
    * REMOVE AFTER REFACTOR COMPLETE
    */

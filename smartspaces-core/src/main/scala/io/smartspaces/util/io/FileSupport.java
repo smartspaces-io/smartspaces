@@ -834,4 +834,17 @@ public interface FileSupport {
    *          the writer that will write the content
    */
   void writeFile(File file, BufferedFileWriter writer);
+  
+  /**
+   * Do an atomic move of the source file to the destination file.
+   * 
+   * <p>
+   * The move will replace an existing file if there is one.
+   * 
+   * @param source
+   *        the source file
+   * @param destination
+   *        the destination file
+   */
+  void atomicMoveFile(File source, File destination);
 }

@@ -18,12 +18,9 @@ package io.smartspaces.sensor.test
 
 import io.smartspaces.event.observable.EventPublisherSubject
 import io.smartspaces.event.observable.ObservableCreator
+import io.smartspaces.sensor.event.PhysicalSpaceOccupancyLiveEvent
+import io.smartspaces.sensor.event.SensorOfflineEvent
 import io.smartspaces.system.SmartSpacesEnvironment
-
-import io.smartspaces.sensor.entity.model.event._
-import io.smartspaces.sensor.entity.model.event.SensorOfflineEvent
-import io.smartspaces.sensor.entity.model.event.PhysicalSpaceOccupancyLiveEvent
-import io.smartspaces.event.observable.ObservableCreator
 
 
 class StandardSensorEventTester(val spaceEnvironment: SmartSpacesEnvironment) {

@@ -177,7 +177,7 @@ public interface WebServerActivityComponent extends ActivityComponent {
    *
    * @return the web server component this method was called on
    */
-  WebServerActivityComponent addDynamicContent(String uriPrefix, boolean usePath,
+  WebServerActivityComponent addDynamicGetRequestHandler(String uriPrefix, boolean usePath,
       HttpDynamicGetRequestHandler handler);
 
   /**

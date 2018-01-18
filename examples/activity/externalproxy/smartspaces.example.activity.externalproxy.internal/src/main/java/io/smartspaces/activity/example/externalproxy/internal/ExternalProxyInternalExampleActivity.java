@@ -104,7 +104,7 @@ public class ExternalProxyInternalExampleActivity extends BaseRoutableWebActivit
 
   @Override
   public void onActivityStartup() {
-    webServer().addDynamicGetContentHandler("barcode", true,
+    webServer().addDynamicGetRequestHandler("barcode", true,
         new ZXingBarcodeHttpDynamicRequestHandler() {
 
           @Override

@@ -30,6 +30,11 @@ public class CommonMimeTypes {
   public static final String MIME_TYPE_TEXT_PLAIN = "text/plain";
 
   /**
+   * The plain HTML MIME type.
+   */
+  public static final String MIME_TYPE_TEXT_HTML = "text/html";
+
+  /**
    * The JSON MIME type.
    */
   public static final String MIME_TYPE_APPLICATION_JSON = "application/json";

@@ -24,8 +24,8 @@ import java.util.Properties;
 
 import io.smartspaces.domain.basic.SpaceController;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 
 /**
  * A {@link SpaceControllerInfoPersister} which uses the file system.
@@ -37,7 +37,7 @@ public class FileSystemSpaceControllerInfoPersister implements SpaceControllerIn
   /**
    * The JSON mapper to use.
    */
-  private JsonMapper jsonMapper = StandardJsonMapper.INSTANCE;
+  private JsonDataMapper jsonMapper = StandardJsonDataMapper.INSTANCE;
 
   @Override
   public void persist(SpaceController controllerInfo, SmartSpacesEnvironment spaceEnvironment) {

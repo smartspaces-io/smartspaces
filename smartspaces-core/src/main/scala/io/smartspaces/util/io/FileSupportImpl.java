@@ -42,6 +42,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -59,6 +60,9 @@ import java.util.zip.ZipOutputStream;
  */
 public class FileSupportImpl implements FileSupport {
 
+  public static void main(String[] args) {
+    INSTANCE.atomicMoveFile(new File("/var/tmp/greeble"), new File("/home/keith/snort"));
+  }
   /**
    * An instance everyone can use if they chose.
    */
@@ -788,4 +792,14 @@ public class FileSupportImpl implements FileSupport {
     }
   }
 
+  @Override
+  public void atomicMoveFile(File source, File destination) {
+    try {
+      Files.move(source.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING,
+          StandardCopyOption.ATOMIC_MOVE);
+    } catch (Throwable e) {
+      throw SmartSpacesException.newFormattedException(e, "Exception while attempting a atomic move from %s to %s",
+          source.getAbsolutePath(), destination.getAbsolutePath());
+    }
+  }
 }

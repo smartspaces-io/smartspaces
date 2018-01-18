@@ -22,8 +22,8 @@ import io.smartspaces.container.control.message.StandardMasterSpaceControllerCod
 import io.smartspaces.domain.basic.pojo.SimpleSpaceController;
 import io.smartspaces.spacecontroller.SpaceController;
 import io.smartspaces.system.SmartSpacesEnvironment;
-import io.smartspaces.util.data.json.JsonMapper;
-import io.smartspaces.util.data.json.StandardJsonMapper;
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
 
 /**
  * Base implementation for a space controller.
@@ -45,7 +45,7 @@ public abstract class BaseSpaceController implements SpaceController {
   /**
    * The JSON mapper to use.
    */
-  private final JsonMapper jsonMapper = StandardJsonMapper.INSTANCE;
+  private final JsonDataMapper jsonMapper = StandardJsonDataMapper.INSTANCE;
 
   /**
    * Construct a controller with the given space environment.

@@ -16,7 +16,7 @@
 
 package io.smartspaces.sensor.value.converter
 
-import io.smartspaces.sensor.entity.MeasurementUnitDescription
+import io.smartspaces.sensor.domain.MeasurementUnitDescription
 
 /**
  * Converter for celcius to fahrenheit.

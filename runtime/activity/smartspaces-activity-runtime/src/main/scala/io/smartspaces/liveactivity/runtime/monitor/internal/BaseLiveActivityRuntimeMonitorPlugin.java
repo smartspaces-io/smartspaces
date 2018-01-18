@@ -102,7 +102,7 @@ public abstract class BaseLiveActivityRuntimeMonitorPlugin implements
   public void startup(RemoteLiveActivityRuntimeMonitorService monitorService, WebServer webServer) {
     this.monitorService = monitorService;
 
-    webServer.addDynamicGetContentHandler(getUrlPrefix(), false, new HttpDynamicGetRequestHandler() {
+    webServer.addDynamicGetRequestHandler(getUrlPrefix(), false, new HttpDynamicGetRequestHandler() {
       @Override
       public void handle(HttpRequest request, HttpResponse response) {
         handleRequest(request, response);

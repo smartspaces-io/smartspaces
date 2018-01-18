@@ -16,7 +16,7 @@
 
 package io.smartspaces.sensor.messaging.input
 
-import io.smartspaces.sensor.processing.SensorProcessor
+import io.smartspaces.sensor.services.processing.SensorProcessor
 import io.smartspaces.service.comm.pubsub.mqtt.MqttSubscriberListener
 import io.smartspaces.messaging.codec.DynamicObjectByteArrayCodec
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint

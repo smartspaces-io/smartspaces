@@ -31,7 +31,7 @@ import io.smartspaces.container.control.message.container.resource.deployment.Co
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ControllerDataRequest;
 import io.smartspaces.resource.Version;
-import io.smartspaces.util.data.json.JsonSmartSpacesException;
+import io.smartspaces.util.data.mapper.DataMapperSmartSpacesException;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -226,7 +226,7 @@ public class StandardMasterSpaceControllerCodec {
         Map<String, Object> value = MAPPER.convertValue(payload, Map.class);
         message.put(CONTROLLER_MESSAGE_PAYLOAD, value);
       } catch (Throwable e) {
-        throw new JsonSmartSpacesException("Could not encode controller request object", e);
+        throw new DataMapperSmartSpacesException("Could not encode controller request object", e);
       }
 
     }
@@ -246,7 +246,7 @@ public class StandardMasterSpaceControllerCodec {
         Map<String, Object> value = MAPPER.convertValue(payload, Map.class);
         message.put(CONTROLLER_MESSAGE_PAYLOAD, value);
       } catch (Throwable e) {
-        throw new JsonSmartSpacesException("Could not parse JSON string", e);
+        throw new DataMapperSmartSpacesException("Could not parse JSON string", e);
       }
 
     }
@@ -258,7 +258,7 @@ public class StandardMasterSpaceControllerCodec {
     try {
       return MAPPER.writeValueAsString(message) + "\n\n";
     } catch (Throwable e) {
-      throw new JsonSmartSpacesException("Could not serialize JSON object as string", e);
+      throw new DataMapperSmartSpacesException("Could not serialize JSON object as string", e);
     }
 
   }
@@ -269,7 +269,7 @@ public class StandardMasterSpaceControllerCodec {
       Map<String, Object> value = MAPPER.readValue(message, Map.class);
       return value;
     } catch (Throwable e) {
-      throw new JsonSmartSpacesException("Could not parse JSON string", e);
+      throw new DataMapperSmartSpacesException("Could not parse JSON string", e);
     }
   }
 
@@ -350,7 +350,7 @@ public class StandardMasterSpaceControllerCodec {
         T value = MAPPER.convertValue(payload, clazz);
         return value;
       } catch (Throwable e) {
-        throw new JsonSmartSpacesException("Could not parse command message string", e);
+        throw new DataMapperSmartSpacesException("Could not parse command message string", e);
       }
 
     }

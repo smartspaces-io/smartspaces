@@ -233,7 +233,7 @@ public interface Configuration {
    * @param property
    *          name of the property
    * @param delineator
-   *          the string to use to separate the property value into separate
+   *          the regex to use to separate the property value into separate
    *          strings
    *
    * @return the set of distinct values or {@code null} if no such property

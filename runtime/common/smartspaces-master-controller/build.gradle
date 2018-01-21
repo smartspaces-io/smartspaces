@@ -36,9 +36,8 @@ jar {
 
     instruction 'Import-Package',
         'io.smartspaces.system.resources.*;resolution:="optional"',
+        'io.smartspaces.domain.*;resolution:="optional"',
         '*'
-
-    io.smartspaces.system.resources
   }
 }
 

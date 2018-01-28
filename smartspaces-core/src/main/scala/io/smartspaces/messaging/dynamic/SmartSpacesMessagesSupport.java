@@ -192,6 +192,38 @@ public class SmartSpacesMessagesSupport {
   }
 
   /**
+   * Get the simple version of a Smart Spaces message success response.
+   *
+   * @return a success response
+   */
+  public static DynamicObjectBuilder getSimpleSuccessResponseAsBuilder() {
+    DynamicObjectBuilder builder = new StandardDynamicObjectBuilder();
+
+    builder.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_RESULT,
+        SmartSpacesMessages.MESSAGE_ENVELOPE_VALUE_RESULT_SUCCESS);
+
+    return builder;
+  }
+
+  /**
+   * Get a Smart Spaces message success response with data.
+   *
+   * @param data
+   *          the data field for the responses
+   *
+   * @return a success Smart Spaces message response with data
+   */
+  public static DynamicObjectBuilder getSuccessResponseAsBuilder(Object data) {
+    DynamicObjectBuilder builder = getSimpleSuccessResponseAsBuilder();
+
+    if (data != null) {
+      builder.setProperty(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA, data);
+    }
+
+    return builder;
+  }
+
+  /**
    * Get a failure Smart Spaces message response.
    *
    * @param reason

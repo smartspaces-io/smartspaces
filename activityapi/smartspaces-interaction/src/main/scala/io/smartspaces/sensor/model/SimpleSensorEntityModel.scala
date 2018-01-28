@@ -55,6 +55,14 @@ class SimpleSensorEntityModel(
   override def getSensorChannelEntityModel(channelId: String): Option[SensorChannelEntityModel] = {
     sensorChannelModels.get(channelId)
   }
+  
+  override def hasMeasurementType(measurementTypeExternalId: String): Boolean = {
+    sensorChannelModels.values.find(_.sensorChannelDetail.measurementType.externalId == measurementTypeExternalId).isDefined
+  }
+
+  override def getMeasurementTypeChannels(measurementTypeExternalId: String): Iterable[SensorChannelEntityModel] = {
+    sensorChannelModels.values.filter(_.sensorChannelDetail.measurementType.externalId == measurementTypeExternalId)
+  }
 
   override def getSensedValue(valueTypeId: String): Option[SensedValue[Any]] = {
     // TODO(keith): Needs some sort of concurrency block

@@ -40,6 +40,16 @@ public class SmartSpacesMessages {
   public static final String MESSAGE_ENVELOPE_REQUEST_ID = "requestId";
 
   /**
+   * Field in the message envelope giving the sender of the message.
+   */
+  public static final String MESSAGE_ENVELOPE_SENDER = "sender";
+
+  /**
+   * Field in the message envelope giving the destination of the message.
+   */
+  public static final String MESSAGE_ENVELOPE_DESTINATION = "destination";
+
+  /**
    * Field in the message envelope giving the result.
    */
   public static final String MESSAGE_ENVELOPE_RESULT = "result";

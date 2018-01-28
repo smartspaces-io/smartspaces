@@ -107,6 +107,9 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
           // TODO(keith): Some sort of error.
           break
         }
+      } else {
+          // TODO(keith): Some sort of error.
+          break        
       }
 
       var sensorUpdateTimeLimit: Option[Long] = None
@@ -137,7 +140,7 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
-        sensorDetail, 
+        sensorDetail.get, 
         itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_SOURCE),
         sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit)
 
@@ -239,7 +242,7 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
       val channelIds = if (sensorChannelIds == "*" || sensorChannelIds.startsWith("-")) {
         val sensor = sensorRegistry.getSensorByExternalId(sensorExternalId)
         if (sensor.isDefined) {
-          var allChannelIds =sensor.get.sensorType.get.getAllSensorChannelDetails().map(_.channelId)
+          var allChannelIds =sensor.get.sensorType.getAllSensorChannelDetails().map(_.channelId)
           if (sensorChannelIds == "*") {
             allChannelIds
           } else {

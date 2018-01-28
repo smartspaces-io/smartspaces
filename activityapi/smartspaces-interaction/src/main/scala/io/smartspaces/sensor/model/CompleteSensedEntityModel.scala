@@ -95,6 +95,26 @@ trait CompleteSensedEntityModel {
   def getSensorEntityModelByExternalId(externalId: String): Option[SensorEntityModel]
 
   /**
+   * Get all sensor entity models that provide a given measurement type.
+   *
+   * @param measurementTypeExternalId
+   *          the external ID of the measurement type
+   *
+   * @return all sensor models that make the given measurement
+   */
+  def getAllSensorEntityModelsForMeasurementTypeExternalId(measurementTypeExternalId: String): Iterable[SensorEntityModel]
+
+  /**
+   * Get all sensor channel entity models that provide a given measurement type.
+   *
+   * @param measurementTypeExternalId
+   *          the external ID of the measurement type
+   *
+   * @return all sensor channel models that make the given measurement
+   */
+  def getAllSensorChannelEntityModelsForMeasurementTypeExternalId(measurementTypeExternalId: String): Iterable[SensorChannelEntityModel]
+
+  /**
    * Get all sensor entity models in the collection.
    *
    * @return the models

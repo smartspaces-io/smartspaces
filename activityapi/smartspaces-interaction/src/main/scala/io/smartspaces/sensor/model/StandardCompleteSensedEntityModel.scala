@@ -173,6 +173,14 @@ class StandardCompleteSensedEntityModel(
   override def getAllSensorEntityModels(): scala.collection.immutable.List[SensorEntityModel] = {
     externalIdToSensorEntityModels.values.toList
   }
+  
+  override def getAllSensorEntityModelsForMeasurementTypeExternalId(measurementTypeExternalId: String): Iterable[SensorEntityModel] = {
+    externalIdToSensorEntityModels.values.filter(_.hasMeasurementType(measurementTypeExternalId))
+  }
+
+  override def getAllSensorChannelEntityModelsForMeasurementTypeExternalId(measurementTypeExternalId: String): Iterable[SensorChannelEntityModel] = {
+    externalIdToSensorEntityModels.values.flatMap(_.getMeasurementTypeChannels(measurementTypeExternalId))
+  }
 
   override def getSensedEntityModelById(id: String): Option[SensedEntityModel] = {
     idToSensedEntityModels.get(id)

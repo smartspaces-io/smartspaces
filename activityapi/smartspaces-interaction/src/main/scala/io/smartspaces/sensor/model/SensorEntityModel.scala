@@ -67,6 +67,20 @@ trait SensorEntityModel extends HeartbeatMonitorable {
   def getSensorChannelEntityModel(channelId: String): Option[SensorChannelEntityModel]
 
   /**
+   * Does the sensor return a given measurement type?
+   *
+   * @return [[true]] if the sensor has a given measurement type
+   */
+  def hasMeasurementType(measurementTypeExternalId: String): Boolean
+
+  /**
+   * Get all channels giving a particular measurement type.
+   *
+   * @return all channels giving a particular measurement type
+   */
+  def getMeasurementTypeChannels(measurementTypeExternalId: String): Iterable[SensorChannelEntityModel]
+
+  /**
    * Get the value of a sensed property by its type ID.
    *
    * @param valueTypeId

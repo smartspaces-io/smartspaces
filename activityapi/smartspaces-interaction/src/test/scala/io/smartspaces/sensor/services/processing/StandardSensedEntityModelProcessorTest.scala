@@ -111,7 +111,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
 
     val sensor =
       new SimpleSensorEntityDescription("2", "foo", "foo", Option("foo"), 
-          Some(sensorDetail), "foo", None, None)
+          sensorDetail, "foo", None, None)
     val sensorModel = new SimpleSensorEntityModel(sensor, completeSensedEntityModel, 0)
 
     val sensedEntity =

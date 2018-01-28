@@ -54,7 +54,7 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
    
     Mockito.when(allModels.eventEmitter).thenReturn(eventEmitter)
 
-    Mockito.when(sensorEntityDescription.sensorType).thenReturn(Option(sensorDetail))
+    Mockito.when(sensorEntityDescription.sensorType).thenReturn(sensorDetail)
 
     model = new SimpleSensorEntityModel(sensorEntityDescription, allModels, modelCreationTime)
   }

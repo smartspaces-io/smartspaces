@@ -78,6 +78,20 @@ trait SensorTypeDescription extends DisplayableDescription {
    * @return the measurement unit
    */
   def getSensorChannelDetail(id: String): Option[SensorChannelDetailDescription]
+  
+  /**
+   * Does the sensor return a given measurement type?
+   * 
+   * @return [[true]] if the sensor has a given measurement type
+   */
+  def hasMeasurementType(measurementTypeExternalId: String): Boolean
+  
+  /**
+   *  Get all sensor channel descriptions for a given measurement type.
+   * 
+   * @return all channels with a given measurement type
+   */
+  def getMeasurementTypeChannels(measurementTypeExternalId: String): Iterable[SensorChannelDetailDescription]
 }
 
 /**
@@ -109,5 +123,13 @@ case class SimpleSensorTypeDescription(
 
   override def getSensorChannelDetail(id: String): Option[SensorChannelDetailDescription] = {
     channelDetails.find(_.channelId == id)
+  }
+  
+  override def hasMeasurementType(measurementTypeExternalId: String): Boolean = {
+    channelDetails.find(_.measurementType.externalId == measurementTypeExternalId).isDefined
+  }
+  
+  override def getMeasurementTypeChannels(measurementTypeExternalId: String): Iterable[SensorChannelDetailDescription] = {
+    channelDetails.filter(_.measurementType.externalId == measurementTypeExternalId)
   }
 }

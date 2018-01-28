@@ -211,7 +211,7 @@ class InMemorySensorInstanceRegistry @Inject()(log: ExtendedLog) extends SensorI
       return this
     }
     
-    val sensorChannelDetail = sensor.get.sensorType.get.getSensorChannelDetail(sensorChannelId)
+    val sensorChannelDetail = sensor.get.sensorType.getSensorChannelDetail(sensorChannelId)
     if (sensorChannelId.isEmpty) {
       log.warn(s"Sensor channel ID ${sensorChannelId} in sensor detail for sensor external ID ${sensorExternalId} not found when associating sensor with sensed entity")
       return this

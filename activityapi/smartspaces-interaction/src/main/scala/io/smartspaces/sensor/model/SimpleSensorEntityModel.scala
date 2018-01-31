@@ -29,9 +29,9 @@ import io.smartspaces.monitor.expectation.time.StandardHeartbeatMonitorable
  * @author Keith M. Hughes
  */
 class SimpleSensorEntityModel(
-    val sensorEntityDescription: SensorEntityDescription, 
-    val allModels: CompleteSensedEntityModel, 
-    override val itemCreationTime: Long) extends SensorEntityModel with StandardHeartbeatMonitorable {
+  val sensorEntityDescription: SensorEntityDescription,
+  val allModels: CompleteSensedEntityModel,
+  override val itemCreationTime: Long) extends SensorEntityModel with StandardHeartbeatMonitorable {
 
   /**
    * The values being sensed keyed by the value name.
@@ -51,11 +51,15 @@ class SimpleSensorEntityModel(
   override def addSensorChannelModel(sensorChannelModel: SensorChannelEntityModel): Unit = {
     sensorChannelModels.put(sensorChannelModel.sensorChannelDetail.channelId, sensorChannelModel)
   }
-  
+
   override def getSensorChannelEntityModel(channelId: String): Option[SensorChannelEntityModel] = {
     sensorChannelModels.get(channelId)
   }
-  
+
+  override def hasSensorChannel(channelId: String): Boolean = {
+    sensorChannelModels.contains(channelId)
+  }
+
   override def hasMeasurementType(measurementTypeExternalId: String): Boolean = {
     sensorChannelModels.values.find(_.sensorChannelDetail.measurementType.externalId == measurementTypeExternalId).isDefined
   }
@@ -78,8 +82,8 @@ class SimpleSensorEntityModel(
 
     sensedValues.put(value.measurementTypeDescription.externalId, value)
   }
-  
+
   override def stateUpdateTimeLimit: Option[Long] = sensorEntityDescription.sensorStateUpdateTimeLimit
-  
+
   override def heartbeatUpdateTimeLimit: Option[Long] = sensorEntityDescription.sensorHeartbeatUpdateTimeLimit
 }

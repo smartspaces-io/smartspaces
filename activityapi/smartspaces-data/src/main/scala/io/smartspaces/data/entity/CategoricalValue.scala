@@ -38,7 +38,7 @@ trait CategoricalValueInstance extends Equals {
    * 
    * @return the value
    */
-  def value(): CategoricalValue[CategoricalValueInstance]
+  def value: CategoricalValue[CategoricalValueInstance]
 }
 
 /**

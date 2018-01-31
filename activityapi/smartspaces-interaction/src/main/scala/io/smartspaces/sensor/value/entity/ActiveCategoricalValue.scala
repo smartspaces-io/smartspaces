@@ -43,7 +43,7 @@ object ActiveCategoricalValueInstances {
    * @author Keith M. Hughes
    */
   sealed abstract class ActiveCategoricalValueInstance(override val id: Int, override val label: String) extends BaseCategoricalValueInstance {
-    override val value: CategoricalValue[CategoricalValueInstance] = ActiveCategoricalValue
+    override def value: CategoricalValue[CategoricalValueInstance] = ActiveCategoricalValue
   }
   
   /**

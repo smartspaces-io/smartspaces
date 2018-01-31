@@ -44,7 +44,7 @@ object MoistureCategoricalValueInstances {
    * @author Keith M. Hughes
    */
   sealed abstract class MoistureCategoricalValueInstance(override val id: Int, override val label: String) extends BaseCategoricalValueInstance {
-    override val value: CategoricalValue[CategoricalValueInstance] = MoistureCategoricalValue
+    override def value: CategoricalValue[CategoricalValueInstance] = MoistureCategoricalValue
   }
   
   /**

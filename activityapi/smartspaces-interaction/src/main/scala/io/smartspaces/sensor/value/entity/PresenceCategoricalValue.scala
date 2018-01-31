@@ -69,7 +69,7 @@ object PresenceCategoricalValueInstances {
    * @author Keith M. Hughes
    */
   sealed abstract class PresenceCategoricalValueInstance(override val id: Int, override val label: String) extends BaseCategoricalValueInstance {
-    override val value: CategoricalValue[CategoricalValueInstance] = PresenceCategoricalValue
+    override def value: CategoricalValue[CategoricalValueInstance] = PresenceCategoricalValue
   }
   
   /**

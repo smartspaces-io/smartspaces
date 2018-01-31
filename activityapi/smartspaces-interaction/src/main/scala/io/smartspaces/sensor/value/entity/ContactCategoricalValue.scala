@@ -44,7 +44,7 @@ object ContactCategoricalValueInstances {
    * @author Keith M. Hughes
    */
   sealed abstract class ContactCategoricalValueInstance(override val id: Int, override val label: String) extends BaseCategoricalValueInstance {
-    override val value: CategoricalValue[CategoricalValueInstance] = ContactCategoricalValue
+    override def value: CategoricalValue[CategoricalValueInstance] = ContactCategoricalValue
   }
   
   /**

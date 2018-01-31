@@ -52,6 +52,20 @@ trait SensorEntityDescription extends EntityDescription {
   var active: Boolean
 
   /**
+   * Does the sensor have a channel with the given ID?
+   * 
+   * <p>
+   * The channel must be a channel of this sensor detail to be found. Channel names are local
+   * to the detail they are contained in.
+   * 
+   * @param channelId
+   *     the ID of the channel detail
+   *
+   * @return [[true]] if there is a channel with the given ID
+   */
+  def hasSensorChannel(channelId: String): Boolean
+
+  /**
    * Does the sensor return a given measurement type?
    *
    * @return [[true]] if the sensor has a given measurement type
@@ -82,6 +96,11 @@ class SimpleSensorEntityDescription(
   override val sensorHeartbeatUpdateTimeLimit: Option[Long]) extends SimpleEntityDescription(id, externalId, displayName, displayDescription) with SensorEntityDescription {
 
   override var active: Boolean = true
+
+  
+  override def hasSensorChannel(channelId: String): Boolean = {
+    sensorType.hasSensorChannel(channelId)
+  }
 
   override def hasMeasurementType(measurementTypeExternalId: String): Boolean = {
     sensorType.hasMeasurementType(measurementTypeExternalId)

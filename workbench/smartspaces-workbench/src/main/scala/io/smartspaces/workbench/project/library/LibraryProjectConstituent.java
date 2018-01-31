@@ -138,12 +138,14 @@ public class LibraryProjectConstituent extends BaseProjectConstituent {
      *          the container Info object to populate
      */
     @SuppressWarnings("unchecked")
-    private void getOsgiInfo(Namespace namespace, Element rootElement, ContainerInfo containerInfo) {
+    private void getOsgiInfo(Namespace namespace, Element rootElement,
+        ContainerInfo containerInfo) {
 
       Element osgiElement = rootElement.getChild(CONTAINER_ELEMENT, namespace);
       if (osgiElement != null) {
-        containerInfo.setActivatorClassname(osgiElement.getChildText(CONTAINER_ACTIVATOR_ELEMENT,
-            namespace));
+        String activatorClassname =
+            osgiElement.getChildText(CONTAINER_ACTIVATOR_ELEMENT, namespace);
+        containerInfo.setActivatorClassname(activatorClassname.trim());
 
         extractPrivatePackages(namespace, osgiElement, containerInfo);
         extractImportPackages(namespace, osgiElement, containerInfo);
@@ -201,8 +203,7 @@ public class LibraryProjectConstituent extends BaseProjectConstituent {
           String packageName = packageElement.getTextTrim();
           if (packageName != null && !packageName.isEmpty()) {
             String requiredAttribute =
-                packageElement.getAttributeValue(
-                    ATTRIBUTE_NAME_CONTAINER_PACKAGES_PACKAGE_REQUIRED,
+                packageElement.getAttributeValue(ATTRIBUTE_NAME_CONTAINER_PACKAGES_PACKAGE_REQUIRED,
                     ATTRIBUTE_VALUE_CONTAINER_PACKAGES_PACKAGE_REQUIRED_VALUE_TRUE);
 
             VersionRange versionRange = null;
@@ -214,7 +215,8 @@ public class LibraryProjectConstituent extends BaseProjectConstituent {
 
             packages.add(new ImportPackage(packageName,
                 ATTRIBUTE_VALUE_CONTAINER_PACKAGES_PACKAGE_REQUIRED_VALUE_TRUE
-                    .equals(requiredAttribute), versionRange));
+                    .equals(requiredAttribute),
+                versionRange));
           }
         }
       }

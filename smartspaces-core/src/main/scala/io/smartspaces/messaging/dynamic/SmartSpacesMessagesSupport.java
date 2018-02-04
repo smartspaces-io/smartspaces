@@ -17,12 +17,13 @@
 
 package io.smartspaces.messaging.dynamic;
 
-import io.smartspaces.SmartSpacesExceptionUtils;
-import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
-import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import io.smartspaces.SmartSpacesExceptionUtils;
+import io.smartspaces.util.data.dynamic.DynamicObject;
+import io.smartspaces.util.data.dynamic.DynamicObjectBuilder;
+import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder;
 
 /**
  * A set of methods and constants to provide uniform Smart Spaces message
@@ -148,6 +149,22 @@ public class SmartSpacesMessagesSupport {
   public static boolean isSuccessResponse(Map<String, Object> response) {
     return SmartSpacesMessages.MESSAGE_ENVELOPE_VALUE_RESULT_SUCCESS
         .equals(response.get(SmartSpacesMessages.MESSAGE_ENVELOPE_RESULT));
+  }
+
+  /**
+   * Is the response a success response?
+   *
+   * <p>
+   * This method assumes the response is in the envelope.
+   * 
+   * @param response
+   *          a Smart Spaces message response as a dynamic object
+   *
+   * @return {@code true} if the response was a success
+   */
+  public static boolean isSuccessResponse(DynamicObject response) {
+    return SmartSpacesMessages.MESSAGE_ENVELOPE_VALUE_RESULT_SUCCESS
+        .equals(response.getString(SmartSpacesMessages.MESSAGE_ENVELOPE_RESULT));
   }
 
   /**

@@ -53,6 +53,11 @@ import java.util.Map
 import java.util.Set
 
 import scala.collection.JavaConversions.asScalaSet
+import io.smartspaces.util.SmartSpacesUtilities
+import com.orientechnologies.orient.core.OrientShutdownHook
+import com.orientechnologies.orient.core.shutdown.OShutdownHandler
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 object StandardQuartzSchedulerService {
   val ORIENTDB_URI = "PLOCAL:${$system.datadir}/database/quartz"
@@ -140,7 +145,24 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
       getSpaceEnvironment.getContainerManagedScope.managedResources
         .addResource(new BaseManagedResource() {
           override def shutdown(): Unit = {
-            Orient.instance().shutdown()
+//       persistedScheduler.shutdown()
+//           val latch = new CountDownLatch(1)
+//            val shutdownHandler = new OShutdownHandler() {
+//              override def getPriority(): Int = {
+//                Integer.MAX_VALUE
+//              }
+//              override def shutdown() = {
+//                println("OrientDB shutdown hook called")
+//              latch.countDown()
+//              }
+//            }
+            val instance = Orient.instance()
+//            instance.closeAllStorages()
+//            instance.addShutdownHandler(shutdownHandler)
+              instance.shutdown()
+
+            //latch.await(5, TimeUnit.SECONDS)
+            
           }
         })
 
@@ -365,7 +387,8 @@ class ActionSchedulerJob(spaceEnvironment: SmartSpacesEnvironment, log: Extended
       executionContext.setValues(jobDataMap)
 
       val actionService: ActionService = spaceEnvironment.getServiceRegistry.getRequiredService(ActionService.SERVICE_NAME)
-      actionService.performAction(jobDataMap.getString(StandardQuartzSchedulerService.JOB_MAP_PROPERTY_ACTION_SOURCE),
+      actionService.performAction(
+        jobDataMap.getString(StandardQuartzSchedulerService.JOB_MAP_PROPERTY_ACTION_SOURCE),
         jobDataMap.getString(StandardQuartzSchedulerService.JOB_MAP_PROPERTY_ACTION_NAME), executionContext)
     } catch {
       case e: Throwable =>

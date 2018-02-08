@@ -18,6 +18,48 @@ package io.smartspaces.sensor.domain
 
 import scala.collection.mutable.ArrayBuffer
 
+import io.smartspaces.data.entity.BaseCategoricalValue
+import io.smartspaces.data.entity.BaseCategoricalValueInstance
+import io.smartspaces.data.entity.CategoricalValue
+import io.smartspaces.data.entity.CategoricalValueInstance
+
+/**
+ * The activity categorical value.
+ * 
+ * @author Keith M. Hughes
+ */
+final object SensorAcquisitionModeCategoricalValue extends BaseCategoricalValue[
+  SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance]( 
+    "sensorAcquisitionType", List(SensorAcquisitionModeCategoricalValueInstances.PULL, SensorAcquisitionModeCategoricalValueInstances.PUSH)) {  
+}
+
+/**
+ * All categorical value instances for how a sensor acquires data..
+ * 
+ * @author Keith M. Hughes
+ */
+object SensorAcquisitionModeCategoricalValueInstances {
+  
+  /**
+   * Base class for the sensor acquisition type categorical variable instances.
+   * 
+   * @author Keith M. Hughes
+   */
+  sealed abstract class SensorAcquisitionModeCategoricalValueInstance(override val id: Int, override val label: String) extends BaseCategoricalValueInstance {
+    override def value: CategoricalValue[CategoricalValueInstance] = SensorAcquisitionModeCategoricalValue
+  }
+  
+  /**
+   * The data must be pulled in.
+   */
+  final object PULL extends SensorAcquisitionModeCategoricalValueInstance(0, "PULL")
+  
+  /**
+   * The data is pushed to the processor.
+   */
+  final object PUSH extends SensorAcquisitionModeCategoricalValueInstance(1, "PUSH")
+}
+
 /**
  * Type information about a sensor.
  * 
@@ -39,6 +81,11 @@ trait SensorTypeDescription extends DisplayableDescription {
    * The usage category of the sensor.
    */
   val usageCategory: Option[String]
+  
+  /**
+   * How the sensor acquires its data.
+   */
+  val acquisitionMode: SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance
     
   /**
    * The time limit on when a sensor update should happen, in milliseconds
@@ -49,6 +96,16 @@ trait SensorTypeDescription extends DisplayableDescription {
    * The time limit on when a sensor heartbeat update should happen, in milliseconds
    */
   val sensorHeartbeatUpdateTimeLimit: Option[Long]
+  
+  /**
+   * The optional manufacturer's name.
+   */
+  val sensorManufacturerName: Option[String]
+  
+  /**
+   * The optional manufacturer's model.
+   */
+  val sensorManufacturerModel: Option[String]
 
   /**
    * Add in a new channel detail to the sensor detail.
@@ -120,7 +177,11 @@ case class SimpleSensorTypeDescription(
     override val displayDescription: Option[String], 
     override val sensorUpdateTimeLimit: Option[Long], 
     override val sensorHeartbeatUpdateTimeLimit: Option[Long],
-    override val usageCategory: Option[String]) extends SensorTypeDescription {
+    override val usageCategory: Option[String],
+    override val acquisitionMode: SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance,
+    override val sensorManufacturerName: Option[String],
+    override val sensorManufacturerModel: Option[String]
+    ) extends SensorTypeDescription {
 
   /**
    * The measurement units for this type.

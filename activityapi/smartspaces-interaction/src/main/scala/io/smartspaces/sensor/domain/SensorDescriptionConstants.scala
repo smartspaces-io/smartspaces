@@ -82,6 +82,21 @@ object SensorDescriptionConstants {
   val SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE = "categoryUsage"
 
   /**
+   * The sensor types section field for the acquisition mode of the sensor type.
+   */
+  val SECTION_FIELD_SENSOR_TYPES_SENSOR_ACQUISITION_MODE = "acquisitionMode"
+
+  /**
+   * The sensor types section field for the manufacturer name of the sensor type.
+   */
+  val SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_NAME = "sensorManufacturerName"
+
+  /**
+   * The sensor types section field for the manufacturer model of the sensor type.
+   */
+  val SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_MODEL = "sensorManufacturerModel"
+
+  /**
    * The sensor types section field for the channels for the sensor type.
    */
   val SECTION_FIELD_SENSOR_TYPES_CHANNELS = "channels"

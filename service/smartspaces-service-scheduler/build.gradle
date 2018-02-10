@@ -24,9 +24,7 @@ dependencies {
     transitive = false
   }
   
-  compile('com.orientechnologies:orientdb-core:2.2.31') {
-    exclude group: 'org.xerial.snappy', module: 'snappy-java'
-  }
+  compile('io.smartspaces:orientdb-complete.osgi:2.2.31')
   
   compile 'io.smartspaces:quartz-orientdb:0.3.0-SNAPSHOT'
   
@@ -37,13 +35,6 @@ dependencies {
   
   runtime("org.apache.commons:com.springsource.org.apache.commons.codec:1.4.0")
   runtime("org.slf4j:slf4j-api:1.7.10")
-
-  runtime('com.orientechnologies:orientdb-client:2.2.31')
-  runtime('com.orientechnologies:orientdb-server:2.2.31') {
-    exclude group: 'javax.mail', module: 'mail'
-    transitive = false
-  }
-  runtime('com.orientechnologies:orientdb-tools:2.2.31')
 
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'

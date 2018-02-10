@@ -247,6 +247,8 @@ public class GeneralSmartSpacesSupportActivator
     try {
       getCoreServices();
       containerLog = new StandardExtendedLog("container", loggingProvider.getLog());
+      
+      executorService = new DefaultScheduledExecutorService();
 
       managedResources = new StandardManagedResources(containerLog);
 
@@ -345,8 +347,6 @@ public class GeneralSmartSpacesSupportActivator
    */
   private void setupSpaceEnvironment(File baseInstallDir) {
     Map<String, String> containerProperties = configurationProvider.getInitialConfiguration();
-
-    executorService = new DefaultScheduledExecutorService();
 
     // filesystem = new BasicSmartSpacesFilesystem(baseInstallDir);
     // filesystem.startup();

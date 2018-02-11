@@ -24,7 +24,7 @@ dependencies {
     transitive = false
   }
   
-  compile('io.smartspaces:orientdb-complete.osgi:2.2.31')
+  compile('io.smartspaces:orientdb-complete-osgi:2.2.31')
   
   compile 'io.smartspaces:quartz-orientdb:0.3.0-SNAPSHOT'
   

@@ -26,12 +26,16 @@ dependencies {
   
   compile('io.smartspaces:orientdb-complete-osgi:2.2.31')
   
-  compile 'io.smartspaces:quartz-orientdb:0.3.0-SNAPSHOT'
+  compile('io.smartspaces:quartz-orientdb:0.3.0-SNAPSHOT') {
+	  exclude group: 'com.orientechnologies'
+  }
   
   provided "${project.ext.osgiContainerDependency}"
 
   runtime 'org.slf4j:slf4j-api:1.7.10'
   runtime 'org.slf4j:slf4j-simple:1.7.10'
+  
+  runtime 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.1'
   
   runtime("org.apache.commons:com.springsource.org.apache.commons.codec:1.4.0")
   runtime("org.slf4j:slf4j-api:1.7.10")

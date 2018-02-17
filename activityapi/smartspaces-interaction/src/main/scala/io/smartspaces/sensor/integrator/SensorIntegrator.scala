@@ -35,6 +35,11 @@ import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
  * @author Keith M. Hughes
  */
 trait SensorIntegrator extends ManagedResource {
+  
+  /**
+   * Any name scoping for observable names.
+   */
+  val observableNameScope: Option[String]
 
   /**
    * The sensor query processor.

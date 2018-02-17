@@ -23,6 +23,8 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import io.reactivex.Observable;
 
+import scala.Option;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,8 @@ import java.util.Map;
  * @author Keith M. Hughes
  */
 public class StandardEventObservableRegistry implements EventObservableRegistry {
+  
+  private static final scala.Option<String> NONE = scala.Option.apply(null);
 
   /**
    * The map of observables.
@@ -62,9 +66,22 @@ public class StandardEventObservableRegistry implements EventObservableRegistry 
   @Override
   public synchronized EventObservableRegistry registerObservable(String observableName,
       Observable<?> observable) {
-    observables.put(observableName, observable);
+    return registerObservable(observableName, NONE, observable);
+  }
 
-    List<FutureObservers<?>> futures = futureObservers.removeAll(observableName);
+  @Override
+  public synchronized EventObservableRegistry registerObservable(
+      String observableName,
+      Option<String> nameScope,
+      Observable<?> observable) {
+    
+    String finalObservableName = scopeObservableName(observableName, nameScope);
+    
+    log.formatInfo("Registering event observable %s", finalObservableName);
+    
+    observables.put(finalObservableName, observable);
+
+    List<FutureObservers<?>> futures = futureObservers.removeAll(finalObservableName);
     for (FutureObservers<?> future : futures) {
       future.subscribe();
     }
@@ -74,7 +91,16 @@ public class StandardEventObservableRegistry implements EventObservableRegistry 
 
   @Override
   public synchronized EventObservableRegistry unregisterObservable(String observableName) {
-    observables.remove(observableName);
+    return unregisterObservable(observableName, NONE);
+  }
+
+  @Override
+  public synchronized EventObservableRegistry unregisterObservable(String observableName, Option<String> nameScope) {
+    String finalObservableName = scopeObservableName(observableName, nameScope);
+    
+    log.formatInfo("Removing event observable %s", finalObservableName);
+   
+    observables.remove(finalObservableName);
 
     return this;
   }
@@ -82,18 +108,39 @@ public class StandardEventObservableRegistry implements EventObservableRegistry 
   @Override
   @SuppressWarnings("unchecked")
   public synchronized <T extends Observable<?>> T getObservable(String observableName) {
-    return (T) observables.get(observableName);
+    return getObservable(observableName, NONE);
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public synchronized <T extends Observable<?>> T getObservable(String observableName, Option<String> nameScope) {
+    String finalObservableName = scopeObservableName(observableName, nameScope);
+    
+    log.formatInfo("Getting event observable %s", finalObservableName);
+    
+    return (T) observables.get(finalObservableName);
   }
 
   @Override
   public synchronized <T extends Observable<?>> T getObservable(String observableName,
       ObservableCreator<T> creator) {
-    T observable = getObservable(observableName);
+    return getObservable(observableName, NONE, creator);
+  }
+
+  @Override
+  public synchronized <T extends Observable<?>> T getObservable(String observableName, 
+      Option<String> nameScope,
+      ObservableCreator<T> creator) {
+    String finalObservableName = scopeObservableName(observableName, nameScope);
+    
+    log.formatInfo("Getting event observable %s with creator", finalObservableName);
+   
+    T observable = getObservable(finalObservableName);
 
     if (observable == null) {
       observable = creator.newObservable();
 
-      registerObservable(observableName, observable);
+      registerObservable(finalObservableName, observable);
     }
 
     return observable;
@@ -102,7 +149,18 @@ public class StandardEventObservableRegistry implements EventObservableRegistry 
   @Override
   public <T> boolean connectObservers(String observableName, ManagedScope scope,
       BaseObserver<T>... observers) {
-    Observable<? extends T> observable = getObservable(observableName);
+    return connectObservers(observableName, NONE, scope, observers);
+  }
+
+  @Override
+  public <T> boolean connectObservers(String observableName, 
+      Option<String> nameScope, ManagedScope scope,
+      BaseObserver<T>... observers) {
+    String finalObservableName = scopeObservableName(observableName, nameScope);
+    
+    log.formatInfo("Connecting observers to event observable %s", finalObservableName);
+    
+    Observable<? extends T> observable = getObservable(finalObservableName);
     if (observable != null) {
       if (observers != null) {
         subscribeScopableObservers(observable, observers, scope);
@@ -116,14 +174,34 @@ public class StandardEventObservableRegistry implements EventObservableRegistry 
   @Override
   public synchronized <T> void connectObserversWhenAvailable(String observableName,
       ManagedScope scope, BaseObserver<T>... observers) {
+    connectObserversWhenAvailable(observableName, NONE, scope, observers);
+  }
+
+  @Override
+  public synchronized <T> void connectObserversWhenAvailable(String observableName, 
+      Option<String> nameScope,
+      ManagedScope scope, BaseObserver<T>... observers) {
+    String finalObservableName = scopeObservableName(observableName, nameScope);
+    
+    log.formatInfo("Connect observers to event observable %s when available", finalObservableName);
+    
     if (observers != null) {
-      Observable<? extends T> observable = getObservable(observableName);
+      Observable<? extends T> observable = getObservable(finalObservableName);
       if (observable != null) {
         subscribeScopableObservers(observable, observers, scope);
       } else {
-        futureObservers.put(observableName,
+        futureObservers.put(finalObservableName,
             new FutureObservers<T>(observableName, scope, observers));
       }
+    }
+  }
+
+  @Override
+  public String scopeObservableName(String observableName, Option<String> nameScope) {
+    if (nameScope.isDefined()) {
+      return observableName + "." + nameScope.get();
+    } else {
+      return observableName;
     }
   }
 

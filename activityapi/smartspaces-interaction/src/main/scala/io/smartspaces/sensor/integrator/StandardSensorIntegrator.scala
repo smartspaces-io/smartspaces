@@ -66,6 +66,7 @@ import io.smartspaces.util.data.dynamic.DynamicObject
  * @author Keith M. Hughes
  */
 class StandardSensorIntegrator(
+    override val observableNameScope: Option[String],
     private val _sensorCommonRegistry: SensorCommonRegistry,
     private val _sensorInstanceRegistry: SensorInstanceRegistry,
     private val spaceEnvironment: SmartSpacesEnvironment, 
@@ -85,7 +86,7 @@ class StandardSensorIntegrator(
   /**
    * The collection of event emitters.
    */
-  val eventEmitter = new StandardSensorProcessingEventEmitter(spaceEnvironment, log)
+  val eventEmitter = new StandardSensorProcessingEventEmitter(observableNameScope, spaceEnvironment, log)
 
   /**
    * The handler for unknown sensed entities.
@@ -112,6 +113,18 @@ class StandardSensorIntegrator(
    * The registry for sensor value processors.
    */
   private var sensorValueProcessorRegistry: SensorValueProcessorRegistry = _
+  
+  /**
+   * Construct a sensor processing without an observable name scope.
+   */
+  def this(
+    sensorCommonRegistry: SensorCommonRegistry,
+    sensorInstanceRegistry: SensorInstanceRegistry,
+    spaceEnvironment: SmartSpacesEnvironment, 
+    managedScope: ManagedScope, 
+    log: ExtendedLog) {
+    this(None, sensorCommonRegistry, sensorInstanceRegistry, spaceEnvironment, managedScope, log)
+  }
 
   override def valueRegistry: ValueRegistry = _valueRegistry
 

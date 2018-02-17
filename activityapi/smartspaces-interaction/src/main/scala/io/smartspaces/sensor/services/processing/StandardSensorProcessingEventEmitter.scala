@@ -31,7 +31,10 @@ import io.smartspaces.system.SmartSpacesEnvironment
  * 
  * @author Keith M. Hughes
  */
-class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSpacesEnvironment, private val log: ExtendedLog) extends SensorProcessingEventEmitter {
+class StandardSensorProcessingEventEmitter(
+    private val nameScope: Option[String],
+    private val spaceEnvironment: SmartSpacesEnvironment, 
+    private val log: ExtendedLog) extends SensorProcessingEventEmitter {
   
   /**
    * The event registry. used only for object construction.
@@ -52,7 +55,7 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
    * The creator for raw sensor observables.
    */
   private val rawSensorEventSubject:  EventPublisherSubject[RawSensorLiveEvent] =
-      eventObservableRegistry.getObservable(RawSensorLiveEvent.EVENT_TYPE,
+      eventObservableRegistry.getObservable(RawSensorLiveEvent.EVENT_TYPE, nameScope,
         rawSensorEventCreator)
 
   /**
@@ -69,7 +72,7 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
    * The subject for physical location occupancy events
    */
   private var physicalLocationOccupancyEventSubject: EventPublisherSubject[PhysicalSpaceOccupancyLiveEvent] =
-      eventObservableRegistry.getObservable(PhysicalSpaceOccupancyLiveEvent.EVENT_TYPE,
+      eventObservableRegistry.getObservable(PhysicalSpaceOccupancyLiveEvent.EVENT_TYPE, nameScope,
         physicalLocationOccupancyEventCreator)
 
   /**
@@ -86,7 +89,7 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
    * The subject for sensor offline events
    */
   private var sensorOfflineEventSubject: EventPublisherSubject[SensorOfflineEvent] =
-      eventObservableRegistry.getObservable(SensorOfflineEvent.EVENT_TYPE,
+      eventObservableRegistry.getObservable(SensorOfflineEvent.EVENT_TYPE, nameScope,
         sensorOfflineEventCreator)
 
   /**
@@ -103,9 +106,21 @@ class StandardSensorProcessingEventEmitter(private val spaceEnvironment: SmartSp
    * The subject for unknown marker seen events
    */
   private var unknownMarkerSeenEventSubject: EventPublisherSubject[UnknownEntitySeenEvent] =
-      eventObservableRegistry.getObservable(UnknownMarkerSeenEvent.EVENT_TYPE,
+      eventObservableRegistry.getObservable(UnknownMarkerSeenEvent.EVENT_TYPE, nameScope,
         unknownMarkerSeenEventCreator)
 
+  /**
+   * Construct an emitter with no name scope.
+   * 
+   * @param spaceEnvironment
+   *        the space environment
+   * @param log
+   *        the log
+   */
+  def this(spaceEnvironment: SmartSpacesEnvironment, log: ExtendedLog) {
+    this(None, spaceEnvironment, log)
+  }
+  
   override def broadcastRawSensorEvent(event: RawSensorLiveEvent): Unit = {
     rawSensorEventSubject.onNext(event)
   }

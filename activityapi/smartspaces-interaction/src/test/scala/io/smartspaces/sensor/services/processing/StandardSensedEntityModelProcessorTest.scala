@@ -104,7 +104,8 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val measurementType =
       new SimpleMeasurementTypeDescription("foo", sensorValueType, null, null, null, null, null)
 
-    val sensorDetail = new SimpleSensorTypeDescription("1", "foo", "foo", Option("foo"), None, None, None,
+    val sensorDetail = new SimpleSensorTypeDescription("1", "foo", "foo", Option("foo"), 
+        None, None, None, None,
         SensorAcquisitionModeCategoricalValueInstances.PULL, None, None)
     val channelId = "test"
     val channelDetail =

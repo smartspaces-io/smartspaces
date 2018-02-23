@@ -82,6 +82,11 @@ object SensorDescriptionConstants {
   val SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE = "categoryUsage"
 
   /**
+   * The field for the data source for a sensor type.
+   */
+  val SECTION_FIELD_SENSOR_TYPES_DATA_SOURCE = "dataSource"
+
+  /**
    * The sensor types section field for the acquisition mode of the sensor type.
    */
   val SECTION_FIELD_SENSOR_TYPES_SENSOR_ACQUISITION_MODE = "acquisitionMode"

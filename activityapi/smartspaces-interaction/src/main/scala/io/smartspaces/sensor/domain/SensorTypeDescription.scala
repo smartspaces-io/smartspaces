@@ -83,6 +83,11 @@ trait SensorTypeDescription extends DisplayableDescription {
   val usageCategory: Option[String]
   
   /**
+   * The source of the data, e.g. SmartThings, internal, etc.
+   */
+  val dataSource: Option[String]
+  
+  /**
    * How the sensor acquires its data.
    */
   val acquisitionMode: SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance
@@ -178,6 +183,7 @@ case class SimpleSensorTypeDescription(
     override val sensorUpdateTimeLimit: Option[Long], 
     override val sensorHeartbeatUpdateTimeLimit: Option[Long],
     override val usageCategory: Option[String],
+    override val dataSource: Option[String],
     override val acquisitionMode: SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance,
     override val sensorManufacturerName: Option[String],
     override val sensorManufacturerModel: Option[String]

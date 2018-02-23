@@ -142,6 +142,8 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
       val sensorUsageCategory = Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE))
 
+      val sensorDataSource = Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_DATA_SOURCE))
+
       val sensorAcquisitionMode = SensorAcquisitionModeCategoricalValue.fromLabel(
         sensorTypeData.getRequiredString(
           SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_ACQUISITION_MODE))
@@ -151,7 +153,8 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
         sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(sensorTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
-        sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit, sensorUsageCategory,
+        sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit, 
+        sensorUsageCategory, sensorDataSource,
         sensorAcquisitionMode.get,
         Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_NAME)),
         Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_MODEL)))

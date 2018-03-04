@@ -66,13 +66,44 @@ import io.smartspaces.util.data.dynamic.DynamicObject
  * @author Keith M. Hughes
  */
 class StandardSensorIntegrator(
-    override val observableNameScope: Option[String],
-    private val _sensorCommonRegistry: SensorCommonRegistry,
-    private val _sensorInstanceRegistry: SensorInstanceRegistry,
-    private val spaceEnvironment: SmartSpacesEnvironment, 
-    private val managedScope: ManagedScope, 
-    private val log: ExtendedLog) extends SensorIntegrator with IdempotentManagedResource {
+  override val observableNameScope: Option[String],
+  private val _valueRegistry: ValueRegistry,
+  private val _sensorCommonRegistry: SensorCommonRegistry,
+  private val _sensorInstanceRegistry: SensorInstanceRegistry,
+  private val spaceEnvironment: SmartSpacesEnvironment,
+  private val managedScope: ManagedScope,
+  private val log: ExtendedLog) extends SensorIntegrator with IdempotentManagedResource {
 
+  /**
+   * Construct the sensor integrator with a base value registry.
+   *
+   * @param observableNameScope
+   *        the naming scope for observables, if any
+   * @param sensorCommonRegistry
+   *        the registry for common sensor information
+   * @param sensorInstanceRegistry
+   *        the registry of specific sensors for a particular instance
+   * @param spaceEnvironment
+   *        the space environment
+   * @param managedScope
+   *        the managed scope to be used by the integrator
+   * @param log
+   *        the logger to use
+   */
+  def this(
+    observableNameScope: Option[String],
+    sensorCommonRegistry: SensorCommonRegistry,
+    sensorInstanceRegistry: SensorInstanceRegistry,
+    spaceEnvironment: SmartSpacesEnvironment,
+    managedScope: ManagedScope,
+    log: ExtendedLog) = {
+    this(
+      observableNameScope,
+      StandardValueRegistry.registerCategoricalValues(
+        ContactCategoricalValue, PresenceCategoricalValue, ActiveCategoricalValue, MoistureCategoricalValue),
+      sensorCommonRegistry, sensorInstanceRegistry,
+      spaceEnvironment, managedScope, log)
+  }
   /**
    * The complete set of models of sensors and sensed entities.
    */
@@ -104,24 +135,18 @@ class StandardSensorIntegrator(
   private var sensorProcessor: SensorProcessor = _
 
   /**
-   * The value registry with a collection of base values.
-   */
-  private val _valueRegistry: ValueRegistry = StandardValueRegistry.registerCategoricalValues(
-    ContactCategoricalValue, PresenceCategoricalValue, ActiveCategoricalValue, MoistureCategoricalValue)
-
-  /**
    * The registry for sensor value processors.
    */
   private var sensorValueProcessorRegistry: SensorValueProcessorRegistry = _
-  
+
   /**
    * Construct a sensor processing without an observable name scope.
    */
   def this(
     sensorCommonRegistry: SensorCommonRegistry,
     sensorInstanceRegistry: SensorInstanceRegistry,
-    spaceEnvironment: SmartSpacesEnvironment, 
-    managedScope: ManagedScope, 
+    spaceEnvironment: SmartSpacesEnvironment,
+    managedScope: ManagedScope,
     log: ExtendedLog) {
     this(None, sensorCommonRegistry, sensorInstanceRegistry, spaceEnvironment, managedScope, log)
   }

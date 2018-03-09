@@ -16,22 +16,22 @@
 
 dependencies {
   compile project(':smartspaces-core')
-
-  compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpcore:4.1') {
-    //exclude module: 'com.springsource.org.apache.commons.logging'
-  }
-  compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpclient:4.1.1') {
-    //exclude module: 'com.springsource.org.apache.commons.logging'
-  }
-  compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpmime:4.1.1') { exclude module: 'com.springsource.org.apache.httpcomponents.httpcore' }
-
-  runtime 'org.apache.commons:com.springsource.org.apache.commons.codec:1.4.0'
-
-  compile(files("${project.getProperty('smartspaces.dependencies.home')}/expression/commons-ognl-4.0-SNAPSHOT.jar"))
-
-  compile 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.jdom:2.0.6_1'
-
-  compile 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'
+//
+//  compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpcore:4.1') {
+//    //exclude module: 'com.springsource.org.apache.commons.logging'
+//  }
+//  compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpclient:4.1.1') {
+//    //exclude module: 'com.springsource.org.apache.commons.logging'
+//  }
+//  compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpmime:4.1.1') { exclude module: 'com.springsource.org.apache.httpcomponents.httpcore' }
+//
+//  runtime 'org.apache.commons:com.springsource.org.apache.commons.codec:1.4.0'
+//
+//  compile(files("${project.getProperty('smartspaces.dependencies.home')}/expression/commons-ognl-4.0-SNAPSHOT.jar"))
+//
+//  compile 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.jdom:2.0.6_1'
+//
+//  compile 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'
 
 
   testCompile 'junit:junit:4.8.2'

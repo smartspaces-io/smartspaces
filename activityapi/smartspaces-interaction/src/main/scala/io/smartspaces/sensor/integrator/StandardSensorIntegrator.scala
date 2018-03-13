@@ -22,8 +22,6 @@ import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.resource.managed.IdempotentManagedResource
 import io.smartspaces.scope.ManagedScope
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
-import io.smartspaces.sensor.services.domain.SensorCommonRegistry
-import io.smartspaces.sensor.services.domain.SensorInstanceRegistry
 import io.smartspaces.sensor.messaging.input.MqttSensorInput
 import io.smartspaces.sensor.messaging.input.SensorInput
 import io.smartspaces.sensor.messaging.input.StandardMqttSensorInput
@@ -31,6 +29,8 @@ import io.smartspaces.sensor.messaging.messages.StandardSensorData
 import io.smartspaces.sensor.model.CompleteSensedEntityModel
 import io.smartspaces.sensor.model.SensorEntityModel
 import io.smartspaces.sensor.model.StandardCompleteSensedEntityModel
+import io.smartspaces.sensor.services.domain.SensorCommonRegistry
+import io.smartspaces.sensor.services.domain.SensorInstanceRegistry
 import io.smartspaces.sensor.services.processing.SensedEntitySensorHandler
 import io.smartspaces.sensor.services.processing.SensedEntitySensorMessageHandler
 import io.smartspaces.sensor.services.processing.SensorProcessor
@@ -54,6 +54,7 @@ import io.smartspaces.sensor.services.query.StandardSensedEntityModelQueryProces
 import io.smartspaces.sensor.value.entity.ActiveCategoricalValue
 import io.smartspaces.sensor.value.entity.ContactCategoricalValue
 import io.smartspaces.sensor.value.entity.MoistureCategoricalValue
+import io.smartspaces.sensor.value.entity.OnlineCategoricalValue
 import io.smartspaces.sensor.value.entity.PresenceCategoricalValue
 import io.smartspaces.service.comm.pubsub.mqtt.MqttCommunicationEndpoint
 import io.smartspaces.system.SmartSpacesEnvironment
@@ -100,7 +101,7 @@ class StandardSensorIntegrator(
     this(
       observableNameScope,
       StandardValueRegistry.registerCategoricalValues(
-        ContactCategoricalValue, PresenceCategoricalValue, ActiveCategoricalValue, MoistureCategoricalValue),
+        ContactCategoricalValue, PresenceCategoricalValue, ActiveCategoricalValue, MoistureCategoricalValue, OnlineCategoricalValue),
       sensorCommonRegistry, sensorInstanceRegistry,
       spaceEnvironment, managedScope, log)
   }

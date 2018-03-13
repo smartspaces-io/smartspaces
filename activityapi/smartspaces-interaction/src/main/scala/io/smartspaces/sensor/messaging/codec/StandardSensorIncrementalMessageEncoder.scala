@@ -46,15 +46,15 @@ object StandardSensorIncrementalMessageEncoder extends IncrementalMessageEncoder
       builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_SENSOR_UPDATE_LAST, date)
     }
 
-    model.sensedEntityModel.foreach { (sensedEntity) =>
-      builder.newObject(SensorSmartSpacesMessages.MESSAGE_ENTITY_SENSOR_LOCATION)
-
-      builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_COMMON_ID, sensedEntity.sensedEntityDescription.id)
-      builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_COMMON_EXTERNAL_ID, sensedEntity.sensedEntityDescription.externalId)
-      builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_COMMON_DISPLAY_NAME, sensedEntity.sensedEntityDescription.displayName)
-      builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_COMMON_DISPLAY_DESCRIPTION, sensedEntity.sensedEntityDescription.displayDescription)
-
-      builder.up()
-    }
+//    model.sensedEntityModel.foreach { (sensedEntity) =>
+//      builder.newObject(SensorSmartSpacesMessages.MESSAGE_ENTITY_SENSOR_LOCATION)
+//
+//      builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_COMMON_ID, sensedEntity.sensedEntityDescription.id)
+//      builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_COMMON_EXTERNAL_ID, sensedEntity.sensedEntityDescription.externalId)
+//      builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_COMMON_DISPLAY_NAME, sensedEntity.sensedEntityDescription.displayName)
+//      builder.setProperty(SensorSmartSpacesMessages.MESSAGE_ENTITY_COMMON_DISPLAY_DESCRIPTION, sensedEntity.sensedEntityDescription.displayDescription)
+//
+//      builder.up()
+//    }
   }
 }

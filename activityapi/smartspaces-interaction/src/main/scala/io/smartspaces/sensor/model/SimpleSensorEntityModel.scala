@@ -43,13 +43,12 @@ class SimpleSensorEntityModel(
    */
   private val sensorChannelModels: Map[String, SensorChannelEntityModel] = new HashMap
 
-  /**
-   * The model that is being sensed by this sensor.
-   */
-  var sensedEntityModel: Option[SensedEntityModel] = None
-
   override def addSensorChannelModel(sensorChannelModel: SensorChannelEntityModel): Unit = {
     sensorChannelModels.put(sensorChannelModel.sensorChannelDetail.channelId, sensorChannelModel)
+  }
+
+  override def getAllSensorChannelModels(): Traversable[SensorChannelEntityModel] = {
+    sensorChannelModels.values
   }
 
   override def getSensorChannelEntityModel(channelId: String): Option[SensorChannelEntityModel] = {

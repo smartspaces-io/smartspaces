@@ -23,11 +23,12 @@ import io.smartspaces.sensor.domain.PersonSensedEntityDescription
  *
  * @author Keith M. Hughes
  */
-class SimplePersonSensedEntityModel(entityDescription: PersonSensedEntityDescription,
-  models: CompleteSensedEntityModel) extends SimpleSensedEntityModel(entityDescription, models)
-    with PersonSensedEntityModel {
+class SimplePersonSensedEntityModel(
+  override val sensedEntityDescription: PersonSensedEntityDescription,
+  override val allModels: CompleteSensedEntityModel) extends 
+  PersonSensedEntityModel with BaseSensedEntityModel {
 
   override var physicalSpaceLocation: PhysicalSpaceSensedEntityModel = null
-  
+
   override var physicalSpaceLocationTimestamp: Long = 0l
 }

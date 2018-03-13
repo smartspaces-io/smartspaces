@@ -44,7 +44,7 @@ trait SensorEntityModel extends HeartbeatMonitorable {
   /**
    * The model that is being sensed by this sensor.
    */
-  var sensedEntityModel: Option[SensedEntityModel]
+  //var sensedEntityModel: Option[SensedEntityModel]
 
   /**
    * Add in a new sensor channel entity model to the sensor model.
@@ -55,6 +55,13 @@ trait SensorEntityModel extends HeartbeatMonitorable {
    * TODO(keith): Potentially move into another interface or make a builder for these things so they are unmodifiable.
    */
   def addSensorChannelModel(sensorChannelEntityModel: SensorChannelEntityModel): Unit
+
+  /**
+   * Get all sensor channel entity models for the sensor model.
+   *          
+   * @return all sensor channel entity models that are associated with the sensor.
+   */
+  def getAllSensorChannelModels(): Traversable[SensorChannelEntityModel]
   
   /**
    * Get a sensor channel entity model for a given channel ID.

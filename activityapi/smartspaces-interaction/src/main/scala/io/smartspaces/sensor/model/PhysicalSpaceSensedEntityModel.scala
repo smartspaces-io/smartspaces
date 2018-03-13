@@ -16,12 +16,16 @@
 
 package io.smartspaces.sensor.model
 
+import io.smartspaces.sensor.domain.PhysicalSpaceSensedEntityDescription
+
 /**
  * A sensed entity model for a physical space.
  *
  * @author keith M. Hughes
  */
 trait PhysicalSpaceSensedEntityModel extends SensedEntityModel {
+  
+  type T = PhysicalSpaceSensedEntityDescription
 
   /**
    * An occupant has entered the physical space.

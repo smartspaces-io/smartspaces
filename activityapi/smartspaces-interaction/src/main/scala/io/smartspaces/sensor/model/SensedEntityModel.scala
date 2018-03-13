@@ -23,17 +23,19 @@ import io.smartspaces.sensor.domain.SensedEntityDescription
  *
  * @author Keith M. Hughes
  */
-trait SensedEntityModel {
+trait SensedEntityModel  {
+  
+  type T <: SensedEntityDescription
 
   /**
    * The sensed entity model collection this model is in.
    */
-  val allModels: CompleteSensedEntityModel
+  def allModels: CompleteSensedEntityModel
 
   /**
    * The entity description for the entity being modeled.
    */
-  val sensedEntityDescription: SensedEntityDescription
+  def sensedEntityDescription: T
   
   /**
    * Add a sensor channel model that is sensing this entity.
@@ -48,7 +50,17 @@ trait SensedEntityModel {
    * 
    * @return all associated sensor channel models
    */
-  def getAllSensorChannelModels(): List[SensorChannelEntityModel]
+  def getAllSensorChannelModels(): Traversable[SensorChannelEntityModel]
+  
+  /**
+   * Get a sensor channel entity model for a given channel ID.
+   *
+   * @param channelId
+   *          the ID of the channel
+   *
+   * @return the channel model, if any
+   */
+  def getSensorChannelEntityModel(channelId: String): Option[SensorChannelEntityModel]
 
   /**
    * Get the value of a sensed property by the value type ID.

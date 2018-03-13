@@ -16,6 +16,8 @@
 
 package io.smartspaces.sensor.model;
 
+import io.smartspaces.sensor.domain.PersonSensedEntityDescription
+
 /**
  * A sensed entity model for a person.
  *
@@ -23,4 +25,6 @@ package io.smartspaces.sensor.model;
  */
 trait PersonSensedEntityModel
     extends SensedEntityModel with PhysicalSpaceLocatableSensedEntityModel {
+
+  type T = PersonSensedEntityDescription
 }

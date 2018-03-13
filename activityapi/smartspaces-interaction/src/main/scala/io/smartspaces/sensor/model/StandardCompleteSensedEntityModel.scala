@@ -38,10 +38,10 @@ import io.smartspaces.sensor.event.SensorOfflineEvent
  * @author Keith M. Hughes
  */
 class StandardCompleteSensedEntityModel(
-    override val sensorRegistry: SensorInstanceRegistry, 
-    override val eventEmitter: SensorProcessingEventEmitter,
-    override val log: ExtendedLog, 
-    private val spaceEnvironment: SmartSpacesEnvironment) extends CompleteSensedEntityModel {
+  override val sensorRegistry: SensorInstanceRegistry,
+  override val eventEmitter: SensorProcessingEventEmitter,
+  override val log: ExtendedLog,
+  private val spaceEnvironment: SmartSpacesEnvironment) extends CompleteSensedEntityModel {
 
   /**
    * Map of IDs to their sensor entity models.
@@ -107,7 +107,8 @@ class StandardCompleteSensedEntityModel(
 
     sensorRegistry
       .getMarkerMarkedEntityAssociations.foreach((association) =>
-        markerIdToPersonModels.put(association.marker.markerId,
+        markerIdToPersonModels.put(
+          association.marker.markerId,
           externalIdToPersonModels.get(association.markable.externalId).get))
 
     sensorRegistry
@@ -140,7 +141,8 @@ class StandardCompleteSensedEntityModel(
       idToPhysicalSpaceModels.put(id, model.asInstanceOf[PhysicalSpaceSensedEntityModel])
       externalIdToPhysicalSpaceModels.put(externalId, model.asInstanceOf[PhysicalSpaceSensedEntityModel])
     } else if (entityDescription.isInstanceOf[PersonSensedEntityDescription]) {
-      model = new SimplePersonSensedEntityModel(entityDescription.asInstanceOf[PersonSensedEntityDescription],
+      model = new SimplePersonSensedEntityModel(
+        entityDescription.asInstanceOf[PersonSensedEntityDescription],
         this)
       idToPersonModels.put(id, model.asInstanceOf[PersonSensedEntityModel])
       externalIdToPersonModels.put(externalId, model.asInstanceOf[PersonSensedEntityModel])
@@ -155,9 +157,9 @@ class StandardCompleteSensedEntityModel(
   override def associateSensorWithSensed(association: SensorSensedEntityAssociationDescription): Unit = {
     val sensor = externalIdToSensorEntityModels.get(association.sensor.externalId)
     val sensed = externalIdToSensedEntityModels.get(association.sensedEntity.externalId)
-    
+
     val channelModel = new SimpleSensorChannelEntityModel(sensor.get, association.sensorChannelDetail, sensed.get)
-    
+
     sensor.get.addSensorChannelModel(channelModel)
     sensed.get.addSensorChannelModel(channelModel)
   }
@@ -170,12 +172,16 @@ class StandardCompleteSensedEntityModel(
     externalIdToSensorEntityModels.get(externalId)
   }
 
-  override def getAllSensorEntityModels(): scala.collection.immutable.List[SensorEntityModel] = {
-    externalIdToSensorEntityModels.values.toList
+  override def getAllSensorEntityModels(): Iterable[SensorEntityModel] = {
+    externalIdToSensorEntityModels.values
   }
-  
+
   override def getAllSensorEntityModelsForMeasurementTypeExternalId(measurementTypeExternalId: String): Iterable[SensorEntityModel] = {
     externalIdToSensorEntityModels.values.filter(_.hasMeasurementType(measurementTypeExternalId))
+  }
+
+  override def getAllSensorEntityModelsForSensorTypeExternalId(sensorTypeExternalId: String): Iterable[SensorEntityModel] = {
+    externalIdToSensorEntityModels.values.filter(_.sensorEntityDescription.externalId == sensorTypeExternalId)
   }
 
   override def getAllSensorChannelEntityModelsForMeasurementTypeExternalId(measurementTypeExternalId: String): Iterable[SensorChannelEntityModel] = {
@@ -190,8 +196,8 @@ class StandardCompleteSensedEntityModel(
     externalIdToSensedEntityModels.get(externalId)
   }
 
-  override def getAllSensedEntityModels(): scala.collection.immutable.List[SensedEntityModel] = {
-    externalIdToSensedEntityModels.values.toList
+  override def getAllSensedEntityModels(): Iterable[SensedEntityModel] = {
+    externalIdToSensedEntityModels.values
   }
 
   override def getPhysicalSpaceSensedEntityModelById(id: String): Option[PhysicalSpaceSensedEntityModel] = {
@@ -202,8 +208,15 @@ class StandardCompleteSensedEntityModel(
     externalIdToPhysicalSpaceModels.get(externalId)
   }
 
-  override def getAllPhysicalSpaceSensedEntityModels(): scala.collection.immutable.List[PhysicalSpaceSensedEntityModel] = {
-    externalIdToPhysicalSpaceModels.values.toList
+  override def getAllPhysicalSpaceSensedEntityModels(): Iterable[PhysicalSpaceSensedEntityModel] = {
+    externalIdToPhysicalSpaceModels.values
+  }
+
+  override def getAllPhysicalSpaceSensedEntityModelsForPhysicalSpaceTypeExternalId(physicalSpaceTypeExternalId: String): Iterable[PhysicalSpaceSensedEntityModel] = {
+    externalIdToPhysicalSpaceModels.values.filter { model => 
+      val pstype = model.sensedEntityDescription.physicalSpaceType
+      pstype.isDefined && pstype.get == physicalSpaceTypeExternalId
+    }
   }
 
   override def getPersonSensedEntityModelById(id: String): Option[PersonSensedEntityModel] = {
@@ -214,8 +227,8 @@ class StandardCompleteSensedEntityModel(
     externalIdToPersonModels.get(externalId)
   }
 
-  override def getAllPersonSensedEntityModels(): scala.collection.immutable.List[PersonSensedEntityModel] = {
-    externalIdToPersonModels.values.toList
+  override def getAllPersonSensedEntityModels(): Iterable[PersonSensedEntityModel] = {
+    externalIdToPersonModels.values
   }
 
   override def getMarkedSensedEntityModelByMarkerId(markerId: String): Option[PersonSensedEntityModel] = {

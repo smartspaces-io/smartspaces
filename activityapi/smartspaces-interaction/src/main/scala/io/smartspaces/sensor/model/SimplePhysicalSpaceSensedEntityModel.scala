@@ -28,7 +28,8 @@ import io.smartspaces.sensor.event.PhysicalSpaceOccupancyLiveEvent
  * @author Keith M. Hughes
  */
 class SimplePhysicalSpaceSensedEntityModel(
-  entityDescription: PhysicalSpaceSensedEntityDescription, models: CompleteSensedEntityModel) extends SimpleSensedEntityModel(entityDescription, models)
+  override val sensedEntityDescription: PhysicalSpaceSensedEntityDescription, 
+  override val allModels: CompleteSensedEntityModel) extends BaseSensedEntityModel
     with PhysicalSpaceSensedEntityModel {
 
   /**
@@ -47,7 +48,7 @@ class SimplePhysicalSpaceSensedEntityModel(
 
       val entered = scala.collection.immutable.HashSet(person)
 
-      models.eventEmitter.broadcastOccupancyEvent(
+      allModels.eventEmitter.broadcastOccupancyEvent(
           PhysicalSpaceOccupancyLiveEvent.newEnteredOnlyEvent(this, entered, measurementTimestamp, sensorMessageReceivedTimestamp))
     }
 
@@ -64,7 +65,7 @@ class SimplePhysicalSpaceSensedEntityModel(
 
       val exited = scala.collection.immutable.HashSet(person)
 
-      models.eventEmitter.broadcastOccupancyEvent(
+      allModels.eventEmitter.broadcastOccupancyEvent(
           PhysicalSpaceOccupancyLiveEvent.newExitedOnlyEvent(this, exited, measurementTimestamp, sensorMessageReceivedTimestamp))
     }
 

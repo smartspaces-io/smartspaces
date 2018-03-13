@@ -26,18 +26,17 @@ import scala.collection.mutable.Map
  *
  * @author Keith M. Hughes
  */
-class SimpleSensedEntityModel(val sensedEntityDescription: SensedEntityDescription,
-    val allModels: CompleteSensedEntityModel) extends SensedEntityModel {
+trait BaseSensedEntityModel extends SensedEntityModel {
   
   /**
    * The values being sensed keyed by the value name.
    */
   private val sensedValues: Map[String, SensedValue[Any]] = new HashMap
-  
+
   /**
-   * The sensor channels associated with this sensed item.
+   * The sensor channel models indexed by the channel ID.
    */
-  private var sensorChannelModels: List[SensorChannelEntityModel] = List()
+  private val sensorChannelModels: Map[String, SensorChannelEntityModel] = new HashMap
 
   /**
    * The time of the last update.
@@ -45,11 +44,15 @@ class SimpleSensedEntityModel(val sensedEntityDescription: SensedEntityDescripti
   private var lastUpdate: Long = 0
   
   override def addSensorChannelModel(sensorChannelModel: SensorChannelEntityModel): Unit = {
-    sensorChannelModels = sensorChannelModel :: sensorChannelModels
+    sensorChannelModels.put(sensorChannelModel.sensorChannelDetail.channelId, sensorChannelModel)
   }
   
-  override def getAllSensorChannelModels(): List[SensorChannelEntityModel] = {
-    sensorChannelModels
+  override def getAllSensorChannelModels(): Traversable[SensorChannelEntityModel] = {
+    sensorChannelModels.values
+  }
+
+  override def getSensorChannelEntityModel(channelId: String): Option[SensorChannelEntityModel] = {
+    sensorChannelModels.get(channelId)
   }
   
   override def getSensedValue(valueTypeId: String): Option[SensedValue[Any]] = {
@@ -71,3 +74,16 @@ class SimpleSensedEntityModel(val sensedEntityDescription: SensedEntityDescripti
     lastUpdate
   }
 }
+
+
+/**
+ * A very simple model of a sensed entity.
+ *
+ * @author Keith M. Hughes
+ */
+class SimpleSensedEntityModel(override val sensedEntityDescription: SensedEntityDescription,
+    override val allModels: CompleteSensedEntityModel) extends BaseSensedEntityModel {
+  
+  type T = SensedEntityDescription
+}
+

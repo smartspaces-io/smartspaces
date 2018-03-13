@@ -105,6 +105,16 @@ trait CompleteSensedEntityModel {
   def getAllSensorEntityModelsForMeasurementTypeExternalId(measurementTypeExternalId: String): Iterable[SensorEntityModel]
 
   /**
+   * Get all sensor entity models that for a givensensor type.
+   *
+   * @param sensorTypeExternalId
+   *          the external ID of the sensor type
+   *
+   * @return all sensor models of the given sensor type
+   */
+  def getAllSensorEntityModelsForSensorTypeExternalId(sensorTypeExternalId: String): Iterable[SensorEntityModel]
+
+  /**
    * Get all sensor channel entity models that provide a given measurement type.
    *
    * @param measurementTypeExternalId
@@ -119,7 +129,7 @@ trait CompleteSensedEntityModel {
    *
    * @return the models
    */
-  def getAllSensorEntityModels(): List[SensorEntityModel]
+  def getAllSensorEntityModels(): Iterable[SensorEntityModel]
 
   /**
    * Get the sensed entity model for a given entity ID.
@@ -146,7 +156,7 @@ trait CompleteSensedEntityModel {
    *
    * @return the models
    */
-  def getAllSensedEntityModels(): List[SensedEntityModel]
+  def getAllSensedEntityModels(): Iterable[SensedEntityModel]
 
   /**
    * Get the model for a given physical space entity ID.
@@ -169,11 +179,21 @@ trait CompleteSensedEntityModel {
   def getPhysicalSpaceSensedEntityModelByExternalId(externalId: String): Option[PhysicalSpaceSensedEntityModel]
 
   /**
+   * Get all physical space entity models that for a given physical space type.
+   *
+   * @param physicalSpaceTypeExternalId
+   *          the external ID of the physical space type
+   *
+   * @return all physical space models of the given physical space type
+   */
+  def getAllPhysicalSpaceSensedEntityModelsForPhysicalSpaceTypeExternalId(physicalSpaceTypeExternalId: String): Iterable[PhysicalSpaceSensedEntityModel]
+
+  /**
    * Get all physical space models in the collection.
    *
    * @return the models
    */
-  def getAllPhysicalSpaceSensedEntityModels(): List[PhysicalSpaceSensedEntityModel]
+  def getAllPhysicalSpaceSensedEntityModels(): Iterable[PhysicalSpaceSensedEntityModel]
 
   /**
    * Get the model for a given person entity ID.
@@ -200,7 +220,7 @@ trait CompleteSensedEntityModel {
    *
    * @return the models
    */
-  def getAllPersonSensedEntityModels(): List[PersonSensedEntityModel]
+  def getAllPersonSensedEntityModels(): Iterable[PersonSensedEntityModel]
 
   /**
    * Get the model for a given marked entity ID.
@@ -220,7 +240,7 @@ trait CompleteSensedEntityModel {
   /**
    * The sensor registry for the collection.
    */
-  val sensorRegistry: SensorInstanceRegistry
+  def sensorRegistry: SensorInstanceRegistry
 
   /**
    * Perform an operations within a read transaction.

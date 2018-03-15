@@ -26,5 +26,5 @@ import io.smartspaces.sensor.domain.PersonSensedEntityDescription
 trait PersonSensedEntityModel
     extends SensedEntityModel with PhysicalSpaceLocatableSensedEntityModel {
 
-  type T = PersonSensedEntityDescription
+  type SensedEntityDescriptionType = PersonSensedEntityDescription
 }

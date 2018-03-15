@@ -84,6 +84,6 @@ trait BaseSensedEntityModel extends SensedEntityModel {
 class SimpleSensedEntityModel(override val sensedEntityDescription: SensedEntityDescription,
     override val allModels: CompleteSensedEntityModel) extends BaseSensedEntityModel {
   
-  type T = SensedEntityDescription
+  type SensedEntityDescriptionType = SensedEntityDescription
 }
 

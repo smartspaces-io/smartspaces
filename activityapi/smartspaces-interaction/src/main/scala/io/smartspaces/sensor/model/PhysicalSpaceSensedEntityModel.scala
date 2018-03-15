@@ -25,7 +25,7 @@ import io.smartspaces.sensor.domain.PhysicalSpaceSensedEntityDescription
  */
 trait PhysicalSpaceSensedEntityModel extends SensedEntityModel {
   
-  type T = PhysicalSpaceSensedEntityDescription
+  type SensedEntityDescriptionType = PhysicalSpaceSensedEntityDescription
 
   /**
    * An occupant has entered the physical space.

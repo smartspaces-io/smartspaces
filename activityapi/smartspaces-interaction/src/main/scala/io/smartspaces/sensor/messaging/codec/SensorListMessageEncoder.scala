@@ -29,7 +29,8 @@ import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
  * @author Keith M. Hughes
  */
 class SensorListMessageEncoder(private val builder: DynamicObjectBuilder, 
-    private val singleSensorEncoder: IncrementalMessageEncoder[SensorEntityModel, DynamicObjectBuilder], private val messageType: String) 
+    private val singleSensorEncoder: IncrementalMessageEncoder[SensorEntityModel, DynamicObjectBuilder], 
+    private val messageType: String) 
     extends MessageEncoder[Iterable[SensorEntityModel], DynamicObjectBuilder] {
 
   def this(messageType: String) = {

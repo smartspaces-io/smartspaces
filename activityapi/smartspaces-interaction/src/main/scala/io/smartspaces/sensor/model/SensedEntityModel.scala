@@ -25,7 +25,7 @@ import io.smartspaces.sensor.domain.SensedEntityDescription
  */
 trait SensedEntityModel  {
   
-  type T <: SensedEntityDescription
+  type SensedEntityDescriptionType <: SensedEntityDescription
 
   /**
    * The sensed entity model collection this model is in.
@@ -35,7 +35,7 @@ trait SensedEntityModel  {
   /**
    * The entity description for the entity being modeled.
    */
-  def sensedEntityDescription: T
+  def sensedEntityDescription: SensedEntityDescriptionType
   
   /**
    * Add a sensor channel model that is sensing this entity.

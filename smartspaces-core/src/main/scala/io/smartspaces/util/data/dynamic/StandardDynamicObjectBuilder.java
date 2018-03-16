@@ -126,8 +126,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an array
 
-      throw new DynamicObjectSmartSpacesException(
-          "The builder is not currently building an array");
+      throw new DynamicObjectSmartSpacesException("The builder is not currently building an array");
     }
 
     return this;
@@ -144,8 +143,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an array
 
-      throw new DynamicObjectSmartSpacesException(
-          "The builder is not currently building an array");
+      throw new DynamicObjectSmartSpacesException("The builder is not currently building an array");
     }
 
     return this;
@@ -162,8 +160,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an array
 
-      throw new DynamicObjectSmartSpacesException(
-          "The builder is not currently building an array");
+      throw new DynamicObjectSmartSpacesException("The builder is not currently building an array");
     }
 
     return this;
@@ -177,8 +174,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
     } else {
       // Must be an array
 
-      throw new DynamicObjectSmartSpacesException(
-          "The builder is not currently building an array");
+      throw new DynamicObjectSmartSpacesException("The builder is not currently building an array");
     }
 
     return this;
@@ -187,13 +183,17 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   @Override
   public DynamicObjectBuilder newObject(String name) {
     if (currentType == DynamicObjectType.OBJECT) {
-      Map<String, Object> newObject = new HashMap<>();
+      @SuppressWarnings("unchecked")
+      Map<String, Object> theObject = (Map<String, Object>) currentObject.get(name);
+      if (theObject == null) {
+        theObject = new HashMap<>();
 
-      currentObject.put(name, newObject);
+        currentObject.put(name, theObject);
+      }
 
       nav.push(currentObject);
 
-      setCurrentAsObject(newObject);
+      setCurrentAsObject(theObject);
     } else {
       // Must be an array
 
@@ -206,13 +206,16 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   @Override
   public DynamicObjectBuilder newArray(String name) {
     if (currentType == DynamicObjectType.OBJECT) {
-      List<Object> newArray = new ArrayList<>();
+      List<Object> theArray = (List<Object>)currentObject.get(name);
+      if (theArray == null) {
+        theArray = new ArrayList<>();
 
-      currentObject.put(name, newArray);
+        currentObject.put(name, theArray);
+      }
 
       nav.push(currentObject);
 
-      setCurrentAsArray(newArray);
+      setCurrentAsArray(theArray);
     } else {
       // Must be an array
 
@@ -304,7 +307,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
 
       nav.setSize(pos);
     }
-    
+
     return this;
   }
 

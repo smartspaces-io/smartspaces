@@ -241,6 +241,22 @@ public class SmartSpacesMessagesSupport {
   }
 
   /**
+   * Get a Smart Spaces message success response with the builder in the data field.
+   *
+   * @param data
+   *          the data field for the responses
+   *
+   * @return a success Smart Spaces message response with data
+   */
+  public static DynamicObjectBuilder getSuccessResponseAsBuilderWithDataObject() {
+    DynamicObjectBuilder builder = getSimpleSuccessResponseAsBuilder();
+
+    builder.newObject(SmartSpacesMessages.MESSAGE_ENVELOPE_DATA);
+
+    return builder;
+  }
+
+  /**
    * Get a failure Smart Spaces message response.
    *
    * @param reason

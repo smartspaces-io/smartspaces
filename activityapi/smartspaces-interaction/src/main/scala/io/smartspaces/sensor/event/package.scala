@@ -21,6 +21,7 @@ import io.smartspaces.sensor.value.entity.ActiveCategoricalValueInstances
 import io.smartspaces.sensor.value.entity.ContactCategoricalValueInstances
 import io.smartspaces.sensor.value.entity.MoistureCategoricalValueInstances
 import io.smartspaces.sensor.value.entity.PresenceCategoricalValueInstances
+import io.smartspaces.sensor.value.entity.OnlineCategoricalValueInstances
 
 /**
  * A collection of types and entities for the event package.
@@ -69,4 +70,13 @@ package object event {
    */
   type MoistureRawSensorEvent = PersistedRawSensorEvent[MoistureCategoricalValue]
 
+  /**
+   * Alias for the online categorical value.
+   */
+  type OnlineCategoricalValue = OnlineCategoricalValueInstances.OnlineCategoricalValueInstance
+  
+  /**
+   * Alias for persisted raw sensor events giving online status.
+   */
+  type OnlineRawSensorEvent = PersistedRawSensorEvent[OnlineCategoricalValue]
 }

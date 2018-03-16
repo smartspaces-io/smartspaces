@@ -133,6 +133,9 @@ public interface DynamicObjectBuilder {
 
   /**
    * Add a new object into the current object.
+   * 
+   * <p>
+   * If the object already exists, the existing object will become the current level.
    *
    * @param name
    *          name of the new object
@@ -146,9 +149,12 @@ public interface DynamicObjectBuilder {
 
   /**
    * Add a new array into the current object.
+   * 
+   * <p>
+   * If the array already exists, the existing array will become the current level.
    *
    * @param name
-   *          name of the new object
+   *          name of the new array
    *
    * @return the builder
    *

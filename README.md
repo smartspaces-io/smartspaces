@@ -13,3 +13,7 @@ run under a Java 8 JVM.
 
 Build documentation is found in the BUILD.md file.
 
+The master and development branches will always compile.
+
+The keithhughesdev branch is not guaranteed to compile.
+

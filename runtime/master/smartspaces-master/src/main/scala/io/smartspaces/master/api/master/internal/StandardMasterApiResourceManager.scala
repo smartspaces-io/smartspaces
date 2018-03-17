@@ -82,7 +82,7 @@ class StandardMasterApiResourceManager extends BaseMasterApiManager with MasterA
       
       spaceEnvironment.getLog.info(s"Successfully saved resource ${resource}")
 
-      return SmartSpacesMessagesSupport.getSuccessResponse()
+      return SmartSpacesMessagesSupport.getSimpleSuccessResponse()
     } catch {
       case e: Throwable =>
         val response =

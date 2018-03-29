@@ -20,25 +20,27 @@ package io.smartspaces.service.web.server;
 /**
  * An access manager determines if a user has access to a particular web
  * resource. This can include both urls and websocket messages.
+ *
+ * @author Dustin Barnard
  */
 public interface WebResourceAccessManager {
 
   /**
    *
-   * Checks to see if a user has access to a given resourse. This should be used
+   * Checks to see if a user has access to a given resource. This should be used
    * for URL's.
    *
    * <p>
    * Implementations of this function should be thread safe.
    *
-   * @param userID
-   *          The identifier for the user request access to the resource
+   * @param userId
+   *        the identifier for the user request access to the resource
    * @param resource
-   *          The identifier for the resource. This should be a uri.
+   *        the identifier for the resource, should be a uri
    * @return {@code true} if the given user is allowed access to the given
-   *         resource {@code false} otherwise.
+   *         resource {@code false} otherwise
    */
-  public boolean userHasAccess(String userID, String resource);
+  public boolean userHasAccess(String userId, String resource);
 
   /**
    * Checks to see if a user is allowed to make the given websocket call.
@@ -46,12 +48,12 @@ public interface WebResourceAccessManager {
    * <p>
    * Implementations of this function should be thread safe.
    *
-   * @param userID
-   *          The identifier for the user making the specified websocketCall
+   * @param userId
+   *          the identifier for the user making the specified websocketCall
    * @param websocketCall
-   *          The websocket call being attempted by the user.
+   *          the websocket call being attempted by the user.
    * @return {@code true} if the given user is allowed to make the given
-   *         websocket call, {@code false} otherwise.
+   *         websocket call, {@code false} otherwise
    */
-  public boolean allowWebsocketCall(String userID, String websocketCall);
+  public boolean allowWebsocketCall(String userId, String websocketCall);
 }

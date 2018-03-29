@@ -28,6 +28,7 @@ import java.util.concurrent.ScheduledExecutorService
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.tasks.StandardManagedTasks
 import io.smartspaces.resource.managed.StandardManagedResources
+import io.smartspaces.resource.managed.IdempotentManagedResource
 
 /**
  * The standard managed scope object.
@@ -51,13 +52,15 @@ object StandardManagedScope {
  *
  * @author Keith M. Hughes
  */
-class StandardManagedScope(override val managedResources: ManagedResources, override val managedTasks: ManagedTasks) extends ManagedScope {
+class StandardManagedScope(
+    override val managedResources: ManagedResources, 
+    override val managedTasks: ManagedTasks) extends IdempotentManagedResource with ManagedScope {
 
-  override def startup(): Unit = {
+  override def onStartup(): Unit = {
     managedResources.startupResources()
   }
 
-  override def shutdown(): Unit = {
+  override def onShutdown(): Unit = {
     managedTasks.asInstanceOf[InternalManagedTasks].shutdownAll()
     
     managedResources.shutdownResourcesAndClear()

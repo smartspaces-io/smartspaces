@@ -31,17 +31,7 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
  *
  * @author Keith M. Hughes
  */
-public interface NettyHttpPostRequestHandler {
-
-  /**
-   * Is the request handled by this handler?
-   *
-   * @param nettyRequest
-   *          the Netty HTTP request
-   *
-   * @return {@code true} if the request is handled by this handler
-   */
-  boolean isHandledBy(HttpRequest nettyRequest);
+public interface NettyHttpPostRequestHandler extends NettyHttpRequestHandler {
 
   /**
    * Handle the web request.

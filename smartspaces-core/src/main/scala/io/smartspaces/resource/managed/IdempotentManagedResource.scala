@@ -35,6 +35,8 @@ trait IdempotentManagedResource extends ManagedResource {
   override def startup(): Unit = {
     this.synchronized {
       if (resourceState == ManagedResourceState.SHUTDOWN) {
+        resourceState = ManagedResourceState.STARTING
+
         onStartup()
 
         resourceState = ManagedResourceState.STARTED
@@ -52,6 +54,8 @@ trait IdempotentManagedResource extends ManagedResource {
   override def shutdown(): Unit = {
     this.synchronized {
       if (resourceState == ManagedResourceState.STARTED) {
+        resourceState = ManagedResourceState.SHUTTING_DOWN
+
         onShutdown()
 
         resourceState = ManagedResourceState.SHUTDOWN
@@ -94,6 +98,8 @@ trait UsageCountIdempotentManagedResource extends ManagedResource {
   override def startup(): Unit = {
     this.synchronized {
       if (resourceState == ManagedResourceState.SHUTDOWN) {
+        resourceState = ManagedResourceState.STARTING
+
         onStartup()
 
         startupCount = 1
@@ -115,9 +121,12 @@ trait UsageCountIdempotentManagedResource extends ManagedResource {
   override def shutdown(): Unit = {
     this.synchronized {
       if (resourceState == ManagedResourceState.STARTED) {
+
         startupCount = startupCount - 1
 
         if (startupCount <= 0) {
+          resourceState = ManagedResourceState.SHUTTING_DOWN
+          
           onShutdown()
 
           resourceState = ManagedResourceState.SHUTDOWN
@@ -143,5 +152,7 @@ object ManagedResourceState extends Enumeration {
   type ManagedResourceState = Value
 
   val STARTED = Value
+  val STARTING = Value
   val SHUTDOWN = Value
+  val SHUTTING_DOWN = Value
 }

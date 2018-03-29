@@ -274,7 +274,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
         if ((authResponse == null) || authResponse.redirectUrl() != null) {
           sendHttpResponse(ctx, req, createRedirect(authResponse.redirectUrl()), false, false);
         } else {
-          webServer.getLog().formatWarn("Auth requested and no redict available for %s",
+          webServer.getLog().formatWarn("Auth requested and no redirect available for %s",
               req.getUri());
           sendHttpResponse(ctx, req, new DefaultHttpResponse(HTTP_1_1, FORBIDDEN), false, false);
         }
@@ -358,7 +358,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   }
 
   /**
-   * Attempt to handle an HTTP PUT request.
+   * Attempt to handle an HTTP POST request.
    *
    * @param context
    *          the context for the request

@@ -40,6 +40,13 @@ public interface HttpRequest {
    * @return the remote address for the request
    */
   SocketAddress getRemoteAddress();
+  
+  /**
+   * Get the HTTP method for the request.
+   * 
+   * @return the HTTP method
+   */
+  String getMethod();
 
   /**
    * Get the URI of the request.

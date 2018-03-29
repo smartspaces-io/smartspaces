@@ -88,10 +88,15 @@ public class NettyHttpRequest implements HttpRequest {
     this.log = log;
     headers = null;
   }
-  
+
   @Override
   public SocketAddress getRemoteAddress() {
     return remoteAddress;
+  }
+
+  @Override
+  public String getMethod() {
+    return request.getMethod().getName();
   }
 
   @Override
@@ -256,11 +261,10 @@ public class NettyHttpRequest implements HttpRequest {
     return portString.toString();
   }
 
-@Override
-public String toString() {
-  return "NettyHttpRequest [remoteAddress=" + getRemoteAddress() + ", uri=" + getUri() + ", headers="
-    + getHeaders() + ", cookies=" + getCookies() + "]";
-}
-  
-  
+  @Override
+  public String toString() {
+    return "NettyHttpRequest [remoteAddress=" + getRemoteAddress() + ", uri=" + getUri()
+        + ", headers=" + getHeaders() + ", cookies=" + getCookies() + "]";
+  }
+
 }

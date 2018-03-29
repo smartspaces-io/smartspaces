@@ -31,7 +31,7 @@ public interface HttpAuthResponse {
    * Returns an identifier for the user who completed this authorization
    * request.
    *
-   * @return the user beyind the http request which generated this response
+   * @return the user behind the http request which generated this response
    */
   public String getUser();
 
@@ -46,7 +46,7 @@ public interface HttpAuthResponse {
    * this should be set. This should only be followed if authorization was not
    * successful.
    *
-   * @return the ridrect url to send the user to.
+   * @return the redirect url to send the user to.
    */
   public String redirectUrl();
 

@@ -168,8 +168,9 @@ public class NettyHttpRequest implements HttpRequest {
     if (headers == null) {
       buildHeaders();
     }
-    if (headers.containsKey(key.toLowerCase())) {
-      return Sets.newHashSet(headers.get(key));
+    String lookupKey = key.toLowerCase();
+    if (headers.containsKey(lookupKey)) {
+      return Sets.newHashSet(headers.get(lookupKey));
     }
 
     return null;

@@ -74,7 +74,7 @@ public class HttpDirectoryRedirectRequestHandler implements HttpDynamicGetReques
   }
 
   @Override
-  public void handle(HttpRequest request, HttpResponse response) {
+  public void handleGet(HttpRequest request, HttpResponse response) {
     try {
       String fullPath = request.getUri().getPath();
       if (!fullPath.startsWith(requestPrefix)) {

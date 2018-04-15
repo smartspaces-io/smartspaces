@@ -125,7 +125,7 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
 
     repositoryServer.addDynamicGetRequestHandler(webappPath, true, new HttpDynamicGetRequestHandler() {
       @Override
-      public void handle(HttpRequest request, HttpResponse response) {
+      public void handleGet(HttpRequest request, HttpResponse response) {
         handleResourceRequest(request, response);
       }
     });
@@ -133,7 +133,7 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
     repositoryServer.addDynamicPostRequestHandler(webappPath, true, new HttpDynamicPostRequestHandler() {
 
       @Override
-      public void handle(HttpRequest request, HttpPostBody body, HttpResponse response) {
+      public void handlePost(HttpRequest request, HttpPostBody body, HttpResponse response) {
         handleResourceUpload(body);
       }
     });

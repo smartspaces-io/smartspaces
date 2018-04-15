@@ -15,23 +15,23 @@
  * the License.
  */
 
-package io.smartspaces.service.web.server.internal.netty;
+package io.smartspaces.service.web.server.internal.netty
 
-import io.smartspaces.service.web.server.HttpPostBody;
+import io.smartspaces.service.web.server.HttpPostBody
 
-import java.io.IOException;
-import java.net.HttpCookie;
-import java.util.Set;
+import java.io.IOException
+import java.net.HttpCookie
+import java.util.{ Set => JSet }
 
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.channel.ChannelHandlerContext
+import org.jboss.netty.handler.codec.http.HttpRequest
 
 /**
  * Handle HTTP POST requests from Netty.
  *
  * @author Keith M. Hughes
  */
-public interface NettyHttpPostRequestHandler extends NettyHttpRequestHandler {
+trait NettyHttpPostRequestHandler extends NettyHttpRequestHandler {
 
   /**
    * Handle the web request.
@@ -48,6 +48,6 @@ public interface NettyHttpPostRequestHandler extends NettyHttpRequestHandler {
    * @throws IOException
    *           something bad happened
    */
-  void handleWebRequest(ChannelHandlerContext ctx, HttpRequest nettyRequest, HttpPostBody postBody,
-      Set<HttpCookie> cookiesToAdd) throws IOException;
+  def handleWebRequest(ctx: ChannelHandlerContext, nettyRequest: HttpRequest, postBody: HttpPostBody,
+    cookiesToAdd: JSet[HttpCookie]): Unit
 }

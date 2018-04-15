@@ -48,7 +48,7 @@ public class ZXingBarcodeHttpDynamicRequestHandler implements HttpDynamicGetRequ
   public static final String QUERY_PARAMETER_NAME_CONTENT = "content";
 
   @Override
-  public void handle(HttpRequest request, HttpResponse response) {
+  public void handleGet(HttpRequest request, HttpResponse response) {
     String barcodeContent = getBarcodeContent(request);
     if (barcodeContent == null) {
       throw new SmartSpacesException(String.format("No content for barcode generator for URL %s",

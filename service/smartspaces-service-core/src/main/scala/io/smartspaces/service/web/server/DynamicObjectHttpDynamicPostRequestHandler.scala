@@ -40,8 +40,8 @@ abstract class DynamicObjectHttpDynamicPostRequestHandler extends HttpDynamicPos
    * @param response
    *          the response
    */
-  override def handle(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit = {
-    val responseData = handle(request, new StandardDynamicObjectNavigator(messageCodec.decode(postBody.getContent)), response)
+  override def handlePost(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit = {
+    val responseData = onHandlePost(request, new StandardDynamicObjectNavigator(messageCodec.decode(postBody.getContent)), response)
     
     val outputStream = response.getOutputStream
     outputStream.write(messageCodec.encode(responseData.toMap()))
@@ -58,5 +58,5 @@ abstract class DynamicObjectHttpDynamicPostRequestHandler extends HttpDynamicPos
    * @param response
    *          the response
    */
-  def handle(request: HttpRequest , body: DynamicObject, response:  HttpResponse ): DynamicObjectBuilder
+  def onHandlePost(request: HttpRequest , body: DynamicObject, response:  HttpResponse ): DynamicObjectBuilder
 }

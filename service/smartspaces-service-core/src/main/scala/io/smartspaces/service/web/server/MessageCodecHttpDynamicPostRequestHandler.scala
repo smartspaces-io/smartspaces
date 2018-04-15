@@ -36,8 +36,8 @@ abstract class MessageCodecHttpDynamicPostRequestHandler[D](private val messageC
    * @param response
    *          the response
    */
-  override def handle(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit = {
-    val responseData = onHandle(request, messageCodec.decode(postBody.getContent), response)
+  override def handlePost(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit = {
+    val responseData = onHandlePost(request, messageCodec.decode(postBody.getContent), response)
     
     response.getOutputStream.write(messageCodec.encode(responseData))
   }
@@ -52,5 +52,5 @@ abstract class MessageCodecHttpDynamicPostRequestHandler[D](private val messageC
    * @param response
    *          the response
    */
-  def onHandle(request: HttpRequest , body: D, response:  HttpResponse ): D
+  def onHandlePost(request: HttpRequest , body: D, response:  HttpResponse ): D
 }

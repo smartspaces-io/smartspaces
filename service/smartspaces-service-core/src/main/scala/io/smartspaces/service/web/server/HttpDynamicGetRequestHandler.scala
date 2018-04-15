@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2015 Google Inc.
+ * Copyright (C) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,21 +18,19 @@
 package io.smartspaces.service.web.server;
 
 /**
- * A handler for dynamic POST requests.
+ * A handler for HTTP GET requests.
  *
  * @author Keith M. Hughes
  */
-public interface HttpDynamicPostRequestHandler {
+trait HttpDynamicGetRequestHandler {
 
   /**
-   * Handle an HTTP request.
+   * Handle an HTTP GET request
    *
    * @param request
    *          the request to handle
-   * @param postBody
-   *          the post body from the request
    * @param response
    *          the response
    */
-  void handle(HttpRequest request, HttpPostBody postBody, HttpResponse response);
+  def handleGet(request: HttpRequest, response: HttpResponse): Unit
 }

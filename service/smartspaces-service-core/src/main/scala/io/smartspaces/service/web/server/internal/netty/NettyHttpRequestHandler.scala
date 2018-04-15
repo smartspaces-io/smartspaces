@@ -16,14 +16,14 @@
 
 package io.smartspaces.service.web.server.internal.netty;
 
-import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpRequest
 
 /**
  * Handle HTTP requests from Netty.
  *
  * @author Keith M. Hughes
  */
-public interface NettyHttpRequestHandler {
+trait NettyHttpRequestHandler {
 
   /**
    * Is the request handled by this handler?
@@ -33,5 +33,5 @@ public interface NettyHttpRequestHandler {
    *
    * @return {@code true} if the request is handled by this handler
    */
-  boolean isHandledBy(HttpRequest req);
+  def isHandledBy( req: HttpRequest): Boolean
 }

@@ -22,6 +22,7 @@ import static org.jboss.netty.handler.codec.http.HttpHeaders.setContentLength;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
 import static org.jboss.netty.handler.codec.http.HttpMethod.GET;
 import static org.jboss.netty.handler.codec.http.HttpMethod.HEAD;
+import static org.jboss.netty.handler.codec.http.HttpMethod.OPTIONS;
 import static org.jboss.netty.handler.codec.http.HttpMethod.POST;
 import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FOUND;
@@ -39,6 +40,7 @@ import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 import io.smartspaces.util.web.HttpConstants;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -115,6 +117,11 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   private List<NettyHttpGetRequestHandler> httpGetRequestHandlers = new ArrayList<>();
 
   /**
+   * All GET request handlers handled by this instance.
+   */
+  private List<NettyHttpOptionsRequestHandler> httpOptionsRequestHandlers = new ArrayList<>();
+
+  /**
    * All POST request handlers handled by this instance.
    */
   private List<NettyHttpPostRequestHandler> httpPostRequestHandlers = new ArrayList<>();
@@ -187,6 +194,34 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   }
 
   /**
+   * Get all GET request handler to the server.
+   *
+   * @return all get request handlers
+   */
+  public List<NettyHttpGetRequestHandler> getHttpGetRequestHandlers() {
+    return Lists.newArrayList(httpGetRequestHandlers);
+  }
+
+  /**
+   * Register a new OPTION request handler to the server.
+   *
+   * @param handler
+   *          the handler to add
+   */
+  public void addHttpOptionsRequestHandler(NettyHttpOptionsRequestHandler handler) {
+    httpOptionsRequestHandlers.add(handler);
+  }
+
+  /**
+   * Get all OPTION request handlers from the server.
+   *
+   * @return all OPTION request handlers
+   */
+  public List<NettyHttpOptionsRequestHandler> getHttpOptionsRequestHandlers() {
+    return Lists.newArrayList(httpOptionsRequestHandlers);
+  }
+
+  /**
    * Register a new POST request handler to the server.
    *
    * @param handler
@@ -195,6 +230,16 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   public void addHttpPostRequestHandler(NettyHttpPostRequestHandler handler) {
     httpPostRequestHandlers.add(handler);
   }
+
+  /**
+   * Get all GET request handler to the server.
+   *
+   * @return all get request handlers
+   */
+  public List<NettyHttpPostRequestHandler> getHttpPostRequestHandler() {
+    return Lists.newArrayList(httpPostRequestHandlers);
+  }
+ 
 
   /**
    * Set the factory for creating web socket handlers.
@@ -289,10 +334,12 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
 
     if (handleWebGetRequest(ctx, req, authResponse)) {
       // The method handled the request if the return value was true.
+    } else if (handleWebPostRequest(ctx, req, authResponse)) {
+      // The method handled the request if the return value was true.
+    } else if (handleWebOptionsRequest(ctx, req, authResponse)) {
+      // The method handled the request if the return value was true.
     } else if (nettyWebSocketConnectionFactory != null
         && tryWebSocketUpgradeRequest(ctx, req, user)) {
-      // The method handled the request if the return value was true.
-    } else if (handleWebPostRequest(ctx, req, authResponse)) {
       // The method handled the request if the return value was true.
     } else {
       // Nothing we handle.
@@ -311,7 +358,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   }
 
   /**
-   * Attempt to handle an HTTP request by scanning through all registered
+   * Attempt to handle an HTTP GET request by scanning through all registered
    * handlers.
    *
    * @param context
@@ -340,6 +387,53 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       }
 
       for (NettyHttpGetRequestHandler handler : httpGetRequestHandlers) {
+        if (handler.isHandledBy(request)) {
+          try {
+            handler.handleWebRequest(context, request, cookies);
+          } catch (Exception e) {
+            webServer.getLog().error(
+                String.format("Exception when handling web request %s", request.getUri()), e);
+          }
+
+          return true;
+        }
+
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Attempt to handle an HTTP OPTIONS request by scanning through all registered
+   * handlers.
+   *
+   * @param context
+   *          the context for the request
+   * @param request
+   *          the request
+   * @param authResponse
+   *          the authentication response
+   *
+   * @return {@code true} if the request was handled
+   *
+   * @throws IOException
+   *           an IO exception happened
+   */
+  private boolean handleWebOptionsRequest(ChannelHandlerContext context, HttpRequest request,
+      HttpAuthResponse authResponse) throws IOException {
+    HttpMethod method = request.getMethod();
+    if (method == OPTIONS) {
+      if (!canUserAccessResource(authResponse, request.getUri())) {
+        return false;
+      }
+
+      Set<HttpCookie> cookies = null;
+      if (authResponse != null) {
+        cookies = authResponse.getCookies();
+      }
+
+      for (NettyHttpOptionsRequestHandler handler : httpOptionsRequestHandlers) {
         if (handler.isHandledBy(request)) {
           try {
             handler.handleWebRequest(context, request, cookies);
@@ -516,7 +610,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    *
    * @param user
    *          the user making the web socket connection
-   * @param channel
+   * @param channelMethod
    *          the Netty channel for the connection
    * @param handshaker
    *          the web socket handshaker
@@ -701,20 +795,6 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
     }
   }
 
-  /**
-   * Send a success response to the client.
-   *
-   * @param ctx
-   *          the channel event context
-   * @param req
-   *          the request which has come in
-   */
-  public void sendSuccessHttpResponse(ChannelHandlerContext ctx, HttpRequest req) {
-    DefaultHttpResponse res = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-    addGlobalHttpResponseHeaders(res);
-    sendHttpResponse(ctx, req, res, false, false);
-  }
-
   @Override
   public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
     Channel channel = e.getChannel();
@@ -806,7 +886,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    *
    * @return the redirection response
    */
-  private DefaultHttpResponse createRedirect(String url) {
+  private HttpResponse createRedirect(String url) {
     DefaultHttpResponse response = new DefaultHttpResponse(HTTP_1_1, FOUND);
     HttpHeaders.addHeader(response, HttpHeaders.Names.LOCATION, url);
     return response;

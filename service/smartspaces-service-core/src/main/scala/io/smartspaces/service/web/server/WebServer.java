@@ -100,7 +100,7 @@ public interface WebServer extends ManagedResource {
       HttpDynamicGetRequestHandler fallbackHandler);
 
   /**
-   * Add in a new dynamic content handler to the server.
+   * Add in a new dynamic GET content handler to the server.
    *
    * <p>
    * See
@@ -118,7 +118,7 @@ public interface WebServer extends ManagedResource {
       HttpDynamicGetRequestHandler handler);
 
   /**
-   * Add in a new dynamic content handler to the server.
+   * Add in a new dynamic GETcontent handler to the server.
    *
    * <p>
    * Content handlers are attempted in the order added. The first prefix which
@@ -136,6 +136,45 @@ public interface WebServer extends ManagedResource {
    */
   void addDynamicGetRequestHandler(String uriPrefix, boolean usePath,
       HttpDynamicGetRequestHandler handler, Map<String, String> extraHttpContentHeaders);
+
+
+  /**
+   * Add in a new dynamic OPTIONS content handler to the server.
+   *
+   * <p>
+   * See
+   * {@link #addDynamicOptionRequestHandler(String, HttpDynamicGetRequestHandler, Map)},
+   * the content header map value will be {@code null}.
+   *
+   * @param uriPrefix
+   *          URI prefix for the content
+   * @param usePath
+   *          {@code true} if the path will be used for processing requests
+   * @param handler
+   *          dynamic request handler
+   */
+  void addDynamicOptionsRequestHandler(String uriPrefix, boolean usePath,
+      HttpDynamicOptionsRequestHandler handler);
+
+  /**
+   * Add in a new dynamic OPTIONS content handler to the server.
+   *
+   * <p>
+   * Content handlers are attempted in the order added. The first prefix which
+   * matches will be run.
+   *
+   * @param uriPrefix
+   *          URI prefix for the content
+   * @param usePath
+   *          {@code true} if the path will be used for processing requests
+   * @param handler
+   *          dynamic request handler
+   * @param extraHttpContentHeaders
+   *          extra HTTP content headers to add to all responses to the handler,
+   *          can be {@code null}
+   */
+  void addDynamicOptionsRequestHandler(String uriPrefix, boolean usePath,
+      HttpDynamicOptionsRequestHandler handler, Map<String, String> extraHttpContentHeaders);
 
   /**
    * Add in a new dynamic POSt request handler to the server.

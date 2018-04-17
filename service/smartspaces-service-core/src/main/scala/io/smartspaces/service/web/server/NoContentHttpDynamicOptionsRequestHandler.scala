@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2015 Google Inc.
+ * Copyright (C) 2018 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,21 +17,16 @@
 package io.smartspaces.service.web.server
 
 /**
- * A handler for dynamic POST requests.
- *
+ * An option request handler that creates no actual content.
+ * 
+ * This is often used to just send headers to the browser. The headers can be sent in the
+ * call that registers the handler.
+ * 
  * @author Keith M. Hughes
  */
-trait HttpDynamicPostRequestHandler {
-
-  /**
-   * Handle a POST HTTP request.
-   *
-   * @param request
-   *          the request to handle
-   * @param postBody
-   *          the post body from the request
-   * @param response
-   *          the response
-   */
-  def handlePostHttpRequest(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit
+class NoContentHttpDynamicOptionsRequestHandler extends HttpDynamicOptionsRequestHandler {
+  
+  override def handleOptionsHttpRequest(request: HttpRequest, response: HttpResponse): Unit = {
+    // Do nothing!
+  }
 }

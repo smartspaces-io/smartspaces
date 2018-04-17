@@ -19,21 +19,16 @@ package io.smartspaces.service.web.server.internal.netty;
 
 import static org.jboss.netty.channel.Channels.pipeline;
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.messaging.codec.MessageCodec;
-import io.smartspaces.service.web.server.HttpAuthProvider;
-import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
-import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
-import io.smartspaces.service.web.server.HttpStaticContentRequestHandler;
-import io.smartspaces.service.web.server.WebResourceAccessManager;
-import io.smartspaces.service.web.server.WebServer;
-import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
-import io.smartspaces.util.net.NetworkBindSimpleSmartSpacesException;
-import io.smartspaces.util.web.MimeResolver;
+import java.io.File;
+import java.net.BindException;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
 
-import com.google.common.collect.Lists;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelException;
@@ -49,15 +44,22 @@ import org.jboss.netty.handler.ssl.SslContext;
 import org.jboss.netty.handler.ssl.util.SelfSignedCertificate;
 import org.jboss.netty.handler.stream.ChunkedWriteHandler;
 
-import java.io.File;
-import java.net.BindException;
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
+import com.google.common.collect.Lists;
+
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.codec.MessageCodec;
+import io.smartspaces.service.web.server.HttpAuthProvider;
+import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
+import io.smartspaces.service.web.server.HttpDynamicOptionsRequestHandler;
+import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
+import io.smartspaces.service.web.server.HttpStaticContentRequestHandler;
+import io.smartspaces.service.web.server.WebResourceAccessManager;
+import io.smartspaces.service.web.server.WebServer;
+import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
+import io.smartspaces.util.net.NetworkBindSimpleSmartSpacesException;
+import io.smartspaces.util.web.MimeResolver;
 
 /**
  * A web server based on Netty.
@@ -167,6 +169,11 @@ public class NettyWebServer implements WebServer {
    * The complete collection of dynamic POST request handlers.
    */
   private List<HttpDynamicPostRequestHandler> dynamicPostRequestHandlers = new ArrayList<>();
+
+  /**
+   * The complete collection of dynamic OPTIONS request handlers.
+   */
+  private List<HttpDynamicOptionsRequestHandler> dynamicOptionsRequestHandlers = new ArrayList<>();
 
   /**
    * Create a web server using a singular thread pool.
@@ -284,7 +291,8 @@ public class NettyWebServer implements WebServer {
 
   @Override
   public void addStaticContentHandler(String uriPrefix, File baseDir,
-      Map<String, String> extraHttpContentHeaders, String fallbackFilePath, HttpDynamicGetRequestHandler fallbackHandler) {
+      Map<String, String> extraHttpContentHeaders, String fallbackFilePath, 
+      HttpDynamicGetRequestHandler fallbackHandler) {
     if (!baseDir.exists()) {
       throw new SmartSpacesException(String.format("Cannot find web folder %s",
           baseDir.getAbsolutePath()));
@@ -320,6 +328,20 @@ public class NettyWebServer implements WebServer {
     serverHandler.addHttpGetRequestHandler(new NettyHttpDynamicGetRequestHandlerHandler(
         serverHandler, uriPrefix, usePath, handler, extraHttpContentHeaders));
     dynamicGetRequestHandlers.add(handler);
+  }
+
+  @Override
+  public void addDynamicOptionsRequestHandler(String uriPrefix, boolean usePath,
+      HttpDynamicOptionsRequestHandler handler) {
+    addDynamicOptionsRequestHandler(uriPrefix, usePath, handler, null);
+  }
+
+  @Override
+  public void addDynamicOptionsRequestHandler(String uriPrefix, boolean usePath,
+      HttpDynamicOptionsRequestHandler handler, Map<String, String> extraHttpContentHeaders) {
+    serverHandler.addHttpOptionsRequestHandler(new NettyHttpDynamicOptionsRequestHandlerHandler(
+        serverHandler, uriPrefix, usePath, handler, extraHttpContentHeaders));
+    dynamicOptionsRequestHandlers.add(handler);
   }
 
   @Override

@@ -172,7 +172,7 @@ public class StandardRemoteMasterCommunicationHandler implements RemoteMasterCom
   private class MyHttpDynamicRequestHandler implements HttpDynamicGetRequestHandler {
 
     @Override
-    public void handleGet(HttpRequest request, HttpResponse response) {
+    public void handleGetHttpRequest(HttpRequest request, HttpResponse response) {
       log.formatInfo("Got registration from %s", request.getRemoteAddress());
       String methodName = request.getUri().getPath()
           .substring(RemoteMasterServerMessages.URI_PREFIX_MASTER_SPACECONTROLLER.length());

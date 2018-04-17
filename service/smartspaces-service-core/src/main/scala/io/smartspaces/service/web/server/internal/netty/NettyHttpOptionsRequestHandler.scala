@@ -14,24 +14,35 @@
  * the License.
  */
 
-package io.smartspaces.service.web.server.internal.netty;
+package io.smartspaces.service.web.server.internal.netty
 
+import java.io.IOException
+import java.net.HttpCookie
+import java.util.{ Set => JSet }
+
+import org.jboss.netty.channel.ChannelHandlerContext
 import org.jboss.netty.handler.codec.http.HttpRequest
 
 /**
- * Handle HTTP requests from Netty.
+ * Handle HTTP GET requests from Netty.
  *
  * @author Keith M. Hughes
  */
-trait NettyHttpRequestHandler {
+trait NettyHttpOptionsRequestHandler extends NettyHttpRequestHandler {
 
   /**
-   * Is the request handled by this handler?
+   * Handle the web request.
    *
-   * @param req
-   *          request which has come in
+   * @param ctx
+   *          the channel handler context
+   * @param nettyRequest
+   *          the Netty HTTP request
+   * @param cookiesToAdd
+   *          cookies to be set on the response
    *
-   * @return {@code true} if the request is handled by this handler
+   * @throws IOException
+   *           something bad happened
    */
-  def isHandledBy(req: HttpRequest): Boolean
+  def handleWebRequest(ctx: ChannelHandlerContext, nettyRequest: HttpRequest,
+    cookiesToAdd: JSet[HttpCookie]): Unit
 }

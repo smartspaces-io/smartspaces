@@ -45,67 +45,25 @@ class NettyHttpDynamicPostRequestHandlerHandler(
   uriPrefixBase: String,
   usePath: Boolean,
   requestHandler: HttpDynamicPostRequestHandler,
-  _extraHttpContentHeaders: JMap[String, String]) extends NettyHttpPostRequestHandler {
-
-  /**
-   * The URI prefix to be handled by this handler.
-   */
-  private val uriPrefix = {
-    val uriPrefix = new StringBuilder()
-    if (!uriPrefixBase.startsWith("/")) {
-      uriPrefix.append('/')
-    }
-    uriPrefix.append(uriPrefixBase)
-    if (usePath && !uriPrefixBase.endsWith("/")) {
-      uriPrefix.append('/')
-    }
-    uriPrefix.toString()
-  }
-
-  /**
-   * Extra headers to add to the response.
-   */
-  private val extraHttpContentHeaders: JMap[String, String] = new JHashMap()
-  if (_extraHttpContentHeaders != null) {
-    extraHttpContentHeaders.putAll(_extraHttpContentHeaders)
-  }
-
-  override def isHandledBy(req: HttpRequest): Boolean = {
-    req.getUri().startsWith(uriPrefix)
-  }
+  extraHttpContentHeaders: JMap[String, String]) extends 
+  BaseNettyHttpDynamicRequestHandlerHandler(parentHandler, uriPrefixBase, usePath, extraHttpContentHeaders) with NettyHttpPostRequestHandler {
 
   override def handleWebRequest(ctx: ChannelHandlerContext, nettyRequest: HttpRequest,
     postBody: HttpPostBody, cookiesToAdd: JSet[HttpCookie]): Unit = {
-    val request = new NettyHttpRequest(
-      nettyRequest,
-      ctx.getChannel().getRemoteAddress(), parentHandler.getWebServer().getLog())
-    val response = new NettyHttpResponse(ctx, extraHttpContentHeaders)
-    response.addCookies(cookiesToAdd)
+    val request = newNettyHttpRequest(nettyRequest, ctx)
+    val response = newNettyHttpResponse(ctx, cookiesToAdd)
 
     //DefaultHttpResponse res
     try {
-      requestHandler.handlePost(request, postBody, response)
+      requestHandler.handlePostHttpRequest(request, postBody, response)
 
-      val res = new DefaultHttpResponse(
-        HttpVersion.HTTP_1_1,
-        HttpResponseStatus.valueOf(response.getResponseCode()))
-      res.setContent(response.getChannelBuffer())
-
-      val contentType = response.getContentType()
-      if (contentType != null) {
-        addHeader(res, HttpHeaders.Names.CONTENT_TYPE, contentType)
-      }
-
-      parentHandler.addHttpResponseHeaders(res, response.getContentHeaders())
-      parentHandler.sendHttpResponse(ctx, nettyRequest, res, true, false)
+      writeSuccessHttpResponse(ctx, nettyRequest, response)
 
       parentHandler.getWebServer().getLog()
-        .formatDebug("Dynamic content handler for %s completed", uriPrefix)
+        .debug(s"Dynamic HTTP POST content handler for ${uriPrefix} completed")
     } catch {
       case e: Throwable =>
-        parentHandler.getWebServer().getLog().error(s"Error while handling dynamic web server POST request ${nettyRequest.getUri()}", e)
-
-        parentHandler.sendError(ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR)
+        writeErrorHttpResponse(nettyRequest, ctx, e)
     }
   }
 }

@@ -40,7 +40,7 @@ import com.google.zxing.common.BitMatrix;
  *
  * @author Keith M. Hughes
  */
-public class ZXingBarcodeHttpDynamicRequestHandler implements HttpDynamicGetRequestHandler {
+public class ZXingBarcodeHttpDynamicGetRequestHandler implements HttpDynamicGetRequestHandler {
 
   /**
    * Query string parameter name for the content to be displayed.
@@ -48,7 +48,7 @@ public class ZXingBarcodeHttpDynamicRequestHandler implements HttpDynamicGetRequ
   public static final String QUERY_PARAMETER_NAME_CONTENT = "content";
 
   @Override
-  public void handleGet(HttpRequest request, HttpResponse response) {
+  public void handleGetHttpRequest(HttpRequest request, HttpResponse response) {
     String barcodeContent = getBarcodeContent(request);
     if (barcodeContent == null) {
       throw new SmartSpacesException(String.format("No content for barcode generator for URL %s",

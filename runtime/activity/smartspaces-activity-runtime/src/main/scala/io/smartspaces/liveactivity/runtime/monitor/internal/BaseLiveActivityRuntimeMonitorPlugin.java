@@ -104,7 +104,7 @@ public abstract class BaseLiveActivityRuntimeMonitorPlugin implements
 
     webServer.addDynamicGetRequestHandler(getUrlPrefix(), false, new HttpDynamicGetRequestHandler() {
       @Override
-      public void handleGet(HttpRequest request, HttpResponse response) {
+      public void handleGetHttpRequest(HttpRequest request, HttpResponse response) {
         handleRequest(request, response);
       }
     });

@@ -175,7 +175,7 @@ public class StandardMasterApiCommunicationManager extends BaseMasterApiManager
     webServer.addDynamicPostRequestHandler(MASTERAPI_PATH_PREFIX_ACTIVITY_UPLOAD, false,
         new HttpDynamicPostRequestHandler() {
           @Override
-          public void handlePost(HttpRequest request, HttpPostBody upload, HttpResponse response) {
+          public void handlePostHttpRequest(HttpRequest request, HttpPostBody upload, HttpResponse response) {
             handleMasterApiActivityUpload(request, upload, response);
           }
         });
@@ -183,7 +183,7 @@ public class StandardMasterApiCommunicationManager extends BaseMasterApiManager
     webServer.addDynamicPostRequestHandler("/masterapi/post", false,
         new HttpDynamicPostRequestHandler() {
           @Override
-          public void handlePost(HttpRequest request, HttpPostBody upload, HttpResponse response) {
+          public void handlePostHttpRequest(HttpRequest request, HttpPostBody upload, HttpResponse response) {
             handleMasterApiPostCommand(request, upload, response);
           }
         });

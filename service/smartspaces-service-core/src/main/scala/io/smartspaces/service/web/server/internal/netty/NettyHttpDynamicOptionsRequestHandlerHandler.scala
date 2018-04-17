@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2013 Google Inc.
+ * Copyright (C) 2018 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,35 +16,33 @@
 
 package io.smartspaces.service.web.server.internal.netty
 
-import org.jboss.netty.handler.codec.http.HttpHeaders.addHeader
-
-import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler
-
-import org.jboss.netty.channel.ChannelHandlerContext
-import org.jboss.netty.handler.codec.http.DefaultHttpResponse
-import org.jboss.netty.handler.codec.http.HttpHeaders
-import org.jboss.netty.handler.codec.http.HttpRequest
-import org.jboss.netty.handler.codec.http.HttpResponseStatus
-import org.jboss.netty.handler.codec.http.HttpVersion
-
-import java.io.IOException
 import java.net.HttpCookie
 import java.util.{ HashMap => JHashMap }
 import java.util.{ Map => JMap }
 import java.util.{ Set => JSet }
 
+import org.jboss.netty.channel.ChannelHandlerContext
+import org.jboss.netty.handler.codec.http.DefaultHttpResponse
+import org.jboss.netty.handler.codec.http.HttpHeaders
+import org.jboss.netty.handler.codec.http.HttpHeaders.addHeader
+import org.jboss.netty.handler.codec.http.HttpRequest
+import org.jboss.netty.handler.codec.http.HttpResponseStatus
+import org.jboss.netty.handler.codec.http.HttpVersion
+
+import io.smartspaces.service.web.server.HttpDynamicOptionsRequestHandler
+
 /**
- * A Netty handler for {@link NettyHttpGetRequestHandler}.
+ * A Netty handler for {@link NettyHttpOptionsRequestHandler}.
  *
  * @author Keith M. Hughes
  */
-class NettyHttpDynamicGetRequestHandlerHandler(
+class NettyHttpDynamicOptionsRequestHandlerHandler(
   parentHandler: NettyWebServerHandler,
   uriPrefixBase: String,
   usePath: Boolean,
-  requestHandler: HttpDynamicGetRequestHandler,
-  _extraHttpContentHeaders: JMap[String, String]) extends 
-  BaseNettyHttpDynamicRequestHandlerHandler(parentHandler, uriPrefixBase, usePath, _extraHttpContentHeaders) with NettyHttpGetRequestHandler {
+  requestHandler: HttpDynamicOptionsRequestHandler,
+  extraHttpContentHeaders: JMap[String, String]) extends
+  BaseNettyHttpDynamicRequestHandlerHandler(parentHandler, uriPrefixBase, usePath, extraHttpContentHeaders) with NettyHttpOptionsRequestHandler {
 
   override def handleWebRequest(ctx: ChannelHandlerContext, req: HttpRequest,
     cookiesToAdd: JSet[HttpCookie]): Unit = {
@@ -53,7 +50,7 @@ class NettyHttpDynamicGetRequestHandlerHandler(
     val response = newNettyHttpResponse(ctx, cookiesToAdd)
 
     try {
-      requestHandler.handleGetHttpRequest(request, response)
+      requestHandler.handleOptionsHttpRequest(request, response)
 
       writeSuccessHttpResponse(ctx, req, response)
 
@@ -61,7 +58,7 @@ class NettyHttpDynamicGetRequestHandlerHandler(
         .debug(s"Dynamic HTTP GET content handler for ${uriPrefix} completed")
     } catch {
       case e: Throwable =>
-        writeErrorHttpResponse(req, ctx, e)
-    }
+         writeErrorHttpResponse(req, ctx, e)
+   }
   }
 }

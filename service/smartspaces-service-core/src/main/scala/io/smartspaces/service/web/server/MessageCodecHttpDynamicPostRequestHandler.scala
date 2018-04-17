@@ -24,7 +24,8 @@ import io.smartspaces.messaging.codec.MessageCodec
  * 
  * @author Keith M. Hughes
  */
-abstract class MessageCodecHttpDynamicPostRequestHandler[D](private val messageCodec: MessageCodec[D, Array[Byte]]) extends HttpDynamicPostRequestHandler {
+abstract class MessageCodecHttpDynamicPostRequestHandler[D](
+    private val messageCodec: MessageCodec[D, Array[Byte]]) extends HttpDynamicPostRequestHandler {
 
   /**
    * Handle an HTTP request.
@@ -36,8 +37,8 @@ abstract class MessageCodecHttpDynamicPostRequestHandler[D](private val messageC
    * @param response
    *          the response
    */
-  override def handlePost(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit = {
-    val responseData = onHandlePost(request, messageCodec.decode(postBody.getContent), response)
+  override def handlePostHttpRequest(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit = {
+    val responseData = onHandlePostHttpRequest(request, messageCodec.decode(postBody.getContent), response)
     
     response.getOutputStream.write(messageCodec.encode(responseData))
   }
@@ -52,5 +53,5 @@ abstract class MessageCodecHttpDynamicPostRequestHandler[D](private val messageC
    * @param response
    *          the response
    */
-  def onHandlePost(request: HttpRequest , body: D, response:  HttpResponse ): D
+  def onHandlePostHttpRequest(request: HttpRequest , body: D, response:  HttpResponse ): D
 }

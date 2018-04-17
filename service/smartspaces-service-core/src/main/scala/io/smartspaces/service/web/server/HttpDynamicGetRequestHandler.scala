@@ -32,5 +32,5 @@ trait HttpDynamicGetRequestHandler {
    * @param response
    *          the response
    */
-  def handleGet(request: HttpRequest, response: HttpResponse): Unit
+  def handleGetHttpRequest(request: HttpRequest, response: HttpResponse): Unit
 }

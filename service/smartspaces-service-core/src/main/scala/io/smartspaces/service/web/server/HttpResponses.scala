@@ -14,24 +14,28 @@
  * the License.
  */
 
-package io.smartspaces.service.web.server.internal.netty;
+package io.smartspaces.service.web.server
 
-import org.jboss.netty.handler.codec.http.HttpRequest
+import io.smartspaces.util.web.HttpResponseCode
+import io.smartspaces.util.web.HttpConstants
 
 /**
- * Handle HTTP requests from Netty.
+ * A collection of canned HTTP responses.
  *
  * @author Keith M. Hughes
  */
-trait NettyHttpRequestHandler {
+object HttpResponses {
 
   /**
-   * Is the request handled by this handler?
-   *
-   * @param req
-   *          request which has come in
-   *
-   * @return {@code true} if the request is handled by this handler
+   * Make he response into a redirect response.
+   * 
+   * @param response
+   *        the response to make a redirect
+   * @param redirectUrl
+   *        the URL to redirect to
    */
-  def isHandledBy(req: NettyHttpRequest): Boolean
+  def redirectResponse(response: HttpResponse, redirectUrl: String): Unit = {
+    response.setResponseCode(HttpResponseCode.FOUND)
+    response.addContentHeader(HttpConstants.HEADER_NAME_LOCATION, redirectUrl)
+  }
 }

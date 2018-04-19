@@ -48,6 +48,6 @@ trait NettyHttpPostRequestHandler extends NettyHttpRequestHandler {
    * @throws IOException
    *           something bad happened
    */
-  def handleWebRequest(ctx: ChannelHandlerContext, nettyRequest: HttpRequest, postBody: HttpPostBody,
+  def handleWebRequest(ctx: ChannelHandlerContext, nettyRequest: NettyHttpRequest, postBody: HttpPostBody,
     cookiesToAdd: JSet[HttpCookie]): Unit
 }

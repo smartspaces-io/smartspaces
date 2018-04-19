@@ -48,22 +48,21 @@ class NettyHttpDynamicPostRequestHandlerHandler(
   extraHttpContentHeaders: JMap[String, String]) extends 
   BaseNettyHttpDynamicRequestHandlerHandler(parentHandler, uriPrefixBase, usePath, extraHttpContentHeaders) with NettyHttpPostRequestHandler {
 
-  override def handleWebRequest(ctx: ChannelHandlerContext, nettyRequest: HttpRequest,
+  override def handleWebRequest(ctx: ChannelHandlerContext, request: NettyHttpRequest,
     postBody: HttpPostBody, cookiesToAdd: JSet[HttpCookie]): Unit = {
-    val request = newNettyHttpRequest(nettyRequest, ctx)
     val response = newNettyHttpResponse(ctx, cookiesToAdd)
 
     //DefaultHttpResponse res
     try {
       requestHandler.handlePostHttpRequest(request, postBody, response)
 
-      writeSuccessHttpResponse(ctx, nettyRequest, response)
+      writeSuccessHttpResponse(ctx, request, response)
 
       parentHandler.getWebServer().getLog()
         .debug(s"Dynamic HTTP POST content handler for ${uriPrefix} completed")
     } catch {
       case e: Throwable =>
-        writeErrorHttpResponse(nettyRequest, ctx, e)
+        writeErrorHttpResponse(request, ctx, e)
     }
   }
 }

@@ -59,13 +59,12 @@ abstract class BaseNettyHttpDynamicRequestHandlerHandler(
     extraHttpContentHeaders.putAll(_extraHttpContentHeaders)
   }
 
-  override def isHandledBy(req: HttpRequest): Boolean = {
-    req.getUri().startsWith(uriPrefix)
-  }
-
-  def newNettyHttpRequest(req: HttpRequest, ctx: ChannelHandlerContext): NettyHttpRequest = {
-    new NettyHttpRequest(req, ctx.getChannel().getRemoteAddress(),
-      parentHandler.getWebServer().getLog())
+  override def isHandledBy(req: NettyHttpRequest): Boolean = {
+    if (usePath) {
+      req.getUri.getPath.startsWith(uriPrefix)
+    } else {
+      req.getUri.getPath == uriPrefix
+    }
   }
 
   def newNettyHttpResponse(
@@ -77,7 +76,7 @@ abstract class BaseNettyHttpDynamicRequestHandlerHandler(
     response
   }
 
-  def writeSuccessHttpResponse(ctx: ChannelHandlerContext, req: HttpRequest, response: NettyHttpResponse): Unit = {
+  def writeSuccessHttpResponse(ctx: ChannelHandlerContext, req: NettyHttpRequest, response: NettyHttpResponse): Unit = {
     val res = new DefaultHttpResponse(
       HttpVersion.HTTP_1_1,
       HttpResponseStatus.valueOf(response.getResponseCode()))
@@ -89,12 +88,12 @@ abstract class BaseNettyHttpDynamicRequestHandlerHandler(
     }
 
     parentHandler.addHttpResponseHeaders(res, response.getContentHeaders())
-    parentHandler.sendHttpResponse(ctx, req, res, true, false)
+    parentHandler.sendHttpResponse(ctx, req.getUnderlyingRequest(), res, true, false)
   }
 
-  def writeErrorHttpResponse(req: HttpRequest, ctx: ChannelHandlerContext, e: Throwable): Unit = {
+  def writeErrorHttpResponse(req: NettyHttpRequest, ctx: ChannelHandlerContext, e: Throwable): Unit = {
     parentHandler.getWebServer().getLog().error(
-      s"Error while handling dynamic web server ${req.getMethod.getName} request ${req.getUri()}", e)
+      s"Error while handling dynamic web server ${req.getMethod} request ${req.getUri()}", e)
 
     parentHandler.sendError(ctx, HttpResponseStatus.INTERNAL_SERVER_ERROR)
 

@@ -44,21 +44,20 @@ class NettyHttpDynamicOptionsRequestHandlerHandler(
   extraHttpContentHeaders: JMap[String, String]) extends
   BaseNettyHttpDynamicRequestHandlerHandler(parentHandler, uriPrefixBase, usePath, extraHttpContentHeaders) with NettyHttpOptionsRequestHandler {
 
-  override def handleWebRequest(ctx: ChannelHandlerContext, req: HttpRequest,
+  override def handleWebRequest(ctx: ChannelHandlerContext, request: NettyHttpRequest,
     cookiesToAdd: JSet[HttpCookie]): Unit = {
-    val request = newNettyHttpRequest(req, ctx)
     val response = newNettyHttpResponse(ctx, cookiesToAdd)
 
     try {
       requestHandler.handleOptionsHttpRequest(request, response)
 
-      writeSuccessHttpResponse(ctx, req, response)
+      writeSuccessHttpResponse(ctx, request, response)
 
       parentHandler.getWebServer().getLog()
         .debug(s"Dynamic HTTP GET content handler for ${uriPrefix} completed")
     } catch {
       case e: Throwable =>
-         writeErrorHttpResponse(req, ctx, e)
+         writeErrorHttpResponse(request, ctx, e)
    }
   }
 }

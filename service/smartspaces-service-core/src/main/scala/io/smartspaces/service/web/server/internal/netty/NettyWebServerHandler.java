@@ -20,15 +20,13 @@ package io.smartspaces.service.web.server.internal.netty;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.isKeepAlive;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.setContentLength;
 import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
-import static org.jboss.netty.handler.codec.http.HttpMethod.GET;
-import static org.jboss.netty.handler.codec.http.HttpMethod.HEAD;
-import static org.jboss.netty.handler.codec.http.HttpMethod.OPTIONS;
 import static org.jboss.netty.handler.codec.http.HttpMethod.POST;
 import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FOUND;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
 import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SmartSpacesException;
 import io.smartspaces.SmartSpacesExceptionUtils;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.messaging.codec.MessageCodec;
@@ -71,6 +69,7 @@ import org.jboss.netty.util.CharsetUtil;
 import java.io.IOException;
 import java.net.HttpCookie;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -311,10 +310,19 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   private void handleHttpRequest(ChannelHandlerContext ctx, HttpRequest req) throws Exception {
     // Before we actually allow handling of this http request, we will check to
     // see if it is properly authorized, if authorization is requested.
+    URI uri = null;
+    try {
+      uri = new URI(req.getUri());
+    } catch (URISyntaxException e) {
+      // Should never, ever happen
+      throw new SmartSpacesException(String.format("Illegal URI syntax %s", req.getUri()), e);
+    }
+
+    NettyHttpRequest request = new NettyHttpRequest(req, ctx.getChannel().getRemoteAddress(), 
+        uri, getWebServer().getLog());
     HttpAuthResponse authResponse = null;
     if (authProvider != null) {
-      authResponse = authProvider.authorizeRequest(
-          new NettyHttpRequest(req, ctx.getChannel().getRemoteAddress(), getWebServer().getLog()));
+      authResponse = authProvider.authorizeRequest(request);
       if ((authResponse == null) || !authResponse.authSuccessful()) {
         if ((authResponse == null) || authResponse.redirectUrl() != null) {
           sendHttpResponse(ctx, req, createRedirect(authResponse.redirectUrl()), false, false);
@@ -332,11 +340,11 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       user = authResponse.getUser();
     }
 
-    if (handleWebGetRequest(ctx, req, authResponse)) {
+    if (handleWebGetRequest(ctx, request, authResponse)) {
       // The method handled the request if the return value was true.
-    } else if (handleWebPostRequest(ctx, req, authResponse)) {
+    } else if (handleWebPostRequest(ctx, request, authResponse)) {
       // The method handled the request if the return value was true.
-    } else if (handleWebOptionsRequest(ctx, req, authResponse)) {
+    } else if (handleWebOptionsRequest(ctx, request, authResponse)) {
       // The method handled the request if the return value was true.
     } else if (nettyWebSocketConnectionFactory != null
         && tryWebSocketUpgradeRequest(ctx, req, user)) {
@@ -373,11 +381,11 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    * @throws IOException
    *           an IO exception happened
    */
-  private boolean handleWebGetRequest(ChannelHandlerContext context, HttpRequest request,
+  private boolean handleWebGetRequest(ChannelHandlerContext context, NettyHttpRequest request,
       HttpAuthResponse authResponse) throws IOException {
-    HttpMethod method = request.getMethod();
-    if (method == GET || method == HEAD) {
-      if (!canUserAccessResource(authResponse, request.getUri())) {
+    String method = request.getMethod();
+    if (method.equals(HttpConstants.HTTP_METHOD_GET) || method.equals(HttpConstants.HTTP_METHOD_HEAD)) {
+      if (!canUserAccessResource(authResponse, request.getUri().toString())) {
         return false;
       }
 
@@ -420,11 +428,11 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    * @throws IOException
    *           an IO exception happened
    */
-  private boolean handleWebOptionsRequest(ChannelHandlerContext context, HttpRequest request,
+  private boolean handleWebOptionsRequest(ChannelHandlerContext context, NettyHttpRequest request,
       HttpAuthResponse authResponse) throws IOException {
-    HttpMethod method = request.getMethod();
-    if (method == OPTIONS) {
-      if (!canUserAccessResource(authResponse, request.getUri())) {
+    String method = request.getMethod();
+    if (method.equals(HttpConstants.HTTP_METHOD_OPTIONS)) {
+      if (!canUserAccessResource(authResponse, request.getUri().toString())) {
         return false;
       }
 
@@ -466,9 +474,9 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    * @throws IOException
    *           an IO exception happened
    */
-  private boolean handleWebPostRequest(ChannelHandlerContext context, HttpRequest request,
+  private boolean handleWebPostRequest(ChannelHandlerContext context, NettyHttpRequest request,
       HttpAuthResponse authResponse) throws IOException {
-    if (request.getMethod() != POST) {
+    if (!request.getMethod().equals(HttpConstants.HTTP_METHOD_POST)) {
       return false;
     }
 
@@ -477,7 +485,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       return false;
     }
 
-    if (!canUserAccessResource(authResponse, request.getUri())) {
+    if (!canUserAccessResource(authResponse, request.getUri().toString())) {
       return false;
     }
 
@@ -487,11 +495,13 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
     }
 
     try {
+      HttpRequest nettyRequest = request.getUnderlyingRequest();
       NettyHttpPostBody postBody =
-          new NettyHttpPostBody(request, new HttpPostRequestDecoder(HTTP_DATA_FACTORY, request),
+          new NettyHttpPostBody(request, 
+              new HttpPostRequestDecoder(HTTP_DATA_FACTORY, nettyRequest),
               postRequestHandler, this, cookies);
 
-      if (request.isChunked()) {
+      if (nettyRequest.isChunked()) {
         // Chunked data so more coming.
         postBodyHandlers.put(context.getChannel().getId(), postBody);
       } else {
@@ -516,7 +526,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    *
    * @return the first handler that handles the request, or {@code null} if none
    */
-  private NettyHttpPostRequestHandler locatePostRequestHandler(HttpRequest nettyRequest) {
+  private NettyHttpPostRequestHandler locatePostRequestHandler(NettyHttpRequest nettyRequest) {
     for (NettyHttpPostRequestHandler handler : httpPostRequestHandlers) {
       if (handler.isHandledBy(nettyRequest)) {
         return handler;

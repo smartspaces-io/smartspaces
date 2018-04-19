@@ -70,7 +70,7 @@ public class NettyHttpPostBody implements HttpPostBody {
   /**
    * The request that started everything off.
    */
-  private HttpRequest nettyHttpRequest;
+  private NettyHttpRequest request;
 
   /**
    * The web server handler handling the request.
@@ -95,8 +95,8 @@ public class NettyHttpPostBody implements HttpPostBody {
   /**
    * Create a new instance.
    *
-   * @param nettyHttpRequest
-   *          incoming Netty HTTP request
+   * @param request
+   *          incoming HTTP request
    * @param decoder
    *          decoder to use
    * @param handler
@@ -106,16 +106,16 @@ public class NettyHttpPostBody implements HttpPostBody {
    * @param cookies
    *          any cookies to add to responses
    */
-  public NettyHttpPostBody(HttpRequest nettyHttpRequest, HttpPostRequestDecoder decoder,
+  public NettyHttpPostBody(NettyHttpRequest request, HttpPostRequestDecoder decoder,
       NettyHttpPostRequestHandler handler, NettyWebServerHandler webServerHandler,
       Set<HttpCookie> cookies) {
-    this.nettyHttpRequest = nettyHttpRequest;
+    this.request = request;
     this.decoder = decoder;
     this.handler = handler;
     this.webServerHandler = webServerHandler;
     this.cookies = cookies;
 
-    String contentType = nettyHttpRequest.headers().get(HttpConstants.HEADER_NAME_CONTENT_TYPE);
+    String contentType = request.getUnderlyingRequest().headers().get(HttpConstants.HEADER_NAME_CONTENT_TYPE);
     isForm = CommonMimeTypes.MIME_TYPE_FORM_MULTIPART.equals(contentType)
         || CommonMimeTypes.MIME_TYPE_FORM_URLENCODED.equals(contentType);
   }
@@ -126,7 +126,7 @@ public class NettyHttpPostBody implements HttpPostBody {
    * @return the original Netty HTTP request
    */
   HttpRequest getNettyHttpRequest() {
-    return nettyHttpRequest;
+    return request.getUnderlyingRequest();
   }
 
   /**
@@ -193,7 +193,7 @@ public class NettyHttpPostBody implements HttpPostBody {
       handleBodyUploadCompleteThroughHandler(context);
     } else {
       getLog().formatError("HTTP post web request not handled due to no handle for URI %s",
-          nettyHttpRequest.getUri());
+          request.getUri());
     }
   }
 
@@ -205,9 +205,9 @@ public class NettyHttpPostBody implements HttpPostBody {
    */
   private void handleBodyUploadCompleteThroughHandler(ChannelHandlerContext context) {
     try {
-      handler.handleWebRequest(context, nettyHttpRequest, this, cookies);
+      handler.handleWebRequest(context, request, this, cookies);
     } catch (Exception e) {
-      getLog().formatError(e, "Exception when handling web request %s", nettyHttpRequest.getUri());
+      getLog().formatError(e, "Exception when handling web request %s", request.getUri());
     }
   }
 
@@ -241,7 +241,7 @@ public class NettyHttpPostBody implements HttpPostBody {
 
   @Override
   public String getContentType() {
-    return nettyHttpRequest.headers().get(CONTENT_TYPE);
+    return request.getUnderlyingRequest().headers().get(CONTENT_TYPE);
   }
 
   @Override
@@ -314,7 +314,7 @@ public class NettyHttpPostBody implements HttpPostBody {
   @Override
   public byte[] getContent() throws SmartSpacesException {
     if (!isFormPost()) {
-      ChannelBuffer content = nettyHttpRequest.getContent();
+      ChannelBuffer content = request.getUnderlyingRequest().getContent();
       int readableBytes = content.readableBytes();
 
       byte[] contentBytes = new byte[readableBytes];

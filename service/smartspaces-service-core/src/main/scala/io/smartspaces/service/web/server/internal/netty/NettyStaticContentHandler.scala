@@ -148,8 +148,8 @@ class NettyStaticContentHandler(parentHandler: NettyWebServerHandler, uriPrefixB
     mimeResolver.asInstanceOf[T]
   }
 
-  override def isHandledBy(request: HttpRequest): Boolean = {
-    if (request.getUri().startsWith(uriPrefix)) {
+  override def isHandledBy(request: NettyHttpRequest): Boolean = {
+    if (request.getUri.getPath.startsWith(uriPrefix)) {
       val method = request.getMethod()
       method == HttpMethod.GET || method == HttpMethod.HEAD
     } else {
@@ -157,9 +157,9 @@ class NettyStaticContentHandler(parentHandler: NettyWebServerHandler, uriPrefixB
     }
   }
 
-  override def handleWebRequest(ctx: ChannelHandlerContext, request: HttpRequest,
+  override def handleWebRequest(ctx: ChannelHandlerContext, request: NettyHttpRequest,
     cookiesToAdd: JSet[HttpCookie]) {
-    var url = request.getUri()
+    var url = request.getUri().getPath
     val originalUrl = url
 
     // Strip off query parameters, if any, as we don't care.
@@ -301,7 +301,7 @@ class NettyStaticContentHandler(parentHandler: NettyWebServerHandler, uriPrefixB
     }
 
     // Decide whether to close the connection or not.
-    if (!isKeepAlive(request)) {
+    if (!isKeepAlive(request.getUnderlyingRequest)) {
       // Close the connection when the whole content is written out.
       writeFuture.addListener(ChannelFutureListener.CLOSE)
     }
@@ -309,7 +309,7 @@ class NettyStaticContentHandler(parentHandler: NettyWebServerHandler, uriPrefixB
     parentHandler.getWebServer().getLog().trace(s"[${status.getCode()}] HTTP ${originalUrl} --> ${file.getPath()}")
   }
 
-  private def handleNonFileFallback(ctx: ChannelHandlerContext, request: HttpRequest,
+  private def handleNonFileFallback(ctx: ChannelHandlerContext, request: NettyHttpRequest,
     cookiesToAdd: JSet[HttpCookie], originalUrl: String): Unit = {
     if (fallbackHandler != null) {
       fallbackHandler.handleWebRequest(ctx, request, cookiesToAdd)
@@ -348,8 +348,8 @@ class NettyStaticContentHandler(parentHandler: NettyWebServerHandler, uriPrefixB
    * @return a parsed range header, or {@code null} if there is no range request
    *         header or there was some sort of error
    */
-  private def parseRangeRequest(request: HttpRequest, availableLength: Long): RangeRequest = {
-    def rangeHeader = getHeader(request, HttpHeaders.Names.RANGE)
+  private def parseRangeRequest(request: NettyHttpRequest, availableLength: Long): RangeRequest = {
+    def rangeHeader = getHeader(request.getUnderlyingRequest, HttpHeaders.Names.RANGE)
     if (rangeHeader == null || rangeHeader.trim().isEmpty()) {
       return null
     }

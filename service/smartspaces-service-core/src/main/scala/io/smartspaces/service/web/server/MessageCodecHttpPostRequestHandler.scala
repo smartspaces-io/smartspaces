@@ -16,20 +16,17 @@
 
 package io.smartspaces.service.web.server
 
-import io.smartspaces.messaging.codec.MapByteArrayMessageCodec
-import io.smartspaces.util.data.dynamic.DynamicObject
-import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
-import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
+import io.smartspaces.messaging.codec.MessageDecoder
+import io.smartspaces.messaging.codec.MessageCodec
 
 /**
- * An HTTP dynamic POST handler for Dynamic Object messages.
+ * Handle HTTP POST requests with the supplied message codec.
  * 
  * @author Keith M. Hughes
  */
-abstract class DynamicObjectHttpDynamicPostRequestHandler extends HttpDynamicPostRequestHandler {
+abstract class MessageCodecHttpPostRequestHandler[D](
+    private val messageCodec: MessageCodec[D, Array[Byte]]) extends HttpPostRequestHandler {
 
-  private val messageCodec = new MapByteArrayMessageCodec
-  
   /**
    * Handle an HTTP request.
    *
@@ -41,11 +38,9 @@ abstract class DynamicObjectHttpDynamicPostRequestHandler extends HttpDynamicPos
    *          the response
    */
   override def handlePostHttpRequest(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit = {
-    val responseData = onHandlePostHttpRequest(request, new StandardDynamicObjectNavigator(messageCodec.decode(postBody.getContent)), response)
+    val responseData = onHandlePostHttpRequest(request, messageCodec.decode(postBody.getContent), response)
     
-    val outputStream = response.getOutputStream
-    outputStream.write(messageCodec.encode(responseData.toMap()))
-    outputStream.flush()
+    response.getOutputStream.write(messageCodec.encode(responseData))
   }
   
   /**
@@ -58,5 +53,5 @@ abstract class DynamicObjectHttpDynamicPostRequestHandler extends HttpDynamicPos
    * @param response
    *          the response
    */
-  def onHandlePostHttpRequest(request: HttpRequest , body: DynamicObject, response:  HttpResponse ): DynamicObjectBuilder
+  def onHandlePostHttpRequest(request: HttpRequest , body: D, response:  HttpResponse ): D
 }

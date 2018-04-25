@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2018 Keith M. Hughes
+ * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,19 +18,19 @@
 package io.smartspaces.service.web.server
 
 /**
- * A handler for HTTP OPTION requests.
+ * A handler for HTTP GET requests.
  *
  * @author Keith M. Hughes
  */
-trait HttpDynamicOptionsRequestHandler {
+trait HttpGetRequestHandler {
 
   /**
-   * Handle an HTTP OPTION request
+   * Handle an HTTP GET request
    *
    * @param request
    *          the request to handle
    * @param response
    *          the response
    */
-  def handleOptionsHttpRequest(request: HttpRequest, response: HttpResponse): Unit
+  def handleGetHttpRequest(request: HttpRequest, response: HttpResponse): Unit
 }

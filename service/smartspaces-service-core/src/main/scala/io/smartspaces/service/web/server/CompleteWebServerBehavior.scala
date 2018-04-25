@@ -53,8 +53,8 @@ trait CompleteWebServerBehavior extends MultipleConnectionWebSocketHandler[Map[S
    * @param handler
    *          content handler being added
    */
-  def addDynamicGetRequestHandler(uriPrefix: String, usePath: Boolean,
-    handler: HttpDynamicGetRequestHandler): Unit
+  def addGetRequestHandler(uriPrefix: String, usePath: Boolean,
+    handler: HttpGetRequestHandler): Unit
 
   /**
    * Add dynamic content for the web server to serve.
@@ -73,8 +73,8 @@ trait CompleteWebServerBehavior extends MultipleConnectionWebSocketHandler[Map[S
    * @param handler
    *          content handler being added
    */
-  def addDynamicPostRequestHandler(uriPrefix: String, usePath: Boolean,
-    handler: HttpDynamicPostRequestHandler): Unit
+  def addPostRequestHandler(uriPrefix: String, usePath: Boolean,
+    handler: HttpPostRequestHandler): Unit
 
   /**
    * Is the web socket connected to anything?

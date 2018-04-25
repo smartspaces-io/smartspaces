@@ -18,6 +18,7 @@ package io.smartspaces.service.web.server
 
 import io.smartspaces.util.web.HttpResponseCode
 import io.smartspaces.util.web.HttpConstants
+import com.google.common.base.Charsets
 
 /**
  * A collection of canned HTTP responses.
@@ -27,8 +28,8 @@ import io.smartspaces.util.web.HttpConstants
 object HttpResponses {
 
   /**
-   * Make he response into a redirect response.
-   * 
+   * Make the response into a redirect response.
+   *
    * @param response
    *        the response to make a redirect
    * @param redirectUrl
@@ -37,5 +38,22 @@ object HttpResponses {
   def redirectResponse(response: HttpResponse, redirectUrl: String): Unit = {
     response.setResponseCode(HttpResponseCode.FOUND)
     response.addContentHeader(HttpConstants.HEADER_NAME_LOCATION, redirectUrl)
+  }
+
+  /**
+   * Send a string response.
+   * 
+   * @param response
+   *        the HTTP response
+   * @param content
+   *        the content to send
+   * @param contentType
+   *        the type of the content
+   */
+  def stringResponse(response: HttpResponse, content: String, contentType: String): Unit = {
+    response.setContentType(contentType)
+    val os = response.getOutputStream
+    os.write(content.getBytes(Charsets.UTF_8))
+    os.flush
   }
 }

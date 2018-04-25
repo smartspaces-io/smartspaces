@@ -23,8 +23,8 @@ import io.smartspaces.resource.Version;
 import io.smartspaces.resource.repository.ResourceCategory;
 import io.smartspaces.resource.repository.ResourceRepositoryServer;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
-import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
-import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
+import io.smartspaces.service.web.server.HttpPostRequestHandler;
+import io.smartspaces.service.web.server.HttpGetRequestHandler;
 import io.smartspaces.service.web.server.HttpPostBody;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
@@ -123,14 +123,14 @@ public class HttpResourceRepositoryServer implements ResourceRepositoryServer {
     repositoryServer.setPort(repositoryPort);
     String webappPath = "/" + repositoryUrlPathPrefix;
 
-    repositoryServer.addDynamicGetRequestHandler(webappPath, true, new HttpDynamicGetRequestHandler() {
+    repositoryServer.addGetRequestHandler(webappPath, true, new HttpGetRequestHandler() {
       @Override
       public void handleGetHttpRequest(HttpRequest request, HttpResponse response) {
         handleResourceRequest(request, response);
       }
     });
 
-    repositoryServer.addDynamicPostRequestHandler(webappPath, true, new HttpDynamicPostRequestHandler() {
+    repositoryServer.addPostRequestHandler(webappPath, true, new HttpPostRequestHandler() {
 
       @Override
       public void handlePostHttpRequest(HttpRequest request, HttpPostBody body, HttpResponse response) {

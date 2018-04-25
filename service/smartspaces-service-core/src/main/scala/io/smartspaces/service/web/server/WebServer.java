@@ -17,13 +17,13 @@
 
 package io.smartspaces.service.web.server;
 
-import io.smartspaces.messaging.codec.MessageCodec;
-import io.smartspaces.resource.managed.ManagedResource;
-import io.smartspaces.util.web.MimeResolver;
-
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+
+import io.smartspaces.messaging.codec.MessageCodec;
+import io.smartspaces.resource.managed.ManagedResource;
+import io.smartspaces.util.web.MimeResolver;
 
 /**
  * A web server for Smart Spaces activities.
@@ -97,14 +97,14 @@ public interface WebServer extends ManagedResource {
    */
   void addStaticContentHandler(String uriPrefix, File baseDir,
       Map<String, String> extraHttpContentHeaders, String fallbackFilePath,
-      HttpDynamicGetRequestHandler fallbackHandler);
+      HttpGetRequestHandler fallbackHandler);
 
   /**
    * Add in a new dynamic GET content handler to the server.
    *
    * <p>
    * See
-   * {@link #addDynamicGetRequestHandler(String, HttpDynamicGetRequestHandler, Map)},
+   * {@link #addGetRequestHandler(String, HttpGetRequestHandler, Map)},
    * the content header map value will be {@code null}.
    *
    * @param uriPrefix
@@ -114,8 +114,8 @@ public interface WebServer extends ManagedResource {
    * @param handler
    *          dynamic request handler
    */
-  void addDynamicGetRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicGetRequestHandler handler);
+  void addGetRequestHandler(String uriPrefix, boolean usePath,
+      HttpGetRequestHandler handler);
 
   /**
    * Add in a new dynamic GETcontent handler to the server.
@@ -134,8 +134,8 @@ public interface WebServer extends ManagedResource {
    *          extra HTTP content headers to add to all responses to the handler,
    *          can be {@code null}
    */
-  void addDynamicGetRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicGetRequestHandler handler, Map<String, String> extraHttpContentHeaders);
+  void addGetRequestHandler(String uriPrefix, boolean usePath,
+      HttpGetRequestHandler handler, Map<String, String> extraHttpContentHeaders);
 
 
   /**
@@ -143,7 +143,7 @@ public interface WebServer extends ManagedResource {
    *
    * <p>
    * See
-   * {@link #addDynamicOptionRequestHandler(String, HttpDynamicGetRequestHandler, Map)},
+   * {@link #addOptionRequestHandler(String, HttpGetRequestHandler, Map)},
    * the content header map value will be {@code null}.
    *
    * @param uriPrefix
@@ -153,8 +153,8 @@ public interface WebServer extends ManagedResource {
    * @param handler
    *          dynamic request handler
    */
-  void addDynamicOptionsRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicOptionsRequestHandler handler);
+  void addOptionsRequestHandler(String uriPrefix, boolean usePath,
+      HttpOptionsRequestHandler handler);
 
   /**
    * Add in a new dynamic OPTIONS content handler to the server.
@@ -173,15 +173,15 @@ public interface WebServer extends ManagedResource {
    *          extra HTTP content headers to add to all responses to the handler,
    *          can be {@code null}
    */
-  void addDynamicOptionsRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicOptionsRequestHandler handler, Map<String, String> extraHttpContentHeaders);
+  void addOptionsRequestHandler(String uriPrefix, boolean usePath,
+      HttpOptionsRequestHandler handler, Map<String, String> extraHttpContentHeaders);
 
   /**
    * Add in a new dynamic POSt request handler to the server.
    *
    * <p>
    * See
-   * {@link #addDynamicGetRequestHandler(String, HttpDynamicGetRequestHandler, Map)},
+   * {@link #addGetRequestHandler(String, HttpGetRequestHandler, Map)},
    * the content header map value will be {@code null}.
    *
    * @param uriPrefix
@@ -191,8 +191,8 @@ public interface WebServer extends ManagedResource {
    * @param handler
    *          dynamic request handler
    */
-  void addDynamicPostRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicPostRequestHandler handler);
+  void addPostRequestHandler(String uriPrefix, boolean usePath,
+      HttpPostRequestHandler handler);
 
   /**
    * Add in a new dynamic POST request handler to the server.
@@ -211,8 +211,8 @@ public interface WebServer extends ManagedResource {
    *          extra HTTP content headers to add to all responses to the handler,
    *          can be {@code null}
    */
-  void addDynamicPostRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicPostRequestHandler handler, Map<String, String> extraHttpContentHeaders);
+  void addPostRequestHandler(String uriPrefix, boolean usePath,
+      HttpPostRequestHandler handler, Map<String, String> extraHttpContentHeaders);
 
   /**
    * Get all static content request handlers.
@@ -228,7 +228,7 @@ public interface WebServer extends ManagedResource {
    * @return all dynamic request handlers in the order they were added to the
    *         server
    */
-  List<HttpDynamicGetRequestHandler> getDynamicRequestHandlers();
+  List<HttpGetRequestHandler> getRequestHandlers();
 
   /**
    * Get all dynamic POST request handlers.
@@ -236,7 +236,7 @@ public interface WebServer extends ManagedResource {
    * @return all dynamic request handlers in the order they were added to the
    *         server
    */
-  List<HttpDynamicPostRequestHandler> getDynamicPostRequestHandlers();
+  List<HttpPostRequestHandler> getPostRequestHandlers();
 
   /**
    * Set the factory for creating web socket handlers.

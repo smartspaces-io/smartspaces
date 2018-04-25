@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  *
  * @author Trevor Pering
  */
-public class HttpDirectoryRedirectRequestHandler implements HttpDynamicGetRequestHandler {
+public class HttpDirectoryRedirectRequestHandler implements HttpGetRequestHandler {
 
   /**
    * Regexp pattern for determining if a target is absolute or not.

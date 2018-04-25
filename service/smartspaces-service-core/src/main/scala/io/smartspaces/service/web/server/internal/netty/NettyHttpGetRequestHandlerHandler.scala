@@ -19,7 +19,7 @@ package io.smartspaces.service.web.server.internal.netty
 
 import org.jboss.netty.handler.codec.http.HttpHeaders.addHeader
 
-import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler
+import io.smartspaces.service.web.server.HttpGetRequestHandler
 
 import org.jboss.netty.channel.ChannelHandlerContext
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse
@@ -32,35 +32,32 @@ import java.io.IOException
 import java.net.HttpCookie
 import java.util.{ HashMap => JHashMap }
 import java.util.{ Map => JMap }
-import java.util.{ Set => JSet }
 
 /**
  * A Netty handler for {@link NettyHttpGetRequestHandler}.
  *
  * @author Keith M. Hughes
  */
-class NettyHttpDynamicGetRequestHandlerHandler(
+class NettyHttpGetRequestHandlerHandler(
   parentHandler: NettyWebServerHandler,
   uriPrefixBase: String,
   usePath: Boolean,
-  requestHandler: HttpDynamicGetRequestHandler,
-  _extraHttpContentHeaders: JMap[String, String]) extends 
-  BaseNettyHttpDynamicRequestHandlerHandler(parentHandler, uriPrefixBase, usePath, _extraHttpContentHeaders) with NettyHttpGetRequestHandler {
+  requestHandler: HttpGetRequestHandler,
+  extraHttpContentHeaders: JMap[String, String]) extends 
+  BaseNettyHttpRequestHandlerHandler(parentHandler, uriPrefixBase, usePath) with NettyHttpGetRequestHandler {
 
-  override def handleWebRequest(ctx: ChannelHandlerContext, request: NettyHttpRequest,
-    cookiesToAdd: JSet[HttpCookie]): Unit = {
-    val response = newNettyHttpResponse(ctx, cookiesToAdd)
-
+  override def handleWebRequest(request: NettyHttpRequest, response: NettyHttpResponse): Unit = {
     try {
+      response.addContentHeaders(extraHttpContentHeaders)
       requestHandler.handleGetHttpRequest(request, response)
 
-      writeSuccessHttpResponse(ctx, request, response)
+      writeSuccessHttpResponse(request, response)
 
       parentHandler.getWebServer().getLog()
         .debug(s"Dynamic HTTP GET content handler for ${uriPrefix} completed")
     } catch {
       case e: Throwable =>
-        writeErrorHttpResponse(request, ctx, e)
+        writeErrorHttpResponse(request, response.getChannelHandlerContext, e)
     }
   }
 }

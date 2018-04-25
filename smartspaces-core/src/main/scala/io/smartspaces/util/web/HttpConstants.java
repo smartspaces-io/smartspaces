@@ -156,4 +156,9 @@ public class HttpConstants {
    * The location header.
    */
   public static final String HEADER_NAME_LOCATION = "Location";
+
+  /**
+   * The range header.
+   */
+  public static final String HEADER_NAME_RANGE = "Range";
 }

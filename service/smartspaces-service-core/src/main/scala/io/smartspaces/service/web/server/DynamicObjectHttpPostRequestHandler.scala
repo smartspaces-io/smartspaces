@@ -16,17 +16,20 @@
 
 package io.smartspaces.service.web.server
 
-import io.smartspaces.messaging.codec.MessageDecoder
-import io.smartspaces.messaging.codec.MessageCodec
+import io.smartspaces.messaging.codec.MapByteArrayMessageCodec
+import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.util.data.dynamic.DynamicObjectBuilder
+import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
 
 /**
- * Handle HTTP POST requests with the supplied message codec.
+ * An HTTP dynamic POST handler for Dynamic Object messages.
  * 
  * @author Keith M. Hughes
  */
-abstract class MessageCodecHttpDynamicPostRequestHandler[D](
-    private val messageCodec: MessageCodec[D, Array[Byte]]) extends HttpDynamicPostRequestHandler {
+abstract class DynamicObjectHttpPostRequestHandler extends HttpPostRequestHandler {
 
+  private val messageCodec = new MapByteArrayMessageCodec
+  
   /**
    * Handle an HTTP request.
    *
@@ -38,9 +41,11 @@ abstract class MessageCodecHttpDynamicPostRequestHandler[D](
    *          the response
    */
   override def handlePostHttpRequest(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit = {
-    val responseData = onHandlePostHttpRequest(request, messageCodec.decode(postBody.getContent), response)
+    val responseData = onHandlePostHttpRequest(request, new StandardDynamicObjectNavigator(messageCodec.decode(postBody.getContent)), response)
     
-    response.getOutputStream.write(messageCodec.encode(responseData))
+    val outputStream = response.getOutputStream
+    outputStream.write(messageCodec.encode(responseData.toMap()))
+    outputStream.flush()
   }
   
   /**
@@ -53,5 +58,5 @@ abstract class MessageCodecHttpDynamicPostRequestHandler[D](
    * @param response
    *          the response
    */
-  def onHandlePostHttpRequest(request: HttpRequest , body: D, response:  HttpResponse ): D
+  def onHandlePostHttpRequest(request: HttpRequest , body: DynamicObject, response:  HttpResponse ): DynamicObjectBuilder
 }

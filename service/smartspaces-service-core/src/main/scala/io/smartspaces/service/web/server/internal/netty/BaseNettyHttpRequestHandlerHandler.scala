@@ -23,18 +23,19 @@ import org.jboss.netty.handler.codec.http.HttpHeaders
 import org.jboss.netty.handler.codec.http.HttpRequest
 import org.jboss.netty.handler.codec.http.HttpResponseStatus
 import org.jboss.netty.handler.codec.http.HttpVersion
+import org.jboss.netty.handler.codec.http.CookieEncoder
 
 import java.io.IOException
 import java.net.HttpCookie
 import java.util.{ HashMap => JHashMap }
 import java.util.{ Map => JMap }
 import java.util.{ Set => JSet }
+import org.jboss.netty.handler.codec.http.Cookie
 
-abstract class BaseNettyHttpDynamicRequestHandlerHandler(
+abstract class BaseNettyHttpRequestHandlerHandler(
   parentHandler: NettyWebServerHandler,
   uriPrefixBase: String,
-  usePath: Boolean,
-  _extraHttpContentHeaders: JMap[String, String]) extends NettyHttpRequestHandler {
+  usePath: Boolean) extends NettyHttpRequestHandler {
 
   /**
    * The URI prefix to be handled by this handler.
@@ -51,14 +52,6 @@ abstract class BaseNettyHttpDynamicRequestHandlerHandler(
     uriPrefix.toString()
   }
 
-  /**
-   * Extra headers to add to the response.
-   */
-  private val extraHttpContentHeaders: JMap[String, String] = new JHashMap()
-  if (_extraHttpContentHeaders != null) {
-    extraHttpContentHeaders.putAll(_extraHttpContentHeaders)
-  }
-
   override def isHandledBy(req: NettyHttpRequest): Boolean = {
     if (usePath) {
       req.getUri.getPath.startsWith(uriPrefix)
@@ -67,28 +60,25 @@ abstract class BaseNettyHttpDynamicRequestHandlerHandler(
     }
   }
 
-  def newNettyHttpResponse(
-    ctx: ChannelHandlerContext,
-    cookiesToAdd: JSet[HttpCookie]): NettyHttpResponse = {
-    val response = new NettyHttpResponse(ctx, extraHttpContentHeaders)
-    response.addCookies(cookiesToAdd)
+  def writeSuccessHttpResponse(request: NettyHttpRequest, response: NettyHttpResponse): Unit = {
+    if (!response.isResponseWritten()) {
+      val res = new DefaultHttpResponse(
+        HttpVersion.HTTP_1_1,
+        HttpResponseStatus.valueOf(response.getResponseCode()))
+      if (response.hasContentForWriting()) {
+        res.setContent(response.getChannelBuffer())
+      }
 
-    response
-  }
+      val contentType = response.getContentType()
+      if (contentType != null) {
+        addHeader(res, HttpHeaders.Names.CONTENT_TYPE, contentType)
+      }
 
-  def writeSuccessHttpResponse(ctx: ChannelHandlerContext, req: NettyHttpRequest, response: NettyHttpResponse): Unit = {
-    val res = new DefaultHttpResponse(
-      HttpVersion.HTTP_1_1,
-      HttpResponseStatus.valueOf(response.getResponseCode()))
-    res.setContent(response.getChannelBuffer())
+      parentHandler.addHttpResponseHeaders(res, response)
 
-    val contentType = response.getContentType()
-    if (contentType != null) {
-      addHeader(res, HttpHeaders.Names.CONTENT_TYPE, contentType)
+      parentHandler.sendHttpResponse(response.getChannelHandlerContext, 
+          request.getUnderlyingRequest(), res, true, false)
     }
-
-    parentHandler.addHttpResponseHeaders(res, response.getContentHeaders())
-    parentHandler.sendHttpResponse(ctx, req.getUnderlyingRequest(), res, true, false)
   }
 
   def writeErrorHttpResponse(req: NettyHttpRequest, ctx: ChannelHandlerContext, e: Throwable): Unit = {

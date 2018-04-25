@@ -17,13 +17,14 @@
 
 package io.smartspaces.service.web.server;
 
-import io.smartspaces.util.web.HttpResponseCode;
-
 import java.io.OutputStream;
 import java.net.HttpCookie;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Multimap;
+
+import io.smartspaces.util.web.HttpResponseCode;
 
 /**
  * A response for an HTTP request.
@@ -106,13 +107,22 @@ public interface HttpResponse {
   void addContentHeader(String name, String value);
 
   /**
-   * Add an HTTP content header that will go out with the HTTP response.
+   * Add HTTP content headers that will go out with the HTTP response.
    *
    * @param headers
    *          the headers to add, the key is the header name, value is the
    *          header value
    */
   void addContentHeaders(Multimap<String, String> headers);
+
+  /**
+   * Add HTTP content header that will go out with the HTTP response.
+   *
+   * @param headers
+   *          the headers to add, the key is the header name, value is the
+   *          header value
+   */
+  void addContentHeaders(Map<String, String> headers);
 
   /**
    * Add the given cookie to the response.

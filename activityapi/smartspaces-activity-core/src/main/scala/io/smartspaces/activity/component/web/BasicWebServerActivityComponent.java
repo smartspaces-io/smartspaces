@@ -28,8 +28,8 @@ import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.messaging.codec.MapStringMessageCodec;
 import io.smartspaces.service.web.WebSocketConnection;
 import io.smartspaces.service.web.WebSocketMessageHandler;
-import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
-import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
+import io.smartspaces.service.web.server.HttpPostRequestHandler;
+import io.smartspaces.service.web.server.HttpGetRequestHandler;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerService;
 import io.smartspaces.service.web.server.WebServerWebSocketMessageHandler;
@@ -77,13 +77,13 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
   /**
    * List of dynamic GET content for the web server.
    */
-  private final List<DynamicContent<HttpDynamicGetRequestHandler>> dynamicGetContent =
+  private final List<WebContent<HttpGetRequestHandler>> getContent =
       Lists.newArrayList();
 
   /**
    * List of dynamic POST content for the web server.
    */
-  private final List<DynamicContent<HttpDynamicPostRequestHandler>> dynamicPostContent =
+  private final List<WebContent<HttpPostRequestHandler>> postContent =
       Lists.newArrayList();
 
   /**
@@ -123,13 +123,13 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
         addStaticContentHandler(content.getUriPrefix(), content.getBaseDir());
       }
 
-      for (DynamicContent<HttpDynamicGetRequestHandler> content : dynamicGetContent) {
-        webServer.addDynamicGetRequestHandler(content.getUriPrefix(), content.isUsePath(),
+      for (WebContent<HttpGetRequestHandler> content : getContent) {
+        webServer.addGetRequestHandler(content.getUriPrefix(), content.isUsePath(),
             content.getRequestHandler());
       }
 
-      for (DynamicContent<HttpDynamicPostRequestHandler> content : dynamicPostContent) {
-        webServer.addDynamicPostRequestHandler(content.getUriPrefix(), content.isUsePath(),
+      for (WebContent<HttpPostRequestHandler> content : postContent) {
+        webServer.addPostRequestHandler(content.getUriPrefix(), content.isUsePath(),
             content.getRequestHandler());
       }
 
@@ -255,26 +255,26 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
   }
 
   @Override
-  public WebServerActivityComponent addDynamicGetRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicGetRequestHandler handler) {
+  public WebServerActivityComponent addGetRequestHandler(String uriPrefix, boolean usePath,
+      HttpGetRequestHandler handler) {
     if (webServer != null) {
-      webServer.addDynamicGetRequestHandler(uriPrefix, usePath, handler);
+      webServer.addGetRequestHandler(uriPrefix, usePath, handler);
     } else {
-      dynamicGetContent
-          .add(new DynamicContent<HttpDynamicGetRequestHandler>(handler, uriPrefix, usePath));
+      getContent
+          .add(new WebContent<HttpGetRequestHandler>(handler, uriPrefix, usePath));
     }
 
     return this;
   }
 
   @Override
-  public WebServerActivityComponent addDynamicPostRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicPostRequestHandler handler) {
+  public WebServerActivityComponent addPostRequestHandler(String uriPrefix, boolean usePath,
+      HttpPostRequestHandler handler) {
     if (webServer != null) {
-      webServer.addDynamicPostRequestHandler(uriPrefix, usePath, handler);
+      webServer.addPostRequestHandler(uriPrefix, usePath, handler);
     } else {
-      dynamicPostContent
-          .add(new DynamicContent<HttpDynamicPostRequestHandler>(handler, uriPrefix, usePath));
+      postContent
+          .add(new WebContent<HttpPostRequestHandler>(handler, uriPrefix, usePath));
     }
 
     return this;
@@ -340,11 +340,11 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
   }
 
   /**
-   * Information about dynamic content.
+   * Information about web content.
    *
    * @author Keith M. Hughes
    */
-  public static class DynamicContent<T> {
+  public static class WebContent<T> {
 
     /**
      * The request handler.
@@ -371,7 +371,7 @@ public class BasicWebServerActivityComponent extends BaseActivityComponent
      * @param usePath
      *          path for handling the content
      */
-    public DynamicContent(T requestHandler, String uriPrefix, boolean usePath) {
+    public WebContent(T requestHandler, String uriPrefix, boolean usePath) {
       this.requestHandler = requestHandler;
       this.uriPrefix = uriPrefix;
       this.usePath = usePath;

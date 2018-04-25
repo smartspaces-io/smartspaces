@@ -17,13 +17,6 @@
 
 package io.smartspaces.service.web.server.internal.netty
 
-import java.io.IOException
-import java.net.HttpCookie
-import java.util.{Set => JSet}
-
-import org.jboss.netty.channel.ChannelHandlerContext
-import org.jboss.netty.handler.codec.http.HttpRequest
-
 /**
  * Handle HTTP GET requests from Netty.
  *
@@ -34,16 +27,13 @@ trait NettyHttpGetRequestHandler extends NettyHttpRequestHandler {
   /**
    * Handle the web request.
    *
-   * @param ctx
-   *          the channel handler context
-   * @param nettyRequest
+   * @param request
    *          the Netty HTTP request
-   * @param cookiesToAdd
-   *          cookies to be set on the response
+   * @param response
+   *          the Netty HTTP response
    *
    * @throws IOException
    *           something bad happened
    */
-  def handleWebRequest( ctx: ChannelHandlerContext,  nettyRequest: NettyHttpRequest,
-       cookiesToAdd: JSet[HttpCookie]): Unit
+  def handleWebRequest(request: NettyHttpRequest, response: NettyHttpResponse): Unit
 }

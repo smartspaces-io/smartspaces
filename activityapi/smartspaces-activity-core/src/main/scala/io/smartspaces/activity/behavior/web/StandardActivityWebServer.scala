@@ -23,8 +23,8 @@ import java.util.Map
 import io.smartspaces.activity.behavior.general.StandardActivityJson
 import io.smartspaces.activity.component.web.WebServerActivityComponent
 import io.smartspaces.service.web.server.BasicMultipleConnectionWebServerWebSocketHandlerFactory
-import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler
-import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler
+import io.smartspaces.service.web.server.HttpGetRequestHandler
+import io.smartspaces.service.web.server.HttpPostRequestHandler
 import io.smartspaces.service.web.server.MultipleConnectionWebServerWebSocketHandlerFactory
 import io.smartspaces.service.web.server.MultipleConnectionWebSocketHandler
 import io.smartspaces.service.web.server.WebServer
@@ -60,14 +60,14 @@ trait StandardActivityWebServer extends WebServerActivityBehavior with StandardA
     _webServerComponent.addStaticContent(uriPrefix, baseDir)
   }
   
-  override def addDynamicGetRequestHandler(uriPrefix: String, usePath: Boolean,
-      handler: HttpDynamicGetRequestHandler): Unit = {
-    _webServerComponent.addDynamicGetRequestHandler(uriPrefix, usePath, handler)
+  override def addGetRequestHandler(uriPrefix: String, usePath: Boolean,
+      handler: HttpGetRequestHandler): Unit = {
+    _webServerComponent.addGetRequestHandler(uriPrefix, usePath, handler)
   }
 
-  override def addDynamicPostRequestHandler(uriPrefix: String, usePath: Boolean,
-      handler: HttpDynamicPostRequestHandler): Unit = {
-    _webServerComponent.addDynamicPostRequestHandler(uriPrefix, usePath, handler)
+  override def addPostRequestHandler(uriPrefix: String, usePath: Boolean,
+      handler: HttpPostRequestHandler): Unit = {
+    _webServerComponent.addPostRequestHandler(uriPrefix, usePath, handler)
   }
 
   override def isWebSocketConnected(): Boolean =  {

@@ -51,9 +51,9 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.service.web.server.HttpAuthProvider;
-import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
-import io.smartspaces.service.web.server.HttpDynamicOptionsRequestHandler;
-import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
+import io.smartspaces.service.web.server.HttpGetRequestHandler;
+import io.smartspaces.service.web.server.HttpOptionsRequestHandler;
+import io.smartspaces.service.web.server.HttpPostRequestHandler;
 import io.smartspaces.service.web.server.HttpStaticContentRequestHandler;
 import io.smartspaces.service.web.server.WebResourceAccessManager;
 import io.smartspaces.service.web.server.WebServer;
@@ -163,17 +163,17 @@ public class NettyWebServer implements WebServer {
   /**
    * The complete collection of dynamic GET request handlers.
    */
-  private List<HttpDynamicGetRequestHandler> dynamicGetRequestHandlers = new ArrayList<>();
+  private List<HttpGetRequestHandler> getRequestHandlers = new ArrayList<>();
 
   /**
    * The complete collection of dynamic POST request handlers.
    */
-  private List<HttpDynamicPostRequestHandler> dynamicPostRequestHandlers = new ArrayList<>();
+  private List<HttpPostRequestHandler> postRequestHandlers = new ArrayList<>();
 
   /**
    * The complete collection of dynamic OPTIONS request handlers.
    */
-  private List<HttpDynamicOptionsRequestHandler> dynamicOptionsRequestHandlers = new ArrayList<>();
+  private List<HttpOptionsRequestHandler> optionsRequestHandlers = new ArrayList<>();
 
   /**
    * Create a web server using a singular thread pool.
@@ -255,8 +255,8 @@ public class NettyWebServer implements WebServer {
       serverChannel = bootstrap.bind(new InetSocketAddress(port));
     } catch (ChannelException e) {
       if (e.getCause() instanceof BindException) {
-        throw new NetworkBindSimpleSmartSpacesException(String.format(
-            "web server component could not be started, port %d in use", port), e);
+        throw new NetworkBindSimpleSmartSpacesException(
+            String.format("web server component could not be started, port %d in use", port), e);
       } else {
         throw e;
       }
@@ -291,20 +291,16 @@ public class NettyWebServer implements WebServer {
 
   @Override
   public void addStaticContentHandler(String uriPrefix, File baseDir,
-      Map<String, String> extraHttpContentHeaders, String fallbackFilePath, 
-      HttpDynamicGetRequestHandler fallbackHandler) {
+      Map<String, String> extraHttpContentHeaders, String fallbackFilePath,
+      HttpGetRequestHandler fallbackHandler) {
+    log.formatInfo("Adding web server static content handler at %s (port=%d)", uriPrefix, port);
     if (!baseDir.exists()) {
-      throw new SmartSpacesException(String.format("Cannot find web folder %s",
-          baseDir.getAbsolutePath()));
+      throw new SmartSpacesException(
+          String.format("Cannot find web folder %s", baseDir.getAbsolutePath()));
     }
 
-    NettyHttpDynamicGetRequestHandlerHandler fallbackNettyHandler =
-        fallbackHandler == null ? null : new NettyHttpDynamicGetRequestHandlerHandler(
-            serverHandler, uriPrefix, false, fallbackHandler, extraHttpContentHeaders);
-
-    NettyStaticContentHandler staticContentHandler =
-        new NettyStaticContentHandler(serverHandler, uriPrefix, baseDir, extraHttpContentHeaders,
-            fallbackFilePath, fallbackNettyHandler);
+    NettyStaticContentHandler staticContentHandler = new NettyStaticContentHandler(serverHandler,
+        uriPrefix, baseDir, extraHttpContentHeaders, fallbackFilePath, fallbackHandler);
     staticContentHandler.setAllowLinks(isDebugMode());
     if (isDebugMode()) {
       getLog().warn("Enabling web-server link following because of debug mode -- not secure.");
@@ -317,45 +313,51 @@ public class NettyWebServer implements WebServer {
   }
 
   @Override
-  public void addDynamicGetRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicGetRequestHandler handler) {
-    addDynamicGetRequestHandler(uriPrefix, usePath, handler, null);
+  public void addGetRequestHandler(String uriPrefix, boolean usePath,
+      HttpGetRequestHandler handler) {
+    addGetRequestHandler(uriPrefix, usePath, handler, null);
   }
 
   @Override
-  public void addDynamicGetRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicGetRequestHandler handler, Map<String, String> extraHttpContentHeaders) {
-    serverHandler.addHttpGetRequestHandler(new NettyHttpDynamicGetRequestHandlerHandler(
+  public void addGetRequestHandler(String uriPrefix, boolean usePath, HttpGetRequestHandler handler,
+      Map<String, String> extraHttpContentHeaders) {
+    log.formatInfo("Adding web server GET handler at %s (usePath=%b, port=%d)", uriPrefix, usePath,
+        port);
+    serverHandler.addHttpGetRequestHandler(new NettyHttpGetRequestHandlerHandler(serverHandler,
+        uriPrefix, usePath, handler, extraHttpContentHeaders));
+    getRequestHandlers.add(handler);
+  }
+
+  @Override
+  public void addOptionsRequestHandler(String uriPrefix, boolean usePath,
+      HttpOptionsRequestHandler handler) {
+    addOptionsRequestHandler(uriPrefix, usePath, handler, null);
+  }
+
+  @Override
+  public void addOptionsRequestHandler(String uriPrefix, boolean usePath,
+      HttpOptionsRequestHandler handler, Map<String, String> extraHttpContentHeaders) {
+    log.formatInfo("Adding web server OPTIONS handler at %s (usePath=%b, port=%d)", uriPrefix,
+        usePath, port);
+    serverHandler.addHttpOptionsRequestHandler(new NettyHttpOptionsRequestHandlerHandler(
         serverHandler, uriPrefix, usePath, handler, extraHttpContentHeaders));
-    dynamicGetRequestHandlers.add(handler);
+    optionsRequestHandlers.add(handler);
   }
 
   @Override
-  public void addDynamicOptionsRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicOptionsRequestHandler handler) {
-    addDynamicOptionsRequestHandler(uriPrefix, usePath, handler, null);
+  public void addPostRequestHandler(String uriPrefix, boolean usePath,
+      HttpPostRequestHandler handler) {
+    addPostRequestHandler(uriPrefix, usePath, handler, null);
   }
 
   @Override
-  public void addDynamicOptionsRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicOptionsRequestHandler handler, Map<String, String> extraHttpContentHeaders) {
-    serverHandler.addHttpOptionsRequestHandler(new NettyHttpDynamicOptionsRequestHandlerHandler(
-        serverHandler, uriPrefix, usePath, handler, extraHttpContentHeaders));
-    dynamicOptionsRequestHandlers.add(handler);
-  }
-
-  @Override
-  public void addDynamicPostRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicPostRequestHandler handler) {
-    addDynamicPostRequestHandler(uriPrefix, usePath, handler, null);
-  }
-
-  @Override
-  public void addDynamicPostRequestHandler(String uriPrefix, boolean usePath,
-      HttpDynamicPostRequestHandler handler, Map<String, String> extraHttpContentHeaders) {
-    serverHandler.addHttpPostRequestHandler(new NettyHttpDynamicPostRequestHandlerHandler(
-        serverHandler, uriPrefix, usePath, handler, extraHttpContentHeaders));
-    dynamicPostRequestHandlers.add(handler);
+  public void addPostRequestHandler(String uriPrefix, boolean usePath,
+      HttpPostRequestHandler handler, Map<String, String> extraHttpContentHeaders) {
+    log.formatInfo("Adding web server POST handler at %s (usePath=%b, port=%d)", uriPrefix, usePath,
+        port);
+    serverHandler.addHttpPostRequestHandler(new NettyHttpPostRequestHandlerHandler(serverHandler,
+        uriPrefix, usePath, handler, extraHttpContentHeaders));
+    postRequestHandlers.add(handler);
   }
 
   @Override
@@ -364,19 +366,21 @@ public class NettyWebServer implements WebServer {
   }
 
   @Override
-  public List<HttpDynamicGetRequestHandler> getDynamicRequestHandlers() {
-    return Lists.newArrayList(dynamicGetRequestHandlers);
+  public List<HttpGetRequestHandler> getRequestHandlers() {
+    return Lists.newArrayList(getRequestHandlers);
   }
 
   @Override
-  public List<HttpDynamicPostRequestHandler> getDynamicPostRequestHandlers() {
-    return Lists.newArrayList(dynamicPostRequestHandlers);
+  public List<HttpPostRequestHandler> getPostRequestHandlers() {
+    return Lists.newArrayList(postRequestHandlers);
   }
 
   @Override
   public <M> void setWebSocketHandlerFactory(String webSocketUriPrefix,
-      WebServerWebSocketHandlerFactory<M> webSocketHandlerFactory, MessageCodec<M, String> messageCodec) {
-    serverHandler.setWebSocketHandlerFactory(webSocketUriPrefix, webSocketHandlerFactory, messageCodec);
+      WebServerWebSocketHandlerFactory<M> webSocketHandlerFactory,
+      MessageCodec<M, String> messageCodec) {
+    serverHandler.setWebSocketHandlerFactory(webSocketUriPrefix, webSocketHandlerFactory,
+        messageCodec);
   }
 
   @Override
@@ -446,8 +450,8 @@ public class NettyWebServer implements WebServer {
 
   @Override
   public void setSslCertificates(File sslCertChainFile, File sslKeyFile) {
-    if (((sslCertChainFile == null) && (sslKeyFile != null)) || (sslCertChainFile != null)
-        && (sslKeyFile == null)) {
+    if (((sslCertChainFile == null) && (sslKeyFile != null))
+        || (sslCertChainFile != null) && (sslKeyFile == null)) {
       throw new SimpleSmartSpacesException(
           "Both a certificate chain file and a private key file must be supplied");
 
@@ -459,8 +463,8 @@ public class NettyWebServer implements WebServer {
     }
 
     if (sslKeyFile != null && !sslKeyFile.isFile()) {
-      throw new SimpleSmartSpacesException(String.format("The private key file %s does not exist",
-          sslKeyFile.getAbsolutePath()));
+      throw new SimpleSmartSpacesException(
+          String.format("The private key file %s does not exist", sslKeyFile.getAbsolutePath()));
     }
 
     this.sslCertChainFile = sslCertChainFile;

@@ -20,7 +20,6 @@ package io.smartspaces.service.web.server.internal.netty;
 import java.net.HttpCookie;
 import java.net.SocketAddress;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,7 +38,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
-import io.smartspaces.SmartSpacesException;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.web.server.HttpRequest;
 
@@ -53,7 +51,7 @@ public class NettyHttpRequest implements HttpRequest {
   /**
    * The proxied request.
    */
-  private org.jboss.netty.handler.codec.http.HttpRequest request;
+  private org.jboss.netty.handler.codec.http.HttpRequest underlyingRequest;
 
   /**
    * The remote address for the sender of the HTTP request.
@@ -78,7 +76,7 @@ public class NettyHttpRequest implements HttpRequest {
   /**
    * Construct a new request.
    *
-   * @param request
+   * @param underlyingRequest
    *        the Netty HTTP request
    * @param remoteAddress
    *        the remote address for the request
@@ -87,9 +85,9 @@ public class NettyHttpRequest implements HttpRequest {
    * @param log
    *        the logger for the request
    */
-  public NettyHttpRequest(org.jboss.netty.handler.codec.http.HttpRequest request,
+  public NettyHttpRequest(org.jboss.netty.handler.codec.http.HttpRequest underlyingRequest,
       SocketAddress remoteAddress, URI uri, ExtendedLog log) {
-    this.request = request;
+    this.underlyingRequest = underlyingRequest;
     this.remoteAddress = remoteAddress;
     this.uri = uri;
     this.log = log;
@@ -97,7 +95,7 @@ public class NettyHttpRequest implements HttpRequest {
   }
 
   public org.jboss.netty.handler.codec.http.HttpRequest getUnderlyingRequest() {
-    return request;
+    return underlyingRequest;
   }
   
   @Override
@@ -107,7 +105,7 @@ public class NettyHttpRequest implements HttpRequest {
 
   @Override
   public String getMethod() {
-    return request.getMethod().getName();
+    return underlyingRequest.getMethod().getName();
   }
 
   @Override
@@ -188,7 +186,7 @@ public class NettyHttpRequest implements HttpRequest {
   private void buildHeaders() {
     headers = HashMultimap.create();
 
-    for (Entry<String, String> header : request.headers()) {
+    for (Entry<String, String> header : underlyingRequest.headers()) {
       headers.put(header.getKey().toLowerCase(), header.getValue());
     }
   }

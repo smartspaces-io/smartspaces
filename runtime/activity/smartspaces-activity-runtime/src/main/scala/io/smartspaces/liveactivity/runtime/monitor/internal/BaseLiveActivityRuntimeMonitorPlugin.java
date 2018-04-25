@@ -19,7 +19,7 @@ package io.smartspaces.liveactivity.runtime.monitor.internal;
 
 import io.smartspaces.liveactivity.runtime.monitor.LiveActivityRuntimeMonitorPlugin;
 import io.smartspaces.liveactivity.runtime.monitor.RemoteLiveActivityRuntimeMonitorService;
-import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
+import io.smartspaces.service.web.server.HttpGetRequestHandler;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
 import io.smartspaces.service.web.server.WebServer;
@@ -102,7 +102,7 @@ public abstract class BaseLiveActivityRuntimeMonitorPlugin implements
   public void startup(RemoteLiveActivityRuntimeMonitorService monitorService, WebServer webServer) {
     this.monitorService = monitorService;
 
-    webServer.addDynamicGetRequestHandler(getUrlPrefix(), false, new HttpDynamicGetRequestHandler() {
+    webServer.addGetRequestHandler(getUrlPrefix(), false, new HttpGetRequestHandler() {
       @Override
       public void handleGetHttpRequest(HttpRequest request, HttpResponse response) {
         handleRequest(request, response);

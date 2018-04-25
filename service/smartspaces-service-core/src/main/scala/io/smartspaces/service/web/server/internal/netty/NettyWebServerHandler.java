@@ -25,22 +25,15 @@ import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 import static org.jboss.netty.handler.codec.http.HttpResponseStatus.FOUND;
 import static org.jboss.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 
-import io.smartspaces.SimpleSmartSpacesException;
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.SmartSpacesExceptionUtils;
-import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.messaging.codec.MessageCodec;
-import io.smartspaces.service.web.server.HttpAuthProvider;
-import io.smartspaces.service.web.server.HttpAuthResponse;
-import io.smartspaces.service.web.server.WebResourceAccessManager;
-import io.smartspaces.service.web.server.WebServer;
-import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
-import io.smartspaces.util.web.HttpConstants;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -53,11 +46,9 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpChunk;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
-import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
-import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.handler.codec.http.multipart.DefaultHttpDataFactory;
 import org.jboss.netty.handler.codec.http.multipart.HttpDataFactory;
 import org.jboss.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
@@ -66,15 +57,22 @@ import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import org.jboss.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import org.jboss.netty.util.CharsetUtil;
 
-import java.io.IOException;
-import java.net.HttpCookie;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+
+import io.smartspaces.SimpleSmartSpacesException;
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.SmartSpacesExceptionUtils;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.messaging.codec.MessageCodec;
+import io.smartspaces.service.web.server.HttpAuthProvider;
+import io.smartspaces.service.web.server.HttpAuthResponse;
+import io.smartspaces.service.web.server.WebResourceAccessManager;
+import io.smartspaces.service.web.server.WebServer;
+import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
+import io.smartspaces.util.web.HttpConstants;
 
 /**
  * A web socket server handler for Netty.
@@ -238,7 +236,6 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   public List<NettyHttpPostRequestHandler> getHttpPostRequestHandler() {
     return Lists.newArrayList(httpPostRequestHandlers);
   }
- 
 
   /**
    * Set the factory for creating web socket handlers.
@@ -318,8 +315,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       throw new SmartSpacesException(String.format("Illegal URI syntax %s", req.getUri()), e);
     }
 
-    NettyHttpRequest request = new NettyHttpRequest(req, ctx.getChannel().getRemoteAddress(), 
-        uri, getWebServer().getLog());
+    NettyHttpRequest request = new NettyHttpRequest(req, ctx.getChannel().getRemoteAddress(), uri,
+        getWebServer().getLog());
     HttpAuthResponse authResponse = null;
     if (authProvider != null) {
       authResponse = authProvider.authorizeRequest(request);
@@ -353,8 +350,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       // Nothing we handle.
 
       HttpResponseStatus status = FORBIDDEN;
-      String message = String.format("HTTP [%d] %s from %s--> (No handlers for request)", status.getCode(),
-          req.getUri(), ctx.getChannel().getRemoteAddress());
+      String message = String.format("HTTP [%d] %s from %s--> (No handlers for request)",
+          status.getCode(), req.getUri(), ctx.getChannel().getRemoteAddress());
       if (shouldWarnOnMissingFile(new URI(req.getUri()).getPath())) {
         webServer.getLog().warn(message);
       } else {
@@ -384,20 +381,18 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   private boolean handleWebGetRequest(ChannelHandlerContext context, NettyHttpRequest request,
       HttpAuthResponse authResponse) throws IOException {
     String method = request.getMethod();
-    if (method.equals(HttpConstants.HTTP_METHOD_GET) || method.equals(HttpConstants.HTTP_METHOD_HEAD)) {
+    if (method.equals(HttpConstants.HTTP_METHOD_GET)
+        || method.equals(HttpConstants.HTTP_METHOD_HEAD)) {
       if (!canUserAccessResource(authResponse, request.getUri().toString())) {
         return false;
       }
 
-      Set<HttpCookie> cookies = null;
-      if (authResponse != null) {
-        cookies = authResponse.getCookies();
-      }
+      NettyHttpResponse response = newNettyHttpResponse(context, authResponse);
 
       for (NettyHttpGetRequestHandler handler : httpGetRequestHandlers) {
         if (handler.isHandledBy(request)) {
           try {
-            handler.handleWebRequest(context, request, cookies);
+            handler.handleWebRequest(request, response);
           } catch (Exception e) {
             webServer.getLog().error(
                 String.format("Exception when handling web request %s", request.getUri()), e);
@@ -413,8 +408,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   }
 
   /**
-   * Attempt to handle an HTTP OPTIONS request by scanning through all registered
-   * handlers.
+   * Attempt to handle an HTTP OPTIONS request by scanning through all
+   * registered handlers.
    *
    * @param context
    *          the context for the request
@@ -436,15 +431,12 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
         return false;
       }
 
-      Set<HttpCookie> cookies = null;
-      if (authResponse != null) {
-        cookies = authResponse.getCookies();
-      }
+      NettyHttpResponse response = newNettyHttpResponse(context, authResponse);
 
       for (NettyHttpOptionsRequestHandler handler : httpOptionsRequestHandlers) {
         if (handler.isHandledBy(request)) {
           try {
-            handler.handleWebRequest(context, request, cookies);
+            handler.handleWebRequest(request, response);
           } catch (Exception e) {
             webServer.getLog().error(
                 String.format("Exception when handling web request %s", request.getUri()), e);
@@ -489,17 +481,12 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       return false;
     }
 
-    Set<HttpCookie> cookies = null;
-    if (authResponse != null) {
-      cookies = authResponse.getCookies();
-    }
+    NettyHttpResponse response = newNettyHttpResponse(context, authResponse);
 
     try {
       HttpRequest nettyRequest = request.getUnderlyingRequest();
-      NettyHttpPostBody postBody =
-          new NettyHttpPostBody(request, 
-              new HttpPostRequestDecoder(HTTP_DATA_FACTORY, nettyRequest),
-              postRequestHandler, this, cookies);
+      NettyHttpPostBody postBody = new NettyHttpPostBody(request, response,
+          new HttpPostRequestDecoder(HTTP_DATA_FACTORY, nettyRequest), postRequestHandler, this);
 
       if (nettyRequest.isChunked()) {
         // Chunked data so more coming.
@@ -507,7 +494,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       } else {
         postBody.completeNonChunked();
 
-        postBody.bodyUploadComplete(context);
+        postBody.bodyUploadComplete();
       }
     } catch (Throwable e) {
       webServer.getLog().error("Could not start file upload", e);
@@ -534,6 +521,27 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
     }
 
     return null;
+  }
+
+  /**
+   * Create a new HTTP response.
+   * 
+   * @param ctx
+   *          the channel chandler context for the request
+   * @param cookiesToAdd
+   *          the cookies to add
+   * 
+   * @return the new response object
+   */
+  private NettyHttpResponse newNettyHttpResponse(ChannelHandlerContext ctx,
+      HttpAuthResponse authResponse) {
+    NettyHttpResponse response = new NettyHttpResponse(ctx);
+
+    if (authResponse != null) {
+      response.addCookies(authResponse.getCookies());
+    }
+
+    return response;
   }
 
   /**
@@ -659,7 +667,7 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
         if (chunk.isLast()) {
           postBodyHandlers.remove(context.getChannel().getId());
 
-          fileUpload.bodyUploadComplete(context);
+          fileUpload.bodyUploadComplete();
         }
       } catch (Throwable e) {
         // An error, so don't leave handler around.
@@ -692,7 +700,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       boolean setContentLength, boolean ignoreKeepAlive) {
     try {
       // Generate an error page if response status code is not OK (200).
-      if (res.getStatus().getCode() != HttpResponseStatus.OK.getCode() && !res.getContent().readable()) {
+      if (res.getStatus().getCode() != HttpResponseStatus.OK.getCode()
+          && !res.getContent().readable()) {
         res.setContent(ChannelBuffers.copiedBuffer(res.getStatus().toString(), CharsetUtil.UTF_8));
         setContentLength(res, res.getContent().readableBytes());
       }
@@ -776,6 +785,24 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
   }
 
   /**
+   * Add in HTTP response headers.
+   *
+   * <p>
+   * The global headers will be added as well.
+   *
+   * @param res
+   *          the response to be sent to the client
+   * @param responseImpl
+   *          the response object from this web server
+   */
+  public void addHttpResponseHeaders(HttpResponse res, NettyHttpResponse responseImpl) {
+    // The global headers should go in first in case they are being
+    // overridden.
+    addGlobalHttpResponseHeaders(res);
+    addHttpResponseHeaderMap(res, responseImpl.getContentHeaders());
+  }
+
+  /**
    * Add in HTTP response headers from the given map.
    *
    * @param res
@@ -818,9 +845,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
     if (isWebsocketChannel) {
       log.error("Exception caught in web server for web socket connections: " + cause.getMessage());
     } else {
-      log.error(
-    	  String.format("Exception caught in the web server from request from %s", ctx.getChannel().getRemoteAddress()), 
-    	  cause);
+      log.error(String.format("Exception caught in the web server from request from %s",
+          ctx.getChannel().getRemoteAddress()), cause);
     }
 
     // Can call close many times without negative effect.
@@ -958,8 +984,9 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
    */
   private boolean shouldWarnOnMissingFile(String uriPath) {
     int pos = uriPath.lastIndexOf(HttpConstants.URL_PATH_COMPONENT_SEPARATOR);
-    String filename = pos >= 0
-        ? uriPath.substring(pos + HttpConstants.URL_PATH_COMPONENT_SEPARATOR.length()) : uriPath;
+    String filename =
+        pos >= 0 ? uriPath.substring(pos + HttpConstants.URL_PATH_COMPONENT_SEPARATOR.length())
+            : uriPath;
     return !UNWARNED_MISSING_FILE_NAMES.contains(filename);
   }
 

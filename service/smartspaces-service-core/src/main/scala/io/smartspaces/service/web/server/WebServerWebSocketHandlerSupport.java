@@ -17,7 +17,6 @@
 
 package io.smartspaces.service.web.server;
 
-import io.smartspaces.messaging.codec.MessageCodec;
 import io.smartspaces.service.web.WebSocketConnection;
 import io.smartspaces.service.web.WebSocketHandlerSupport;
 

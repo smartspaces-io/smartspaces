@@ -16,8 +16,6 @@
 
 package io.smartspaces.service.comm.network.client;
 
-import io.smartspaces.service.comm.network.server.TcpServerNetworkCommunicationEndpointListener;
-
 /**
  * A default implementation of
  * {@link TcpClientNetworkCommunicationEndpointListener}.

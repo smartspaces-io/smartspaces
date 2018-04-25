@@ -25,7 +25,7 @@ import io.smartspaces.master.communication.MasterCommunicationManager;
 import io.smartspaces.master.server.remote.RemoteMasterServerMessages;
 import io.smartspaces.master.server.remote.master.RemoteMasterCommunicationHandler;
 import io.smartspaces.master.server.remote.master.RemoteMasterServerListener;
-import io.smartspaces.service.web.server.HttpDynamicGetRequestHandler;
+import io.smartspaces.service.web.server.HttpGetRequestHandler;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
 import io.smartspaces.system.SmartSpacesEnvironment;
@@ -70,9 +70,9 @@ public class StandardRemoteMasterCommunicationHandler implements RemoteMasterCom
 
   @Override
   public void register(MasterCommunicationManager masterCommunicationManager) {
-    masterCommunicationManager.getWebServer().addDynamicGetRequestHandler(
+    masterCommunicationManager.getWebServer().addGetRequestHandler(
         RemoteMasterServerMessages.URI_PREFIX_MASTER_SPACECONTROLLER, true,
-        new MyHttpDynamicRequestHandler());
+        new MyHttpGetRequestHandler());
   }
 
   @Override
@@ -169,7 +169,7 @@ public class StandardRemoteMasterCommunicationHandler implements RemoteMasterCom
    *
    * @author Keith M. Hughes
    */
-  private class MyHttpDynamicRequestHandler implements HttpDynamicGetRequestHandler {
+  private class MyHttpGetRequestHandler implements HttpGetRequestHandler {
 
     @Override
     public void handleGetHttpRequest(HttpRequest request, HttpResponse response) {

@@ -19,13 +19,6 @@ package io.smartspaces.service.web.server.internal.netty
 
 import io.smartspaces.service.web.server.HttpPostBody
 
-import java.io.IOException
-import java.net.HttpCookie
-import java.util.{ Set => JSet }
-
-import org.jboss.netty.channel.ChannelHandlerContext
-import org.jboss.netty.handler.codec.http.HttpRequest
-
 /**
  * Handle HTTP POST requests from Netty.
  *
@@ -36,18 +29,15 @@ trait NettyHttpPostRequestHandler extends NettyHttpRequestHandler {
   /**
    * Handle the web request.
    *
-   * @param ctx
-   *          the channel handler context
-   * @param nettyRequest
+   * @param request
    *          the Netty HTTP request
    * @param postBody
    *          the HTTP post body
-   * @param cookiesToAdd
-   *          cookies to be set on the response
+   * @param response
+   *          the Netty HTTP response
    *
    * @throws IOException
    *           something bad happened
    */
-  def handleWebRequest(ctx: ChannelHandlerContext, nettyRequest: NettyHttpRequest, postBody: HttpPostBody,
-    cookiesToAdd: JSet[HttpCookie]): Unit
+  def handleWebRequest(request: NettyHttpRequest, postBody: HttpPostBody, response: NettyHttpResponse): Unit
 }

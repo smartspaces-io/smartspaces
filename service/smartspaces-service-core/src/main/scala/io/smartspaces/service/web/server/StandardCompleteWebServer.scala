@@ -43,14 +43,14 @@ class StandardCompleteWebServer(
     _webServer.addStaticContentHandler(uriPrefix, baseDir)
   }
 
-  override def addDynamicGetRequestHandler(uriPrefix: String, usePath: Boolean,
-    handler: HttpDynamicGetRequestHandler): Unit = {
-    _webServer.addDynamicGetRequestHandler(uriPrefix, usePath, handler)
+  override def addGetRequestHandler(uriPrefix: String, usePath: Boolean,
+    handler: HttpGetRequestHandler): Unit = {
+    _webServer.addGetRequestHandler(uriPrefix, usePath, handler)
   }
 
-  override def addDynamicPostRequestHandler(uriPrefix: String, usePath: Boolean,
-    handler: HttpDynamicPostRequestHandler): Unit = {
-    _webServer.addDynamicPostRequestHandler(uriPrefix, usePath, handler)
+  override def addPostRequestHandler(uriPrefix: String, usePath: Boolean,
+    handler: HttpPostRequestHandler): Unit = {
+    _webServer.addPostRequestHandler(uriPrefix, usePath, handler)
   }
 
   override def isWebSocketConnected(): Boolean = {

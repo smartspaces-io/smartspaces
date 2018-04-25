@@ -45,7 +45,6 @@ import com.google.common.collect.Lists;
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.logging.ExtendedLog;
-import io.smartspaces.messaging.MessageSender;
 import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpoint;
 import io.smartspaces.service.comm.network.client.TcpClientNetworkCommunicationEndpointListener;
 

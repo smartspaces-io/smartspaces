@@ -40,10 +40,8 @@ import org.jboss.netty.handler.codec.http.multipart.InterfaceHttpData.HttpDataTy
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.HttpCookie;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A Netty-based {@link HttpPostBody}.
@@ -73,6 +71,11 @@ public class NettyHttpPostBody implements HttpPostBody {
   private NettyHttpRequest request;
 
   /**
+   * The response.
+   */
+  private NettyHttpResponse response;
+
+  /**
    * The web server handler handling the request.
    */
   private NettyWebServerHandler webServerHandler;
@@ -81,11 +84,6 @@ public class NettyHttpPostBody implements HttpPostBody {
    * FileUpload container for this particular upload.
    */
   private FileUpload fileUpload;
-
-  /**
-   * The cookies to add.
-   */
-  private Set<HttpCookie> cookies;
 
   /**
    * {@code true} if this is a form post.
@@ -97,25 +95,26 @@ public class NettyHttpPostBody implements HttpPostBody {
    *
    * @param request
    *          incoming HTTP request
+   * @param response
+   *          outgoing HTTP response
    * @param decoder
    *          decoder to use
    * @param handler
    *          the HTTP POST handler, can be {@code null}
    * @param webServerHandler
    *          underlying web server handler
-   * @param cookies
-   *          any cookies to add to responses
    */
-  public NettyHttpPostBody(NettyHttpRequest request, HttpPostRequestDecoder decoder,
-      NettyHttpPostRequestHandler handler, NettyWebServerHandler webServerHandler,
-      Set<HttpCookie> cookies) {
+  public NettyHttpPostBody(NettyHttpRequest request, NettyHttpResponse response,
+      HttpPostRequestDecoder decoder, NettyHttpPostRequestHandler handler,
+      NettyWebServerHandler webServerHandler) {
     this.request = request;
+    this.response = response;
     this.decoder = decoder;
     this.handler = handler;
     this.webServerHandler = webServerHandler;
-    this.cookies = cookies;
 
-    String contentType = request.getUnderlyingRequest().headers().get(HttpConstants.HEADER_NAME_CONTENT_TYPE);
+    String contentType =
+        request.getUnderlyingRequest().headers().get(HttpConstants.HEADER_NAME_CONTENT_TYPE);
     isForm = CommonMimeTypes.MIME_TYPE_FORM_MULTIPART.equals(contentType)
         || CommonMimeTypes.MIME_TYPE_FORM_URLENCODED.equals(contentType);
   }
@@ -184,13 +183,10 @@ public class NettyHttpPostBody implements HttpPostBody {
 
   /**
    * The body upload is complete. Handle it as needed.
-   *
-   * @param context
-   *          the context for the channel handler
    */
-  void bodyUploadComplete(ChannelHandlerContext context) {
+  void bodyUploadComplete() {
     if (handler != null) {
-      handleBodyUploadCompleteThroughHandler(context);
+      handleBodyUploadCompleteThroughHandler();
     } else {
       getLog().formatError("HTTP post web request not handled due to no handle for URI %s",
           request.getUri());
@@ -199,13 +195,10 @@ public class NettyHttpPostBody implements HttpPostBody {
 
   /**
    * Handle the body upload completion through the handler.
-   *
-   * @param context
-   *          the context for the channel handler
-   */
-  private void handleBodyUploadCompleteThroughHandler(ChannelHandlerContext context) {
+    */
+  private void handleBodyUploadCompleteThroughHandler() {
     try {
-      handler.handleWebRequest(context, request, this, cookies);
+      handler.handleWebRequest(request, this, response);
     } catch (Exception e) {
       getLog().formatError(e, "Exception when handling web request %s", request.getUri());
     }

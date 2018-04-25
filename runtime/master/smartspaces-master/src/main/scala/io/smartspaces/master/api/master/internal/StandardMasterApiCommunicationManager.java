@@ -36,7 +36,7 @@ import io.smartspaces.messaging.codec.MapByteArrayMessageCodec;
 import io.smartspaces.messaging.codec.MapStringMessageCodec;
 import io.smartspaces.messaging.dynamic.SmartSpacesMessagesSupport;
 import io.smartspaces.service.web.server.BasicMultipleConnectionWebServerWebSocketHandlerFactory;
-import io.smartspaces.service.web.server.HttpDynamicPostRequestHandler;
+import io.smartspaces.service.web.server.HttpPostRequestHandler;
 import io.smartspaces.service.web.server.HttpPostBody;
 import io.smartspaces.service.web.server.HttpRequest;
 import io.smartspaces.service.web.server.HttpResponse;
@@ -172,16 +172,16 @@ public class StandardMasterApiCommunicationManager extends BaseMasterApiManager
         extensionManager, spaceEnvironment.getTimeProvider(), webSocketHandlerFactory,
         spaceEnvironment.getLog());
 
-    webServer.addDynamicPostRequestHandler(MASTERAPI_PATH_PREFIX_ACTIVITY_UPLOAD, false,
-        new HttpDynamicPostRequestHandler() {
+    webServer.addPostRequestHandler(MASTERAPI_PATH_PREFIX_ACTIVITY_UPLOAD, false,
+        new HttpPostRequestHandler() {
           @Override
           public void handlePostHttpRequest(HttpRequest request, HttpPostBody upload, HttpResponse response) {
             handleMasterApiActivityUpload(request, upload, response);
           }
         });
 
-    webServer.addDynamicPostRequestHandler("/masterapi/post", false,
-        new HttpDynamicPostRequestHandler() {
+    webServer.addPostRequestHandler("/masterapi/post", false,
+        new HttpPostRequestHandler() {
           @Override
           public void handlePostHttpRequest(HttpRequest request, HttpPostBody upload, HttpResponse response) {
             handleMasterApiPostCommand(request, upload, response);

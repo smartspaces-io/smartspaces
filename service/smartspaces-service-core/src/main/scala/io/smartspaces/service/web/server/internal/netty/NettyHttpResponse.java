@@ -17,12 +17,13 @@
 
 package io.smartspaces.service.web.server.internal.netty;
 
-import io.smartspaces.SmartSpacesException;
-import io.smartspaces.service.web.server.HttpResponse;
-import io.smartspaces.util.web.HttpResponseCode;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpCookie;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferOutputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -31,12 +32,12 @@ import org.jboss.netty.handler.codec.http.Cookie;
 import org.jboss.netty.handler.codec.http.CookieEncoder;
 import org.jboss.netty.handler.codec.http.DefaultCookie;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpCookie;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+
+import io.smartspaces.SmartSpacesException;
+import io.smartspaces.service.web.server.HttpResponse;
+import io.smartspaces.util.web.HttpResponseCode;
 
 /**
  * A Netty-based HttpResponse
@@ -118,6 +119,16 @@ public class NettyHttpResponse implements HttpResponse {
   private String contentType;
 
   /**
+   * The cookies for the request.
+   */
+  private Set<HttpCookie> cookies = new HashSet<>();
+
+  /**
+   * {@code true} if the response has already been writtem.
+   */
+  private boolean responseWritten = false;
+
+  /**
    * Construct a new response.
    *
    * @param ctx
@@ -127,7 +138,6 @@ public class NettyHttpResponse implements HttpResponse {
    */
   public NettyHttpResponse(ChannelHandlerContext ctx, Map<String, String> extraHttpContentHeaders) {
     this.ctx = ctx;
-    channelBuffer = ChannelBuffers.dynamicBuffer();
 
     if (extraHttpContentHeaders != null) {
       for (String key : extraHttpContentHeaders.keySet()) {
@@ -147,11 +157,20 @@ public class NettyHttpResponse implements HttpResponse {
   public NettyHttpResponse(ChannelHandlerContext ctx,
       Multimap<String, String> extraHttpContentHeaders) {
     this.ctx = ctx;
-    channelBuffer = ChannelBuffers.dynamicBuffer();
 
     if (extraHttpContentHeaders != null) {
       contentHeaders.putAll(extraHttpContentHeaders);
     }
+  }
+
+  /**
+   * Construct a new response.
+   *
+   * @param ctx
+   *          the Netty context for the connection to the client
+  */
+  public NettyHttpResponse(ChannelHandlerContext ctx) {
+    this.ctx = ctx;
   }
 
   @Override
@@ -177,6 +196,7 @@ public class NettyHttpResponse implements HttpResponse {
   @Override
   public OutputStream getOutputStream() {
     if (outputStream == null) {
+      channelBuffer = ChannelBuffers.dynamicBuffer();
       outputStream = new ChannelBufferOutputStream(channelBuffer);
     }
 
@@ -194,6 +214,13 @@ public class NettyHttpResponse implements HttpResponse {
   }
 
   @Override
+  public void addContentHeaders(Map<String, String> headers) {
+    for (Map.Entry<String, String> entry : headers.entrySet()) {
+      contentHeaders.put(entry.getKey(), entry.getValue());
+    }
+  }
+
+  @Override
   public Multimap<String, String> getContentHeaders() {
     return contentHeaders;
   }
@@ -205,7 +232,7 @@ public class NettyHttpResponse implements HttpResponse {
    * Once this is called, the output stream used for writing the response is
    * closed.
    *
-   * @return the channel buffer
+   * @return the channel buffer, or {@code null} if no stream is available
    */
   public ChannelBuffer getChannelBuffer() {
     try {
@@ -227,23 +254,73 @@ public class NettyHttpResponse implements HttpResponse {
     return channelBuffer;
   }
 
+  /**
+   * Is there content for output?
+   * 
+   * <p>
+   * This does not include headers or cookies.
+   * 
+   * @return {@code true} if there is content to write
+   */
+  public boolean hasContentForWriting() {
+    return channelBuffer != null && channelBuffer.readable();
+  }
+
+  /**
+   * Get the channel handler context.
+   * 
+   * @return the channel handler context
+   */
+  public ChannelHandlerContext getChannelHandlerContext() {
+    return ctx;
+  }
+
   @Override
   public void addCookie(HttpCookie cookie) {
-    CookieEncoder encoder = new CookieEncoder(false);
-    encoder.addCookie(createNettyCookie(cookie));
-    contentHeaders.put("Set-Cookie", encoder.encode());
+    cookies.add(cookie);
   }
 
   @Override
   public void addCookies(Set<HttpCookie> newCookies) {
-    if (newCookies == null) {
-      return;
+    if (newCookies != null) {
+      cookies.addAll(newCookies);
     }
+  }
+
+  /**
+   * Has the response been written?
+   * 
+   * @return {@code true} if the response has been written
+   */
+  public boolean isResponseWritten() {
+    return responseWritten;
+  }
+
+  /**
+   * Se if the response been written.
+   * 
+   * @param responseWritten
+   *          {@code true} if the response has been written
+   */
+  public void setResponseWritten(boolean responseWritten) {
+    this.responseWritten = responseWritten;
+  }
+
+  /**
+   * Prepare the entire response to be written back to the requestor.
+   */
+  public void prepareForWrite() {
+    convertCookiesToHeader();
+  }
+
+  /**
+   * Convert all cookies into the cookie header.
+   */
+  private void convertCookiesToHeader() {
     CookieEncoder encoder = new CookieEncoder(false);
-    for (HttpCookie cookie : newCookies) {
+    for (HttpCookie cookie : cookies) {
       encoder.addCookie(createNettyCookie(cookie));
       contentHeaders.put("Set-Cookie", encoder.encode());
     }
   }
-
 }

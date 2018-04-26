@@ -62,6 +62,8 @@ abstract class BaseNettyHttpRequestHandlerHandler(
 
   def writeSuccessHttpResponse(request: NettyHttpRequest, response: NettyHttpResponse): Unit = {
     if (!response.isResponseWritten()) {
+      response.prepareForWrite();
+      
       val res = new DefaultHttpResponse(
         HttpVersion.HTTP_1_1,
         HttpResponseStatus.valueOf(response.getResponseCode()))

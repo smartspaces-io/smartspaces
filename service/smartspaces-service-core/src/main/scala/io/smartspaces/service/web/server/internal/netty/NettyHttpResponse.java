@@ -168,7 +168,7 @@ public class NettyHttpResponse implements HttpResponse {
    *
    * @param ctx
    *          the Netty context for the connection to the client
-  */
+   */
   public NettyHttpResponse(ChannelHandlerContext ctx) {
     this.ctx = ctx;
   }
@@ -210,13 +210,17 @@ public class NettyHttpResponse implements HttpResponse {
 
   @Override
   public void addContentHeaders(Multimap<String, String> headers) {
-    contentHeaders.putAll(headers);
+    if (headers != null) {
+      contentHeaders.putAll(headers);
+    }
   }
 
   @Override
   public void addContentHeaders(Map<String, String> headers) {
-    for (Map.Entry<String, String> entry : headers.entrySet()) {
-      contentHeaders.put(entry.getKey(), entry.getValue());
+    if (headers != null) {
+      for (Map.Entry<String, String> entry : headers.entrySet()) {
+        contentHeaders.put(entry.getKey(), entry.getValue());
+      }
     }
   }
 
@@ -317,7 +321,7 @@ public class NettyHttpResponse implements HttpResponse {
    * Convert all cookies into the cookie header.
    */
   private void convertCookiesToHeader() {
-    CookieEncoder encoder = new CookieEncoder(false);
+    CookieEncoder encoder = new CookieEncoder(true);
     for (HttpCookie cookie : cookies) {
       encoder.addCookie(createNettyCookie(cookie));
       contentHeaders.put("Set-Cookie", encoder.encode());

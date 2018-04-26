@@ -103,10 +103,15 @@ class NettyStaticContentResponseWriter(
   private val RANGE_HEADER_REGEX = Pattern.compile("bytes=(\\d+)\\-(\\d+)?")
 
   /**
-   * The file support to use.
+   * Write a file response.
+   * 
+   * @param fileToWrite
+   *        the file to write
+   * @param request
+   *        the HTTP request
+   * @param response
+   *        the HTTP response
    */
-  private val fileSupport = FileSupportImpl.INSTANCE
-
   def writeResponse(fileToWrite: File, request: NettyHttpRequest, response: NettyHttpResponse): Unit = {
     val raf = {
       try {
@@ -167,7 +172,7 @@ class NettyStaticContentResponseWriter(
     val ch = response.getChannelHandlerContext.getChannel()
 
     // Write the initial line and the header.
-    var writeFuture = ch.write(response)
+    var writeFuture = ch.write(responseInternal)
 
     // Write the content if there have been no errors and we are a GET
     // request.

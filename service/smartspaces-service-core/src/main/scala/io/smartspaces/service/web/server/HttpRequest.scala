@@ -24,78 +24,104 @@ import com.google.common.collect.Multimap;
 import java.net.HttpCookie;
 import java.net.SocketAddress;
 import java.net.URI;
-import java.util.Map;
-import java.util.Set;
+import java.util.{Map => JMap};
+import java.util.{Set => JSet};
 
 /**
  * An HTTP request coming into the server.
  *
  * @author Keith M. Hughes
  */
-public interface HttpRequest {
+trait HttpRequest {
   
   /**
    * Get the remote address for the request.
    * 
    * @return the remote address for the request
    */
-  SocketAddress getRemoteAddress();
+  def getRemoteAddress(): SocketAddress 
   
   /**
    * Get the HTTP method for the request.
    * 
    * @return the HTTP method
    */
-  String getMethod();
+  def getMethod(): String 
 
   /**
    * Get the URI of the request.
    *
    * @return the URI of the request.
    */
-  URI getUri();
+  def getUri(): URI 
 
   /**
    * Get the query parameters from the URI.
    *
    * @return the query parameters
    */
-  Map<String, String> getUriQueryParameters();
+   def getUriQueryParameters(): JMap[String, String]
 
   /**
    * Get the logger for this request.
    *
    * @return the logger to use
    */
-  ExtendedLog getLog();
+  def getLog(): ExtendedLog 
 
   /**
    * Get the header for this request
    *
    * @return the header for the http message
    */
-  Multimap<String, String> getHeaders();
+   def getHeaders(): Multimap[String, String]
 
   /**
    * Return the set of header strings for the given key.
    *
-   * @param key
-   * @return
+   * @param name
+   *        the name of the header
+   *        
+   * @return all values for the header
    */
-  Set<String> getHeader(String key);
+   def getHeader(key: String ): JSet[String]
 
   /**
    * Return the cookie which has the given name, if it exists.
    *
    * @param name
-   * @return
+   *        name of the cookie
+   *        
+   * @return value of the cookie
    */
-  HttpCookie getCookie(String name);
+   def getCookie(name: String ): HttpCookie
 
   /**
-   * Return a map of all cookie values set on the request.
+   * Return a set of all cookie values set on the request.
    *
    * @return
    */
-  Set<HttpCookie> getCookies();
+   def getCookies(): JSet[HttpCookie]
+  
+  /**
+   * Get a value from the session.
+   * 
+   * @param valueName
+   *        the name of the value
+   *        
+   * @return the value, if found
+   */
+  def getValue[T](valueName: String): T
+  
+  /**
+   * Set a value in the session.
+   * 
+   * @param valueName
+   *        the name of the value
+   * @param valueValue
+   *        the value of the value
+   *        
+   * @return this session
+   */
+  def setValue(valueName: String, valueValue: Any): HttpRequest
 }

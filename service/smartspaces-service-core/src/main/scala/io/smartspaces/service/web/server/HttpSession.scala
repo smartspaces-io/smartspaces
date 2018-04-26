@@ -56,7 +56,6 @@ trait HttpSession {
    */
   def setValue(valueName: String, valueValue: Any): HttpSession
   
-  
   /**
    * [[true]] if the session is authenticated.
    */
@@ -66,13 +65,20 @@ trait HttpSession {
    * Invalidate the session
    */
   def invalidate(): Unit
-  
 }
 
+/**
+ * The HTTP session implementation.
+ * 
+ * @author Keith M. Hughes
+ */
 class SimpleHttpSession(
   override val sessionToken: String,
   override val sessionCreationTime: Long) extends HttpSession {
   
+  /**
+   * The values in the session.
+   */
   private var values = Map[String, Any]()
   
   @volatile override var sessionLastUsedTime: Long = sessionCreationTime

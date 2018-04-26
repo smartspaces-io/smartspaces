@@ -34,7 +34,7 @@ object HttpFilterChain {
    * @return the handler
    */
   def newFilteredGetHandler(filters: List[HttpFilter], finalHandler: HttpGetRequestHandler): HttpGetRequestHandler = {
-    new FilteredHttpDynamicGetRequestHandler(newGetFilterChain(filters, finalHandler))
+    new FilteredHttpGetRequestHandler(newGetFilterChain(filters, finalHandler))
   }
   
   /**
@@ -62,7 +62,7 @@ object HttpFilterChain {
    * @return the handler
    */
   def newFilteredOptionsHandler(filters: List[HttpFilter], finalHandler: HttpOptionsRequestHandler): HttpOptionsRequestHandler = {
-    new FilteredHttpDynamicOptionsRequestHandler(newOptionsFilterChain(filters, finalHandler))
+    new FilteredHttpOptionsRequestHandler(newOptionsFilterChain(filters, finalHandler))
   }
   
   /**
@@ -138,7 +138,7 @@ class HttpOptionsFilterChainEnd(finalHandler: HttpOptionsRequestHandler) extends
  * 
  * @author Keith M. Hughes
  */
-class FilteredHttpDynamicGetRequestHandler(filterChain: HttpFilterChain) extends HttpGetRequestHandler {
+class FilteredHttpGetRequestHandler(filterChain: HttpFilterChain) extends HttpGetRequestHandler {
   override def handleGetHttpRequest(request: HttpRequest, response: HttpResponse): Unit = {
     filterChain.doHttpFilter(request, response)
   }
@@ -149,7 +149,7 @@ class FilteredHttpDynamicGetRequestHandler(filterChain: HttpFilterChain) extends
  * 
  * @author Keith M. Hughes
  */
-class FilteredHttpDynamicOptionsRequestHandler(filterChain: HttpFilterChain) extends HttpOptionsRequestHandler {
+class FilteredHttpOptionsRequestHandler(filterChain: HttpFilterChain) extends HttpOptionsRequestHandler {
   override def handleOptionsHttpRequest(request: HttpRequest, response: HttpResponse): Unit = {
     filterChain.doHttpFilter(request, response)
   }
@@ -174,3 +174,118 @@ trait HttpFilter {
    */
   def doHttpFilter(request: HttpRequest, response: HttpResponse, filterChain: HttpFilterChain): Unit
 }
+
+
+/**
+ * An HTTP POST filter chain.
+ * 
+ * @author Keith M. Hughes
+ */
+object HttpPostFilterChain {
+ 
+  /**
+   * Create a filtered POST handler.
+   * 
+   * @param filters
+   *        the filters to use
+   * @param finalHandler
+   *        the POST handler
+   * 
+   * @return the handler
+   */
+  def newFilteredPostHandler(filters: List[HttpPostFilter], finalHandler: HttpPostRequestHandler): HttpPostRequestHandler = {
+    new FilteredHttpPostRequestHandler(newPostFilterChain(filters, finalHandler))
+  }
+  
+  /**
+   * Create a filter chain for a POST handler.
+   * 
+   * @param filters
+   *        the filters to use
+   * @param finalHandler
+   *        the OPTIONS handler
+   * 
+   * @return the formed chain
+   */
+  def newPostFilterChain(filters: List[HttpPostFilter], finalHandler: HttpPostRequestHandler): HttpPostFilterChain = {
+    filters.foldRight(new HttpPostFilterChainEnd(finalHandler).asInstanceOf[HttpPostFilterChain]) ((filter, chain) => new HttpPostFilterChainIntermediate(filter, chain).asInstanceOf[HttpPostFilterChain])
+  }
+}
+
+/**
+ * An HTTP POST filter chain.
+ * 
+ * @author Keith M. Hughes
+ */
+trait HttpPostFilterChain {
+  
+  /**
+   * Do a filtering operation.
+   * 
+   * @param request
+   *        the request
+   * @param postBody
+   *        the POST body
+   * @param response
+   *        the response
+   */
+  def doHttpFilter(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit
+}
+
+/**
+ *A filter for HTTP POSTrequests.
+ * 
+ * @author Keith M. Hughes
+ */
+trait HttpPostFilter {
+  
+  /**
+   * Perform the filtering operation.
+   * 
+   * @param request
+   *        the HTTP request
+   * @param postBody
+   *        the POST body
+   * @param response
+   *        the HTTP response
+   * @param filterChain
+   *        the filter chain
+   */
+  def doHttpFilter(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse, filterChain: HttpPostFilterChain): Unit
+}
+
+
+/**
+ * An intermediate element of a filter chain which calls a filter and includes the next part of the
+ * chain.
+ * 
+ * @author Keith M. Hughes
+ */
+class HttpPostFilterChainIntermediate(filter:  HttpPostFilter, nextChainElement: HttpPostFilterChain) extends HttpPostFilterChain {
+    override def doHttpFilter(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit = {
+   filter.doHttpFilter(request, postBody, response, nextChainElement)
+  }
+}
+
+/**
+ * The end of the filter chain for a POST HTTP handler.
+ * 
+ * @author Keith M. Hughes
+ */
+class HttpPostFilterChainEnd(finalHandler: HttpPostRequestHandler) extends HttpPostFilterChain {
+  override def doHttpFilter(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit = {
+    finalHandler.handlePostHttpRequest(request, postBody, response)
+  }
+}
+
+/**
+ * An HTTP POST request handler that uses a filter.
+ * 
+ * @author Keith M. Hughes
+ */
+class FilteredHttpPostRequestHandler(filterChain: HttpPostFilterChain) extends HttpPostRequestHandler {
+  override def handlePostHttpRequest(request: HttpRequest, postBody: HttpPostBody, response: HttpResponse): Unit = {
+    filterChain.doHttpFilter(request, postBody, response)
+  }
+}
+

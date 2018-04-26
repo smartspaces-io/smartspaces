@@ -50,12 +50,10 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.messaging.codec.MessageCodec;
-import io.smartspaces.service.web.server.HttpAuthProvider;
 import io.smartspaces.service.web.server.HttpGetRequestHandler;
 import io.smartspaces.service.web.server.HttpOptionsRequestHandler;
 import io.smartspaces.service.web.server.HttpPostRequestHandler;
 import io.smartspaces.service.web.server.HttpStaticContentRequestHandler;
-import io.smartspaces.service.web.server.WebResourceAccessManager;
 import io.smartspaces.service.web.server.WebServer;
 import io.smartspaces.service.web.server.WebServerWebSocketHandlerFactory;
 import io.smartspaces.util.net.NetworkBindSimpleSmartSpacesException;
@@ -158,7 +156,7 @@ public class NettyWebServer implements WebServer {
   /**
    * The complete collection of static content handlers.
    */
-  private List<HttpStaticContentRequestHandler> staticContentRequestHandlers = new ArrayList<>();
+  private List<HttpGetRequestHandler> staticContentRequestHandlers = new ArrayList<>();
 
   /**
    * The complete collection of dynamic GET request handlers.
@@ -293,10 +291,37 @@ public class NettyWebServer implements WebServer {
   public void addStaticContentHandler(String uriPrefix, File baseDir,
       Map<String, String> extraHttpContentHeaders, String fallbackFilePath,
       HttpGetRequestHandler fallbackHandler) {
-    log.formatInfo("Adding web server static content handler at %s (port=%d)", uriPrefix, port);
+    
+    HttpGetRequestHandler handler = newStaticContentHandler(uriPrefix, baseDir,
+        extraHttpContentHeaders, fallbackFilePath, fallbackHandler);
+    
+    serverHandler.addHttpGetRequestHandler(new NettyHttpGetRequestHandlerHandler(serverHandler,
+        uriPrefix, true, handler, extraHttpContentHeaders));
+
+    staticContentRequestHandlers.add(handler);
+  }
+  
+  @Override
+  public HttpGetRequestHandler newStaticContentHandler(String uriPrefix, File baseDir) {
+    return newStaticContentHandler(uriPrefix, baseDir, null);
+  }
+
+  @Override
+  public HttpGetRequestHandler newStaticContentHandler(String uriPrefix, File baseDir,
+      Map<String, String> extraHttpContentHeaders) {
+    return newStaticContentHandler(uriPrefix, baseDir, extraHttpContentHeaders, null, null);
+    
+  }
+
+  @Override
+  public HttpGetRequestHandler newStaticContentHandler(String uriPrefix, File baseDir,
+      Map<String, String> extraHttpContentHeaders, String fallbackFilePath,
+      HttpGetRequestHandler fallbackHandler) {
+    log.formatInfo("Creating web server static content handler for %s at %s (port=%d)", 
+        baseDir.getAbsolutePath(), uriPrefix, port);
     if (!baseDir.exists()) {
       throw new SmartSpacesException(
-          String.format("Cannot find web folder %s", baseDir.getAbsolutePath()));
+          String.format("Cannot find static web content folder %s", baseDir.getAbsolutePath()));
     }
 
     NettyStaticContentHandler staticContentHandler = new NettyStaticContentHandler(serverHandler,
@@ -307,9 +332,8 @@ public class NettyWebServer implements WebServer {
     }
 
     staticContentHandler.setMimeResolver(defaultMimeResolver);
-    serverHandler.addHttpGetRequestHandler(staticContentHandler);
-
-    staticContentRequestHandlers.add(staticContentHandler);
+    
+    return staticContentHandler;
   }
 
   @Override
@@ -361,7 +385,7 @@ public class NettyWebServer implements WebServer {
   }
 
   @Override
-  public List<HttpStaticContentRequestHandler> getStaticContentRequestHandlers() {
+  public List<HttpGetRequestHandler> getStaticContentRequestHandlers() {
     return Lists.newArrayList(staticContentRequestHandlers);
   }
 
@@ -469,17 +493,6 @@ public class NettyWebServer implements WebServer {
 
     this.sslCertChainFile = sslCertChainFile;
     this.sslKeyFile = sslKeyFile;
-  }
-
-  @Override
-  public void setAuthProvider(HttpAuthProvider authProvider) {
-    serverHandler.setAuthProvider(authProvider);
-
-  }
-
-  @Override
-  public void setAccessManager(WebResourceAccessManager accessManager) {
-    serverHandler.setAccessManager(accessManager);
   }
 
   /**

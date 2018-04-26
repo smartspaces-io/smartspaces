@@ -67,23 +67,28 @@ public class NettyHttpRequest implements HttpRequest {
    * The headers for the request.
    */
   private Multimap<String, String> headers;
-  
+
   /**
    * URI for the request.
    */
   private URI uri;
 
   /**
+   * The values in the session.
+   */
+  private Map<String, Object> values = new HashMap<>();
+
+  /**
    * Construct a new request.
    *
    * @param underlyingRequest
-   *        the Netty HTTP request
+   *          the Netty HTTP request
    * @param remoteAddress
-   *        the remote address for the request
+   *          the remote address for the request
    * @param uri
-   *        the URI 
+   *          the URI
    * @param log
-   *        the logger for the request
+   *          the logger for the request
    */
   public NettyHttpRequest(org.jboss.netty.handler.codec.http.HttpRequest underlyingRequest,
       SocketAddress remoteAddress, URI uri, ExtendedLog log) {
@@ -97,7 +102,7 @@ public class NettyHttpRequest implements HttpRequest {
   public org.jboss.netty.handler.codec.http.HttpRequest getUnderlyingRequest() {
     return underlyingRequest;
   }
-  
+
   @Override
   public SocketAddress getRemoteAddress() {
     return remoteAddress;
@@ -221,6 +226,19 @@ public class NettyHttpRequest implements HttpRequest {
           }));
     }
     return Sets.newHashSet(cookies);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> T getValue(String valueName) {
+    return (T) values.get(valueName);
+  }
+
+  @Override
+  public HttpRequest setValue(String valueName, Object valueValue) {
+    values.put(valueName,  valueValue);
+    
+    return this;
   }
 
   /**

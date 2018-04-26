@@ -100,6 +100,73 @@ public interface WebServer extends ManagedResource {
       HttpGetRequestHandler fallbackHandler);
 
   /**
+   * Get a new static content handler to the server.
+   * 
+   * <p>
+   * This handler will not be registered with the server. This is usually so it can be added
+   * to an HTTP filter chain.
+   *
+   * <p>
+   * See {@link #newStaticContentHandler(String, File, Map)}, the content header
+   * map value will be {@code null}.
+   *
+   * @param uriPrefix
+   *          URI prefix for the content
+   * @param baseDir
+   *          the base directory for the content
+   *          
+   * @return the new handler
+   */
+  HttpGetRequestHandler newStaticContentHandler(String uriPrefix, File baseDir);
+
+  /**
+   * Get a new static content handler to the server.
+   * 
+   * <p>
+   * This handler will not be registered with the server. This is usually so it can be added
+   * to an HTTP filter chain.
+   *
+   * @param uriPrefix
+   *          URI prefix for the content
+   * @param baseDir
+   *          the base directory for the content
+   * @param extraHttpContentHeaders
+   *          extra content headers to add to every response, can be
+   *          {@code null}
+   *          
+   * @return the new handler
+   */
+  HttpGetRequestHandler newStaticContentHandler(String uriPrefix, File baseDir,
+      Map<String, String> extraHttpContentHeaders);
+
+  /**
+   * Get a new static content handler.
+   * 
+   * <p>
+   * This handler will not be registered with the server. This is usually so it can be added
+   * to an HTTP filter chain.
+   *
+   * @param uriPrefix
+   *          URI prefix for the content
+   * @param baseDir
+   *          the base directory for the content
+   * @param extraHttpContentHeaders
+   *          extra content headers to add to every response, can be
+   *          {@code null}
+   * @param fallbackFilePath
+   *          file path relative to the base directory to use if a file is not
+   *          found, can be {@code null}
+   * @param fallbackHandler
+   *          dynamic content handler to use if requested file is missing, can
+   *          be {@code null}
+   *          
+   * @return the new handler
+   */
+  HttpGetRequestHandler newStaticContentHandler(String uriPrefix, File baseDir,
+      Map<String, String> extraHttpContentHeaders, String fallbackFilePath,
+      HttpGetRequestHandler fallbackHandler);
+
+  /**
    * Add in a new dynamic GET content handler to the server.
    *
    * <p>
@@ -220,7 +287,7 @@ public interface WebServer extends ManagedResource {
    * @return all static content request handlers in the order they were added to
    *         the server
    */
-  List<HttpStaticContentRequestHandler> getStaticContentRequestHandlers();
+  List<HttpGetRequestHandler> getStaticContentRequestHandlers();
 
   /**
    * Get all dynamic GET request handlers.
@@ -366,24 +433,4 @@ public interface WebServer extends ManagedResource {
    *          a PKCS#8 private key file in PEM format
    */
   void setSslCertificates(File sslCertChainFile, File sslKeyFile);
-
-  /**
-   * Set the AuthProvider to use with this server, if no auth provider is set on
-   * a server, it should not attempt any kind of access control. Setting the
-   * auth provider to {@code null} should disable authorization checking on a
-   * server.
-   *
-   * @param authProvider
-   *          the authentication provider
-   */
-  void setAuthProvider(HttpAuthProvider authProvider);
-
-  /**
-   * Set the access manager for this webserver. The access manager will only be
-   * used if the auth provider is set.
-   *
-   * @param accessManager
-   *          the access manager
-   */
-  void setAccessManager(WebResourceAccessManager accessManager);
 }

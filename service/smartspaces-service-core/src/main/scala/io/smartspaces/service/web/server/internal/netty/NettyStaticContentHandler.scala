@@ -24,13 +24,15 @@ import java.util.{ HashMap => JHashMap }
 import java.util.{ Map => JMap }
 import java.util.regex.Pattern
 
-import org.jboss.netty.handler.codec.http.HttpMethod
 import org.jboss.netty.handler.codec.http.HttpResponseStatus
 
 import io.smartspaces.service.web.server.HttpGetRequestHandler
 import io.smartspaces.service.web.server.HttpStaticContentRequestHandler
 import io.smartspaces.util.io.FileSupportImpl
+import io.smartspaces.util.web.HttpConstants
 import io.smartspaces.util.web.MimeResolver
+import io.smartspaces.service.web.server.HttpResponse
+import io.smartspaces.service.web.server.HttpRequest
 
 /**
  * Handle static web content using Netty.
@@ -40,7 +42,7 @@ import io.smartspaces.util.web.MimeResolver
 class NettyStaticContentHandler(parentHandler: NettyWebServerHandler, uriPrefixBase: String,
   baseDir: File, _extraHttpContentHeaders: JMap[String, String], fallbackFilePath: String,
   fallbackHandler: HttpGetRequestHandler)
-  extends NettyHttpGetRequestHandler with HttpStaticContentRequestHandler {
+  extends HttpGetRequestHandler with HttpStaticContentRequestHandler {
 
   /**
    * The first portion of a content range header.
@@ -67,22 +69,22 @@ class NettyStaticContentHandler(parentHandler: NettyWebServerHandler, uriPrefixB
    * Regex for an HTTP range header.
    */
   private val RANGE_HEADER_REGEX = Pattern.compile("bytes=(\\d+)\\-(\\d+)?")
-
+  
   /**
-   * The URI prefix to be handled by this handler.
+   * The URI prefix that makes it easy to remove the front.
    */
-  private val uriPrefix = {
-    val sanitizedUriPrefix = new StringBuilder()
-    if (!uriPrefixBase.startsWith(CONTENT_RANGE_RANGE_SIZE_SEPARATOR)) {
-      sanitizedUriPrefix.append('/')
+  val uriPrefix = {
+    val uriPrefix = new StringBuilder()
+    if (!uriPrefixBase.startsWith("/")) {
+      uriPrefix.append('/')
     }
-    sanitizedUriPrefix.append(uriPrefixBase)
-    if (!uriPrefixBase.endsWith(CONTENT_RANGE_RANGE_SIZE_SEPARATOR)) {
-      sanitizedUriPrefix.append('/')
+    uriPrefix.append(uriPrefixBase)
+    if (!uriPrefixBase.endsWith("/")) {
+      uriPrefix.append('/')
     }
-    sanitizedUriPrefix.toString()
+    uriPrefix.toString()
   }
-
+  
   /**
    * Extra headers to add to the response.
    */
@@ -118,16 +120,7 @@ class NettyStaticContentHandler(parentHandler: NettyWebServerHandler, uriPrefixB
     mimeResolver.asInstanceOf[T]
   }
 
-  override def isHandledBy(request: NettyHttpRequest): Boolean = {
-    if (request.getUri.getPath.startsWith(uriPrefix)) {
-      val method = request.getMethod()
-      method == HttpMethod.GET || method == HttpMethod.HEAD
-    } else {
-      false
-    }
-  }
-
-  override def handleWebRequest(request: NettyHttpRequest, response: NettyHttpResponse): Unit = {
+  override def handleGetHttpRequest(request: HttpRequest, response: HttpResponse): Unit = {
     var url = request.getUri().getPath
     val originalUrl = url
 
@@ -149,7 +142,7 @@ class NettyStaticContentHandler(parentHandler: NettyWebServerHandler, uriPrefixB
       val status = HttpResponseStatus.FORBIDDEN
       parentHandler.getWebServer().getLog().warn(
         s"HTTP [${status.getCode()}] ${originalUrl} --> (Path attempts to leave base directory)")
-      parentHandler.sendError(response.getChannelHandlerContext(), status)
+      parentHandler.sendError(response.asInstanceOf[NettyHttpResponse].getChannelHandlerContext(), status)
       return
     }
 
@@ -169,16 +162,16 @@ class NettyStaticContentHandler(parentHandler: NettyWebServerHandler, uriPrefixB
     }
 
     val writer = new NettyStaticContentResponseWriter(parentHandler, fallbackHandler, mimeResolver)
-    writer.writeResponse(file, request, response)
+    writer.writeResponse(file, request.asInstanceOf[NettyHttpRequest], response.asInstanceOf[NettyHttpResponse])
   }
 
-  private def handleNonFileFallback(request: NettyHttpRequest, response: NettyHttpResponse, originalUrl: String): Unit = {
+  private def handleNonFileFallback(request: HttpRequest, response: HttpResponse, originalUrl: String): Unit = {
     if (fallbackHandler != null) {
       fallbackHandler.handleGetHttpRequest(request, response)
     } else {
       val status = HttpResponseStatus.NOT_FOUND
       parentHandler.getWebServer().getLog().warn(s"HTTP [${status.getCode()}] ${originalUrl} --> (File Not Found)")
-      parentHandler.sendError(response.getChannelHandlerContext, status)
+      parentHandler.sendError(response.asInstanceOf[NettyHttpResponse].getChannelHandlerContext, status)
     }
   }
 

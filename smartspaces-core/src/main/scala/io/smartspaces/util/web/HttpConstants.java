@@ -161,4 +161,10 @@ public class HttpConstants {
    * The range header.
    */
   public static final String HEADER_NAME_RANGE = "Range";
+  
+  /**
+   * The Origin header.
+   */
+  public static final String HEADER_NAME_ORIGIN = "Origin";
+
 }

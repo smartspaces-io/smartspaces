@@ -206,7 +206,7 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
   @Override
   public DynamicObjectBuilder newArray(String name) {
     if (currentType == DynamicObjectType.OBJECT) {
-      List<Object> theArray = (List<Object>)currentObject.get(name);
+      List<Object> theArray = (List<Object>) currentObject.get(name);
       if (theArray == null) {
         theArray = new ArrayList<>();
 
@@ -216,6 +216,20 @@ public class StandardDynamicObjectBuilder implements DynamicObjectBuilder {
       nav.push(currentObject);
 
       setCurrentAsArray(theArray);
+    } else {
+      // Must be an array
+
+      throw new DynamicObjectSmartSpacesException("Cannot put named item into an array");
+    }
+
+    return this;
+  }
+
+  @Override
+  public DynamicObjectBuilder setArray(String name, List<? extends Object> values)
+      throws DynamicObjectSmartSpacesException {
+    if (currentType == DynamicObjectType.OBJECT) {
+      currentObject.put(name, values);
     } else {
       // Must be an array
 

@@ -16,6 +16,7 @@
 
 package io.smartspaces.util.data.dynamic;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -162,6 +163,24 @@ public interface DynamicObjectBuilder {
    *           the current level is not an object
    */
   DynamicObjectBuilder newArray(String name) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * Add a new array into the current object.
+   * 
+   * <p>
+   * The builder will not be moved to the level of the array but stay at the object level.
+   *
+   * @param name
+   *         name of the new array
+   * @param values
+   *        the values for the array
+   *
+   * @return the builder
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           the current level is not an object
+   */
+  DynamicObjectBuilder setArray(String name, List<? extends Object> values) throws DynamicObjectSmartSpacesException;
 
   /**
    * Add a new array into the current array.

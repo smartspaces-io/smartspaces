@@ -69,7 +69,7 @@ trait MeasurementTypeDescription extends DisplayableDescription {
   /**
    * The default unit for the measurement type.
    */
-  var defaultUnit: MeasurementUnitDescription
+  var defaultUnit: Option[MeasurementUnitDescription]
 
   /**
    * The aliases for the measurement type.
@@ -83,6 +83,13 @@ trait MeasurementTypeDescription extends DisplayableDescription {
    *      the measurement unit to add
    */
   def addMeasurementUnit(measurementUnit: MeasurementUnitDescription): Unit
+
+  /**
+   * Does the type have measurement units.
+   *
+   * @return [[true]] if there are measurement units
+   */
+  def hasMeasurementUnits(): Boolean
   
   /**
    * Get all measurement units for this measurement type.
@@ -98,12 +105,12 @@ trait MeasurementTypeDescription extends DisplayableDescription {
    * <p>
    * The unit must be a unit of this type to be found.
    * 
-   * @param id
-   *     the ID of the measurement unit
+   * @param externalId
+   *     the external ID of the measurement unit
    *
    * @return the measurement unit
    */
-  def getMeasurementUnit(id: String): Option[MeasurementUnitDescription]
+  def getMeasurementUnit(externalId: String): Option[MeasurementUnitDescription]
 }
 
 /**
@@ -128,17 +135,21 @@ case class SimpleMeasurementTypeDescription(
   /**
    * The default unit for the measurement type.
    */
-  var defaultUnit: MeasurementUnitDescription = null
+  override var defaultUnit: Option[MeasurementUnitDescription] = None
    
   override def addMeasurementUnit(measurementUnit: MeasurementUnitDescription): Unit = {
     measurementUnits += measurementUnit
+  }
+  
+  override def hasMeasurementUnits(): Boolean = {
+    !measurementUnits.isEmpty
   }
   
   override def getAllMeasurementUnits(): List[MeasurementUnitDescription] = {
     measurementUnits.toList
   }
   
-  override def getMeasurementUnit(id: String): Option[MeasurementUnitDescription] = {
-    measurementUnits.find(_.id == id)
+  override def getMeasurementUnit(externalId: String): Option[MeasurementUnitDescription] = {
+    measurementUnits.find(_.externalId == externalId)
   }
 }

@@ -36,22 +36,22 @@ trait SensorChannelDetailDescription extends DisplayableDescription {
   /**
    * The sensor detail this channel is part of.
    */
-  val sensorDetail: SensorTypeDescription
+  def sensorDetail: SensorTypeDescription
    
   /**
    * The ID of the channel.
    */
-  val channelId: String
+  def channelId: String
   
   /**
    * The type of the channel measurement.
    */
-  val measurementType: MeasurementTypeDescription
+  def measurementType: MeasurementTypeDescription
   
   /**
    * The unit being used for the channel measurement
    */
-  val measurementUnit: MeasurementUnitDescription
+  def measurementUnit: Option[MeasurementUnitDescription]
 }
 
 /**
@@ -75,4 +75,4 @@ case class SimpleSensorChannelDetailDescription(
     override val displayName: String, 
     override val displayDescription: Option[String], 
     override val measurementType: MeasurementTypeDescription, 
-    override val measurementUnit: MeasurementUnitDescription) extends SensorChannelDetailDescription
+    override val measurementUnit: Option[MeasurementUnitDescription]) extends SensorChannelDetailDescription

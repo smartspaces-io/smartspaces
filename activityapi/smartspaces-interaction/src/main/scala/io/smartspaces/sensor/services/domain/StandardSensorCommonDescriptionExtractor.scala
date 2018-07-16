@@ -48,6 +48,8 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
   private var id: Integer = 0
 
   override def extractDescriptions(data: DynamicObject, sensorRegistry: SensorCommonRegistry): SensorCommonDescriptionExtractor = {
+    log.info("Extracting common sensor description")
+
     getMeasurementTypes(sensorRegistry, data)
     getSensorTypes(sensorRegistry, data)
     getPhysicalSpaceTypes(sensorRegistry, data)
@@ -69,11 +71,13 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
     data.getArrayEntries().asScala.foreach((measurementTypeEntry: ArrayDynamicObjectEntry) => {
       val measurementTypeData: DynamicObject = measurementTypeEntry.down()
 
+      val measurementTypeId = measurementTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID)
+
       val valueType =
         measurementTypeData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_MEASUREMENT_TYPES_VALUE_TYPE)
       val measurementType = new SimpleMeasurementTypeDescription(
         getNextId(),
-        measurementTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
+        measurementTypeId,
         measurementTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(measurementTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
         measurementTypeData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_MEASUREMENT_TYPES_PROCESSING_TYPE),
@@ -99,12 +103,12 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
           measurementUnitData.up()
         })
-
+        
         val measurementUnit = measurementType.getMeasurementUnit(defaultUnitId)
         if (measurementUnit.isDefined) {
-          measurementType.defaultUnit = measurementUnit.get
+          measurementType.defaultUnit = measurementUnit
         } else {
-          // Need an error message
+          log.error(s"Did not find default measurement unit with ID ${defaultUnitId} for measurement type ${measurementTypeId}")
         }
       }
       measurementTypeData.up()
@@ -153,7 +157,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
         sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(sensorTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
-        sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit, 
+        sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit,
         sensorUsageCategory, sensorDataSource,
         sensorAcquisitionMode.get,
         Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_NAME)),
@@ -163,6 +167,8 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
       data.getArrayEntries().asScala.foreach((channelDetailEntry: ArrayDynamicObjectEntry) => breakable {
         val channelDetailData = channelDetailEntry.down()
 
+        val channelId = channelDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID)
+
         val measurementTypeId =
           channelDetailData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CHANNELS_TYPE)
         val measurementType = sensorRegistry.getMeasurementTypeByExternalId(measurementTypeId)
@@ -171,17 +177,18 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
           break
         }
 
-        var measurementUnit: MeasurementUnitDescription = null
+        var measurementUnit: Option[MeasurementUnitDescription] = None
         val measurementUnitId =
           channelDetailData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CHANNELS_UNIT)
         if (measurementUnitId != null) {
           var measurementUnitOption = sensorRegistry.getMeasurementUnitByExternalId(measurementUnitId)
           if (measurementUnitOption.isEmpty) {
             // TODO(keith): Some sort of error message
+            log.warn(s"Unknown measurement unit ID ${measurementUnitId} for sensor type ${sensorDetail.externalId} channel ID ${channelId}")
 
             break
           } else {
-            measurementUnit = measurementUnitOption.get
+            measurementUnit = measurementUnitOption
           }
         } else {
           // The default unit is used if none was specified
@@ -190,7 +197,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
         val channelDetail = new SimpleSensorChannelDetailDescription(
           sensorDetail,
-          channelDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
+          channelId,
           channelDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(channelDetailData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
           measurementType.get, measurementUnit)

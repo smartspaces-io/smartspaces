@@ -162,7 +162,7 @@ to look at for SmartSpaces information.
 The official repository is hosted at inhabitech.com.
 
 ```
-nexusUrl=https://eng.inhabitech.com:8082
+nexusUrl=https://eng.inhabitech.com:8084
 ```
 
 Some of the other properties are described later in the **Building** section.

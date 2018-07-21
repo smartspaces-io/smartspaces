@@ -247,6 +247,9 @@ subprojects {
     mavenLocal()
     mavenCentral()
     maven {
+      url "https://eng.inhabitech.com:8084/repository/smartspaces-io"
+    }
+    maven {
       url 'https://oss.sonatype.org/content/repositories/snapshots'
     }
     maven {
@@ -261,9 +264,6 @@ subprojects {
     //maven {
     //  url 'http://repository.pentaho.org/artifactory/repo/'
     //}
-    maven {
-      url "https://eng.inhabitech.com:8082/repository/smartspaces-io"
-    }
   }
 }
 

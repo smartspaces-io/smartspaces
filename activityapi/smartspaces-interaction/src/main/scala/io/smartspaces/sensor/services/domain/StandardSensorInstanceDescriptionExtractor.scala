@@ -108,8 +108,8 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
           break
         }
       } else {
-          // TODO(keith): Some sort of error.
-          break        
+        // TODO(keith): Some sort of error.
+        break
       }
 
       var sensorUpdateTimeLimit: Option[Long] = None
@@ -140,7 +140,7 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
-        sensorDetail.get, 
+        sensorDetail.get,
         itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_SOURCE),
         sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit)
 
@@ -239,25 +239,14 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
       val sensedExternalId = itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_SENSOR_ASSOCIATION_SENSED)
       val sensorChannelIds = itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_SENSOR_ASSOCIATION_SENSOR_CHANNEL_IDS, "*")
 
-      val channelIds = if (sensorChannelIds == "*" || sensorChannelIds.startsWith("-")) {
-        val sensor = sensorRegistry.getSensorByExternalId(sensorExternalId)
-        if (sensor.isDefined) {
-          var allChannelIds =sensor.get.sensorType.getAllSensorChannelDetails().map(_.channelId)
-          if (sensorChannelIds == "*") {
-            allChannelIds
-          } else {
-            var toBeRemoved  = sensorChannelIds.substring(1).split(':').toSet
-            allChannelIds.filter(!toBeRemoved.contains(_))
-          }
-        } else {
-          log.warn(s"Could not find sensor with ID ${sensorExternalId} in sensor association")
-          return
-        }
-      } else {
-        sensorChannelIds.split(':').toList
-      }
+      val sensor = sensorRegistry.getSensorByExternalId(sensorExternalId)
+      if (sensor.isDefined) {
+        val channelIds = EntityDescriptionSupport.getSensorChannelIdsFromDescription(sensor.get, sensorChannelIds)
 
-      channelIds.foreach { sensorRegistry.associateSensorWithSensedEntity(sensorExternalId, _, sensedExternalId) }
+        channelIds.foreach { sensorRegistry.associateSensorWithSensedEntity(sensorExternalId, _, sensedExternalId) }
+      } else {
+        log.warn(s"Could not find sensor with ID ${sensorExternalId} in sensor association")
+      }
     })
     data.up()
   }

@@ -17,7 +17,11 @@
 
 package io.smartspaces.util.web;
 
+import java.util.Locale;
 import java.util.Map;
+
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -161,10 +165,106 @@ public class HttpConstants {
    * The range header.
    */
   public static final String HEADER_NAME_RANGE = "Range";
-  
+
   /**
    * The Origin header.
    */
   public static final String HEADER_NAME_ORIGIN = "Origin";
 
+  /**
+   * The cache control header.
+   */
+  public static final String HEADER_NAME_CACHE_CONTROL = "Cache-Control";
+
+  /**
+   * The cache control header value for cache control max age. In seconds.
+   */
+  public static final String HEADER_VALUE_CACHE_CONTROL_MAX_AGE = "max-age";
+
+  /**
+   * The cache control header value for cache control for max age for shared
+   * caches. In seconds.
+   */
+  public static final String HEADER_VALUE_CACHE_CONTROL_SHARED_MAX_AGE = "s-maxage";
+
+  /**
+   * The cache control header value for cache control public.
+   */
+  public static final String HEADER_VALUE_CACHE_CONTROL_PUBLIC = "public";
+
+  /**
+   * The cache control header value for cache control private.
+   */
+  public static final String HEADER_VALUE_CACHE_CONTROL_PRIVATE = "private";
+
+  /**
+   * The cache control header value for cache control no cache.
+   */
+  public static final String HEADER_VALUE_CACHE_CONTROL_NO_CACHE = "no-cache";
+
+  /**
+   * The cache control header value for cache control no store.
+   */
+  public static final String HEADER_VALUE_CACHE_CONTROL_NO_STORE = "no-store";
+
+  /**
+   * The cache control header value for cache control for must revalidate.
+   */
+  public static final String HEADER_VALUE_CACHE_CONTROL_MUST_REVALIDATE = "must-revalidate";
+
+  /**
+   * The cache control header value for cache control for proxy revalidate.
+   */
+  public static final String HEADER_VALUE_CACHE_CONTROL_PROXY_REVALIDATE = "proxy-revalidate";
+
+  /**
+   * The ETAG header.
+   */
+  public static final String HEADER_NAME_ETAG = "ETag";
+
+  /**
+   * The Last Modified header.
+   */
+  public static final String HEADER_NAME_LAST_MODFIED = "Last-Modified";
+
+  /**
+   * The If Modified Since header.
+   */
+  public static final String HEADER_NAME_IF_MODFIED_SINCE = "If-Modified-Since";
+
+  /**
+   * The If UnModified Since header.
+   */
+  public static final String HEADER_NAME_IF_UNMODFIED_SINCE = "If-Unmodified-Since";
+
+  /**
+   * The If Match header.
+   */
+  public static final String HEADER_NAME_IF_MATCH = "If-Match";
+
+  /**
+   * The If None Match header.
+   */
+  public static final String HEADER_NAME_IF_NONE_MATCH = "If-None-Match";
+
+  /**
+   * The Vary header.
+   */
+  public static final String HEADER_NAME_VARY = "Vary";
+
+  /**
+   * The User Agent header.
+   */
+  public static final String HEADER_NAME_USER_AGENT = "User-Agent";
+
+  /**
+   * HTTP Date format RFC1123 for the Joda DateTime formatter.
+   */
+  public static final String DATE_TIME_FORMAT_RFC_1123 = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
+
+  /**
+   * HTTP Date/Time RFC1123 parser/formatter.
+   */
+  public static final DateTimeFormatter DATE_TIME_FORMATTER_RFC_1123 =
+      DateTimeFormat.forPattern(DATE_TIME_FORMAT_RFC_1123).withLocale(Locale.US).withZoneUTC();
 }

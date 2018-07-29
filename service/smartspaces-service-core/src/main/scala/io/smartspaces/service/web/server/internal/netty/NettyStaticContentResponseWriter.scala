@@ -40,8 +40,8 @@ import org.jboss.netty.handler.codec.http.CookieEncoder
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse
 import org.jboss.netty.handler.codec.http.HttpHeaders
 import org.jboss.netty.handler.codec.http.HttpMethod
-import org.jboss.netty.handler.codec.http.{HttpRequest => NettyInternalHttpRequest}
-import org.jboss.netty.handler.codec.http.{HttpResponse => NettyInternalHttpResponse}
+import org.jboss.netty.handler.codec.http.{ HttpRequest => NettyInternalHttpRequest }
+import org.jboss.netty.handler.codec.http.{ HttpResponse => NettyInternalHttpResponse }
 import org.jboss.netty.handler.codec.http.HttpResponseStatus
 import org.jboss.netty.handler.ssl.SslHandler
 import org.jboss.netty.handler.stream.ChunkedFile
@@ -104,7 +104,7 @@ class NettyStaticContentResponseWriter(
 
   /**
    * Write a file response.
-   * 
+   *
    * @param fileToWrite
    *        the file to write
    * @param request
@@ -113,6 +113,8 @@ class NettyStaticContentResponseWriter(
    *        the HTTP response
    */
   def writeResponse(fileToWrite: File, request: NettyHttpRequest, response: NettyHttpResponse): Unit = {
+    val lastModified = fileToWrite.lastModified()
+
     val raf = {
       try {
         new RandomAccessFile(fileToWrite, "r")
@@ -128,6 +130,9 @@ class NettyStaticContentResponseWriter(
     val responseInternal = new DefaultHttpResponse(HTTP_1_1, HttpResponseStatus.OK)
 
     setMimeType(fileToWrite.getName, responseInternal)
+
+    HttpHeaders.addHeader(responseInternal, HttpHeaders.Names.LAST_MODIFIED,
+      HttpConstants.DATE_TIME_FORMATTER_RFC_1123.print(lastModified))
 
     parentHandler.addHeaderIfNotExists(responseInternal, HttpHeaders.Names.ACCEPT_RANGES,
       HttpHeaders.Values.BYTES)
@@ -213,7 +218,7 @@ class NettyStaticContentResponseWriter(
     }
 
     parentHandler.getWebServer().getLog().trace(s"[${status.getCode()}] HTTP ${request.getUri} --> ${fileToWrite.getPath()}")
-    
+
     response.setResponseWritten(true)
   }
 

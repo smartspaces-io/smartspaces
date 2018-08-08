@@ -23,6 +23,7 @@ import io.smartspaces.service.BaseSupportedService;
 import io.smartspaces.service.mail.common.MailMessage;
 import io.smartspaces.service.mail.sender.MailSenderService;
 
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -58,6 +59,10 @@ public class JavaxMailMailSenderService extends BaseSupportedService implements 
    */
   private Session mailerSession;
 
+  private String username;
+
+  private String password;
+
   @Override
   public String getName() {
     return MailSenderService.SERVICE_NAME;
@@ -69,18 +74,42 @@ public class JavaxMailMailSenderService extends BaseSupportedService implements 
 
     Properties props = System.getProperties();
 
+    Map<String, Object> smtpParams = getSpaceEnvironment().getSystemConfiguration()
+        .getPropertyJson(CONFIGURATION_NAME_MAIL_SMTP);
     // Setup mail server
-    String smtpHost =
-        getSpaceEnvironment().getSystemConfiguration().getPropertyString(
-            CONFIGURATION_NAME_MAIL_SMTP_HOST);
-    if (smtpHost != null) {
+    if (smtpParams != null) {
+      String smtpHost = (String) smtpParams.get(PROPERTY_NAME_HOST);
+      String smtpPort =
+          (String) smtpParams.getOrDefault(PROPERTY_NAME_PORT, PROPERTY_VALUE_DEFAULT_PORT);
+      Boolean useTls = (Boolean) smtpParams.get(PROPERTY_NAME_USE_TLS);
+      username = (String) smtpParams.get(PROPERTY_NAME_USERNAME);
+      password = (String) smtpParams.get(PROPERTY_NAME_PASSWORD);
+
       props.put(PROPERTY_MAIL_SMTP_HOST, smtpHost);
-      props.put(PROPERTY_MAIL_SMTP_PORT, getSpaceEnvironment().getSystemConfiguration()
-          .getPropertyString(CONFIGURATION_NAME_MAIL_SMTP_PORT, CONFIGURATION_VALUE_DEFAULT_MAIL_SMTP_PORT));
+      props.put(PROPERTY_MAIL_SMTP_PORT, smtpPort);
+
+      props.put("mail.smtp.socketFactory.port", smtpPort);
+      props.put("mail.smtp.socketFactory.class", "javax.net.SocketFactory");
+
+      if (username != null && password != null) {
+        props.put("mail.smtp.auth", "true");
+      } else if (username != null) {
+        getSpaceEnvironment().getLog().warn("SMTP username givem, but no password");
+      } else if (username != null) {
+        getSpaceEnvironment().getLog().warn("SMTP password givem, but no username");
+      }
+
+      if (useTls != null && useTls) {
+        props.put("mail.smtp.ssl.enable", "false");
+        props.put("mail.smtp.starttls.enable", "true");
+      }
 
       mailerSession = Session.getDefaultInstance(props, null);
+
+      getSpaceEnvironment().getLog().formatInfo("Mail service configured. SMTP host %s:%s",
+          smtpHost, smtpPort);
     } else {
-      getSpaceEnvironment().getLog().warn("Mail service not configured. No smptp host given");
+      getSpaceEnvironment().getLog().warn("Mail service not configured. No smtp host given.");
     }
   }
 
@@ -112,7 +141,7 @@ public class JavaxMailMailSenderService extends BaseSupportedService implements 
 
       // Send message
       Transport transport = mailerSession.getTransport(MAIL_TRANSPORT_SMTP);
-      transport.connect();
+      transport.connect(username, password);
       transport.sendMessage(msg, msg.getAllRecipients());
       transport.close();
 

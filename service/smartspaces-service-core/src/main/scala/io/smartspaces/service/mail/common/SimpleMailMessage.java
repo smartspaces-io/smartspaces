@@ -58,17 +58,17 @@ public class SimpleMailMessage implements ComposableMailMessage {
   private String body;
 
   @Override
-  public List<String> getToAdresses() {
+  public List<String> getToAddresses() {
     return toAddresses;
   }
 
   @Override
-  public List<String> getCcAdresses() {
+  public List<String> getCcAddresses() {
     return ccAddresses;
   }
 
   @Override
-  public List<String> getBccAdresses() {
+  public List<String> getBccAddresses() {
     return bccAddresses;
   }
 

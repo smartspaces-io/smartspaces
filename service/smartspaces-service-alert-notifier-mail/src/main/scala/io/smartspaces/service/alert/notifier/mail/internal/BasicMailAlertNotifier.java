@@ -25,6 +25,7 @@ import io.smartspaces.service.alert.AlertNotifier;
 import io.smartspaces.service.alert.AlertService;
 import io.smartspaces.service.mail.common.ComposableMailMessage;
 import io.smartspaces.service.mail.common.SimpleMailMessage;
+import io.smartspaces.service.mail.sender.MailSenderEndpoint;
 import io.smartspaces.service.mail.sender.MailSenderService;
 
 /**
@@ -75,6 +76,11 @@ public class BasicMailAlertNotifier extends BaseSupportedService implements Aler
   private final MailSenderService mailSenderService;
 
   /**
+   * The sender for email.
+   */
+  private MailSenderEndpoint mailSenderEndpoint = null;
+
+  /**
    * Construct a new mail alert notifier.
    *
    * @param alertService
@@ -95,11 +101,15 @@ public class BasicMailAlertNotifier extends BaseSupportedService implements Aler
   @Override
   public void startup() {
     alertService.registerAlertNotifier(this);
+
+    mailSenderEndpoint = mailSenderService.newMailSenderEndpoint(getSpaceEnvironment().getLog());
+    mailSenderEndpoint.startup();
   }
 
   @Override
   public void shutdown() {
     alertService.unregisterAlertNotifier(this);
+    mailSenderEndpoint.shutdown();
   }
 
   @Override
@@ -115,20 +125,17 @@ public class BasicMailAlertNotifier extends BaseSupportedService implements Aler
         addSubject(alertType, mail, config);
       } catch (SimpleSmartSpacesException e) {
         getSpaceEnvironment().getLog().warn(e.getCompoundMessage());
-        getSpaceEnvironment().getLog().warn(
-            String.format("Email alert failed for alert type %s, id %s, message %s", alertType, id,
-                message));
+        getSpaceEnvironment().getLog().formatWarn(
+            "Email alert failed for alert type %s, id %s, message %s", alertType, id, message);
         return;
       }
 
       mail.setBody(message);
 
-      mailSenderService.sendMailMessage(mail);
+      mailSenderEndpoint.sendMailMessage(mail);
     } catch (Throwable e) {
-      getSpaceEnvironment().getLog()
-          .error(
-              String.format("Email alert for alert type %s, id %s, message %s", alertType, id,
-                  message), e);
+      getSpaceEnvironment().getLog().formatError(e,
+          "Email alert for alert type %s, id %s, message %s", alertType, id, message);
     }
   }
 
@@ -143,9 +150,8 @@ public class BasicMailAlertNotifier extends BaseSupportedService implements Aler
    *          the system configuration
    */
   private void addToAddresses(String alertType, ComposableMailMessage mail, Configuration config) {
-    String tos =
-        getConfigValue(CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_TO, alertType,
-            config);
+    String tos = getConfigValue(CONFIGURATION_NAME_SMARTSPACES_SERVICE_ALERT_NOTIFIER_MAIL_TO,
+        alertType, config);
 
     for (String to : tos.trim().split("\\s+")) {
       mail.addToAddress(to.trim());

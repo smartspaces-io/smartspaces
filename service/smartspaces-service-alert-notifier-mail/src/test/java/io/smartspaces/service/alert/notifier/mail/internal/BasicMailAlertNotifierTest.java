@@ -18,20 +18,21 @@
 package io.smartspaces.service.alert.notifier.mail.internal;
 
 import static org.junit.Assert.assertEquals;
+
 import io.smartspaces.configuration.Configuration;
+import io.smartspaces.logging.ExtendedLog;
 import io.smartspaces.service.alert.AlertNotifier;
 import io.smartspaces.service.alert.AlertService;
-import io.smartspaces.service.alert.notifier.mail.internal.BasicMailAlertNotifier;
 import io.smartspaces.service.mail.common.MailMessage;
+import io.smartspaces.service.mail.sender.MailSenderEndpoint;
 import io.smartspaces.service.mail.sender.MailSenderService;
 import io.smartspaces.system.SmartSpacesEnvironment;
 
+import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-
-import com.google.common.collect.Lists;
 
 /**
  * Unit tests for the {@link BasicMailAlertNotifier}.
@@ -43,18 +44,25 @@ public class BasicMailAlertNotifierTest {
   private BasicMailAlertNotifier notifier;
 
   private SmartSpacesEnvironment spaceEnvironment;
+  private ExtendedLog log;
   private MailSenderService mailSenderService;
+  private MailSenderEndpoint mailSenderEndpoint;
   private AlertService alertService;
   private Configuration configuration;
 
   @Before
   public void setup() {
     configuration = Mockito.mock(Configuration.class);
+    log = Mockito.mock(ExtendedLog.class);
     spaceEnvironment = Mockito.mock(SmartSpacesEnvironment.class);
     Mockito.when(spaceEnvironment.getSystemConfiguration()).thenReturn(configuration);
+    Mockito.when(spaceEnvironment.getLog()).thenReturn(log);
 
     mailSenderService = Mockito.mock(MailSenderService.class);
+    mailSenderEndpoint = Mockito.mock(MailSenderEndpoint.class);
     alertService = Mockito.mock(AlertService.class);
+    
+    Mockito.when(mailSenderService.newMailSenderEndpoint(log)).thenReturn(mailSenderEndpoint);
 
     notifier = new BasicMailAlertNotifier(alertService, mailSenderService);
     notifier.setSpaceEnvironment(spaceEnvironment);
@@ -112,12 +120,13 @@ public class BasicMailAlertNotifierTest {
 
     ArgumentCaptor<MailMessage> argument = ArgumentCaptor.forClass(MailMessage.class);
 
+    notifier.startup();
     notifier.notify(alertType, id, message);
 
-    Mockito.verify(mailSenderService).sendMailMessage(argument.capture());
+    Mockito.verify(mailSenderEndpoint).sendMailMessage(argument.capture());
 
     assertEquals(fromAddress, argument.getValue().getFromAddress());
-    assertEquals(toAddress, argument.getValue().getToAdresses().get(0));
+    assertEquals(toAddress, argument.getValue().getToAddresses().get(0));
     assertEquals(subject, argument.getValue().getSubject());
     assertEquals(message, argument.getValue().getBody());
   }
@@ -156,12 +165,13 @@ public class BasicMailAlertNotifierTest {
 
     ArgumentCaptor<MailMessage> argument = ArgumentCaptor.forClass(MailMessage.class);
 
+    notifier.startup();
     notifier.notify(alertType, id, message);
 
-    Mockito.verify(mailSenderService).sendMailMessage(argument.capture());
+    Mockito.verify(mailSenderEndpoint).sendMailMessage(argument.capture());
 
     assertEquals(fromAddress, argument.getValue().getFromAddress());
-    assertEquals(Lists.newArrayList(toAddress1, toAddress2), argument.getValue().getToAdresses());
+    assertEquals(Lists.newArrayList(toAddress1, toAddress2), argument.getValue().getToAddresses());
     assertEquals(subject, argument.getValue().getSubject());
     assertEquals(message, argument.getValue().getBody());
   }

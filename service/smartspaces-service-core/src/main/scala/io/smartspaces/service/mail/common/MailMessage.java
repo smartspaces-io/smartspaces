@@ -31,21 +31,21 @@ public interface MailMessage {
    *
    * @return a potentially empty list of addresses
    */
-  List<String> getToAdresses();
+  List<String> getToAddresses();
 
   /**
    * Get all the CC addresses.
    *
    * @return a potentially empty list of addresses
    */
-  List<String> getCcAdresses();
+  List<String> getCcAddresses();
 
   /**
    * Get all the BCC addresses.
    *
    * @return a potentially empty list of addresses
    */
-  List<String> getBccAdresses();
+  List<String> getBccAddresses();
 
   /**
    * Get the from address of the mail.

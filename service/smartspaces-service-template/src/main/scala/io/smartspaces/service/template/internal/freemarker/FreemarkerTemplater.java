@@ -44,7 +44,7 @@ public class FreemarkerTemplater implements Templater {
   /**
    * The version of freemarker to use.
    */
-  private static final Version FREEMARKER_VERSION = Configuration.VERSION_2_3_22;
+  private static final Version FREEMARKER_VERSION = Configuration.VERSION_2_3_28;
 
   /**
    * The directory containing the templates.

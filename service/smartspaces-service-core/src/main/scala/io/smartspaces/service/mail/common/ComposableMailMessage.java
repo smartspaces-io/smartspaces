@@ -18,7 +18,7 @@
 package io.smartspaces.service.mail.common;
 
 /**
- * A {@link MailMessage} which is composable
+ * A {@link MailMessage} which is composable.
  *
  * @author Keith M. Hughes
  */
@@ -71,4 +71,11 @@ public interface ComposableMailMessage extends MailMessage {
    *          the complete body of the message
    */
   void setBody(String body);
+  
+  /**
+   * Get the MIME type of the message.
+   * 
+   * @return the MIME type
+   */
+   void setMimeType(String mimeType);
 }

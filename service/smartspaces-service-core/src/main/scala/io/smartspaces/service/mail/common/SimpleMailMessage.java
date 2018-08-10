@@ -20,6 +20,8 @@ package io.smartspaces.service.mail.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.smartspaces.util.web.CommonMimeTypes;
+
 /**
  * A concrete mail message which is composable.
  *
@@ -56,6 +58,11 @@ public class SimpleMailMessage implements ComposableMailMessage {
    * Body of the email.
    */
   private String body;
+  
+  /**
+   * The mime type of the message.
+   */
+  private String mimeType = CommonMimeTypes.MIME_TYPE_TEXT_PLAIN;
 
   @Override
   public List<String> getToAddresses() {
@@ -88,6 +95,11 @@ public class SimpleMailMessage implements ComposableMailMessage {
   }
 
   @Override
+  public String getMimeType() {
+    return mimeType;
+  }
+
+  @Override
   public void addToAddress(String address) {
     toAddresses.add(address);
   }
@@ -115,5 +127,10 @@ public class SimpleMailMessage implements ComposableMailMessage {
   @Override
   public void setBody(String body) {
     this.body = body;
+  }
+
+  @Override
+  public void setMimeType(String mimeType) {
+    this.mimeType = mimeType;
   }
 }

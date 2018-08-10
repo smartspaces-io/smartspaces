@@ -167,7 +167,7 @@ class JavaxMailMailSenderEndpoint(smtpConfig: JMap[String, Object], log: Extende
         msg.addRecipient(Message.RecipientType.BCC, new InternetAddress(a)))
 
       msg.setSubject(message.getSubject())
-      msg.setText(message.getBody())
+      msg.setContent(message.getBody(), message.getMimeType())
 
       msg.saveChanges
 

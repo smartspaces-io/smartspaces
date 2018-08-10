@@ -21,6 +21,9 @@ import java.util.List;
 
 /**
  * A mail message.
+ * 
+ * <p>
+ * The default MIME type is text/plain
  *
  * @author Keith M. Hughes
  */
@@ -67,4 +70,11 @@ public interface MailMessage {
    * @return the complete body of the message.
    */
   String getBody();
-}
+  
+  /**
+   * Get the MIME type of the message.
+   * 
+   * @return the MIME type
+   */
+  String getMimeType();
+ }

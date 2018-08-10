@@ -22,7 +22,7 @@ dependencies {
   
   compile 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.jdom:2.0.6_1'
   
-  compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.freemarker:2.3.22_1') {
+  compile('org.freemarker:freemarker:2.3.28') {
     exclude group: 'org.apache.log4j'
   }
   

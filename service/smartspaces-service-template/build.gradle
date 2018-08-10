@@ -18,7 +18,7 @@ dependencies {
   compile project(':service:smartspaces-service-core')
   compile project(':smartspaces-core')
 
-  compile('org.apache.servicemix.bundles:org.apache.servicemix.bundles.freemarker:2.3.22_1') {
+  compile('org.freemarker:freemarker:2.3.28') {
     exclude group: 'org.apache.log4j'
   }
 

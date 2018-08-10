@@ -66,7 +66,7 @@ dependencies {
   
   compile 'io.smartspaces:org.eclipse.gemini.blueprint.io:1.0.2.RELEASE'
   
-  compile('org.freemarker:com.springsource.freemarker:2.3.15') {
+  compile('org.freemarker:freemarker:2.3.28') {
     exclude group: 'org.apache.log4j'
   }
 

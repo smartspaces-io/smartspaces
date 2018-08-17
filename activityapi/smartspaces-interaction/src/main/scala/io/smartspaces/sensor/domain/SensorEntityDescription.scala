@@ -29,22 +29,22 @@ trait SensorEntityDescription extends EntityDescription {
   /**
    * The sensor type for the sensor.
    */
-  val sensorType: SensorTypeDescription
+  def sensorType: SensorTypeDescription
 
   /**
    * The source of the sensor, e.g. from an external sensor relay and the name it has in that relay.
    */
-  val sensorSource: String
+  def sensorSource: String
 
   /**
    * The time limit on when a sensor update should happen, in milliseconds
    */
-  val sensorStateUpdateTimeLimit: Option[Long]
+  def sensorStateUpdateTimeLimit: Option[Long]
 
   /**
    * The time limit on when a sensor heartbeat update should happen, in milliseconds
    */
-  val sensorHeartbeatUpdateTimeLimit: Option[Long]
+  def sensorHeartbeatUpdateTimeLimit: Option[Long]
 
   /**
    * {@code true} if the sensor is active.
@@ -63,21 +63,21 @@ trait SensorEntityDescription extends EntityDescription {
    *
    * @return [[true]] if there is a channel with the given ID
    */
-  def hasSensorChannel(channelId: String): Boolean
+  def hasSupportedSensorChannel(channelId: String): Boolean
 
   /**
    * Does the sensor return a given measurement type?
    *
    * @return [[true]] if the sensor has a given measurement type
    */
-  def hasMeasurementType(measurementTypeExternalId: String): Boolean
+  def hasSupportedMeasurementType(measurementTypeExternalId: String): Boolean
 
   /**
    * Get all channels giving a particular measurement type.
    *
    * @return all channels giving a particular measurement type
    */
-  def getMeasurementTypeChannels(measurementTypeExternalId: String): Iterable[SensorChannelDetailDescription]
+  def getSupportedMeasurementTypeChannels(measurementTypeExternalId: String): Iterable[SensorChannelDetailDescription]
 }
 
 /**
@@ -98,15 +98,15 @@ class SimpleSensorEntityDescription(
   override var active: Boolean = true
 
   
-  override def hasSensorChannel(channelId: String): Boolean = {
-    sensorType.hasSensorChannel(channelId)
+  override def hasSupportedSensorChannel(channelId: String): Boolean = {
+    sensorType.hasSupportedSensorChannel(channelId)
   }
 
-  override def hasMeasurementType(measurementTypeExternalId: String): Boolean = {
-    sensorType.hasMeasurementType(measurementTypeExternalId)
+  override def hasSupportedMeasurementType(measurementTypeExternalId: String): Boolean = {
+    sensorType.hasSupportedMeasurementType(measurementTypeExternalId)
   }
 
-  override def getMeasurementTypeChannels(measurementTypeExternalId: String): Iterable[SensorChannelDetailDescription] = {
-    sensorType.getMeasurementTypeChannels(measurementTypeExternalId)
+  override def getSupportedMeasurementTypeChannels(measurementTypeExternalId: String): Iterable[SensorChannelDetailDescription] = {
+    sensorType.getSupportedMeasurementTypeChannels(measurementTypeExternalId)
   }
 } 

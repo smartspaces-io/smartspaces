@@ -32,6 +32,8 @@ import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.data.dynamic.DynamicObject.ArrayDynamicObjectEntry
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
 import io.smartspaces.sensor.domain.SensorAcquisitionModeCategoricalValue
+import scala.collection.mutable.ArrayBuffer
+import io.smartspaces.sensor.domain.SensorChannelDetailDescription
 
 /**
  * A YAML-based sensor common description importer.
@@ -103,7 +105,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
           measurementUnitData.up()
         })
-        
+
         val measurementUnit = measurementType.getMeasurementUnit(defaultUnitId)
         if (measurementUnit.isDefined) {
           measurementType.defaultUnit = measurementUnit
@@ -131,38 +133,30 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
     data.getArrayEntries().asScala.foreach((sensorDetailEntry) => {
       val sensorTypeData = sensorDetailEntry.down()
+      
+      val sensorTypeId = sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID)
 
-      var sensorUpdateTimeLimit: Option[Long] = None
-      val sensorUpdateTimeLimitValue: java.lang.Long = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT)
-      if (sensorUpdateTimeLimitValue != null) {
-        sensorUpdateTimeLimit = Option(sensorUpdateTimeLimitValue)
+      val sensorUpdateTimeLimit: Option[Long] = {
+        val sensorUpdateTimeLimitValue: java.lang.Long = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT)
+        Option(sensorUpdateTimeLimitValue)
       }
 
-      var sensorHeartbeatUpdateTimeLimit: Option[Long] = None
-      val sensorHeartbeatUpdateTimeLimitValue: java.lang.Long = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_HEARTBEAT_UPDATE_TIME_LIMIT)
-      if (sensorHeartbeatUpdateTimeLimitValue != null) {
-        sensorHeartbeatUpdateTimeLimit = Option(sensorHeartbeatUpdateTimeLimitValue)
+      val sensorHeartbeatUpdateTimeLimit: Option[Long] = {
+        val sensorHeartbeatUpdateTimeLimitValue: java.lang.Long = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_HEARTBEAT_UPDATE_TIME_LIMIT)
+        Option(sensorHeartbeatUpdateTimeLimitValue)
       }
 
       val sensorUsageCategory = Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE))
 
       val sensorDataSource = Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_DATA_SOURCE))
 
+      val supportedChannelIds = sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SUPPORTED_CHANNEL_IDS, "*")
+
       val sensorAcquisitionMode = SensorAcquisitionModeCategoricalValue.fromLabel(
         sensorTypeData.getRequiredString(
           SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_ACQUISITION_MODE))
 
-      val sensorDetail = new SimpleSensorTypeDescription(
-        getNextId(),
-        sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
-        sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
-        Option(sensorTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
-        sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit,
-        sensorUsageCategory, sensorDataSource,
-        sensorAcquisitionMode.get,
-        Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_NAME)),
-        Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_MODEL)))
-
+      val allSensorChannelsBuffer = ArrayBuffer[SensorChannelDetailDescription]()
       sensorTypeData.down(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CHANNELS)
       data.getArrayEntries().asScala.foreach((channelDetailEntry: ArrayDynamicObjectEntry) => breakable {
         val channelDetailData = channelDetailEntry.down()
@@ -184,7 +178,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
           var measurementUnitOption = sensorRegistry.getMeasurementUnitByExternalId(measurementUnitId)
           if (measurementUnitOption.isEmpty) {
             // TODO(keith): Some sort of error message
-            log.warn(s"Unknown measurement unit ID ${measurementUnitId} for sensor type ${sensorDetail.externalId} channel ID ${channelId}")
+            log.warn(s"Unknown measurement unit ID ${measurementUnitId} for sensor type ${sensorTypeId} channel ID ${channelId}")
 
             break
           } else {
@@ -196,16 +190,33 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
         }
 
         val channelDetail = new SimpleSensorChannelDetailDescription(
-          sensorDetail,
           channelId,
           channelDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(channelDetailData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
           measurementType.get, measurementUnit)
 
-        sensorDetail.addSensorChannelDetail(channelDetail)
+        allSensorChannelsBuffer += channelDetail
 
         channelDetailData.up()
       })
+      
+      val allSensorChannels = allSensorChannelsBuffer.toList
+      val allSupportedSensorChannelsIds = 
+        EntityDescriptionSupport.getSensorChannelIdsFromSensorChannelDetailDescription(allSensorChannels, supportedChannelIds)
+      val allSupportedSensorChannels = allSensorChannels.filter(
+          channel => allSupportedSensorChannelsIds.exists(_ == channel.channelId))
+      
+      val sensorDetail = new SimpleSensorTypeDescription(
+        getNextId(),
+        sensorTypeId,
+        sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
+        Option(sensorTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
+        sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit,
+        sensorUsageCategory, sensorDataSource,
+        sensorAcquisitionMode.get,
+        Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_NAME)),
+        Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_MODEL)),
+        supportedChannelIds, allSensorChannels, allSupportedSensorChannels)
 
       sensorRegistry.registerSensorType(sensorDetail)
     })

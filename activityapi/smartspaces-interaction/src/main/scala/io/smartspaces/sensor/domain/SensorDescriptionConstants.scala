@@ -102,7 +102,14 @@ object SensorDescriptionConstants {
   val SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_MODEL = "sensorManufacturerModel"
 
   /**
+   * The sensor types section field for the IDs of supported channels for the sensor type.
+   */
+  val SECTION_FIELD_SENSOR_TYPES_SUPPORTED_CHANNEL_IDS = "supportedChannelIds"
+
+  /**
    * The sensor types section field for the channels for the sensor type.
+   * 
+   * These needn't be supported channels. All are enumerated whether supported or not
    */
   val SECTION_FIELD_SENSOR_TYPES_CHANNELS = "channels"
 

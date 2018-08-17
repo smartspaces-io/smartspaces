@@ -99,11 +99,11 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
     data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => breakable {
       val itemData = entry.down()
 
-      var sensorDetail: Option[SensorTypeDescription] = None
-      var sensorDetailId = itemData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_TYPE)
-      if (sensorDetailId != null) {
-        sensorDetail = sensorCommonRegistry.getSensorTypeByExternalId(sensorDetailId)
-        if (sensorDetail.isEmpty) {
+      var sensorType: Option[SensorTypeDescription] = None
+      var sensorTypeId = itemData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_TYPE)
+      if (sensorTypeId != null) {
+        sensorType = sensorCommonRegistry.getSensorTypeByExternalId(sensorTypeId)
+        if (sensorType.isEmpty) {
           // TODO(keith): Some sort of error.
           break
         }
@@ -117,8 +117,8 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
       if (updateTimeLimitValue != null) {
         sensorUpdateTimeLimit = Option(updateTimeLimitValue)
       } else {
-        if (sensorDetail.isDefined) {
-          sensorUpdateTimeLimit = sensorDetail.get.sensorUpdateTimeLimit
+        if (sensorType.isDefined) {
+          sensorUpdateTimeLimit = sensorType.get.sensorUpdateTimeLimit
         } else {
           sensorUpdateTimeLimit = None
         }
@@ -129,8 +129,8 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
       if (updateHeartbeatTimeLimitValue != null) {
         sensorHeartbeatUpdateTimeLimit = Option(updateHeartbeatTimeLimitValue)
       } else {
-        if (sensorDetail.isDefined) {
-          sensorHeartbeatUpdateTimeLimit = sensorDetail.get.sensorHeartbeatUpdateTimeLimit
+        if (sensorType.isDefined) {
+          sensorHeartbeatUpdateTimeLimit = sensorType.get.sensorHeartbeatUpdateTimeLimit
         } else {
           sensorHeartbeatUpdateTimeLimit = None
         }
@@ -140,7 +140,7 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
-        sensorDetail.get,
+        sensorType.get,
         itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_SOURCE),
         sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit)
 
@@ -241,7 +241,7 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
 
       val sensor = sensorRegistry.getSensorByExternalId(sensorExternalId)
       if (sensor.isDefined) {
-        val channelIds = EntityDescriptionSupport.getSensorChannelIdsFromDescription(sensor.get, sensorChannelIds)
+        val channelIds = EntityDescriptionSupport.getSensorChannelIdsFromSensorDescription(sensor.get, sensorChannelIds)
 
         channelIds.foreach { sensorRegistry.associateSensorWithSensedEntity(sensorExternalId, _, sensedExternalId) }
       } else {

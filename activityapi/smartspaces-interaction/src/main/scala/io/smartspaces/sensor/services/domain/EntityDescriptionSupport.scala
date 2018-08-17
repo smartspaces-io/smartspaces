@@ -17,6 +17,8 @@
 package io.smartspaces.sensor.services.domain
 
 import io.smartspaces.sensor.domain.SensorEntityDescription
+import io.smartspaces.sensor.domain.SensorTypeDescription
+import io.smartspaces.sensor.domain.SensorChannelDetailDescription
 
 /**
  * A collection of methods to support working with entity descriptions.
@@ -27,23 +29,59 @@ object EntityDescriptionSupport {
 
   /**
    * Get the valid channel IDs for the sensor from the channel ID description.
-   * 
+   *
    * @param sensor
    *        the sensor to get the channel IDs from
    * @param sensorChannelIdDescription
    *        the description of channel IDs
    */
-  def getSensorChannelIdsFromDescription(sensor: SensorEntityDescription, sensorChannelIdDescription: String): Iterable[String] = {
-    var allChannelIds = sensor.sensorType.getAllSensorChannelDetails().map(_.channelId)
-    if (sensorChannelIdDescription == "*" || sensorChannelIdDescription.startsWith("-")) {
-      if (sensorChannelIdDescription == "*") {
-        allChannelIds
-      } else {
-        var toBeRemoved = sensorChannelIdDescription.substring(1).split(':').toSet
-        allChannelIds.filter(!toBeRemoved.contains(_))
-      }
+  def getSensorChannelIdsFromSensorDescription(sensor: SensorEntityDescription, sensorChannelIdDescription: String): Iterable[String] = {
+    val allChannelIds = sensor.sensorType.supportedChannelDetails.map(_.channelId)
+    getSensorChannelIdsFromDescriptionAndSource(allChannelIds, sensorChannelIdDescription)
+  }
+  
+  /**
+   * Get the valid channel IDs for the sensor from the channel ID description.
+   *
+   * @param sensor
+   *        the sensor to get the channel IDs from
+   * @param sensorChannelIdDescription
+   *        the description of channel IDs
+   */
+  def getSensorChannelIdsFromSensorTypeDescription(sensorType: SensorTypeDescription, sensorChannelIdDescription: String): Iterable[String] = {
+    val allChannelIds = sensorType.supportedChannelDetails.map(_.channelId)
+    getSensorChannelIdsFromDescriptionAndSource(allChannelIds, sensorChannelIdDescription)
+  }
+  
+  /**
+   * Get the valid channel IDs for the sensor from the channel ID description.
+   *
+   * @param sensor
+   *        the sensor to get the channel IDs from
+   * @param sensorChannelIdDescription
+   *        the description of channel IDs
+   */
+  def getSensorChannelIdsFromSensorChannelDetailDescription(sensorChannelDetails: Iterable[SensorChannelDetailDescription], sensorChannelIdDescription: String): Iterable[String] = {
+    val allChannelIds = sensorChannelDetails.map(_.channelId)
+    getSensorChannelIdsFromDescriptionAndSource(allChannelIds, sensorChannelIdDescription)
+  }
+ 
+  /**
+   * Get the valid channel IDs for the sensor from the channel ID description.
+   *
+   * @param sensor
+   *        the sensor to get the channel IDs from
+   * @param sensorChannelIdDescription
+   *        the description of channel IDs
+   */
+  def getSensorChannelIdsFromDescriptionAndSource(sourceSensorChannelIds: Iterable[String], sensorChannelIdDescription: String): Iterable[String] = {
+    if (sensorChannelIdDescription == "*") {
+      sourceSensorChannelIds
+    } else if (sensorChannelIdDescription.startsWith("-")) {
+      val toBeRemoved = sensorChannelIdDescription.substring(1).split(':').toSet
+      sourceSensorChannelIds.filter(!toBeRemoved.contains(_))
     } else {
-      sensorChannelIdDescription.split(':').toList
+      sensorChannelIdDescription.split(':').toList.filter(id => sourceSensorChannelIds.exists(_ == id))
     }
   }
 }

@@ -133,17 +133,25 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
     data.getArrayEntries().asScala.foreach((sensorDetailEntry) => {
       val sensorTypeData = sensorDetailEntry.down()
-      
+
       val sensorTypeId = sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID)
 
       val sensorUpdateTimeLimit: Option[Long] = {
         val sensorUpdateTimeLimitValue: java.lang.Long = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT)
-        Option(sensorUpdateTimeLimitValue)
+        if (sensorUpdateTimeLimitValue != null) {
+          Some(sensorUpdateTimeLimitValue)
+        } else {
+          None
+        }
       }
 
       val sensorHeartbeatUpdateTimeLimit: Option[Long] = {
         val sensorHeartbeatUpdateTimeLimitValue: java.lang.Long = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_HEARTBEAT_UPDATE_TIME_LIMIT)
-        Option(sensorHeartbeatUpdateTimeLimitValue)
+        if (sensorHeartbeatUpdateTimeLimitValue != null) {
+          Some(sensorHeartbeatUpdateTimeLimitValue)
+        } else {
+          None
+        }
       }
 
       val sensorUsageCategory = Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE))
@@ -199,13 +207,14 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
         channelDetailData.up()
       })
+      sensorTypeData.up
       
       val allSensorChannels = allSensorChannelsBuffer.toList
-      val allSupportedSensorChannelsIds = 
+      val allSupportedSensorChannelsIds =
         EntityDescriptionSupport.getSensorChannelIdsFromSensorChannelDetailDescription(allSensorChannels, supportedChannelIds)
       val allSupportedSensorChannels = allSensorChannels.filter(
-          channel => allSupportedSensorChannelsIds.exists(_ == channel.channelId))
-      
+        channel => allSupportedSensorChannelsIds.exists(_ == channel.channelId))
+
       val sensorDetail = new SimpleSensorTypeDescription(
         getNextId(),
         sensorTypeId,

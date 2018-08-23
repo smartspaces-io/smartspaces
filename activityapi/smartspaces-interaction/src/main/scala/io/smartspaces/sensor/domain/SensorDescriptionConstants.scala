@@ -248,5 +248,4 @@ object SensorDescriptionConstants {
    * The section header for the configuration section of the file.
    */
   val SECTION_HEADER_CONFIGURATIONS = "configurations"
-
 }

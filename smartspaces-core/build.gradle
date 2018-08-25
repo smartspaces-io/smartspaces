@@ -67,8 +67,8 @@ dependencies {
 
   compile 'javax.jmdns:jmdns:3.4.1'
   
-  compile 'org.bouncycastle:bcprov-jdk15on:1.56'
-  compile 'org.bouncycastle:bcpkix-jdk15on:1.56'
+  compile 'org.bouncycastle:bcprov-jdk15on:1.59'
+  compile 'org.bouncycastle:bcpkix-jdk15on:1.59'
   
   provided "${project.ext.osgiContainerDependency}"
 }

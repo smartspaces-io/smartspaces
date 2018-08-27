@@ -66,6 +66,10 @@ class NumericContinuousPersistedRawSensorEvent(
   override def exportableValue(): Any = value
   
   override def exportableAdditional(): Any = additional.getOrElse("NA")
+  
+  override def toString(): String = {
+    s"sensorExternalId=${sensorExternalId}, sensedEntityExternalId=${sensedEntityExternalId} channelId=${channelId}, value=${value}, measurementTimestamp=${measurementTimestamp}"
+  }
 }
 
 /**
@@ -86,6 +90,10 @@ class StringPersistedRawSensorEvent(
   override def exportableValue(): Any = value
   
   override def exportableAdditional(): Any = additional.getOrElse("NA")
+  
+  override def toString(): String = {
+    s"sensorExternalId=${sensorExternalId}, sensedEntityExternalId=${sensedEntityExternalId} channelId=${channelId}, value=${value}, measurementTimestamp=${measurementTimestamp}"
+  }
 }
 
 /**
@@ -106,4 +114,8 @@ class CategoricalValuePersistedRawSensorEvent(
   override def exportableValue(): Any = value.label
   
   override def exportableAdditional(): Any = additional.getOrElse("NA")
+  
+  override def toString(): String = {
+    s"sensorExternalId=${sensorExternalId}, sensedEntityExternalId=${sensedEntityExternalId} channelId=${channelId}, value=${value.label}, measurementTimestamp=${measurementTimestamp}"
+  }
 }

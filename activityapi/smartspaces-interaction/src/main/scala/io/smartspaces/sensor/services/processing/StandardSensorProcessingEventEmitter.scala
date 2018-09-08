@@ -25,17 +25,18 @@ import io.smartspaces.sensor.event.SensorOfflineEvent
 import io.smartspaces.sensor.event.UnknownEntitySeenEvent
 import io.smartspaces.sensor.event.UnknownMarkerSeenEvent
 import io.smartspaces.system.SmartSpacesEnvironment
+import io.smartspaces.sensor.event.SensorHeartbeatEvent
 
 /**
  * An emitter of events from sensor processors.
- * 
+ *
  * @author Keith M. Hughes
  */
 class StandardSensorProcessingEventEmitter(
-    private val nameScope: Option[String],
-    private val spaceEnvironment: SmartSpacesEnvironment, 
-    private val log: ExtendedLog) extends SensorProcessingEventEmitter {
-  
+  private val nameScope: Option[String],
+  private val spaceEnvironment: SmartSpacesEnvironment,
+  private val log: ExtendedLog) extends SensorProcessingEventEmitter {
+
   /**
    * The event registry. used only for object construction.
    */
@@ -54,9 +55,26 @@ class StandardSensorProcessingEventEmitter(
   /**
    * The creator for raw sensor observables.
    */
-  private val rawSensorEventSubject:  EventPublisherSubject[RawSensorLiveEvent] =
-      eventObservableRegistry.getObservable(RawSensorLiveEvent.EVENT_TYPE, nameScope,
-        rawSensorEventCreator)
+  private val rawSensorEventSubject: EventPublisherSubject[RawSensorLiveEvent] =
+    eventObservableRegistry.getObservable(RawSensorLiveEvent.EVENT_TYPE, nameScope,
+      rawSensorEventCreator)
+
+  /**
+   * The creator for sensor heartbeat observables.
+   */
+  private val sensorHeartbeatEventCreator: ObservableCreator[EventPublisherSubject[SensorHeartbeatEvent]] =
+    new ObservableCreator[EventPublisherSubject[SensorHeartbeatEvent]]() {
+      override def newObservable(): EventPublisherSubject[SensorHeartbeatEvent] = {
+        EventPublisherSubject.create(log)
+      }
+    }
+
+  /**
+   * The creator for raw sensor observables.
+   */
+  private val sensorHeartbeatEventSubject: EventPublisherSubject[SensorHeartbeatEvent] =
+    eventObservableRegistry.getObservable(SensorHeartbeatEvent.EVENT_TYPE, nameScope,
+      sensorHeartbeatEventCreator)
 
   /**
    * The creator for physical occupancy observables.
@@ -72,8 +90,8 @@ class StandardSensorProcessingEventEmitter(
    * The subject for physical location occupancy events
    */
   private var physicalLocationOccupancyEventSubject: EventPublisherSubject[PhysicalSpaceOccupancyLiveEvent] =
-      eventObservableRegistry.getObservable(PhysicalSpaceOccupancyLiveEvent.EVENT_TYPE, nameScope,
-        physicalLocationOccupancyEventCreator)
+    eventObservableRegistry.getObservable(PhysicalSpaceOccupancyLiveEvent.EVENT_TYPE, nameScope,
+      physicalLocationOccupancyEventCreator)
 
   /**
    * The creator for sensor offline observables.
@@ -89,8 +107,8 @@ class StandardSensorProcessingEventEmitter(
    * The subject for sensor offline events
    */
   private var sensorOfflineEventSubject: EventPublisherSubject[SensorOfflineEvent] =
-      eventObservableRegistry.getObservable(SensorOfflineEvent.EVENT_TYPE, nameScope,
-        sensorOfflineEventCreator)
+    eventObservableRegistry.getObservable(SensorOfflineEvent.EVENT_TYPE, nameScope,
+      sensorOfflineEventCreator)
 
   /**
    * The creator for unknown marker seen observables.
@@ -106,12 +124,12 @@ class StandardSensorProcessingEventEmitter(
    * The subject for unknown marker seen events
    */
   private var unknownMarkerSeenEventSubject: EventPublisherSubject[UnknownEntitySeenEvent] =
-      eventObservableRegistry.getObservable(UnknownMarkerSeenEvent.EVENT_TYPE, nameScope,
-        unknownMarkerSeenEventCreator)
+    eventObservableRegistry.getObservable(UnknownMarkerSeenEvent.EVENT_TYPE, nameScope,
+      unknownMarkerSeenEventCreator)
 
   /**
    * Construct an emitter with no name scope.
-   * 
+   *
    * @param spaceEnvironment
    *        the space environment
    * @param log
@@ -120,9 +138,13 @@ class StandardSensorProcessingEventEmitter(
   def this(spaceEnvironment: SmartSpacesEnvironment, log: ExtendedLog) {
     this(None, spaceEnvironment, log)
   }
-  
+
   override def broadcastRawSensorEvent(event: RawSensorLiveEvent): Unit = {
     rawSensorEventSubject.onNext(event)
+  }
+
+  override def broadcastSensorHeartbeatEvent(event: SensorHeartbeatEvent): Unit = {
+    sensorHeartbeatEventSubject.onNext(event)
   }
 
   override def broadcastOccupancyEvent(event: PhysicalSpaceOccupancyLiveEvent): Unit = {

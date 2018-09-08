@@ -51,7 +51,7 @@ class StatefulMarkerSensorSensorValueProcessor(
    */
   override val sensorValueType = StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL
 
-  override def processData(measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long, 
+  override def processData(timestampMeasurement: Long,  timestampMeasurementReceived: Long, 
       sensorEntity: SensorEntityModel, sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
     channelId: String, data: DynamicObject): Unit = {
     val presenceLabel = data.getRequiredString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)
@@ -67,7 +67,7 @@ class StatefulMarkerSensorSensorValueProcessor(
     val markerEntity = processorContext.completeSensedEntityModel.sensorRegistry.getMarkerEntityByMarkerId(markerId)
     if (markerEntity.isEmpty) {
       processorContext.log.warn(s"Detected unknown marker ID ${markerId}")
-      unknownMarkerHandler.handleUnknownMarker(markerId, measurementTimestamp)
+      unknownMarkerHandler.handleUnknownMarker(markerId, timestampMeasurement)
 
       return
     }
@@ -83,7 +83,7 @@ class StatefulMarkerSensorSensorValueProcessor(
     val person = personOption.get.asInstanceOf[PersonSensedEntityModel]
     val sensedLocation = sensedEntityModel.asInstanceOf[PhysicalSpaceSensedEntityModel]
 
-    sensorEntity.stateUpdated(measurementTimestamp)
+    sensorEntity.stateUpdated(timestampMeasurement)
 
     presence.get match {
       case PresenceCategoricalValueInstances.PRESENT =>
@@ -96,8 +96,9 @@ class StatefulMarkerSensorSensorValueProcessor(
     
     val value = new SimpleCategoricalValueSensedValue(
         sensorEntity, Option(channelId), statefulMarkerMeasurementType, presence.get, 
-        Some(markerId), measurementTimestamp, sensorMessageReceivedTimestamp)
+        Some(markerId), timestampMeasurement,  timestampMeasurementReceived)
     
-    processorContext.completeSensedEntityModel.eventEmitter.broadcastRawSensorEvent(new RawSensorLiveEvent(value, sensedEntityModel))
+    processorContext.completeSensedEntityModel.eventEmitter.broadcastRawSensorEvent(
+        new RawSensorLiveEvent(value, sensedEntityModel, timestampMeasurement,  timestampMeasurementReceived))
   }
 }

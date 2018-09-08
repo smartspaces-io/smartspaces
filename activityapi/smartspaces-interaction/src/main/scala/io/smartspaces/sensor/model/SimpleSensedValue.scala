@@ -30,15 +30,15 @@ class SimpleSensedValue[T <: Any](
     override val measurementTypeDescription: MeasurementTypeDescription,
     override val value: T,
     override val additional: Option[Any],
-    override val measurementTimestamp: Long,
-    override val sensorMessageReceivedTimestamp: Long) extends SensedValue[T] {
+    override val timestampMeasurement: Long,
+    override val timestampMeasurementReceived: Long) extends SensedValue[T] {
 
   override def toString() = {
     "SimpleSensedValue [sensor=" + sensor + ", channelId=" + channelId + 
     ", measurementTypeDescription=" + measurementTypeDescription + 
     ", value=" + value + ", additional=" + additional + 
-    ", measurementTimestamp=" + measurementTimestamp + 
-    ", sensorMessageReceivedTimestamp=" + sensorMessageReceivedTimestamp + "]"
+    ", timestampMeasurement=" + timestampMeasurement + 
+    ", timestampMeasurementReceived=" + timestampMeasurementReceived + "]"
   }
 }
 

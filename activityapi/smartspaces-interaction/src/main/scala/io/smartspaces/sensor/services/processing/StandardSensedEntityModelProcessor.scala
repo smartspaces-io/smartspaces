@@ -26,6 +26,7 @@ import io.smartspaces.sensor.model.SensorEntityModel
 import io.smartspaces.sensor.services.processing.value.SensorValueProcessorContext
 import io.smartspaces.sensor.services.processing.value.SensorValueProcessorRegistry
 import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.sensor.event.SensorHeartbeatEvent
 
 /**
  * A sensor processor that will update sensed entity models.
@@ -47,12 +48,14 @@ class StandardSensedEntityModelProcessor(
   override def handleNewSensorMessage(handler: SensedEntitySensorHandler, messageReceivedTimestamp: Long,
     sensor: SensorEntityModel, message: DynamicObject): Unit = {
 
-    val messageType = message.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
+    val messageType = message.getString(
+      SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE,
+      SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
 
     if (log.isDebugEnabled()) {
       log.debug(s"Updating model with message type ${messageType} from sensor ${sensor.sensorEntityDescription.externalId}")
     }
-    
+
     messageType match {
       case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT =>
         handleMeasurement(handler, messageReceivedTimestamp, sensor, message)
@@ -75,7 +78,7 @@ class StandardSensedEntityModelProcessor(
    */
   private def handleMeasurement(
     handler: SensedEntitySensorHandler,
-    messageReceivedTimestamp: Long,
+    timestampMeasurementReceived: Long,
     sensor: SensorEntityModel,
     message: DynamicObject): Unit = {
 
@@ -83,7 +86,7 @@ class StandardSensedEntityModelProcessor(
     message.down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
 
     // If the message contained a timestamp, use it, otherwise use when the message came into the processor.
-    var measurementTimestamp = message.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, messageReceivedTimestamp)
+    var timestampMeasurement = message.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, timestampMeasurementReceived)
 
     // Go through every property in the data set, find its type, and then create
     // appropriate values.
@@ -92,19 +95,21 @@ class StandardSensedEntityModelProcessor(
         val sensorChannelModel = sensor.getSensorChannelEntityModel(channelId)
         if (sensorChannelModel.isDefined) {
           val sensedMeasurementType = sensorChannelModel.get.sensorChannelDetail.measurementType
+          
+          // TODO(keith): Place the processor directly in the sensor channel model
           val sensorValueProcessor = sensorValueProcessorRegistry.getSensorValueProcessor(sensedMeasurementType.externalId)
           if (sensorValueProcessor.isDefined) {
             message.down(channelId)
 
             // Pick up the measurement timestamp from the channel data if it is there,
             // otherwise use the last determined timestamp
-            measurementTimestamp = message.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, measurementTimestamp)
+            timestampMeasurement = message.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, timestampMeasurement)
 
             if (log.isDebugEnabled()) {
               log.debug(s"Processing sensor message for channel ${sensorChannelModel.get}")
             }
             sensorValueProcessor.get.processData(
-              measurementTimestamp, messageReceivedTimestamp,
+              timestampMeasurement, timestampMeasurementReceived,
               sensor, sensorChannelModel.get.sensedEntityModel, processorContext,
               channelId, message);
             message.up
@@ -135,5 +140,6 @@ class StandardSensedEntityModelProcessor(
     sensor: SensorEntityModel, message: DynamicObject): Unit = {
 
     sensor.updateHeartbeat(messageReceivedTimestamp)
+    completeSensedEntityModel.eventEmitter.broadcastSensorHeartbeatEvent(new SensorHeartbeatEvent(messageReceivedTimestamp, sensor))
   }
 }

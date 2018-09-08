@@ -29,15 +29,15 @@ import io.smartspaces.sensor.services.processing.SensorProcessingEventEmitter
  * @author Keith M. Hughes
  */
 trait CompleteSensedEntityModel {
-  
+
   /**
    * Logger to be used with the model.
    */
   val log: ExtendedLog
-  
+
   /**
    * The event emitter.
-   * 
+   *
    * TODO(keith): Maybe hand this in some how with method calls?
    */
   val eventEmitter: SensorProcessingEventEmitter
@@ -49,7 +49,7 @@ trait CompleteSensedEntityModel {
    * This will include building sensing models that current exist.
    */
   def prepare(): Unit
-  
+
   /**
    * Add in a new sensor entity into the collection.
    *
@@ -57,7 +57,7 @@ trait CompleteSensedEntityModel {
    *          the new description
    */
   def addNewSensorEntity(entityDescription: SensorEntityDescription): Unit
-  
+
   /**
    * Add in a new sensed entity into the collection.
    *
@@ -65,7 +65,7 @@ trait CompleteSensedEntityModel {
    *          the new description
    */
   def addNewSensedEntity(entityDescription: SensedEntityDescription): Unit
-  
+
   /*
    * Associate a sensor model with the sensed item.
    *
@@ -233,7 +233,7 @@ trait CompleteSensedEntityModel {
   def getMarkedSensedEntityModelByMarkerId(markerId: String): Option[PersonSensedEntityModel]
 
   /**
-   * Check all models for  things like going offline.
+   * Check all models for things like going offline.
    */
   def checkModels(): Unit
 

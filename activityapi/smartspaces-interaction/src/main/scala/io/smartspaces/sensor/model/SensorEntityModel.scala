@@ -34,12 +34,12 @@ trait SensorEntityModel extends HeartbeatMonitorable {
   /**
    * The sensor entity description for the model.
    */
-  val sensorEntityDescription: SensorEntityDescription
+  def sensorEntityDescription: SensorEntityDescription
 
   /**
    * Get the sensed entity model collection this model is in.
    */
-  val allModels: CompleteSensedEntityModel
+  def allModels: CompleteSensedEntityModel
 
   /**
    * The model that is being sensed by this sensor.

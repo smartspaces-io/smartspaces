@@ -205,11 +205,11 @@ class StandardSensorIntegrator(
 
     sensorHandler.addSensedEntitySensorMessageHandler(new SensedEntitySensorMessageHandler() {
 
-      override def handleNewSensorMessage(handler: SensedEntitySensorHandler, timestamp: Long,
+      override def handleNewSensorMessage(handler: SensedEntitySensorHandler, timestampMeasurementReceived: Long,
         sensor: SensorEntityModel,
         message: DynamicObject): Unit = {
         if (log.isDebugEnabled()) {
-          log.debug(s"Got message at ${timestamp.toString} from sensor ${sensor}: ${message.asMap()}")
+          log.debug(s"Got message at ${timestampMeasurementReceived.toString} from sensor ${sensor}: ${message.asMap()}")
         }
       }
     })

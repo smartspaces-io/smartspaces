@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
+ * Copyright (C) 2018 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,22 +18,27 @@ package io.smartspaces.sensor.event
 
 import io.smartspaces.sensor.model.SensorEntityModel
 
-/**
- * An event indicating a sensor going offline.
- *
- * @author Keith M. Hughes
- */
-object SensorOfflineEvent {
-
+object SensorHeartbeatEvent {
+  
   /**
-   * The name of the event.
+   * The type of the event.
    */
-  val EVENT_TYPE = "sensor.offline"
+  val EVENT_TYPE = "sensor.heartbeat"
 }
 
 /**
- * An event indicating a sensor going offline.
- *
+ * An event for a new sensor heartbeat.
+ * 
  * @author Keith M. Hughes
  */
-class SensorOfflineEvent(val sensorModel: SensorEntityModel, val timestampOffline: Long)
+class SensorHeartbeatEvent(
+    
+    /**
+     * The value that was sensed.
+     */
+    val timestampHeartbeat: Long,
+    
+    /**
+     * The entity that was sensed.
+     */
+    val sensorModel: SensorEntityModel)

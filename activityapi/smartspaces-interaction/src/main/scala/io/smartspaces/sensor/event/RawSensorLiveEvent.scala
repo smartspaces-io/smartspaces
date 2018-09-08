@@ -20,7 +20,7 @@ import io.smartspaces.sensor.model.SensedValue
 import io.smartspaces.sensor.model.SensedEntityModel
 
 object RawSensorLiveEvent {
-  
+
   /**
    * The type of the event.
    */
@@ -29,19 +29,27 @@ object RawSensorLiveEvent {
 
 /**
  * An event for a new sensor update.
- * 
+ *
  * @author Keith M. Hughes
  */
 class RawSensorLiveEvent(
-    
-    /**
-     * The value that was sensed.
-     */
-    val value: SensedValue[Any],
-    
-    /**
-     * The entity that was sensed.
-     */
-    val sensedEntity: SensedEntityModel) {
-  
-}
+
+  /**
+   * The value that was sensed.
+   */
+  val value: SensedValue[Any],
+
+  /**
+   * The entity that was sensed.
+   */
+  val sensedEntity: SensedEntityModel,
+
+  /**
+   * The timestamp when the measurement was made.
+   */
+  val timestampMeasurement: Long,
+
+  /**
+   * The timestamp when the measurement was received by the processor.
+   */
+  val timestampMeasurementReceived: Long)

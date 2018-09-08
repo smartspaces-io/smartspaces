@@ -89,7 +89,6 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
 
     Mockito.verify(sensorModel).checkIfOfflineTransition(checkTime)
     
-    
     val argumentCaptor = ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
     Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
   }
@@ -126,6 +125,6 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
 
     val event = argumentCaptor.getValue
     Assert.assertEquals(sensorModel, event.sensorModel)
-    Assert.assertEquals(checkTime, event.timestamp)
+    Assert.assertEquals(checkTime, event.timestampOffline)
   }
 }

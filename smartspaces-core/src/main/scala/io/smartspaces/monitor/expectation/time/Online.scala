@@ -62,7 +62,7 @@ trait HeartbeatMonitorable extends OnlineMonitorable {
   /**
    * When this item was created.
    */
-  val itemCreationTime: Long
+  def itemCreationTime: Long
 
   /**
    * A value in the state has been updated.
@@ -93,5 +93,4 @@ trait HeartbeatMonitorable extends OnlineMonitorable {
    * @return the last time
    */
   def lastHeartbeatUpdate(): Option[Long]
-
 }

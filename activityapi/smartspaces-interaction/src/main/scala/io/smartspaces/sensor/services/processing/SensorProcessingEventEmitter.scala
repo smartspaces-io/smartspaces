@@ -20,6 +20,7 @@ import io.smartspaces.sensor.event.PhysicalSpaceOccupancyLiveEvent
 import io.smartspaces.sensor.event.RawSensorLiveEvent
 import io.smartspaces.sensor.event.SensorOfflineEvent
 import io.smartspaces.sensor.event.UnknownEntitySeenEvent
+import io.smartspaces.sensor.event.SensorHeartbeatEvent
 
 /**
  * An emitter of events from sensor processors.
@@ -35,6 +36,14 @@ trait SensorProcessingEventEmitter {
    * 		the event to broadcast
    */
   def broadcastRawSensorEvent(event:RawSensorLiveEvent): Unit
+  
+  /**
+   * Broadcast a sensor heartbeat event.
+   *
+   * @param event
+   * 		the event to broadcast
+   */
+  def broadcastSensorHeartbeatEvent(event:SensorHeartbeatEvent): Unit
   
   /**
    * Broadcast a physical location occupancy event.

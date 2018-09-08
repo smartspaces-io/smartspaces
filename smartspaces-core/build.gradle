@@ -47,7 +47,7 @@ dependencies {
 	  transitive=false
     //exclude module: 'com.springsource.org.apache.commons.logging'
   }
-  compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpmime:4.1.1') { exclude module: 'com.springsource.org.apache.httpcomponents.httpcore' }
+  //compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpmime:4.1.1') { exclude module: 'com.springsource.org.apache.httpcomponents.httpcore' }
 
   runtime 'org.apache.commons:com.springsource.org.apache.commons.codec:1.4.0'
 

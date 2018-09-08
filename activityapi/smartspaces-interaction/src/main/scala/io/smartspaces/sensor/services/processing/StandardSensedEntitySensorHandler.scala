@@ -30,8 +30,10 @@ import io.smartspaces.util.data.dynamic.DynamicObject
  *
  * @author Keith M. Hughes
  */
-class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: CompleteSensedEntityModel, private val unknownSensedEntityHandler: UnknownSensedEntityHandler,
-    val log: ExtendedLog) extends SensedEntitySensorHandler with IdempotentManagedResource {
+class StandardSensedEntitySensorHandler(
+  private val completeSensedEntityModel: CompleteSensedEntityModel,
+  private val unknownSensedEntityHandler: UnknownSensedEntityHandler,
+  val log: ExtendedLog) extends SensedEntitySensorHandler with IdempotentManagedResource {
 
   /**
    * The sensor processor the sensor input is running under.
@@ -51,7 +53,9 @@ class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: C
   }
 
   override def handleSensorMessage(timestamp: Long, message: DynamicObject): Unit = {
-    val messageType = message.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
+    val messageType = message.getString(
+      SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE,
+      SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
 
     messageType match {
       case SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_COMPOSITE =>
@@ -63,8 +67,8 @@ class StandardSensedEntitySensorHandler(private val completeSensedEntityModel: C
 
   private def handleCompositeSensorMessage(timestamp: Long, message: DynamicObject): Unit = {
     message.down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA).
-        down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_MESSAGES)
-        
+      down(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_MESSAGES)
+
     message.getArrayEntries.asScala.foreach { (messageComponent) =>
       handleSingleSensorMessage(timestamp, messageComponent.down())
     }

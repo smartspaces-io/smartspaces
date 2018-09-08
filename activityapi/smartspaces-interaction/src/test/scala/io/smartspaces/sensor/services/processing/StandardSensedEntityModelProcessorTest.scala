@@ -40,6 +40,9 @@ import io.smartspaces.sensor.model.SimpleSensorChannelEntityModel
 import io.smartspaces.sensor.model.SimpleSensorEntityModel
 import io.smartspaces.sensor.services.processing.value.SensorValueProcessor
 import io.smartspaces.sensor.services.processing.value.StandardSensorValueProcessorRegistry
+import io.smartspaces.sensor.event.SensorHeartbeatEvent
+import org.mockito.ArgumentCaptor
+import org.junit.Assert
 
 /**
  * Tests for the {@link StandardSensedEntityModelProcessor}.
@@ -60,8 +63,12 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
 
   @Mock var managedScope: ManagedScope = _
 
+  @Mock var eventEmitter: SensorProcessingEventEmitter = _
+
   @Before def setup(): Unit = {
     MockitoAnnotations.initMocks(this)
+    
+    Mockito.when(completeSensedEntityModel.eventEmitter).thenReturn(eventEmitter)
 
     sensorValueProcessorRegistry = new StandardSensorValueProcessorRegistry(log)
     processor = new StandardSensedEntityModelProcessor(sensorValueProcessorRegistry, completeSensedEntityModel, managedScope, log)
@@ -85,6 +92,14 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     processor.handleNewSensorMessage(handler, timestamp, sensorModel, data)
 
     Mockito.verify(sensorModel).updateHeartbeat(timestamp)
+    
+    val argumentCaptor = ArgumentCaptor.forClass(classOf[SensorHeartbeatEvent])
+    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorHeartbeatEvent(argumentCaptor.capture())
+    
+    val event = argumentCaptor.getValue
+    
+    Assert.assertEquals(timestamp, event.timestampHeartbeat)
+    Assert.assertEquals(sensorModel, event.sensorModel)
   }
 
   /**

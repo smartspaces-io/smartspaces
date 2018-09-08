@@ -16,6 +16,7 @@
 package io.smartspaces.sensor.model
 
 import io.smartspaces.sensor.domain.SensorChannelDetailDescription
+import io.smartspaces.sensor.services.processing.value.SensorValueProcessor
 
 /**
  * The entity model of a sensor channel and the sensed entity the channel is associated with.
@@ -27,17 +28,22 @@ trait SensorChannelEntityModel {
   /**
    * The detail of the sensor channel.
    */
-  val sensorChannelDetail: SensorChannelDetailDescription
+  def sensorChannelDetail: SensorChannelDetailDescription
   
   /**
    * The sensor model for this channel.
    */
-  val sensorModel: SensorEntityModel
+  def sensorModel: SensorEntityModel
   
   /**
    * The model of the entity being sensed.
    */
-  val sensedEntityModel: SensedEntityModel
+  def sensedEntityModel: SensedEntityModel
+  
+  /**
+   * The processor for sensor values for this channel.
+   */
+  def sensorValueProcessor: SensorValueProcessor
 }
 
 /*
@@ -48,7 +54,8 @@ trait SensorChannelEntityModel {
 class SimpleSensorChannelEntityModel(
   override val sensorModel: SensorEntityModel,
   override val sensorChannelDetail: SensorChannelDetailDescription,
-  override val sensedEntityModel: SensedEntityModel
+  override val sensedEntityModel: SensedEntityModel,
+  override val sensorValueProcessor: SensorValueProcessor
 ) extends SensorChannelEntityModel {
     
   override def toString(): String = {

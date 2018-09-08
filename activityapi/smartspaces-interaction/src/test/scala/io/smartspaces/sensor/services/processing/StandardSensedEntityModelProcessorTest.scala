@@ -71,7 +71,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     Mockito.when(completeSensedEntityModel.eventEmitter).thenReturn(eventEmitter)
 
     sensorValueProcessorRegistry = new StandardSensorValueProcessorRegistry(log)
-    processor = new StandardSensedEntityModelProcessor(sensorValueProcessorRegistry, completeSensedEntityModel, managedScope, log)
+    processor = new StandardSensedEntityModelProcessor(completeSensedEntityModel, managedScope, log)
   }
 
   /**
@@ -111,8 +111,6 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     Mockito.when(sensorValueProcessor.sensorValueType).thenReturn(sensorValueType)
     val sensorValue: Long = 1234
 
-    sensorValueProcessorRegistry.addSensorValueProcessor(sensorValueProcessor)
-
     val measurementTimestamp: Long = 1000
     val sensorMessageReceivedTimestamp: Long = 1001
 
@@ -136,7 +134,8 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val sensedEntityModel =
       new SimpleSensedEntityModel(sensedEntity, completeSensedEntityModel)
 
-    val sensorChannelModel = new SimpleSensorChannelEntityModel(sensorModel, channelDetail, sensedEntityModel)
+    val sensorChannelModel = new SimpleSensorChannelEntityModel(
+        sensorModel, channelDetail, sensedEntityModel, sensorValueProcessor)
     sensorModel.addSensorChannelModel(sensorChannelModel)
 
     val builder = StandardSensorMessageBuilder.newMeasurementMessage(sensor.externalId)

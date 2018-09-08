@@ -193,7 +193,7 @@ class StandardSensorIntegrator(
       }
 
     _completeSensedEntityModel =
-      new StandardCompleteSensedEntityModel(_sensorInstanceRegistry, eventEmitter, log, spaceEnvironment)
+      new StandardCompleteSensedEntityModel(sensorValueProcessorRegistry, _sensorInstanceRegistry, eventEmitter, log, spaceEnvironment)
     _completeSensedEntityModel.prepare()
 
     _queryProcessor = new StandardSensedEntityModelQueryProcessor(completeSensedEntityModel, unknownMarkerHandler, unknownSensedEntityHandler)
@@ -215,7 +215,7 @@ class StandardSensorIntegrator(
     })
 
     val modelProcessor =
-      new StandardSensedEntityModelProcessor(sensorValueProcessorRegistry, completeSensedEntityModel, managedScope, log)
+      new StandardSensedEntityModelProcessor(completeSensedEntityModel, managedScope, log)
 
     sensorHandler.addSensedEntitySensorMessageHandler(modelProcessor)
 

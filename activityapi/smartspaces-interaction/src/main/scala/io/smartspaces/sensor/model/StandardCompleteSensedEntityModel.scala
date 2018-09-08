@@ -31,6 +31,7 @@ import io.smartspaces.sensor.domain.SensorSensedEntityAssociationDescription
 import io.smartspaces.sensor.services.processing.SensorProcessingEventEmitter
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.sensor.event.SensorOfflineEvent
+import io.smartspaces.sensor.services.processing.value.SensorValueProcessorRegistry
 
 /**
  * A collection of sensed entity models.
@@ -38,6 +39,7 @@ import io.smartspaces.sensor.event.SensorOfflineEvent
  * @author Keith M. Hughes
  */
 class StandardCompleteSensedEntityModel(
+  private val sensorValueProcessorRegistry: SensorValueProcessorRegistry,
   override val sensorRegistry: SensorInstanceRegistry,
   override val eventEmitter: SensorProcessingEventEmitter,
   override val log: ExtendedLog,
@@ -158,10 +160,22 @@ class StandardCompleteSensedEntityModel(
     val sensor = externalIdToSensorEntityModels.get(association.sensor.externalId)
     val sensed = externalIdToSensedEntityModels.get(association.sensedEntity.externalId)
 
-    val channelModel = new SimpleSensorChannelEntityModel(sensor.get, association.sensorChannelDetail, sensed.get)
+    val sensedMeasurementType = association.sensorChannelDetail.measurementType
 
-    sensor.get.addSensorChannelModel(channelModel)
-    sensed.get.addSensorChannelModel(channelModel)
+    // TODO(keith): Place the processor directly in the sensor channel model
+    val sensorValueProcessor = sensorValueProcessorRegistry.getSensorValueProcessor(sensedMeasurementType.externalId)
+    if (sensorValueProcessor.isDefined) {
+
+      val channelModel = new SimpleSensorChannelEntityModel(
+          sensor.get, association.sensorChannelDetail, 
+          sensed.get, 
+          sensorValueProcessor.get)
+
+      sensor.get.addSensorChannelModel(channelModel)
+      sensed.get.addSensorChannelModel(channelModel)
+    } else {
+      log.warn(s"could not find measurement type ${sensedMeasurementType.externalId} for sensor association")
+    }
   }
 
   override def getSensorEntityModelById(id: String): Option[SensorEntityModel] = {
@@ -213,7 +227,7 @@ class StandardCompleteSensedEntityModel(
   }
 
   override def getAllPhysicalSpaceSensedEntityModelsForPhysicalSpaceTypeExternalId(physicalSpaceTypeExternalId: String): Iterable[PhysicalSpaceSensedEntityModel] = {
-    externalIdToPhysicalSpaceModels.values.filter { model => 
+    externalIdToPhysicalSpaceModels.values.filter { model =>
       val pstype = model.sensedEntityDescription.physicalSpaceType
       pstype.isDefined && pstype.get == physicalSpaceTypeExternalId
     }

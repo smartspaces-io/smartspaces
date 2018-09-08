@@ -23,7 +23,7 @@ import io.smartspaces.data.entity.CategoricalValueInstance
  * 
  * @author Keith M. Hughes
  */
-trait PersistedRawSensorEvent[+T <: Any] {
+trait RawSensorPersistedEvent[+T <: Any] {
   val sensorExternalId: String
   val sensedEntityExternalId: String
   val channelId: String
@@ -53,7 +53,7 @@ trait PersistedRawSensorEvent[+T <: Any] {
  * 
  * @author Keith M. Hughes
  */
-class NumericContinuousPersistedRawSensorEvent(
+class NumericContinuousRawSensorPersistedEvent(
   override val sensorExternalId: String,
   override val sensedEntityExternalId: String,
   override val channelId: String,
@@ -62,7 +62,7 @@ class NumericContinuousPersistedRawSensorEvent(
   override val additional: Option[Any],
   override val measurementTimestamp: Long,
   override val sensorMessageReceivedTimestamp: Long)
-    extends PersistedRawSensorEvent[Double] {
+    extends RawSensorPersistedEvent[Double] {
   override def exportableValue(): Any = value
   
   override def exportableAdditional(): Any = additional.getOrElse("NA")
@@ -77,7 +77,7 @@ class NumericContinuousPersistedRawSensorEvent(
  * 
  * @author Keith M. Hughes
  */
-class StringPersistedRawSensorEvent(
+class StringRawSensorPersistedEvent(
   override val sensorExternalId: String,
   override val sensedEntityExternalId: String,
   override val channelId: String,
@@ -86,7 +86,7 @@ class StringPersistedRawSensorEvent(
   override val additional: Option[Any],
   override val measurementTimestamp: Long,
   override val sensorMessageReceivedTimestamp: Long)
-    extends PersistedRawSensorEvent[String] {
+    extends RawSensorPersistedEvent[String] {
   override def exportableValue(): Any = value
   
   override def exportableAdditional(): Any = additional.getOrElse("NA")
@@ -101,7 +101,7 @@ class StringPersistedRawSensorEvent(
  * 
  * @author Keith M. Hughes
  */
-class CategoricalValuePersistedRawSensorEvent(
+class CategoricalValueRawSensorPersistedEvent(
   override val sensorExternalId: String,
   override val sensedEntityExternalId: String,
   override val channelId: String,
@@ -110,7 +110,7 @@ class CategoricalValuePersistedRawSensorEvent(
   override val additional: Option[Any],
   override val measurementTimestamp: Long,
   override val sensorMessageReceivedTimestamp: Long)
-    extends PersistedRawSensorEvent[CategoricalValueInstance] {
+    extends RawSensorPersistedEvent[CategoricalValueInstance] {
   override def exportableValue(): Any = value.label
   
   override def exportableAdditional(): Any = additional.getOrElse("NA")

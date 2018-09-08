@@ -34,7 +34,6 @@ import io.smartspaces.sensor.event.SensorHeartbeatEvent
  * @author Keith M. Hughes
  */
 class StandardSensedEntityModelProcessor(
-  private val sensorValueProcessorRegistry: SensorValueProcessorRegistry,
   private val completeSensedEntityModel: CompleteSensedEntityModel,
   private val managedScope: ManagedScope,
   private val log: ExtendedLog)
@@ -94,28 +93,30 @@ class StandardSensedEntityModelProcessor(
       if (!SensorMessages.SENSOR_MESSAGE_DATA_NON_CHANNEL_FIELDS.contains(channelId)) {
         val sensorChannelModel = sensor.getSensorChannelEntityModel(channelId)
         if (sensorChannelModel.isDefined) {
-          val sensedMeasurementType = sensorChannelModel.get.sensorChannelDetail.measurementType
-          
-          // TODO(keith): Place the processor directly in the sensor channel model
-          val sensorValueProcessor = sensorValueProcessorRegistry.getSensorValueProcessor(sensedMeasurementType.externalId)
-          if (sensorValueProcessor.isDefined) {
+//          val sensedMeasurementType = sensorChannelModel.get.sensorChannelDetail.measurementType
+//          
+//          // TODO(keith): Place the processor directly in the sensor channel model
+//          val sensorValueProcessor = sensorValueProcessorRegistry.getSensorValueProcessor(sensedMeasurementType.externalId)
+//          if (sensorValueProcessor.isDefined) {
             message.down(channelId)
 
             // Pick up the measurement timestamp from the channel data if it is there,
             // otherwise use the last determined timestamp
-            timestampMeasurement = message.getLong(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, timestampMeasurement)
+            timestampMeasurement = message.getLong(
+                SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP, 
+                timestampMeasurement)
 
             if (log.isDebugEnabled()) {
               log.debug(s"Processing sensor message for channel ${sensorChannelModel.get}")
             }
-            sensorValueProcessor.get.processData(
+            sensorChannelModel.get.sensorValueProcessor.processData(
               timestampMeasurement, timestampMeasurementReceived,
               sensor, sensorChannelModel.get.sensedEntityModel, processorContext,
-              channelId, message);
+              channelId, message)
             message.up
-          } else {
-            log.warn(s"Got unknown sensed type with no apparent processor ${sensedMeasurementType}")
-          }
+//          } else {
+//            log.warn(s"Got unknown sensed type with no apparent processor ${sensedMeasurementType}")
+//          }
         } else {
           log.warn(s"Got unknown channel ID ${channelId}")
         }
@@ -140,6 +141,6 @@ class StandardSensedEntityModelProcessor(
     sensor: SensorEntityModel, message: DynamicObject): Unit = {
 
     sensor.updateHeartbeat(messageReceivedTimestamp)
-    completeSensedEntityModel.eventEmitter.broadcastSensorHeartbeatEvent(new SensorHeartbeatEvent(messageReceivedTimestamp, sensor))
+    completeSensedEntityModel.eventEmitter.broadcastSensorHeartbeatEvent(new SensorHeartbeatEvent(sensor, messageReceivedTimestamp))
   }
 }

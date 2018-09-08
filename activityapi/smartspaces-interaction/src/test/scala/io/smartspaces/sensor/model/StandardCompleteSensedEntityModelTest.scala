@@ -33,6 +33,7 @@ import io.smartspaces.sensor.event.SensorOfflineEvent
 import io.smartspaces.sensor.services.processing.SensorProcessingEventEmitter
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.time.provider.SettableTimeProvider
+import io.smartspaces.sensor.services.processing.value.SensorValueProcessorRegistry
 
 /**
  * Test the {@link #StandardCompleteSensedEntityModel}.
@@ -40,17 +41,19 @@ import io.smartspaces.time.provider.SettableTimeProvider
  * @author Keith M. Hughes
  */
 class StandardCompleteSensedEntityModelTest extends JUnitSuite {
-  var allModels: StandardCompleteSensedEntityModel = null
-
-  @Mock var sensorRegistry: SensorInstanceRegistry = null
-
-  @Mock var eventObservableRegistry: EventObservableRegistry = null
+  var allModels: StandardCompleteSensedEntityModel = _
   
-  @Mock var eventEmitter: SensorProcessingEventEmitter = null
+  @Mock var sensorValueProcessorRegistry: SensorValueProcessorRegistry = _
+
+  @Mock var sensorRegistry: SensorInstanceRegistry = _
+
+  @Mock var eventObservableRegistry: EventObservableRegistry = _
+  
+  @Mock var eventEmitter: SensorProcessingEventEmitter = _
 
   @Mock var log: ExtendedLog = null
 
-  @Mock var spaceEnvironment: SmartSpacesEnvironment = null
+  @Mock var spaceEnvironment: SmartSpacesEnvironment = _
 
   val timeProvider = new SettableTimeProvider
 
@@ -60,7 +63,8 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
     Mockito.when(spaceEnvironment.getTimeProvider).thenReturn(timeProvider)
     Mockito.when(spaceEnvironment.getEventObservableRegistry).thenReturn(eventObservableRegistry)
 
-    allModels = new StandardCompleteSensedEntityModel(sensorRegistry, eventEmitter, log, spaceEnvironment)
+    allModels = new StandardCompleteSensedEntityModel(
+        sensorValueProcessorRegistry, sensorRegistry, eventEmitter, log, spaceEnvironment)
   }
 
   /**

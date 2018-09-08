@@ -16,7 +16,7 @@
 
 package io.smartspaces.sensor
 
-import io.smartspaces.sensor.event.PersistedRawSensorEvent
+import io.smartspaces.sensor.event.RawSensorPersistedEvent
 import io.smartspaces.sensor.value.entity.ActiveCategoricalValueInstances
 import io.smartspaces.sensor.value.entity.ContactCategoricalValueInstances
 import io.smartspaces.sensor.value.entity.MoistureCategoricalValueInstances
@@ -38,7 +38,7 @@ package object event {
   /**
    * Alias for persisted raw sensor events giving presence status.
    */
-  type PresenceRawSensorEvent = PersistedRawSensorEvent[PresenceCategoricalValue]
+  type PresenceRawSensorPersistedEvent = RawSensorPersistedEvent[PresenceCategoricalValue]
 
   /**
    * Alias for the contact categorical value.
@@ -48,7 +48,7 @@ package object event {
   /**
    * Alias for persisted raw sensor events giving contact status.
    */
-  type ContactRawSensorEvent = PersistedRawSensorEvent[ContactCategoricalValue]
+  type ContactRawSensorPersistedEvent = RawSensorPersistedEvent[ContactCategoricalValue]
 
   /**
    * Alias for the active categorical value.
@@ -58,7 +58,7 @@ package object event {
   /**
    * Alias for persisted raw sensor events giving active status.
    */
-  type ActiveRawSensorEvent = PersistedRawSensorEvent[ActiveCategoricalValue]
+  type ActiveRawSensorPersistedEvent = RawSensorPersistedEvent[ActiveCategoricalValue]
 
   /**
    * Alias for the moisture categorical value.
@@ -68,7 +68,7 @@ package object event {
   /**
    * Alias for persisted raw sensor events giving moisture status.
    */
-  type MoistureRawSensorEvent = PersistedRawSensorEvent[MoistureCategoricalValue]
+  type MoistureRawSensorPersistedEvent = RawSensorPersistedEvent[MoistureCategoricalValue]
 
   /**
    * Alias for the online categorical value.
@@ -78,5 +78,5 @@ package object event {
   /**
    * Alias for persisted raw sensor events giving online status.
    */
-  type OnlineRawSensorEvent = PersistedRawSensorEvent[OnlineCategoricalValue]
+  type OnlineRawSensorPersistedEvent = RawSensorPersistedEvent[OnlineCategoricalValue]
 }

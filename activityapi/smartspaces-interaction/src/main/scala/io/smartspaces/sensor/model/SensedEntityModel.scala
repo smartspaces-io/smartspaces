@@ -63,21 +63,35 @@ trait SensedEntityModel  {
   def getSensorChannelEntityModel(channelId: String): Option[SensorChannelEntityModel]
 
   /**
-   * Get the value of a sensed property by the value type ID.
+   * Does the sensor return a given measurement type?
    *
-   * @param valueTypeId
-   *          the ID of the value type
-   *
-   * @return the sensed value with the specified type ID
+   * @return [[true]] if the sensor has a given measurement type
    */
-  def getSensedValue(valueTypeId: String): Option[SensedValue[Any]]
+  def hasMeasurementType(measurementTypeExternalId: String): Boolean
+
+  /**
+   * Get all channels giving a particular measurement type.
+   *
+   * @return all channels giving a particular measurement type
+   */
+  def getMeasurementTypeChannels(measurementTypeExternalId: String): Iterable[SensorChannelEntityModel]
+
+  /**
+   * Get the value of a sensed property by its type ID.
+   *
+   * @param measurementTypeExternalId
+   *          the ID of the measurement type
+   *
+   * @return the sensed value with the specified value type
+   */
+  def getSensedValue(measurementTypeExternalId: String): Option[SensedValue[Any]]
 
   /**
    * Get all sensed values for this entity.
    *
    * @return all sensed values
    */
-  def getAllSensedValues(): List[SensedValue[Any]]
+  def getAllSensedValues(): Iterable[SensedValue[Any]]
 
   /**
    * Update a sensed value.

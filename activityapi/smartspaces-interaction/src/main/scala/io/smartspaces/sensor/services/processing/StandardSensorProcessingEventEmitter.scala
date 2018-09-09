@@ -26,6 +26,9 @@ import io.smartspaces.sensor.event.UnknownEntitySeenEvent
 import io.smartspaces.sensor.event.UnknownMarkerSeenEvent
 import io.smartspaces.system.SmartSpacesEnvironment
 import io.smartspaces.sensor.event.SensorHeartbeatEvent
+import io.smartspaces.sensor.event.SensorOnlineEvent
+import io.smartspaces.sensor.event.SensorChannelOnlineEvent
+import io.smartspaces.sensor.event.SensorChannelOfflineEvent
 
 /**
  * An emitter of events from sensor processors.
@@ -89,7 +92,7 @@ class StandardSensorProcessingEventEmitter(
   /**
    * The subject for physical location occupancy events
    */
-  private var physicalLocationOccupancyEventSubject: EventPublisherSubject[PhysicalSpaceOccupancyLiveEvent] =
+  private val physicalLocationOccupancyEventSubject: EventPublisherSubject[PhysicalSpaceOccupancyLiveEvent] =
     eventObservableRegistry.getObservable(PhysicalSpaceOccupancyLiveEvent.EVENT_TYPE, nameScope,
       physicalLocationOccupancyEventCreator)
 
@@ -106,9 +109,60 @@ class StandardSensorProcessingEventEmitter(
   /**
    * The subject for sensor offline events
    */
-  private var sensorOfflineEventSubject: EventPublisherSubject[SensorOfflineEvent] =
+  private val sensorOfflineEventSubject: EventPublisherSubject[SensorOfflineEvent] =
     eventObservableRegistry.getObservable(SensorOfflineEvent.EVENT_TYPE, nameScope,
       sensorOfflineEventCreator)
+
+  /**
+   * The creator for sensor online observables.
+   */
+  private val sensorOnlineEventCreator: ObservableCreator[EventPublisherSubject[SensorOnlineEvent]] =
+    new ObservableCreator[EventPublisherSubject[SensorOnlineEvent]]() {
+      override def newObservable(): EventPublisherSubject[SensorOnlineEvent] = {
+        EventPublisherSubject.create(log)
+      }
+    }
+
+  /**
+   * The subject for sensor online events
+   */
+  private val sensorOnlineEventSubject: EventPublisherSubject[SensorOnlineEvent] =
+    eventObservableRegistry.getObservable(SensorOnlineEvent.EVENT_TYPE, nameScope,
+      sensorOnlineEventCreator)
+
+  /**
+   * The creator for sensor channel offline observables.
+   */
+  private val sensorChannelOfflineEventCreator: ObservableCreator[EventPublisherSubject[SensorChannelOfflineEvent]] =
+    new ObservableCreator[EventPublisherSubject[SensorChannelOfflineEvent]]() {
+      override def newObservable(): EventPublisherSubject[SensorChannelOfflineEvent] = {
+        EventPublisherSubject.create(log)
+      }
+    }
+
+  /**
+   * The subject for sensor channel offline events
+   */
+  private val sensorChannelOfflineEventSubject: EventPublisherSubject[SensorChannelOfflineEvent] =
+    eventObservableRegistry.getObservable(SensorChannelOfflineEvent.EVENT_TYPE, nameScope,
+      sensorChannelOfflineEventCreator)
+
+  /**
+   * The creator for sensor chanel online observables.
+   */
+  private val sensorChannelOnlineEventCreator: ObservableCreator[EventPublisherSubject[SensorChannelOnlineEvent]] =
+    new ObservableCreator[EventPublisherSubject[SensorChannelOnlineEvent]]() {
+      override def newObservable(): EventPublisherSubject[SensorChannelOnlineEvent] = {
+        EventPublisherSubject.create(log)
+      }
+    }
+
+  /**
+   * The subject for sensor channel online events
+   */
+  private val sensorChannelOnlineEventSubject: EventPublisherSubject[SensorChannelOnlineEvent] =
+    eventObservableRegistry.getObservable(SensorChannelOnlineEvent.EVENT_TYPE, nameScope,
+      sensorChannelOnlineEventCreator)
 
   /**
    * The creator for unknown marker seen observables.
@@ -153,6 +207,18 @@ class StandardSensorProcessingEventEmitter(
 
   override def broadcastSensorOfflineEvent(event: SensorOfflineEvent): Unit = {
     sensorOfflineEventSubject.onNext(event)
+  }
+
+  override def broadcastSensorOnlineEvent(event: SensorOnlineEvent): Unit = {
+    sensorOnlineEventSubject.onNext(event)
+  }
+
+  override def broadcastSensorChannelOfflineEvent(event: SensorChannelOfflineEvent): Unit = {
+    sensorChannelOfflineEventSubject.onNext(event)
+  }
+
+  override def broadcastSensorChannelOnlineEvent(event: SensorChannelOnlineEvent): Unit = {
+    sensorChannelOnlineEventSubject.onNext(event)
   }
 
   override def broadcastUnknownMarkerSeenEvent(event: UnknownEntitySeenEvent): Unit = {

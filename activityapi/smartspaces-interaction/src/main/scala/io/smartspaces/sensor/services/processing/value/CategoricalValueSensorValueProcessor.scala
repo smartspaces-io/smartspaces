@@ -25,6 +25,7 @@ import io.smartspaces.sensor.model.SensorEntityModel
 import io.smartspaces.sensor.model.SimpleCategoricalValueSensedValue
 import io.smartspaces.sensor.event.RawSensorLiveEvent
 import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.sensor.model.SensorChannelEntityModel
 
 /**
  * A processor for sensor value data messages with categorical values.
@@ -32,22 +33,24 @@ import io.smartspaces.util.data.dynamic.DynamicObject
  * @author Keith M. Hughes
  */
 class CategoricalValueSensorValueProcessor(val measurementType: MeasurementTypeDescription, val categoricalValue: CategoricalValue[CategoricalValueInstance]) extends SensorValueProcessor {
-  
+
   override val sensorValueType = measurementType.externalId
-  
-  override def processData(timestampMeasurement: Long, timestampMeasurementReceived: Long, sensorEntity: SensorEntityModel,
-    sensedEntity: SensedEntityModel, processorContext: SensorValueProcessorContext,
+
+  override def processData(
+    timestampMeasurement: Long,
+    timestampMeasurementReceived: Long,
+    sensorChannel: SensorChannelEntityModel,
+    processorContext: SensorValueProcessorContext,
     channelId: String, data: DynamicObject): Unit = {
     val value = new SimpleCategoricalValueSensedValue(
-        sensorEntity, Option(channelId), measurementType,
-        categoricalValue.fromLabel(data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)).get, 
-        timestampMeasurement, timestampMeasurementReceived)
+      sensorChannel,
+      categoricalValue.fromLabel(data.getString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)).get,
+      timestampMeasurement, timestampMeasurementReceived)
 
-    sensedEntity.updateSensedValue(value, timestampMeasurement)
-    sensorEntity.updateSensedValue(value, timestampMeasurement)
-    
+    sensorChannel.updateSensedValue(value, timestampMeasurement)
+
     processorContext.completeSensedEntityModel.eventEmitter.broadcastRawSensorEvent(
-        new RawSensorLiveEvent(value, sensedEntity, timestampMeasurement, timestampMeasurementReceived))
+      new RawSensorLiveEvent(value, sensorChannel, timestampMeasurement, timestampMeasurementReceived))
   }
 }
 

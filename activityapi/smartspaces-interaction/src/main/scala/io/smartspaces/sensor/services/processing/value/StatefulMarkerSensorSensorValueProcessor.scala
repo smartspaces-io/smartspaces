@@ -31,6 +31,7 @@ import io.smartspaces.sensor.services.processing.UnknownMarkerHandler
 import io.smartspaces.sensor.value.entity.PresenceCategoricalValue
 import io.smartspaces.sensor.value.entity.PresenceCategoricalValueInstances
 import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.sensor.model.SensorChannelEntityModel
 
 /**
  * The standard processor for sensors that give a stateful marker ID.
@@ -52,7 +53,7 @@ class StatefulMarkerSensorSensorValueProcessor(
   override val sensorValueType = StandardSensorData.MEASUREMENT_TYPE_MARKER_STATEFUL
 
   override def processData(timestampMeasurement: Long,  timestampMeasurementReceived: Long, 
-      sensorEntity: SensorEntityModel, sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
+      sensorChannel: SensorChannelEntityModel, processorContext: SensorValueProcessorContext,
     channelId: String, data: DynamicObject): Unit = {
     val presenceLabel = data.getRequiredString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)
     val presence = PresenceCategoricalValue.fromLabel(presenceLabel)
@@ -81,9 +82,7 @@ class StatefulMarkerSensorSensorValueProcessor(
     }
 
     val person = personOption.get.asInstanceOf[PersonSensedEntityModel]
-    val sensedLocation = sensedEntityModel.asInstanceOf[PhysicalSpaceSensedEntityModel]
-
-    sensorEntity.stateUpdated(timestampMeasurement)
+    val sensedLocation = sensorChannel.sensedEntityModel.asInstanceOf[PhysicalSpaceSensedEntityModel]
 
     presence.get match {
       case PresenceCategoricalValueInstances.PRESENT =>
@@ -95,10 +94,12 @@ class StatefulMarkerSensorSensorValueProcessor(
     //modelUpdater.updateLocation(newLocation, person, timestamp)
     
     val value = new SimpleCategoricalValueSensedValue(
-        sensorEntity, Option(channelId), statefulMarkerMeasurementType, presence.get, 
+        sensorChannel, presence.get, 
         Some(markerId), timestampMeasurement,  timestampMeasurementReceived)
     
+    sensorChannel.updateSensedValue(value, timestampMeasurement)
+    
     processorContext.completeSensedEntityModel.eventEmitter.broadcastRawSensorEvent(
-        new RawSensorLiveEvent(value, sensedEntityModel, timestampMeasurement,  timestampMeasurementReceived))
+        new RawSensorLiveEvent(value, sensorChannel, timestampMeasurement,  timestampMeasurementReceived))
   }
 }

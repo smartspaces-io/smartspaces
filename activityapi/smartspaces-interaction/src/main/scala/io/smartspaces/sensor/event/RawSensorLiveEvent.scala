@@ -18,6 +18,7 @@ package io.smartspaces.sensor.event
 
 import io.smartspaces.sensor.model.SensedValue
 import io.smartspaces.sensor.model.SensedEntityModel
+import io.smartspaces.sensor.model.SensorChannelEntityModel
 
 object RawSensorLiveEvent {
 
@@ -40,9 +41,9 @@ class RawSensorLiveEvent(
   val value: SensedValue[Any],
 
   /**
-   * The entity that was sensed.
+   * The sensor channel that got the value.
    */
-  val sensedEntity: SensedEntityModel,
+  val sensorChannelModel: SensorChannelEntityModel,
 
   /**
    * The timestamp when the measurement was made.

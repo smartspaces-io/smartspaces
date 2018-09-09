@@ -34,12 +34,12 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
   /**
    * The time of the last update.
    */
-  protected var _lastUpdateTime: Option[Long] = None
+  protected var _timestampLastUpdate: Option[Long] = None
 
   /**
    * The time of the last heartbeat update.
    */
-  protected var _lastHeartbeatUpdate: Option[Long] = None
+  protected var _timestampLastHeartbeat: Option[Long] = None
 
   /**
    * {@code true} if there has been a signaling of going offline.
@@ -65,53 +65,37 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
   /**
    * An update happened.
    */
-  private def updateHappened(): Unit = {
+  private def updateHappened(timestamp: Long): Unit = {
+    if (!_online && offlineSignaled) {
+      emitOnlineEvent(timestamp)
+    }
+    
     // The online status is definitely true if an update is coming in.
     offlineSignaled = false
     _online = true
   }
 
   override def stateUpdated(timestamp: Long): Unit = {
-    _lastUpdateTime = Option(timestamp)
+    _timestampLastUpdate = Option(timestamp)
 
-    updateHappened
+    updateHappened(timestamp)
   }
 
-  override def lastUpdateTime(): Option[Long] = {
-    _lastUpdateTime
-  }
-
-  /**
-   * Set the last update time.
-   *
-   * <p>
-   * This is for testing.
-   */
-  /* protected[time] */ def setLastUpdateTime(time: Long): Unit = {
-    _lastUpdateTime = Option(time)
+  override def timestampLastUpdate(): Option[Long] = {
+    _timestampLastUpdate
   }
 
   override def updateHeartbeat(timestamp: Long): Unit = {
-    _lastHeartbeatUpdate = Option(timestamp)
+    _timestampLastHeartbeat = Option(timestamp)
 
-    updateHappened
+    updateHappened(timestamp)
   }
 
-  override def lastHeartbeatUpdate(): Option[Long] = {
-    _lastHeartbeatUpdate
+  override def timestampLastHeartbeat(): Option[Long] = {
+    _timestampLastHeartbeat
   }
 
-  /**
-   * Set the last update time.
-   *
-   * <p>
-   * This is for testing.
-   */
-  /* private[time] */ def setLastHeartbeatUpdateTime(time: Long): Unit = {
-    _lastHeartbeatUpdate = Option(time)
-  }
-
-  override def online(): Boolean = _online
+  override def online: Boolean = _online
 
   override def checkIfOfflineTransition(currentTime: Long): Boolean = {
     // Only check if the model thinks it is online and there was an update time,
@@ -120,18 +104,18 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
       if (stateUpdateTimeLimit.isDefined) {
         // The only way we would ever be considered online is if there was a lastUpdate,
         // so the .get will work.
-        _online = !isTimeout(currentTime, _lastUpdateTime.get, stateUpdateTimeLimit.get)
+        _online = !isTimeout(currentTime, _timestampLastUpdate.get, stateUpdateTimeLimit.get)
       } else if (heartbeatUpdateTimeLimit.isDefined) {
         // If this sensor requires a heartbeat, the heartbeat time can be checked.
 
-        val updateToUse = if (_lastUpdateTime.isDefined) {
-          if (_lastHeartbeatUpdate.isDefined) {
-            Math.max(_lastUpdateTime.get, _lastHeartbeatUpdate.get)
+        val updateToUse = if (_timestampLastUpdate.isDefined) {
+          if (_timestampLastHeartbeat.isDefined) {
+            Math.max(_timestampLastUpdate.get, _timestampLastHeartbeat.get)
           } else {
-            _lastUpdateTime.get
+            _timestampLastUpdate.get
           }
         } else {
-          _lastHeartbeatUpdate.get
+          _timestampLastHeartbeat.get
         }
         
         _online = !isTimeout(currentTime, updateToUse, heartbeatUpdateTimeLimit.get)
@@ -148,7 +132,7 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
       // time of birth of the model. otherwise no need to check.
       if (!offlineSignaled) {
         if (stateUpdateTimeLimit.isDefined) {
-          if (isTimeout(currentTime, _lastUpdateTime.getOrElse(itemCreationTime), stateUpdateTimeLimit.get)) {
+          if (isTimeout(currentTime, _timestampLastUpdate.getOrElse(timestampItemCreation), stateUpdateTimeLimit.get)) {
             signalOffline(currentTime)
 
             true
@@ -157,7 +141,7 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
           }
         } else if (heartbeatUpdateTimeLimit.isDefined) {
           // If this sensor requires a heartbeat, the heartbeat time can be checked.
-          if (isTimeout(currentTime, _lastHeartbeatUpdate.getOrElse(itemCreationTime), heartbeatUpdateTimeLimit.get)) {
+          if (isTimeout(currentTime, _timestampLastHeartbeat.getOrElse(timestampItemCreation), heartbeatUpdateTimeLimit.get)) {
             signalOffline(currentTime)
 
             true
@@ -179,16 +163,61 @@ trait StandardHeartbeatMonitorable extends HeartbeatMonitorable {
    * @param currentTime
    * 		the time when the sensor was detected offline
    */
-  private def signalOffline(currentTime: Long): Unit = {
+  private def signalOffline(timestamp: Long): Unit = {
     offlineSignaled = true
+    
+    emitOfflineEvent(timestamp)
   }
 
+  /**
+   * Get the time limit for a heartbeat update.
+   */
   def heartbeatUpdateTimeLimit: Option[Long] = None
 
+  /**
+   * Get the time limit for a state update.
+   */
   def stateUpdateTimeLimit: Option[Long] = None
 
   /**
-   * REMOVE AFTER REFACTOR COMPLETE
+   * Set whether online or not.
+   *
+   * <p>
+   * This is for testing.
    */
-  def setOnline(o: Boolean): Unit = this._online = o
+  def setOnline(o: Boolean): Unit = {
+    this._online = o
+  }
+  
+  
+  /**
+   * Set the last update time.
+   *
+   * <p>
+   * This is for testing.
+   */
+  /* private[time] */ def setLastHeartbeatUpdateTime(time: Long): Unit = {
+    _timestampLastHeartbeat = Some(time)
+  }
+
+  /**
+   * Set the last update time.
+   *
+   * <p>
+   * This is for testing.
+   */
+  /* protected[time] */ def setLastUpdateTime(time: Long): Unit = {
+    _timestampLastUpdate = Some(time)
+  }
+
+  
+  /**
+   * Set if offline signaled.
+   *
+   * <p>
+   * This is for testing.
+   */
+  def setOfflineSignaled(offlineSignaled: Boolean): Unit = {
+    this.offlineSignaled = offlineSignaled
+  }
 }

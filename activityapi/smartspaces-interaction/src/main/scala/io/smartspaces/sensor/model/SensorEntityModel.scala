@@ -42,11 +42,6 @@ trait SensorEntityModel extends HeartbeatMonitorable {
   def allModels: CompleteSensedEntityModel
 
   /**
-   * The model that is being sensed by this sensor.
-   */
-  //var sensedEntityModel: Option[SensedEntityModel]
-
-  /**
    * Add in a new sensor channel entity model to the sensor model.
    * 
    * @param sensorChannelEntityModel
@@ -61,7 +56,7 @@ trait SensorEntityModel extends HeartbeatMonitorable {
    *          
    * @return all sensor channel entity models that are associated with the sensor.
    */
-  def getAllSensorChannelModels(): Traversable[SensorChannelEntityModel]
+  def getAllSensorChannelModels(): Iterable[SensorChannelEntityModel]
   
   /**
    * Get a sensor channel entity model for a given channel ID.
@@ -100,27 +95,27 @@ trait SensorEntityModel extends HeartbeatMonitorable {
   /**
    * Get the value of a sensed property by its type ID.
    *
-   * @param valueTypeId
-   *          the ID of the value type
+   * @param measurementTypeExternalId
+   *          the ID of the measurement type
    *
    * @return the sensed value with the specified value type
    */
-  def getSensedValue(valueTypeId: String): Option[SensedValue[Any]]
+  def getSensedValue(measurementTypeExternalId: String): Option[SensedValue[Any]]
 
   /**
    * Get all sensed values for this entity.
    *
    * @return all sensed values
    */
-  def getAllSensedValues(): List[SensedValue[Any]]
+  def getAllSensedValues(): Iterable[SensedValue[Any]]
 
   /**
    * Update a sensed value.
    *
    * @param value
    *          the value being updated
-   * @param updateTime
-   * 		      the time of this update
+   * @param timestampUpdate
+   * 		      the timestamp of this update
    */
-  def updateSensedValue[T <: Any](value: SensedValue[T], updateTime: Long): Unit
+  def updateSensedValue[T <: Any](value: SensedValue[T], timestampUpdate: Long): Unit
 }

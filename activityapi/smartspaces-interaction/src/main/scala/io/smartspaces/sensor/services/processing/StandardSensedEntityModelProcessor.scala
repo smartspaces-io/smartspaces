@@ -109,10 +109,13 @@ class StandardSensedEntityModelProcessor(
             if (log.isDebugEnabled()) {
               log.debug(s"Processing sensor message for channel ${sensorChannelModel.get}")
             }
+            
             sensorChannelModel.get.sensorValueProcessor.processData(
               timestampMeasurement, timestampMeasurementReceived,
-              sensor, sensorChannelModel.get.sensedEntityModel, processorContext,
+              sensorChannelModel.get, 
+              processorContext,
               channelId, message)
+              
             message.up
 //          } else {
 //            log.warn(s"Got unknown sensed type with no apparent processor ${sensedMeasurementType}")

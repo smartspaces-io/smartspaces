@@ -42,13 +42,13 @@ import io.smartspaces.sensor.services.processing.value.SensorValueProcessorRegis
  */
 class StandardCompleteSensedEntityModelTest extends JUnitSuite {
   var allModels: StandardCompleteSensedEntityModel = _
-  
+
   @Mock var sensorValueProcessorRegistry: SensorValueProcessorRegistry = _
 
   @Mock var sensorRegistry: SensorInstanceRegistry = _
 
   @Mock var eventObservableRegistry: EventObservableRegistry = _
-  
+
   @Mock var eventEmitter: SensorProcessingEventEmitter = _
 
   @Mock var log: ExtendedLog = null
@@ -64,7 +64,7 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
     Mockito.when(spaceEnvironment.getEventObservableRegistry).thenReturn(eventObservableRegistry)
 
     allModels = new StandardCompleteSensedEntityModel(
-        sensorValueProcessorRegistry, sensorRegistry, eventEmitter, log, spaceEnvironment)
+      sensorValueProcessorRegistry, sensorRegistry, eventEmitter, log, spaceEnvironment)
   }
 
   /**
@@ -92,7 +92,7 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
     allModels.performModelCheck()
 
     Mockito.verify(sensorModel).checkIfOfflineTransition(checkTime)
-    
+
     val argumentCaptor = ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
     Mockito.verify(eventEmitter, Mockito.times(0)).broadcastSensorOfflineEvent(argumentCaptor.capture())
   }
@@ -123,12 +123,5 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
     allModels.performModelCheck()
 
     Mockito.verify(sensorModel).checkIfOfflineTransition(checkTime)
-    
-    val argumentCaptor = ArgumentCaptor.forClass(classOf[SensorOfflineEvent])
-    Mockito.verify(eventEmitter, Mockito.times(1)).broadcastSensorOfflineEvent(argumentCaptor.capture())
-
-    val event = argumentCaptor.getValue
-    Assert.assertEquals(sensorModel, event.sensorModel)
-    Assert.assertEquals(checkTime, event.timestampOffline)
   }
 }

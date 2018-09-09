@@ -26,6 +26,7 @@ import io.smartspaces.sensor.model.updater.LocationChangeModelUpdater
 import io.smartspaces.sensor.model.updater.SimpleLocationChangeModelUpdater
 import io.smartspaces.sensor.services.processing.UnknownMarkerHandler
 import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.sensor.model.SensorChannelEntityModel
 
 /**
  * The standard processor for sensors that give a simple marker ID.
@@ -43,16 +44,16 @@ class SimpleMarkerSensorValueProcessor(unknownMarkerHandler: UnknownMarkerHandle
    */
   override val sensorValueType = StandardSensorData.MEASUREMENT_TYPE_MARKER_SIMPLE
 
-  override def processData(measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long, 
-      sensorModel: SensorEntityModel,
-      sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
+  override def processData(timestampMeasurement: Long, timestampMeasurementReceived: Long, 
+      sensorChannel: SensorChannelEntityModel,
+      processorContext: SensorValueProcessorContext,
       channelId: String, data: DynamicObject): Unit = {
     val markerId = data.getRequiredString(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE)
 
     val markerEntity = processorContext.completeSensedEntityModel.sensorRegistry.getMarkerEntityByMarkerId(markerId)
     if (markerEntity.isEmpty) {
       processorContext.log.warn(s"Detected unknown marker ID ${markerId}")
-      unknownMarkerHandler.handleUnknownMarker(markerId, measurementTimestamp)
+      unknownMarkerHandler.handleUnknownMarker(markerId, timestampMeasurement)
 
       return
     }
@@ -66,12 +67,13 @@ class SimpleMarkerSensorValueProcessor(unknownMarkerHandler: UnknownMarkerHandle
     }
       
     val person = personOption.get.asInstanceOf[PersonSensedEntityModel]
-    val newLocation = sensedEntityModel.asInstanceOf[PhysicalSpaceSensedEntityModel]
+    val newLocation = sensorChannel.sensedEntityModel.asInstanceOf[PhysicalSpaceSensedEntityModel]
 
-    sensorModel.stateUpdated(measurementTimestamp)
+    sensorChannel.stateUpdated(timestampMeasurement)
+    sensorChannel.sensorModel.stateUpdated(timestampMeasurement)
 
     processorContext.log.info(s"Detected marker ID ${markerId}, person ${person.sensedEntityDescription.externalId} entering ${newLocation}")
 
-    modelUpdater.updateLocation(newLocation, person, measurementTimestamp, sensorMessageReceivedTimestamp)
+    modelUpdater.updateLocation(newLocation, person, timestampMeasurement, timestampMeasurementReceived)
   }
 }

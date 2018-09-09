@@ -31,17 +31,7 @@ trait SensedValue[+T <: Any] {
   /**
    * The model of the sensor that gave the value.
    */
-  val sensor: SensorEntityModel
-  
-  /**
-   * The channel ID of the sensor that gave the value
-   */
-  val channelId: Option[String]
-
-  /**
-   * The type of the sensed value.
-   */
-  val measurementTypeDescription: MeasurementTypeDescription
+  val sensorChannel: SensorChannelEntityModel
 
   /**
    * The timestamp of when the measurement was taken, 

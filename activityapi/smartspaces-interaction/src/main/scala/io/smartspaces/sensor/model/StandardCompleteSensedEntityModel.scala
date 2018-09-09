@@ -167,9 +167,12 @@ class StandardCompleteSensedEntityModel(
     if (sensorValueProcessor.isDefined) {
 
       val channelModel = new SimpleSensorChannelEntityModel(
-          sensor.get, association.sensorChannelDetail, 
+          association.sensorChannelDetail, 
+          sensor.get, 
           sensed.get, 
-          sensorValueProcessor.get)
+          sensorValueProcessor.get,
+          this, 
+          sensor.get.timestampItemCreation)
 
       sensor.get.addSensorChannelModel(channelModel)
       sensed.get.addSensorChannelModel(channelModel)
@@ -263,10 +266,8 @@ class StandardCompleteSensedEntityModel(
 
     log.debug(s"Performing sensor model check at ${currentTime}")
 
-    getAllSensorEntityModels().filter(_.sensorEntityDescription.active).foreach { (sensor) =>
-      if (sensor.checkIfOfflineTransition(currentTime)) {
-        eventEmitter.broadcastSensorOfflineEvent(new SensorOfflineEvent(sensor, currentTime))
-      }
+    getAllSensorEntityModels().filter(_.sensorEntityDescription.active).foreach { 
+      _.checkIfOfflineTransition(currentTime)
     }
   }
 

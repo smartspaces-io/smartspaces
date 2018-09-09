@@ -19,6 +19,7 @@ package io.smartspaces.sensor.services.processing.value
 import io.smartspaces.sensor.model.SensedEntityModel
 import io.smartspaces.sensor.model.SensorEntityModel
 import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.sensor.model.SensorChannelEntityModel
 
 /**
  * A processor for sensor value data messages.
@@ -39,12 +40,10 @@ trait SensorValueProcessor {
    *
    * @param timestampMeasurement
    *          the time of the sensor measurement
-   * @param sensorMessageReceivedTimestamp
+   * @param timestampMeasurementReceived
    *          the time when the sensor message was received
-   * @param sensor
-   *          the sensor platform that detected the data
-   * @param sensedEntityModel
-   *          the sensed entity model that is associated with the sensor
+   * @param sensorChannel
+   *          the sensor channel that received the data
    * @param processorContext
    *          the context for processor handling
    * @param channelId
@@ -52,7 +51,11 @@ trait SensorValueProcessor {
    * @param data
    *          the data to process, should be inside the data field
    */
-  def processData(timestampMeasurement: Long, sensorMessageReceivedTimestamp: Long, sensor: SensorEntityModel,
-    sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
-    channelId: String, data: DynamicObject): Unit
+  def processData(
+    timestampMeasurement: Long,
+    timestampMeasurementReceived: Long,
+    sensorChannel: SensorChannelEntityModel,
+    processorContext: SensorValueProcessorContext,
+    channelId: String, 
+    data: DynamicObject): Unit
 }

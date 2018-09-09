@@ -16,12 +16,19 @@
 
 package io.smartspaces.sensor.services.domain
 
-import scala.collection.JavaConverters._
+import java.lang.{ Long => JLong }
+
+import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+import scala.collection.mutable.ArrayBuffer
 import scala.util.control.Breaks.break
 import scala.util.control.Breaks.breakable
+
 import io.smartspaces.logging.ExtendedLog
+
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
+import io.smartspaces.sensor.domain.SensorAcquisitionModeCategoricalValue
+import io.smartspaces.sensor.domain.SensorChannelDetailDescription
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
 import io.smartspaces.sensor.domain.SimpleMeasurementTypeDescription
 import io.smartspaces.sensor.domain.SimpleMeasurementUnitDescription
@@ -30,10 +37,6 @@ import io.smartspaces.sensor.domain.SimpleSensorChannelDetailDescription
 import io.smartspaces.sensor.domain.SimpleSensorTypeDescription
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.data.dynamic.DynamicObject.ArrayDynamicObjectEntry
-import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
-import io.smartspaces.sensor.domain.SensorAcquisitionModeCategoricalValue
-import scala.collection.mutable.ArrayBuffer
-import io.smartspaces.sensor.domain.SensorChannelDetailDescription
 
 /**
  * A YAML-based sensor common description importer.
@@ -137,7 +140,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
       val sensorTypeId = sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID)
 
       val sensorUpdateTimeLimit: Option[Long] = {
-        val sensorUpdateTimeLimitValue: java.lang.Long = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT)
+        val sensorUpdateTimeLimitValue: JLong = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT)
         if (sensorUpdateTimeLimitValue != null) {
           Some(sensorUpdateTimeLimitValue)
         } else {
@@ -146,7 +149,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
       }
 
       val sensorHeartbeatUpdateTimeLimit: Option[Long] = {
-        val sensorHeartbeatUpdateTimeLimitValue: java.lang.Long = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_HEARTBEAT_UPDATE_TIME_LIMIT)
+        val sensorHeartbeatUpdateTimeLimitValue: JLong = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_HEARTBEAT_UPDATE_TIME_LIMIT)
         if (sensorHeartbeatUpdateTimeLimitValue != null) {
           Some(sensorHeartbeatUpdateTimeLimitValue)
         } else {
@@ -197,18 +200,36 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
           measurementUnit = measurementType.get.defaultUnit
         }
 
+        val updateTimeLimit: Option[Long] = {
+          val updateTimeLimitValue: JLong = channelDetailData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT)
+          if (updateTimeLimitValue != null) {
+            Some(updateTimeLimitValue)
+          } else {
+            None
+          }
+        }
+
+        val heartbeatUpdateTimeLimit: Option[Long] = {
+          val heartbeatUpdateTimeLimitValue: JLong = channelDetailData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_HEARTBEAT_UPDATE_TIME_LIMIT)
+          if (heartbeatUpdateTimeLimitValue != null) {
+            Some(heartbeatUpdateTimeLimitValue)
+          } else {
+            None
+          }
+        }
+
         val channelDetail = new SimpleSensorChannelDetailDescription(
           channelId,
           channelDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(channelDetailData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
-          measurementType.get, measurementUnit)
+          measurementType.get, measurementUnit, updateTimeLimit, heartbeatUpdateTimeLimit)
 
         allSensorChannelsBuffer += channelDetail
 
         channelDetailData.up()
       })
       sensorTypeData.up
-      
+
       val allSensorChannels = allSensorChannelsBuffer.toList
       val allSupportedSensorChannelsIds =
         EntityDescriptionSupport.getSensorChannelIdsFromSensorChannelDetailDescription(allSensorChannels, supportedChannelIds)

@@ -21,6 +21,9 @@ import io.smartspaces.sensor.event.RawSensorLiveEvent
 import io.smartspaces.sensor.event.SensorOfflineEvent
 import io.smartspaces.sensor.event.UnknownEntitySeenEvent
 import io.smartspaces.sensor.event.SensorHeartbeatEvent
+import io.smartspaces.sensor.event.SensorOnlineEvent
+import io.smartspaces.sensor.event.SensorChannelOnlineEvent
+import io.smartspaces.sensor.event.SensorChannelOfflineEvent
 
 /**
  * An emitter of events from sensor processors.
@@ -60,6 +63,30 @@ trait SensorProcessingEventEmitter {
    * 		the event to broadcast
    */
   def broadcastSensorOfflineEvent(event: SensorOfflineEvent): Unit
+
+  /**
+   * Broadcast a sensor online event.
+   *
+   * @param event
+   * 		the event to broadcast
+   */
+  def broadcastSensorOnlineEvent(event: SensorOnlineEvent): Unit
+
+  /**
+   * Broadcast a sensor channel offline event.
+   *
+   * @param event
+   * 		the event to broadcast
+   */
+  def broadcastSensorChannelOfflineEvent(event: SensorChannelOfflineEvent): Unit
+
+  /**
+   * Broadcast a sensor channel online event.
+   *
+   * @param event
+   * 		the event to broadcast
+   */
+  def broadcastSensorChannelOnlineEvent(event: SensorChannelOnlineEvent): Unit
 
   /**
    * Broadcast an unknown marker event.

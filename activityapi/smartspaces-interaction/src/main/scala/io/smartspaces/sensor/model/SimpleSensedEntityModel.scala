@@ -27,11 +27,6 @@ import scala.collection.mutable.Map
  * @author Keith M. Hughes
  */
 trait BaseSensedEntityModel extends SensedEntityModel {
-  
-  /**
-   * The values being sensed keyed by the value name.
-   */
-  private val sensedValues: Map[String, SensedValue[Any]] = new HashMap
 
   /**
    * The sensor channel models indexed by the channel ID.
@@ -55,19 +50,31 @@ trait BaseSensedEntityModel extends SensedEntityModel {
     sensorChannelModels.get(channelId)
   }
   
-  override def getSensedValue(valueTypeId: String): Option[SensedValue[Any]] = {
-    // TODO(keith): Needs some sort of concurrency block
-    sensedValues.get(valueTypeId)
+  override def hasMeasurementType(measurementTypeExternalId: String): Boolean = {
+    sensorChannelModels.values.find(_.sensorChannelDetail.measurementType.externalId == measurementTypeExternalId).isDefined
   }
 
-  override def getAllSensedValues(): scala.collection.immutable.List[SensedValue[Any]] = {
-    sensedValues.values.toList
+  override def getMeasurementTypeChannels(measurementTypeExternalId: String): Iterable[SensorChannelEntityModel] = {
+    sensorChannelModels.values.filter(_.sensorChannelDetail.measurementType.externalId == measurementTypeExternalId)
+  }
+
+  override def getSensedValue(measurementTypeExternalId: String): Option[SensedValue[Any]] = {
+    // TODO(keith): Needs some sort of concurrency block
+    val channels = getMeasurementTypeChannels(measurementTypeExternalId)
+    if (channels.isEmpty) {
+      None
+    } else {
+      Some(channels.head.mostRecentSensedValue)
+    }
+  }
+
+  override def getAllSensedValues(): Iterable[SensedValue[Any]] = {
+    sensorChannelModels.values.map(_.mostRecentSensedValue)
   }
 
   override def updateSensedValue[T <: Any](value: SensedValue[T], timestamp: Long): Unit = {
     // TODO(keith): Needs some sort of concurrency block
     _lastUpdateTime = Some(timestamp)
-    sensedValues.put(value.measurementTypeDescription.externalId, value);
   }
   
   override def lastUpdateTime: Option[Long] = {

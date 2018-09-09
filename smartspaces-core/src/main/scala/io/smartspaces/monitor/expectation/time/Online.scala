@@ -26,7 +26,7 @@ trait Online {
   /**
    * [[true]] if the entity is online.
    */
-  def online(): Boolean
+  def online: Boolean
 }
 
 /**
@@ -50,6 +50,23 @@ trait OnlineMonitorable extends Online {
    * @return [[true]] if has transitioned to offline
    */
   def checkIfOfflineTransition(currentTime: Long): Boolean
+  
+  /**
+   * Emit that the item has gone offline.
+   * 
+   * @param timestamp
+   *        timestamp of the event
+   */
+  def emitOfflineEvent(timestamp: Long): Unit
+  
+  /**
+   * Emit that the item has gone online.
+   * 
+   * @param timestamp
+   *        timestamp of the event
+   * 
+   */
+  def emitOnlineEvent(timestamp: Long): Unit
 }
 
 /**
@@ -62,35 +79,35 @@ trait HeartbeatMonitorable extends OnlineMonitorable {
   /**
    * When this item was created.
    */
-  def itemCreationTime: Long
+  def timestampItemCreation: Long
 
   /**
    * A value in the state has been updated.
    *
-   * @param updateTime
+   * @param timestampUpdated
    * 		      the time of this update
    */
-  def stateUpdated(updateTime: Long): Unit
+  def stateUpdated(timestampUpdated: Long): Unit
 
   /**
    * Get the last update for the item.
    *
    * @return the last time
    */
-  def lastUpdateTime(): Option[Long]
+  def timestampLastUpdate: Option[Long]
 
   /**
    * Update the heartbeat for the item.
    *
-   * @param updateTime
-   * 		      the time of this update
+   * @param timestampUpdated
+   * 		      the timestamp of this update
    */
-  def updateHeartbeat(updateTime: Long): Unit
+  def updateHeartbeat(timestampUpdated: Long): Unit
 
   /**
    * Get the last heartbeat update for the item.
    *
-   * @return the last time
+   * @return the last timestamp
    */
-  def lastHeartbeatUpdate(): Option[Long]
+  def timestampLastHeartbeat: Option[Long]
 }

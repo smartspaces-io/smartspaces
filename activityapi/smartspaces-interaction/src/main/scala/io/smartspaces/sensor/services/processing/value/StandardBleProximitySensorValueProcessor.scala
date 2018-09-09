@@ -32,6 +32,7 @@ import io.smartspaces.sensor.model.SensorEntityModel
 import io.smartspaces.sensor.model.updater.SimplePersonPhysicalSpaceModelUpdater
 import io.smartspaces.sensor.services.processing.StandardBleProximitySupport
 import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.sensor.model.SensorChannelEntityModel
 
 /**
  * The standard processor for BLE proximity data.
@@ -69,13 +70,13 @@ class StandardBleProximitySensorValueProcessor extends SensorValueProcessor {
   val sensorValueType = StandardSensorData.SENSOR_TYPE_PROXIMITY_BLE
 
   override def processData(measurementTimestamp: Long, sensorMessageReceivedTimestamp: Long, 
-      sensor: SensorEntityModel,
-      sensedEntityModel: SensedEntityModel, processorContext: SensorValueProcessorContext,
+      sensorChannel: SensorChannelEntityModel,
+      processorContext: SensorValueProcessorContext,
       channelId: String, data: DynamicObject) {
     val markerId = "ble" + ":" + data.getRequiredString("id")
     val rssi = data.getDouble("rssi")
 
-    val userTrigger = getTrigger(markerId, sensor, sensedEntityModel, processorContext)
+    val userTrigger = getTrigger(markerId, sensorChannel.sensorModel, sensorChannel.sensedEntityModel, processorContext)
     userTrigger.update(rssi, new TriggerTimes(measurementTimestamp, sensorMessageReceivedTimestamp))
 
     val markedEntity = processorContext.completeSensedEntityModel.

@@ -47,8 +47,8 @@ class StandardSensedEntityModelQueryProcessor(private val allModels: CompleteSen
   override def getAllValuesForMeasurementType(measurementTypeExternalId: String): Iterable[SensedValue[Any]] = {
     allModels.doReadTransaction { () =>
       for (
-        sensedEntityModel <- allModels.getAllSensedEntityModels(); sensedValue <- sensedEntityModel.getAllSensedValues();
-        if sensedValue.measurementTypeDescription.externalId == measurementTypeExternalId
+        sensorEntityModel <- allModels.getAllSensorEntityModels(); sensedValue <- sensorEntityModel.getAllSensedValues();
+        if sensedValue.sensorChannel.sensorChannelDetail.measurementType.externalId == measurementTypeExternalId
       ) yield sensedValue
     }
   }

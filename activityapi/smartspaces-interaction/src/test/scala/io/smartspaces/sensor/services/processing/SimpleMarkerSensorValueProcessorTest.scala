@@ -37,6 +37,7 @@ import io.smartspaces.sensor.model.updater.LocationChangeModelUpdater
 import io.smartspaces.sensor.services.processing.value.SensorValueProcessorContext
 import io.smartspaces.sensor.services.processing.value.SimpleMarkerSensorValueProcessor
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
+import io.smartspaces.sensor.model.SensorChannelEntityModel
 
 /**
  * A test for the simple marker sensor value processor.
@@ -85,10 +86,10 @@ class SimpleMarkerSensorValueProcessorTest {
 
     Mockito.when(sensorRegistry.getMarkerEntityByMarkerId(markerId)).thenReturn(None)
 
-    val sensorModel = Mockito.mock(classOf[SensorEntityModel])
+    val sensorChannelModel = Mockito.mock(classOf[SensorChannelEntityModel])
     val sensedEntityModel = Mockito.mock(classOf[PhysicalSpaceLocatableSensedEntityModel])
 
-    processor.processData(measurementTimestamp, sensorMessageReceivedTimestamp, sensorModel, sensedEntityModel, context, "channelId", builder.toDynamicObject())
+    processor.processData(measurementTimestamp, sensorMessageReceivedTimestamp, sensorChannelModel, context, "channelId", builder.toDynamicObject())
 
     Mockito.verify(unknownMarkerHandler, Mockito.times(1)).handleUnknownMarker(markerId, measurementTimestamp)
   }
@@ -112,13 +113,18 @@ class SimpleMarkerSensorValueProcessorTest {
     Mockito.when(personEntity.sensedEntityDescription).thenReturn(personDescription)
     Mockito.when(completeSensedEntityModel.getMarkedSensedEntityModelByMarkerId(markerId)).thenReturn(Some(personEntity))
 
+    val sensorChannelModel = Mockito.mock(classOf[SensorChannelEntityModel])
     val sensorModel = Mockito.mock(classOf[SensorEntityModel])
     val sensedEntityModel = Mockito.mock(classOf[PhysicalSpaceSensedEntityModel])
+    
+    Mockito.when(sensorChannelModel.sensorModel).thenReturn(sensorModel)
+    Mockito.when(sensorChannelModel.sensedEntityModel).thenReturn(sensedEntityModel)
 
-    processor.processData(measurementTimestamp, sensorMessageReceivedTimestamp, sensorModel, sensedEntityModel, context, "channelId", builder.toDynamicObject())
+    processor.processData(measurementTimestamp, sensorMessageReceivedTimestamp, sensorChannelModel, context, "channelId", builder.toDynamicObject())
 
     Mockito.verify(unknownMarkerHandler, Mockito.times(0)).handleUnknownMarker(markerId, measurementTimestamp)
     
+    Mockito.verify(sensorChannelModel, Mockito.times(1)).stateUpdated(measurementTimestamp)
     Mockito.verify(sensorModel, Mockito.times(1)).stateUpdated(measurementTimestamp)
     
     modelUpdater.updateLocation(sensedEntityModel, personEntity, measurementTimestamp, sensorMessageReceivedTimestamp)

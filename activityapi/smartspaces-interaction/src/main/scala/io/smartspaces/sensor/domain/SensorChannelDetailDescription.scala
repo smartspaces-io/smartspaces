@@ -18,40 +18,50 @@ package io.smartspaces.sensor.domain
 
 /**
  * Details about a sensor channel.
- * 
+ *
  * <p>
  * The ID of the channel is local to the sensor detail it is part of. For example, multiple
  * sensor detail items could contain a channel called temperature.
- * 
+ *
  * <p>
  * The type of the channel specifies the sort of measurement the channel supplies.
- * 
+ *
  * <p>
  * The units of the channel specify the units the channel is supplying the measurement in.
- * 
+ *
  * @author Keith M. Hughes
  */
 trait SensorChannelDetailDescription extends DisplayableDescription {
-  
+
   /**
    * The sensor detail this channel is part of.
    */
   //def sensorDetail: SensorTypeDescription
-   
+
   /**
    * The ID of the channel.
    */
   def channelId: String
-  
+
   /**
    * The type of the channel measurement.
    */
   def measurementType: MeasurementTypeDescription
-  
+
   /**
    * The unit being used for the channel measurement
    */
   def measurementUnit: Option[MeasurementUnitDescription]
+
+  /**
+   * The time limit on when a sensor channel update should happen, in milliseconds
+   */
+  def stateUpdateTimeLimit: Option[Long]
+
+  /**
+   * The time limit on when a sensor channel heartbeat update should happen, in milliseconds
+   */
+  def heartbeatUpdateTimeLimit: Option[Long]
 }
 
 /**
@@ -70,9 +80,11 @@ trait SensorChannelDetailDescription extends DisplayableDescription {
  * @author Keith M. Hughes
  */
 case class SimpleSensorChannelDetailDescription(
-    //override val sensorDetail: SensorTypeDescription, 
-    override val channelId: String, 
-    override val displayName: String, 
-    override val displayDescription: Option[String], 
-    override val measurementType: MeasurementTypeDescription, 
-    override val measurementUnit: Option[MeasurementUnitDescription]) extends SensorChannelDetailDescription
+  //override val sensorDetail: SensorTypeDescription,
+  override val channelId: String,
+  override val displayName: String,
+  override val displayDescription: Option[String],
+  override val measurementType: MeasurementTypeDescription,
+  override val measurementUnit: Option[MeasurementUnitDescription],
+  override val stateUpdateTimeLimit: Option[Long],
+  override val heartbeatUpdateTimeLimit: Option[Long]) extends SensorChannelDetailDescription

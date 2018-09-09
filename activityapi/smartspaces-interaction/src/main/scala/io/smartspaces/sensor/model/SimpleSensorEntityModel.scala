@@ -22,6 +22,7 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
 import io.smartspaces.sensor.event.SensorOfflineEvent
 import io.smartspaces.monitor.expectation.time.StandardHeartbeatMonitorable
+import io.smartspaces.sensor.event.SensorOnlineEvent
 
 /**
  * The model of a sensor.
@@ -31,12 +32,7 @@ import io.smartspaces.monitor.expectation.time.StandardHeartbeatMonitorable
 class SimpleSensorEntityModel(
   val sensorEntityDescription: SensorEntityDescription,
   val allModels: CompleteSensedEntityModel,
-  override val itemCreationTime: Long) extends SensorEntityModel with StandardHeartbeatMonitorable {
-
-  /**
-   * The values being sensed keyed by the value name.
-   */
-  private val sensedValues: Map[String, SensedValue[Any]] = new HashMap
+  override val timestampItemCreation: Long) extends SensorEntityModel with StandardHeartbeatMonitorable {
 
   /**
    * The sensor channel models indexed by the channel ID.
@@ -47,7 +43,7 @@ class SimpleSensorEntityModel(
     sensorChannelModels.put(sensorChannelModel.sensorChannelDetail.channelId, sensorChannelModel)
   }
 
-  override def getAllSensorChannelModels(): Traversable[SensorChannelEntityModel] = {
+  override def getAllSensorChannelModels(): Iterable[SensorChannelEntityModel] = {
     sensorChannelModels.values
   }
 
@@ -67,19 +63,30 @@ class SimpleSensorEntityModel(
     sensorChannelModels.values.filter(_.sensorChannelDetail.measurementType.externalId == measurementTypeExternalId)
   }
 
-  override def getSensedValue(valueTypeId: String): Option[SensedValue[Any]] = {
+  override def getSensedValue(measurementTypeExternalId: String): Option[SensedValue[Any]] = {
     // TODO(keith): Needs some sort of concurrency block
-    sensedValues.get(valueTypeId)
+    val channels = getMeasurementTypeChannels(measurementTypeExternalId)
+    if (channels.isEmpty) {
+      None
+    } else {
+      Some(channels.head.mostRecentSensedValue)
+    }
   }
 
-  override def getAllSensedValues(): scala.collection.immutable.List[SensedValue[Any]] = {
-    sensedValues.values.toList
+  override def getAllSensedValues(): Iterable[SensedValue[Any]] = {
+    sensorChannelModels.values.map(_.mostRecentSensedValue)
   }
 
   override def updateSensedValue[T <: Any](value: SensedValue[T], timestamp: Long): Unit = {
     stateUpdated(timestamp)
+  }
 
-    sensedValues.put(value.measurementTypeDescription.externalId, value)
+  override def emitOnlineEvent(timestamp: Long): Unit = {
+    allModels.eventEmitter.broadcastSensorOnlineEvent(new SensorOnlineEvent(this, timestamp))
+  }
+
+  override def emitOfflineEvent(timestamp: Long): Unit = {
+    allModels.eventEmitter.broadcastSensorOfflineEvent(new SensorOfflineEvent(this, timestamp))
   }
 
   override def stateUpdateTimeLimit: Option[Long] = sensorEntityDescription.sensorStateUpdateTimeLimit

@@ -26,7 +26,7 @@ import org.mockito.MockitoAnnotations
 import org.scalatest.junit.JUnitSuite
 
 /**
- * A set of unit tests for the standard heartbeat monitorable muixin.
+ * A set of unit tests for the standard heartbeat monitorable mixin.
  * 
  * @author Keith M. Hughes
  */
@@ -44,17 +44,26 @@ class StandardHeartbeatMonitorableTest extends JUnitSuite {
 
     //The model starts offline until proven online
     Assert.assertFalse(model.online)
+        
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
 
     // Model didn't change from short change
     val transition1 = model.checkIfOfflineTransition(modelCreationTime + timeoutTime / 2)
     Assert.assertFalse(transition1)
     Assert.assertFalse(model.online)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
 
     // Now trigger it from no signal from model start.
     val offlineTime = modelCreationTime + timeoutTime + 1
     var transition2 = model.checkIfOfflineTransition(offlineTime)
     Assert.assertTrue(transition2)
     Assert.assertFalse(model.online)
+    
+    Assert.assertEquals(1, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
   }
 
   /**
@@ -69,17 +78,26 @@ class StandardHeartbeatMonitorableTest extends JUnitSuite {
     // Set the model online and last update time
     model.setOnline(true)
     model.setLastUpdateTime(lastUpdate)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
 
     // Model didn't change from short change
     val transition1 = model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
     Assert.assertFalse(transition1)
     Assert.assertTrue(model.online)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
 
     // Now trigger it
     var offlineTime = lastUpdate + timeoutTime + 1
     var transition2 = model.checkIfOfflineTransition(offlineTime)
     Assert.assertTrue(transition2)
     Assert.assertFalse(model.online)
+    
+    Assert.assertEquals(1, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
   }
 
   /**
@@ -92,17 +110,26 @@ class StandardHeartbeatMonitorableTest extends JUnitSuite {
 
     //The model starts offline until proven online
     Assert.assertFalse(model.online)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
 
     // Model didn't change from short change
     val transition1 = model.checkIfOfflineTransition(modelCreationTime + timeoutTime / 2)
     Assert.assertFalse(transition1)
     Assert.assertFalse(model.online)
+   
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
 
     // Now trigger it from no signal from model start.
     val offlineTime = modelCreationTime + timeoutTime + 1
     val transition2 = model.checkIfOfflineTransition(offlineTime)
     Assert.assertTrue(transition2)
     Assert.assertFalse(model.online)
+    
+    Assert.assertEquals(1, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
   }
 
   /**
@@ -117,17 +144,26 @@ class StandardHeartbeatMonitorableTest extends JUnitSuite {
     // Set the model online and last update time
     model.setOnline(true)
     model.setLastHeartbeatUpdateTime(lastUpdate)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
 
     // Model didn't change from short change
     val transition1 = model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
     Assert.assertFalse(transition1)
     Assert.assertTrue(model.online)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
 
     // Now trigger it
     var offlineTime = lastUpdate + timeoutTime + 1
     val transition2 = model.checkIfOfflineTransition(offlineTime)
     Assert.assertTrue(transition2)
     Assert.assertFalse(model.online)
+    
+    Assert.assertEquals(1, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
   }
 
   /**
@@ -143,42 +179,147 @@ class StandardHeartbeatMonitorableTest extends JUnitSuite {
     model.setOnline(true)
     model.setLastHeartbeatUpdateTime(lastUpdate/2)
     model.setLastUpdateTime(lastUpdate)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
 
     // Model didn't change from short change
-    model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2)
+    Assert.assertFalse(model.checkIfOfflineTransition(lastUpdate + timeoutTime / 2))
     Assert.assertTrue(model.online)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
 
     // Now trigger it
     var offlineTime = lastUpdate + timeoutTime + 1
-    model.checkIfOfflineTransition(offlineTime)
+    Assert.assertTrue(model.checkIfOfflineTransition(offlineTime))
     Assert.assertFalse(model.online)
+    
+    Assert.assertEquals(1, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
   }
 
   /**
    * Test a model heartbeat update and confirm that it makes the sensor model online, and properly
-   * records when it happened.
+   * records when it happened. Also, no online event was triggered because no offline event was triggered.
    *
    */
   @Test def testHeartbeatUpdate(): Unit = {
     val model = new TestObject(None, None, modelCreationTime)
     
-    val currentTime = 10000l
+    val timestampCurrent = 10000l
 
     model.setOnline(false)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
 
-    Assert.assertTrue(model.lastHeartbeatUpdate().isEmpty)
+    Assert.assertTrue(model.timestampLastHeartbeat.isEmpty)
 
-    model.updateHeartbeat(currentTime)
+    model.updateHeartbeat(timestampCurrent)
 
-    Assert.assertEquals(currentTime, model.lastHeartbeatUpdate().get)
+    Assert.assertEquals(timestampCurrent, model.timestampLastHeartbeat.get)
     Assert.assertTrue(model.online)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
+  }
+
+  /**
+   * Test a model heartbeat update and confirm that it makes the sensor model online, and properly
+   * records when it happened. Also, an online event was triggered because an offline event had been signalled.
+   *
+   */
+  @Test def testHeartbeatUpdateEmitOnline(): Unit = {
+    val model = new TestObject(None, None, modelCreationTime)
+    
+    val timestampCurrent = 10000l
+
+    model.setOnline(false)
+    model.setOfflineSignaled(true)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
+
+    Assert.assertTrue(model.timestampLastHeartbeat.isEmpty)
+
+    model.updateHeartbeat(timestampCurrent)
+
+    Assert.assertEquals(timestampCurrent, model.timestampLastHeartbeat.get)
+    Assert.assertTrue(model.online)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(1, model.onlineEventCount)
+  }
+
+  /**
+   * Test a model state update and confirm that it makes the sensor model online, and properly
+   * records when it happened. Also, no online event was triggered because no offline event was triggered.
+   *
+   */
+  @Test def testStateUpdate(): Unit = {
+    val model = new TestObject(None, None, modelCreationTime)
+    
+    val timestampCurrent = 10000l
+
+    model.setOnline(false)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
+
+    Assert.assertTrue(model.timestampLastUpdate.isEmpty)
+
+    model.stateUpdated(timestampCurrent)
+
+    Assert.assertEquals(timestampCurrent, model.timestampLastUpdate.get)
+    Assert.assertTrue(model.online)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
+  }
+
+  /**
+   * Test a model state update and confirm that it makes the sensor model online, and properly
+   * records when it happened. Also, an online event was triggered because an offline event had been signalled.
+   *
+   */
+  @Test def tesStateUpdateEmitOnline(): Unit = {
+    val model = new TestObject(None, None, modelCreationTime)
+    
+    val timestampCurrent = 10000l
+
+    model.setOnline(false)
+    model.setOfflineSignaled(true)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(0, model.onlineEventCount)
+
+    Assert.assertTrue(model.timestampLastUpdate.isEmpty)
+
+    model.stateUpdated(timestampCurrent)
+
+    Assert.assertEquals(timestampCurrent, model.timestampLastUpdate.get)
+    Assert.assertTrue(model.online)
+    
+    Assert.assertEquals(0, model.offlineEventCount)
+    Assert.assertEquals(1, model.onlineEventCount)
   }
 
   class TestObject(heartbeat: Option[Long], state: Option[Long], creation: Long) extends StandardHeartbeatMonitorable { 
+    var onlineEventCount = 0
+    var offlineEventCount = 0
+    
     override def stateUpdateTimeLimit = state
     override def heartbeatUpdateTimeLimit = heartbeat
     
-    val itemCreationTime = creation
+    val timestampItemCreation = creation
+    
+    override def emitOnlineEvent(timestamp: Long): Unit = {
+      onlineEventCount = onlineEventCount + 1
+    }
+    
+    override def emitOfflineEvent(timestamp: Long): Unit = {
+      offlineEventCount = offlineEventCount + 1
+    }
   }
-  
 }

@@ -23,6 +23,7 @@ import io.smartspaces.sensor.model.SensorEntityModel
 import io.smartspaces.sensor.model.SimpleNumericContinuousSensedValue
 import io.smartspaces.sensor.event.RawSensorLiveEvent
 import io.smartspaces.util.data.dynamic.DynamicObject
+import io.smartspaces.sensor.model.SensorChannelEntityModel
 
 /**
  * A processor for sensor value data messages with continuous values.
@@ -35,18 +36,17 @@ class NumericContinuousValueSensorValueProcessor(
   override val sensorValueType = measurementType.externalId
   
   override def processData(timestampMeasurement: Long, timestampMeasurementReceived: Long, 
-      sensorEntity: SensorEntityModel, sensedEntity: SensedEntityModel, 
+      sensorChannel: SensorChannelEntityModel, 
       processorContext: SensorValueProcessorContext,
       channelId: String, data: DynamicObject): Unit = {
     val value =
-      new SimpleNumericContinuousSensedValue(sensorEntity, Option(channelId), measurementType,
+      new SimpleNumericContinuousSensedValue(sensorChannel,
         data.getDouble(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_VALUE), 
         timestampMeasurement, timestampMeasurementReceived)
 
-    sensedEntity.updateSensedValue(value, timestampMeasurement)
-    sensorEntity.updateSensedValue(value, timestampMeasurement)
+    sensorChannel.updateSensedValue(value, timestampMeasurement)
     
     processorContext.completeSensedEntityModel.eventEmitter.broadcastRawSensorEvent(
-        new RawSensorLiveEvent(value, sensedEntity, timestampMeasurement, timestampMeasurementReceived))
+        new RawSensorLiveEvent(value, sensorChannel, timestampMeasurement, timestampMeasurementReceived))
   }
 }

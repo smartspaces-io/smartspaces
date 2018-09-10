@@ -140,7 +140,8 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
       val sensorTypeId = sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID)
 
       val sensorUpdateTimeLimit: Option[Long] = {
-        val sensorUpdateTimeLimitValue: JLong = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT)
+        val sensorUpdateTimeLimitValue: JLong = sensorTypeData.getLong(
+            SensorDescriptionConstants.SECTION_FIELD_STATE_UPDATE_TIME_LIMIT)
         if (sensorUpdateTimeLimitValue != null) {
           Some(sensorUpdateTimeLimitValue)
         } else {
@@ -149,7 +150,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
       }
 
       val sensorHeartbeatUpdateTimeLimit: Option[Long] = {
-        val sensorHeartbeatUpdateTimeLimitValue: JLong = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_HEARTBEAT_UPDATE_TIME_LIMIT)
+        val sensorHeartbeatUpdateTimeLimitValue: JLong = sensorTypeData.getLong(SensorDescriptionConstants.SECTION_FIELD_HEARTBEAT_UPDATE_TIME_LIMIT)
         if (sensorHeartbeatUpdateTimeLimitValue != null) {
           Some(sensorHeartbeatUpdateTimeLimitValue)
         } else {
@@ -201,7 +202,8 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
         }
 
         val updateTimeLimit: Option[Long] = {
-          val updateTimeLimitValue: JLong = channelDetailData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT)
+          val updateTimeLimitValue: JLong = channelDetailData.getLong(
+              SensorDescriptionConstants.SECTION_FIELD_STATE_UPDATE_TIME_LIMIT)
           if (updateTimeLimitValue != null) {
             Some(updateTimeLimitValue)
           } else {
@@ -210,7 +212,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
         }
 
         val heartbeatUpdateTimeLimit: Option[Long] = {
-          val heartbeatUpdateTimeLimitValue: JLong = channelDetailData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_HEARTBEAT_UPDATE_TIME_LIMIT)
+          val heartbeatUpdateTimeLimitValue: JLong = channelDetailData.getLong(SensorDescriptionConstants.SECTION_FIELD_HEARTBEAT_UPDATE_TIME_LIMIT)
           if (heartbeatUpdateTimeLimitValue != null) {
             Some(heartbeatUpdateTimeLimitValue)
           } else {

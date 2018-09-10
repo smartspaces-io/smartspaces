@@ -66,8 +66,8 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
   @Test def testOfflineFromInitialUpdateTimeout(): Unit = {
     val timeoutTime = 1000l
 
-    Mockito.when(sensorEntityDescription.sensorStateUpdateTimeLimit).thenReturn(Option(timeoutTime))
-    Mockito.when(sensorEntityDescription.sensorHeartbeatUpdateTimeLimit).thenReturn(None)
+    Mockito.when(sensorEntityDescription.stateUpdateTimeLimit).thenReturn(Option(timeoutTime))
+    Mockito.when(sensorEntityDescription.heartbeatUpdateTimeLimit).thenReturn(None)
 
     //The model starts offline until proven online
     Assert.assertFalse(model.online)

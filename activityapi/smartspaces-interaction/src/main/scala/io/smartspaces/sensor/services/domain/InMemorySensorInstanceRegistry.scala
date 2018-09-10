@@ -201,7 +201,12 @@ class InMemorySensorInstanceRegistry @Inject()(log: ExtendedLog) extends SensorI
     externalIdToPhysicalSpace.get(externalId)
   }
 
-  override def associateSensorWithSensedEntity(sensorExternalId: String, sensorChannelId: String, sensedEntityExternalId: String): SensorInstanceRegistry = {
+  override def associateSensorWithSensedEntity(
+      sensorExternalId: String, 
+      sensorChannelId: String, 
+      sensedEntityExternalId: String,
+      stateUpdateTimeLimit: Option[Long],
+      heartbeatUpdateTimeLimit: Option[Long]): SensorInstanceRegistry = {
     // TODO(keith) Decide what to do if neither exists
     val sensor = externalIdToSensor.get(sensorExternalId)
     val sensedEntity = externalIdToSensed.get(sensedEntityExternalId)
@@ -223,7 +228,7 @@ class InMemorySensorInstanceRegistry @Inject()(log: ExtendedLog) extends SensorI
     }
 
     sensorSensedEntityAssociations +=
-      new SimpleSensorSensedEntityAssociationDescription(sensor.get, sensorChannelDetail.get, sensedEntity.get)
+      new SimpleSensorSensedEntityAssociationDescription(sensor.get, sensorChannelDetail.get, sensedEntity.get, stateUpdateTimeLimit, heartbeatUpdateTimeLimit)
 
     this
   }

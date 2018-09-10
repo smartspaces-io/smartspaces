@@ -89,7 +89,7 @@ class SimpleSensorEntityModel(
     allModels.eventEmitter.broadcastSensorOfflineEvent(new SensorOfflineEvent(this, timestamp))
   }
 
-  override def stateUpdateTimeLimit: Option[Long] = sensorEntityDescription.sensorStateUpdateTimeLimit
+  override def stateUpdateTimeLimit: Option[Long] = sensorEntityDescription.stateUpdateTimeLimit
 
-  override def heartbeatUpdateTimeLimit: Option[Long] = sensorEntityDescription.sensorHeartbeatUpdateTimeLimit
+  override def heartbeatUpdateTimeLimit: Option[Long] = sensorEntityDescription.heartbeatUpdateTimeLimit
 }

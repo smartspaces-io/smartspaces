@@ -112,29 +112,32 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
         break
       }
 
-      var sensorUpdateTimeLimit: Option[Long] = None
-      val updateTimeLimitValue = itemData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT)
-      if (updateTimeLimitValue != null) {
-        sensorUpdateTimeLimit = Option(updateTimeLimitValue)
-      } else {
-        if (sensorType.isDefined) {
-          sensorUpdateTimeLimit = sensorType.get.sensorUpdateTimeLimit
+      val sensorUpdateTimeLimit: Option[Long] = {
+        val updateTimeLimitValue = itemData.getLong(SensorDescriptionConstants.SECTION_FIELD_STATE_UPDATE_TIME_LIMIT)
+        if (updateTimeLimitValue != null) {
+          Some(updateTimeLimitValue)
         } else {
-          sensorUpdateTimeLimit = None
+          if (sensorType.isDefined) {
+            sensorType.get.sensorUpdateTimeLimit
+          } else {
+            None
+          }
         }
       }
 
-      var sensorHeartbeatUpdateTimeLimit: Option[Long] = None
-      val updateHeartbeatTimeLimitValue = itemData.getLong(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT)
-      if (updateHeartbeatTimeLimitValue != null) {
-        sensorHeartbeatUpdateTimeLimit = Option(updateHeartbeatTimeLimitValue)
-      } else {
-        if (sensorType.isDefined) {
-          sensorHeartbeatUpdateTimeLimit = sensorType.get.sensorHeartbeatUpdateTimeLimit
+      val sensorHeartbeatUpdateTimeLimit: Option[Long] = {
+        val updateHeartbeatTimeLimitValue = itemData.getLong(SensorDescriptionConstants.SECTION_FIELD_HEARTBEAT_UPDATE_TIME_LIMIT)
+        if (updateHeartbeatTimeLimitValue != null) {
+          Some(updateHeartbeatTimeLimitValue)
         } else {
-          sensorHeartbeatUpdateTimeLimit = None
+          if (sensorType.isDefined) {
+            sensorType.get.sensorHeartbeatUpdateTimeLimit
+          } else {
+            None
+          }
         }
       }
+
       val entity = new SimpleSensorEntityDescription(
         getNextId(),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
@@ -142,7 +145,8 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
         Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
         sensorType.get,
         itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_SOURCE),
-        sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit)
+        sensorUpdateTimeLimit,
+        sensorHeartbeatUpdateTimeLimit)
 
       entity.active = itemData.getBoolean(SensorDescriptionConstants.SECTION_FIELD_SENSORS_ACTIVE, SensorDescriptionConstants.SECTION_FIELD_DEFAULT_VALUE_SENSORS_ACTIVE)
 
@@ -241,9 +245,32 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
 
       val sensor = sensorRegistry.getSensorByExternalId(sensorExternalId)
       if (sensor.isDefined) {
+
+        val updateTimeLimit: Option[Long] = {
+          val updateTimeLimitValue = itemData.getLong(SensorDescriptionConstants.SECTION_FIELD_STATE_UPDATE_TIME_LIMIT)
+          if (updateTimeLimitValue != null) {
+            Some(updateTimeLimitValue)
+          } else {
+            None
+          }
+        }
+
+        val heartbeatUpdateTimeLimit: Option[Long] = {
+          val heartbeatTimeLimitValue = itemData.getLong(SensorDescriptionConstants.SECTION_FIELD_HEARTBEAT_UPDATE_TIME_LIMIT)
+          if (heartbeatTimeLimitValue != null) {
+            Some(heartbeatTimeLimitValue)
+          } else {
+            None
+          }
+        }
+
         val channelIds = EntityDescriptionSupport.getSensorChannelIdsFromSensorDescription(sensor.get, sensorChannelIds)
 
-        channelIds.foreach { sensorRegistry.associateSensorWithSensedEntity(sensorExternalId, _, sensedExternalId) }
+        channelIds.foreach {
+          sensorRegistry.associateSensorWithSensedEntity(
+            sensorExternalId, _, sensedExternalId,
+            updateTimeLimit, heartbeatUpdateTimeLimit)
+        }
       } else {
         log.warn(s"Could not find sensor with ID ${sensorExternalId} in sensor association")
       }

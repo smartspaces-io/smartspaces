@@ -26,17 +26,27 @@ trait SensorSensedEntityAssociationDescription {
   /**
    * The sensor description.
    */
-  val sensor: SensorEntityDescription
+  def sensor: SensorEntityDescription
 
   /**
    * The sensor channel from the sensor to be associated with the sensed entity.
    */
-  val sensorChannelDetail: SensorChannelDetailDescription
+  def sensorChannelDetail: SensorChannelDetailDescription
 
   /**
    * The entity being sensed by the sensor channel.
    */
-  val sensedEntity: SensedEntityDescription
+  def sensedEntity: SensedEntityDescription
+
+  /**
+   * The time limit on when a sensor update should happen, in milliseconds
+   */
+  def stateUpdateTimeLimit: Option[Long]
+
+  /**
+   * The time limit on when a sensor heartbeat update should happen, in milliseconds
+   */
+  def heartbeatUpdateTimeLimit: Option[Long]
 }
 
 /**
@@ -45,10 +55,8 @@ trait SensorSensedEntityAssociationDescription {
  * @author Keith M. Hughes
  */
 case class SimpleSensorSensedEntityAssociationDescription(
-
   override val sensor: SensorEntityDescription,
-
   override val sensorChannelDetail: SensorChannelDetailDescription,
-
-  override val sensedEntity: SensedEntityDescription
-) extends SensorSensedEntityAssociationDescription
+  override val sensedEntity: SensedEntityDescription,
+  override val stateUpdateTimeLimit: Option[Long],
+  override val heartbeatUpdateTimeLimit: Option[Long]) extends SensorSensedEntityAssociationDescription

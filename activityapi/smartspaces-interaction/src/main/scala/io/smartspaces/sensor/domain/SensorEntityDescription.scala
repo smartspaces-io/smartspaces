@@ -39,17 +39,31 @@ trait SensorEntityDescription extends EntityDescription {
   /**
    * The time limit on when a sensor update should happen, in milliseconds
    */
-  def sensorStateUpdateTimeLimit: Option[Long]
+  def stateUpdateTimeLimit: Option[Long]
 
   /**
    * The time limit on when a sensor heartbeat update should happen, in milliseconds
    */
-  def sensorHeartbeatUpdateTimeLimit: Option[Long]
+  def heartbeatUpdateTimeLimit: Option[Long]
 
   /**
    * {@code true} if the sensor is active.
    */
   var active: Boolean
+
+  /**
+   * Get a supported sensor channel detail of this sensor detail.
+   * 
+   * <p>
+   * The channel must be a channel of this sensor detail to be found. Channel names are local
+   * to the detail they are contained in.
+   * 
+   * @param id
+   *     the ID of the channel detail
+   *
+   * @return the channel detail
+   */
+  def getSupportedSensorChannelDetail(id: String): Option[SensorChannelDetailDescription]
 
   /**
    * Does the sensor have a channel with the given ID?
@@ -92,11 +106,14 @@ class SimpleSensorEntityDescription(
   displayDescription: Option[String],
   override val sensorType: SensorTypeDescription,
   override val sensorSource: String,
-  override val sensorStateUpdateTimeLimit: Option[Long],
-  override val sensorHeartbeatUpdateTimeLimit: Option[Long]) extends SimpleEntityDescription(id, externalId, displayName, displayDescription) with SensorEntityDescription {
+  override val stateUpdateTimeLimit: Option[Long],
+  override val heartbeatUpdateTimeLimit: Option[Long]) extends SimpleEntityDescription(id, externalId, displayName, displayDescription) with SensorEntityDescription {
 
   override var active: Boolean = true
 
+  override def getSupportedSensorChannelDetail(id: String): Option[SensorChannelDetailDescription] = {
+    sensorType.getSupportedSensorChannelDetail(id)
+  }
   
   override def hasSupportedSensorChannel(channelId: String): Boolean = {
     sensorType.hasSupportedSensorChannel(channelId)

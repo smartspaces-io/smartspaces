@@ -108,5 +108,5 @@ trait SensedEntityModel  {
    *
    * @return the last time
    */
-  def lastUpdateTime: Option[Long]
+  def timestampLastUpdate: Option[Long]
 }

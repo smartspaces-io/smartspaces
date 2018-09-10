@@ -260,10 +260,19 @@ trait SensorInstanceRegistry {
    *          the ID of the sensor channel for the sensed entity
    * @param sensedEntityExternalId
    *          the external ID of the sensed entity
+   * @param stateUpdateTimeLimit
+   *        the time limit for state updates
+   * @param heartbeatUpdateTimeLimit
+   *        the time limit for state updates
    *
    * @returns this registry
    */
-  def associateSensorWithSensedEntity(sensorExternalId: String, sensorChannelId: String, sensedEntityExternalId: String): SensorInstanceRegistry
+  def associateSensorWithSensedEntity(
+      sensorExternalId: String, 
+      sensorChannelId: String, 
+      sensedEntityExternalId: String,
+      stateUpdateTimeLimit: Option[Long],
+      heartbeatUpdateTimeLimit: Option[Long]): SensorInstanceRegistry
 
   /**
    * Get the associations between sensors and their sensed entities.

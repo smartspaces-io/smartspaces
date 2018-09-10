@@ -150,14 +150,14 @@ object SensorDescriptionConstants {
   val SECTION_FIELD_SENSORS_SENSOR_SOURCE = "sensorSource"
 
   /**
-   * The section field for the update time limit for a sensor.
+   * The section field for the update time limit for a sensor or sensed.
    */
-  val SECTION_FIELD_SENSORS_SENSOR_UPDATE_TIME_LIMIT = "sensorUpdateTimeLimit"
+  val SECTION_FIELD_STATE_UPDATE_TIME_LIMIT = "stateUpdateTimeLimit"
 
   /**
-   * The section field for the heartbeat time limit for a sensor.
+   * The section field for the heartbeat time limit for a sensor or sensed.
    */
-  val SECTION_FIELD_SENSORS_SENSOR_HEARTBEAT_UPDATE_TIME_LIMIT = "sensorHeartbeatUpdateTimeLimit"
+  val SECTION_FIELD_HEARTBEAT_UPDATE_TIME_LIMIT = "heartbeatUpdateTimeLimit"
 
   /**
    * The section field for whether a sensor is to be considered active or not.

@@ -19,8 +19,8 @@ package io.smartspaces.sensor.services.domain
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.Map
+
 import io.smartspaces.logging.ExtendedLog
-import javax.inject.Inject
 import io.smartspaces.sensor.domain.MarkableEntityDescription
 import io.smartspaces.sensor.domain.MarkerEntityDescription
 import io.smartspaces.sensor.domain.MarkerMarkedEntityAssociationDescription
@@ -29,15 +29,16 @@ import io.smartspaces.sensor.domain.SensedEntityDescription
 import io.smartspaces.sensor.domain.SensorEntityDescription
 import io.smartspaces.sensor.domain.SensorSensedEntityAssociationDescription
 import io.smartspaces.sensor.domain.SimpleMarkerMarkedEntityAssociationDescription
+import io.smartspaces.sensor.domain.SimpleSensorChannelDetailDescription
 import io.smartspaces.sensor.domain.SimpleSensorSensedEntityAssociationDescription
-import io.smartspaces.sensor.domain.SimpleSensorSensedEntityAssociationDescription
+import javax.inject.Inject
 
 /**
  * A sensor registry totally contained in memory.
  *
  * @author Keith M. Hughes
  */
-class InMemorySensorInstanceRegistry @Inject()(log: ExtendedLog) extends SensorInstanceRegistry {
+class InMemorySensorInstanceRegistry @Inject() (log: ExtendedLog) extends SensorInstanceRegistry {
 
   /**
    * A map of persistence sensor IDs to their description.
@@ -129,11 +130,11 @@ class InMemorySensorInstanceRegistry @Inject()(log: ExtendedLog) extends SensorI
   override def getSensorByExternalId(externalId: String): Option[SensorEntityDescription] = {
     externalIdToSensor.get(externalId)
   }
-  
+
   override def getAllSensorEntities(): List[SensorEntityDescription] = {
-      idToSensor.values.toList
+    idToSensor.values.toList
   }
-  
+
   override def registerMarker(marker: MarkerEntityDescription): SensorInstanceRegistry = {
     idToMarker.put(marker.id, marker)
     externalIdToMarker.put(marker.externalId, marker)
@@ -202,33 +203,42 @@ class InMemorySensorInstanceRegistry @Inject()(log: ExtendedLog) extends SensorI
   }
 
   override def associateSensorWithSensedEntity(
-      sensorExternalId: String, 
-      sensorChannelId: String, 
-      sensedEntityExternalId: String,
-      stateUpdateTimeLimit: Option[Long],
-      heartbeatUpdateTimeLimit: Option[Long]): SensorInstanceRegistry = {
+    sensorExternalId: String,
+    sensorChannelId: String,
+    sensedEntityExternalId: String,
+    stateUpdateTimeLimit: Option[Long],
+    heartbeatUpdateTimeLimit: Option[Long]): SensorInstanceRegistry = {
     // TODO(keith) Decide what to do if neither exists
     val sensor = externalIdToSensor.get(sensorExternalId)
     val sensedEntity = externalIdToSensed.get(sensedEntityExternalId)
-    
+
     if (sensor.isEmpty) {
       log.warn(s"Sensor external ID ${sensorExternalId} not found when associating sensor with sensed entity")
       return this
     }
-    
-    val sensorChannelDetail = sensor.get.sensorType.getSupportedSensorChannelDetail(sensorChannelId)
-    if (sensorChannelId.isEmpty) {
+
+    val sensorChannelDetailDefault = sensor.get.sensorType.getSupportedSensorChannelDetail(sensorChannelId)
+    if (sensorChannelDetailDefault.isEmpty) {
       log.warn(s"Sensor channel ID ${sensorChannelId} in sensor detail for sensor external ID ${sensorExternalId} not found when associating sensor with sensed entity")
       return this
     }
-    
+
     if (sensedEntity.isEmpty) {
       log.warn(s"Sensed entity external ID ${sensedEntityExternalId} not found when associating sensor with sensed entity")
       return this
     }
 
+    val sensorChannelDetail = new SimpleSensorChannelDetailDescription(
+      sensorChannelId,
+      sensorChannelDetailDefault.get.displayName,
+      sensorChannelDetailDefault.get.displayDescription,
+      sensorChannelDetailDefault.get.measurementType,
+      sensorChannelDetailDefault.get.measurementUnit,
+      stateUpdateTimeLimit,
+      heartbeatUpdateTimeLimit)
+
     sensorSensedEntityAssociations +=
-      new SimpleSensorSensedEntityAssociationDescription(sensor.get, sensorChannelDetail.get, sensedEntity.get, stateUpdateTimeLimit, heartbeatUpdateTimeLimit)
+      new SimpleSensorSensedEntityAssociationDescription(sensor.get, sensorChannelDetail, sensedEntity.get, stateUpdateTimeLimit, heartbeatUpdateTimeLimit)
 
     this
   }
@@ -240,27 +250,27 @@ class InMemorySensorInstanceRegistry @Inject()(log: ExtendedLog) extends SensorI
   override def getSensorsForSensedEntityByExternalId(externalId: String): scala.collection.immutable.List[SensorSensedEntityAssociationDescription] = {
     sensorSensedEntityAssociations.filter(_.sensedEntity.externalId == externalId).toList
   }
-  
+
   override def associateMarkerWithMarkedEntity(markerExternalId: String, markedEntityExternalId: String): SensorInstanceRegistry = {
     // TODO(keith) Decide what to do if neither exists
     val marker = externalIdToMarker.get(markerExternalId)
     val markedEntity = externalIdToMarkable.get(markedEntityExternalId)
-    
+
     if (marker.isEmpty) {
       log.warn(s"Marker ID ${markerExternalId} not found when associating marker with marked entity")
       return this
     }
-    
+
     if (markedEntity.isEmpty) {
       log.warn(s"Marked entity ID ${markedEntityExternalId} not found when associating marker with marked entity")
       return this
     }
-    
 
     associateMarkerWithMarkedEntity(marker.get, markedEntity.get)
   }
 
-  override def associateMarkerWithMarkedEntity(marker: MarkerEntityDescription,
+  override def associateMarkerWithMarkedEntity(
+    marker: MarkerEntityDescription,
     markableEntity: MarkableEntityDescription): SensorInstanceRegistry = {
     markerMarkedEntityAssociations +=
       new SimpleMarkerMarkedEntityAssociationDescription(marker, markableEntity)
@@ -282,7 +292,8 @@ class InMemorySensorInstanceRegistry @Inject()(log: ExtendedLog) extends SensorI
     markerIdToMarkable.get(markerId)
   }
 
-  override def addConfigurationData(entityId: String,
+  override def addConfigurationData(
+    entityId: String,
     configurationData: scala.collection.immutable.Map[String, AnyRef]): SensorInstanceRegistry = {
     val map: Map[String, AnyRef] = getConfigurationMap(entityId)
 

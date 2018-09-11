@@ -157,27 +157,28 @@ class StandardCompleteSensedEntityModel(
   }
 
   override def associateSensorWithSensed(association: SensorSensedEntityAssociationDescription): Unit = {
-    val sensor = externalIdToSensorEntityModels.get(association.sensor.externalId)
-    val sensed = externalIdToSensedEntityModels.get(association.sensedEntity.externalId)
+    val sensorModel = externalIdToSensorEntityModels.get(association.sensor.externalId)
+    val sensedModel = externalIdToSensedEntityModels.get(association.sensedEntity.externalId)
 
     val sensedMeasurementType = association.sensorChannelDetail.measurementType
 
     // TODO(keith): Place the processor directly in the sensor channel model
     val sensorValueProcessor = sensorValueProcessorRegistry.getSensorValueProcessor(sensedMeasurementType.externalId)
     if (sensorValueProcessor.isDefined) {
+      log.info(s"sensor association ${association.sensor.displayName}:${association.sensorChannelDetail.channelId} ${association.stateUpdateTimeLimit} ${association.heartbeatUpdateTimeLimit}")
 
       val channelModel = new SimpleSensorChannelEntityModel(
-          association.sensorChannelDetail, 
-          sensor.get, 
-          sensed.get, 
-          sensorValueProcessor.get,
-          this, 
-          sensor.get.timestampItemCreation)
+        association.sensorChannelDetail,
+        sensorModel.get,
+        sensedModel.get,
+        sensorValueProcessor.get,
+        this,
+        sensorModel.get.timestampItemCreation)
 
-      sensor.get.addSensorChannelModel(channelModel)
-      sensed.get.addSensorChannelModel(channelModel)
+      sensorModel.get.addSensorChannelModel(channelModel)
+      sensedModel.get.addSensorChannelModel(channelModel)
     } else {
-      log.warn(s"could not find measurement type ${sensedMeasurementType.externalId} for sensor association")
+      log.warn(s"could not find sensor value processor for measurement type ${sensedMeasurementType.externalId} for sensor association")
     }
   }
 
@@ -266,8 +267,14 @@ class StandardCompleteSensedEntityModel(
 
     log.debug(s"Performing sensor model check at ${currentTime}")
 
-    getAllSensorEntityModels().filter(_.sensorEntityDescription.active).foreach { 
-      _.checkIfOfflineTransition(currentTime)
+    getAllSensorEntityModels().filter(_.sensorEntityDescription.active).foreach { sensor =>
+      val sensorOffline = sensor.checkIfOfflineTransition(currentTime)
+
+      if (!sensorOffline) {
+        sensor.getAllSensorChannelModels().foreach { channel =>
+          channel.checkIfOfflineTransition(currentTime)
+        }
+      }
     }
   }
 

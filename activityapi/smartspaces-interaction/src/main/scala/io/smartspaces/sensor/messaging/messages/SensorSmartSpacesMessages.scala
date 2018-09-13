@@ -58,12 +58,12 @@ object SensorSmartSpacesMessages {
   /**
    * The sensor message field for the last heartbeat.
    */
-  val MESSAGE_ENTITY_SENSOR_HEARTBEAT_LAST = "heartbeatLast"
+  val MESSAGE_ENTITY_SENSOR_HEARTBEAT_UPDATE_LAST = "heartbeatUpdateLast"
 
   /**
    * The sensor message field for the last update.
    */
-  val MESSAGE_ENTITY_SENSOR_UPDATE_LAST = "updateLast"
+  val MESSAGE_ENTITY_SENSOR_STATE_UPDATE_LAST = "stateUpdateLast"
 
   /**
    * The sensor message field for the location.

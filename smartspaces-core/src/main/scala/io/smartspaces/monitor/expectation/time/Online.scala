@@ -94,7 +94,7 @@ trait HeartbeatMonitorable extends OnlineMonitorable {
    *
    * @return the last time
    */
-  def timestampLastUpdate: Option[Long]
+  def timestampLastStateUpdate: Option[Long]
 
   /**
    * Update the heartbeat for the item.
@@ -109,5 +109,10 @@ trait HeartbeatMonitorable extends OnlineMonitorable {
    *
    * @return the last timestamp
    */
-  def timestampLastHeartbeat: Option[Long]
+  def timestampLastHeartbeatUpdate: Option[Long]
+  
+  /**
+   * Get the last update of any sort, whether it be a state or heartbeat update.
+   */
+  def timestampLastUpdate: Option[Long]
 }

@@ -214,11 +214,11 @@ class StandardHeartbeatMonitorableTest extends JUnitSuite {
     Assert.assertEquals(0, model.offlineEventCount)
     Assert.assertEquals(0, model.onlineEventCount)
 
-    Assert.assertTrue(model.timestampLastHeartbeat.isEmpty)
+    Assert.assertTrue(model.timestampLastHeartbeatUpdate.isEmpty)
 
     model.updateHeartbeat(timestampCurrent)
 
-    Assert.assertEquals(timestampCurrent, model.timestampLastHeartbeat.get)
+    Assert.assertEquals(timestampCurrent, model.timestampLastHeartbeatUpdate.get)
     Assert.assertTrue(model.online)
     
     Assert.assertEquals(0, model.offlineEventCount)
@@ -241,11 +241,11 @@ class StandardHeartbeatMonitorableTest extends JUnitSuite {
     Assert.assertEquals(0, model.offlineEventCount)
     Assert.assertEquals(0, model.onlineEventCount)
 
-    Assert.assertTrue(model.timestampLastHeartbeat.isEmpty)
+    Assert.assertTrue(model.timestampLastHeartbeatUpdate.isEmpty)
 
     model.updateHeartbeat(timestampCurrent)
 
-    Assert.assertEquals(timestampCurrent, model.timestampLastHeartbeat.get)
+    Assert.assertEquals(timestampCurrent, model.timestampLastHeartbeatUpdate.get)
     Assert.assertTrue(model.online)
     
     Assert.assertEquals(0, model.offlineEventCount)
@@ -267,11 +267,11 @@ class StandardHeartbeatMonitorableTest extends JUnitSuite {
     Assert.assertEquals(0, model.offlineEventCount)
     Assert.assertEquals(0, model.onlineEventCount)
 
-    Assert.assertTrue(model.timestampLastUpdate.isEmpty)
+    Assert.assertTrue(model.timestampLastStateUpdate.isEmpty)
 
     model.stateUpdated(timestampCurrent)
 
-    Assert.assertEquals(timestampCurrent, model.timestampLastUpdate.get)
+    Assert.assertEquals(timestampCurrent, model.timestampLastStateUpdate.get)
     Assert.assertTrue(model.online)
     
     Assert.assertEquals(0, model.offlineEventCount)
@@ -294,11 +294,11 @@ class StandardHeartbeatMonitorableTest extends JUnitSuite {
     Assert.assertEquals(0, model.offlineEventCount)
     Assert.assertEquals(0, model.onlineEventCount)
 
-    Assert.assertTrue(model.timestampLastUpdate.isEmpty)
+    Assert.assertTrue(model.timestampLastStateUpdate.isEmpty)
 
     model.stateUpdated(timestampCurrent)
 
-    Assert.assertEquals(timestampCurrent, model.timestampLastUpdate.get)
+    Assert.assertEquals(timestampCurrent, model.timestampLastStateUpdate.get)
     Assert.assertTrue(model.online)
     
     Assert.assertEquals(0, model.offlineEventCount)

@@ -103,11 +103,11 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
     model.setOnline(false)
     model.setOfflineSignaled(true)
 
-    Assert.assertTrue(model.timestampLastUpdate.isEmpty)
+    Assert.assertTrue(model.timestampLastStateUpdate.isEmpty)
 
     model.updateSensedValue(value, currentTime)
 
-    Assert.assertEquals(currentTime, model.timestampLastUpdate.get)
+    Assert.assertEquals(currentTime, model.timestampLastStateUpdate.get)
      Assert.assertTrue(model.online)
 
     val onlineEventArgumentCaptor = ArgumentCaptor.forClass(classOf[SensorOnlineEvent])

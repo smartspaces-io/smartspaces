@@ -116,11 +116,11 @@ class SimpleSensorChannelEntityModelTest extends JUnitSuite {
     model.setOnline(false)
     model.setOfflineSignaled(true)
 
-    Assert.assertTrue(model.timestampLastUpdate.isEmpty)
+    Assert.assertTrue(model.timestampLastStateUpdate.isEmpty)
 
     model.updateSensedValue(value, timestampCurrent)
 
-    Assert.assertEquals(timestampCurrent, model.timestampLastUpdate.get)
+    Assert.assertEquals(timestampCurrent, model.timestampLastStateUpdate.get)
     Assert.assertTrue(model.online)
 
     val onlineEventArgumentCaptor = ArgumentCaptor.forClass(classOf[SensorChannelOnlineEvent])

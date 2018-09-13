@@ -36,7 +36,7 @@ trait BaseSensedEntityModel extends SensedEntityModel {
   /**
    * The time of the last update.
    */
-  private var _timestampLastUpdate: Option[Long] = None
+  private var _timestampLastStateUpdate: Option[Long] = None
   
   override def addSensorChannelModel(sensorChannelModel: SensorChannelEntityModel): Unit = {
     sensorChannelModels.put(sensorChannelModel.sensorChannelDetail.channelId, sensorChannelModel)
@@ -74,11 +74,11 @@ trait BaseSensedEntityModel extends SensedEntityModel {
 
   override def updateSensedValue[T <: Any](value: SensedValue[T], timestamp: Long): Unit = {
     // TODO(keith): Needs some sort of concurrency block
-    _timestampLastUpdate = Some(timestamp)
+    _timestampLastStateUpdate = Some(timestamp)
   }
   
-  override def timestampLastUpdate: Option[Long] = {
-    _timestampLastUpdate
+  override def timestampLastStateUpdate: Option[Long] = {
+    _timestampLastStateUpdate
   }
 }
 

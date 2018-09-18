@@ -16,6 +16,7 @@
 
 package io.smartspaces.util.messaging.mqtt
 
+import java.lang.{ Integer => JInteger }
 import io.smartspaces.SmartSpacesException
 import io.smartspaces.util.data.mapper.StandardJsonDataMapper
 
@@ -66,6 +67,7 @@ object MqttBrokerDescription {
       var autoreconnect: Option[Boolean] = None
       var persistencePath: Option[String] = None
       var brokerClientId: Option[String] = None
+      var maxInFlight: Option[JInteger] = None
 
       val paramString = matcher.group(4)
       if (paramString != null) {
@@ -81,10 +83,13 @@ object MqttBrokerDescription {
         autoreconnect = Option(params.get("autoreconnect").asInstanceOf[Boolean])
         persistencePath = Option(params.get("persistencePath").asInstanceOf[String])
         brokerClientId = Option(params.get("brokerClientId").asInstanceOf[String])
+        maxInFlight = Option(params.get("maxInFlight").asInstanceOf[JInteger])
       }
 
       new MqttBrokerDescription(brokerHost, brokerPort, isSsl, username, password, keystorePath, keystorePassword, caCertPath,
-        clientCertPath, clientKeyPath, autoreconnect, persistencePath, brokerClientId)
+        clientCertPath, clientKeyPath, 
+        autoreconnect, persistencePath, 
+        brokerClientId, maxInFlight)
     } else {
       throw new SmartSpacesException(s"MQTT broker description has the wrong syntax: ${description}")
     }
@@ -97,61 +102,66 @@ object MqttBrokerDescription {
  * @author Keith M. Hughes
  */
 class MqttBrokerDescription(
-  val brokerHost: String, 
-  val brokerPort: Integer, 
-  val isSsl: Boolean, 
+  val brokerHost: String,
+  val brokerPort: Integer,
+  val isSsl: Boolean,
 
   /**
    * The username for the broker.
    */
-  val username: Option[String], 
+  val username: Option[String],
 
   /**
    * The password for the broker.
    */
-  val password: Option[String], 
+  val password: Option[String],
 
   /**
    * File path to the keystore if using SSL.
    */
-  val keystorePath: Option[String], 
+  val keystorePath: Option[String],
 
   /**
    * Password for the keystore if using SSL.
    */
-  val keystorePassword: Option[String], 
+  val keystorePassword: Option[String],
 
   /**
    * File path to the certificate authority cert if using client certificate SSL.
    */
-  val caCertPath: Option[String], 
+  val caCertPath: Option[String],
 
   /**
    * File path to the client cert if using client certificate SSL.
    */
-  val clientCertPath: Option[String], 
+  val clientCertPath: Option[String],
 
   /**
    * File path to the client private key if using client certificate SSL.
    */
-  val clientKeyPath: Option[String], 
+  val clientKeyPath: Option[String],
 
   /**
    * {@code true} if should reconnect automatically back to the broker.
    */
-  val autoreconnect: Option[Boolean], 
+  val autoreconnect: Option[Boolean],
 
   /**
    * The path to the persistence for MQTT retained messages.
    */
-  val persistencePath: Option[String], 
+  val persistencePath: Option[String],
 
   /**
    * The client ID for a client based on this broker description.
    *
    * used when the client should be shared amongst multiple users.
    */
-  val brokerClientId: Option[String]) extends Equals {
+  val brokerClientId: Option[String],
+
+  /**
+   * The maximum number of inflight publishes allowed.
+   */
+  val maxInFlight: Option[JInteger]) extends Equals {
 
   /**
    * The network address of the broker.
@@ -168,20 +178,20 @@ class MqttBrokerDescription(
 
   override def equals(other: Any) = {
     other match {
-      case that: io.smartspaces.util.messaging.mqtt.MqttBrokerDescription => 
-        that.canEqual(MqttBrokerDescription.this) && 
-        brokerHost == that.brokerHost && 
-        brokerPort == that.brokerPort && 
-        isSsl == that.isSsl && 
-        brokerClientId == that.brokerClientId
+      case that: io.smartspaces.util.messaging.mqtt.MqttBrokerDescription =>
+        that.canEqual(MqttBrokerDescription.this) &&
+          brokerHost == that.brokerHost &&
+          brokerPort == that.brokerPort &&
+          isSsl == that.isSsl &&
+          brokerClientId == that.brokerClientId
       case _ => false
     }
   }
 
   override def hashCode() = {
     val prime = 41
-    prime * (prime * (prime * (prime + brokerHost.hashCode) + 
-        brokerPort.hashCode) + isSsl.hashCode) + 
-        brokerClientId.hashCode
+    prime * (prime * (prime * (prime + brokerHost.hashCode) +
+      brokerPort.hashCode) + isSsl.hashCode) +
+      brokerClientId.hashCode
   }
 }

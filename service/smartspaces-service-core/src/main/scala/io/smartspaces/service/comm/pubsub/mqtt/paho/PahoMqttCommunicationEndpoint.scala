@@ -143,6 +143,7 @@ class PahoMqttCommunicationEndpoint(
 
       mqttConnectOptions.setCleanSession(true)
       mqttConnectOptions.setAutomaticReconnect(mqttBrokerDescription.autoreconnect.getOrElse(AUTORECONNECT_DEFAULT))
+      mqttBrokerDescription.maxInFlight.foreach(mqttConnectOptions.setMaxInflight(_))
       if (mqttBrokerDescription.username.isDefined) {
         mqttConnectOptions.setUserName(mqttBrokerDescription.username.get)
         mqttConnectOptions.setPassword(mqttBrokerDescription.password.get.toCharArray())
@@ -151,7 +152,7 @@ class PahoMqttCommunicationEndpoint(
         mqttConnectOptions.setSocketFactory(configureSSLSocketFactory())
       }
 
-      log.info("Connecting to broker: " + mqttClient.getServerURI())
+      log.info(s"Client ${mqttClientId} connecting to MQTT broker ${mqttClient.getServerURI()}")
 
       mqttClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
         override def onSuccess(token: IMqttToken): Unit = {
@@ -165,7 +166,8 @@ class PahoMqttCommunicationEndpoint(
         }
       })
     } catch {
-      case e: Throwable => throw new SmartSpacesException(s"Error when connecting to MQTT client ${mqttClientId} broker", e)
+      case e: Throwable => 
+        throw new SmartSpacesException(s"Error when connecting to MQTT client ${mqttClientId} broker", e)
     }
   }
 

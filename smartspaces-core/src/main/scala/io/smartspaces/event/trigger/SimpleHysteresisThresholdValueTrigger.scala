@@ -17,9 +17,6 @@
 
 package io.smartspaces.event.trigger;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 /**
  * A simple trigger which watches for the change of a value and will signal
  * rising or falling states.
@@ -32,47 +29,37 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author Keith M. Hughes
  */
-public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger {
+class SimpleHysteresisThresholdValueTrigger extends ResettableTrigger {
 
   /**
    * The current value of the trigger.
    */
-  private double value;
+  private var value: Double = 0.0
 
   /**
    * The value at which the trigger will switch on.
    */
-  private double thresholdOn;
+  private var thresholdOn: Double = 0
 
   /**
    * The value at which the trigger will switch off.
    */
-  private double thresholdOff;
+  private var thresholdOff: Double = 0
 
   /**
    * The current state of the trigger.
    */
-  private TriggerState state;
+  private var state: TriggerStates.TriggerState = TriggerStates.NOT_TRIGGERED
 
   /**
    * The previous state of the trigger.
    */
-  private TriggerState previousState;
+  private var previousState: TriggerStates.TriggerState = TriggerStates.NOT_TRIGGERED
 
   /**
    * Collection of listeners for trigger point events.
    */
-  private List<TriggerListener> listeners = new CopyOnWriteArrayList<>();
-
-  /**
-   * Construct a new trigger.
-   */
-  public SimpleHysteresisThresholdValueTrigger() {
-    thresholdOn = 0;
-    thresholdOff = 0;
-    value = 0;
-    state = previousState = TriggerState.NOT_TRIGGERED;
-  }
+  private var listeners = List[TriggerListener]()
 
   /**
    * Set the threshold at which the trigger will switch on.
@@ -80,10 +67,10 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    * @param thresholdOn
    *          the threshold at which the trigger will switch on
    */
-  public SimpleHysteresisThresholdValueTrigger setThresholdOn(double thresholdOn) {
-    this.thresholdOn = thresholdOn;
+  def setThresholdOn(thresholdOn: Double): SimpleHysteresisThresholdValueTrigger = {
+    this.thresholdOn = thresholdOn
 
-    return this;
+    this
   }
 
   /**
@@ -91,8 +78,8 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    *
    * @return the threshold at which the trigger will switch on
    */
-  public double getThresholdOn() {
-    return thresholdOn;
+  def getThresholdOn(): Double = {
+    thresholdOn
   }
 
   /**
@@ -101,15 +88,15 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    * @param thresholdOff
    *          the value at which the trigger will switch off
    */
-  public SimpleHysteresisThresholdValueTrigger setThresholdOff(double thresholdOff) {
-    this.thresholdOff = thresholdOff;
+  def setThresholdOff(thresholdOff: Double): SimpleHysteresisThresholdValueTrigger = {
+    this.thresholdOff = thresholdOff
 
-    return this;
+    this
   }
 
   /**
    * Set the value at which the trigger will switch on and off.
-   * 
+   *
    * <p>
    * The on value will be from {@code thresholdOn}. {@code offset} will be
    * subtracted from {@code thresholdOn} to get {@code thresholdOff}.
@@ -120,12 +107,13 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    *          the value to subtract from {@code thresholdOn} to get
    *          {@code thresholdOff}
    */
-  public SimpleHysteresisThresholdValueTrigger setThresholdsWithOffset(double thresholdOn,
-      double offset) {
-    this.thresholdOn = thresholdOn;
-    this.thresholdOff = thresholdOn - offset;
+  def setThresholdsWithOffset(
+    thresholdOn: Double,
+    offset: Double): SimpleHysteresisThresholdValueTrigger = {
+    this.thresholdOn = thresholdOn
+    this.thresholdOff = thresholdOn - offset
 
-    return this;
+    this
   }
 
   /**
@@ -133,18 +121,16 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    *
    * @return the threshold at which the trigger will switch off
    */
-  public double getThresholdOff() {
-    return thresholdOn;
+  def getThresholdOff(): Double = {
+    thresholdOn
   }
 
-  @Override
-  public void addListener(TriggerListener listener) {
-    listeners.add(listener);
+  override def addListener(listener: TriggerListener): Unit = {
+    listeners = listener :: listeners
   }
 
-  @Override
-  public void removeListener(TriggerListener listener) {
-    listeners.remove(listener);
+  override def removeListener(listener: TriggerListener): Unit = {
+    listeners = listeners.filter(_ != listener)
   }
 
   /**
@@ -153,30 +139,30 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    * @param newValue
    *          the new value
    */
-  public void update(double newValue) {
-    TriggerState newState = null;
-    TriggerEventType type = null;
+  def update(newValue: Double): Unit = {
+    var newState: TriggerStates.TriggerState = null
+    var eventType: TriggerEventTypes.TriggerEventType = null
 
-    boolean change = false;
+    var change = false
     if (newValue <= thresholdOff) {
-      if (state == TriggerState.TRIGGERED) {
-        newState = TriggerState.NOT_TRIGGERED;
-        type = TriggerEventType.FALLING;
+      if (state == TriggerStates.TRIGGERED) {
+        newState = TriggerStates.NOT_TRIGGERED
+        eventType = TriggerEventTypes.FALLING
         changeState(newValue, newState);
-        change = true;
+        change = true
       }
     } else if (newValue >= thresholdOn) {
-      if (state == TriggerState.NOT_TRIGGERED) {
-        newState = TriggerState.TRIGGERED;
-        type = TriggerEventType.RISING;
-        changeState(newValue, newState);
-        change = true;
+      if (state == TriggerStates.NOT_TRIGGERED) {
+        newState = TriggerStates.TRIGGERED
+        eventType = TriggerEventTypes.RISING
+        changeState(newValue, newState)
+        change = true
       }
     }
 
     if (change) {
-      for (TriggerListener listener : listeners) {
-        listener.onTrigger(this, newState, type);
+      listeners.foreach {
+        _.onTrigger(this, newState, eventType)
       }
     }
 
@@ -187,23 +173,23 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    *
    * @return the current value of the trigger
    */
-  public double getValue() {
-    return value;
+  def getValue(): Double = {
+    value
   }
 
-  @Override
-  public synchronized TriggerState getState() {
-    return state;
+  override def getState(): TriggerStates.TriggerState = {
+    synchronized {
+      state
+    }
   }
 
-  @Override
-  public void reset() {
-    TriggerState lastState = state;
-    changeState(0, TriggerState.NOT_TRIGGERED);
+  override def reset(): Unit = {
+    val lastState = state
+    changeState(0, TriggerStates.NOT_TRIGGERED)
 
-    if (!lastState.equals(TriggerState.NOT_TRIGGERED)) {
-      for (TriggerListener listener : listeners) {
-        listener.onTrigger(this, TriggerState.NOT_TRIGGERED, TriggerEventType.FALLING);
+    if (!lastState.equals(TriggerStates.NOT_TRIGGERED)) {
+      listeners.foreach {
+        _.onTrigger(this, TriggerStates.NOT_TRIGGERED, TriggerEventTypes.FALLING)
       }
     }
   }
@@ -213,8 +199,10 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    *
    * @return the previous state of the trigger
    */
-  public synchronized TriggerState getPreviousState() {
-    return previousState;
+  def getPreviousState(): TriggerStates.TriggerState = {
+    synchronized {
+      previousState
+    }
   }
 
   /**
@@ -225,16 +213,17 @@ public class SimpleHysteresisThresholdValueTrigger implements ResettableTrigger 
    * @param newState
    *          the new state of the trigger
    */
-  private synchronized void changeState(double newValue, TriggerState newState) {
-    value = newValue;
-    previousState = state;
-    state = newState;
+  private def changeState(newValue: Double, newState: TriggerStates.TriggerState): Unit = {
+    synchronized {
+      value = newValue;
+      previousState = state;
+      state = newState;
+    }
   }
 
-  @Override
-  public String toString() {
-    return "SimpleHysteresisThresholdValueTrigger [value=" + value + ", state=" + state
-        + ", previousState=" + previousState + ", thresholdOn=" + thresholdOn + ", thresholdOff="
-        + thresholdOff + "]";
+  override def toString(): String = {
+    "SimpleHysteresisThresholdValueTrigger [value=" + value + ", state=" + state +
+      ", previousState=" + previousState + ", thresholdOn=" + thresholdOn +
+      ", thresholdOff=" + thresholdOff + "]";
   }
 }

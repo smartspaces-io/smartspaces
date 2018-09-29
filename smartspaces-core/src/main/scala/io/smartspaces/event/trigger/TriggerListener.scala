@@ -15,18 +15,14 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger;
+package io.smartspaces.event.trigger
 
 /**
- * A listener for trigger events from triggers with data.
- * 
- * @param <D>
- *          the type of the data handed with the trigger
- *          
- * @author Keith M. Hughes
+ * A listener for trigger events.
  *
+ * @author Keith M. Hughes
  */
-public interface TriggerWithDataListener<D> {
+trait TriggerListener {
 
   /**
    * Have triggered to a new state.
@@ -38,5 +34,5 @@ public interface TriggerWithDataListener<D> {
    * @param event
    *          the type of event created by the trigger
    */
-  void onTrigger(TriggerWithData<D> trigger, TriggerState newState, TriggerEventType event);
+  def onTrigger(trigger: Trigger, newState: TriggerStates.TriggerState, event: TriggerEventTypes.TriggerEventType): Unit
 }

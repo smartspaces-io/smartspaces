@@ -18,6 +18,7 @@ dependencies {
 	
   compile project(":smartspaces-core")
   compile project(":service:smartspaces-service-core")
+  compile project(":service:smartspaces-service-action")
   compile project(":activityapi:smartspaces-activity-core")
   compile project(":activityapi:smartspaces-data")
   

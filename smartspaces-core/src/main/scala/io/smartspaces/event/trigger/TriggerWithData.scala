@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger;
+package io.smartspaces.event.trigger
 
 /**
  * A trigger which can be observed.
@@ -29,7 +29,7 @@ package io.smartspaces.event.trigger;
  * 
  * @author Keith M. Hughes
  */
-public interface TriggerWithData<D> {
+trait TriggerWithData[D] {
 
   /**
    * Add a new listener to the trigger.
@@ -37,7 +37,7 @@ public interface TriggerWithData<D> {
    * @param listener
    *          the new listener to add
    */
-  void addListener(TriggerWithDataListener<D> listener);
+  def addListener( listener: TriggerWithDataListener[D]): Unit
 
   /**
    * Remove a listener from the trigger.
@@ -48,14 +48,14 @@ public interface TriggerWithData<D> {
    * @param listener
    *          the listener to remove
    */
-  void removeListener(TriggerWithDataListener<D> listener);
+  def removeListener(listener: TriggerWithDataListener[D]): Unit
 
   /**
    * Get the current state of the trigger.
    *
    * @return the trigger state
    */
-  TriggerState getState();
+   def getState(): TriggerStates.TriggerState
   
 
   /**
@@ -63,6 +63,6 @@ public interface TriggerWithData<D> {
    *
    * @return the trigger data
    */
-  D getData();
+  def getData(): D
 
 }

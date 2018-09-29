@@ -52,6 +52,11 @@ public class StandardExecutionContext implements ExecutionContext {
   private final Map<String, Object> values = new HashMap<>();
 
   /**
+   * The potential parent of this context.
+   */
+  private StandardExecutionContext parent = null;
+
+  /**
    * Construct a new context.
    * 
    * @param managedScope
@@ -67,7 +72,12 @@ public class StandardExecutionContext implements ExecutionContext {
     this.spaceEnvironment = spaceEnvironment;
     this.log = log;
   }
-  
+
+  @Override
+  public ExecutionContext getParent() {
+    return parent;
+  }
+
   @Override
   public ManagedScope getManagedScope() {
     return managedScope;
@@ -85,8 +95,24 @@ public class StandardExecutionContext implements ExecutionContext {
 
   @SuppressWarnings("unchecked")
   @Override
-  public synchronized <T> T getValue(String name) {
+  public synchronized <T> T getValueLocally(String name) {
     return (T) values.get(name);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public synchronized <T> T getValue(String name) {
+    StandardExecutionContext current = this;
+    do {
+      T value = current.getValueLocally(name);
+      if (value != null) {
+        return value;
+      }
+
+      current = current.parent;
+    } while (current != null);
+
+    return (T) null;
   }
 
   @Override
@@ -97,5 +123,14 @@ public class StandardExecutionContext implements ExecutionContext {
   @Override
   public synchronized void setValues(Map<String, Object> values) {
     this.values.putAll(values);
+  }
+
+  @Override
+  public synchronized ExecutionContext push() {
+    StandardExecutionContext newContext =
+        new StandardExecutionContext(managedScope, spaceEnvironment, log);
+    newContext.parent = this;
+
+    return newContext;
   }
 }

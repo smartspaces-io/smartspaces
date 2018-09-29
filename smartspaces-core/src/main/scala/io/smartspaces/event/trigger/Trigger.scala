@@ -15,21 +15,38 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger;
+package io.smartspaces.event.trigger
 
 /**
- * Event type for a {@link TriggerListener} event transition.
+ * A trigger which can be observed.
  *
  * @author Keith M. Hughes
  */
-public enum TriggerEventType {
+trait Trigger {
+ 
   /**
-   * The trigger value is falling.
+   * Add a new listener to the trigger.
+   *
+   * @param listener
+   *          the new listener to add
    */
-  FALLING, 
-  
+  def addListener( listener: TriggerListener): Unit
+
   /**
-   * The trigger value is rising.
+   * Remove a listener from the trigger.
+   *
+   * <p>
+   * Does nothing if the listener wasn't registered with the trigger.
+   *
+   * @param listener
+   *          the listener to remove
    */
-  RISING
+  def removeListener(listener: TriggerListener ): Unit
+
+  /**
+   * Get the current state of the trigger.
+   *
+   * @return the trigger state
+   */
+  def getState(): TriggerStates.TriggerState
 }

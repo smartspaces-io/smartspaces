@@ -18,10 +18,21 @@
 package io.smartspaces.event.trigger;
 
 /**
- * The state of a trigger.
+ * Event type for a {@link TriggerListener} event transition.
  *
  * @author Keith M. Hughes
  */
-public enum TriggerState {
-  NOT_TRIGGERED, TRIGGERED
+object TriggerEventTypes {
+  
+  sealed abstract class TriggerEventType
+  
+  /**
+   * The trigger value is falling.
+   */
+  object FALLING extends TriggerEventType
+  
+  /**
+   * The trigger value is rising.
+   */
+  object RISING extends TriggerEventType
 }

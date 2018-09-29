@@ -52,6 +52,16 @@ public interface ExecutionContext {
   Log getLog();
 
   /**
+   * Get a value from the current level of the context.
+   * 
+   * @param name
+   *          the name of the value
+   * 
+   * @return the value associated with the name, or {@code null} if not there
+   */
+  <T> T getValueLocally(String name);
+
+  /**
    * Get a value from the context.
    * 
    * @param name
@@ -62,7 +72,7 @@ public interface ExecutionContext {
   <T> T getValue(String name);
 
   /**
-   * Set a value in the context.
+   * Set a value in the context at the current lavel.
    * 
    * @param name
    *          the name of the value
@@ -72,7 +82,7 @@ public interface ExecutionContext {
   void setValue(String name, Object value);
 
   /**
-   * Set all values into the context.
+   * Set all values into the context at the current level..
    * 
    * <p>
    * The name will be the key in the supplied map and the value will be the
@@ -82,4 +92,18 @@ public interface ExecutionContext {
    *          the values to add
    */
   void setValues(Map<String, Object> values);
+  
+  /**
+   * Get the parent of this context, if any.
+   * 
+   * @return the parent, or {@code null} when none
+   */
+  ExecutionContext getParent();
+  
+  /**
+   * Create a new execution context that has this context as its parent.
+   * 
+   * @return the new context
+   */
+  ExecutionContext push();
 }

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -18,21 +18,24 @@
 package io.smartspaces.event.trigger;
 
 /**
- * A listener for trigger events.
+ * A {@link TriggerWithData} that is resettable.
+ *
+ * @param <D>
+ *          the type of the data
  *
  * @author Keith M. Hughes
  */
-public interface TriggerListener {
+trait ResettableTriggerWithData[D] extends TriggerWithData[D] {
 
   /**
-   * Have triggered to a new state.
+   * Reset the trigger.
    *
-   * @param trigger
-   *          the trigger that triggered
-   * @param newState
-   *          the new state
-   * @param event
-   *          the type of event created by the trigger
+   * <p>
+   * If the state changes because of the reset, an event will be published to
+   * the listeners.
+   *
+   * @param data
+   *          data for the reset event
    */
-  void onTrigger(Trigger trigger, TriggerState newState, TriggerEventType event);
+  def reset(data: D): Unit
 }

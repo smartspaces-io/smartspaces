@@ -15,38 +15,17 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger;
+package io.smartspaces.event.trigger
 
 /**
- * A trigger which can be observed.
+ * The state of a trigger.
  *
  * @author Keith M. Hughes
  */
-public interface Trigger {
- 
-  /**
-   * Add a new listener to the trigger.
-   *
-   * @param listener
-   *          the new listener to add
-   */
-  void addListener(TriggerListener listener);
+object TriggerStates {
+  sealed abstract class TriggerState
+  
+  object NOT_TRIGGERED extends TriggerState
 
-  /**
-   * Remove a listener from the trigger.
-   *
-   * <p>
-   * Does nothing if the listener wasn't registered with the trigger.
-   *
-   * @param listener
-   *          the listener to remove
-   */
-  void removeListener(TriggerListener listener);
-
-  /**
-   * Get the current state of the trigger.
-   *
-   * @return the trigger state
-   */
-  TriggerState getState();
+  object TRIGGERED extends TriggerState
 }

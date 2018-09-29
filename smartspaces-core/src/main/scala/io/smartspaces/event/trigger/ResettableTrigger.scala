@@ -15,17 +15,14 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger;
+package io.smartspaces.event.trigger
 
 /**
- * A {@link TriggerWithData} that is resettable.
- *
- * @param <D>
- *          the type of the data
+ * A {@link Trigger} that is resettable.
  *
  * @author Keith M. Hughes
  */
-public interface ResettableTriggerWithData<D> extends TriggerWithData<D> {
+trait ResettableTrigger extends Trigger {
 
   /**
    * Reset the trigger.
@@ -33,10 +30,6 @@ public interface ResettableTriggerWithData<D> extends TriggerWithData<D> {
    * <p>
    * If the state changes because of the reset, an event will be published to
    * the listeners.
-   * 
-   * @param data
-   *          data for the reset event
    */
-  void reset(D data);
-
+  def reset(): Unit
 }

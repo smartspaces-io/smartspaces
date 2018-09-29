@@ -31,29 +31,29 @@ trait SensedValue[+T <: Any] {
   /**
    * The model of the sensor that gave the value.
    */
-  val sensorChannel: SensorChannelEntityModel
+  def sensorChannel: SensorChannelEntityModel
 
   /**
    * The timestamp of when the measurement was taken, 
    * in milliseconds since the epoch.
    */
-  val timestampMeasurement: Long
+  def timestampMeasurement: Long
 
   /**
    * The timestamp of when the sensor measurement was received, 
    * in milliseconds since the epoch.
    */
-  val timestampMeasurementReceived: Long
+  def timestampMeasurementReceived: Long
   
   /**
    * The value of the sensor.
    *
    * @return the value of the sensor
    */
-  val value: T
+  def value: T
   
   /**
    * Additional value from the sensor, if any.
    */
-  val additional: Option[Any]
+  def additional: Option[Any]
 }

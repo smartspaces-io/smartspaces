@@ -22,6 +22,7 @@ import io.smartspaces.sensor.domain.SensorChannelDetailDescription
 import io.smartspaces.sensor.event.SensorChannelOfflineEvent
 import io.smartspaces.sensor.event.SensorChannelOnlineEvent
 import io.smartspaces.sensor.services.processing.value.SensorValueProcessor
+import io.smartspaces.sensor.model.rules.SensorChannelSensedValueRuleTrigger
 
 /**
  * The entity model of a sensor channel and the sensed entity the channel is associated with.
@@ -64,6 +65,14 @@ trait SensorChannelEntityModel extends HeartbeatMonitorable {
    * The most recent sensed value for this channel.
    */
   def mostRecentSensedValue: SensedValue[Any]
+
+  /**
+   * Add in a new rule trigger for the channel.
+   *
+   * @param trigger
+   *        the rule trigger
+   */
+  def addSensorChannelSensedValueRuleTrigger(trigger: SensorChannelSensedValueRuleTrigger): Unit
 }
 
 /*
@@ -84,19 +93,30 @@ class SimpleSensorChannelEntityModel(
    */
   private var _mostRecentSensedValue: SensedValue[Any] = _
 
+  /**
+   * The rule triggers for this channel.
+   */
+  private var ruleTriggers = List[SensorChannelSensedValueRuleTrigger]()
+
+  override def addSensorChannelSensedValueRuleTrigger(trigger: SensorChannelSensedValueRuleTrigger): Unit = {
+    ruleTriggers = trigger :: ruleTriggers
+  }
+
   override def updateSensedValue[T <: Any](value: SensedValue[T], timestampUpdate: Long): Unit = {
     synchronized {
       _mostRecentSensedValue = value
     }
-    
+
     // ??? Update in time between channel and the sensor and sensed sending potential online events.
     stateUpdated(timestampUpdate)
-    
+
     sensorModel.updateSensedValue(value, timestampUpdate)
     sensedEntityModel.updateSensedValue(value, timestampUpdate)
+    
+    ruleTriggers.foreach(_.updateValue(value))
   }
 
-  override  def mostRecentSensedValue: SensedValue[Any] = {
+  override def mostRecentSensedValue: SensedValue[Any] = {
     synchronized {
       _mostRecentSensedValue
     }

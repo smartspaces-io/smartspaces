@@ -36,6 +36,7 @@ import io.smartspaces.sensor.domain.SensorChannelDetailDescription
 import io.smartspaces.sensor.services.processing.value.SensorValueProcessor
 import io.smartspaces.sensor.event.SensorChannelOnlineEvent
 import io.smartspaces.sensor.event.SensorChannelOfflineEvent
+import io.smartspaces.sensor.model.rules.SensorChannelSensedValueRuleTrigger
 
 /**
  * Tests for the SimpleSensorChannelEntityModel.
@@ -117,6 +118,9 @@ class SimpleSensorChannelEntityModelTest extends JUnitSuite {
     model.setOfflineSignaled(true)
 
     Assert.assertTrue(model.timestampLastStateUpdate.isEmpty)
+    
+    val trigger = Mockito.mock(classOf[SensorChannelSensedValueRuleTrigger])
+    model.addSensorChannelSensedValueRuleTrigger(trigger)
 
     model.updateSensedValue(value, timestampCurrent)
 
@@ -130,5 +134,7 @@ class SimpleSensorChannelEntityModelTest extends JUnitSuite {
 
     Mockito.verify(sensorEntityModel, Mockito.times(1)).updateSensedValue(value, timestampCurrent)
     Mockito.verify(sensedEntityModel, Mockito.times(1)).updateSensedValue(value, timestampCurrent)
+    
+    Mockito.verify(trigger).updateValue(value)
   }
 }

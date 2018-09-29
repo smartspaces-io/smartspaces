@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2013 Google Inc.
+ * Copyright (C) 2012 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,29 +15,22 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger
+package io.smartspaces.interaction.event.trigger
 
 /**
  * A trigger which can be observed.
- * 
- * <p>
- * The trigger can carry additional data with the trigger event, not just the
- * value.
  *
- * @param <D>
- *          the type of the data
- * 
  * @author Keith M. Hughes
  */
-trait TriggerWithData[D] {
-
+trait Trigger {
+ 
   /**
    * Add a new listener to the trigger.
    *
    * @param listener
    *          the new listener to add
    */
-  def addListener( listener: TriggerWithDataListener[D]): Unit
+  def addListener( listener: TriggerListener): Unit
 
   /**
    * Remove a listener from the trigger.
@@ -48,21 +41,12 @@ trait TriggerWithData[D] {
    * @param listener
    *          the listener to remove
    */
-  def removeListener(listener: TriggerWithDataListener[D]): Unit
+  def removeListener(listener: TriggerListener ): Unit
 
   /**
    * Get the current state of the trigger.
    *
    * @return the trigger state
    */
-   def getState(): TriggerStates.TriggerState
-  
-
-  /**
-   * Get the current data for the trigger.
-   *
-   * @return the trigger data
-   */
-  def getData(): D
-
+  def getState(): TriggerStates.TriggerState
 }

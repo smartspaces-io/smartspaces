@@ -14,7 +14,7 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger
+package io.smartspaces.interaction.event.trigger
 
 import org.junit.Before
 import org.junit.Test
@@ -27,16 +27,16 @@ import org.scalatest.junit.JUnitSuite
  *
  * @author Keith M. Hughes
  */
-class SimpleHysteresisThresholdValueTriggerTest extends JUnitSuite {
+class SimpleHysteresisThresholdValueTriggerWithDataTest extends JUnitSuite {
 
-  var trigger: SimpleHysteresisThresholdValueTrigger = _
+  var trigger: SimpleHysteresisThresholdValueTriggerWithData[Integer] = _
 
-  var triggerListener: TriggerListener = _
+  var triggerListener: TriggerWithDataListener[Integer] = _
 
   @Before def setup(): Unit = {
-    trigger = new SimpleHysteresisThresholdValueTrigger()
+    trigger = new SimpleHysteresisThresholdValueTriggerWithData[Integer](0)
 
-    triggerListener = Mockito.mock(classOf[TriggerListener])
+    triggerListener = Mockito.mock(classOf[TriggerWithDataListener[Integer]])
     trigger.addListener(triggerListener)
   }
 
@@ -47,13 +47,11 @@ class SimpleHysteresisThresholdValueTriggerTest extends JUnitSuite {
     trigger.setThresholdOn(10)
     trigger.setThresholdOff(8)
 
-    trigger.update(9)
-    trigger.update(8)
-    trigger.update(7)
-    Mockito.verify(triggerListener, Mockito.times(0)).onTrigger(
-      Matchers.eq(trigger),
-      Matchers.any(classOf[TriggerStates.TriggerState]),
-      Matchers.any(classOf[TriggerEventTypes.TriggerEventType]))
+    trigger.update(9, 1)
+    trigger.update(8,1)
+    trigger.update(7,1)
+    Mockito.verify(triggerListener, Mockito.times(0)).onTrigger(Matchers.eq(trigger),
+        Matchers.any(classOf[TriggerStates.TriggerState]), Matchers.any(classOf[TriggerEventTypes.TriggerEventType]))
   }
 
   /**
@@ -63,10 +61,9 @@ class SimpleHysteresisThresholdValueTriggerTest extends JUnitSuite {
     trigger.setThresholdOn(10)
     trigger.setThresholdOff(8)
 
-    trigger.update(11)
-    Mockito.verify(triggerListener, Mockito.times(1)).onTrigger(
-      trigger,
-      TriggerStates.TRIGGERED, TriggerEventTypes.RISING)
+    trigger.update(11, 1);
+    Mockito.verify(triggerListener, Mockito.times(1)).onTrigger(trigger,
+        TriggerStates.TRIGGERED, TriggerEventTypes.RISING)
   }
 
   /**
@@ -76,10 +73,9 @@ class SimpleHysteresisThresholdValueTriggerTest extends JUnitSuite {
     trigger.setThresholdOn(10)
     trigger.setThresholdOff(8)
 
-    trigger.update(10)
-    Mockito.verify(triggerListener, Mockito.times(1)).onTrigger(
-      trigger,
-      TriggerStates.TRIGGERED, TriggerEventTypes.RISING)
+    trigger.update(10, 1);
+    Mockito.verify(triggerListener, Mockito.times(1)).onTrigger(trigger,
+        TriggerStates.TRIGGERED, TriggerEventTypes.RISING)
   }
 
   /**
@@ -89,11 +85,10 @@ class SimpleHysteresisThresholdValueTriggerTest extends JUnitSuite {
     trigger.setThresholdOn(10)
     trigger.setThresholdOff(8)
 
-    trigger.update(11)
-    trigger.update(10)
-    Mockito.verify(triggerListener, Mockito.times(1)).onTrigger(
-      trigger,
-      TriggerStates.TRIGGERED, TriggerEventTypes.RISING)
+    trigger.update(11, 1)
+    trigger.update(10, 1)
+    Mockito.verify(triggerListener, Mockito.times(1)).onTrigger(trigger,
+        TriggerStates.TRIGGERED, TriggerEventTypes.RISING);
   }
 
   /**
@@ -102,18 +97,16 @@ class SimpleHysteresisThresholdValueTriggerTest extends JUnitSuite {
   @Test def testTriggerOnThenOff(): Unit = {
     trigger.setThresholdOn(10)
     trigger.setThresholdOff(8)
-
+    
     val inorder = Mockito.inOrder(triggerListener)
 
-    trigger.update(11)
-    trigger.update(8)
-
-    inorder.verify(triggerListener, Mockito.times(1)).onTrigger(
-      trigger,
-      TriggerStates.TRIGGERED, TriggerEventTypes.RISING)
-    inorder.verify(triggerListener, Mockito.times(1)).onTrigger(
-      trigger,
-      TriggerStates.NOT_TRIGGERED, TriggerEventTypes.FALLING)
+    trigger.update(11, 1)
+    trigger.update(8, 1)
+    
+    inorder.verify(triggerListener, Mockito.times(1)).onTrigger(trigger,
+        TriggerStates.TRIGGERED, TriggerEventTypes.RISING)
+    inorder.verify(triggerListener, Mockito.times(1)).onTrigger(trigger,
+        TriggerStates.NOT_TRIGGERED, TriggerEventTypes.FALLING)
   }
 
   /**
@@ -122,17 +115,15 @@ class SimpleHysteresisThresholdValueTriggerTest extends JUnitSuite {
   @Test def testTriggerOnThenNotOff(): Unit = {
     trigger.setThresholdOn(10)
     trigger.setThresholdOff(8)
-
+    
     val inorder = Mockito.inOrder(triggerListener)
 
-    trigger.update(11)
-    trigger.update(9)
-
-    inorder.verify(triggerListener, Mockito.times(1)).onTrigger(
-      trigger,
-      TriggerStates.TRIGGERED, TriggerEventTypes.RISING)
-    inorder.verify(triggerListener, Mockito.times(0)).onTrigger(
-      trigger,
-      TriggerStates.NOT_TRIGGERED, TriggerEventTypes.FALLING)
+    trigger.update(11, 1)
+    trigger.update(9, 2)
+    
+    inorder.verify(triggerListener, Mockito.times(1)).onTrigger(trigger,
+        TriggerStates.TRIGGERED, TriggerEventTypes.RISING)
+    inorder.verify(triggerListener, Mockito.times(0)).onTrigger(trigger,
+        TriggerStates.NOT_TRIGGERED, TriggerEventTypes.FALLING)
   }
 }

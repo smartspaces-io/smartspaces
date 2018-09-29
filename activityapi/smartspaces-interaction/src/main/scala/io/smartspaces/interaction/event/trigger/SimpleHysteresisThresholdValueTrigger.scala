@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger
+package io.smartspaces.interaction.event.trigger
 
 /**
  * A simple trigger which watches for the change of a value and will signal
@@ -27,25 +27,14 @@ package io.smartspaces.event.trigger
  * the update value goes at or below the off threshold. This is useful for noisy
  * data.
  *
- * <p>
- * The trigger events carry extra data. This data will only be updated if the
- * trigger changes state.
- *
  * @author Keith M. Hughes
  */
-
-class SimpleHysteresisThresholdValueTriggerWithData[D](val initialData: D)
-  extends ResettableTriggerWithData[D] {
+class SimpleHysteresisThresholdValueTrigger extends ResettableTrigger {
 
   /**
    * The current value of the trigger.
    */
   private var value: Double = 0.0
-
-  /**
-   * The current data of the trigger.
-   */
-  private var data = initialData
 
   /**
    * The value at which the trigger will switch on.
@@ -70,15 +59,18 @@ class SimpleHysteresisThresholdValueTriggerWithData[D](val initialData: D)
   /**
    * Collection of listeners for trigger point events.
    */
-  private var listeners = List[TriggerWithDataListener[D]]()
-  
+  private var listeners = List[TriggerListener]()
+
   /**
-   * Get the threshold at which the trigger will switch on.
+   * Set the threshold at which the trigger will switch on.
    *
-   * @return the threshold at which the trigger will switch on
+   * @param thresholdOn
+   *          the threshold at which the trigger will switch on
    */
-  def setThresholdOn(thresholdOn: Double): Unit = {
+  def setThresholdOn(thresholdOn: Double): SimpleHysteresisThresholdValueTrigger = {
     this.thresholdOn = thresholdOn
+
+    this
   }
 
   /**
@@ -95,10 +87,8 @@ class SimpleHysteresisThresholdValueTriggerWithData[D](val initialData: D)
    *
    * @param thresholdOff
    *          the value at which the trigger will switch off
-   *
-   * @return this trigger
    */
-  def setThresholdOff(thresholdOff: Double): SimpleHysteresisThresholdValueTriggerWithData[D] = {
+  def setThresholdOff(thresholdOff: Double): SimpleHysteresisThresholdValueTrigger = {
     this.thresholdOff = thresholdOff
 
     this
@@ -117,7 +107,9 @@ class SimpleHysteresisThresholdValueTriggerWithData[D](val initialData: D)
    *          the value to subtract from {@code thresholdOn} to get
    *          {@code thresholdOff}
    */
-  def setThresholdsWithOffset(thresholdOn: Double, offset: Double): SimpleHysteresisThresholdValueTriggerWithData[D] = {
+  def setThresholdsWithOffset(
+    thresholdOn: Double,
+    offset: Double): SimpleHysteresisThresholdValueTrigger = {
     this.thresholdOn = thresholdOn
     this.thresholdOff = thresholdOn - offset
 
@@ -133,11 +125,11 @@ class SimpleHysteresisThresholdValueTriggerWithData[D](val initialData: D)
     thresholdOn
   }
 
-  override def addListener(listener: TriggerWithDataListener[D]): Unit = {
+  override def addListener(listener: TriggerListener): Unit = {
     listeners = listener :: listeners
   }
 
-  override def removeListener(listener: TriggerWithDataListener[D]): Unit = {
+  override def removeListener(listener: TriggerListener): Unit = {
     listeners = listeners.filter(_ != listener)
   }
 
@@ -146,10 +138,8 @@ class SimpleHysteresisThresholdValueTriggerWithData[D](val initialData: D)
    *
    * @param newValue
    *          the new value
-   * @param newData
-   *          the new data
    */
-  def update(newValue: Double, newData: D): Unit = {
+  def update(newValue: Double): Unit = {
     var newState: TriggerStates.TriggerState = null
     var eventType: TriggerEventTypes.TriggerEventType = null
 
@@ -158,28 +148,24 @@ class SimpleHysteresisThresholdValueTriggerWithData[D](val initialData: D)
       if (state == TriggerStates.TRIGGERED) {
         newState = TriggerStates.NOT_TRIGGERED
         eventType = TriggerEventTypes.FALLING
-        changeState(newValue, newState, newData)
+        changeState(newValue, newState);
         change = true
       }
     } else if (newValue >= thresholdOn) {
       if (state == TriggerStates.NOT_TRIGGERED) {
         newState = TriggerStates.TRIGGERED
         eventType = TriggerEventTypes.RISING
-        changeState(newValue, newState, newData)
+        changeState(newValue, newState)
         change = true
       }
     }
 
     if (change) {
       listeners.foreach {
-        _.onTrigger(this, newState, eventType);
+        _.onTrigger(this, newState, eventType)
       }
     }
 
-  }
-
-  override def getData(): D = {
-    data
   }
 
   /**
@@ -188,23 +174,22 @@ class SimpleHysteresisThresholdValueTriggerWithData[D](val initialData: D)
    * @return the current value of the trigger
    */
   def getValue(): Double = {
-    synchronized {
-      value
-    }
+    value
   }
+
   override def getState(): TriggerStates.TriggerState = {
     synchronized {
       state
     }
   }
 
-  override def reset(data: D) = {
+  override def reset(): Unit = {
     val lastState = state
-    changeState(0, TriggerStates.NOT_TRIGGERED, data)
+    changeState(0, TriggerStates.NOT_TRIGGERED)
 
     if (!lastState.equals(TriggerStates.NOT_TRIGGERED)) {
       listeners.foreach {
-        _.onTrigger(this, TriggerStates.NOT_TRIGGERED, TriggerEventTypes.FALLING);
+        _.onTrigger(this, TriggerStates.NOT_TRIGGERED, TriggerEventTypes.FALLING)
       }
     }
   }
@@ -228,18 +213,17 @@ class SimpleHysteresisThresholdValueTriggerWithData[D](val initialData: D)
    * @param newState
    *          the new state of the trigger
    */
-  private def changeState(newValue: Double, newState: TriggerStates.TriggerState, newData: D): Unit = {
+  private def changeState(newValue: Double, newState: TriggerStates.TriggerState): Unit = {
     synchronized {
-      value = newValue
-      previousState = state
-      state = newState
-      data = newData
+      value = newValue;
+      previousState = state;
+      state = newState;
     }
   }
 
   override def toString(): String = {
-    return "SimpleHysteresisThresholdValueTriggerWithData [value=" + value + ", data=" + data +
-      ", state=" + state + ", previousState=" + previousState + ", thresholdOn=" + thresholdOn +
-      ", thresholdOff=" + thresholdOff + "]"
+    "SimpleHysteresisThresholdValueTrigger [value=" + value + ", state=" + state +
+      ", previousState=" + previousState + ", thresholdOn=" + thresholdOn +
+      ", thresholdOff=" + thresholdOff + "]";
   }
 }

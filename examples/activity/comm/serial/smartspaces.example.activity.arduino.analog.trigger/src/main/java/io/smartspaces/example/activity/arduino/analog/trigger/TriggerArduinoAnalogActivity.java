@@ -22,11 +22,11 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 
 import io.smartspaces.activity.impl.route.BaseRoutableActivity;
-import io.smartspaces.event.trigger.SimpleHysteresisThresholdValueTrigger;
-import io.smartspaces.event.trigger.Trigger;
-import io.smartspaces.event.trigger.TriggerEventType;
-import io.smartspaces.event.trigger.TriggerListener;
-import io.smartspaces.event.trigger.TriggerState;
+import io.smartspaces.interaction.event.trigger.SimpleHysteresisThresholdValueTrigger;
+import io.smartspaces.interaction.event.trigger.Trigger;
+import io.smartspaces.interaction.event.trigger.TriggerEventType;
+import io.smartspaces.interaction.event.trigger.TriggerListener;
+import io.smartspaces.interaction.event.trigger.TriggerStates;
 import io.smartspaces.resource.managed.ManagedResourceWithTask;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpoint;
 import io.smartspaces.service.comm.serial.SerialCommunicationEndpointService;

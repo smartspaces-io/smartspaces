@@ -18,7 +18,7 @@
 package io.smartspaces.example.activity.wii.remote;
 
 import io.smartspaces.activity.impl.BaseActivity;
-import io.smartspaces.event.simple.EventDividerSampler;
+import io.smartspaces.interaction.event.simple.EventDividerSampler;
 import io.smartspaces.util.SmartSpacesUtilities;
 
 /**

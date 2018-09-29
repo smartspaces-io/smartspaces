@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2012 Google Inc.
+ * Copyright (C) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,24 +15,27 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger;
+package io.smartspaces.interaction.event.trigger;
 
 /**
- * Event type for a {@link TriggerListener} event transition.
+ * A {@link TriggerWithData} that is resettable.
+ *
+ * @param <D>
+ *          the type of the data
  *
  * @author Keith M. Hughes
  */
-object TriggerEventTypes {
-  
-  sealed abstract class TriggerEventType
-  
+trait ResettableTriggerWithData[D] extends TriggerWithData[D] {
+
   /**
-   * The trigger value is falling.
+   * Reset the trigger.
+   *
+   * <p>
+   * If the state changes because of the reset, an event will be published to
+   * the listeners.
+   *
+   * @param data
+   *          data for the reset event
    */
-  object FALLING extends TriggerEventType
-  
-  /**
-   * The trigger value is rising.
-   */
-  object RISING extends TriggerEventType
+  def reset(data: D): Unit
 }

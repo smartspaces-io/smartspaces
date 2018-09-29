@@ -15,17 +15,31 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger
+package io.smartspaces.interaction.event.trigger
 
 /**
- * The state of a trigger.
+ * A listener for trigger events from triggers with data.
+ *
+ * @param <D>
+ *          the type of the data handed with the trigger
  *
  * @author Keith M. Hughes
+ *
  */
-object TriggerStates {
-  sealed abstract class TriggerState
-  
-  object NOT_TRIGGERED extends TriggerState
+trait TriggerWithDataListener[D] {
 
-  object TRIGGERED extends TriggerState
+  /**
+   * Have triggered to a new state.
+   *
+   * @param trigger
+   *          the trigger that triggered
+   * @param newState
+   *          the new state
+   * @param event
+   *          the type of event created by the trigger
+   */
+  def onTrigger(
+      trigger: TriggerWithData[D], 
+      newState: TriggerStates.TriggerState, 
+      event: TriggerEventTypes.TriggerEventType): Unit
 }

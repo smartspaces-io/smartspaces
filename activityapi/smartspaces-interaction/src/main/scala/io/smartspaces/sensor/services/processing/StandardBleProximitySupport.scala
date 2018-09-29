@@ -16,7 +16,7 @@
 
 package io.smartspaces.sensor.services.processing
 
-import io.smartspaces.event.trigger.SimpleHysteresisThresholdValueTriggerWithData
+import io.smartspaces.interaction.event.trigger.SimpleHysteresisThresholdValueTriggerWithData
 import io.smartspaces.sensor.model.SensorEntityModel
 import io.smartspaces.sensor.services.processing.value.SensorValueProcessorContext
 import io.smartspaces.sensor.services.processing.value.TriggerTimes

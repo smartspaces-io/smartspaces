@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger
+package io.smartspaces.interaction.event.trigger
 
 /**
  * A {@link Trigger} that is resettable.

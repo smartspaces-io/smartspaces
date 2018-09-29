@@ -19,20 +19,20 @@ package io.smartspaces.sensor.services.processing.value
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
 
-import io.smartspaces.event.trigger.SimpleHysteresisThresholdValueTriggerWithData
-import io.smartspaces.event.trigger.TriggerEventType
-import io.smartspaces.event.trigger.TriggerState
-import io.smartspaces.event.trigger.TriggerWithData
-import io.smartspaces.event.trigger.TriggerWithDataListener
+import io.smartspaces.interaction.event.trigger.SimpleHysteresisThresholdValueTriggerWithData
+import io.smartspaces.interaction.event.trigger.TriggerEventTypes
+import io.smartspaces.interaction.event.trigger.TriggerStates
+import io.smartspaces.interaction.event.trigger.TriggerWithData
+import io.smartspaces.interaction.event.trigger.TriggerWithDataListener
 import io.smartspaces.sensor.messaging.messages.StandardSensorData
 import io.smartspaces.sensor.model.PersonSensedEntityModel
 import io.smartspaces.sensor.model.PhysicalSpaceSensedEntityModel
 import io.smartspaces.sensor.model.SensedEntityModel
+import io.smartspaces.sensor.model.SensorChannelEntityModel
 import io.smartspaces.sensor.model.SensorEntityModel
 import io.smartspaces.sensor.model.updater.SimplePersonPhysicalSpaceModelUpdater
 import io.smartspaces.sensor.services.processing.StandardBleProximitySupport
 import io.smartspaces.util.data.dynamic.DynamicObject
-import io.smartspaces.sensor.model.SensorChannelEntityModel
 
 /**
  * The standard processor for BLE proximity data.
@@ -57,7 +57,9 @@ class StandardBleProximitySensorValueProcessor extends SensorValueProcessor {
    * The listener for trigger events being shared across all triggers.
    */
   private val triggerListener = new TriggerWithDataListener[TriggerTimes]() {
-    override def onTrigger(trigger: TriggerWithData[TriggerTimes], state: TriggerState, eventType: TriggerEventType): Unit = {
+    override def onTrigger(trigger: TriggerWithData[TriggerTimes], 
+        state: TriggerStates.TriggerState, 
+        eventType: TriggerEventTypes.TriggerEventType): Unit = {
       handleTrigger(trigger, state, eventType);
     }
   };
@@ -138,10 +140,12 @@ class StandardBleProximitySensorValueProcessor extends SensorValueProcessor {
    * @param triggerType
    *          the type of the state change
    */
-  private def handleTrigger(trigger: TriggerWithData[TriggerTimes], state: TriggerState, eventType: TriggerEventType): Unit = {
+  private def handleTrigger(trigger: TriggerWithData[TriggerTimes], 
+      state: TriggerStates.TriggerState, 
+      eventType: TriggerEventTypes.TriggerEventType): Unit = {
     val t = trigger.asInstanceOf[SimpleHysteresisThresholdValueTriggerWithData[TriggerTimes]]
     val modelUpdater = userTriggerToUpdaters.get(t).get
-    if (eventType == TriggerEventType.RISING) {
+    if (eventType == TriggerEventTypes.RISING) {
       modelUpdater.enterSpace(t.getData.measurementTimestamp, t.getData.sensorMessageReceivedTimestamp);
     } else {
       modelUpdater.exitSpace(t.getData.measurementTimestamp, t.getData.sensorMessageReceivedTimestamp);

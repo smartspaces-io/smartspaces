@@ -15,24 +15,24 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger
+package io.smartspaces.interaction.event.trigger
 
 /**
- * A listener for trigger events.
+ * Event type for a {@link TriggerListener} event transition.
  *
  * @author Keith M. Hughes
  */
-trait TriggerListener {
-
+object TriggerEventTypes {
+  
+  sealed abstract class TriggerEventType
+  
   /**
-   * Have triggered to a new state.
-   *
-   * @param trigger
-   *          the trigger that triggered
-   * @param newState
-   *          the new state
-   * @param event
-   *          the type of event created by the trigger
+   * The trigger value is falling.
    */
-  def onTrigger(trigger: Trigger, newState: TriggerStates.TriggerState, event: TriggerEventTypes.TriggerEventType): Unit
+  object FALLING extends TriggerEventType
+  
+  /**
+   * The trigger value is rising.
+   */
+  object RISING extends TriggerEventType
 }

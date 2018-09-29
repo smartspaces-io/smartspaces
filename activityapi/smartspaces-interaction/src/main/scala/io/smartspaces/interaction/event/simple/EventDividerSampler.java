@@ -15,7 +15,7 @@
  * the License.
  */
 
-package io.smartspaces.event.simple;
+package io.smartspaces.interaction.event.simple;
 
 /**
  * A very simple event sampler.

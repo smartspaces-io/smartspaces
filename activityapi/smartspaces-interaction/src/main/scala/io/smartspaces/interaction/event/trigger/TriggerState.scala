@@ -15,38 +15,17 @@
  * the License.
  */
 
-package io.smartspaces.event.trigger
+package io.smartspaces.interaction.event.trigger
 
 /**
- * A trigger which can be observed.
+ * The state of a trigger.
  *
  * @author Keith M. Hughes
  */
-trait Trigger {
- 
-  /**
-   * Add a new listener to the trigger.
-   *
-   * @param listener
-   *          the new listener to add
-   */
-  def addListener( listener: TriggerListener): Unit
+object TriggerStates {
+  sealed abstract class TriggerState
+  
+  object NOT_TRIGGERED extends TriggerState
 
-  /**
-   * Remove a listener from the trigger.
-   *
-   * <p>
-   * Does nothing if the listener wasn't registered with the trigger.
-   *
-   * @param listener
-   *          the listener to remove
-   */
-  def removeListener(listener: TriggerListener ): Unit
-
-  /**
-   * Get the current state of the trigger.
-   *
-   * @return the trigger state
-   */
-  def getState(): TriggerStates.TriggerState
+  object TRIGGERED extends TriggerState
 }

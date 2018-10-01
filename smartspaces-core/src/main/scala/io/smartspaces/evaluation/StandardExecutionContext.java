@@ -16,13 +16,14 @@
 
 package io.smartspaces.evaluation;
 
-import io.smartspaces.scope.ManagedScope;
-import io.smartspaces.system.SmartSpacesEnvironment;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 
-import java.util.HashMap;
-import java.util.Map;
+import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.scope.ManagedScope;
+import io.smartspaces.system.SmartSpacesEnvironment;
 
 /**
  * A standard implementation of an execution context.
@@ -44,7 +45,7 @@ public class StandardExecutionContext implements ExecutionContext {
   /**
    * The logger for this context.
    */
-  private final Log log;
+  private final ExtendedLog log;
 
   /**
    * The map of values indexed by their names.
@@ -67,7 +68,7 @@ public class StandardExecutionContext implements ExecutionContext {
    *          the logger to use
    */
   public StandardExecutionContext(ManagedScope managedScope,
-      SmartSpacesEnvironment spaceEnvironment, Log log) {
+      SmartSpacesEnvironment spaceEnvironment, ExtendedLog log) {
     this.managedScope = managedScope;
     this.spaceEnvironment = spaceEnvironment;
     this.log = log;

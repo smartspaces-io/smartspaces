@@ -42,6 +42,13 @@ trait Rule {
   def ruleTriggers: Iterable[RuleTrigger]
 
   /**
+   * Get a rule trigger by name.
+   *
+   * @return the trigger, if found
+   */
+  def getRuleTrigger(triggerName: String): Option[RuleTrigger]
+
+  /**
    * Add in a new rule trigger.
    *
    * @param ruleTrigger
@@ -152,7 +159,7 @@ class StandardRule(
   /**
    * The triggers for the rule.
    */
-  private var _ruleTriggers = List[RuleTrigger]()
+  private var _ruleTriggers = Map[String, RuleTrigger]()
 
   /**
    * The guards for the rule.
@@ -165,18 +172,22 @@ class StandardRule(
   private var _ruleActions = List[RuleAction]()
 
   override def ruleTriggers: Iterable[RuleTrigger] = {
-    _ruleTriggers
+    _ruleTriggers.values
   }
-
+  
+ override def getRuleTrigger(triggerName: String): Option[RuleTrigger] = {
+   _ruleTriggers.get(triggerName)
+ }
+ 
   override def addRuleTrigger(ruleTrigger: RuleTrigger): Rule = {
     ruleTrigger.initialize()
-    _ruleTriggers = ruleTrigger :: _ruleTriggers
+    _ruleTriggers = _ruleTriggers + (ruleTrigger.triggerName -> ruleTrigger)
 
     this
   }
 
   override def removeRuleTrigger(ruleTrigger: RuleTrigger): Rule = {
-    _ruleTriggers = _ruleTriggers.filter(_ != ruleTrigger)
+    _ruleTriggers = _ruleTriggers - ruleTrigger.triggerName
 
     this
   }

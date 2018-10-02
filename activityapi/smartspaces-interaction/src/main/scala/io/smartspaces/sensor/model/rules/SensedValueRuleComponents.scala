@@ -71,11 +71,11 @@ class SimpleNumericContinuousSensedValueAboveRuleGuard(val triggerValue: Double)
 }
 
 /**
- * A rule conditional of a numeric continuous value goes above a trigger.
+ * A rule conditional of a numeric continuous value goes below a trigger.
  *
  * @author Keith M. Hughes
  */
-class SimpleNumericContinuousSensedValueBlowRuleGuard(val triggerValue: Double) extends BaseRuleGuard {
+class SimpleNumericContinuousSensedValueBelowRuleGuard(val triggerValue: Double) extends BaseRuleGuard {
 
   override def evaluate(rule: Rule, executionContext: ExecutionContext): Boolean = {
     val value: SimpleNumericContinuousSensedValue = executionContext.getValue(

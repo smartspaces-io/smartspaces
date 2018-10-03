@@ -64,7 +64,7 @@ jar {
         'io.smartspaces.activity.component.comm.route',
         'io.smartspaces.activity.component.web',
         'io.smartspaces.event',
-        'io.smartspaces.event.trigger',
+        'io.smartspaces.interaction.event.trigger;resolution:="optional"',
         'io.smartspaces.tasks',
         'io.smartspaces.util',
         'io.smartspaces.util.data',

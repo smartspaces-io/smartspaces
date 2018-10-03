@@ -54,6 +54,11 @@ object DynamicObjectRuleImporter {
    * The section head for the entire collection of actions for a given rule.
    */
   val SECTION_ACTIONS = "actions"
+
+  /**
+   * The section head for data for a rule component.
+   */
+  val SECTION_DATA = "data"
 }
 
 /**
@@ -151,7 +156,7 @@ class DynamicObjectRuleImporter(log: ExtendedLog) extends RuleImporter {
       source.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
         val itemData = entry.down()
 
-        importTrigger(source).foreach(rule.addRuleTrigger(_))
+        importTrigger(source, rule).foreach(rule.addRuleTrigger(_))
       })
 
       source.up
@@ -164,11 +169,11 @@ class DynamicObjectRuleImporter(log: ExtendedLog) extends RuleImporter {
    * @param source
    *        the source for the trigger definition at the position for the definition
    */
-  private def importTrigger(source: DynamicObject): Option[RuleTrigger] = {
+  private def importTrigger(source: DynamicObject, rule: Rule): Option[RuleTrigger] = {
     val kind = source.getRequiredString(DynamicObjectRuleImporter.ITEM_KIND)
     val kindImporter = triggerKindImporters.get(kind)
     if (kindImporter.isDefined) {
-      Some(kindImporter.get.importRuleComponent(source))
+      Some(kindImporter.get.importRuleComponent(source, rule))
     } else {
       log.warn(s"Rule trigger had unknown kind ${kind}")
 
@@ -190,7 +195,7 @@ class DynamicObjectRuleImporter(log: ExtendedLog) extends RuleImporter {
       source.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
         val itemData = entry.down()
 
-        importGuard(source).foreach(rule.addRuleGuard(_))
+        importGuard(source, rule).foreach(rule.addRuleGuard(_))
       })
 
       source.up
@@ -203,11 +208,11 @@ class DynamicObjectRuleImporter(log: ExtendedLog) extends RuleImporter {
    * @param source
    *        the source for the guard definition at the position for the definition
    */
-  private def importGuard(source: DynamicObject): Option[RuleGuard] = {
+  private def importGuard(source: DynamicObject, rule: Rule): Option[RuleGuard] = {
     val kind = source.getRequiredString(DynamicObjectRuleImporter.ITEM_KIND)
     val kindImporter = guardKindImporters.get(kind)
     if (kindImporter.isDefined) {
-      Some(kindImporter.get.importRuleComponent(source))
+      Some(kindImporter.get.importRuleComponent(source, rule))
     } else {
       log.warn(s"Rule guard had unknown kind ${kind}")
 
@@ -228,7 +233,7 @@ class DynamicObjectRuleImporter(log: ExtendedLog) extends RuleImporter {
       source.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
         val itemData = entry.down()
 
-        importAction(source).foreach(rule.addRuleAction(_))
+        importAction(source, rule).foreach(rule.addRuleAction(_))
       })
 
       source.up
@@ -241,11 +246,11 @@ class DynamicObjectRuleImporter(log: ExtendedLog) extends RuleImporter {
    * @param source
    *        the source for the action definition at the position for the definition
    */
-  private def importAction(source: DynamicObject): Option[RuleAction] = {
+  private def importAction(source: DynamicObject, rule: Rule): Option[RuleAction] = {
     val kind = source.getRequiredString(DynamicObjectRuleImporter.ITEM_KIND)
     val kindImporter = actionKindImporters.get(kind)
     if (kindImporter.isDefined) {
-      Some(kindImporter.get.importRuleComponent(source))
+      Some(kindImporter.get.importRuleComponent(source, rule))
     } else {
       log.warn(s"Rule action had unknown kind ${kind}")
 

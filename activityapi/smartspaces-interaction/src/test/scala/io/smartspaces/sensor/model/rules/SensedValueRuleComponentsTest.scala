@@ -46,8 +46,10 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
     val rule = new StandardRule("foo", rootExecutionContext)
 
     val sensorChannelModel = Mockito.mock(classOf[SensorChannelEntityModel])
+    
+    val valueName = "glorp"
 
-    val trigger = new SensorChannelSensedValueRuleTrigger("trigger1", rule, sensorChannelModel)
+    val trigger = new SensorChannelSensedValueRuleTrigger("trigger1", rule, sensorChannelModel, valueName)
 
     val value = 100.0
 
@@ -56,7 +58,7 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
 
     trigger.updateValue(sensedValue)
 
-    Mockito.verify(executionContext).setValue(SensedValueRuleTrigger.CONTEXT_NAME_SENSED_VALUE, sensedValue)
+    Mockito.verify(executionContext).setValue(valueName, sensedValue)
   }
 
   /**
@@ -69,13 +71,15 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
     val rule = new StandardRule("foo", rootExecutionContext)
 
     val sensorChannelModel = Mockito.mock(classOf[SensorChannelEntityModel])
+    
+    val valueName = "glorp"
 
-    val guard = new SimpleNumericContinuousSensedValueAboveRuleGuard(1000)
+    val guard = new SimpleNumericContinuousSensedValueAboveRuleGuard(1000, valueName)
 
     val sensedValueTrue = new SimpleNumericContinuousSensedValue(
       sensorChannelModel, 1001, None, 1000, 1000)
     val executionContextTrue = Mockito.mock(classOf[ExecutionContext])
-    Mockito.when(executionContextTrue.getValue(SensedValueRuleTrigger.CONTEXT_NAME_SENSED_VALUE)).
+    Mockito.when(executionContextTrue.getValue(valueName)).
       thenReturn(sensedValueTrue)
 
     Assert.assertTrue(guard.evaluate(rule, executionContextTrue))
@@ -83,7 +87,7 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
     val sensedValueFalse = new SimpleNumericContinuousSensedValue(
       sensorChannelModel, 999, None, 1000, 1000)
     val executionContextFalse = Mockito.mock(classOf[ExecutionContext])
-    Mockito.when(executionContextFalse.getValue(SensedValueRuleTrigger.CONTEXT_NAME_SENSED_VALUE)).
+    Mockito.when(executionContextFalse.getValue(valueName)).
       thenReturn(sensedValueFalse)
 
     Assert.assertFalse(guard.evaluate(rule, executionContextFalse))
@@ -95,17 +99,18 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
   @Test def testSimpleNumericContinuousSensedValueBelowRuleGuard(): Unit = {
     val rootExecutionContext = Mockito.mock(classOf[ExecutionContext])
 
-
     val rule = new StandardRule("foo", rootExecutionContext)
 
     val sensorChannelModel = Mockito.mock(classOf[SensorChannelEntityModel])
+    
+    val valueName = "glorp"
 
-    val guard = new SimpleNumericContinuousSensedValueBelowRuleGuard(1000)
+    val guard = new SimpleNumericContinuousSensedValueBelowRuleGuard(1000, valueName)
 
     val sensedValueTrue = new SimpleNumericContinuousSensedValue(
       sensorChannelModel, 999, None, 999, 1000)
     val executionContextTrue = Mockito.mock(classOf[ExecutionContext])
-    Mockito.when(executionContextTrue.getValue(SensedValueRuleTrigger.CONTEXT_NAME_SENSED_VALUE)).
+    Mockito.when(executionContextTrue.getValue(valueName)).
       thenReturn(sensedValueTrue)
 
     Assert.assertTrue(guard.evaluate(rule, executionContextTrue))
@@ -113,7 +118,7 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
     val sensedValueFalse = new SimpleNumericContinuousSensedValue(
       sensorChannelModel, 1000, None, 1000, 1000)
     val executionContextFalse = Mockito.mock(classOf[ExecutionContext])
-    Mockito.when(executionContextFalse.getValue(SensedValueRuleTrigger.CONTEXT_NAME_SENSED_VALUE)).
+    Mockito.when(executionContextFalse.getValue(valueName)).
       thenReturn(sensedValueFalse)
 
     Assert.assertFalse(guard.evaluate(rule, executionContextFalse))

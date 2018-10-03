@@ -174,13 +174,14 @@ class StandardRule(
   override def ruleTriggers: Iterable[RuleTrigger] = {
     _ruleTriggers.values
   }
-  
- override def getRuleTrigger(triggerName: String): Option[RuleTrigger] = {
-   _ruleTriggers.get(triggerName)
- }
- 
+
+  override def getRuleTrigger(triggerName: String): Option[RuleTrigger] = {
+    _ruleTriggers.get(triggerName)
+  }
+
   override def addRuleTrigger(ruleTrigger: RuleTrigger): Rule = {
     ruleTrigger.initialize()
+
     _ruleTriggers = _ruleTriggers + (ruleTrigger.triggerName -> ruleTrigger)
 
     this
@@ -198,7 +199,7 @@ class StandardRule(
 
   override def addRuleGuard(ruleGuard: RuleGuard): Rule = {
     ruleGuard.initialize()
-    
+
     _ruleGuards = ruleGuard :: _ruleGuards
 
     this
@@ -216,7 +217,7 @@ class StandardRule(
 
   override def addRuleAction(ruleAction: RuleAction): Rule = {
     ruleAction.initialize()
-    
+
     _ruleActions = ruleAction :: _ruleActions
 
     this

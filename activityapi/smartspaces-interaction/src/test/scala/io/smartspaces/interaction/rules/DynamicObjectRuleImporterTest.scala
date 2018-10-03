@@ -30,6 +30,7 @@ import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.util.data.mapper.YamlDataMapper
 import io.smartspaces.util.data.mapper.StandardYamlDataMapper
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectNavigator
+import org.mockito.Matchers
 
 /**
  * Tests for the dynamic object rule importer.
@@ -90,38 +91,38 @@ rules:
     val trigger1Factory = Mockito.mock(classOf[RuleTriggerKindImporter])
 
     Mockito.when(trigger1Factory.importerKind).thenReturn(triggerKind1)
-    Mockito.when(trigger1Factory.importRuleComponent(source)).thenReturn(trigger1)
+    Mockito.when(trigger1Factory.importRuleComponent(Matchers.eq(source), Matchers.any(classOf[Rule]))).thenReturn(trigger1)
 
     val trigger2 = Mockito.mock(classOf[RuleTrigger])
     Mockito.when(trigger2.triggerName).thenReturn(triggerName2)
     val trigger2Factory = Mockito.mock(classOf[RuleTriggerKindImporter])
 
     Mockito.when(trigger2Factory.importerKind).thenReturn(triggerKind2)
-    Mockito.when(trigger2Factory.importRuleComponent(source)).thenReturn(trigger2)
+    Mockito.when(trigger2Factory.importRuleComponent(Matchers.eq(source), Matchers.any(classOf[Rule]))).thenReturn(trigger2)
 
     val guard1 = Mockito.mock(classOf[RuleGuard])
     val guard1Factory = Mockito.mock(classOf[RuleGuardKindImporter])
 
     Mockito.when(guard1Factory.importerKind).thenReturn(guardKind1)
-    Mockito.when(guard1Factory.importRuleComponent(source)).thenReturn(guard1)
+    Mockito.when(guard1Factory.importRuleComponent(Matchers.eq(source), Matchers.any(classOf[Rule]))).thenReturn(guard1)
 
     val guard2 = Mockito.mock(classOf[RuleGuard])
     val guard2Factory = Mockito.mock(classOf[RuleGuardKindImporter])
 
     Mockito.when(guard2Factory.importerKind).thenReturn(guardKind2)
-    Mockito.when(guard2Factory.importRuleComponent(source)).thenReturn(guard2)
+    Mockito.when(guard2Factory.importRuleComponent(Matchers.eq(source), Matchers.any(classOf[Rule]))).thenReturn(guard2)
 
     val action1 = Mockito.mock(classOf[RuleAction])
     val action1Factory = Mockito.mock(classOf[RuleActionKindImporter])
 
     Mockito.when(action1Factory.importerKind).thenReturn(actionKind1)
-    Mockito.when(action1Factory.importRuleComponent(source)).thenReturn(action1)
+    Mockito.when(action1Factory.importRuleComponent(Matchers.eq(source), Matchers.any(classOf[Rule]))).thenReturn(action1)
 
     val action2 = Mockito.mock(classOf[RuleAction])
     val action2Factory = Mockito.mock(classOf[RuleActionKindImporter])
 
     Mockito.when(action2Factory.importerKind).thenReturn(actionKind2)
-    Mockito.when(action2Factory.importRuleComponent(source)).thenReturn(action2)
+    Mockito.when(action2Factory.importRuleComponent(Matchers.eq(source), Matchers.any(classOf[Rule]))).thenReturn(action2)
     
     importer.addRuleTriggerImporter(trigger1Factory)
     importer.addRuleTriggerImporter(trigger2Factory)

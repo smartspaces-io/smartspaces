@@ -33,8 +33,15 @@ trait RuleTriggerKindImporter {
 
   /**
    * Import a rule trigger.
+   * 
+   * @param source
+   *        the source for the import
+   * @param rule
+   *        the rule the trigger will be part of
+   *        
+   * @return the imported trigger
    */
-  def importRuleComponent(source: DynamicObject): RuleTrigger
+  def importRuleComponent(source: DynamicObject, rule: Rule): RuleTrigger
 }
 
 /**
@@ -51,8 +58,15 @@ trait RuleGuardKindImporter {
 
   /**
    * Import a rule guard.
+   * 
+   * @param source
+   *        the source for the import
+   * @param rule
+   *        the rule the guard will be part of
+   *        
+   * @return the imported guard
    */
-  def importRuleComponent(source: DynamicObject): RuleGuard
+  def importRuleComponent(source: DynamicObject, rule: Rule): RuleGuard
 }
 
 /**
@@ -68,9 +82,16 @@ trait RuleActionKindImporter {
   def importerKind: String
 
   /**
-   * Import a rule action.
+   * Import a rule guardaction.
+   * 
+   * @param source
+   *        the source for the import
+   * @param rule
+   *        the rule the action will be part of
+   *        
+   * @return the imported action
    */
-  def importRuleComponent(source: DynamicObject): RuleAction
+  def importRuleComponent(source: DynamicObject, rule: Rule): RuleAction
 }
 
 /**

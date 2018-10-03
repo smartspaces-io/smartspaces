@@ -227,7 +227,7 @@ public class StandardAutomationManager implements AutomationManager {
    *          the folder which has been added
    */
   private void handleImportFileAdded(File file) {
-    spaceEnvironment.getLog().formatInfo("Import file  %s found in autoinput folders", file);
+    spaceEnvironment.getLog().formatInfo("Import file  %s found in autoimport folders", file);
 
     String watchedFolder = file.getParent();
 

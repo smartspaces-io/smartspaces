@@ -48,7 +48,7 @@ trait RuleAction {
  * 
  * @author Keith M. Hughes
  */
-abstract class BaseRuleAcion extends RuleAction{
+abstract class BaseRuleAction extends RuleAction{
   
   override def initialize(): Unit = {
     // Do nothing

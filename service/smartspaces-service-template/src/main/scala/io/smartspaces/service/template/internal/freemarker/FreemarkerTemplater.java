@@ -17,6 +17,14 @@
 
 package io.smartspaces.service.template.internal.freemarker;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Locale;
+import java.util.Map;
+
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Template;
@@ -26,13 +34,6 @@ import io.smartspaces.SmartSpacesException;
 import io.smartspaces.service.template.Templater;
 import io.smartspaces.util.io.FileSupport;
 import io.smartspaces.util.io.FileSupportImpl;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.Map;
 
 /**
  * A templater using Freemarker.
@@ -65,7 +66,7 @@ public class FreemarkerTemplater implements Templater {
    * Construct a new Freemarker templater.
    *
    * @param templateDirectory
-   *          the directory containing the templates
+   *        the directory containing the templates
    */
   public FreemarkerTemplater(File templateDirectory) {
     this.templateDirectory = templateDirectory;
@@ -114,18 +115,23 @@ public class FreemarkerTemplater implements Templater {
 
   @Override
   public String instantiateTemplate(String templateName, Map<String, Object> data) {
+    return instantiateTemplate(templateName, data, null);
+  }
+
+  @Override
+  public String instantiateTemplate(String templateName, Map<String, Object> data, Locale locale) {
     checkInitialized();
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     Writer out = new OutputStreamWriter(baos);
     boolean noException = true;
     try {
-      Template template = getConfiguration().getTemplate(templateName);
+      Template template = getConfiguration().getTemplate(templateName, locale);
 
       template.process(data, out);
     } catch (Exception e) {
       noException = false;
-      throw new SmartSpacesException(String.format("Could not instantiate template %s",
-          templateName), e);
+      throw new SmartSpacesException(
+          String.format("Could not instantiate template %s", templateName), e);
     } finally {
       fileSupport.close(out, noException);
     }
@@ -135,17 +141,22 @@ public class FreemarkerTemplater implements Templater {
 
   @Override
   public void writeTemplate(String templateName, Map<String, Object> data, File outputFile) {
+    writeTemplate(templateName, data, null, outputFile);
+  }
+
+  @Override
+  public void writeTemplate(String templateName, Map<String, Object> data, Locale locale, File outputFile) {
     checkInitialized();
     Writer out = null;
     boolean noException = true;
     try {
-      Template template = getConfiguration().getTemplate(templateName);
+      Template template = getConfiguration().getTemplate(templateName, locale);
       out = new FileWriter(outputFile);
       template.process(data, out);
     } catch (Exception e) {
       noException = false;
-      throw new SmartSpacesException(String.format("Could not instantiate template %s",
-          templateName), e);
+      throw new SmartSpacesException(
+          String.format("Could not instantiate template %s", templateName), e);
     } finally {
       fileSupport.close(out, noException);
     }

@@ -18,6 +18,7 @@
 package io.smartspaces.service.template;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.Map;
 
 import io.smartspaces.resource.managed.ManagedResource;
@@ -45,15 +46,44 @@ public interface Templater extends ManagedResource {
   String instantiateTemplate(String templateName, Map<String, Object> data);
 
   /**
+   * Instantiate a template given a set of data.
+   *
+   * @param templateName
+   *        which template to use
+   * @param data
+   *        data for the template
+   * @param locale
+   *        the locale for the format to be instantiated in, can be {@code null}
+   *
+   * @return the instantiated template
+   */
+  String instantiateTemplate(String templateName, Map<String, Object> data, Locale locale);
+
+  /**
    * Instantiate a template given a set of data and write the contents to a
    * file.
    *
    * @param templateName
-   *          which template to use
+   *        which template to use
    * @param data
-   *          data for the template
+   *        data for the template
    * @param outputFile
-   *          file to writre the template to
+   *        file to writre the template to
    */
   void writeTemplate(String templateName, Map<String, Object> data, File outputFile);
+
+  /**
+   * Instantiate a template given a set of data and write the contents to a
+   * file.
+   *
+   * @param templateName
+   *        which template to use
+   * @param data
+   *        data for the template
+   * @param locale
+   *        the locale for the format to be instantiated in, can be {@code null}
+   * @param outputFile
+   *        file to writre the template to
+   */
+  void writeTemplate(String templateName, Map<String, Object> data, Locale locale, File outputFile);
 }

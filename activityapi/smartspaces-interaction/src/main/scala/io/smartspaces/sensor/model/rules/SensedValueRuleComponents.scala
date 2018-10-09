@@ -35,38 +35,6 @@ import io.smartspaces.sensor.model.SimpleNumericContinuousSensedValue
 import io.smartspaces.util.data.dynamic.DynamicObject
 
 /**
- * Various useful external constants for various rule components for sensed values.
- *
- * @author Keith M. Hughes
- */
-object SensedValueRuleComponents {
-
-  /**
-   * The kind for the sensor channel sensed value rule trigger.
-   */
-  val KIND_TRIGGER_SENSOR_CHANNEL_SENSED_VALUE =
-    "io.smartspaces.rule.trigger.sensor.channel.sensed.value"
-
-  /**
-   * The kind for the simple continuous sensed value above rule guard.
-   */
-  val KIND_GUARD_SIMPLE_NUMERIC_CONTINUOUS_SENSED_VALUE_ABOVE =
-    "io.smartspaces.rule.guard.simple.numeric.continuous.sensed.value.above"
-
-  /**
-   * The kind for the simple continuous sensed value below rule guard.
-   */
-  val KIND_GUARD_SIMPLE_NUMERIC_CONTINUOUS_SENSED_VALUE_BELOW =
-    "io.smartspaces.rule.guard.simple.numeric.continuous.sensed.value.below"
-
-  /**
-   * The kind for the logging of a sensed value rule action.
-   */
-  val KIND_ACTION_SENSED_VALUE_LOG  =
-    "io.smartspaces.rule.action.sensed.value.log"
-}
-
-/**
  * A rule trigger for sensed values from a sensor channel.
  *
  * @author Keith M. Hughes
@@ -75,7 +43,7 @@ class SensorChannelSensedValueRuleTrigger(
   override val triggerName: String,
   override val rule: Rule,
   val sensorChannelModel: SensorChannelEntityModel,
-  val sensedValueValueName: String) extends BaseRuleTrigger {
+  val measurmentValueName: String) extends BaseRuleTrigger {
 
   override def initialize(): Unit = {
     sensorChannelModel.addSensorChannelSensedValueRuleTrigger(this)
@@ -90,34 +58,11 @@ class SensorChannelSensedValueRuleTrigger(
   def updateValue(value: SensedValue[Any]): Unit = {
 
     def ruleInvocationInitialize = (context: ExecutionContext) => {
-      context.setValue(sensedValueValueName, value)
+      context.setValue(measurmentValueName, value)
     }
 
     rule.triggered(this, ruleInvocationInitialize)
   }
-}
-
-/**
- * Various constants and other components useful for the sensor channel sensed value rule trigger.
- *
- * @author Keith M. Hughes
- */
-object SensorChannelSensedValueRuleTriggerKindImporter {
-
-  /**
-   * The field name in the data section for the sensor ID.
-   */
-  val DATA_FIELD_NAME_SENSOR_ID = "sensorId"
-
-  /**
-   * The field name in the data section for the sensor channel ID.
-   */
-  val DATA_FIELD_NAME_SENSOR_CHANNEL_ID = "sensorChannelId"
-
-  /**
-   * The field name in the data section for the sensed value value name.
-   */
-  val DATA_FIELD_NAME_SENSED_VALUE_VALUE_NAME = "sensedValueValueName"
 }
 
 /**
@@ -129,7 +74,7 @@ class SensorChannelSensedValueRuleTriggerKindImporter(
   sensorModel: CompleteSensedEntityModel) extends RuleTriggerKindImporter {
 
   override val importerKind: String = {
-    SensedValueRuleComponents.KIND_TRIGGER_SENSOR_CHANNEL_SENSED_VALUE
+    RuleComponentConstants.KIND_TRIGGER_SENSOR_CHANNEL_SENSED_VALUE
   }
 
   override def importRuleComponent(source: DynamicObject, rule: Rule): RuleTrigger = {
@@ -140,15 +85,15 @@ class SensorChannelSensedValueRuleTriggerKindImporter(
 
     val sensorChannelModel = {
       val sensorId = source.getRequiredString(
-        SensorChannelSensedValueRuleTriggerKindImporter.DATA_FIELD_NAME_SENSOR_ID)
+        RuleComponentConstants.DATA_FIELD_NAME_SENSOR_ID)
       val sensorChannelId = source.getRequiredString(
-        SensorChannelSensedValueRuleTriggerKindImporter.DATA_FIELD_NAME_SENSOR_CHANNEL_ID)
+        RuleComponentConstants.DATA_FIELD_NAME_SENSOR_CHANNEL_ID)
 
       sensorModel.getSensorEntityModelByExternalId(sensorId).flatMap(
         _.getSensorChannelEntityModel(sensorChannelId))
     }
     val valueName = source.getRequiredString(
-      SimpleNumericContinuousSensedValueBelowRuleGuardKindImporter.DATA_FIELD_NAME_SENSED_VALUE_VALUE_NAME)
+      RuleComponentConstants.DATA_FIELD_NAME_MEASUREMENT_VALUE_NAME)
 
     source.up
 
@@ -163,31 +108,24 @@ class SensorChannelSensedValueRuleTriggerKindImporter(
  */
 class SimpleNumericContinuousSensedValueAboveRuleGuard(
   val thresholdValue: Double,
-  val sensedValueValueName: String) extends BaseRuleGuard {
+  val measurmentValueName: String) extends BaseRuleGuard {
 
   override def evaluate(rule: Rule, executionContext: ExecutionContext): Boolean = {
-    val value: SimpleNumericContinuousSensedValue = executionContext.getValue(sensedValueValueName)
+    val value: SimpleNumericContinuousSensedValue = executionContext.getValue(measurmentValueName)
 
-    value.value > thresholdValue
+    if (value.value > thresholdValue) {
+      executionContext.setValue(
+        RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD,
+        thresholdValue)
+      executionContext.setValue(
+        RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD_COMPARISON_TYPE,
+        RuleComponentConstants.DATA_FIELD_VALUE_THRESHOLD_COMPARISON_TYPE_ABOVE)
+
+      true
+    } else {
+      false
+    }
   }
-}
-
-/**
- * Various constants and other components useful for the simple numeric continuous sensed value above rule guard.
- *
- * @author Keith M. Hughes
- */
-object SimpleNumericContinuousSensedValueAboveRuleGuardKindImporter {
-
-  /**
-   * The field name in the data section for the threshold.
-   */
-  val DATA_FIELD_NAME_THRESHOLD = "threshold"
-
-  /**
-   * The field name in the data section for the sensed value value name.
-   */
-  val DATA_FIELD_NAME_SENSED_VALUE_VALUE_NAME = "sensedValueValueName"
 }
 
 /**
@@ -198,7 +136,7 @@ object SimpleNumericContinuousSensedValueAboveRuleGuardKindImporter {
 class SimpleNumericContinuousSensedValueAboveRuleGuardKindImporter extends RuleGuardKindImporter {
 
   override val importerKind: String = {
-    SensedValueRuleComponents.KIND_GUARD_SIMPLE_NUMERIC_CONTINUOUS_SENSED_VALUE_ABOVE
+    RuleComponentConstants.KIND_GUARD_SIMPLE_NUMERIC_CONTINUOUS_SENSED_VALUE_ABOVE
   }
 
   override def importRuleComponent(source: DynamicObject, rule: Rule): RuleGuard = {
@@ -206,9 +144,9 @@ class SimpleNumericContinuousSensedValueAboveRuleGuardKindImporter extends RuleG
     source.down(DynamicObjectRuleImporter.SECTION_DATA)
 
     val thresholdValue = source.getRequiredDouble(
-      SimpleNumericContinuousSensedValueAboveRuleGuardKindImporter.DATA_FIELD_NAME_THRESHOLD)
+      RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD)
     val valueName = source.getRequiredString(
-      SimpleNumericContinuousSensedValueAboveRuleGuardKindImporter.DATA_FIELD_NAME_SENSED_VALUE_VALUE_NAME)
+      RuleComponentConstants.DATA_FIELD_NAME_MEASUREMENT_VALUE_NAME)
 
     source.up
 
@@ -223,31 +161,24 @@ class SimpleNumericContinuousSensedValueAboveRuleGuardKindImporter extends RuleG
  */
 class SimpleNumericContinuousSensedValueBelowRuleGuard(
   val thresholdValue: Double,
-  sensedValueValueName: String) extends BaseRuleGuard {
+  val measurementValueName: String) extends BaseRuleGuard {
 
   override def evaluate(rule: Rule, executionContext: ExecutionContext): Boolean = {
-    val value: SimpleNumericContinuousSensedValue = executionContext.getValue(sensedValueValueName)
+    val value: SimpleNumericContinuousSensedValue = executionContext.getValue(measurementValueName)
 
-    value.value < thresholdValue
+    if (value.value < thresholdValue) {
+      executionContext.setValue(
+        RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD,
+        thresholdValue)
+      executionContext.setValue(
+        RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD_COMPARISON_TYPE,
+        RuleComponentConstants.DATA_FIELD_VALUE_THRESHOLD_COMPARISON_TYPE_BELOW)
+
+      true
+    } else {
+      false
+    }
   }
-}
-
-/**
- * Various constants and other components useful for the simple numeric continuous sensed value below rule guard.
- *
- * @author Keith M. Hughes
- */
-object SimpleNumericContinuousSensedValueBelowRuleGuardKindImporter {
-
-  /**
-   * The field name in the data section for the threshold.
-   */
-  val DATA_FIELD_NAME_THRESHOLD = "threshold"
-
-  /**
-   * The field name in the data section for the sensed value value name.
-   */
-  val DATA_FIELD_NAME_SENSED_VALUE_VALUE_NAME = "sensedValueValueName"
 }
 
 /**
@@ -258,7 +189,7 @@ object SimpleNumericContinuousSensedValueBelowRuleGuardKindImporter {
 class SimpleNumericContinuousSensedValueBelowRuleGuardKindImporter extends RuleGuardKindImporter {
 
   override val importerKind: String = {
-    SensedValueRuleComponents.KIND_GUARD_SIMPLE_NUMERIC_CONTINUOUS_SENSED_VALUE_BELOW
+    RuleComponentConstants.KIND_GUARD_SIMPLE_NUMERIC_CONTINUOUS_SENSED_VALUE_BELOW
   }
 
   override def importRuleComponent(source: DynamicObject, rule: Rule): RuleGuard = {
@@ -266,9 +197,9 @@ class SimpleNumericContinuousSensedValueBelowRuleGuardKindImporter extends RuleG
     source.down(DynamicObjectRuleImporter.SECTION_DATA)
 
     val thresholdValue = source.getRequiredDouble(
-      SimpleNumericContinuousSensedValueBelowRuleGuardKindImporter.DATA_FIELD_NAME_THRESHOLD)
+      RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD)
     val valueName = source.getRequiredString(
-      SimpleNumericContinuousSensedValueBelowRuleGuardKindImporter.DATA_FIELD_NAME_SENSED_VALUE_VALUE_NAME)
+      RuleComponentConstants.DATA_FIELD_NAME_MEASUREMENT_VALUE_NAME)
 
     source.up
 
@@ -282,24 +213,11 @@ class SimpleNumericContinuousSensedValueBelowRuleGuardKindImporter extends RuleG
  * @author Keith M. Hughes
  */
 class SensedValueLoggingRuleAction(
-  val sensedValueValueName: String) extends BaseRuleAction {
+  val measurmentValueName: String) extends BaseRuleAction {
 
   override def evaluate(rule: Rule, trigger: RuleTrigger, executionContext: ExecutionContext): Unit = {
-    executionContext.getLog.info(s"Rule action for ${rule.ruleName} ${executionContext.getValue(sensedValueValueName)}")
+    executionContext.getLog.info(s"Rule action for ${rule.ruleName} ${executionContext.getValue(measurmentValueName)}")
   }
-}
-
-/**
- * Various constants and other components useful for the simple numeric continuous sensed value below rule guard.
- *
- * @author Keith M. Hughes
- */
-object SensedValueLoggingRuleActionKindImporter {
-
-  /**
-   * The field name in the data section for the sensed value value name.
-   */
-  val DATA_FIELD_NAME_SENSED_VALUE_VALUE_NAME = "sensedValueValueName"
 }
 
 /**
@@ -310,7 +228,7 @@ object SensedValueLoggingRuleActionKindImporter {
 class SensedValueLoggingRuleActionKindImporter extends RuleActionKindImporter {
 
   override val importerKind: String = {
-    SensedValueRuleComponents.KIND_ACTION_SENSED_VALUE_LOG 
+    RuleComponentConstants.KIND_ACTION_SENSED_VALUE_LOG
   }
 
   override def importRuleComponent(source: DynamicObject, rule: Rule): RuleAction = {
@@ -318,7 +236,7 @@ class SensedValueLoggingRuleActionKindImporter extends RuleActionKindImporter {
     source.down(DynamicObjectRuleImporter.SECTION_DATA)
 
     val valueName = source.getRequiredString(
-      SensedValueLoggingRuleActionKindImporter.DATA_FIELD_NAME_SENSED_VALUE_VALUE_NAME)
+      RuleComponentConstants.DATA_FIELD_NAME_MEASUREMENT_VALUE_NAME)
 
     source.up
 

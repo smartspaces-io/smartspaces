@@ -46,7 +46,7 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
     val rule = new StandardRule("foo", rootExecutionContext)
 
     val sensorChannelModel = Mockito.mock(classOf[SensorChannelEntityModel])
-    
+
     val valueName = "glorp"
 
     val trigger = new SensorChannelSensedValueRuleTrigger("trigger1", rule, sensorChannelModel, valueName)
@@ -67,14 +67,14 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
   @Test def testSimpleNumericContinuousSensedValueAboveRuleGuard(): Unit = {
     val rootExecutionContext = Mockito.mock(classOf[ExecutionContext])
 
-
     val rule = new StandardRule("foo", rootExecutionContext)
 
     val sensorChannelModel = Mockito.mock(classOf[SensorChannelEntityModel])
-    
+
     val valueName = "glorp"
 
-    val guard = new SimpleNumericContinuousSensedValueAboveRuleGuard(1000, valueName)
+    val threshold = 1000.0
+    val guard = new SimpleNumericContinuousSensedValueAboveRuleGuard(threshold, valueName)
 
     val sensedValueTrue = new SimpleNumericContinuousSensedValue(
       sensorChannelModel, 1001, None, 1000, 1000)
@@ -83,6 +83,12 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
       thenReturn(sensedValueTrue)
 
     Assert.assertTrue(guard.evaluate(rule, executionContextTrue))
+    Mockito.verify(executionContextTrue, Mockito.times(1)).setValue(
+      RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD,
+      threshold)
+    Mockito.verify(executionContextTrue, Mockito.times(1)).setValue(
+      RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD_COMPARISON_TYPE,
+      RuleComponentConstants.DATA_FIELD_VALUE_THRESHOLD_COMPARISON_TYPE_ABOVE)
 
     val sensedValueFalse = new SimpleNumericContinuousSensedValue(
       sensorChannelModel, 999, None, 1000, 1000)
@@ -91,6 +97,12 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
       thenReturn(sensedValueFalse)
 
     Assert.assertFalse(guard.evaluate(rule, executionContextFalse))
+    Mockito.verify(executionContextFalse, Mockito.times(0)).setValue(
+      RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD,
+      threshold)
+    Mockito.verify(executionContextFalse, Mockito.times(0)).setValue(
+      RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD_COMPARISON_TYPE,
+      RuleComponentConstants.DATA_FIELD_VALUE_THRESHOLD_COMPARISON_TYPE_ABOVE)
   }
 
   /**
@@ -102,10 +114,11 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
     val rule = new StandardRule("foo", rootExecutionContext)
 
     val sensorChannelModel = Mockito.mock(classOf[SensorChannelEntityModel])
-    
+
     val valueName = "glorp"
 
-    val guard = new SimpleNumericContinuousSensedValueBelowRuleGuard(1000, valueName)
+    val threshold = 1000.0
+    val guard = new SimpleNumericContinuousSensedValueBelowRuleGuard(threshold, valueName)
 
     val sensedValueTrue = new SimpleNumericContinuousSensedValue(
       sensorChannelModel, 999, None, 999, 1000)
@@ -114,6 +127,12 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
       thenReturn(sensedValueTrue)
 
     Assert.assertTrue(guard.evaluate(rule, executionContextTrue))
+    Mockito.verify(executionContextTrue, Mockito.times(1)).setValue(
+      RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD,
+      threshold)
+    Mockito.verify(executionContextTrue, Mockito.times(1)).setValue(
+      RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD_COMPARISON_TYPE,
+      RuleComponentConstants.DATA_FIELD_VALUE_THRESHOLD_COMPARISON_TYPE_BELOW)
 
     val sensedValueFalse = new SimpleNumericContinuousSensedValue(
       sensorChannelModel, 1000, None, 1000, 1000)
@@ -122,5 +141,11 @@ class SensedValueRuleComponentsTest extends JUnitSuite {
       thenReturn(sensedValueFalse)
 
     Assert.assertFalse(guard.evaluate(rule, executionContextFalse))
+    Mockito.verify(executionContextFalse, Mockito.times(0)).setValue(
+      RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD,
+      threshold)
+    Mockito.verify(executionContextFalse, Mockito.times(0)).setValue(
+      RuleComponentConstants.DATA_FIELD_NAME_THRESHOLD_COMPARISON_TYPE,
+      RuleComponentConstants.DATA_FIELD_VALUE_THRESHOLD_COMPARISON_TYPE_BELOW)
   }
 }

@@ -350,8 +350,8 @@ public class NettyWebServerHandler extends SimpleChannelUpstreamHandler {
       // Nothing we handle.
 
       HttpResponseStatus status = FORBIDDEN;
-      String message = String.format("HTTP [%d] %s from %s--> (No handlers for request)",
-          status.getCode(), req.getUri(), ctx.getChannel().getRemoteAddress());
+      String message = String.format("HTTP [%d] %s:%s from %s--> (No handlers for request)",
+          status.getCode(), req.getMethod().getName(), req.getUri(), ctx.getChannel().getRemoteAddress());
       if (shouldWarnOnMissingFile(new URI(req.getUri()).getPath())) {
         webServer.getLog().warn(message);
       } else {

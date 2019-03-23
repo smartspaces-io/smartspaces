@@ -48,7 +48,7 @@ class StandardSensedEntityModelProcessor(
     sensor: SensorEntityModel, message: DynamicObject): Unit = {
 
     val messageType = message.getString(
-      SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA_TYPE,
+      SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_TYPE,
       SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
 
     if (log.isDebugEnabled()) {

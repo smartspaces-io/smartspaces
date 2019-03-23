@@ -18,7 +18,7 @@ package io.smartspaces.sensor.messaging.messages
 
 /**
  * Useful support for sensor messaging.
- * 
+ *
  * @author Keith M. Hughes
  */
 object SensorMessages {
@@ -29,9 +29,24 @@ object SensorMessages {
   val SENSOR_MESSAGE_FIELD_NAME_SENSOR = "sensor"
 
   /**
+   * The version field for a message envelope.
+   */
+  val SENSOR_MESSAGE_FIELD_NAME_VERSION = "version";
+
+  /**
    * The field name for the message type field.
    */
-  val SENSOR_MESSAGE_FIELD_NAME_MESSAGE_TYPE = "type"
+  val SENSOR_MESSAGE_FIELD_NAME_MESSAGE_TYPE = "messageType"
+
+  /**
+   * The field name for the message sender field.
+   */
+  val SENSOR_MESSAGE_FIELD_NAME_MESSAGE_SENDER = "messageSender"
+
+  /**
+   * The field name for the message destination field.
+   */
+  val SENSOR_MESSAGE_FIELD_NAME_MESSAGE_DESTINATION = "messageDestination"
 
   /**
    * The field value for a measurement for the message type field.
@@ -72,12 +87,12 @@ object SensorMessages {
    * The field name for the timestamp field in the data field.
    */
   val SENSOR_MESSAGE_FIELD_NAME_DATA_TIMESTAMP = "timestamp"
-  
+
   /**
    * The field name for the messages field in the data field of a composite message.
    */
   val SENSOR_MESSAGE_FIELD_NAME_DATA_MESSAGES = "messages"
-  
+
   /**
    * A collection of fields in a sensor data packet that are not channels.
    */

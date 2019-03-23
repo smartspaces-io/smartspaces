@@ -22,7 +22,7 @@ dependencies {
 jar {
   manifest {
     version = version
-    symbolicName = 'smartspaces.launcher'
+    //symbolicName = 'smartspaces.launcher'
 	
 	attributes(
 		"Main-Class": "io.smartspaces.launcher.SmartSpacesLauncher", 

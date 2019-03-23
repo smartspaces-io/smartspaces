@@ -36,10 +36,10 @@ import io.smartspaces.resource.managed.IdempotentManagedResource
  * @author Keith M. Hughes
  */
 object StandardManagedScope {
-  
+
   /**
    * Create a new managed scope.
-   * 
+   *
    * @return the new managed scope
    */
   def newManagedScope(executorService: ScheduledExecutorService, log: ExtendedLog): ManagedScope = {
@@ -53,8 +53,8 @@ object StandardManagedScope {
  * @author Keith M. Hughes
  */
 class StandardManagedScope(
-    override val managedResources: ManagedResources, 
-    override val managedTasks: ManagedTasks) extends IdempotentManagedResource with ManagedScope {
+  override val managedResources: ManagedResources,
+  override val managedTasks: ManagedTasks) extends IdempotentManagedResource with ManagedScope {
 
   override def onStartup(): Unit = {
     managedResources.startupResources()
@@ -62,18 +62,18 @@ class StandardManagedScope(
 
   override def onShutdown(): Unit = {
     managedTasks.asInstanceOf[InternalManagedTasks].shutdownAll()
-    
+
     managedResources.shutdownResourcesAndClear()
   }
 
-  override def addResource(resource: ManagedResource): Unit = {   
+  override def addResource(resource: ManagedResource): Unit = {
     managedResources.addResource(resource)
   }
 
   override def addStartedResource(resource: ManagedResource): Unit = {
     managedResources.addResource(resource)
   }
-  
+
   override def submit(task: Runnable): ManagedTask = {
     managedTasks.submit(task)
   }
@@ -82,12 +82,12 @@ class StandardManagedScope(
     managedTasks.schedule(task, delay, unit)
   }
 
-  override def scheduleAtFixedRate(task: Runnable,  taskFrequency: TimeFrequency): ManagedTask = {
-    managedTasks.scheduleAtFixedRate(task,  taskFrequency)
+  override def scheduleAtFixedRate(task: Runnable, taskFrequency: TimeFrequency): ManagedTask = {
+    managedTasks.scheduleAtFixedRate(task, taskFrequency)
   }
 
   override def scheduleAtFixedRate(task: Runnable, taskFrequency: TimeFrequency,
-      allowTerminate: Boolean): ManagedTask = {
+    allowTerminate: Boolean): ManagedTask = {
     managedTasks.scheduleAtFixedRate(task, taskFrequency, allowTerminate)
   }
 
@@ -96,8 +96,8 @@ class StandardManagedScope(
   }
 
   override def scheduleAtFixedRate(task: Runnable, initialDelay: Long, period: Long,
-      unit: TimeUnit, allowTerminate: Boolean): ManagedTask = {
-    managedTasks.scheduleAtFixedRate(task, initialDelay, period, unit , allowTerminate)
+    unit: TimeUnit, allowTerminate: Boolean): ManagedTask = {
+    managedTasks.scheduleAtFixedRate(task, initialDelay, period, unit, allowTerminate)
   }
 
   override def scheduleWithFixedDelay(task: Runnable, taskDelay: TimeDelay): ManagedTask = {
@@ -105,17 +105,17 @@ class StandardManagedScope(
   }
 
   override def scheduleWithFixedDelay(task: Runnable, taskDelay: TimeDelay,
-     allowTerminate: Boolean): ManagedTask = {
+    allowTerminate: Boolean): ManagedTask = {
     managedTasks.scheduleWithFixedDelay(task, taskDelay, allowTerminate)
   }
 
   override def scheduleWithFixedDelay(task: Runnable, initialDelay: Long, delay: Long,
-      unit: TimeUnit): ManagedTask = {
+    unit: TimeUnit): ManagedTask = {
     managedTasks.scheduleWithFixedDelay(task, initialDelay, delay, unit)
   }
 
   override def scheduleWithFixedDelay(task: Runnable, initialDelay: Long, delay: Long,
-      unit: TimeUnit, allowTerminate: Boolean): ManagedTask = {
+    unit: TimeUnit, allowTerminate: Boolean): ManagedTask = {
     managedTasks.scheduleWithFixedDelay(task, initialDelay, delay, unit, allowTerminate)
   }
 }

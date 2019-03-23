@@ -18,9 +18,10 @@ package io.smartspaces.sensor.model
 
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.domain.SensedEntityDescription
+import io.smartspaces.sensor.domain.SensorAcquisitionModeCategoricalValueInstances
 import io.smartspaces.sensor.domain.SensorEntityDescription
-import io.smartspaces.sensor.services.domain.SensorInstanceRegistry
 import io.smartspaces.sensor.domain.SensorSensedEntityAssociationDescription
+import io.smartspaces.sensor.services.domain.SensorInstanceRegistry
 import io.smartspaces.sensor.services.processing.SensorProcessingEventEmitter
 
 /**
@@ -103,6 +104,17 @@ trait CompleteSensedEntityModel {
    * @return all sensor models that make the given measurement
    */
   def getAllSensorEntityModelsForMeasurementTypeExternalId(measurementTypeExternalId: String): Iterable[SensorEntityModel]
+
+  /**
+   * Get all sensor entity models that provide a given measurement type.
+   *
+   * @param measurementTypeExternalId
+   *          the external ID of the measurement type
+   *
+   * @return all sensor models that make the given measurement
+   */
+  def getAllSensorEntityModelsForAcquisitionMode(
+      acquisitionMode: SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance): Iterable[SensorEntityModel]
 
   /**
    * Get all sensor entity models that for a givensensor type.

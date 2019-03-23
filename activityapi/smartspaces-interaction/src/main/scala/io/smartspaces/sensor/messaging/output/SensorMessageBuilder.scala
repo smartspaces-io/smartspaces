@@ -132,21 +132,63 @@ object StandardSensorMessageBuilder {
    * @return the message builder
    */
   def newMeasurementMessage(sensorId: String): SensorMessageBuilder = {
-    new StandardSensorMessageBuilder(newDynamicObjectBuilder(sensorId,
-      SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT))
+    newMeasurementMessage(sensorId, None, None)
+  }
+
+  /**
+   * Create a new measurement message.
+   *
+   * @param sensorId
+   *            the sensor external ID
+   * @param sender
+   *        an optional sender
+   * @param destination
+   *        an optional destination
+   *
+   * @return the message builder
+   */
+  def newMeasurementMessage(
+    sensorId: String,
+    sender: Option[String],
+    destination: Option[String]): SensorMessageBuilder = {
+    new StandardSensorMessageBuilder(newDynamicObjectBuilder(
+      sensorId,
+      SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT,
+      sender, destination))
   }
 
   /**
    * Create a new heartbeat message.
    *
    * @param sensorId
-   *            the sensor external ID
+   *        the sensor external ID
    *
    * @return the message builder
    */
   def newHeartbeatMessage(sensorId: String): SensorMessageBuilder = {
-    new StandardSensorMessageBuilder(newDynamicObjectBuilder(sensorId,
-      SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_HEARTBEAT))
+    newHeartbeatMessage(sensorId, None, None)
+  }
+
+  /**
+   * Create a new heartbeat message.
+   *
+   * @param sensorId
+   *        the sensor external ID
+   * @param sender
+   *        an optional sender
+   * @param destination
+   *        an optional destination
+   *
+   * @return the message builder
+   */
+  def newHeartbeatMessage(
+    sensorId: String,
+    sender: Option[String],
+    destination: Option[String]): SensorMessageBuilder = {
+    new StandardSensorMessageBuilder(newDynamicObjectBuilder(
+      sensorId,
+      SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_HEARTBEAT,
+      sender, destination))
   }
 
   /**
@@ -158,13 +200,66 @@ object StandardSensorMessageBuilder {
    *             the type of message
    */
   def addSensorMessage(sensorId: String, messageType: String): SensorMessageBuilder = {
-    new StandardSensorMessageBuilder(newDynamicObjectBuilder(sensorId, messageType))
+    addSensorMessage(sensorId, messageType, None, None)
   }
 
-  private def newDynamicObjectBuilder(sensorId: String, messageType: String): DynamicObjectBuilder = {
+  /**
+   * Add in a new sensor message to the composite builder.
+   *
+   * @param sensorId
+   *        the sensor external ID
+   * @param messageType
+   *        the type of message
+   * @param sender
+   *        an optional sender
+   * @param destination
+   *        an optional destination
+   *        
+   * @return the builder
+   */
+  def addSensorMessage(
+    sensorId: String,
+    messageType: String,
+    sender: Option[String],
+    destination: Option[String]): SensorMessageBuilder = {
+    new StandardSensorMessageBuilder(newDynamicObjectBuilder(
+        sensorId, messageType, sender, destination))
+  }
+
+  /**
+   * Create a new dynamic object builder for a sensor message.
+   *
+   * @param sensorId
+   *        the sensor external ID
+   * @param messageType
+   *        the type of message
+   * @param sender
+   *        an optional sender
+   * @param destination
+   *        an optional destination
+   *        
+   * @return the builder
+   */
+  private def newDynamicObjectBuilder(
+    sensorId: String,
+    messageType: String,
+    sender: Option[String],
+    destination: Option[String]): DynamicObjectBuilder = {
     val messageBuilder = new StandardDynamicObjectBuilder
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_SENSOR, sensorId)
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_TYPE, messageType)
+
+    sender.foreach {
+      messageBuilder.setProperty(
+        SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_SENDER,
+        _)
+    }
+
+    destination.foreach {
+      messageBuilder.setProperty(
+        SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_DESTINATION,
+        _)
+    }
 
     messageBuilder.newObject(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
 
@@ -256,6 +351,20 @@ trait CompositeSensorMessageBuilder extends SensorMessageBuilder {
   def newMeasurementMessage(sensorId: String): CompositeSensorMessageBuilder
 
   /**
+   * Create a new measurement message.
+   *
+   * @param sensorId
+   *            the sensor external ID
+   * @param sender
+   *        an optional sender
+   * @param destination
+   *        an optional destination
+   *
+   * @return the message builder
+   */
+  def newMeasurementMessage(sensorId: String, sender: Option[String], destination: Option[String]): CompositeSensorMessageBuilder
+
+  /**
    * Create a new heartbeat message.
    *
    * @param sensorId
@@ -266,6 +375,20 @@ trait CompositeSensorMessageBuilder extends SensorMessageBuilder {
   def newHeartbeatMessage(sensorId: String): CompositeSensorMessageBuilder
 
   /**
+   * Create a new heartbeat message.
+   *
+   * @param sensorId
+   *            the sensor external ID
+   * @param sender
+   *        an optional sender
+   * @param destination
+   *        an optional destination
+   *
+   * @return the message builder
+   */
+  def newHeartbeatMessage(sensorId: String, sender: Option[String], destination: Option[String]): CompositeSensorMessageBuilder
+
+  /**
    * Add in a new sensor message to the composite builder.
    *
    * @param sensorId
@@ -274,6 +397,20 @@ trait CompositeSensorMessageBuilder extends SensorMessageBuilder {
    *             the type of message
    */
   def addSensorMessage(sensorId: String, messageType: String): CompositeSensorMessageBuilder
+
+  /**
+   * Add in a new sensor message to the composite builder.
+   *
+   * @param sensorId
+   *             the sensor external ID
+   * @param messageType
+   *             the type of message
+   * @param sender
+   *        an optional sender
+   * @param destination
+   *        an optional destination
+   */
+  def addSensorMessage(sensorId: String, messageType: String, sender: Option[String], destination: Option[String]): CompositeSensorMessageBuilder
 }
 
 /**
@@ -289,9 +426,36 @@ object StandardCompositeSensorMessageBuilder {
    * The builder will be in place for the first message.
    */
   def newCompositeMessage(): CompositeSensorMessageBuilder = {
+    newCompositeMessage(None, None)
+  }
+
+  /**
+   * Create a new compoite image.
+   *
+   * The builder will be in place for the first message.
+   *
+   * @param sender
+   *        an optional sender
+   * @param destination
+   *        an optional destination
+   */
+  def newCompositeMessage(sender: Option[String], destination: Option[String]): CompositeSensorMessageBuilder = {
     val messageBuilder = new StandardDynamicObjectBuilder
-    messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_TYPE,
+    messageBuilder.setProperty(
+      SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_TYPE,
       SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_COMPOSITE)
+
+    sender.foreach {
+      messageBuilder.setProperty(
+        SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_SENDER,
+        _)
+    }
+
+    destination.foreach {
+      messageBuilder.setProperty(
+        SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_DESTINATION,
+        _)
+    }
 
     messageBuilder.newObject(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
 
@@ -299,7 +463,7 @@ object StandardCompositeSensorMessageBuilder {
 
     messageBuilder.pushMark
 
-    new StandardCompositeSensorMessageBuilder(messageBuilder)
+    new StandardCompositeSensorMessageBuilder(sender, destination, messageBuilder)
   }
 }
 
@@ -308,22 +472,50 @@ object StandardCompositeSensorMessageBuilder {
  *
  * @author Keith M. Hughes
  */
-private class StandardCompositeSensorMessageBuilder(messageBuilder: DynamicObjectBuilder) extends StandardSensorMessageBuilder(messageBuilder) with CompositeSensorMessageBuilder {
+private class StandardCompositeSensorMessageBuilder(
+  defaultSender: Option[String], defaultDestination: Option[String],
+  messageBuilder: DynamicObjectBuilder) extends StandardSensorMessageBuilder(messageBuilder) with CompositeSensorMessageBuilder {
 
   override def newMeasurementMessage(sensorId: String): CompositeSensorMessageBuilder = {
-    newSensorMessage(sensorId, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT)
+    newMeasurementMessage(sensorId, defaultSender, defaultDestination)
+  }
+
+  override def newMeasurementMessage(
+    sensorId: String,
+    sender: Option[String],
+    destination: Option[String]): CompositeSensorMessageBuilder = {
+    newSensorMessage(
+      sensorId, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_MEASUREMENT,
+      sender, destination)
 
     this
   }
 
   override def newHeartbeatMessage(sensorId: String): CompositeSensorMessageBuilder = {
-    newSensorMessage(sensorId, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_HEARTBEAT)
+    newHeartbeatMessage(sensorId, defaultSender, defaultDestination)
+  }
+
+  override def newHeartbeatMessage(
+    sensorId: String,
+    sender: Option[String],
+    destination: Option[String]): CompositeSensorMessageBuilder = {
+    newSensorMessage(
+      sensorId, SensorMessages.SENSOR_MESSAGE_FIELD_VALUE_MESSAGE_TYPE_HEARTBEAT,
+      sender, destination)
 
     this
   }
 
   override def addSensorMessage(sensorId: String, messageType: String): CompositeSensorMessageBuilder = {
-    newSensorMessage(sensorId, messageType)
+    addSensorMessage(sensorId, messageType, defaultSender, defaultDestination)
+  }
+
+  override def addSensorMessage(
+    sensorId: String,
+    messageType: String,
+    sender: Option[String],
+    destination: Option[String]): CompositeSensorMessageBuilder = {
+    newSensorMessage(sensorId, messageType, sender, destination)
 
     this
   }
@@ -335,13 +527,33 @@ private class StandardCompositeSensorMessageBuilder(messageBuilder: DynamicObjec
    *              the external ID of the sensor
    * @param messageType
    *              the type of this message
+   * @param sender
+   *        an optional sender
+   * @param destination
+   *        an optional destination
    */
-  private def newSensorMessage(sensorId: String, messageType: String): Unit = {
+  private def newSensorMessage(
+    sensorId: String,
+    messageType: String,
+    sender: Option[String],
+    destination: Option[String]): Unit = {
     messageBuilder.resetToMark(false)
-    
+
     messageBuilder.newObject()
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_SENSOR, sensorId)
     messageBuilder.setProperty(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_TYPE, messageType)
+
+    sender.foreach {
+      messageBuilder.setProperty(
+        SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_SENDER,
+        _)
+    }
+
+    destination.foreach {
+      messageBuilder.setProperty(
+        SensorMessages.SENSOR_MESSAGE_FIELD_NAME_MESSAGE_DESTINATION,
+        _)
+    }
 
     messageBuilder.newObject(SensorMessages.SENSOR_MESSAGE_FIELD_NAME_DATA)
   }

@@ -54,7 +54,7 @@ allprojects {
     containerBuildTarget = 'build/staging'
 
     // Project paths of non-Java projects
-    nonjavaProjects = [ 
+    nonJvmProjects = [ 
       ':rosjava',
       ':common',
       ':runtime',
@@ -75,12 +75,28 @@ allprojects {
 
     nonOsgiJvmProjects = [
       ':smartspaces-launcher',
-      ':smartspaces-bootstrap-core',
       ':smartspaces-launcher-bootstrap'
+    ]
+
+    nonScalaJvmProjects = [
+      ':smartspaces-launcher',
+      ':smartspaces-bootstrap-core',
+      ':smartspaces-launcher-bootstrap',
+      ':smartspaces-testing',
+      ':rosjava:nrosjava_bootstrap', 
+      ':rosjava:nrosjava_messages', 
+      ':rosjava:napache_xmlrpc_common',
+      ':rosjava:napache_xmlrpc_client', 
+      ':rosjava:napache_xmlrpc_server',
+      ':rosjava:nrosjava',
+      ':rosjava:nrosjava_geometry',
+      ':rosjava:rosjava_osgi',
+      ':rosjava:rosjava_osgi_master',
+      ':rosjava:rosjava_osgi_node',
     ]
     
     javaProjects = rootProject.subprojects.findResults {
-      (!nonjavaProjects.contains(it.path)) ? it : null
+      (!nonJvmProjects.contains(it.path)) ? it : null
     }
 
     if (project.hasProperty("buildTypeProp")) {
@@ -128,8 +144,12 @@ subprojects {
     extrasBuildFolder = "build/staging/controller/extras"
   }
 
-  if (!ext.nonjavaProjects.contains(path)) {
-    apply plugin: 'scala'
+  if (!ext.nonJvmProjects.contains(path)) {
+    if (ext.nonScalaJvmProjects.contains(path)) {
+      apply plugin: 'java'
+    } else {
+      apply plugin: 'scala'
+    }
     apply plugin: 'maven'
     apply plugin: 'eclipse'
     //apply plugin: 'idea'
@@ -138,9 +158,9 @@ subprojects {
       archives jar
     }
 
-//    if (name != 'smartspaces-bootstrap-core') {
+    if (!ext.nonOsgiJvmProjects.contains(path)) {
       apply plugin: 'osgi'
-//    }
+    }
 
     apply plugin: 'jacoco'
  
@@ -212,12 +232,14 @@ subprojects {
     eclipse.classpath.plusConfigurations += [configurations.extrasCompile]
     eclipse.classpath.plusConfigurations += [configurations.extrasSupportCompile]
 
-    if (!ext.nonOsgiJvmProjects.contains(path)) {
+    dependencies {
+      testCompile 'junit:junit:4.8.2'
+      testCompile 'org.mockito:mockito-all:1.9.5'
+    }
+
+    if (!ext.nonScalaJvmProjects.contains(path)) {
       dependencies {
         compile 'org.scala-lang:scala-library:2.11.8'
-
-        testCompile 'junit:junit:4.8.2'
-        testCompile 'org.mockito:mockito-all:1.9.5'
         testCompile 'org.scalatest:scalatest_2.11:3.0.0'
       }
     }

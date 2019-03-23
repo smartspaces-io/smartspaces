@@ -29,6 +29,6 @@ dependencies {
 jar {
   manifest {
     version = version
-    symbolicName = 'smartspaces.launcher.bootstrap'
+    // symbolicName = 'smartspaces.launcher.bootstrap'
   }
 }

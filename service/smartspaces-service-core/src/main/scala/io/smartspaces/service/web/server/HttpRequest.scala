@@ -15,17 +15,17 @@
  * the License.
  */
 
-package io.smartspaces.service.web.server;
+package io.smartspaces.service.web.server
 
-import io.smartspaces.logging.ExtendedLog;
+import io.smartspaces.logging.ExtendedLog
 
-import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimap
 
-import java.net.HttpCookie;
-import java.net.SocketAddress;
-import java.net.URI;
-import java.util.{Map => JMap};
-import java.util.{Set => JSet};
+import java.net.HttpCookie
+import java.net.SocketAddress
+import java.net.URI
+import java.util.{Map => JMap}
+import java.util.{Set => JSet}
 
 /**
  * An HTTP request coming into the server.

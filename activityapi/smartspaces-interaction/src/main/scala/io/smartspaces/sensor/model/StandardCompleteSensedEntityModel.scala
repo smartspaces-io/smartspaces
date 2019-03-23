@@ -25,13 +25,13 @@ import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.domain.PersonSensedEntityDescription
 import io.smartspaces.sensor.domain.PhysicalSpaceSensedEntityDescription
 import io.smartspaces.sensor.domain.SensedEntityDescription
+import io.smartspaces.sensor.domain.SensorAcquisitionModeCategoricalValueInstances
 import io.smartspaces.sensor.domain.SensorEntityDescription
-import io.smartspaces.sensor.services.domain.SensorInstanceRegistry
 import io.smartspaces.sensor.domain.SensorSensedEntityAssociationDescription
+import io.smartspaces.sensor.services.domain.SensorInstanceRegistry
 import io.smartspaces.sensor.services.processing.SensorProcessingEventEmitter
-import io.smartspaces.system.SmartSpacesEnvironment
-import io.smartspaces.sensor.event.SensorOfflineEvent
 import io.smartspaces.sensor.services.processing.value.SensorValueProcessorRegistry
+import io.smartspaces.system.SmartSpacesEnvironment
 
 /**
  * A collection of sensed entity models.
@@ -196,6 +196,12 @@ class StandardCompleteSensedEntityModel(
 
   override def getAllSensorEntityModelsForMeasurementTypeExternalId(measurementTypeExternalId: String): Iterable[SensorEntityModel] = {
     externalIdToSensorEntityModels.values.filter(_.hasMeasurementType(measurementTypeExternalId))
+  }
+
+  override def getAllSensorEntityModelsForAcquisitionMode(
+    acquisitionMode: SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance): Iterable[SensorEntityModel] = {
+    externalIdToSensorEntityModels.values.filter(
+      _.sensorEntityDescription.sensorType.acquisitionMode == acquisitionMode)
   }
 
   override def getAllSensorEntityModelsForSensorTypeExternalId(sensorTypeExternalId: String): Iterable[SensorEntityModel] = {

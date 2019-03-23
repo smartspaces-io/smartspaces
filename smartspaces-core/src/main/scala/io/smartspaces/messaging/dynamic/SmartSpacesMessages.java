@@ -18,11 +18,17 @@
 package io.smartspaces.messaging.dynamic;
 
 /**
- * Some common constants and functions for creating dynamic messages for SmartSpaces to have a common format.
+ * Some common constants and functions for creating dynamic messages for
+ * SmartSpaces to have a common format.
  * 
  * @author Keith M. Hughes
  */
 public class SmartSpacesMessages {
+
+  /**
+   * The version field for a message envelope.
+   */
+  public static final String MESSAGE_ENVELOPE_VERSION = "version";
 
   /**
    * The type field for a message envelope.
@@ -60,7 +66,7 @@ public class SmartSpacesMessages {
   public static final String MESSAGE_ENVELOPE_VALUE_RESULT_SUCCESS = "success";
 
   /**
-   * The result given for a failed  call.
+   * The result given for a failed call.
    */
   public static final String MESSAGE_ENVELOPE_VALUE_RESULT_FAILURE = "failure";
 

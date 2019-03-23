@@ -48,7 +48,7 @@ class DynamicObjectByteArrayCodec(private val charset: Charset) extends MessageC
   /**
    * The JSON mapper for message translation.
    */
-  private val MAPPER: JsonDataMapper = StandardJsonDataMapper.INSTANCE;
+  private val MAPPER: JsonDataMapper = StandardJsonDataMapper.INSTANCE
 
   /**
    * Construct a codec that supports JSON ended in charset
@@ -59,11 +59,11 @@ class DynamicObjectByteArrayCodec(private val charset: Charset) extends MessageC
   }
 
   override def encode(out: DynamicObject): Array[Byte] = {
-    return MAPPER.toString(out.asMap()).getBytes(charset);
+    return MAPPER.toString(out.asMap()).getBytes(charset)
   }
 
   override def decode(in: Array[Byte]): DynamicObject = {
-    val msg = MAPPER.parseObject(new String(in, charset));
+    val msg = MAPPER.parseObject(new String(in, charset))
     return new StandardDynamicObjectNavigator(msg)
   }
 }

@@ -165,8 +165,6 @@ class StandardCompleteSensedEntityModel(
     // TODO(keith): Place the processor directly in the sensor channel model
     val sensorValueProcessor = sensorValueProcessorRegistry.getSensorValueProcessor(sensedMeasurementType.externalId)
     if (sensorValueProcessor.isDefined) {
-      log.info(s"sensor association ${association.sensor.displayName}:${association.sensorChannelDetail.channelId} ${association.stateUpdateTimeLimit} ${association.heartbeatUpdateTimeLimit}")
-
       val channelModel = new SimpleSensorChannelEntityModel(
         association.sensorChannelDetail,
         sensorModel.get,

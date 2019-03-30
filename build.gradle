@@ -27,6 +27,11 @@ buildscript {
   }
 }
 
+plugins {
+    id 'idea'
+    id 'biz.aQute.bnd.builder'  version "4.2.0" apply false
+}
+
 allprojects {
   ext {
     // Specify the SS version here.
@@ -152,7 +157,7 @@ subprojects {
     }
     apply plugin: 'maven'
     apply plugin: 'eclipse'
-    //apply plugin: 'idea'
+    apply plugin: 'idea'
 
     artifacts {
       archives jar
@@ -173,7 +178,7 @@ subprojects {
         csv.enabled false
       }
 
-      additionalSourceDirs = files(sourceSets.main.allJava.srcDirs)
+      additionalSourceDirs.from files(sourceSets.main.allJava.srcDirs)
     }
 
     if (name != 'smartspaces-testing') {
@@ -287,10 +292,6 @@ subprojects {
     //  url 'http://repository.pentaho.org/artifactory/repo/'
     //}
   }
-}
-
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.10.2'
 }
 
 defaultTasks 'install'

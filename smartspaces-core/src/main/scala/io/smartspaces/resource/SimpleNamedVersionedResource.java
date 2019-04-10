@@ -22,7 +22,7 @@ package io.smartspaces.resource;
  *
  * @author Keith M. Hughes
  */
-public class NamedVersionedResource implements VersionedResource {
+public class SimpleNamedVersionedResource implements NamedVersionedResource {
 
   /**
    * The name of the bundle, the symbolic name in OSGi parlance.
@@ -37,7 +37,7 @@ public class NamedVersionedResource implements VersionedResource {
   /**
    * Construct a new named versioned resource.
    */
-  public NamedVersionedResource() {
+  public SimpleNamedVersionedResource() {
   }
 
   /**
@@ -48,7 +48,7 @@ public class NamedVersionedResource implements VersionedResource {
    * @param version
    *          version of the bundle
    */
-  public NamedVersionedResource(String name, Version version) {
+  public SimpleNamedVersionedResource(String name, Version version) {
     this.name = name;
     this.version = version;
   }
@@ -113,7 +113,7 @@ public class NamedVersionedResource implements VersionedResource {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    NamedVersionedResource other = (NamedVersionedResource) obj;
+    SimpleNamedVersionedResource other = (SimpleNamedVersionedResource) obj;
     if (!name.equals(other.name)) {
       return false;
     }

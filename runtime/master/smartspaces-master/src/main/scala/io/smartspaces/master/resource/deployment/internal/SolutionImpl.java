@@ -3,7 +3,7 @@
  */
 package io.smartspaces.master.resource.deployment.internal;
 
-import io.smartspaces.resource.NamedVersionedResource;
+import io.smartspaces.resource.SimpleNamedVersionedResource;
 import io.smartspaces.resource.ResourceDependency;
 
 import java.util.Collection;
@@ -29,7 +29,7 @@ public class SolutionImpl implements Solution {
   }
 
   @Override
-  public void addDependency(NamedVersionedResource resource) {
+  public void addDependency(SimpleNamedVersionedResource resource) {
     // TODO Auto-generated method stub
 
   }

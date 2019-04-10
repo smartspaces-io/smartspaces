@@ -28,7 +28,7 @@ import io.smartspaces.domain.support.ActivityUtils;
 import io.smartspaces.domain.support.JdomActivityDescriptionReader;
 import io.smartspaces.master.server.services.ActivityRepository;
 import io.smartspaces.master.server.services.ResourceRepository;
-import io.smartspaces.resource.NamedVersionedResource;
+import io.smartspaces.resource.SimpleNamedVersionedResource;
 import io.smartspaces.resource.Version;
 import io.smartspaces.resource.repository.ResourceCategory;
 import io.smartspaces.resource.repository.ResourceRepositoryManager;
@@ -75,7 +75,7 @@ public class StandardResourceRepositoryManager implements ResourceRepositoryMana
   public Resource addBundleResource(InputStream resourceStream) {
     String stageHandle = repositoryStorageManager.stageResource(resourceStream);
     try {
-      NamedVersionedResource resource =
+      SimpleNamedVersionedResource resource =
           repositoryStorageManager.getNameVersionResource(stageHandle);
 
       // TODO(keith): Might want to edit what it gives to the import so

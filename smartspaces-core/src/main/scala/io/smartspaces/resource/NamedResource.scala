@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2013 Google Inc.
+ * Copyright (C) 2019 Keith M. Hughes
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -15,22 +14,28 @@
  * the License.
  */
 
-package io.smartspaces.resource;
+package io.smartspaces.resource
 
 /**
- * A resource which has a {@link Version}.
- *
- * @author Keith M. Hughes
- */
-public interface VersionedResource {
+  * A resource which has a name.
+  *
+  * @author Keith M. Hughes
+  */
+trait NamedResource {
 
   /**
-   * Get the version of the resource.
-   *
-   * <p>
-   * It can be {@code null}, leaving it up to the consumer to decide what to do.
-   *
-   * @return the version
-   */
-  Version getVersion();
+    * Get the name of the resource.
+    *
+    * @return the name
+    */
+  def getName(): String
+}
+
+/**
+  * A mixin for adding a name to a resource.
+  *
+  * @author Keith M. Hughes
+  */
+trait SimpleNamedResource(private val name) extends NamedResource {
+  override getName(): String = name
 }

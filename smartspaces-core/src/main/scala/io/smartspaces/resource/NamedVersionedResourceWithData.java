@@ -25,7 +25,7 @@ package io.smartspaces.resource;
  *
  * @author Keith M. Hughes
  */
-public class NamedVersionedResourceWithData<T> extends NamedVersionedResource {
+public class NamedVersionedResourceWithData<T> extends SimpleNamedVersionedResource {
 
   /**
    * The data associated with the resource.

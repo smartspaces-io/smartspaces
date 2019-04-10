@@ -3,7 +3,7 @@
  */
 package io.smartspaces.master.resource.deployment.internal;
 
-import io.smartspaces.resource.NamedVersionedResource;
+import io.smartspaces.resource.SimpleNamedVersionedResource;
 
 /**
  * @author Keith M. Hughes
@@ -16,7 +16,7 @@ public interface Solution {
    * @param resource
    *          the resource to add
    */
-  void addDependency(NamedVersionedResource resource);
+  void addDependency(SimpleNamedVersionedResource resource);
 
   /**
    * Set the state of the solution being created,

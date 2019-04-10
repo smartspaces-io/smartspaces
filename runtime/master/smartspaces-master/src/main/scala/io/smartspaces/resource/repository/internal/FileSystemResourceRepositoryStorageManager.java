@@ -20,7 +20,7 @@ package io.smartspaces.resource.repository.internal;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.configuration.Configuration;
-import io.smartspaces.resource.NamedVersionedResource;
+import io.smartspaces.resource.SimpleNamedVersionedResource;
 import io.smartspaces.resource.NamedVersionedResourceCollection;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.Version;
@@ -330,7 +330,7 @@ public class FileSystemResourceRepositoryStorageManager
   }
 
   @Override
-  public NamedVersionedResource getNameVersionResource(String stageHandle)
+  public SimpleNamedVersionedResource getNameVersionResource(String stageHandle)
       throws SmartSpacesException {
     File stageFile = stagingFiles.get(stageHandle);
     if (stageFile != null) {
@@ -342,7 +342,7 @@ public class FileSystemResourceRepositoryStorageManager
         String name = attributes.getValue(OSGI_HEADER_SYMBOLIC_NAME);
         String version = attributes.getValue(OSGI_HEADER_VERSION);
         if (name != null && version != null) {
-          return new NamedVersionedResource(name, Version.parseVersion(version));
+          return new SimpleNamedVersionedResource(name, Version.parseVersion(version));
         } else {
           throw SmartSpacesException.newFormattedException(
               "Resource %s is not a proper OSGi bundle "

@@ -55,8 +55,8 @@ public class Sat4jDependencySolver {
   // solution.setState(SolutionState.Resolving);
   // IPBSolver solver =
   // SolverFactory.newMiniLearningOPBClauseCardConstrMaxSpecificOrderIncrementalReductionToClause();
-  // DependencyHelper<NamedVersionedResource, String> helper = new
-  // DependencyHelper<NamedVersionedResource, String>(solver, true);
+  // DependencyHelper<SimpleNamedVersionedResource, String> helper = new
+  // DependencyHelper<SimpleNamedVersionedResource, String>(solver, true);
   // Set<Resource> slice = null ; //Slicer.slice(repository, resource);
   // /*
   // * create the question
@@ -73,9 +73,9 @@ public class Sat4jDependencySolver {
   // */
   // try {
   // if (helper.hasASolution()) {
-  // IVec<NamedVersionedResource> solutionSet = helper.getSolution();
+  // IVec<SimpleNamedVersionedResource> solutionSet = helper.getSolution();
   // System.out.println("Size " + solutionSet.size());
-  // Iterator<NamedVersionedResource> i = solutionSet.iterator();
+  // Iterator<SimpleNamedVersionedResource> i = solutionSet.iterator();
   // while (i.hasNext()) {
   // solution.addDependency(i.next());
   // }
@@ -103,7 +103,7 @@ public class Sat4jDependencySolver {
   // helper.setObjectiveFunction(wos.toArray(new WeightedObject[] {}));
   // }
   //
-  // private void addRequires(DependencyHelper<NamedVersionedResource, String>
+  // private void addRequires(DependencyHelper<SimpleNamedVersionedResource, String>
   // helper, Set<Resource> slice)
   // throws ContradictionException {
   // Set<Resource> set = new HashSet<>();

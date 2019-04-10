@@ -26,7 +26,7 @@ import org.junit.Test;
  *
  * @author Keith M. Hughes
  */
-public class NamedVersionedResourceCollectionTest {
+public class SimpleNamedVersionedResourceCollectionTest {
   private NamedVersionedResourceCollection<Integer> collection;
 
   @Before

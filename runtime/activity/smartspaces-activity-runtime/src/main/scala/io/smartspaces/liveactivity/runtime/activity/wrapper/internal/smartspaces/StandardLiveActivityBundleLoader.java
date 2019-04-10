@@ -19,7 +19,7 @@ package io.smartspaces.liveactivity.runtime.activity.wrapper.internal.smartspace
 
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.liveactivity.runtime.domain.InstalledLiveActivity;
-import io.smartspaces.resource.NamedVersionedResource;
+import io.smartspaces.resource.SimpleNamedVersionedResource;
 import io.smartspaces.system.resources.ContainerResourceManager;
 import io.smartspaces.system.resources.ContainerResourceType;
 import io.smartspaces.util.data.resource.MessageDigestResourceSignatureCalculator;
@@ -55,7 +55,7 @@ public class StandardLiveActivityBundleLoader implements LiveActivityBundleLoade
    * The bundles currently loaded by the loader, indexed by the resource
    * representing the bundle.
    */
-  private final Map<NamedVersionedResource, LiveActivityBundle> loadedBundles = new HashMap<>();
+  private final Map<SimpleNamedVersionedResource, LiveActivityBundle> loadedBundles = new HashMap<>();
 
   /**
    * The file support to use.
@@ -94,7 +94,7 @@ public class StandardLiveActivityBundleLoader implements LiveActivityBundleLoade
           fileSupport.getAbsolutePath(bundleFile));
     }
 
-    NamedVersionedResource bundleId = getLiveActivityBundleId(liveActivity);
+    SimpleNamedVersionedResource bundleId = getLiveActivityBundleId(liveActivity);
     LiveActivityBundle bundleInfo = loadedBundles.get(bundleId);
     if (bundleInfo == null) {
       // This live activity has never been loaded before.
@@ -129,7 +129,7 @@ public class StandardLiveActivityBundleLoader implements LiveActivityBundleLoade
 
   @Override
   public synchronized void dismissLiveActivityBundle(InstalledLiveActivity liveActivity) {
-    NamedVersionedResource bundleId = getLiveActivityBundleId(liveActivity);
+    SimpleNamedVersionedResource bundleId = getLiveActivityBundleId(liveActivity);
     LiveActivityBundle bundleInfo = loadedBundles.get(bundleId);
     if (bundleInfo != null) {
       if (bundleInfo.decrementUsage()) {
@@ -152,8 +152,8 @@ public class StandardLiveActivityBundleLoader implements LiveActivityBundleLoade
    *
    * @return the bundle ID
    */
-  private NamedVersionedResource getLiveActivityBundleId(InstalledLiveActivity liveActivity) {
-    return new NamedVersionedResource(liveActivity.getIdentifyingName(), liveActivity.getVersion());
+  private SimpleNamedVersionedResource getLiveActivityBundleId(InstalledLiveActivity liveActivity) {
+    return new SimpleNamedVersionedResource(liveActivity.getIdentifyingName(), liveActivity.getVersion());
   }
 
   /**

@@ -18,7 +18,7 @@
 package io.smartspaces.resource.repository;
 
 import io.smartspaces.SmartSpacesException;
-import io.smartspaces.resource.NamedVersionedResource;
+import io.smartspaces.resource.SimpleNamedVersionedResource;
 import io.smartspaces.resource.NamedVersionedResourceCollection;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
 import io.smartspaces.resource.Version;
@@ -119,7 +119,7 @@ public interface ResourceRepositoryStorageManager extends ManagedResource {
    *           if the stage handle is invalid or the activity contains no
    *           description file
    */
-  NamedVersionedResource getNameVersionResource(String stageHandle) throws SmartSpacesException;
+  SimpleNamedVersionedResource getNameVersionResource(String stageHandle) throws SmartSpacesException;
 
   /**
    * Get an {@link InputStream} for the entire staged bundle.

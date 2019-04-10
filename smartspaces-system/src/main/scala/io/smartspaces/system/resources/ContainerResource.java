@@ -17,7 +17,7 @@
 
 package io.smartspaces.system.resources;
 
-import io.smartspaces.resource.NamedVersionedResource;
+import io.smartspaces.resource.SimpleNamedVersionedResource;
 import io.smartspaces.resource.Version;
 
 /**
@@ -25,7 +25,7 @@ import io.smartspaces.resource.Version;
  *
  * @author Keith M. Hughes
  */
-public class ContainerResource extends NamedVersionedResource {
+public class ContainerResource extends SimpleNamedVersionedResource {
 
   /**
    * The type of the resource.

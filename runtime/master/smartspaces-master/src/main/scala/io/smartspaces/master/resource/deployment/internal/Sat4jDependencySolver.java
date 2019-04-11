@@ -50,7 +50,7 @@ public class Sat4jDependencySolver {
    *
    * @return
    */
-  // public Solution call(Collection<ResourceDependency> dependencies) {
+  // public Solution call(Collection<NamedVersionedResourceDependency> dependencies) {
   // SolutionImpl solution = new SolutionImpl(repository, dependencies);
   // solution.setState(SolutionState.Resolving);
   // IPBSolver solver =

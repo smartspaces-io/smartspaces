@@ -3,8 +3,8 @@
  */
 package io.smartspaces.master.resource.deployment.internal;
 
+import io.smartspaces.resource.NamedVersionedResourceDependency;
 import io.smartspaces.resource.SimpleNamedVersionedResource;
-import io.smartspaces.resource.ResourceDependency;
 
 import java.util.Collection;
 
@@ -18,12 +18,12 @@ public class SolutionImpl implements Solution {
   private SolutionState state;
 
   private final Repository repository;
-  private final Collection<ResourceDependency> dependencies;
+  private final Collection<NamedVersionedResourceDependency> dependencies;
 
   /**
    * The subset of the repository that we are interested in
    */
-  public SolutionImpl(Repository repository, Collection<ResourceDependency> dependencies) {
+  public SolutionImpl(Repository repository, Collection<NamedVersionedResourceDependency> dependencies) {
     this.repository = repository;
     this.dependencies = dependencies;
   }

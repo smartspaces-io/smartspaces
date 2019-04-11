@@ -16,17 +16,19 @@
 
 package io.smartspaces.resource
 
+import java.lang.{Iterable => JIterable}
+
 /**
-  * A resource which has a name.
+  * A resource with dependencies.
   *
-  * @author Keith M. Hughes
+  * @author Keith M. Hugehs
   */
-trait NamedResource {
+trait DependentResource[T] {
 
   /**
-    * Get the name of the resource.
+    * Get the dependencies for the resource.
     *
-    * @return the name
+    * @return the dependencies
     */
-  def getName(): String
+  def getDependencies(): JIterable[T]
 }

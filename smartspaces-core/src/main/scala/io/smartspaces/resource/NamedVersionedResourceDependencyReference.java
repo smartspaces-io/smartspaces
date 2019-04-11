@@ -22,7 +22,7 @@ package io.smartspaces.resource;
  *
  * @author Keith M. Hughes
  */
-public class ResourceDependencyReference implements ResourceDependency {
+public class NamedVersionedResourceDependencyReference implements NamedVersionedResourceDependency {
 
   /**
    * Name of the resource.
@@ -37,7 +37,7 @@ public class ResourceDependencyReference implements ResourceDependency {
   /**
    * Construct a resource dependency reference.
    */
-  public ResourceDependencyReference() {
+  public NamedVersionedResourceDependencyReference() {
   }
 
   /**
@@ -48,7 +48,7 @@ public class ResourceDependencyReference implements ResourceDependency {
    * @param versionRange
    *          range of versions of the resource required
    */
-  public ResourceDependencyReference(String name, VersionRange versionRange) {
+  public NamedVersionedResourceDependencyReference(String name, VersionRange versionRange) {
     this.name = name;
     this.versionRange = versionRange;
   }
@@ -104,7 +104,7 @@ public class ResourceDependencyReference implements ResourceDependency {
       return false;
     }
 
-    ResourceDependencyReference other = (ResourceDependencyReference) obj;
+    NamedVersionedResourceDependencyReference other = (NamedVersionedResourceDependencyReference) obj;
     if (!name.equals(other.name)) {
       return false;
     }

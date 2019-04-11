@@ -50,13 +50,33 @@ trait ConditionalInitializer[T] {
    *        the error
    */
   def displayError(context: T, e: Throwable): Unit
-} 
+}
 
-
+/**
+  * A mixin for conditional initializers.
+  *
+  * @tparam T
+  *
+  * @author Keith M. Hughes
+  */
 trait ConditionalInitializerMixin[T] {
+
+  /**
+    * Run the initializers.
+    *
+    * @param initializers
+    *        the initializers to run if needed
+    */
     def runInitializers(initializers: ConditionalInitializer[T]*): Unit
 }
 
+/**
+  * A base mixin for conditional initializers.
+  *
+  * @tparam T
+  *
+  * @author Keith M. Hughes
+  */
 trait BaseConditionalInitializerMixin[T] extends ConditionalInitializerMixin[T] {
   override def runInitializers(initializers: ConditionalInitializer[T]*): Unit = {
     if (initializers != null) {

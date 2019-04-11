@@ -18,8 +18,8 @@
 package io.smartspaces.master.server.services;
 
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
+import io.smartspaces.resource.NamedVersionedResourceDependencyReference;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
-import io.smartspaces.resource.ResourceDependencyReference;
 import io.smartspaces.resource.managed.ManagedResource;
 
 import java.net.URI;
@@ -42,7 +42,7 @@ public interface ContainerResourceDeploymentManager extends ManagedResource {
    * @return the items which meet the requirements
    */
   Set<NamedVersionedResourceWithData<URI>>
-      satisfyDependencies(Set<ResourceDependencyReference> dependencies);
+      satisfyDependencies(Set<NamedVersionedResourceDependencyReference> dependencies);
 
   /**
    * Commit a set of resources to a space controller.

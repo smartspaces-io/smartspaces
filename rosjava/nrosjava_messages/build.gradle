@@ -14,34 +14,42 @@
  * the License.
  */
 
-dependencies { compile project(':rosjava:nrosjava_bootstrap') }
-
-
-task generateSources(type: JavaExec) {
-	def outputDir = "${buildDir}/generated-src"
-	outputs.dir file(outputDir)
-	args outputDir
-	classpath = configurations.runtime
-	main = 'org.ros.internal.message.GenerateInterfaces'
+dependencies {
+  compile project(':rosjava:nrosjava_bootstrap')
 }
 
-compileJava.source generateSources.outputs.files
+task generateSources(type: JavaExec) {
+  def outputDir = "${buildDir}/generated-src"
+  outputs.dir file(outputDir)
+  args outputDir
+  classpath = configurations.runtime
+  main = 'org.ros.internal.message.GenerateInterfaces'
+}
+
+// compileJava.source generateSources.outputs.files
+sourceSets {
+  main {
+    java {
+      srcDir 'build/generated-src'
+    }
+  }
+}
 
 eclipse.classpath.file {
-	withXml {
-		// TODO(damonkohler): Avoid repetition of build directory. This is
-		// necessary because Eclipse wants a project relative path.
-		it.asNode().appendNode('classpathentry', [kind: 'src', path: 'build/generated-src'])
-	}
+  withXml {
+    // TODO(damonkohler): Avoid repetition of build directory. This is
+    // necessary because Eclipse wants a project relative path.
+    it.asNode().appendNode('classpathentry', [kind: 'src', path: 'build/generated-src'])
+  }
 }
 
 jar {
-	manifest {
-		version = osgiVersion
-		symbolicName = 'org.ros.nrosjava_messages'
+  manifest {
+    version = osgiVersion
+    symbolicName = 'org.ros.nrosjava_messages'
 
-		instruction 'Fragment-Host',
-				'org.ros.nrosjava; bundle-version="[0.1.0,2.0.0)"'
-	}
+    instruction 'Fragment-Host',
+		'org.ros.nrosjava; bundle-version="[0.1.0,2.0.0)"'
+  }
 }
 

@@ -15,11 +15,11 @@
  * the License.
  */
 
-package io.smartspaces.resource.managed;
+package io.smartspaces.resource.managed
 
-import io.smartspaces.SmartSpacesException;
+import io.smartspaces.SmartSpacesException
 
-import java.util.List;
+import java.util.{List => JList}
 
 /**
  * A collection of {@link ManagedResource} instances.
@@ -32,20 +32,22 @@ import java.util.List;
  *
  * @author Keith M. Hughes
  */
-public interface ManagedResources {
+trait ManagedResources {
 
   /**
    * Add a new resource to the collection.
    * 
-   * <p>
    * If {@link #startupResources()} has already been called, the resource
    * will be immediately started and will only be added to the collection if it starts
    * properly.
    *
    * @param resource
    *          the resource to add
+    *
+    * @throws SmartSpacesException
+    *         the resource could not start
    */
-  void addResource(ManagedResource resource) throws SmartSpacesException;
+  def addResource(resource: ManagedResource): Unit
 
   /**
    * Add a resource that has already been started to the collection.
@@ -53,14 +55,14 @@ public interface ManagedResources {
    * @param resource
    *          the resource to add
    */
-  void addStartedResource(ManagedResource resource);
+  def addStartedResource(resource: ManagedResource): Unit
 
   /**
    * Get a list of the currently managed resources.
    *
    * @return list of managed resources
    */
-  List<ManagedResource> getResources();
+   def getResources(): JList[ManagedResource]
 
   /**
    * Clear all resources from the collection.
@@ -69,7 +71,7 @@ public interface ManagedResources {
    * The collection is cleared. No lifecycle methods are called on the
    * resources.
    */
-  void clear();
+  def clear(): Unit
 
   /**
    * Attempt to startup all resources in the manager.
@@ -83,7 +85,7 @@ public interface ManagedResources {
    * {@link #shutdownResourcesAndClear()} if an exception is thrown out of this
    * method.
    */
-  void startupResources();
+  def startupResources(): Unit
 
   /**
    * Shut down all resources.
@@ -92,7 +94,7 @@ public interface ManagedResources {
    * This will make a best attempt. A shutdown will be attempted on all
    * resources, even if some throw an exception.
    */
-  void shutdownResources();
+  def shutdownResources(): Unit
 
   /**
    * Shut down all resources and clear from the collection.
@@ -101,5 +103,5 @@ public interface ManagedResources {
    * This will make a best attempt. A shutdown will be attempted on all
    * resources, even if some throw an exception.
    */
-  void shutdownResourcesAndClear();
+  def shutdownResourcesAndClear(): Unit
 }

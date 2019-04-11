@@ -17,8 +17,7 @@
 
 package io.smartspaces.container.control.message.container.resource.deployment;
 
-import io.smartspaces.resource.ResourceDependency;
-import io.smartspaces.resource.ResourceDependencyReference;
+import io.smartspaces.resource.NamedVersionedResourceDependencyReference;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +37,7 @@ public class ContainerResourceDeploymentQueryRequest {
   /**
    * The queries.
    */
-  private Set<ResourceDependencyReference> queries = new HashSet<>();
+  private Set<NamedVersionedResourceDependencyReference> queries = new HashSet<>();
 
   /**
    * Construct a new query.
@@ -81,7 +80,7 @@ public class ContainerResourceDeploymentQueryRequest {
    * @param query
    *          the query to add
    */
-  public void addQuery(ResourceDependencyReference query) {
+  public void addQuery(NamedVersionedResourceDependencyReference query) {
     queries.add(query);
   }
 
@@ -90,7 +89,7 @@ public class ContainerResourceDeploymentQueryRequest {
    *
    * @return the queries
    */
-  public Set<ResourceDependencyReference> getQueries() {
+  public Set<NamedVersionedResourceDependencyReference> getQueries() {
     return queries;
   }
 
@@ -100,7 +99,7 @@ public class ContainerResourceDeploymentQueryRequest {
    * @param queries
    *          the queries
    */
-  public void setQueries(Set<ResourceDependencyReference> queries) {
+  public void setQueries(Set<NamedVersionedResourceDependencyReference> queries) {
     this.queries = queries;
   }
 }

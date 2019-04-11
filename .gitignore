@@ -29,3 +29,4 @@ smartspaces-controller-android/libs/**
 smartspaces_docs/src/main/sphinx/__pycache__/*
 **/.cache-main
 **/.cache-tests
+**/out

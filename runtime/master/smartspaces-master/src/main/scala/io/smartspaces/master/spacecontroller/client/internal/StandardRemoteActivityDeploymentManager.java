@@ -31,8 +31,8 @@ import io.smartspaces.master.server.services.RemoteSpaceControllerClient;
 import io.smartspaces.master.server.services.internal.RemoteSpaceControllerClientListenerCollection;
 import io.smartspaces.master.server.services.model.ActiveLiveActivity;
 import io.smartspaces.master.spacecontroller.client.RemoteActivityDeploymentManager;
+import io.smartspaces.resource.NamedVersionedResourceDependencyReference;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
-import io.smartspaces.resource.ResourceDependencyReference;
 import io.smartspaces.resource.Version;
 import io.smartspaces.resource.VersionRange;
 import io.smartspaces.resource.repository.ResourceCategory;
@@ -128,7 +128,7 @@ public class StandardRemoteActivityDeploymentManager implements RemoteActivityDe
       ContainerResourceDeploymentQueryRequest query =
           new ContainerResourceDeploymentQueryRequest(transactionId);
       for (ActivityDependency dependency : dependencies) {
-        query.addQuery(new ResourceDependencyReference(dependency.getIdentifyingName(),
+        query.addQuery(new NamedVersionedResourceDependencyReference(dependency.getIdentifyingName(),
             new VersionRange(Version.parseVersionIncludeNull(dependency.getMinimumVersion()),
                 Version.parseVersionIncludeNull(dependency.getMaximumVersion()), false)));
       }

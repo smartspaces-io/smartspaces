@@ -25,7 +25,7 @@ import io.smartspaces.container.control.message.container.resource.deployment.Co
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryRequest;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse;
 import io.smartspaces.container.control.message.container.resource.deployment.ContainerResourceDeploymentQueryResponse.QueryResponseStatus;
-import io.smartspaces.resource.ResourceDependency;
+import io.smartspaces.resource.NamedVersionedResourceDependency;
 import io.smartspaces.resource.io.HttpCopierResourceSource;
 import io.smartspaces.system.SmartSpacesEnvironment;
 import io.smartspaces.system.resources.ContainerResource;
@@ -136,7 +136,7 @@ public class ControllerContainerResourceDeploymentManager implements
    */
   private boolean currentlySatisfiesQuery(ContainerResourceDeploymentQueryRequest deploymentQuery,
       ContainerResourceCollection currentResources) {
-    for (ResourceDependency query : deploymentQuery.getQueries()) {
+    for (NamedVersionedResourceDependency query : deploymentQuery.getQueries()) {
       ContainerResource resource =
           currentResources.getResource(query.getName(), query.getVersionRange());
       if (resource == null) {

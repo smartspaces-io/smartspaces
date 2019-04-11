@@ -25,8 +25,8 @@ import io.smartspaces.master.server.services.RemoteSpaceControllerClient;
 import io.smartspaces.master.server.services.model.ActiveSpaceController;
 import io.smartspaces.resource.NamedVersionedResourceCollection;
 import io.smartspaces.resource.NamedVersionedResourceWithData;
-import io.smartspaces.resource.ResourceDependency;
-import io.smartspaces.resource.ResourceDependencyReference;
+import io.smartspaces.resource.NamedVersionedResourceDependency;
+import io.smartspaces.resource.NamedVersionedResourceDependencyReference;
 import io.smartspaces.resource.repository.ResourceCategory;
 import io.smartspaces.resource.repository.ResourceRepositoryServer;
 import io.smartspaces.resource.repository.ResourceRepositoryStorageManager;
@@ -99,13 +99,13 @@ public class StandardContainerResourceDeploymentManager
 
   @Override
   public Set<NamedVersionedResourceWithData<URI>>
-      satisfyDependencies(Set<ResourceDependencyReference> dependencies) {
+      satisfyDependencies(Set<NamedVersionedResourceDependencyReference> dependencies) {
     Set<NamedVersionedResourceWithData<URI>> results = new HashSet<>();
 
     NamedVersionedResourceCollection<NamedVersionedResourceWithData<URI>> allResources =
         resourceRepositoryStorageManager
             .getAllResources(ResourceCategory.RESOURCE_CATEGORY_CONTAINER_BUNDLE);
-    for (ResourceDependency dependency : dependencies) {
+    for (NamedVersionedResourceDependency dependency : dependencies) {
       NamedVersionedResourceWithData<URI> resource =
           allResources.getResource(dependency.getName(), dependency.getVersionRange());
       if (resource != null) {

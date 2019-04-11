@@ -15,26 +15,19 @@
  * the License.
  */
 
-package io.smartspaces.resource;
+package io.smartspaces.resource
 
 /**
  * A dependency for a resource.
  *
  * @author Keith M. Hughes
  */
-public interface ResourceDependency {
-
-  /**
-   * Get the name of the dependency.
-   *
-   * @return the name of the dependency
-   */
-  String getName();
+trait NamedVersionedResourceDependency extends NamedResource {
 
   /**
    * Get the version range of the dependency.
    *
    * @return version range of the dependency
    */
-  VersionRange getVersionRange();
+  def getVersionRange(): VersionRange
 }

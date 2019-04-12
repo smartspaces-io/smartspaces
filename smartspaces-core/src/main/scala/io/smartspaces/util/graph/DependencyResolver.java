@@ -21,10 +21,7 @@ import io.smartspaces.SmartSpacesException;
 
 import com.google.common.collect.Sets;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A {@link GraphWalkerObserver} which gives a dependency mapping.
@@ -44,12 +41,12 @@ import java.util.Set;
  *
  * @author Keith M. Hughes
  */
-public class DependencyResolver<I, T> extends BaseGraphWalkerObserver<I, T> {
+public class DependencyResolver<I, T> {
 
   /**
    * The ordering of the data.
    */
-  private List<T> ordering = new ArrayList<>();
+  private List<WalkableGraphNode<I, T>> ordering = new ArrayList<>();
 
   /**
    * The nodes added to the resolver.
@@ -113,39 +110,60 @@ public class DependencyResolver<I, T> extends BaseGraphWalkerObserver<I, T> {
     }
   }
 
-  @Override
-  public void observeGraphNodeAfter(WalkableGraphNode<I, T> node) {
-    ordering.add(node.getData());
-  }
-
-  @Override
-  public void observeGraphEdge(WalkableGraphNode<I, T> nodeFrom, WalkableGraphNode<I, T> nodeTo,
-      GraphWalkerEdgeClassification classification) {
-    if (classification.equals(GraphWalkerEdgeClassification.BACK)) {
-      throw new SmartSpacesException(String.format("Cycle in dependency graph from %s to %s",
-          nodeFrom.getData(), nodeTo.getData()));
-    }
-  }
-
   /**
    * Calculate the dependency ordering.
    */
   public void resolve() {
+    MyGraphWalkerObserver observer = new MyGraphWalkerObserver();
+
     walker.setDirected(true);
 
     for (WalkableGraphNode<I, T> node : nodes) {
       if (!node.isDiscovered()) {
-        walker.walkNode(node, this);
+        walker.walkNode(node, observer);
       }
     }
   }
 
   /**
-   * Get the final ordering.
+   * Get the final node ordering.
    *
    * @return the ordering
    */
-  public List<T> getOrdering() {
-    return ordering;
+  public List<WalkableGraphNode<I, T>> getNodeOrdering() {
+    return Collections.unmodifiableList(ordering);
+  }
+
+  /**
+   * Get the final data ordering.
+   *
+   * @return the ordering
+   */
+  public List<T> getDataOrdering() {
+    List<T> result = new ArrayList<>();
+
+    for (WalkableGraphNode<I, T> node : ordering) {
+      result.add(node.getData());
+    }
+
+    return result;
+  }
+
+  private class MyGraphWalkerObserver extends BaseGraphWalkerObserver<I, T> {
+
+    @Override
+    public void observeGraphNodeAfter(WalkableGraphNode<I, T> node) {
+      ordering.add(node);
+    }
+
+    @Override
+    public void observeGraphEdge(WalkableGraphNode<I, T> nodeFrom, WalkableGraphNode<I, T> nodeTo,
+                                 GraphWalkerEdgeClassification classification) {
+      if (classification.equals(GraphWalkerEdgeClassification.BACK)) {
+        throw new SmartSpacesException(String.format("Cycle in dependency graph from %s to %s",
+                nodeFrom.getData(), nodeTo.getData()));
+      }
+    }
+
   }
 }

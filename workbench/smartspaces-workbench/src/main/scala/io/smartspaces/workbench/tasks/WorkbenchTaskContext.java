@@ -361,7 +361,7 @@ public class WorkbenchTaskContext {
     }
 
     resolver.resolve();
-    List<DependencyWorkbenchTask> orderedTasks = resolver.getOrdering();
+    List<DependencyWorkbenchTask> orderedTasks = resolver.getDataOrdering();
     return orderedTasks;
   }
 

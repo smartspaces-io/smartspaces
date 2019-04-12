@@ -255,3 +255,12 @@ This is only useful if using SpaceOperations.
 where path is the root folder which will receive the image.
 
 The image will contain a master, controller, and workbench.
+
+## Using IntelliJ
+
+If you want to work with Smartspaces using a Gradle-based IntelliJ project,
+you should add the following Gradle VM option.
+
+```
+-DINTELLIJ=true
+```

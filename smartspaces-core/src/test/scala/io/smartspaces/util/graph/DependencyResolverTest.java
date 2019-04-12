@@ -46,7 +46,7 @@ public class DependencyResolverTest {
     resolver.addNodeDependencies("a", "b");
     resolver.resolve();
 
-    assertComesAfter(resolver.getOrdering(), "a-data", "b-data");
+    assertComesAfter(resolver.getDataOrdering(), "a-data", "b-data");
   }
 
   @Test
@@ -58,7 +58,7 @@ public class DependencyResolverTest {
     resolver.addNode("c", "c-data");
     resolver.resolve();
 
-    List<String> ordering = resolver.getOrdering();
+    List<String> ordering = resolver.getDataOrdering();
     assertComesAfter(ordering, "b-data", "c-data");
     assertComesAfter(ordering, "a-data", "b-data");
   }
@@ -78,7 +78,7 @@ public class DependencyResolverTest {
 
     resolver.resolve();
 
-    List<String> ordering = resolver.getOrdering();
+    List<String> ordering = resolver.getDataOrdering();
     assertComesAfter(ordering, "b-data", "c-data");
     assertComesAfter(ordering, "a-data", "c-data");
   }
@@ -101,7 +101,7 @@ public class DependencyResolverTest {
 
     resolver.resolve();
 
-    List<String> ordering = resolver.getOrdering();
+    List<String> ordering = resolver.getDataOrdering();
     assertComesAfter(ordering, "a-data", "b-data", "c-data", "d-data", "e-data", "f-data");
     assertComesAfter(ordering, "c-data", "d-data", "e-data", "f-data");
   }

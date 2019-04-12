@@ -26,13 +26,16 @@ task generateSources(type: JavaExec) {
   main = 'org.ros.internal.message.GenerateInterfaces'
 }
 
-// compileJava.source generateSources.outputs.files
-sourceSets {
-  main {
-    java {
-      srcDir 'build/generated-src'
+if (System.getProperty("INTELLIJ") == "true") {
+  sourceSets {
+    main {
+      java {
+        srcDir 'build/generated-src'
+      }
     }
   }
+} else {
+  compileJava.source generateSources.outputs.files
 }
 
 eclipse.classpath.file {

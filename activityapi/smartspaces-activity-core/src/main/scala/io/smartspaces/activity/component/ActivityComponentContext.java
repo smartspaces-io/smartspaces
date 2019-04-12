@@ -380,7 +380,7 @@ public class ActivityComponentContext {
     }
 
     resolver.resolve();
-    for (ActivityComponent component : resolver.getOrdering()) {
+    for (ActivityComponent component : resolver.getDataOrdering()) {
       // There will be null components if addNode() was never called.
       // This means the component wasn't added but was a dependency.
       // Only the component which had it as a dependency knows if it

@@ -23,8 +23,7 @@ import org.junit.Assert.fail
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.resource.DependentResource
 import io.smartspaces.resource.NamedResource
-import org.junit.Before
-import org.junit.Test
+import org.junit.{Assert, Before, Test}
 import org.mockito.{Matchers, Mockito}
 import java.lang.{Iterable => JIterable}
 
@@ -148,7 +147,7 @@ class StandardManagedResourcesTest extends JUnitSuite {
     val shutdownList = ArrayBuffer[String]()
 
     val resourceA = new TestNameDependencyManagedResource("a", List("b", "c"), startupList, shutdownList)
-    val resourceB = new TestNameDependencyManagedResource("b", List(), startupList, shutdownList)
+    val resourceB = new TestNameDependencyManagedResource("b", List("c"), startupList, shutdownList)
     val resourceC = new TestNameDependencyManagedResource("c", List(), startupList, shutdownList)
 
     resources.addResource(resourceB)
@@ -164,6 +163,9 @@ class StandardManagedResourcesTest extends JUnitSuite {
     Mockito.verify(resource1, Mockito.times(1)).shutdown()
     Mockito.verify(resource2, Mockito.times(1)).startup()
     Mockito.verify(resource2, Mockito.times(1)).shutdown()
+
+    Assert.assertEquals(List("c", "b", "a"), startupList.toList)
+    Assert.assertEquals(List("a", "b", "c"), shutdownList.toList)
   }
 
 

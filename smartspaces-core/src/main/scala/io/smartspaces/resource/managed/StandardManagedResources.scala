@@ -19,15 +19,12 @@ package io.smartspaces.resource.managed
 
 import io.smartspaces.SmartSpacesException
 import io.smartspaces.logging.ExtendedLog
-import com.google.common.collect.Lists
-import java.util.ArrayList
 import java.util.{Collections => JCollections}
 import java.util.{List => JList}
 
 import io.smartspaces.resource.{DependentResource, NamedResource}
 import io.smartspaces.util.graph.DependencyResolver
 
-import scala.collection.mutable.ArrayBuffer
 import scala.collection.JavaConverters._
 
 
@@ -88,7 +85,7 @@ class StandardManagedResources(private val log: ExtendedLog) extends ManagedReso
   }
 
   override def startupResources(): Unit = {
-    var startedResources = List[ManagedResource]()
+    var myStartedResources = List[ManagedResource]()
 
     var nondependentResources = List[ManagedResource]()
 
@@ -112,15 +109,15 @@ class StandardManagedResources(private val log: ExtendedLog) extends ManagedReso
     }
 
     dependencyResolver.resolve()
-    dependencyResolver.getOrdering().asScala.foreach { resource =>
-      if (dependency != null) {
+    dependencyResolver.getDataOrdering().asScala.foreach { resource =>
+      if (resource != null) {
         try {
           resource.startup()
 
-          startedResources = resource :: startedResources
+          myStartedResources = resource :: myStartedResources
         } catch {
           case e: Throwable => {
-            shutdownResources(startedResources)
+            shutdownResources(myStartedResources)
 
             throw new SmartSpacesException("Could not start up all managed resources", e)
           }
@@ -135,22 +132,24 @@ class StandardManagedResources(private val log: ExtendedLog) extends ManagedReso
       try {
         resource.startup()
 
-        startedResources = resource :: startedResources
+        myStartedResources = resource :: myStartedResources
       } catch  {
         case e: Throwable => {
-          shutdownResources(startedResources)
+          shutdownResources(myStartedResources)
 
           throw new SmartSpacesException("Could not start up all managed resources", e)
         }
       }
     }
 
+    startedResources = myStartedResources
+
     started = true
   }
 
   override def shutdownResources(): Unit = {
     this.synchronized {
-      shutdownResources(resources)
+      shutdownResources(startedResources)
     }
   }
 

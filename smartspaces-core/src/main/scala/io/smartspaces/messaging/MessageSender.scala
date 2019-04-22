@@ -35,3 +35,24 @@ trait MessageSender[F] {
    */
   def sendMessage(message: F): Unit
 }
+
+/**
+  * A writer of keyed messages.
+  *
+  * @author Keith M. Hughes
+  */
+trait KeyedMessageSender[K, F] {
+
+  /**
+    * Send a message.
+    *
+    * <p>
+    * The message will be serialized properly for the channel.
+    *
+    * @param key
+    *        the key for the message
+    * @param message
+    *          the message to send
+    */
+  def sendKeyedMessage(key: K, message: F): Unit
+}

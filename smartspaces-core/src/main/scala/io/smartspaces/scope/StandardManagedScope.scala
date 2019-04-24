@@ -43,7 +43,10 @@ object StandardManagedScope {
    * @return the new managed scope
    */
   def newManagedScope(executorService: ScheduledExecutorService, log: ExtendedLog): ManagedScope = {
-    new StandardManagedScope(new StandardManagedResources(log), new StandardManagedTasks(executorService, log))
+    new StandardManagedScope(
+      new StandardManagedResources(log),
+      new StandardManagedTasks(executorService, log),
+      executorService)
   }
 }
 
@@ -54,7 +57,8 @@ object StandardManagedScope {
  */
 class StandardManagedScope(
   override val managedResources: ManagedResources,
-  override val managedTasks: ManagedTasks) extends IdempotentManagedResource with ManagedScope {
+  override val managedTasks: ManagedTasks,
+  private val executorService: ScheduledExecutorService) extends IdempotentManagedResource with ManagedScope {
 
   override def onStartup(): Unit = {
     managedResources.startupResources()
@@ -62,7 +66,6 @@ class StandardManagedScope(
 
   override def onShutdown(): Unit = {
     managedTasks.asInstanceOf[InternalManagedTasks].shutdownAll()
-
     managedResources.shutdownResourcesAndClear()
   }
 
@@ -72,6 +75,10 @@ class StandardManagedScope(
 
   override def addStartedResource(resource: ManagedResource): Unit = {
     managedResources.addResource(resource)
+  }
+
+  override def submitResourceRunnable(runnable: Runnable): Unit = {
+    executorService.submit(runnable)
   }
 
   override def submit(task: Runnable): ManagedTask = {

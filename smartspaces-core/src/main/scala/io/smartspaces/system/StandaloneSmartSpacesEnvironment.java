@@ -74,7 +74,7 @@ public final class StandaloneSmartSpacesEnvironment implements SmartSpacesEnviro
     environment.managedTasks =
         new StandardManagedTasks(environment.executorService, environment.log);
     environment.managedScope =
-        new StandardManagedScope(environment.managedResources, environment.managedTasks);
+        new StandardManagedScope(environment.managedResources, environment.managedTasks, environment.executorService);
     environment.managedResources.startupResources();
 
     return environment;

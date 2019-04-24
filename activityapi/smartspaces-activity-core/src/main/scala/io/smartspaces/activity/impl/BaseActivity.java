@@ -239,7 +239,7 @@ public abstract class BaseActivity extends ActivitySupport
 
     managedTasks = new StandardManagedTasks(getSpaceEnvironment().getExecutorService(), getLog());
 
-    managedScope = new StandardManagedScope(managedResources, managedTasks);
+    managedScope = new StandardManagedScope(managedResources, managedTasks, getSpaceEnvironment().getExecutorService());
     
     setActivityStatus(ActivityState.STARTUP_ATTEMPT);
 

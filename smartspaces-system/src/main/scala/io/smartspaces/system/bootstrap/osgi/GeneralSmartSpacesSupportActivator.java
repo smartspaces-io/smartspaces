@@ -201,7 +201,7 @@ public class GeneralSmartSpacesSupportActivator implements BundleActivator {
 
       ManagedTasks managedTasks = new StandardManagedTasks(executorService, containerLog);
 
-      containerManagedScope = new StandardManagedScope(managedResources, managedTasks);
+      containerManagedScope = new StandardManagedScope(managedResources, managedTasks, executorService);
       containerManagedScope.startup();
 
       setupSpaceEnvironment(baseInstallDir);

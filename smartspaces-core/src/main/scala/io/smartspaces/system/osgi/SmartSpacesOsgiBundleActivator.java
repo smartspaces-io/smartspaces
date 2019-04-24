@@ -214,7 +214,7 @@ public abstract class SmartSpacesOsgiBundleActivator
     managedTasks =
         new StandardManagedTasks(spaceEnvironment.getExecutorService(), spaceEnvironment.getLog());
 
-    managedScope = new StandardManagedScope(managedResources, managedTasks);
+    managedScope = new StandardManagedScope(managedResources, managedTasks, spaceEnvironment.getExecutorService());
 
     allRequiredServicesAvailable();
 

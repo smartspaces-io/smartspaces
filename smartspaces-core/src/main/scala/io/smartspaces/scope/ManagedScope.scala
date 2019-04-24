@@ -61,4 +61,14 @@ trait ManagedScope extends ManagedResource with ManagedTasks {
    *          the resource to add
    */
   def addStartedResource(resource: ManagedResource): Unit
+
+  /**
+    * Add in a runnable that will run in a separate thread, but not be a task.
+    *
+    * This is for runnables that will be controlled by the managed resource that the tthread is created for.
+    *
+    * @param runnable
+    *        the runnable
+    */
+  def submitResourceRunnable(runnable: Runnable): Unit
 }

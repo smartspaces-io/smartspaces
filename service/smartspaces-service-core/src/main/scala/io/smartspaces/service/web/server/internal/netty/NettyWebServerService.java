@@ -41,7 +41,7 @@ public class NettyWebServerService extends BaseWebServerService {
    * Where the default MIME types are found.
    */
   public static final String BUNDLE_LOCATION_WEB_SERVER_MIME_TYPES =
-      "smartspaces/util/web/mime.types";
+      "io/smartspaces/util/web/mime.types";
 
   /**
    * The line splitter regex for the internal MIME file.
@@ -130,6 +130,9 @@ public class NettyWebServerService extends BaseWebServerService {
       InputStream mimeResource = MapExtensionMimeResolver.class.getClassLoader()
           .getResourceAsStream(BUNDLE_LOCATION_WEB_SERVER_MIME_TYPES);
       if (mimeResource != null) {
+        if (log != null) {
+          log.info("Loading internal MIME file");
+        }
         String mimeFile = fileSupport.inputStreamAsString(mimeResource);
         String[] lines = mimeFile.split(MIME_TYPE_LINE_SPLITTER_REGEX);
         for (String line : lines) {
@@ -143,6 +146,10 @@ public class NettyWebServerService extends BaseWebServerService {
               }
             }
           }
+        }
+      } else {
+        if (log != null) {
+          log.warn("Could not read MIME file. MIME resolver is empty", e);
         }
       }
     } catch (Exception e) {

@@ -149,7 +149,7 @@ public class NettyWebServerService extends BaseWebServerService {
         }
       } else {
         if (log != null) {
-          log.warn("Could not read MIME file. MIME resolver is empty", e);
+          log.warn("Could not read MIME file. MIME resolver is empty");
         }
       }
     } catch (Exception e) {

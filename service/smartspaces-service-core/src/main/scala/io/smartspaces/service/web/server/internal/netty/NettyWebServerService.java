@@ -131,7 +131,8 @@ public class NettyWebServerService extends BaseWebServerService {
           .getResourceAsStream(BUNDLE_LOCATION_WEB_SERVER_MIME_TYPES);
       if (mimeResource != null) {
         if (log != null) {
-          log.info("Loading internal MIME file");
+          log.info(String.format("Loading internal MIME file %s",
+                  BUNDLE_LOCATION_WEB_SERVER_MIME_TYPES));
         }
         String mimeFile = fileSupport.inputStreamAsString(mimeResource);
         String[] lines = mimeFile.split(MIME_TYPE_LINE_SPLITTER_REGEX);
@@ -149,12 +150,14 @@ public class NettyWebServerService extends BaseWebServerService {
         }
       } else {
         if (log != null) {
-          log.warn("Could not read MIME file. MIME resolver is empty");
+          log.warn(String.format("Could not read MIME file %s. MIME resolver is empty",
+                  BUNDLE_LOCATION_WEB_SERVER_MIME_TYPES));
         }
       }
     } catch (Exception e) {
       if (log != null) {
-        log.warn("Could not read MIME file. MIME resolver is empty", e);
+        log.warn(String.format("Could not read MIME file %s. MIME resolver is empty",
+                BUNDLE_LOCATION_WEB_SERVER_MIME_TYPES), e);
       }
     }
     return resolver;

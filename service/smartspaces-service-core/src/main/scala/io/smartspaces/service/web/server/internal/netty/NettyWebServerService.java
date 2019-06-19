@@ -124,7 +124,7 @@ public class NettyWebServerService extends BaseWebServerService {
    * @return the resolver
    */
   private MapExtensionMimeResolver newDefaultMimeResolver(ExtendedLog log) {
-    MapExtensionMimeResolver resolver = new MapExtensionMimeResolver();
+    MapExtensionMimeResolver resolver = new MapExtensionMimeResolver(log);
 
     try {
       InputStream mimeResource = MapExtensionMimeResolver.class.getClassLoader()

@@ -24,9 +24,9 @@ dependencies {
     transitive = false
   }
   
-  compile('io.smartspaces:orientdb-complete-osgi:2.2.31')
+  compile('io.smartspaces:orientdb-complete-osgi:3.0.20')
   
-  compile('io.smartspaces:quartz-orientdb:0.3.0-SNAPSHOT') {
+  compile('io.smartspaces:quartz-orientdb:0.4.0-SNAPSHOT') {
 	  exclude group: 'com.orientechnologies'
   }
   

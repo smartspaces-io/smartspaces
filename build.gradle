@@ -23,7 +23,7 @@ buildscript {
 
   dependencies {
     classpath 'com.bmuschko:gradle-izpack-plugin:2.1'
-    classpath 'org.gradle.api.plugins:gradle-android-plugin:1.2.1'
+    // classpath 'org.gradle.api.plugins:gradle-android-plugin:1.2.1'
   }
 }
 
@@ -144,7 +144,6 @@ allprojects {
 }
 
 subprojects {
-    task allDeps(type: DependencyReportTask) {}
   ext {
     extrasBuildFolder = "build/staging/controller/extras"
   }
@@ -158,6 +157,8 @@ subprojects {
     apply plugin: 'maven'
     apply plugin: 'eclipse'
     apply plugin: 'idea'
+
+    task allDeps(type: DependencyReportTask) {}
 
     artifacts {
       archives jar

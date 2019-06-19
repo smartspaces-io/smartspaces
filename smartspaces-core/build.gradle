@@ -29,8 +29,12 @@ dependencies {
   compile project(':rosjava:rosjava_osgi')
   compile project(':smartspaces-bootstrap-core')
 
-  compile('com.google.guava:guava:21.0') {
+  compile('com.google.guava:guava:25.1-jre') {
     exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    exclude group: 'org.checkerframework', module: 'checker-compat-qual'
+    exclude group: 'com.google.errorprone', module: 'error_prone_annotations'
+    exclude group: 'com.google.j2objc', module: 'j2objc-annotations'
+    exclude group: 'org.codehaus.mojo', module: 'animal-sniffer-annotations'
   }
 
   compile 'io.netty:netty:3.9.3.Final'

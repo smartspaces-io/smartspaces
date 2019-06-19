@@ -60,7 +60,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 object StandardQuartzSchedulerService {
-  val ORIENTDB_URI = "PLOCAL:${$system.datadir}/database/quartz"
+  val ORIENTDB_URI = "plocal:${$system.datadir}/database/quartz"
   val ORIENTDB_USER = "sooperdooper"
   val ORIENTDB_PASSWORD = "sooperdooper"
   val PERSISTED_SCHEDULER_NAME = "SmartSpacesSchedulerPersisted"

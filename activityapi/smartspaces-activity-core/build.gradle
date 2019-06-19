@@ -18,7 +18,7 @@ dependencies {
   compile project(':smartspaces-core')
   compile project(':service:smartspaces-service-core')
   
-  compile('com.google.inject:guice:4.1.0') {
+  compile('com.google.inject:guice:4.2.2') {
 	  exclude module: 'aopalliance'
 	  exclude module: 'javax.inject'
   }

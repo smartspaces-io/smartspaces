@@ -51,10 +51,8 @@ public class MapExtensionMimeResolver implements MimeResolver {
   @Override
   public String resolve(String contentPath) {
     int periodPos = contentPath.lastIndexOf(FILE_EXTENSION_SEPARATOR);
-    log.formatInfo("MIME resolver looking up content path %s with periodPos %d", contentPath, periodPos);
     if (periodPos >= 0) {
       String extension = contentPath.substring(periodPos + 1);
-      log.formatInfo("MIME resolver has extension %s with length %d", extension, extension.length());
 
       return extensionsToMime.get(extension);
     } else {

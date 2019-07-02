@@ -33,21 +33,21 @@ dependencies {
 jar {
   from configurations.includeInJar.collect { File file -> file.isDirectory() ? file : zipTree(file) }
 
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.speech.synthesis'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.speech.synthesis
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.service.speech.synthesis.internal.osgi.SpeechSynthesisServiceOsgiBundleActivator'
+    Bundle-Activator: \\
+        io.smartspaces.service.speech.synthesis.internal.osgi.SpeechSynthesisServiceOsgiBundleActivator
 
-    instruction 'Private-Package',
-        'io.smartspaces.service.speech.synthesis.internal'
+    Private-Package: \\
+        io.smartspaces.service.speech.synthesis.internal
 
-    instruction 'Import-Package',
-        '!com.sun.speech.freetts.*',
-        'org.w3c.dom',
-        'javax.sound.*;resolution:="optional"',
-        '*'
-  }
+    Import-Package: \\
+        !com.sun.speech.freetts.*, \\
+        org.w3c.dom, \\
+        javax.sound.*;resolution:="optional", \\
+        *
+  """
 }
 

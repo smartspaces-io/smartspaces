@@ -34,12 +34,12 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'org.ros.nrosjava_bootstrap'
+  bnd """
+    Bundle-SymbolicName: org.ros.nrosjava_bootstrap
+    Bundle-Version: ${osgiVersion}
 	
-    instruction 'Fragment-Host', 
-		'org.ros.nrosjava; bundle-version="[0.1.0,2.0.0)"'
-  }
+    Fragment-Host: \\
+		  org.ros.nrosjava; bundle-version="[0.1.0,2.0.0)"
+  """
 }
 

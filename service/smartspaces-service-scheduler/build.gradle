@@ -35,7 +35,7 @@ dependencies {
   runtime 'org.slf4j:slf4j-api:1.7.10'
   runtime 'org.slf4j:slf4j-simple:1.7.10'
   
-  runtime 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.1'
+  runtime 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2'
   
   runtime("org.apache.commons:com.springsource.org.apache.commons.codec:1.4.0")
   runtime("org.slf4j:slf4j-api:1.7.10")
@@ -45,19 +45,19 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.scheduler'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.scheduler
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.service.scheduler.internal.osgi.OsgiSchedulerServiceActivator'
+    Bundle-Activator: \\
+        io.smartspaces.service.scheduler.internal.osgi.OsgiSchedulerServiceActivator
 
-    instruction 'Export-Package',
-        '!io.smartspaces.service.scheduler.internal.*',
-        'io.smartspaces.service.scheduler.*'
+    Export-Package: \\
+        !io.smartspaces.service.scheduler.internal.*, \\
+        io.smartspaces.service.scheduler.*
 
-    instruction 'Private-Package',
-        'io.smartspaces.service.scheduler.internal.*'
-  }
+    Private-Package: \\
+        io.smartspaces.service.scheduler.internal.*
+  """
 }
 

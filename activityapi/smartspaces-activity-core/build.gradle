@@ -36,18 +36,18 @@ test {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.activity.core'
+  bnd """
+    Bundle-SymbolicName: smartspaces.activity.core
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        'io.smartspaces.*'
+    Export-Package: \\
+        io.smartspaces.*
 
-    instruction 'Import-Package',
-        'org.apache.commons.ognl.*;resolution:="optional"',
-        'org.ros.*;resolution:="optional"',
-        'com.google.common;resolution:="optional"',
-        'smartspaces_msgs;resolution:="optional"',
-        '*'
-  }
+    Import-Package: \\
+        org.apache.commons.ognl.*;resolution:="optional", \\
+        org.ros.*;resolution:="optional", \\
+        com.google.common;resolution:="optional", \\
+        smartspaces_msgs;resolution:="optional", \\
+        *
+  """
 }

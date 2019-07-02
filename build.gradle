@@ -165,7 +165,7 @@ subprojects {
     }
 
     if (!ext.nonOsgiJvmProjects.contains(path)) {
-      apply plugin: 'osgi'
+      apply plugin: 'biz.aQute.bnd.builder'
     }
 
     apply plugin: 'jacoco'

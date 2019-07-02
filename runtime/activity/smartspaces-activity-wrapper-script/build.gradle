@@ -26,21 +26,20 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.controller.activity.wrapper.script'
+  bnd """
+    Bundle-SymbolicName: smartspaces.controller.activity.wrapper.script
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.controller.activity.wrapper.internal.script.osgi.OsgiScriptActivityWrapperActivator'
+    Bundle-Activator: \\
+        io.smartspaces.controller.activity.wrapper.internal.script.osgi.OsgiScriptActivityWrapperActivator
 
-    instruction 'Export-Package',
-        'io.smartspaces.*'
+    Export-Package: \\
+        io.smartspaces.controller.activity.wrapper.internal.script.*
 
-    instruction 'Import-Package',
-        'org.apache.commons.logging.impl',
-        //'org.apache.felix.service.command;status=provisional',
-        'io.smartspaces.evaluation',
-        '*'
-  }
+    Import-Package: \\
+        org.apache.commons.logging.impl, \\
+        io.smartspaces.evaluation, \\
+        *
+  """
 }
 

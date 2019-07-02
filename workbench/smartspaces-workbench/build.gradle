@@ -43,16 +43,16 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = version
-    symbolicName = 'smartspaces.workbench'
+  bnd """
+    Bundle-SymbolicName: smartspaces.workbench
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.workbench.osgi.SmartSpacesWorkbenchActivator'
+    Bundle-Activator: \\
+        io.smartspaces.workbench.osgi.SmartSpacesWorkbenchActivator
 
-    instruction 'Import-Packages',
-        'com.google',
-        'org.junit;version="[4,5)"',
-        '*'
-  }
+    Import-Packages: \\
+        com.google, \\
+        org.junit;version="[4,5)", \\
+        *
+  """
 }

@@ -35,17 +35,17 @@ test {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.activity.runtime'
+  bnd """
+    Bundle-SymbolicName: smartspaces.activity.runtime
+    Bundle-Version: ${osgiVersion}
 	
-    instruction 'Export-Package',
-		'io.smartspaces.*'
+    Export-Package: \\
+		  io.smartspaces.liveactivity.runtime.*
 		
-    instruction 'Import-Package',
-		'org.apache.commons.logging.impl',
-		'io.smartspaces.evaluation',
-		'*'
-  }
+    Import-Package: \\
+		  org.apache.commons.logging.impl, \\
+		  io.smartspaces.evaluation, \\
+		  *
+  """
 }
 

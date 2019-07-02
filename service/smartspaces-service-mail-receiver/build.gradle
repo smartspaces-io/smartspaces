@@ -27,19 +27,19 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.mail.receiver'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.mail.receiver
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.service.mail.receiver.internal.osgi.OsgiMailReceiverServiceActivator'
+    Bundle-Activator: \\
+        io.smartspaces.service.mail.receiver.internal.osgi.OsgiMailReceiverServiceActivator
 
-    instruction 'Export-Package',
-        '!io.smartspaces.service.mail.receiver.internal.*',
-        'io.smartspaces.service.mail.receiver.*'
+    Export-Package: \\
+        !io.smartspaces.service.mail.receiver.internal.*, \\
+        io.smartspaces.service.mail.receiver.*
 
-    instruction 'Private-Package',
-        'io.smartspaces.service.mail.receiver.internal.*'
-  }
+    Private-Package: \\
+        io.smartspaces.service.mail.receiver.internal.*
+  """
 }
 

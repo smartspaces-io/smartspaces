@@ -48,15 +48,15 @@ task assembleExtras(dependsOn: [copyExtraComponents, copyServiceArtifacts])
 
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.comm.serial.bluetooth'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.comm.serial.bluetooth
+    Bundle-Version; ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.service.comm.serial.bluetooth.internal.osgi.BluetoothCommunicationEndpointServiceBundleActivator'
+    Bundle-Activator: \\
+        io.smartspaces.service.comm.serial.bluetooth.internal.osgi.BluetoothCommunicationEndpointServiceBundleActivator
 
-    instruction 'Export-Package',
-        'io.smartspaces.hardware.driver.*'
-  }
+    Export-Package: \\
+        io.smartspaces.hardware.driver.*
+  """
 }
 

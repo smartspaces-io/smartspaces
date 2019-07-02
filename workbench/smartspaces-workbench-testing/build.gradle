@@ -30,8 +30,8 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = version
-    symbolicName = 'smartspaces.workbench.testing'
-  }
+  bnd """
+    Bundle-SymbolicName: smartspaces.workbench.testing
+    Bundle-Version: ${osgiVersion}
+  """
 }

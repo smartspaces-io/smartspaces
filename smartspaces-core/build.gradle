@@ -88,31 +88,30 @@ test {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces'
+  bnd """
+    Bundle-SymbolicName: smartspaces
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        'io.smartspaces.*'
+    Export-Package: io.smartspaces.*
 
-    instruction 'Import-Package',
-        'org.apache.commons.ognl.*;resolution:="optional"',
-        'org.apache.http.*;resolution:="optional"',
-        'org.jdom2.*;resolution:="optional"',
-        'org.jboss.netty.handler.codec.http;resolution:="optional"',
-        'org.jboss.netty.bootstrap;resolution:="optional"',
-        'com.fasterxml.jackson.*;resolution:="optional"',
-        'org.apache.commons.net.ntp;resolution:="optional"',
-        'org.apache.commons.net.telnet;resolution:="optional"',
-        'org.ros.*;resolution:="optional"',
-        'org.joda.*;resolution:="optional"',
-        'org.eclipse.paho.client.mqttv3.*;resolution:="optional"',
-        'javassist.*;resolution:="optional"',
-        'io.smartspaces.system.bootstrap.osgi;resolution:="optional"',
-        'com.google.common;resolution:="optional"',
-        'rx;resolution:="optional"',
-        'org.bouncycastle;resolution:="optional"',
-        'org.osgi.*;resolution:="optional"',
-        '*'
-  }
+    Import-Package: \\
+        org.apache.commons.ognl.*;resolution:="optional", \\
+        org.apache.http.*;resolution:="optional", \\
+        org.jdom2.*;resolution:="optional", \\
+        org.jboss.netty.handler.codec.http;resolution:="optional", \\
+        org.jboss.netty.bootstrap;resolution:="optional", \\
+        com.fasterxml.jackson.*;resolution:="optional", \\
+        org.apache.commons.net.ntp;resolution:="optional", \\
+        org.apache.commons.net.telnet;resolution:="optional", \\
+        org.ros.*;resolution:="optional", \\
+        org.joda.*;resolution:="optional", \\
+        org.eclipse.paho.client.mqttv3.*;resolution:="optional", \\
+        javassist.*;resolution:="optional", \\
+        io.smartspaces.system.bootstrap.osgi;resolution:="optional", \\
+        com.google.common;resolution:="optional", \\
+        rx;resolution:="optional", \\
+        org.bouncycastle;resolution:="optional", \\
+        org.osgi.*;resolution:="optional", \\
+        *
+  """
 }

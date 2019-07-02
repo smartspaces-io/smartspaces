@@ -23,14 +23,14 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.data'
+  bnd """
+    Bundle-SymbolicName: smartspaces.data
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        'io.smartspaces.*'
+    Export-Package: \\
+        io.smartspaces.*
 
-    instruction 'Import-Package',
-        '*'
-  }
+    Import-Package: \\
+        *
+  """
 }

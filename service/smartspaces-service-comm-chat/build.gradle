@@ -27,19 +27,19 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.comm.chat'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.comm.chat
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.service.comm.chat.internal.osgi.ChatServiceOsgiBundleActivator'
+    Bundle-Activator: \\
+        io.smartspaces.service.comm.chat.internal.osgi.ChatServiceOsgiBundleActivator
 
-    instruction 'Export-Package',
-        '!io.smartspaces.service.comm.chat.internal.*',
-        'io.smartspaces.service.comm.chat.*'
+    Export-Package: \\
+        !io.smartspaces.service.comm.chat.internal.*, \\
+        io.smartspaces.service.comm.chat.*
 
-    instruction 'Private-Package',
-        'io.smartspaces.service.comm.chat.internal.*'
-  }
+    Private-Package: \\
+        io.smartspaces.service.comm.chat.internal.*
+  """
 }
 

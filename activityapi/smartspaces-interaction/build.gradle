@@ -28,19 +28,19 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.interaction'
+  bnd """
+    Bundle-SymbolicName: smartspaces.interaction
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        'io.smartspaces.*'
+    Export-Package: \\
+        io.smartspaces.*
 
-    instruction 'Import-Package',
-        'org.apache.commons.ognl.*;resolution:="optional"',
-        'org.ros.*;resolution:="optional"',
-        'com.google.common;resolution:="optional"',
-        'smartspaces_msgs;resolution:="optional"',
-        'io.smartspaces.activity;resolution:="optional"',
-        '*'
-  }
+    Import-Package: \\
+        org.apache.commons.ognl.*;resolution:="optional", \\
+        org.ros.*;resolution:="optional", \\
+        com.google.common;resolution:="optional", \\
+        smartspaces_msgs;resolution:="optional", \\
+        io.smartspaces.activity;resolution:="optional", \\
+        *
+  """
 }

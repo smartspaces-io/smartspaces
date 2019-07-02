@@ -76,11 +76,11 @@ task assembleExtras(dependsOn: [
 install.dependsOn.add copyExtraComponents
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.image.vision.opencv'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.image.vision.opencv
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        '*'
-  }
+    Export-Package: \\
+        io.smartspaces.service.image.vision.opencv.*
+  """
 }

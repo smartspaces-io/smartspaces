@@ -19,14 +19,14 @@ dependencies {
 }
 
 jar {
-  manifest {
-	version = osgiVersion
-	symbolicName = 'smartspaces.bootstrap.core'
+  bnd """
+    Bundle-SymbolicName: smartspaces.bootstrap.core
+	  BundleVersion: ${osgiVersion}
 
-	instruction 'Export-Package',
-		'io.smartspaces.*'
+	  Export-Package: \\
+		  io.smartspaces.*
 
-	instruction 'Import-Package',
-		'*'
-  }
+	Import-Package: \\
+		*
+  """
 }

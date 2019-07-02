@@ -34,9 +34,7 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.mail.sender.internal.osgi.OsgiMailSenderServiceActivator
 
-    Export-Package: \\
-        !io.smartspaces.service.mail.sender.internal.*, \\
-        io.smartspaces.service.mail.sender.*
+    -exportcontents *
 
     Private-Package: \\
         io.smartspaces.service.mail.sender.internal.*

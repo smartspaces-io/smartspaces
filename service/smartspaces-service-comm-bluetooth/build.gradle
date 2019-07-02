@@ -55,8 +55,7 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.comm.serial.bluetooth.internal.osgi.BluetoothCommunicationEndpointServiceBundleActivator
 
-    Export-Package: \\
-        io.smartspaces.hardware.driver.*
+    -exportcontents *
   """
 }
 

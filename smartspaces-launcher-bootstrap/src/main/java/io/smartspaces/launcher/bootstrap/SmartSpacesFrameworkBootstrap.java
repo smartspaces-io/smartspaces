@@ -175,9 +175,9 @@ public class SmartSpacesFrameworkBootstrap {
    * Spaces.
    */
   public static final String[] PACKAGES_SYSTEM_SMARTSPACES =
-      new String[] { LOGGING_PROVIDER_INTERFACE.getPackage().getName(),
-          CONFIGURATION_PROVIDER_INTERFACE.getPackage().getName(),
-          CONTAINER_COSTUMIZER_PROVIDER_INTERFACE.getPackage().getName() };
+      new String[] { LOGGING_PROVIDER_INTERFACE.getPackage().getName() + "; version=1.0.0",
+          CONFIGURATION_PROVIDER_INTERFACE.getPackage().getName() + "; version=1.0.0",
+          CONTAINER_COSTUMIZER_PROVIDER_INTERFACE.getPackage().getName() + "; version=1.0.0" };
 
   /**
    * The Jar Manifest property that gives the Smart Spaces version.

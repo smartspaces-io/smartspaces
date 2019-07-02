@@ -23,8 +23,8 @@ dependencies {
   compile project(':activityapi:smartspaces-activity-core')
 
   expandedJars 'org.codehaus.groovy:groovy-all:2.2.1'
-  expandedJars files("${project.getProperty('smartspaces.dependencies.home')}/python/jython/jython2.7.0/jython.jar")
-  expandedJars 'org.mozilla:rhino:1.7.7.1'
+  //expandedJars files("${project.getProperty('smartspaces.dependencies.home')}/python/jython/jython2.7.0/jython.jar")
+  expandedJars 'org.mozilla:rhino:1.7.11'
 
   provided "${project.ext.osgiContainerDependency}"
 
@@ -44,9 +44,7 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.script.internal.osgi.OsgiScriptServiceActivator
 
-    Export-Package: \\
-        !io.smartspaces.service.script.internal.*, \\
-        io.smartspaces.service.script.*
+    -exportcontents *
 
     Private-Package: \\
         io.smartspaces.service.script.internal.*
@@ -99,11 +97,9 @@ jar {
         org.apache.xmlbeans;resolution:="optional", \\
         com.kenai.jnr.x86asm;resolution:="optional", \\
         org.codehaus.groovy.jsr223.*;resolution:="optional", \\
-        org.python.apache.*, \\
-        // These are because of the way that gradle and bnd are working together
-        // even though all classes are in the bundle
-        org.mozilla.javascript.*;resolution:="optional", \\
-        org.python.*;resolution:="optional", \\
-        *
+        org.mozilla.javascript.*;resolution:="optional"
+
+        // org.python.apache.*,
+        // org.python.*;resolution:="optional"
   """
 }

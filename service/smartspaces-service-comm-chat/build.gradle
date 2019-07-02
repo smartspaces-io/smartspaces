@@ -34,9 +34,7 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.comm.chat.internal.osgi.ChatServiceOsgiBundleActivator
 
-    Export-Package: \\
-        !io.smartspaces.service.comm.chat.internal.*, \\
-        io.smartspaces.service.comm.chat.*
+    -exportcontents *
 
     Private-Package: \\
         io.smartspaces.service.comm.chat.internal.*

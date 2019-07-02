@@ -32,8 +32,7 @@ jar {
     Bundle-SymbolicName: smartspaces.interaction
     Bundle-Version: ${osgiVersion}
 
-    Export-Package: \\
-        io.smartspaces.*
+    -exportcontents *
 
     Import-Package: \\
         org.apache.commons.ognl.*;resolution:="optional", \\

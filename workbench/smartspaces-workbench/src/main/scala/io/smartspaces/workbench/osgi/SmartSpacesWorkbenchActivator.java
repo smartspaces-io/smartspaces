@@ -22,19 +22,12 @@ import io.smartspaces.system.SimpleSmartSpacesEnvironment;
 import io.smartspaces.system.core.configuration.ConfigurationProvider;
 import io.smartspaces.system.core.container.ContainerCustomizerProvider;
 import io.smartspaces.system.core.logging.LoggingProvider;
+import io.smartspaces.util.concurrency.DefaultScheduledExecutorService;
 import io.smartspaces.workbench.SmartSpacesWorkbench;
 import io.smartspaces.workbench.ui.WorkbenchUi;
+import org.osgi.framework.*;
 
 import java.util.List;
-
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.BundleListener;
-import org.osgi.framework.ServiceReference;
-import org.ros.concurrent.DefaultScheduledExecutorService;
 
 /**
  * OSGi activator for the Smart Spaces Workbench.

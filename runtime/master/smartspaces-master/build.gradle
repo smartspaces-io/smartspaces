@@ -136,36 +136,33 @@ compileScala.doLast {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.master'
+  bnd """
+    Bundle-SymbolicName: smartspaces.master
+    Bundle-Version: ${osgiVersion}
 	
-    instruction 'Export-Package',
-		'!io.smartspaces.controller.client.master.internal.*', 
-		'!io.smartspaces.resource.repository.internal.*', 
-		'io.smartspaces.*'
+    -exportcontents *
 		
-    instruction 'Private-Package',
-		'io.smartspaces.controller.client.master.internal.*', 
-		'io.smartspaces.resource.repository.internal.*'
+    Private-Package: \\
+		  io.smartspaces.master.spacecontroller.client.internal.*, \\
+		  io.smartspaces.resource.repository.internal.*
 		
-    instruction 'Import-Package',
-		'org.apache.felix.service.command',
-		'org.eclipse.gemini.blueprint.config',
-		'org.springframework.transaction.config',
-		'org.springframework.aop',
-		'org.springframework.aop.framework',
-		'org.aopalliance.aop',
-		'javax.sql',
-		'org.apache.commons.dbcp',
-        'org.springframework.orm.jpa',
-		'org.springframework.orm.jpa.support',
-        'org.springframework.orm.jpa.vendor',
-		'org.springframework.jdbc.datasource',
-		'org.springframework.transaction.interceptor',
-		'org.apache.derby.jdbc',
-		'javax.persistence.criteria',
-		'*'
-  }
+    Import-Package: \\
+		  org.apache.felix.service.command, \\
+		  org.eclipse.gemini.blueprint.config, \\
+		  org.springframework.transaction.config, \\
+		  org.springframework.aop, \\
+		  org.springframework.aop.framework, \\
+		  org.aopalliance.aop, \\
+		  javax.sql, \\
+		  org.apache.commons.dbcp, \\
+      org.springframework.orm.jpa, \\
+		  org.springframework.orm.jpa.support, \\
+      org.springframework.orm.jpa.vendor, \\
+		  org.springframework.jdbc.datasource, \\
+		  org.springframework.transaction.interceptor, \\
+		  org.apache.derby.jdbc, \\
+		  javax.persistence.criteria, \\
+		  *
+  """
 }
 

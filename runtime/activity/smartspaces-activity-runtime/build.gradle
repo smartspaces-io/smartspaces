@@ -39,8 +39,8 @@ jar {
     Bundle-SymbolicName: smartspaces.activity.runtime
     Bundle-Version: ${osgiVersion}
 	
-    Export-Package: \\
-		  io.smartspaces.liveactivity.runtime.*
+    -exportcontents *
+
 		
     Import-Package: \\
 		  org.apache.commons.logging.impl, \\

@@ -47,9 +47,7 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.image.vision.internal.osgi.ImageVisionServiceActivator
 
-    Export-Package: \\
-        !io.smartspaces.service.image.vision.internal.*, \\
-        io.smartspaces.service.image.vision.*
+    -exportcontents *
 
     Private-Package: \\
         io.smartspaces.service.image.vision.internal.*

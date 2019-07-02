@@ -34,10 +34,7 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.system.bootstrap.osgi.GeneralSmartSpacesSupportActivator
 
-    Export-Package: \\
-        !io.smartspaces.system.bootstrap.osgi.*, \\
-        !io.smartspaces.system.internal.osgi.*, \\
-        io.smartspaces.*
+    -exportcontents *
 
     Private-Package: \\
         io.smartspaces.system.bootstrap.osgi.*, \\

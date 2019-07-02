@@ -34,9 +34,7 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.comm.twitter.internal.osgi.TwitterServiceOsgiBundleActivator
 
-    Export-Package: \\
-        !io.smartspaces.service.comm.twitter.internal.*, \\
-        io.smartspaces.service.comm.twitter.*
+    -exportcontents *
 
     Private-Package: \\
         io.smartspaces.service.comm.twitter.internal.*

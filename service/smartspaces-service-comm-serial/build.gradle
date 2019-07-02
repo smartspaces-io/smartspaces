@@ -57,7 +57,7 @@ jar {
     Bundle-SymbolicName: smartspaces.service.comm.serial
     Bundle-Version: ${osgiVersion}
 
-    Bundle-Activator:
+    Bundle-Activator: \\
         io.smartspaces.service.comm.serial.internal.osgi.SerialCommunicationBundleActivator
   """
 }

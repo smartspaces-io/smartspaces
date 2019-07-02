@@ -18,16 +18,11 @@
 package io.smartspaces.workbench.devinfrastructure;
 
 import io.smartspaces.SmartSpacesException;
-
-import java.net.URI;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.Jdk14Logger;
-import org.ros.log.RosLogFactory;
-import org.ros.osgi.common.SimpleRosEnvironment;
-import org.ros.osgi.master.core.internal.RosJavaRosMasterController;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @author Keith M. Hughes
@@ -57,12 +52,12 @@ public class StandaloneDevelopmentInfrastructure implements DevelopmentInfrastru
   /**
    * The ROS environment.
    */
-  private SimpleRosEnvironment rosEnvironment;
+  //private SimpleRosEnvironment rosEnvironment;
 
   /**
    * The controller for the ROS Master.
    */
-  private RosJavaRosMasterController rosMasterController;
+  //private RosJavaRosMasterController rosMasterController;
 
   @Override
   public void startup() {
@@ -81,8 +76,8 @@ public class StandaloneDevelopmentInfrastructure implements DevelopmentInfrastru
 
   @Override
   public void shutdown() {
-    rosMasterController.shutdown();
-    rosEnvironment.shutdown();
+    //rosMasterController.shutdown();
+    //rosEnvironment.shutdown();
     executorService.shutdown();
   }
 
@@ -93,6 +88,7 @@ public class StandaloneDevelopmentInfrastructure implements DevelopmentInfrastru
    *           something bad happened
    */
   private void initializeRosEnvironment() throws Exception {
+    /*
     rosEnvironment = new SimpleRosEnvironment();
     rosEnvironment.setExecutorService(executorService);
     rosEnvironment.setMaster(true);
@@ -100,16 +96,21 @@ public class StandaloneDevelopmentInfrastructure implements DevelopmentInfrastru
     // TODO(keith): Decide if this should come from a config.
     rosEnvironment.setMasterUri(new URI(ROS_MASTER_URI));
     rosEnvironment.setLog(log);
+
+     */
   }
 
   /**
    * Initialize the ROS Master.
    */
   private void initializeRosMasterController() {
+    /*
     RosLogFactory.setLog(log);
 
     rosMasterController = new RosJavaRosMasterController();
     rosMasterController.setRosEnvironment(rosEnvironment);
     rosMasterController.startup();
+
+     */
   }
 }

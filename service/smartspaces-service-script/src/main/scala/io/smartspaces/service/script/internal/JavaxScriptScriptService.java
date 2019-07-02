@@ -17,37 +17,19 @@
 
 package io.smartspaces.service.script.internal;
 
+import com.google.common.collect.Sets;
 import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 import io.smartspaces.activity.Activity;
 import io.smartspaces.activity.ActivityFilesystem;
 import io.smartspaces.configuration.Configuration;
 import io.smartspaces.service.BaseSupportedService;
-import io.smartspaces.service.script.ActivityScriptWrapper;
-import io.smartspaces.service.script.Script;
-import io.smartspaces.service.script.ScriptService;
-import io.smartspaces.service.script.ScriptSource;
-import io.smartspaces.service.script.StringScriptSource;
+import io.smartspaces.service.script.*;
 import io.smartspaces.service.script.internal.javascript.RhinoJavascriptActivityScriptFactory;
-import io.smartspaces.service.script.internal.python.PythonActivityScriptFactory;
-
-import com.google.common.collect.Sets;
 import org.codehaus.groovy.jsr223.GroovyScriptEngineFactory;
-import org.python.jsr223.PyScriptEngineFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.script.Compilable;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import javax.script.SimpleBindings;
+import javax.script.*;
+import java.util.*;
 
 /**
  * An {@link ScriptService} using {@code javax.script}.
@@ -85,8 +67,8 @@ public class JavaxScriptScriptService extends BaseSupportedService implements Sc
       // registered factories.
       GroovyScriptEngineFactory groovyScriptEngineFactory = new GroovyScriptEngineFactory();
       registerLanguage("groovy", groovyScriptEngineFactory, null);
-      registerLanguage("python", new PyScriptEngineFactory(), new PythonActivityScriptFactory(
-          getSpaceEnvironment()));
+      //registerLanguage("python", new PyScriptEngineFactory(), new PythonActivityScriptFactory(
+      //    getSpaceEnvironment()));
       // registerLanguage("javascript",
       // new RhinoJavascriptScriptEngineFactory(),
       // new RhinoJavascriptActivityScriptFactory());

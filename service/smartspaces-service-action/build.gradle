@@ -30,15 +30,11 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.action.internal.osgi.ActionServiceActivator
 
-    Export-Package: \\
-        !io.smartspaces.service.action.internal.*, \\
-        !io.smartspaces.service.scheduler.internal.*, \\
-        io.smartspaces.service.action.*, \\
-        io.smartspaces.service.scheduler.*
+    -exportcontents *
         
     Private-Package: \\
         io.smartspaces.service.action.internal.*, \\
-        !io.smartspaces.service.scheduler.internal.*'
+        io.smartspaces.service.scheduler.internal.*
   """
 }
 

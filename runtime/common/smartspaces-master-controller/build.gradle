@@ -31,8 +31,8 @@ jar {
     Bundle-SymbolicName: smartspaces.master.controller
     Bundle-Version: ${osgiVersion}
 
-    Export-Package: \\
-        io.smartspaces.*
+    -exportcontents *
+
 
     Import-Package: \\
         io.smartspaces.system.resources.*;resolution:="optional", \\

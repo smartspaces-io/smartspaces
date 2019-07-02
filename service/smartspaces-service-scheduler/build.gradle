@@ -52,9 +52,7 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.scheduler.internal.osgi.OsgiSchedulerServiceActivator
 
-    Export-Package: \\
-        !io.smartspaces.service.scheduler.internal.*, \\
-        io.smartspaces.service.scheduler.*
+    -exportcontents *
 
     Private-Package: \\
         io.smartspaces.service.scheduler.internal.*

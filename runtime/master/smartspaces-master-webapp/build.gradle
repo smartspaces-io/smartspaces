@@ -82,53 +82,54 @@ dependencies {
 
 jar {
   extension = 'war'
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.master.webapp'
+  bnd """ 
+    Bundle-SymbolicName: smartspaces.master.webapp
+    Bundle-Version: ${osgiVersion}
 	
-	instruction 'Webapp-Context', '/smartspaces'
-	instruction 'Web-ContextPath', '/smartspaces'
-	instruction 'Bundle-Classpath', '.,WEB-INF'
+	  Webapp-Context: /smartspaces
+	  Web-ContextPath: /smartspaces
+	  Bundle-Classpath: .,WEB-INF
 
-    instruction 'Bundle-Activator',
-		'io.smartspaces.master.ui.internal.web.osgi.WebappActivator'
+    Bundle-Activator: \\
+		  io.smartspaces.master.ui.internal.web.osgi.WebappActivator
 	
-    instruction 'Private-Package', 
-		'io.smartspaces.*'
+    Private-Package: \\
+		  io.smartspaces.*
 
-    instruction 'Import-Package',
-        'org.springframework.web.servlet',
-        'org.springframework.core',
-        'org.springframework.web.util',
-        'org.springframework.context.support',
-        'org.springframework.web.context',
-        'org.springframework.beans.factory.xml',
-        'org.springframework.web.servlet.view',
-        'org.springframework.web.servlet.view.velocity',
-        'org.springframework.web.servlet.view.freemarker',
-        'org.springframework.ui.freemarker',
-        'org.springframework.webflow.config',
-        'org.springframework.webflow.mvc.servlet',
-        'org.springframework.webflow.mvc.builder',
-        'org.springframework.validation.beanvalidation',
-        'org.springframework.webflow.engine.impl',
-        'org.springframework.webflow.core.collection',
-        'org.springframework.binding.convert.service',
-        'org.springframework.webflow.engine.builder.support',
-        'org.springframework.webflow.expression.spel',
-        'org.springframework.expression.spel.standard',
-        'org.springframework.web.multipart.commons',
-        'org.springframework.ui.velocity',
-        'org.eclipse.gemini.blueprint.config',
-        'org.springframework.web.filter',
-		'org.springframework.transaction.config',
-		'org.apache.derby.jdbc',
-        'org.apache.commons.fileupload.disk',
-		//'javax.servlet;version=""',
-        '*'
+    Import-Package: \\
+        org.springframework.web.servlet, \\
+        org.springframework.core, \\
+        org.springframework.web.util, \\
+        org.springframework.context.support, \\
+        org.springframework.web.context, \\
+        org.springframework.beans.factory.xml, \\
+        org.springframework.web.servlet.view, \\
+        org.springframework.web.servlet.view.velocity, \\
+        org.springframework.web.servlet.view.freemarker, \\
+        org.springframework.ui.freemarker, \\
+        org.springframework.webflow.config, \\
+        org.springframework.webflow.mvc.servlet, \\
+        org.springframework.webflow.mvc.builder, \\
+        org.springframework.validation.beanvalidation, \\
+        org.springframework.webflow.engine.impl, \\
+        org.springframework.webflow.core.collection, \\
+        org.springframework.binding.convert.service, \\
+        org.springframework.webflow.engine.builder.support, \\
+        org.springframework.webflow.expression.spel, \\
+        org.springframework.expression.spel.standard, \\
+        org.springframework.web.multipart.commons, \\
+        org.springframework.ui.velocity, \\
+        org.eclipse.gemini.blueprint.config, \\
+        org.springframework.web.filter, \\
+		    org.springframework.transaction.config, \\
+		    org.apache.derby.jdbc, \\
+        org.apache.commons.fileupload.disk, \\
+        *
         
-        //'org.springframework.security.config',
-        //'org.springframework.security.provisioning',
-        //'org.springframework.security.web.authentication',
-  }
+        # javax.servlet;version=""
+
+        # org.springframework.security.config, 
+        # org.springframework.security.provisioning,
+        # org.springframework.security.web.authentication,
+  """
 }

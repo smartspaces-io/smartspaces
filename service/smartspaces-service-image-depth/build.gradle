@@ -70,9 +70,7 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.image.depth.internal.osgi.DepthCameraServiceActivator
 
-    Export-Package: \\
-        !io.smartspaces.service.image.depth.internal.*, \\
-        io.smartspaces.service.image.depth.*'
+   -exportcontents *
 
     Private-Package: \\
         io.smartspaces.service.image.depth.internal.*

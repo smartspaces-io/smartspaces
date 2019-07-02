@@ -27,8 +27,7 @@ jar {
     Bundle-SymbolicName: smartspaces.data
     Bundle-Version: ${osgiVersion}
 
-    Export-Package: \\
-        io.smartspaces.*
+    -exportcontents *
 
     Import-Package: \\
         *

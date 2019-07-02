@@ -29,8 +29,7 @@ jar {
     Bundle-SymbolicName: smartspaces.service.core
     Bundle-Version: ${osgiVersion}
 
-    Export-Package: \\
-		    io.smartspaces.service.*
+    -exportcontents *
 
     Import-Package: \\
         org.eclipse.paho.client.mqttv3.*;resolution:="optional", \\

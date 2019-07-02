@@ -80,7 +80,6 @@ jar {
     Bundle-SymbolicName: smartspaces.service.image.vision.opencv
     Bundle-Version: ${osgiVersion}
 
-    Export-Package: \\
-        io.smartspaces.service.image.vision.opencv.*
+    -exportcontents *
   """
 }

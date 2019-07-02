@@ -31,9 +31,7 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.smartspaces.master.internal.osgi.SmartSpacesMasterServiceOsgiBundleActivator
 
-    Export-Package: \\
-        !io.smartspaces.service.smartspaces.master.internal.*, \\
-        io.smartspaces.service.smartspaces.master.*
+    -exportcontents *
         
     Private-Package: \\
         io.smartspaces.service.smartspaces.master.internal.*

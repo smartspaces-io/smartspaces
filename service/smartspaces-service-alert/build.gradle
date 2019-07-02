@@ -31,9 +31,7 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.alert.internal.osgi.OsgiAlertServiceActivator
 
-    Export-Package: \\
-        !io.smartspaces.service.alert.internal.*, \\
-        io.smartspaces.service.alert.*
+    -exportcontents *
 
     Private-Package: \\
         io.smartspaces.service.alert.internal.*

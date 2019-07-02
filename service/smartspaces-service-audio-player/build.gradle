@@ -39,9 +39,7 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.audio.player.internal.osgi.AudioPlayerServiceOsgiBundleActivator
 
-    Export-Package: \\
-        !io.smartspaces.service.audio.player.internal.*, \\
-        io.smartspaces.service.audio.player.*
+    -exportcontents *
 
     Private-Package: \\
         io.smartspaces.service.audio.player.internal.*

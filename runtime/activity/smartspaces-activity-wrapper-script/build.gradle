@@ -33,8 +33,8 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.controller.activity.wrapper.internal.script.osgi.OsgiScriptActivityWrapperActivator
 
-    Export-Package: \\
-        io.smartspaces.controller.activity.wrapper.internal.script.*
+    -exportcontents *
+
 
     Import-Package: \\
         org.apache.commons.logging.impl, \\

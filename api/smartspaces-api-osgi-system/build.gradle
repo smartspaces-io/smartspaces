@@ -32,7 +32,6 @@ jar {
     Bundle-SymbolicName: smartspaces.api.osgi.system
     Bundle-Version: ${osgiVersion}
 
-    Export-Package: \\
-        io.smartspaces.*
+    -exportcontents *
   """
 }

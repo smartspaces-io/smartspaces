@@ -41,8 +41,8 @@ jar {
 	  Bundle-Activator: \\
 		  io.smartspaces.spacecontroller.runtime.internal.osgi.OsgiSpaceControllerActivator
 
-    Export-Package: \\
-		    io.smartspaces.spacecontroller.*
+    -exportcontents *
+
 		
     Import-Package: \\
 		  org.apache.commons.logging.impl, \\

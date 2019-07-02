@@ -38,8 +38,7 @@ jar {
     SmartSpaces-StartLevel: \\
         STARTUP_LEVEL_LAST
 
-    Export-Package: \\
-        io.smartspaces.liveactivity.runtime.standalone.*
+    -exportcontents *
 
     Import-Package: \\
         org.apache.commons.logging.impl, \\

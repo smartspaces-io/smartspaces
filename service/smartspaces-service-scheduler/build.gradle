@@ -24,7 +24,9 @@ dependencies {
     transitive = false
   }
   
-  compile('io.smartspaces:orientdb-complete-osgi:3.0.20')
+  compile('io.smartspaces:orientdb-complete-osgi:3.0.20') {
+    exclude group: 'com.orientechnologies'
+  }
   
   compile('io.smartspaces:quartz-orientdb:0.4.0-SNAPSHOT') {
 	  exclude group: 'com.orientechnologies'
@@ -36,6 +38,7 @@ dependencies {
   runtime 'org.slf4j:slf4j-simple:1.7.10'
   
   runtime 'com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.4.2'
+  runtime 'org.lz4:lz4-java:1.4.0'
   
   runtime("org.apache.commons:com.springsource.org.apache.commons.codec:1.4.0")
   runtime("org.slf4j:slf4j-api:1.7.10")

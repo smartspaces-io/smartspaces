@@ -93,9 +93,9 @@ task copyPythonRelease(type:Copy) {
 }
 
 task copyNeededComponents(dependsOn: [
-  copyCore,
-  copyPythonCore,
-  copyPythonRelease
+  copyCore //,
+  //copyPythonCore,
+  // copyPythonRelease
 ])
 
 

@@ -137,9 +137,9 @@ project.afterEvaluate {
 
 task copyNeededComponents(dependsOn: [
   copyExtras,
-  copyCore,
-  copyPythonCore,
-  copyPythonRelease
+  copyCore //,
+  //copyPythonCore,
+  //copyPythonRelease
 ])
 
 task copyContainerDependenciesLauncher(type: Copy) {

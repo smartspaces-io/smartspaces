@@ -92,9 +92,6 @@ jar {
 
     Bundle-Activator: \\
 		  io.smartspaces.master.ui.internal.web.osgi.WebappActivator
-	
-    Private-Package: \\
-		  io.smartspaces.*
 
     Import-Package: \\
         org.springframework.web.servlet, \\

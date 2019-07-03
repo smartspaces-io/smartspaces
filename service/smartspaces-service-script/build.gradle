@@ -44,7 +44,9 @@ jar {
     Bundle-Activator: \\
         io.smartspaces.service.script.internal.osgi.OsgiScriptServiceActivator
 
-    -exportcontents *
+    Export-Package: \\
+        !io.smartspaces.service.script.internal.*, \\
+        io.smartspaces.service.script.*; version=${osgiVersion}
 
     Private-Package: \\
         io.smartspaces.service.script.internal.*
@@ -88,18 +90,34 @@ jar {
         org.apache.tools.ant.types.resources;resolution:="optional", \\
         org.apache.tools.ant.util;resolution:="optional", \\
         org.gnu.readline;resolution:="optional", \\
-        org.python.apache.xml.resolver;resolution:="optional", \\
-        org.python.apache.xml.resolver.readers;resolution:="optional", \\
-        org.python.objectweb.asm.tree;resolution:="optional", \\
-        org.python.objectweb.asm.tree.analysis;resolution:="optional", \\
         sun.io;resolution:="optional", \\
         sun.misc;resolution:="optional", \\
         org.apache.xmlbeans;resolution:="optional", \\
         com.kenai.jnr.x86asm;resolution:="optional", \\
         org.codehaus.groovy.jsr223.*;resolution:="optional", \\
-        org.mozilla.javascript.*;resolution:="optional"
+        groovy.runtime.metaclass.*;resolution:="optional", \\
+        groovyjarjarasm.asm.tree.analysis.*;resolution:="optional", \\
+        jline.*;resolution:="optional", \\
+        junit.textui.*;resolution:="optional", \\
+        org.junit.*;resolution:="optional", \\
+        org.fusesource.jansi.*;resolution:="optional", \\
+        org.jdesktop.swingx.*;resolution:="optional", \\
+        org.apache.bsf.*;resolution:="optional", \\
+        org.apache.ivy.*;resolution:="optional", \\
+        org.apache.commons.cli.*;resolution:="optional", \\
+        org.apache.tools.ant.*;resolution:="optional", \\
+        sun.*;resolution:="optional", \\\\
+        org.mozilla.javascript.*;resolution:="optional", \\
+        com.thoughtworks.qdox.*;resolution:="optional", \\
+        com.thoughtworks.xstream.*;resolution:="optional", \\
+        *
 
         // org.python.apache.*,
         // org.python.*;resolution:="optional"
+        // org.python.apache.xml.resolver;resolution:="optional", 
+        // org.python.apache.xml.resolver.readers;resolution:="optional",
+        // org.python.objectweb.asm.tree;resolution:="optional",
+        // org.python.objectweb.asm.tree.analysis;resolution:="optional",
+
   """
 }

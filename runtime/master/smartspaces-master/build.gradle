@@ -81,10 +81,10 @@ dependencies {
   
   compile 'org.codehaus.groovy:groovy-all:2.2.1'
   
-  compile('org.apache.felix:org.apache.felix.bundlerepository:2.0.8') {
-    exclude group: 'org.osgi'
-    exclude group: 'org.easymock'
-  }
+  //compile('org.apache.felix:org.apache.felix.bundlerepository:2.0.8') {
+  //  exclude group: 'org.osgi'
+  //  exclude group: 'org.easymock'
+  //}
   
   //compile 'org.sat4j:org.sat4j.core:2.3.1'
   //compile 'org.sat4j:org.sat4j.pb:2.3.1'

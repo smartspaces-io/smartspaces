@@ -120,9 +120,7 @@ allprojects {
         smartSpacesVersion + "-" + smartSpacesVersionQualifier :
         smartSpacesVersion
 
-    osgiVersion = smartSpacesVersionQualifier ? 
-        smartSpacesVersion + "." + smartSpacesVersionQualifier :
-        smartSpacesVersion
+    osgiVersion = smartSpacesVersion
 
     if (project.hasProperty("testSize")) {
       ext.testSizing = project.testSize

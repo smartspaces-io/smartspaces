@@ -50,7 +50,7 @@ task assembleExtras(dependsOn: [copyExtraComponents, copyServiceArtifacts])
 jar {
   bnd """
     Bundle-SymbolicName: smartspaces.service.comm.serial.bluetooth
-    Bundle-Version; ${osgiVersion}
+    Bundle-Version: ${osgiVersion}
 
     Bundle-Activator: \\
         io.smartspaces.service.comm.serial.bluetooth.internal.osgi.BluetoothCommunicationEndpointServiceBundleActivator

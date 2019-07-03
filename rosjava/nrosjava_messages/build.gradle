@@ -51,8 +51,12 @@ jar {
     Bundle-SymbolicName: org.ros.nrosjava_messages
     Bundle-Version: ${osgiVersion}
 
+    Provide-Capability: org.ros.bootstrap
+
+    -exportcontents *
+
     Fragment-Host: \\
-		  org.ros.nrosjava; bundle-version="[0.1.0,2.0.0)"
+		  org.ros.nrosjava
   """
 }
 

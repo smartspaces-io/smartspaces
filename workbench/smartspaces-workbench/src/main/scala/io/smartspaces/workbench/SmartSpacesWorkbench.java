@@ -95,7 +95,7 @@ public class SmartSpacesWorkbench {
   public static final String CONFIGURATION_NAME_WORKBENCH_HOME = "workbench.home";
 
   /**
-   * Command to recursively walk over a set of directories looking for the IS
+   * Command to recursively walk over a set of directories looking for the SmartSpaces
    * project folders.
    */
   public static final String COMMAND_RECURSIVE = "walk";
@@ -121,7 +121,7 @@ public class SmartSpacesWorkbench {
   public static final String COMMAND_DEPLOY = "deploy";
 
   /**
-   * Command to create an IDE project for an IS project.
+   * Command to create an IDE project for a SmartSpaces project.
    */
   public static final String COMMAND_IDE = "ide";
 

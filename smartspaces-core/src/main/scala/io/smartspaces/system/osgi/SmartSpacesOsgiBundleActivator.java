@@ -158,16 +158,20 @@ public abstract class SmartSpacesOsgiBundleActivator
    * Unregister and shutdown all services registered with smart spaces.
    */
   private void unregisterSmartSpacesServices() {
-    ServiceRegistry serviceRegistry =
-        smartspacesEnvironmentTracker.getMyService().getServiceRegistry();
-    for (Service service : registeredSmartSpacesServices) {
-      try {
-        serviceRegistry.shutdownAndUnregisterService(service);
-      } catch (Throwable e) {
-        getSmartSpacesEnvironment().getLog().error("Could not shut service down", e);
+    // May shut the activator down before anything registered with it due to a bundle refresh. So tracker
+    // may return null.
+    SmartSpacesEnvironment myService = smartspacesEnvironmentTracker.getMyService();
+    if (myService != null) {
+      ServiceRegistry serviceRegistry = myService.getServiceRegistry();
+      for (Service service : registeredSmartSpacesServices) {
+        try {
+          serviceRegistry.shutdownAndUnregisterService(service);
+        } catch (Throwable e) {
+          getSmartSpacesEnvironment().getLog().error("Could not shut service down", e);
+        }
       }
+      registeredSmartSpacesServices.clear();
     }
-    registeredSmartSpacesServices.clear();
   }
 
   /**

@@ -35,6 +35,10 @@ jar {
 
     Bundle-Activator: \\
         io.smartspaces.service.template.internal.osgi.TemplateBundleActivator
+
+    -exportcontents *
+
+    Private-Package: io.smartspaces.service.template.internal
   """
 }
 

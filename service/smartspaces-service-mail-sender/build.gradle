@@ -18,7 +18,7 @@ dependencies {
   compile project(':service:smartspaces-service-core')
   compile project(':smartspaces-core')
 
-  compile 'javax.mail:javax.mail-api:1.6.2'
+  compile 'com.sun.mail:javax.mail:1.6.2'
 
   provided "${project.ext.osgiContainerDependency}"
 

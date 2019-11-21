@@ -41,7 +41,7 @@ allprojects {
     // be pushed to production.
     //
     // Final versions should set the qualifier to null.
-    smartSpacesVersion = '0.16.0'
+    smartSpacesVersion = '0.17.0'
     smartSpacesVersionQualifier = 'SNAPSHOT'
 
     // These specify the layout of SS containers.
@@ -136,8 +136,8 @@ allprojects {
   version = mavenVersion
 
   tasks.withType(JavaCompile) { 
-    sourceCompatibility = "1.7"
-    targetCompatibility = "1.7" 
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8" 
   }
 }
 
@@ -243,8 +243,8 @@ subprojects {
 
     if (!ext.nonScalaJvmProjects.contains(path)) {
       dependencies {
-        compile 'org.scala-lang:scala-library:2.11.12'
-        testCompile 'org.scalatest:scalatest_2.11:3.0.0'
+        compile 'org.scala-lang:scala-library:2.12.10'
+        testCompile 'org.scalatest:scalatest_2.12:3.0.0'
       }
     }
     

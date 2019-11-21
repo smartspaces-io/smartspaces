@@ -31,7 +31,7 @@ dependencies {
   compile files("${project.getProperty('smartspaces.dependencies.home')}/gui/org.swinglabs.swingx-1.6.1.jar")
   compile 'biz.aQute:bndlib:1.50.0'
   
-  compile 'org.scala-lang:scala-compiler:2.11.8'
+  compile 'org.scala-lang:scala-compiler:2.12.10'
   
   // Needed by BND for some reason. Wish it was optional.
   runtime 'org.junit:com.springsource.junit:3.8.2'

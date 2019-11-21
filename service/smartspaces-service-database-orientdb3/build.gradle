@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2016 Keith M. Hughes
- * Copyright (C) 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,25 +13,27 @@
  * the License.
  */
 
-ext {
-  serviceFolderName = "smartspaces.service.image.depth"
-  baseServiceBuildFolder = "${project.ext.extrasBuildFolder}/${project.ext.serviceFolderName}"
-}
- 
 dependencies {
-  extrasSupportCompile('com.nativelibs4java:bridj:0.7.0') { exclude module: 'dx' }
+  compile project(':smartspaces-core')
 
-  compile 'org.scala-lang:scala-library:2.12.10'
+  compile "io.smartspaces:orientdb-complete-osgi:3.0.20"
+  
+  provided "${project.ext.osgiContainerDependency}"
 
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
 }
 
-task copyServiceArtifacts(type: Copy, dependsOn: [install]) {
-  from configurations.archives.allArtifacts.files
-  into "${project.ext.baseServiceBuildFolder}"
+jar {
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.database.document.orientdb3
+
+    Bundle-Version: ${osgiVersion}
+
+    Bundle-Activator: \\
+        io.smartspaces.service.database.document.orientdb3.internal.osgi.OrientDbDocumentDatabaseServiceOsgiBundleActivator
+
+    -exportcontents *
+  """
 }
 
-task assembleExtras(dependsOn: [
-  copyServiceArtifacts
-])

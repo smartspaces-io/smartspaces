@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project type="library" language="scala">
+  <name>OrientDB Database Service</name>
+  <description>
+    A service for working with OrientDB databases.
+  </description>
+
+  <identifyingName>
+    smartspaces.sandbox.service.database.document.orientdb3
+  </identifyingName>
+  <version>1.0.0</version>
+
+  <library>
+    <container>
+      <activator>
+        io.smartspaces.sandbox.service.database.document.orientdb3.internal.osgi.OrientDbDocumentDatabaseServiceOsgiBundleActivator
+      </activator>
+    </container>
+  </library>
+
+  <dependencies>
+    <dependency identifyingName="orientdb-complete"
+        version="[3.0.0, 3.1.0)" required="true" />
+  </dependencies>
+</project>

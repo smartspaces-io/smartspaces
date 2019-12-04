@@ -39,6 +39,11 @@ object SensorDescriptionConstants {
   val ENTITY_DESCRIPTION_FIELD_DESCRIPTION = "description"
 
   /**
+   * The section header for the marker types section of the file.
+   */
+  val SECTION_HEADER_MARKER_TYPES = "markerTypes"
+
+  /**
    * The section header for the measurement types section of the file.
    */
   val SECTION_HEADER_MEASUREMENT_TYPES = "measurementTypes"
@@ -52,6 +57,11 @@ object SensorDescriptionConstants {
    * The measurement type section field for the value type for the measurement.
    */
   val SECTION_FIELD_MEASUREMENT_TYPES_VALUE_TYPE = "valueType"
+
+  /**
+   * The measurement type section field for the the measurement type.
+   */
+  val SECTION_FIELD_MEASUREMENT_TYPE = "measurementType"
 
   /**
    * The measurement type section field for the default unit for the

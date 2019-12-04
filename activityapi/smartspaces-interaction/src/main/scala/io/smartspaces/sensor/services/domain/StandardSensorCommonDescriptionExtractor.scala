@@ -16,20 +16,20 @@
 
 package io.smartspaces.sensor.services.domain
 
-import java.lang.{ Long => JLong }
+import java.lang.{Long => JLong}
 
 import scala.collection.JavaConverters.iterableAsScalaIterableConverter
 import scala.collection.mutable.ArrayBuffer
 import scala.util.control.Breaks.break
 import scala.util.control.Breaks.breakable
-
 import io.smartspaces.logging.ExtendedLog
-
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
 import io.smartspaces.sensor.domain.SensorAcquisitionModeCategoricalValue
+import io.smartspaces.sensor.domain.SensorAcquisitionModeCategoricalValueInstances
 import io.smartspaces.sensor.domain.SensorChannelDetailDescription
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
+import io.smartspaces.sensor.domain.SimpleMarkerTypeDescription
 import io.smartspaces.sensor.domain.SimpleMeasurementTypeDescription
 import io.smartspaces.sensor.domain.SimpleMeasurementUnitDescription
 import io.smartspaces.sensor.domain.SimplePhysicalSpaceTypeDescription
@@ -57,6 +57,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
     getMeasurementTypes(sensorRegistry, data)
     getSensorTypes(sensorRegistry, data)
+    getMeasurementTypes(sensorRegistry, data)
     getPhysicalSpaceTypes(sensorRegistry, data)
 
     return this
@@ -176,7 +177,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
         val channelId = channelDetailData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID)
 
         val measurementTypeId =
-          channelDetailData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CHANNELS_TYPE)
+          channelDetailData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_MEASUREMENT_TYPE)
         val measurementType = sensorRegistry.getMeasurementTypeByExternalId(measurementTypeId)
         if (measurementType.isEmpty) {
           // TODO(keith): Some sort of error message
@@ -253,6 +254,58 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
       sensorRegistry.registerSensorType(sensorDetail)
     })
     data.up()
+  }
+
+  /**
+   * Get all the marker type data.
+   *
+   * @param sensorRegistry
+   *          the sensor registry to store the data in
+   * @param data
+   *          the data read from the input stream
+   */
+  private def getMarkerTypes(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
+    if (data.containsProperty(SensorDescriptionConstants.SECTION_HEADER_MARKER_TYPES)) {
+      data.down(SensorDescriptionConstants.SECTION_HEADER_MARKER_TYPES)
+
+      data.getArrayEntries().asScala.foreach((markerDetailEntry) => {
+        val markerTypeData = markerDetailEntry.down()
+
+        val markerTypeId = markerTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID)
+
+        val markerUsageCategory = Option(markerTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE))
+
+        val markerDataSource = Option(markerTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_DATA_SOURCE))
+
+        val markerAcquisitionMode = SensorAcquisitionModeCategoricalValue.fromLabel(
+          markerTypeData.getRequiredString(
+            SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_ACQUISITION_MODE))
+
+        val measurementTypeId =
+          markerTypeData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_MEASUREMENT_TYPE)
+        val measurementType = sensorRegistry.getMeasurementTypeByExternalId(measurementTypeId)
+        if (measurementType.isEmpty) {
+          // TODO(keith): Some sort of error message
+          break
+        }
+
+        val markerDetail = SimpleMarkerTypeDescription(
+          getNextId(),
+          markerTypeId,
+          markerTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
+          Option(markerTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
+          markerUsageCategory,
+          markerDataSource,
+          markerAcquisitionMode.get,
+          Option(markerTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_NAME)),
+          Option(markerTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_MODEL)),
+          measurementType.get
+        )
+
+        sensorRegistry.registerMarkerType(markerDetail)
+      })
+      data.up()
+    }
   }
 
   /**

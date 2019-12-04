@@ -16,6 +16,7 @@
 
 package io.smartspaces.sensor.services.domain
 
+import io.smartspaces.sensor.domain.MarkerTypeDescription
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
 import io.smartspaces.sensor.domain.PhysicalSpaceTypeDescription
@@ -121,6 +122,43 @@ trait SensorCommonRegistry {
    * @return all sensor types in the registry
    */
   def getAllSensorTypes(): List[SensorTypeDescription]
+
+  /**
+   * Register a marker type with the registry.
+   *
+   * @param markerType
+   *          the marker type to add
+   *
+   * @return this registry
+   */
+  def registerMarkerType(markerType: MarkerTypeDescription): SensorCommonRegistry
+
+  /**
+   * Get a marker type from the registry persistence ID.
+   *
+   * @param id
+   *          id of the the marker type
+   *
+   * @return the marker type
+   */
+  def getMarkerType(id: String): Option[MarkerTypeDescription]
+
+  /**
+   * Get a marker type from the registry external ID.
+   *
+   * @param externalId
+   *          external id of the the marker type
+   *
+   * @return the marker type
+   */
+  def getMarkerTypeByExternalId(externalId: String): Option[MarkerTypeDescription]
+
+  /**
+   * Get all marker types from the registry.
+   *
+   * @return all marker types in the registry
+   */
+  def getAllMarkerTypes(): List[MarkerTypeDescription]
 
   /**
    * Register a physical space type with the registry.

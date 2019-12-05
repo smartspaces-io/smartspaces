@@ -16,15 +16,16 @@
 
 package io.smartspaces.sensor.services.domain
 
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.Map
-
 import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.sensor.domain.MarkerTypeDescription
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
 import io.smartspaces.sensor.domain.PhysicalSpaceTypeDescription
 import io.smartspaces.sensor.domain.SensorTypeDescription
 import javax.inject.Inject
+
+import scala.collection.mutable.HashMap
+import scala.collection.mutable.Map
 
 
 /**
@@ -63,6 +64,16 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
    * A map of external IDs to sensor types.
    */
   private val externalIdToSensorType: Map[String, SensorTypeDescription] = new HashMap
+
+  /**
+   * A map of persistence IDs to marker types.
+   */
+  private val idToMarkerType: Map[String, MarkerTypeDescription] = new HashMap
+
+  /**
+   * A map of external IDs to marker types.
+   */
+  private val externalIdToMarkerType: Map[String, MarkerTypeDescription] = new HashMap
 
   /**
    * A map of persistence IDs to physical space types.
@@ -123,6 +134,25 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
 
   override def getAllSensorTypes(): List[SensorTypeDescription] = {
     idToSensorType.values.toList
+  }
+
+  override def registerMarkerType(markerDetail: MarkerTypeDescription): SensorCommonRegistry = {
+    idToMarkerType.put(markerDetail.id, markerDetail)
+    externalIdToMarkerType.put(markerDetail.externalId, markerDetail)
+
+    this
+  }
+
+  override def getMarkerType(id: String): Option[MarkerTypeDescription] = {
+    idToMarkerType.get(id)
+  }
+
+  override def getMarkerTypeByExternalId(externalId: String): Option[MarkerTypeDescription] = {
+    externalIdToMarkerType.get(externalId)
+  }
+
+  override def getAllMarkerTypes(): List[MarkerTypeDescription] = {
+    idToMarkerType.values.toList
   }
 
   override def registerPhysicalSpaceType(physicalSpaceType: PhysicalSpaceTypeDescription): SensorCommonRegistry = {

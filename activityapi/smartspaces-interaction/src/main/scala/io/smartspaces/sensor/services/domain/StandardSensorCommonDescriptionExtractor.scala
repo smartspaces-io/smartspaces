@@ -18,15 +18,10 @@ package io.smartspaces.sensor.services.domain
 
 import java.lang.{Long => JLong}
 
-import scala.collection.JavaConverters.iterableAsScalaIterableConverter
-import scala.collection.mutable.ArrayBuffer
-import scala.util.control.Breaks.break
-import scala.util.control.Breaks.breakable
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
 import io.smartspaces.sensor.domain.SensorAcquisitionModeCategoricalValue
-import io.smartspaces.sensor.domain.SensorAcquisitionModeCategoricalValueInstances
 import io.smartspaces.sensor.domain.SensorChannelDetailDescription
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
 import io.smartspaces.sensor.domain.SimpleMarkerTypeDescription
@@ -37,6 +32,11 @@ import io.smartspaces.sensor.domain.SimpleSensorChannelDetailDescription
 import io.smartspaces.sensor.domain.SimpleSensorTypeDescription
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.data.dynamic.DynamicObject.ArrayDynamicObjectEntry
+
+import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+import scala.collection.mutable.ArrayBuffer
+import scala.util.control.Breaks.break
+import scala.util.control.Breaks.breakable
 
 /**
  * A YAML-based sensor common description importer.
@@ -57,7 +57,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
     getMeasurementTypes(sensorRegistry, data)
     getSensorTypes(sensorRegistry, data)
-    getMeasurementTypes(sensorRegistry, data)
+    getMarkerTypes(sensorRegistry, data)
     getPhysicalSpaceTypes(sensorRegistry, data)
 
     return this

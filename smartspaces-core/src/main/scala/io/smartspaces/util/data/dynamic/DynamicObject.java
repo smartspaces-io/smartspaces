@@ -292,6 +292,66 @@ public interface DynamicObject {
   <T> T getItem(String name) throws DynamicObjectSmartSpacesException;
 
   /**
+   * If the current level is a object, get an object field from the object.
+   *
+   * @param name
+   *          name of the field
+   *
+   * @return value of the field, or {@code null} if nothing for that key
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object
+   */
+  Object getObject(String name) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * If the current level is a object, get an object field from the object.
+   *
+   * <p>
+   *     The object is required.
+   * </p>
+   *
+   * @param name
+   *          name of the field
+   *
+   * @return value of the field, or {@code null} if nothing for that key
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object
+   */
+  Object getRequiredObject(String name) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * If the current level is a object, get an object field from the object as JSON.
+   *
+   * @param name
+   *          name of the field
+   *
+   * @return value of the field, or {@code null} if nothing for that key
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object
+   */
+  String getObjectJson(String name) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * If the current level is a object, get an object field from the object as JSON.
+   *
+   * <p>
+   *     The object is required.
+   * </p>
+   *
+   * @param name
+   *          name of the field
+   *
+   * @return value of the field, or {@code null} if nothing for that key
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an object
+   */
+  String getRequiredObjectJson(String name) throws DynamicObjectSmartSpacesException;
+
+  /**
    * If the current level is an array, get a string field from the object.
    *
    * @param pos
@@ -357,6 +417,32 @@ public interface DynamicObject {
    *           not an array
    */
   <T> T getItem(int pos) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * If the current level is an array, get an object field from the object.
+   *
+   * @param pos
+   *          position in the array
+   *
+   * @return value of the field
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an array
+   */
+  Object getObject(int pos) throws DynamicObjectSmartSpacesException;
+
+  /**
+   * If the current level is an array, get an object field from the object as JSON.
+   *
+   * @param pos
+   *          position in the array
+   *
+   * @return value of the field
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           not an array
+   */
+  String getObjectJson(int pos) throws DynamicObjectSmartSpacesException;
 
   /**
    * If the current level is an array, get the size of the array.

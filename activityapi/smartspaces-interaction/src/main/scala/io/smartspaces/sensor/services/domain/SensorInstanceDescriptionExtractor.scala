@@ -23,7 +23,7 @@ import io.smartspaces.util.data.dynamic.DynamicObject
  *
  * @author Keith M. Hughes
  */
-trait SensorInstanceDescriptionExtractor {
+trait SensorInstanceDescriptionExtractor[T] {
 
   /**
    * Import a description into a particular instance registry.
@@ -33,5 +33,5 @@ trait SensorInstanceDescriptionExtractor {
    *
    * @return this importer
    */
-  def extractDescriptions(data: DynamicObject, register: SensorInstanceRegistry): SensorInstanceDescriptionExtractor
+  def extractDescriptions(data: T, register: SensorInstanceRegistry): SensorInstanceDescriptionExtractor[T]
 }

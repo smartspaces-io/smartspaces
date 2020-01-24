@@ -28,7 +28,7 @@ dependencies {
   testCompile 'org.mockito:mockito-all:1.9.5'
 }
 
-task copyServiceArtifacts(type: Copy, dependsOn: [install]) {
+task copyServiceArtifacts(type: Copy, dependsOn: [publishToMavenLocal]) {
   from configurations.archives.allArtifacts.files
   into "${project.ext.baseServiceBuildFolder}"
 }

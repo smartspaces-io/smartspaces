@@ -34,11 +34,13 @@ import io.smartspaces.util.data.dynamic.DynamicObject.ArrayDynamicObjectEntry
 import io.smartspaces.util.data.dynamic.DynamicObject.ObjectDynamicObjectEntry
 
 /**
- * A YAML-based sensor instance description importer.
+ * A dynamic object-based sensor instance description importer.
  *
  * @author Keith M. Hughes
  */
-class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCommonRegistry, log: ExtendedLog) extends SensorInstanceDescriptionExtractor {
+class StandardDynamicObjectSensorInstanceDescriptionExtractor(
+  sensorCommonRegistry: SensorCommonRegistry,
+  log: ExtendedLog) extends SensorInstanceDescriptionExtractor[DynamicObject] {
 
   /**
    * The ID to be given to entities.
@@ -47,7 +49,9 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
    */
   private var id: Integer = 0
 
-  override def extractDescriptions(data: DynamicObject, sensorRegistry: SensorInstanceRegistry): SensorInstanceDescriptionExtractor = {
+  override def extractDescriptions(
+    data: DynamicObject,
+    sensorRegistry: SensorInstanceRegistry): SensorInstanceDescriptionExtractor[DynamicObject] = {
     getSensors(sensorRegistry, data)
     getPeople(sensorRegistry, data)
     getMarkers(sensorRegistry, data)

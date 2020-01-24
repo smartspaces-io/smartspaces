@@ -39,7 +39,7 @@ task copyExtrasJars(type: Copy) {
 
 task copyExtraComponents(dependsOn: [copyExtrasJars])
 
-task copyServiceArtifacts(type: Copy, dependsOn: [install]) {
+task copyServiceArtifacts(type: Copy, dependsOn: [publishToMavenLocal]) {
   from configurations.archives.allArtifacts.files
   into "${project.ext.baseServiceBuildFolder}"
 }

@@ -16,36 +16,26 @@
 
 package io.smartspaces.util.messaging.mqtt
 
-import io.smartspaces.SmartSpacesException
-import io.smartspaces.logging.ExtendedLog
-import io.smartspaces.messaging.codec.MessageEncoder
-import io.smartspaces.util.io.FileSupportImpl
-
-import org.eclipse.paho.client.mqttv3.IMqttActionListener
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
-import org.eclipse.paho.client.mqttv3.IMqttToken
-import org.eclipse.paho.client.mqttv3.MqttAsyncClient
-import org.eclipse.paho.client.mqttv3.MqttCallback
-import org.eclipse.paho.client.mqttv3.MqttClientPersistence
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions
-import org.eclipse.paho.client.mqttv3.MqttException
-import org.eclipse.paho.client.mqttv3.MqttMessage
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
-import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence
-
 import java.util.List
 import java.util.Set
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
-import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.JavaConversions.asScalaSet
+import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.messaging.codec.MessageEncoder
+import org.eclipse.paho.client.mqttv3.IMqttActionListener
+import org.eclipse.paho.client.mqttv3.IMqttToken
+import org.eclipse.paho.client.mqttv3.MqttMessage
+
+import scala.collection.JavaConverters._
 
 /**
  * A collection of MQTT publishers for a given message topic.
  *
- * @param <T>
+ * @param messageEncoder
+ *        the message encoder
+ * @param log
+ *        the logger to use
+ * @tparam T
  *          the type of messages
  *
  * @author Keith M. Hughes
@@ -74,7 +64,7 @@ class StandardMqttPublishers[T](messageEncoder: MessageEncoder[T, Array[Byte]], 
 
     log.debug(s"Adding publishers for topic names ${topicNames} to MQTT master ${mqttClient.mqttBrokerDescription}")
 
-    topicNames.foreach { topicName =>
+    topicNames.asScala.foreach { topicName =>
       log.debug(s"Adding publisher topic ${topicName}")
       clients.add(new MqttClientInformation(mqttClient, topicName));
     }
@@ -84,7 +74,7 @@ class StandardMqttPublishers[T](messageEncoder: MessageEncoder[T, Array[Byte]], 
     val mqttMessage = new MqttMessage(messageEncoder.encode(message))
     mqttMessage.setQos(1)
 
-    clients.foreach { client =>
+    clients.asScala.foreach { client =>
       try {
         client.mqttClient.mqttClient.publish(client.topicName, mqttMessage, null, actionListener);
       } catch {

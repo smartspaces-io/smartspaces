@@ -154,7 +154,7 @@ trait SensorInstanceRegistry {
    *
    * @return this registry
    */
-  def registerSensedEntity(sensor: SensedEntityDescription): SensorInstanceRegistry
+  def registerSensedEntity(sensedEntity: SensedEntityDescription): SensorInstanceRegistry
 
   /**
    * Get the sensed entity description by persistence ID.

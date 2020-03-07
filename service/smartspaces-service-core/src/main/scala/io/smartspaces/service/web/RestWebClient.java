@@ -122,7 +122,50 @@ public interface RestWebClient extends ManagedResource {
       throws SmartSpacesException;
 
   /**
-   * See {@link #performPost(String, String, Charset)}.
+   * See {@link #performDelete(String, Charset, Map)}.
+   *
+   * <p>
+   * The charset will be UTF-8.
+   *
+   * @param sourceUri
+   *          the URI to copy the content from
+   * @param headers
+   *          a map of headers for the request, can be {@code null}
+   *
+   * @return the content
+   *
+   * @throws SmartSpacesException
+   *           if transfer was not successful
+   */
+  String performDelete(String sourceUri, Map<String,String> headers) throws SmartSpacesException;
+
+  /**
+   * Delete the content of the source URI and return as a string.
+   *
+   * <p>
+   * This method blocks until the transfer is complete or it fails.
+   *
+   * <p>
+   * This method will fail if there are not enough connections available and
+   * blocking until a connection becomes ready is not enabled.
+   *
+   * @param sourceUri
+   *          the URI to copy the content from
+   * @param charset
+   *          the charset the content will be in
+   * @param headers
+   *          a map of headers for the request, can be {@code null}
+   *
+   * @return the content
+   *
+   * @throws SmartSpacesException
+   *           if delete was not successful
+   */
+  String performDelete(String sourceUri, Charset charset, Map<String,String> headers)
+          throws SmartSpacesException;
+
+  /**
+   * See {@link #performPost(String, String, Charset, Map)}.
    *
    * <p>
    * The charset will be UTF-8.

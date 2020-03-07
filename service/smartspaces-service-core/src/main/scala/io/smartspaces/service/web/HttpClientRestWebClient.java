@@ -26,10 +26,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.*;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.config.SocketConfig;
@@ -188,6 +185,28 @@ public class HttpClientRestWebClient implements RestWebClient {
     try {
       HttpPut request = new HttpPut(sourceUri);
       request.setEntity(new StringEntity(putContent, charset.name()));
+
+      placeHeadersInRequest(headers, request);
+
+      ResponseHandler<String> responseHandler = newResponseHandler(charset);
+
+      return httpClient.execute(request, responseHandler);
+    } catch (Exception e) {
+      throw new SimpleSmartSpacesException(String.format("REST call to %s failed.", sourceUri), e);
+    }
+  }
+  @Override
+  public String performDelete(String sourceUri,
+                              Map<String, String> headers) throws SmartSpacesException {
+    return performDelete(sourceUri, Charsets.UTF_8,  headers);
+  }
+
+  @Override
+  public String performDelete(String sourceUri, Charset charset,
+                           Map<String, String> headers) throws SmartSpacesException {
+
+    try {
+      HttpDelete request = new HttpDelete(sourceUri);
 
       placeHeadersInRequest(headers, request);
 

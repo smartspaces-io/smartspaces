@@ -48,7 +48,7 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
 
   @Mock var eventEmitter: SensorProcessingEventEmitter = _
 
-  @Mock var log: ExtendedLog = null
+  @Mock var log: ExtendedLog = _
 
   @Mock var spaceEnvironment: SmartSpacesEnvironment = _
 

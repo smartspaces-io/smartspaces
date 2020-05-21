@@ -16,15 +16,11 @@
 
 package io.smartspaces.sensor.services.domain
 
-import scala.collection.JavaConverters.asScalaBufferConverter
-import scala.collection.JavaConverters.iterableAsScalaIterableConverter
-import scala.collection.JavaConverters.mapAsScalaMapConverter
-import scala.util.control.Breaks.break
-import scala.util.control.Breaks.breakable
-
 import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValue
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
 import io.smartspaces.sensor.domain.SensorTypeDescription
+import io.smartspaces.sensor.domain.SimpleDataSourceDescription
 import io.smartspaces.sensor.domain.SimpleMarkerEntityDescription
 import io.smartspaces.sensor.domain.SimplePersonSensedEntityDescription
 import io.smartspaces.sensor.domain.SimplePhysicalSpaceSensedEntityDescription
@@ -32,6 +28,12 @@ import io.smartspaces.sensor.domain.SimpleSensorEntityDescription
 import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.data.dynamic.DynamicObject.ArrayDynamicObjectEntry
 import io.smartspaces.util.data.dynamic.DynamicObject.ObjectDynamicObjectEntry
+
+import scala.collection.JavaConverters.asScalaBufferConverter
+import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+import scala.collection.JavaConverters.mapAsScalaMapConverter
+import scala.util.control.Breaks.break
+import scala.util.control.Breaks.breakable
 
 /**
  * A dynamic object-based sensor instance description importer.
@@ -148,7 +150,13 @@ class StandardDynamicObjectSensorInstanceDescriptionExtractor(
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
         sensorType.get,
-        itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_SOURCE),
+        SimpleDataSourceDescription(
+          itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ORIGIN_PROVIDER_ID),
+          itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_INTERFACE_PROVIDER_ID),
+          itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID),
+          DataSourceAcquisitionModeCategoricalValue.fromLabel(
+            itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_MODE)).get
+        ),
         sensorUpdateTimeLimit,
         sensorHeartbeatUpdateTimeLimit)
 
@@ -179,7 +187,13 @@ class StandardDynamicObjectSensorInstanceDescriptionExtractor(
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
-          itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_SOURCE),
+          SimpleDataSourceDescription(
+            itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ORIGIN_PROVIDER_ID),
+            itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_INTERFACE_PROVIDER_ID),
+            itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID),
+            DataSourceAcquisitionModeCategoricalValue.fromLabel(
+              itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_MODE)).get
+          ),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_TYPE),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_ID)))
       })

@@ -18,20 +18,20 @@ package io.smartspaces.sensor.model
 
 import java.util.concurrent.locks.ReentrantReadWriteLock
 
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.Map
-
 import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValueInstances
 import io.smartspaces.sensor.domain.PersonSensedEntityDescription
 import io.smartspaces.sensor.domain.PhysicalSpaceSensedEntityDescription
 import io.smartspaces.sensor.domain.SensedEntityDescription
-import io.smartspaces.sensor.domain.SensorAcquisitionModeCategoricalValueInstances
 import io.smartspaces.sensor.domain.SensorEntityDescription
 import io.smartspaces.sensor.domain.SensorSensedEntityAssociationDescription
 import io.smartspaces.sensor.services.domain.SensorInstanceRegistry
 import io.smartspaces.sensor.services.processing.SensorProcessingEventEmitter
 import io.smartspaces.sensor.services.processing.value.SensorValueProcessorRegistry
 import io.smartspaces.system.SmartSpacesEnvironment
+
+import scala.collection.mutable.HashMap
+import scala.collection.mutable.Map
 
 /**
  * A collection of sensed entity models.
@@ -197,9 +197,9 @@ class StandardCompleteSensedEntityModel(
   }
 
   override def getAllSensorEntityModelsForAcquisitionMode(
-    acquisitionMode: SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance): Iterable[SensorEntityModel] = {
+    acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance): Iterable[SensorEntityModel] = {
     externalIdToSensorEntityModels.values.filter(
-      _.sensorEntityDescription.sensorType.acquisitionMode == acquisitionMode)
+      _.sensorEntityDescription.dataSource.acquisitionMode == acquisitionMode)
   }
 
   override def getAllSensorEntityModelsForSensorTypeExternalId(sensorTypeExternalId: String): Iterable[SensorEntityModel] = {

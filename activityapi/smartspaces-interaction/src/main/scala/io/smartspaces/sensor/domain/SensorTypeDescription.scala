@@ -16,112 +16,63 @@
 
 package io.smartspaces.sensor.domain
 
-import scala.collection.mutable.ArrayBuffer
-
-import io.smartspaces.data.entity.BaseCategoricalValue
-import io.smartspaces.data.entity.BaseCategoricalValueInstance
-import io.smartspaces.data.entity.CategoricalValue
-import io.smartspaces.data.entity.CategoricalValueInstance
-
-/**
- * The activity categorical value.
- * 
- * @author Keith M. Hughes
- */
-final object SensorAcquisitionModeCategoricalValue extends BaseCategoricalValue[
-  SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance]( 
-    "sensorAcquisitionType", List(SensorAcquisitionModeCategoricalValueInstances.PULL, SensorAcquisitionModeCategoricalValueInstances.PUSH)) {  
-}
-
-/**
- * All categorical value instances for how a sensor acquires data..
- * 
- * @author Keith M. Hughes
- */
-object SensorAcquisitionModeCategoricalValueInstances {
-  
-  /**
-   * Base class for the sensor acquisition type categorical variable instances.
-   * 
-   * @author Keith M. Hughes
-   */
-  sealed abstract class SensorAcquisitionModeCategoricalValueInstance(override val id: Int, override val label: String) extends BaseCategoricalValueInstance {
-    override def value: CategoricalValue[CategoricalValueInstance] = SensorAcquisitionModeCategoricalValue
-  }
-  
-  /**
-   * The data must be pulled in.
-   */
-  final object PULL extends SensorAcquisitionModeCategoricalValueInstance(0, "PULL")
-  
-  /**
-   * The data is pushed to the processor.
-   */
-  final object PUSH extends SensorAcquisitionModeCategoricalValueInstance(1, "PUSH")
-}
-
 /**
  * Type information about a sensor.
- * 
+ *
  * @author Keith M. Hughes
  */
 trait SensorTypeDescription extends DisplayableDescription {
-  
+
   /**
    * The ID of the sensor detail.
    */
   def id: String
-  
+
   /**
    * The external ID of the sensor detail.
    */
   def externalId: String
-  
+
   /**
    * The usage category of the sensor.
    */
   def usageCategory: Option[String]
-  
+
   /**
    * The source of the data, e.g. SmartThings, internal, etc.
    */
-  def dataSource: Option[String]
-  
-  /**
-   * How the sensor acquires its data.
-   */
-  def acquisitionMode: SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance
-    
+  def dataSources: Iterable[DataSourceTypeDescription]
+
   /**
    * The time limit on when a sensor update should happen, in milliseconds
    */
   def sensorUpdateTimeLimit: Option[Long]
-    
+
   /**
    * The time limit on when a sensor heartbeat update should happen, in milliseconds
    */
   def sensorHeartbeatUpdateTimeLimit: Option[Long]
-  
+
   /**
    * The optional manufacturer's name.
    */
   def sensorManufacturerName: Option[String]
-  
+
   /**
    * The optional manufacturer's model.
    */
   def sensorManufacturerModel: Option[String]
-  
+
   /**
    * The supported channel IDs.
    */
   def supportedChannelIds: String
-  
+
   /**
    * All channel details for the sensor type.
    */
   def allChannelDetails: List[SensorChannelDetailDescription]
-  
+
   /**
    * All supported channel details for the sensor type.
    */
@@ -129,11 +80,11 @@ trait SensorTypeDescription extends DisplayableDescription {
 
   /**
    * Get a supported sensor channel detail of this sensor detail.
-   * 
+   *
    * <p>
    * The channel must be a channel of this sensor detail to be found. Channel names are local
    * to the detail they are contained in.
-   * 
+   *
    * @param id
    *     the ID of the channel detail
    *
@@ -143,28 +94,28 @@ trait SensorTypeDescription extends DisplayableDescription {
 
   /**
    * Does the sensor type have a supported channel with the given ID?
-   * 
+   *
    * <p>
    * The channel must be a channel of this sensor detail to be found. Channel names are local
    * to the detail they are contained in.
-   * 
+   *
    * @param channelId
    *     the ID of the channel detail
    *
    * @return [[true]] if there is a channel with the given ID
    */
   def hasSupportedSensorChannel(channelId: String): Boolean
-  
+
   /**
    * Does the sensor support returning a given measurement type?
-   * 
+   *
    * @return [[true]] if the sensor has a given measurement type
    */
   def hasSupportedMeasurementType(measurementTypeExternalId: String): Boolean
-  
+
   /**
    *  Get all supported sensor channel descriptions for a given measurement type.
-   * 
+   *
    * @return all channels with a given measurement type
    */
   def getSupportedMeasurementTypeChannels(measurementTypeExternalId: String): Iterable[SensorChannelDetailDescription]
@@ -176,20 +127,19 @@ trait SensorTypeDescription extends DisplayableDescription {
  * @author Keith M. Hughes
  */
 case class SimpleSensorTypeDescription(
-    override val id: String, 
-    override val externalId: String, 
-    override val displayName: String, 
-    override val displayDescription: Option[String], 
-    override val sensorUpdateTimeLimit: Option[Long], 
-    override val sensorHeartbeatUpdateTimeLimit: Option[Long],
-    override val usageCategory: Option[String],
-    override val dataSource: Option[String],
-    override val acquisitionMode: SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance,
-    override val sensorManufacturerName: Option[String],
-    override val sensorManufacturerModel: Option[String],
-    override val supportedChannelIds: String,
-    override val allChannelDetails: List[SensorChannelDetailDescription],
-    override val supportedChannelDetails: List[SensorChannelDetailDescription]
+                                        override val id: String,
+                                        override val externalId: String,
+                                        override val displayName: String,
+                                        override val displayDescription: Option[String],
+                                        override val sensorUpdateTimeLimit: Option[Long],
+                                        override val sensorHeartbeatUpdateTimeLimit: Option[Long],
+                                        override val usageCategory: Option[String],
+                                        override val dataSources: Iterable[DataSourceTypeDescription],
+                                        override val sensorManufacturerName: Option[String],
+                                        override val sensorManufacturerModel: Option[String],
+                                        override val supportedChannelIds: String,
+                                        override val allChannelDetails: List[SensorChannelDetailDescription],
+                                        override val supportedChannelDetails: List[SensorChannelDetailDescription]
     ) extends SensorTypeDescription {
 
   override def getSupportedSensorChannelDetail(id: String): Option[SensorChannelDetailDescription] = {

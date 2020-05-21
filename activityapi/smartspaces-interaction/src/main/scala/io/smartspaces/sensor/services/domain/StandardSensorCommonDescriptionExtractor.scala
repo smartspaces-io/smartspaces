@@ -21,9 +21,11 @@ import java.lang.{Long => JLong}
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
-import io.smartspaces.sensor.domain.SensorAcquisitionModeCategoricalValue
+import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValue
+import io.smartspaces.sensor.domain.DataSourceTypeDescription
 import io.smartspaces.sensor.domain.SensorChannelDetailDescription
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
+import io.smartspaces.sensor.domain.SimpleDataSourceTypeDescription
 import io.smartspaces.sensor.domain.SimpleMarkerTypeDescription
 import io.smartspaces.sensor.domain.SimpleMeasurementTypeDescription
 import io.smartspaces.sensor.domain.SimpleMeasurementUnitDescription
@@ -161,13 +163,25 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
       val sensorUsageCategory = Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE))
 
-      val sensorDataSource = Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_DATA_SOURCE))
+      val allSensorDataSourcesBuffer = ArrayBuffer[DataSourceTypeDescription]()
+      sensorTypeData.down(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_DATA_SOURCES)
+      data.getArrayEntries().asScala.foreach((dataSourceEntry: ArrayDynamicObjectEntry) => breakable {
+        val dataSourceData = dataSourceEntry.down()
+
+        val dataSourceOriginProviderId = sensorTypeData.getRequiredString(
+          SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_ORIGIN_PROVIDER_ID)
+        val dataSourceInterfaceProviderId = sensorTypeData.getRequiredString(
+          SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_INTERFACE_PROVIDER_ID)
+        val dataSourceAcquisitionMode = DataSourceAcquisitionModeCategoricalValue.fromLabel(
+          sensorTypeData.getRequiredString(
+            SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_ACQUISITION_MODE)).get
+
+        allSensorDataSourcesBuffer += SimpleDataSourceTypeDescription(
+          dataSourceOriginProviderId, dataSourceInterfaceProviderId, dataSourceAcquisitionMode)
+      })
+      sensorTypeData.up
 
       val supportedChannelIds = sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SUPPORTED_CHANNEL_IDS, "*")
-
-      val sensorAcquisitionMode = SensorAcquisitionModeCategoricalValue.fromLabel(
-        sensorTypeData.getRequiredString(
-          SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_ACQUISITION_MODE))
 
       val allSensorChannelsBuffer = ArrayBuffer[SensorChannelDetailDescription]()
       sensorTypeData.down(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CHANNELS)
@@ -245,8 +259,8 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
         sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(sensorTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
         sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit,
-        sensorUsageCategory, sensorDataSource,
-        sensorAcquisitionMode.get,
+        sensorUsageCategory,
+        allSensorDataSourcesBuffer.toList,
         Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_NAME)),
         Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_MODEL)),
         supportedChannelIds, allSensorChannels, allSupportedSensorChannels)
@@ -275,11 +289,23 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
         val markerUsageCategory = Option(markerTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE))
 
-        val markerDataSource = Option(markerTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_DATA_SOURCE))
+        val allMarkerDataSourcesBuffer = ArrayBuffer[DataSourceTypeDescription]()
+        markerTypeData.down(SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_DATA_SOURCES)
+        data.getArrayEntries().asScala.foreach((dataSourceEntry: ArrayDynamicObjectEntry) => breakable {
+          val dataSourceData = dataSourceEntry.down()
 
-        val markerAcquisitionMode = SensorAcquisitionModeCategoricalValue.fromLabel(
-          markerTypeData.getRequiredString(
-            SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_ACQUISITION_MODE))
+          val dataSourceOriginProviderId = markerTypeData.getRequiredString(
+            SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_ORIGIN_PROVIDER_ID)
+          val dataSourceInterfaceProviderId = markerTypeData.getRequiredString(
+            SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_INTERFACE_PROVIDER_ID)
+          val dataSourceAcquisitionMode = DataSourceAcquisitionModeCategoricalValue.fromLabel(
+            markerTypeData.getRequiredString(
+              SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_ACQUISITION_MODE)).get
+
+          allMarkerDataSourcesBuffer += SimpleDataSourceTypeDescription(
+            dataSourceOriginProviderId, dataSourceInterfaceProviderId, dataSourceAcquisitionMode)
+        })
+        markerTypeData.up
 
         val measurementTypeId =
           markerTypeData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_MEASUREMENT_TYPE)
@@ -295,8 +321,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
           markerTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(markerTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
           markerUsageCategory,
-          markerDataSource,
-          markerAcquisitionMode.get,
+          allMarkerDataSourcesBuffer.toList,
           Option(markerTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_NAME)),
           Option(markerTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_MODEL)),
           measurementType.get

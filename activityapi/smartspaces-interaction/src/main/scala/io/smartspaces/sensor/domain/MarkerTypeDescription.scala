@@ -41,12 +41,7 @@ trait MarkerTypeDescription extends DisplayableDescription {
   /**
    * The source of the data, e.g. SmartThings, internal, etc.
    */
-  def dataSource: Option[String]
-
-  /**
-   * How the sensor acquires its data.
-   */
-  def acquisitionMode: SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance
+  def dataSources: Iterable[DataSourceTypeDescription]
 
   /**
    * The optional manufacturer's name.
@@ -70,14 +65,13 @@ trait MarkerTypeDescription extends DisplayableDescription {
  * @author Keith M. Mughes
  */
 case class SimpleMarkerTypeDescription(
-  override val id: String,
-  override val externalId: String,
-  override val displayName: String,
-  override val displayDescription: Option[String],
-  override val usageCategory: Option[String],
-  override val dataSource: Option[String],
-  override val acquisitionMode: SensorAcquisitionModeCategoricalValueInstances.SensorAcquisitionModeCategoricalValueInstance,
-  override val sensorManufacturerName: Option[String],
-  override val sensorManufacturerModel: Option[String],
-  override val measurementType: MeasurementTypeDescription
+                                        override val id: String,
+                                        override val externalId: String,
+                                        override val displayName: String,
+                                        override val displayDescription: Option[String],
+                                        override val usageCategory: Option[String],
+                                        override val dataSources: Iterable[DataSourceTypeDescription],
+                                        override val sensorManufacturerName: Option[String],
+                                        override val sensorManufacturerModel: Option[String],
+                                        override val measurementType: MeasurementTypeDescription
 ) extends MarkerTypeDescription

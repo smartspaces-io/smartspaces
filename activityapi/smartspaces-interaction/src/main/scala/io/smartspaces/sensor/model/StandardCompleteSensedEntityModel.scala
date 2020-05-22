@@ -118,7 +118,10 @@ class StandardCompleteSensedEntityModel(
   }
 
   override def addNewSensorEntity(entityDescription: SensorEntityDescription): Unit = {
-    registerSensorModel(new SimpleSensorEntityModel(entityDescription, this, spaceEnvironment.getTimeProvider.getCurrentTime))
+    val dataSourceId = entityDescription.dataSource.sourceId
+    val dataSource = entityDescription.sensorType.dataSources.find(_.externalId == dataSourceId)
+    registerSensorModel(new SimpleSensorEntityModel(
+      entityDescription, dataSource.get.acquisitionMode, this, spaceEnvironment.getTimeProvider.getCurrentTime))
   }
 
   /**
@@ -199,7 +202,7 @@ class StandardCompleteSensedEntityModel(
   override def getAllSensorEntityModelsForAcquisitionMode(
     acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance): Iterable[SensorEntityModel] = {
     externalIdToSensorEntityModels.values.filter(
-      _.sensorEntityDescription.dataSource.acquisitionMode == acquisitionMode)
+      _.acquisitionMode == acquisitionMode)
   }
 
   override def getAllSensorEntityModelsForSensorTypeExternalId(sensorTypeExternalId: String): Iterable[SensorEntityModel] = {

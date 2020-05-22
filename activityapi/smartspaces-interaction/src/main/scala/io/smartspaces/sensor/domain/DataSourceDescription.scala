@@ -66,26 +66,15 @@ object DataSourceAcquisitionModeCategoricalValueInstances {
 trait DataSourceDescription {
 
   /**
-   * The ID of the sensor origin provider, e.g. smartthings.
+   * The ID of the data source. This ID will be relative to the sensor or marker type.
    */
-  def originProviderId: String
-
-  /**
-   * The ID of the interface that the system uses to access to source, e.g. internal, yonomi.
-   */
-  def interfaceProviderId: String
+  def sourceId: String
 
   /**
    * The ID of the sensor, for example the ID that the system uses if using the internal SmartThings
    * interface, vs the ID that Yonomi provides for A SmartThings sensor.
    */
   def acquisitionId: String
-
-  /**
-   * The ID of the sensor, for example the ID that the system uses if using the internal SmartThings
-   * interface, vs the ID that Yonomi provides for A SmartThings sensor.
-   */
-  def acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance
 }
 
 /**
@@ -94,8 +83,6 @@ trait DataSourceDescription {
  * @author Keith M. Hughes
  */
 case class SimpleDataSourceDescription(
-  override val originProviderId: String,
-  override val interfaceProviderId: String,
-  override val acquisitionId: String,
-  override val acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance
+  override val sourceId: String,
+  override val acquisitionId: String
 ) extends DataSourceDescription

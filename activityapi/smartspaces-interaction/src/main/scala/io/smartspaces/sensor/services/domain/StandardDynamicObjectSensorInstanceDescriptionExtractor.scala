@@ -17,7 +17,6 @@
 package io.smartspaces.sensor.services.domain
 
 import io.smartspaces.logging.ExtendedLog
-import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValue
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
 import io.smartspaces.sensor.domain.SensorTypeDescription
 import io.smartspaces.sensor.domain.SimpleDataSourceDescription
@@ -151,11 +150,8 @@ class StandardDynamicObjectSensorInstanceDescriptionExtractor(
         Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
         sensorType.get,
         SimpleDataSourceDescription(
-          itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ORIGIN_PROVIDER_ID),
-          itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_INTERFACE_PROVIDER_ID),
-          itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID),
-          DataSourceAcquisitionModeCategoricalValue.fromLabel(
-            itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_MODE)).get
+          itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_DATA_SOURCE_ID),
+          itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID)
         ),
         sensorUpdateTimeLimit,
         sensorHeartbeatUpdateTimeLimit)
@@ -188,11 +184,8 @@ class StandardDynamicObjectSensorInstanceDescriptionExtractor(
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
           SimpleDataSourceDescription(
-            itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ORIGIN_PROVIDER_ID),
-            itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_INTERFACE_PROVIDER_ID),
-            itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID),
-            DataSourceAcquisitionModeCategoricalValue.fromLabel(
-              itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_MODE)).get
+            itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_DATA_SOURCE_ID),
+            itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID)
           ),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_TYPE),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_ID)))

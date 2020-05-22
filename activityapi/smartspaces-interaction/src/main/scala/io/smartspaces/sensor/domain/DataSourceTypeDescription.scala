@@ -24,6 +24,11 @@ package io.smartspaces.sensor.domain
 trait DataSourceTypeDescription {
 
   /**
+   * The external ID for this data source
+   */
+  def externalId: String
+
+  /**
    * The provider ID for the origin of the data.
    */
   def originProviderId: String
@@ -45,6 +50,7 @@ trait DataSourceTypeDescription {
  * @author Keith M. Hughes
  */
 case class SimpleDataSourceTypeDescription(
+  override val externalId: String,
   override val originProviderId: String,
   override val interfaceProviderId: String,
   override val acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance

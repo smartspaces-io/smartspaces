@@ -99,6 +99,11 @@ object SensorDescriptionConstants {
   /**
    * The sensor types section field for the origin provider ID of a sensor type data source.
    */
+  val SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_EXTERNAL_ID = "externalId"
+
+  /**
+   * The sensor types section field for the origin provider ID of a sensor type data source.
+   */
   val SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_ORIGIN_PROVIDER_ID = "originProviderId"
 
   /**
@@ -167,24 +172,13 @@ object SensorDescriptionConstants {
    * The section field for the origin provider of a data source. The origin is where the data comes from, e.g.
    * an external provider like SmartThings.
    */
-  val SECTION_FIELD_DATA_SOURCE_ORIGIN_PROVIDER_ID = "dataSourceOriginProviderId"
-
-  /**
-   * The section field for the interface provider of a data source. The interface is the intermediary where the data
-   * from. This could be internal to SmartSpaces or an external ecosystem integrator.
-   */
-  val SECTION_FIELD_DATA_SOURCE_INTERFACE_PROVIDER_ID = "dataSourceInterfaceProviderId"
+  val SECTION_FIELD_DATA_SOURCE_DATA_SOURCE_ID = "dataSourceId"
 
   /**
    * The section field for the acquisition ID of a data source. The ID is the one used by the interface provider
    * to refer to the sensor.
    */
   val SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID = "dataSourceAcquisitionId"
-
-  /**
-   * The section field for the acquisition mode of a data source. The moe would be, e.g. PUSH or PULL
-   */
-  val SECTION_FIELD_DATA_SOURCE_ACQUISITION_MODE = "dataSourceAcquisitionMode"
 
   /**
    * The section field for the update time limit for a sensor or sensed.
@@ -242,17 +236,22 @@ object SensorDescriptionConstants {
   val SECTION_FIELD_MARKER_TYPES_DATA_SOURCES = "dataSources"
 
   /**
-   * The sensor types section field for the origin provider ID of a marker type data source.
+   * The marker types section field for the external ID of a marker type data source.
+   */
+  val SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_EXTERNAL_ID = "externalId"
+
+  /**
+   * The marker types section field for the origin provider ID of a marker type data source.
    */
   val SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_ORIGIN_PROVIDER_ID = "originProviderId"
 
   /**
-   * The sensor types section field for the interface provider ID of a marker type data source.
+   * The marker types section field for the interface provider ID of a marker type data source.
    */
   val SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_INTERFACE_PROVIDER_ID = "interfaceProviderId"
 
   /**
-   * The sensor types section field for the acquisition mode of a marker type data source.
+   * The marker types section field for the acquisition mode of a marker type data source.
    */
   val SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_ACQUISITION_MODE = "acquisitionMode"
 

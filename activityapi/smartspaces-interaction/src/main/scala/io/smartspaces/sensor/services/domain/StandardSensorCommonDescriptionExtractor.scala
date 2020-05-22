@@ -168,6 +168,8 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
       data.getArrayEntries().asScala.foreach((dataSourceEntry: ArrayDynamicObjectEntry) => breakable {
         val dataSourceData = dataSourceEntry.down()
 
+        val dataSourceExternalId = sensorTypeData.getRequiredString(
+          SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_EXTERNAL_ID)
         val dataSourceOriginProviderId = sensorTypeData.getRequiredString(
           SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_ORIGIN_PROVIDER_ID)
         val dataSourceInterfaceProviderId = sensorTypeData.getRequiredString(
@@ -177,7 +179,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
             SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_ACQUISITION_MODE)).get
 
         allSensorDataSourcesBuffer += SimpleDataSourceTypeDescription(
-          dataSourceOriginProviderId, dataSourceInterfaceProviderId, dataSourceAcquisitionMode)
+          dataSourceExternalId, dataSourceOriginProviderId, dataSourceInterfaceProviderId, dataSourceAcquisitionMode)
       })
       sensorTypeData.up
 
@@ -294,6 +296,8 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
         data.getArrayEntries().asScala.foreach((dataSourceEntry: ArrayDynamicObjectEntry) => breakable {
           val dataSourceData = dataSourceEntry.down()
 
+          val dataSourceExternalId = markerTypeData.getRequiredString(
+            SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_EXTERNAL_ID)
           val dataSourceOriginProviderId = markerTypeData.getRequiredString(
             SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_ORIGIN_PROVIDER_ID)
           val dataSourceInterfaceProviderId = markerTypeData.getRequiredString(
@@ -303,7 +307,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
               SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_ACQUISITION_MODE)).get
 
           allMarkerDataSourcesBuffer += SimpleDataSourceTypeDescription(
-            dataSourceOriginProviderId, dataSourceInterfaceProviderId, dataSourceAcquisitionMode)
+            dataSourceExternalId, dataSourceOriginProviderId, dataSourceInterfaceProviderId, dataSourceAcquisitionMode)
         })
         markerTypeData.up
 

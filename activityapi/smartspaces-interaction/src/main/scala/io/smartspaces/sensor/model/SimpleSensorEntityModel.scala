@@ -22,6 +22,7 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
 import io.smartspaces.sensor.event.SensorOfflineEvent
 import io.smartspaces.monitor.expectation.time.StandardHeartbeatMonitorable
+import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValueInstances
 import io.smartspaces.sensor.event.SensorOnlineEvent
 
 /**
@@ -30,8 +31,9 @@ import io.smartspaces.sensor.event.SensorOnlineEvent
  * @author Keith M. Hughes
  */
 class SimpleSensorEntityModel(
-  val sensorEntityDescription: SensorEntityDescription,
-  val allModels: CompleteSensedEntityModel,
+  override val sensorEntityDescription: SensorEntityDescription,
+  override val acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance,
+  override val allModels: CompleteSensedEntityModel,
   override val timestampItemCreation: Long) extends SensorEntityModel with StandardHeartbeatMonitorable {
 
   /**

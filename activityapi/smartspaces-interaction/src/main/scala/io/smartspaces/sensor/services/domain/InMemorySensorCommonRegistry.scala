@@ -17,6 +17,7 @@
 package io.smartspaces.sensor.services.domain
 
 import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.sensor.domain.DataSourceTypeDescription
 import io.smartspaces.sensor.domain.MarkerTypeDescription
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
@@ -33,7 +34,8 @@ import scala.collection.mutable.Map
  * 
  * @author Keith M. Hughes
  */
-class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCommonRegistry {
+class InMemorySensorCommonRegistry @Inject() (
+  log: ExtendedLog) extends SensorCommonRegistry {
   
   /**
    * A map of persistence IDs to their measurement types.
@@ -81,9 +83,14 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
   private val idToPhysicalSpaceType: Map[String, PhysicalSpaceTypeDescription] = new HashMap
 
   /**
-   * A map of external IDs to physical space typels.
+   * A map of external IDs to physical space types.
    */
   private val externalIdToPhysicalSpaceType: Map[String, PhysicalSpaceTypeDescription] = new HashMap
+
+  /**
+   * A map of external IDs to data sources.
+   */
+  private val externalIdToDataSourceType: Map[String, DataSourceTypeDescription] = new HashMap
 
   override def registerMeasurementType(measurementType: MeasurementTypeDescription): SensorCommonRegistry = {
     idToMeasurementType.put(measurementType.id, measurementType)
@@ -105,8 +112,8 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
     externalIdToMeasurementType.get(externalId)
   }
  
-  override def getAllMeasurementTypes(): List[MeasurementTypeDescription] = {
-    idToMeasurementType.values.toList
+  override def getAllMeasurementTypes(): Iterable[MeasurementTypeDescription] = {
+    idToMeasurementType.values.toIterable
   }
 
   override def getMeasurementUnit(id: String): Option[MeasurementUnitDescription] = {
@@ -115,6 +122,10 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
 
   override def getMeasurementUnitByExternalId(externalId: String): Option[MeasurementUnitDescription] = {
     externalIdToMeasurementUnit.get(externalId)
+  }
+
+  override def getAllMeasurementUnits(): Iterable[MeasurementUnitDescription] = {
+    externalIdToMeasurementUnit.values
   }
 
   override def registerSensorType(sensorDetail: SensorTypeDescription): SensorCommonRegistry = {
@@ -132,8 +143,8 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
     externalIdToSensorType.get(externalId)
   }
 
-  override def getAllSensorTypes(): List[SensorTypeDescription] = {
-    idToSensorType.values.toList
+  override def getAllSensorTypes(): Iterable[SensorTypeDescription] = {
+    idToSensorType.values
   }
 
   override def registerMarkerType(markerDetail: MarkerTypeDescription): SensorCommonRegistry = {
@@ -151,8 +162,8 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
     externalIdToMarkerType.get(externalId)
   }
 
-  override def getAllMarkerTypes(): List[MarkerTypeDescription] = {
-    idToMarkerType.values.toList
+  override def getAllMarkerTypes(): Iterable[MarkerTypeDescription] = {
+    idToMarkerType.values
   }
 
   override def registerPhysicalSpaceType(physicalSpaceType: PhysicalSpaceTypeDescription): SensorCommonRegistry = {
@@ -170,8 +181,21 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
     externalIdToPhysicalSpaceType.get(externalId)
   }
 
-  override def getAllPhysicalSpaceTypes(): List[PhysicalSpaceTypeDescription] = {
-    idToPhysicalSpaceType.values.toList
+  override def getAllPhysicalSpaceTypes(): Iterable[PhysicalSpaceTypeDescription] = {
+    idToPhysicalSpaceType.values
   }
 
+  override def registerDataSourceType(dataSourceType: DataSourceTypeDescription): SensorCommonRegistry = {
+    externalIdToDataSourceType.put(dataSourceType.externalId, dataSourceType)
+
+    this
+  }
+
+  override def getDataSourceTypeByExternalId(externalId: String): Option[DataSourceTypeDescription] = {
+    externalIdToDataSourceType.get(externalId)
+  }
+
+  override def getAllDataSourceTypes(): Iterable[DataSourceTypeDescription] = {
+    externalIdToDataSourceType.values
+  }
 }

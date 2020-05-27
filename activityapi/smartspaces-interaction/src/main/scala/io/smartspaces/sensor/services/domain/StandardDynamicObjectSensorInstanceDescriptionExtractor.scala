@@ -143,16 +143,18 @@ class StandardDynamicObjectSensorInstanceDescriptionExtractor(
         }
       }
 
+      val dataSource = SimpleDataSourceDescription(
+        itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_DATA_SOURCE_ID),
+        Option(itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID))
+      )
+
       val entity = new SimpleSensorEntityDescription(
         getNextId(),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
         sensorType.get,
-        SimpleDataSourceDescription(
-          itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_DATA_SOURCE_ID),
-          itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID)
-        ),
+        dataSource,
         sensorUpdateTimeLimit,
         sensorHeartbeatUpdateTimeLimit)
 
@@ -178,15 +180,17 @@ class StandardDynamicObjectSensorInstanceDescriptionExtractor(
       data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
         val itemData = entry.down()
 
+        val dataSource = SimpleDataSourceDescription(
+          itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_DATA_SOURCE_ID),
+          Option(itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID))
+        )
+
         sensorRegistry.registerMarker(new SimpleMarkerEntityDescription(
           getNextId(),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
-          SimpleDataSourceDescription(
-            itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_DATA_SOURCE_ID),
-            itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID)
-          ),
+          dataSource,
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_TYPE),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_ID)))
       })

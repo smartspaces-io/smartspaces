@@ -74,7 +74,7 @@ trait DataSourceDescription {
    * The ID of the sensor, for example the ID that the system uses if using the internal SmartThings
    * interface, vs the ID that Yonomi provides for A SmartThings sensor.
    */
-  def acquisitionId: String
+  def acquisitionId: Option[String]
 }
 
 /**
@@ -84,5 +84,5 @@ trait DataSourceDescription {
  */
 case class SimpleDataSourceDescription(
   override val sourceId: String,
-  override val acquisitionId: String
+  override val acquisitionId: Option[String]
 ) extends DataSourceDescription

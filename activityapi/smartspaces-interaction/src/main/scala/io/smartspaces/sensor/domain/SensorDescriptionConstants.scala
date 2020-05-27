@@ -22,7 +22,32 @@ package io.smartspaces.sensor.domain
  * @author Keith M. Hughes
  */
 object SensorDescriptionConstants {
-  
+
+  /**
+   * The section header for the data sources section of the file.
+   */
+  val SECTION_HEADER_DATA_SOURCE_TYPES = "dataSources"
+
+  /**
+   * The data sources section field for the origin provider ID of a data source.
+   */
+  val SECTION_FIELD_DATA_SOURCES_EXTERNAL_ID = "externalId"
+
+  /**
+   * The data sources section field for the origin provider ID of a data source.
+   */
+  val SECTION_FIELD_DATA_SOURCES_ORIGIN_PROVIDER_ID = "originProviderId"
+
+  /**
+   * The data sources section field for the interface provider ID of a data source.
+   */
+  val SECTION_FIELD_DATA_SOURCES_INTERFACE_PROVIDER_ID = "interfaceProviderId"
+
+  /**
+   * The data sources section field for the acquisition mode of a data source.
+   */
+  val SECTION_FIELD_DATA_SOURCES_ACQUISITION_MODE = "acquisitionMode"
+
   /**
    * The field in all entity descriptions for the entity ID.
    */
@@ -100,21 +125,6 @@ object SensorDescriptionConstants {
    * The sensor types section field for the origin provider ID of a sensor type data source.
    */
   val SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_EXTERNAL_ID = "externalId"
-
-  /**
-   * The sensor types section field for the origin provider ID of a sensor type data source.
-   */
-  val SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_ORIGIN_PROVIDER_ID = "originProviderId"
-
-  /**
-   * The sensor types section field for the interface provider ID of a sensor type data source.
-   */
-  val SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_INTERFACE_PROVIDER_ID = "interfaceProviderId"
-
-  /**
-   * The sensor types section field for the acquisition mode of a sensor type data source.
-   */
-  val SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_ACQUISITION_MODE = "acquisitionMode"
 
   /**
    * The sensor types section field for the manufacturer name of the sensor type.
@@ -234,26 +244,6 @@ object SensorDescriptionConstants {
    * The field for the data sources for a marker type.
    */
   val SECTION_FIELD_MARKER_TYPES_DATA_SOURCES = "dataSources"
-
-  /**
-   * The marker types section field for the external ID of a marker type data source.
-   */
-  val SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_EXTERNAL_ID = "externalId"
-
-  /**
-   * The marker types section field for the origin provider ID of a marker type data source.
-   */
-  val SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_ORIGIN_PROVIDER_ID = "originProviderId"
-
-  /**
-   * The marker types section field for the interface provider ID of a marker type data source.
-   */
-  val SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_INTERFACE_PROVIDER_ID = "interfaceProviderId"
-
-  /**
-   * The marker types section field for the acquisition mode of a marker type data source.
-   */
-  val SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_ACQUISITION_MODE = "acquisitionMode"
 
   /**
    * The field in a marker entity description for the marker type.

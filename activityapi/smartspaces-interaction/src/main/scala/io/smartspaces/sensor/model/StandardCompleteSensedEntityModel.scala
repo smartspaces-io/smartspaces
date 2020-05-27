@@ -25,6 +25,7 @@ import io.smartspaces.sensor.domain.PhysicalSpaceSensedEntityDescription
 import io.smartspaces.sensor.domain.SensedEntityDescription
 import io.smartspaces.sensor.domain.SensorEntityDescription
 import io.smartspaces.sensor.domain.SensorSensedEntityAssociationDescription
+import io.smartspaces.sensor.services.domain.SensorCommonRegistry
 import io.smartspaces.sensor.services.domain.SensorInstanceRegistry
 import io.smartspaces.sensor.services.processing.SensorProcessingEventEmitter
 import io.smartspaces.sensor.services.processing.value.SensorValueProcessorRegistry
@@ -40,6 +41,7 @@ import scala.collection.mutable.Map
  */
 class StandardCompleteSensedEntityModel(
   private val sensorValueProcessorRegistry: SensorValueProcessorRegistry,
+  private val sensorCommonRegistry: SensorCommonRegistry,
   override val sensorRegistry: SensorInstanceRegistry,
   override val eventEmitter: SensorProcessingEventEmitter,
   override val log: ExtendedLog,
@@ -119,7 +121,7 @@ class StandardCompleteSensedEntityModel(
 
   override def addNewSensorEntity(entityDescription: SensorEntityDescription): Unit = {
     val dataSourceId = entityDescription.dataSource.sourceId
-    val dataSource = entityDescription.sensorType.dataSources.find(_.externalId == dataSourceId)
+    val dataSource = sensorCommonRegistry.getDataSourceTypeByExternalId(dataSourceId)
     registerSensorModel(new SimpleSensorEntityModel(
       entityDescription, dataSource.get.acquisitionMode, this, spaceEnvironment.getTimeProvider.getCurrentTime))
   }
@@ -127,7 +129,6 @@ class StandardCompleteSensedEntityModel(
   /**
    * Register a sensor model.
    *
-   * <p>
    * This is exposed for testing.
    */
   private[model] def registerSensorModel(model: SensorEntityModel): Unit = {

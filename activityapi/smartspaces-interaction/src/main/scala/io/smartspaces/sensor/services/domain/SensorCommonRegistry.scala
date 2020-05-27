@@ -16,6 +16,7 @@
 
 package io.smartspaces.sensor.services.domain
 
+import io.smartspaces.sensor.domain.DataSourceTypeDescription
 import io.smartspaces.sensor.domain.MarkerTypeDescription
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
@@ -64,7 +65,7 @@ trait SensorCommonRegistry {
    *
    * @return all measurement types in the registry
    */
-  def getAllMeasurementTypes(): List[MeasurementTypeDescription]
+  def getAllMeasurementTypes(): Iterable[MeasurementTypeDescription]
 
   /**
    * Get a measurement unit from the registry persistence ID.
@@ -85,6 +86,13 @@ trait SensorCommonRegistry {
    * @return the measurement unit
    */
   def getMeasurementUnitByExternalId(id: String): Option[MeasurementUnitDescription]
+
+  /**
+   * Get all measurement units from the registry.
+   *
+   * @return all measurement units
+   */
+  def getAllMeasurementUnits(): Iterable[MeasurementUnitDescription]
 
   /**
    * Register a sensor type with the registry.
@@ -121,7 +129,7 @@ trait SensorCommonRegistry {
    *
    * @return all sensor types in the registry
    */
-  def getAllSensorTypes(): List[SensorTypeDescription]
+  def getAllSensorTypes(): Iterable[SensorTypeDescription]
 
   /**
    * Register a marker type with the registry.
@@ -158,7 +166,7 @@ trait SensorCommonRegistry {
    *
    * @return all marker types in the registry
    */
-  def getAllMarkerTypes(): List[MarkerTypeDescription]
+  def getAllMarkerTypes(): Iterable[MarkerTypeDescription]
 
   /**
    * Register a physical space type with the registry.
@@ -195,6 +203,32 @@ trait SensorCommonRegistry {
    *
    * @return all physical space types in the registry
    */
-  def getAllPhysicalSpaceTypes(): List[PhysicalSpaceTypeDescription]
+  def getAllPhysicalSpaceTypes(): Iterable[PhysicalSpaceTypeDescription]
 
+  /**
+   * Register a data source with the registry.
+   *
+   * @param dataSourceType
+   *          the data source to add
+   *
+   * @return this registry
+   */
+  def registerDataSourceType(dataSourceType: DataSourceTypeDescription): SensorCommonRegistry
+
+  /**
+   * Get a data source type from the registry by external ID.
+   *
+   * @param externalId
+   *          external id of the the data source type
+   *
+   * @return the data source type
+   */
+  def getDataSourceTypeByExternalId(externalId: String): Option[DataSourceTypeDescription]
+
+  /**
+   * Get all data source types from the registry.
+   *
+   * @return all data source types in the registry
+   */
+  def getAllDataSourceTypes(): Iterable[DataSourceTypeDescription]
 }

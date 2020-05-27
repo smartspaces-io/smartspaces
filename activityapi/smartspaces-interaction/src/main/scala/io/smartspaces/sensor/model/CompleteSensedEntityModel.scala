@@ -106,9 +106,9 @@ trait CompleteSensedEntityModel {
   def getAllSensorEntityModelsForMeasurementTypeExternalId(measurementTypeExternalId: String): Iterable[SensorEntityModel]
 
   /**
-   * Get all sensor entity models that provide a given measurement type.
+   * Get all sensor entity models that have a given acquisition mode.
    *
-   * @param measurementTypeExternalId
+   * @param acquisitionMode
    *          the external ID of the measurement type
    *
    * @return all sensor models that make the given measurement

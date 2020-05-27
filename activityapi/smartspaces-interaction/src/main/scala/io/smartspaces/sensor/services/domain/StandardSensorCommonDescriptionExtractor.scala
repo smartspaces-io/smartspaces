@@ -19,10 +19,9 @@ package io.smartspaces.sensor.services.domain
 import java.lang.{Long => JLong}
 
 import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValue
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
-import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValue
-import io.smartspaces.sensor.domain.DataSourceTypeDescription
 import io.smartspaces.sensor.domain.SensorChannelDetailDescription
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
 import io.smartspaces.sensor.domain.SimpleDataSourceTypeDescription
@@ -45,7 +44,8 @@ import scala.util.control.Breaks.breakable
  *
  * @author Keith M. Hughes
  */
-class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorCommonDescriptionExtractor {
+class StandardSensorCommonDescriptionExtractor(
+  log: ExtendedLog) extends SensorCommonDescriptionExtractor {
 
   /**
    * The ID to be given to entities.
@@ -57,12 +57,41 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
   override def extractDescriptions(data: DynamicObject, sensorRegistry: SensorCommonRegistry): SensorCommonDescriptionExtractor = {
     log.info("Extracting common sensor description")
 
+    getDataSourceTypes(sensorRegistry, data)
     getMeasurementTypes(sensorRegistry, data)
     getSensorTypes(sensorRegistry, data)
     getMarkerTypes(sensorRegistry, data)
     getPhysicalSpaceTypes(sensorRegistry, data)
 
     return this
+  }
+  /**
+   * Get all the data source type data.
+   *
+   * @param sensorRegistry
+   *          the sensor registry to store the data in
+   * @param data
+   *          the data read from the input stream
+   */
+  private def getDataSourceTypes(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
+    data.down(SensorDescriptionConstants.SECTION_HEADER_DATA_SOURCE_TYPES)
+    data.getArrayEntries().asScala.foreach((dataSourceEntry: ArrayDynamicObjectEntry) => breakable {
+      val dataSourceData = dataSourceEntry.down()
+
+      val dataSourceExternalId = dataSourceData.getRequiredString(
+        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCES_EXTERNAL_ID)
+      val dataSourceOriginProviderId = dataSourceData.getRequiredString(
+        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCES_ORIGIN_PROVIDER_ID)
+      val dataSourceInterfaceProviderId = dataSourceData.getRequiredString(
+        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCES_INTERFACE_PROVIDER_ID)
+      val dataSourceAcquisitionMode = DataSourceAcquisitionModeCategoricalValue.fromLabel(
+        dataSourceData.getRequiredString(
+          SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCES_ACQUISITION_MODE)).get
+
+      sensorRegistry.registerDataSourceType(SimpleDataSourceTypeDescription(
+        dataSourceExternalId, dataSourceOriginProviderId, dataSourceInterfaceProviderId, dataSourceAcquisitionMode))
+    })
+    data.up
   }
 
   /**
@@ -163,24 +192,11 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
       val sensorUsageCategory = Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE))
 
-      val allSensorDataSourcesBuffer = ArrayBuffer[DataSourceTypeDescription]()
       sensorTypeData.down(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_DATA_SOURCES)
-      data.getArrayEntries().asScala.foreach((dataSourceEntry: ArrayDynamicObjectEntry) => breakable {
-        val dataSourceData = dataSourceEntry.down()
-
-        val dataSourceExternalId = sensorTypeData.getRequiredString(
-          SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_EXTERNAL_ID)
-        val dataSourceOriginProviderId = sensorTypeData.getRequiredString(
-          SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_ORIGIN_PROVIDER_ID)
-        val dataSourceInterfaceProviderId = sensorTypeData.getRequiredString(
-          SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_INTERFACE_PROVIDER_ID)
-        val dataSourceAcquisitionMode = DataSourceAcquisitionModeCategoricalValue.fromLabel(
-          sensorTypeData.getRequiredString(
-            SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_DATA_SOURCE_ACQUISITION_MODE)).get
-
-        allSensorDataSourcesBuffer += SimpleDataSourceTypeDescription(
-          dataSourceExternalId, dataSourceOriginProviderId, dataSourceInterfaceProviderId, dataSourceAcquisitionMode)
-      })
+      val numberDataSources = sensorTypeData.getSize
+      val dataSources = for (pos <- 0 until numberDataSources) yield {
+        sensorTypeData.getString(pos)
+      }
       sensorTypeData.up
 
       val supportedChannelIds = sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SUPPORTED_CHANNEL_IDS, "*")
@@ -262,7 +278,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
         Option(sensorTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
         sensorUpdateTimeLimit, sensorHeartbeatUpdateTimeLimit,
         sensorUsageCategory,
-        allSensorDataSourcesBuffer.toList,
+        dataSources.toList,
         Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_NAME)),
         Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_MODEL)),
         supportedChannelIds, allSensorChannels, allSupportedSensorChannels)
@@ -291,24 +307,11 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
 
         val markerUsageCategory = Option(markerTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE))
 
-        val allMarkerDataSourcesBuffer = ArrayBuffer[DataSourceTypeDescription]()
         markerTypeData.down(SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_DATA_SOURCES)
-        data.getArrayEntries().asScala.foreach((dataSourceEntry: ArrayDynamicObjectEntry) => breakable {
-          val dataSourceData = dataSourceEntry.down()
-
-          val dataSourceExternalId = markerTypeData.getRequiredString(
-            SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_EXTERNAL_ID)
-          val dataSourceOriginProviderId = markerTypeData.getRequiredString(
-            SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_ORIGIN_PROVIDER_ID)
-          val dataSourceInterfaceProviderId = markerTypeData.getRequiredString(
-            SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_INTERFACE_PROVIDER_ID)
-          val dataSourceAcquisitionMode = DataSourceAcquisitionModeCategoricalValue.fromLabel(
-            markerTypeData.getRequiredString(
-              SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_MARKER_DATA_SOURCE_ACQUISITION_MODE)).get
-
-          allMarkerDataSourcesBuffer += SimpleDataSourceTypeDescription(
-            dataSourceExternalId, dataSourceOriginProviderId, dataSourceInterfaceProviderId, dataSourceAcquisitionMode)
-        })
+        val numberDataSources = markerTypeData.getSize
+        val dataSources = for (pos <- 0 until numberDataSources) yield {
+          markerTypeData.getString(pos)
+        }
         markerTypeData.up
 
         val measurementTypeId =
@@ -325,7 +328,7 @@ class StandardSensorCommonDescriptionExtractor(log: ExtendedLog) extends SensorC
           markerTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(markerTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
           markerUsageCategory,
-          allMarkerDataSourcesBuffer.toList,
+          dataSources.toList,
           Option(markerTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_NAME)),
           Option(markerTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_MODEL)),
           measurementType.get

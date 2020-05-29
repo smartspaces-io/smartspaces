@@ -41,7 +41,7 @@ trait SensorTypeDescription extends DisplayableDescription {
   /**
    * The source of the data, e.g. SmartThings, internal, etc.
    */
-  def dataSources: List[String]
+  def dataSourceProviders: List[String]
 
   /**
    * The time limit on when a sensor update should happen, in milliseconds
@@ -127,19 +127,19 @@ trait SensorTypeDescription extends DisplayableDescription {
  * @author Keith M. Hughes
  */
 case class SimpleSensorTypeDescription(
-  override val id: String,
-  override val externalId: String,
-  override val displayName: String,
-  override val displayDescription: Option[String],
-  override val sensorUpdateTimeLimit: Option[Long],
-  override val sensorHeartbeatUpdateTimeLimit: Option[Long],
-  override val usageCategory: Option[String],
-  override val dataSources: List[String],
-  override val sensorManufacturerName: Option[String],
-  override val sensorManufacturerModel: Option[String],
-  override val supportedChannelIds: String,
-  override val allChannelDetails: List[SensorChannelDetailDescription],
-  override val supportedChannelDetails: List[SensorChannelDetailDescription]
+                                        override val id: String,
+                                        override val externalId: String,
+                                        override val displayName: String,
+                                        override val displayDescription: Option[String],
+                                        override val sensorUpdateTimeLimit: Option[Long],
+                                        override val sensorHeartbeatUpdateTimeLimit: Option[Long],
+                                        override val usageCategory: Option[String],
+                                        override val dataSourceProviders: List[String],
+                                        override val sensorManufacturerName: Option[String],
+                                        override val sensorManufacturerModel: Option[String],
+                                        override val supportedChannelIds: String,
+                                        override val allChannelDetails: List[SensorChannelDetailDescription],
+                                        override val supportedChannelDetails: List[SensorChannelDetailDescription]
     ) extends SensorTypeDescription {
 
   override def getSupportedSensorChannelDetail(id: String): Option[SensorChannelDetailDescription] = {

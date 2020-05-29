@@ -63,12 +63,12 @@ object DataSourceAcquisitionModeCategoricalValueInstances {
  *
  * @author Keith M. Hughes
  */
-trait DataSourceDescription {
+trait DataSourceProviderDescription {
 
   /**
-   * The ID of the data source. This ID will be relative to the sensor or marker type.
+   * The ID of the data source provider. This ID will be relative to the sensor or marker type.
    */
-  def sourceId: String
+  def providerId: String
 
   /**
    * The ID of the sensor, for example the ID that the system uses if using the internal SmartThings
@@ -82,7 +82,7 @@ trait DataSourceDescription {
  *
  * @author Keith M. Hughes
  */
-case class SimpleDataSourceDescription(
-  override val sourceId: String,
+case class SimpleDataSourceProviderDescription(
+  override val providerId: String,
   override val acquisitionId: Option[String]
-) extends DataSourceDescription
+) extends DataSourceProviderDescription

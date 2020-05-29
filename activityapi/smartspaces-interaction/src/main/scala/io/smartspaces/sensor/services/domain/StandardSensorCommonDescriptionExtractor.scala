@@ -24,7 +24,7 @@ import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
 import io.smartspaces.sensor.domain.SensorChannelDetailDescription
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
-import io.smartspaces.sensor.domain.SimpleDataSourceTypeDescription
+import io.smartspaces.sensor.domain.SimpleDataSourceProviderTypeDescription
 import io.smartspaces.sensor.domain.SimpleMarkerTypeDescription
 import io.smartspaces.sensor.domain.SimpleMeasurementTypeDescription
 import io.smartspaces.sensor.domain.SimpleMeasurementUnitDescription
@@ -57,7 +57,7 @@ class StandardSensorCommonDescriptionExtractor(
   override def extractDescriptions(data: DynamicObject, sensorRegistry: SensorCommonRegistry): SensorCommonDescriptionExtractor = {
     log.info("Extracting common sensor description")
 
-    getDataSourceTypes(sensorRegistry, data)
+    getDataSourceProviderTypes(sensorRegistry, data)
     getMeasurementTypes(sensorRegistry, data)
     getSensorTypes(sensorRegistry, data)
     getMarkerTypes(sensorRegistry, data)
@@ -73,22 +73,22 @@ class StandardSensorCommonDescriptionExtractor(
    * @param data
    *          the data read from the input stream
    */
-  private def getDataSourceTypes(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
-    data.down(SensorDescriptionConstants.SECTION_HEADER_DATA_SOURCE_TYPES)
+  private def getDataSourceProviderTypes(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
+    data.down(SensorDescriptionConstants.SECTION_HEADER_DATA_SOURCE_PROVIDER_TYPES)
     data.getArrayEntries().asScala.foreach((dataSourceEntry: ArrayDynamicObjectEntry) => breakable {
       val dataSourceData = dataSourceEntry.down()
 
       val dataSourceExternalId = dataSourceData.getRequiredString(
-        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCES_EXTERNAL_ID)
+        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_EXTERNAL_ID)
       val dataSourceOriginProviderId = dataSourceData.getRequiredString(
-        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCES_ORIGIN_PROVIDER_ID)
+        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_ORIGIN_PROVIDER_ID)
       val dataSourceInterfaceProviderId = dataSourceData.getRequiredString(
-        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCES_INTERFACE_PROVIDER_ID)
+        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_INTERFACE_PROVIDER_ID)
       val dataSourceAcquisitionMode = DataSourceAcquisitionModeCategoricalValue.fromLabel(
         dataSourceData.getRequiredString(
-          SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCES_ACQUISITION_MODE)).get
+          SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_ACQUISITION_MODE)).get
 
-      sensorRegistry.registerDataSourceType(SimpleDataSourceTypeDescription(
+      sensorRegistry.registerDataSourceProviderType(SimpleDataSourceProviderTypeDescription(
         dataSourceExternalId, dataSourceOriginProviderId, dataSourceInterfaceProviderId, dataSourceAcquisitionMode))
     })
     data.up

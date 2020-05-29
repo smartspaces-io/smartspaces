@@ -17,17 +17,11 @@
 package io.smartspaces.sensor.domain
 
 /**
- * Data source descriptions for sensor and marker types.
+ * Data source provider reference for sensor and marker types.
  *
  * @author Keith M. Hughes
  */
-trait DataSourceTypeDescription {
-
-  /**
-   * The external ID for this data source
-   */
-  def externalId: String
-
+trait DataSourceProviderTypeReference {
   /**
    * The provider ID for the origin of the data.
    */
@@ -44,14 +38,39 @@ trait DataSourceTypeDescription {
   def acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance
 }
 
+
 /**
- * Data source descriptions for sensor and marker types.
+ * Data source provider  reference for sensor and marker types.
  *
  * @author Keith M. Hughes
  */
-case class SimpleDataSourceTypeDescription(
+case class SimpleDataSourceProviderTypeReference(
+  override val originProviderId: String,
+  override val interfaceProviderId: String,
+  override val acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance
+) extends DataSourceProviderTypeReference
+
+/**
+ * Data source provider descriptions for sensor and marker types.
+ *
+ * @author Keith M. Hughes
+ */
+trait DataSourceProviderTypeDescription extends DataSourceProviderTypeReference {
+
+  /**
+   * The external ID for this data source
+   */
+  def externalId: String
+}
+
+/**
+ * Data sourceprovider  descriptions for sensor and marker types.
+ *
+ * @author Keith M. Hughes
+ */
+case class SimpleDataSourceProviderTypeDescription(
   override val externalId: String,
   override val originProviderId: String,
   override val interfaceProviderId: String,
   override val acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance
-) extends DataSourceTypeDescription
+) extends DataSourceProviderTypeDescription

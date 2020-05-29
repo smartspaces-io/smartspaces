@@ -16,7 +16,7 @@
 
 package io.smartspaces.sensor.services.domain
 
-import io.smartspaces.sensor.domain.DataSourceTypeDescription
+import io.smartspaces.sensor.domain.DataSourceProviderTypeDescription
 import io.smartspaces.sensor.domain.MarkerTypeDescription
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
@@ -208,12 +208,12 @@ trait SensorCommonRegistry {
   /**
    * Register a data source with the registry.
    *
-   * @param dataSourceType
+   * @param dataSourceProviderType
    *          the data source to add
    *
    * @return this registry
    */
-  def registerDataSourceType(dataSourceType: DataSourceTypeDescription): SensorCommonRegistry
+  def registerDataSourceProviderType(dataSourceProviderType: DataSourceProviderTypeDescription): SensorCommonRegistry
 
   /**
    * Get a data source type from the registry by external ID.
@@ -223,12 +223,12 @@ trait SensorCommonRegistry {
    *
    * @return the data source type
    */
-  def getDataSourceTypeByExternalId(externalId: String): Option[DataSourceTypeDescription]
+  def getDataSourceProviderTypeByExternalId(externalId: String): Option[DataSourceProviderTypeDescription]
 
   /**
    * Get all data source types from the registry.
    *
    * @return all data source types in the registry
    */
-  def getAllDataSourceTypes(): Iterable[DataSourceTypeDescription]
+  def getAllDataSourceProviderTypes(): Iterable[DataSourceProviderTypeDescription]
 }

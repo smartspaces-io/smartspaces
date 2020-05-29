@@ -24,29 +24,29 @@ package io.smartspaces.sensor.domain
 object SensorDescriptionConstants {
 
   /**
-   * The section header for the data sources section of the file.
+   * The section header for the data source provider types section of the file.
    */
-  val SECTION_HEADER_DATA_SOURCE_TYPES = "dataSources"
+  val SECTION_HEADER_DATA_SOURCE_PROVIDER_TYPES = "dataSourceProviderTypes"
 
   /**
    * The data sources section field for the origin provider ID of a data source.
    */
-  val SECTION_FIELD_DATA_SOURCES_EXTERNAL_ID = "externalId"
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_EXTERNAL_ID = "externalId"
 
   /**
-   * The data sources section field for the origin provider ID of a data source.
+   * The data sources section field for the origin provider ID of a data source provider.
    */
-  val SECTION_FIELD_DATA_SOURCES_ORIGIN_PROVIDER_ID = "originProviderId"
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_ORIGIN_PROVIDER_ID = "originProviderId"
 
   /**
-   * The data sources section field for the interface provider ID of a data source.
+   * The data sources section field for the interface provider ID of a data source provider.
    */
-  val SECTION_FIELD_DATA_SOURCES_INTERFACE_PROVIDER_ID = "interfaceProviderId"
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_INTERFACE_PROVIDER_ID = "interfaceProviderId"
 
   /**
-   * The data sources section field for the acquisition mode of a data source.
+   * The data sources section field for the acquisition mode of a data source provider.
    */
-  val SECTION_FIELD_DATA_SOURCES_ACQUISITION_MODE = "acquisitionMode"
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_ACQUISITION_MODE = "acquisitionMode"
 
   /**
    * The field in all entity descriptions for the entity ID.
@@ -182,13 +182,13 @@ object SensorDescriptionConstants {
    * The section field for the origin provider of a data source. The origin is where the data comes from, e.g.
    * an external provider like SmartThings.
    */
-  val SECTION_FIELD_DATA_SOURCE_DATA_SOURCE_ID = "dataSourceId"
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_PROVIDER_ID = "dataSourceProviderProviderId"
 
   /**
-   * The section field for the acquisition ID of a data source. The ID is the one used by the interface provider
+   * The section field for the acquisition ID of a data source provider. The ID is the one used by the interface provider
    * to refer to the sensor.
    */
-  val SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID = "dataSourceAcquisitionId"
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_ACQUISITION_ID = "dataSourceProviderAcquisitionId"
 
   /**
    * The section field for the update time limit for a sensor or sensed.

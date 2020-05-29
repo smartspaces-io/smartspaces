@@ -17,7 +17,7 @@
 package io.smartspaces.sensor.services.domain
 
 import io.smartspaces.logging.ExtendedLog
-import io.smartspaces.sensor.domain.DataSourceTypeDescription
+import io.smartspaces.sensor.domain.DataSourceProviderTypeDescription
 import io.smartspaces.sensor.domain.MarkerTypeDescription
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
@@ -90,7 +90,7 @@ class InMemorySensorCommonRegistry @Inject() (
   /**
    * A map of external IDs to data sources.
    */
-  private val externalIdToDataSourceType: Map[String, DataSourceTypeDescription] = new HashMap
+  private val externalIdToDataSourceProviderType: Map[String, DataSourceProviderTypeDescription] = new HashMap
 
   override def registerMeasurementType(measurementType: MeasurementTypeDescription): SensorCommonRegistry = {
     idToMeasurementType.put(measurementType.id, measurementType)
@@ -185,17 +185,17 @@ class InMemorySensorCommonRegistry @Inject() (
     idToPhysicalSpaceType.values
   }
 
-  override def registerDataSourceType(dataSourceType: DataSourceTypeDescription): SensorCommonRegistry = {
-    externalIdToDataSourceType.put(dataSourceType.externalId, dataSourceType)
+  override def registerDataSourceProviderType(dataSourceProviderType: DataSourceProviderTypeDescription): SensorCommonRegistry = {
+    externalIdToDataSourceProviderType.put(dataSourceProviderType.externalId, dataSourceProviderType)
 
     this
   }
 
-  override def getDataSourceTypeByExternalId(externalId: String): Option[DataSourceTypeDescription] = {
-    externalIdToDataSourceType.get(externalId)
+  override def getDataSourceProviderTypeByExternalId(externalId: String): Option[DataSourceProviderTypeDescription] = {
+    externalIdToDataSourceProviderType.get(externalId)
   }
 
-  override def getAllDataSourceTypes(): Iterable[DataSourceTypeDescription] = {
-    externalIdToDataSourceType.values
+  override def getAllDataSourceProviderTypes(): Iterable[DataSourceProviderTypeDescription] = {
+    externalIdToDataSourceProviderType.values
   }
 }

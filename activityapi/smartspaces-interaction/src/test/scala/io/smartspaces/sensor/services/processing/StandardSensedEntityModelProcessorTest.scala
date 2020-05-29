@@ -20,7 +20,7 @@ import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.scope.ManagedScope
 import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValueInstances
 import io.smartspaces.sensor.domain.SensorEntityDescription
-import io.smartspaces.sensor.domain.SimpleDataSourceDescription
+import io.smartspaces.sensor.domain.SimpleDataSourceProviderDescription
 import io.smartspaces.sensor.domain.SimpleMeasurementTypeDescription
 import io.smartspaces.sensor.domain.SimplePhysicalSpaceSensedEntityDescription
 import io.smartspaces.sensor.domain.SimpleSensorChannelDetailDescription
@@ -126,7 +126,7 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val sensor =
       new SimpleSensorEntityDescription("2", "foo", "foo", Option("foo"),
         sensorDetail,
-        SimpleDataSourceDescription("foo", Some("bar")),
+        SimpleDataSourceProviderDescription("foo", Some("bar")),
         None, None)
     val sensorModel = new SimpleSensorEntityModel(
       sensor, DataSourceAcquisitionModeCategoricalValueInstances.PUSH,

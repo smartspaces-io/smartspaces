@@ -19,7 +19,7 @@ package io.smartspaces.sensor.services.domain
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
 import io.smartspaces.sensor.domain.SensorTypeDescription
-import io.smartspaces.sensor.domain.SimpleDataSourceDescription
+import io.smartspaces.sensor.domain.SimpleDataSourceProviderDescription
 import io.smartspaces.sensor.domain.SimpleMarkerEntityDescription
 import io.smartspaces.sensor.domain.SimplePersonSensedEntityDescription
 import io.smartspaces.sensor.domain.SimplePhysicalSpaceSensedEntityDescription
@@ -143,9 +143,9 @@ class StandardDynamicObjectSensorInstanceDescriptionExtractor(
         }
       }
 
-      val dataSource = SimpleDataSourceDescription(
-        itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_DATA_SOURCE_ID),
-        Option(itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID))
+      val dataSourceProvider = SimpleDataSourceProviderDescription(
+        itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_PROVIDER_ID),
+        Option(itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_ACQUISITION_ID))
       )
 
       val entity = new SimpleSensorEntityDescription(
@@ -154,7 +154,7 @@ class StandardDynamicObjectSensorInstanceDescriptionExtractor(
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
         sensorType.get,
-        dataSource,
+        dataSourceProvider,
         sensorUpdateTimeLimit,
         sensorHeartbeatUpdateTimeLimit)
 
@@ -180,9 +180,9 @@ class StandardDynamicObjectSensorInstanceDescriptionExtractor(
       data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
         val itemData = entry.down()
 
-        val dataSource = SimpleDataSourceDescription(
-          itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_DATA_SOURCE_ID),
-          Option(itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_ACQUISITION_ID))
+        val dataSourceProvider = SimpleDataSourceProviderDescription(
+          itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_PROVIDER_ID),
+          Option(itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_ACQUISITION_ID))
         )
 
         sensorRegistry.registerMarker(new SimpleMarkerEntityDescription(
@@ -190,7 +190,7 @@ class StandardDynamicObjectSensorInstanceDescriptionExtractor(
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
-          dataSource,
+          dataSourceProvider,
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_TYPE),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_ID)))
       })

@@ -120,10 +120,10 @@ class StandardCompleteSensedEntityModel(
   }
 
   override def addNewSensorEntity(entityDescription: SensorEntityDescription): Unit = {
-    val dataSourceId = entityDescription.dataSource.sourceId
-    val dataSource = sensorCommonRegistry.getDataSourceTypeByExternalId(dataSourceId)
+    val dataSourceProviderId = entityDescription.sensorDataSourceProvider.providerId
+    val dataSourceProvider = sensorCommonRegistry.getDataSourceProviderTypeByExternalId(dataSourceProviderId)
     registerSensorModel(new SimpleSensorEntityModel(
-      entityDescription, dataSource.get.acquisitionMode, this, spaceEnvironment.getTimeProvider.getCurrentTime))
+      entityDescription, dataSourceProvider.get.acquisitionMode, this, spaceEnvironment.getTimeProvider.getCurrentTime))
   }
 
   /**

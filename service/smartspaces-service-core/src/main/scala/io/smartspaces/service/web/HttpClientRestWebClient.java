@@ -20,9 +20,7 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 
 import com.google.common.base.Charsets;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
+import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
@@ -30,6 +28,7 @@ import org.apache.http.client.methods.*;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.config.SocketConfig;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.DnsResolver;
 import org.apache.http.conn.HttpConnectionFactory;
 import org.apache.http.conn.ManagedHttpClientConnection;
@@ -47,6 +46,9 @@ import org.apache.http.impl.conn.SystemDefaultDnsResolver;
 import org.apache.http.impl.io.DefaultHttpRequestWriterFactory;
 import org.apache.http.io.HttpMessageParserFactory;
 import org.apache.http.io.HttpMessageWriterFactory;
+import org.apache.http.message.BasicHeaderElementIterator;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
@@ -80,6 +82,11 @@ public class HttpClientRestWebClient implements RestWebClient {
   private final int totalConnectionsAllowed;
 
   /**
+   * The default keep alive time for a connection.
+   */
+  private long keepAliveDefault = 0;
+
+  /**
    * Construct a performer which allows a maximum of
    * {@link #TOTAL_CONNECTIONS_ALLOWED_DEFAULT} connections.
    */
@@ -95,6 +102,11 @@ public class HttpClientRestWebClient implements RestWebClient {
    */
   public HttpClientRestWebClient(int totalConnectionsAllowed) {
     this.totalConnectionsAllowed = totalConnectionsAllowed;
+  }
+
+  @Override
+  public void setKeepAliveTimeDefault(long keepAliveDefault) {
+    this.keepAliveDefault = keepAliveDefault;
   }
 
   @Override
@@ -133,7 +145,28 @@ public class HttpClientRestWebClient implements RestWebClient {
     connManager.setValidateAfterInactivity(1000);
     connManager.setMaxTotal(totalConnectionsAllowed);
 
-    httpClient = HttpClients.custom().setConnectionManager(connManager).build();
+    ConnectionKeepAliveStrategy keepAliveStrategy = new ConnectionKeepAliveStrategy() {
+      @Override
+      public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+        HeaderElementIterator it = new BasicHeaderElementIterator
+            (response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+        while (it.hasNext()) {
+          HeaderElement he = it.nextElement();
+          String param = he.getName();
+          String value = he.getValue();
+          if (value != null && param.equalsIgnoreCase
+              ("timeout")) {
+            return Long.parseLong(value) * 1000;
+          }
+        }
+        return keepAliveDefault;
+      }
+    };
+
+    httpClient = HttpClients.custom()
+        .setKeepAliveStrategy(keepAliveStrategy)
+        .setConnectionManager(connManager)
+        .build();
   }
 
   @Override

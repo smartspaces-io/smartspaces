@@ -639,6 +639,19 @@ public interface DynamicObject {
   DynamicObject top();
 
   /**
+   * Push a block. This prevents the user from going beyond a point.
+   */
+  void pushMark();
+
+  /**
+   * Reset the nav to the last mark.
+   *
+   * @param remove
+   *          if {code true} remove the mark
+   */
+  void resetToMark(boolean remove);
+
+  /**
    * Get an iterator for walking through the current object.
    *
    * <p>

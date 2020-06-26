@@ -23,14 +23,26 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
- * Copy content from an HTTP URL to a file.
+ * A REST web client.
  *
  * <p>
- * It is safe to have multiple threads copying content.
+ * It is safe to have multiple threads using the client.
  *
  * @author Keith M. Hughes
  */
 public interface RestWebClient extends ManagedResource {
+
+  /**
+   * Set the keep alive default time.
+   *
+   * <p>
+   *   The default is 0 milliseconds.
+   * </p>
+   *
+   * @param keepAliveDefault
+   *        the keep alive time, in milliseconds
+   */
+  void setKeepAliveTimeDefault(long keepAliveDefault);
 
   /**
    * See {@link #performGet(String, Charset, Map)}.

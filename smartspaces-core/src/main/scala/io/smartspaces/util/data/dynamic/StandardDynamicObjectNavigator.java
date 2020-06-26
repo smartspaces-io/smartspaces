@@ -743,7 +743,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   /**
    * Push a block. This prevents the user from going beyond a point.
    */
-  private void pushMark() {
+  @Override
+  public void pushMark() {
     marks.push(nav.size());
   }
 
@@ -753,7 +754,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
    * @param remove
    *          if {code true} remove the mark
    */
-  private void resetToMark(boolean remove) {
+  @Override
+  public void resetToMark(boolean remove) {
     int pos;
     if (remove) {
       pos = marks.pop();

@@ -16,6 +16,8 @@
 
 package io.smartspaces.sensor.domain
 
+import io.smartspaces.sensor.services.domain.EntityDescriptionSupport
+
 /**
  * Type information about a sensor.
  *
@@ -41,7 +43,7 @@ trait SensorTypeDescription extends DisplayableDescription {
   /**
    * The source of the data, e.g. SmartThings, internal, etc.
    */
-  def dataSourceProviders: List[String]
+  def dataSourceProviders: Iterable[String]
 
   /**
    * The time limit on when a sensor update should happen, in milliseconds
@@ -66,17 +68,50 @@ trait SensorTypeDescription extends DisplayableDescription {
   /**
    * The supported channel IDs.
    */
-  def supportedChannelIds: String
+  def supportedChannelIdDescriptor: String
+
+  /**
+   * The expanded list of supported channels.
+   */
+  def expandedSupportedChannelIds: Set[String]
 
   /**
    * All channel details for the sensor type.
    */
-  def allChannelDetails: List[SensorChannelDetailDescription]
+  def allChannelDetails: Iterable[SensorChannelDetailDescription]
 
   /**
    * All supported channel details for the sensor type.
    */
-  def supportedChannelDetails: List[SensorChannelDetailDescription]
+  def supportedChannelDetails: Iterable[SensorChannelDetailDescription]
+
+  /**
+   * Get a sensor channel detail of this sensor detail.
+   *
+   * <p>
+   * The channel must be a channel of this sensor detail to be found. Channel names are local
+   * to the detail they are contained in.
+   *
+   * @param channelId
+   *     the ID of the channel detail
+   *
+   * @return the channel detail
+   */
+  def getSensorChannelDetail(channelId: String): Option[SensorChannelDetailDescription]
+
+  /**
+   * Does the sensor type have a channel with the given ID?
+   *
+   * <p>
+   * The channel must be a channel of this sensor detail to be found. Channel names are local
+   * to the detail they are contained in.
+   *
+   * @param channelId
+   *     the ID of the channel detail
+   *
+   * @return [[ true ]] if there is a channel with the given ID
+   */
+  def hasSensorChannel(channelId: String): Boolean
 
   /**
    * Get a supported sensor channel detail of this sensor detail.
@@ -85,12 +120,12 @@ trait SensorTypeDescription extends DisplayableDescription {
    * The channel must be a channel of this sensor detail to be found. Channel names are local
    * to the detail they are contained in.
    *
-   * @param id
+   * @param channelId
    *     the ID of the channel detail
    *
    * @return the channel detail
    */
-  def getSupportedSensorChannelDetail(id: String): Option[SensorChannelDetailDescription]
+  def getSupportedSensorChannelDetail(channelId: String): Option[SensorChannelDetailDescription]
 
   /**
    * Does the sensor type have a supported channel with the given ID?
@@ -102,14 +137,14 @@ trait SensorTypeDescription extends DisplayableDescription {
    * @param channelId
    *     the ID of the channel detail
    *
-   * @return [[true]] if there is a channel with the given ID
+   * @return [[ true ]] if there is a channel with the given ID
    */
   def hasSupportedSensorChannel(channelId: String): Boolean
 
   /**
    * Does the sensor support returning a given measurement type?
    *
-   * @return [[true]] if the sensor has a given measurement type
+   * @return [[ true ]] if the sensor has a given measurement type
    */
   def hasSupportedMeasurementType(measurementTypeExternalId: String): Boolean
 
@@ -127,27 +162,39 @@ trait SensorTypeDescription extends DisplayableDescription {
  * @author Keith M. Hughes
  */
 case class SimpleSensorTypeDescription(
-                                        override val id: String,
-                                        override val externalId: String,
-                                        override val displayName: String,
-                                        override val displayDescription: Option[String],
-                                        override val sensorUpdateTimeLimit: Option[Long],
-                                        override val sensorHeartbeatUpdateTimeLimit: Option[Long],
-                                        override val usageCategory: Option[String],
-                                        override val dataSourceProviders: List[String],
-                                        override val sensorManufacturerName: Option[String],
-                                        override val sensorManufacturerModel: Option[String],
-                                        override val supportedChannelIds: String,
-                                        override val allChannelDetails: List[SensorChannelDetailDescription],
-                                        override val supportedChannelDetails: List[SensorChannelDetailDescription]
-    ) extends SensorTypeDescription {
+  override val id: String,
+  override val externalId: String,
+  override val displayName: String,
+  override val displayDescription: Option[String],
+  override val sensorUpdateTimeLimit: Option[Long],
+  override val sensorHeartbeatUpdateTimeLimit: Option[Long],
+  override val usageCategory: Option[String],
+  override val dataSourceProviders: Iterable[String],
+  override val sensorManufacturerName: Option[String],
+  override val sensorManufacturerModel: Option[String],
+  override val supportedChannelIdDescriptor: String,
+  override val allChannelDetails: Iterable[SensorChannelDetailDescription]
+) extends SensorTypeDescription {
 
-  override def getSupportedSensorChannelDetail(id: String): Option[SensorChannelDetailDescription] = {
-    supportedChannelDetails.find(_.channelId == id)
+  override val expandedSupportedChannelIds = EntityDescriptionSupport.
+    getSensorChannelIdsFromSensorChannelDetailDescription(allChannelDetails, supportedChannelIdDescriptor).toSet
+
+  override val supportedChannelDetails = allChannelDetails.filter(d => expandedSupportedChannelIds.contains(d.channelId))
+
+  override def getSensorChannelDetail(channelId: String): Option[SensorChannelDetailDescription] = {
+    allChannelDetails.find(_.channelId == channelId)
+  }
+
+  override def hasSensorChannel(channelId: String): Boolean = {
+    allChannelDetails.find(_.channelId == channelId).isDefined
+  }
+
+  override def getSupportedSensorChannelDetail(channelId: String): Option[SensorChannelDetailDescription] = {
+    supportedChannelDetails.find(_.channelId == channelId)
   }
 
   override def hasSupportedSensorChannel(channelId: String): Boolean = {
-    supportedChannelDetails.find(_.channelId == channelId).isDefined
+    expandedSupportedChannelIds.contains(channelId)
   }
   
   override def hasSupportedMeasurementType(measurementTypeExternalId: String): Boolean = {

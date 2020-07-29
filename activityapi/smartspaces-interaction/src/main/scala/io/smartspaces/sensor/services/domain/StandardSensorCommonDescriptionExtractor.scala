@@ -199,7 +199,7 @@ class StandardSensorCommonDescriptionExtractor(
       }
       sensorTypeData.up
 
-      val supportedChannelIds = sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SUPPORTED_CHANNEL_IDS, "*")
+      val supportedChannelIdDescriptor = sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SUPPORTED_CHANNEL_IDS, "*")
 
       val allSensorChannelsBuffer = ArrayBuffer[SensorChannelDetailDescription]()
       sensorTypeData.down(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CHANNELS)
@@ -266,10 +266,6 @@ class StandardSensorCommonDescriptionExtractor(
       sensorTypeData.up
 
       val allSensorChannels = allSensorChannelsBuffer.toList
-      val allSupportedSensorChannelsIds =
-        EntityDescriptionSupport.getSensorChannelIdsFromSensorChannelDetailDescription(allSensorChannels, supportedChannelIds)
-      val allSupportedSensorChannels = allSensorChannels.filter(
-        channel => allSupportedSensorChannelsIds.exists(_ == channel.channelId))
 
       val sensorDetail = new SimpleSensorTypeDescription(
         getNextId(),
@@ -281,7 +277,7 @@ class StandardSensorCommonDescriptionExtractor(
         dataSources.toList,
         Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_NAME)),
         Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_SENSOR_MANUFACTURER_MODEL)),
-        supportedChannelIds, allSensorChannels, allSupportedSensorChannels)
+        supportedChannelIdDescriptor, allSensorChannels)
 
       sensorRegistry.registerSensorType(sensorDetail)
     })

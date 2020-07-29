@@ -30,34 +30,36 @@ object EntityDescriptionSupport {
   /**
    * Get the valid channel IDs for the sensor from the channel ID description.
    *
+   * Only the supported channels will be examined.
+   *
    * @param sensor
    *        the sensor to get the channel IDs from
    * @param sensorChannelIdDescription
    *        the description of channel IDs
    */
   def getSensorChannelIdsFromSensorDescription(sensor: SensorEntityDescription, sensorChannelIdDescription: String): Iterable[String] = {
-    val allChannelIds = sensor.sensorType.supportedChannelDetails.map(_.channelId)
-    getSensorChannelIdsFromDescriptionAndSource(allChannelIds, sensorChannelIdDescription)
+    getSensorChannelIdsFromSensorTypeDescription(sensor.sensorType, sensorChannelIdDescription)
   }
   
   /**
    * Get the valid channel IDs for the sensor from the channel ID description.
    *
-   * @param sensor
-   *        the sensor to get the channel IDs from
+   * Only the supported channels will be examined.
+   *
+   * @param sensorType
+   *        the sensor type to get the channel IDs from
    * @param sensorChannelIdDescription
    *        the description of channel IDs
    */
   def getSensorChannelIdsFromSensorTypeDescription(sensorType: SensorTypeDescription, sensorChannelIdDescription: String): Iterable[String] = {
-    val allChannelIds = sensorType.supportedChannelDetails.map(_.channelId)
-    getSensorChannelIdsFromDescriptionAndSource(allChannelIds, sensorChannelIdDescription)
+     getSensorChannelIdsFromSensorChannelDetailDescription(sensorType.supportedChannelDetails, sensorChannelIdDescription)
   }
   
   /**
    * Get the valid channel IDs for the sensor from the channel ID description.
    *
-   * @param sensor
-   *        the sensor to get the channel IDs from
+   * @param sensorChannelDetails
+   *        the sensor channel details from a sensor
    * @param sensorChannelIdDescription
    *        the description of channel IDs
    */
@@ -69,8 +71,8 @@ object EntityDescriptionSupport {
   /**
    * Get the valid channel IDs for the sensor from the channel ID description.
    *
-   * @param sensor
-   *        the sensor to get the channel IDs from
+   * @param sourceSensorChannelIds
+   *        the IDs for the source sensor channels
    * @param sensorChannelIdDescription
    *        the description of channel IDs
    */

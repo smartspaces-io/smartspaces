@@ -74,3 +74,55 @@ case class SimpleDataSourceProviderTypeDescription(
   override val interfaceProviderId: String,
   override val acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance
 ) extends DataSourceProviderTypeDescription
+
+/**
+ * Data source provider descriptions for data source interfaces.
+ *
+ * @author Keith M. Hughes
+ */
+trait DataSourceProviderInterfaceTypeDescription extends DisplayableDescription {
+
+  /**
+   * Get the external ID for this data source provider interface
+   *
+   * @return the external ID for this data source provider interface
+   */
+  def externalId: String
+}
+
+/**
+ * Data source provider descriptions for interfaces.
+ *
+ * @author Keith M. Hughes
+ */
+case class SimpleDataSourceProviderInterfaceTypeDescription(
+  override val externalId: String,
+  override val displayName: String,
+  override val displayDescription: Option[String]
+) extends DataSourceProviderInterfaceTypeDescription
+
+/**
+ * Data source provider descriptions for data source origins.
+ *
+ * @author Keith M. Hughes
+ */
+trait DataSourceProviderOriginTypeDescription extends DisplayableDescription {
+
+  /**
+   * Get the external ID for this data source provider origin.
+   *
+   * @return the external ID for this data source provider origin
+   */
+  def externalId: String
+}
+
+/**
+ * Data source provider descriptions for interfaces.
+ *
+ * @author Keith M. Hughes
+ */
+case class SimpleDataSourceProviderOriginTypeDescription(
+  override val externalId: String,
+  override val displayName: String,
+  override val displayDescription: Option[String]
+) extends DataSourceProviderOriginTypeDescription

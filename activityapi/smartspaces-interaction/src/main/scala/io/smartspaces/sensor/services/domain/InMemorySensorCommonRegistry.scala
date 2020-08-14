@@ -17,6 +17,8 @@
 package io.smartspaces.sensor.services.domain
 
 import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.sensor.domain.DataSourceProviderInterfaceTypeDescription
+import io.smartspaces.sensor.domain.DataSourceProviderOriginTypeDescription
 import io.smartspaces.sensor.domain.DataSourceProviderTypeDescription
 import io.smartspaces.sensor.domain.MarkerTypeDescription
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
@@ -88,9 +90,19 @@ class InMemorySensorCommonRegistry @Inject() (
   private val externalIdToPhysicalSpaceType: Map[String, PhysicalSpaceTypeDescription] = new HashMap
 
   /**
-   * A map of external IDs to data sources.
+   * A map of external IDs to data source providers.
    */
   private val externalIdToDataSourceProviderType: Map[String, DataSourceProviderTypeDescription] = new HashMap
+
+  /**
+   * A map of external IDs to data source provider interfaces.
+   */
+  private val externalIdToDataSourceProviderInterfaceType: Map[String, DataSourceProviderInterfaceTypeDescription] = new HashMap
+
+  /**
+   * A map of external IDs to data source provider origins.
+   */
+  private val externalIdToDataSourceProviderOriginType: Map[String, DataSourceProviderOriginTypeDescription] = new HashMap
 
   override def registerMeasurementType(measurementType: MeasurementTypeDescription): SensorCommonRegistry = {
     idToMeasurementType.put(measurementType.id, measurementType)
@@ -197,5 +209,41 @@ class InMemorySensorCommonRegistry @Inject() (
 
   override def getAllDataSourceProviderTypes(): Iterable[DataSourceProviderTypeDescription] = {
     externalIdToDataSourceProviderType.values
+  }
+
+  override def getAllDataSourceProviderTypesByInterface(interfaceId: String): Iterable[DataSourceProviderTypeDescription] = {
+    externalIdToDataSourceProviderType.values.filter(_.interfaceProviderId == interfaceId)
+  }
+
+  override def getAllDataSourceProviderTypesByOrigin(originId: String): Iterable[DataSourceProviderTypeDescription] = {
+    externalIdToDataSourceProviderType.values.filter(_.originProviderId == originId)
+  }
+
+  override def registerDataSourceProviderInterfaceType(dataSourceProviderInterfaceType: DataSourceProviderInterfaceTypeDescription): SensorCommonRegistry = {
+    externalIdToDataSourceProviderInterfaceType.put(dataSourceProviderInterfaceType.externalId, dataSourceProviderInterfaceType)
+
+    this
+  }
+
+  override def getDataSourceProviderInterfaceTypeByExternalId(externalId: String): Option[DataSourceProviderInterfaceTypeDescription] = {
+    externalIdToDataSourceProviderInterfaceType.get(externalId)
+  }
+
+  override def getAllDataSourceProviderInterfaceTypes(): Iterable[DataSourceProviderInterfaceTypeDescription] = {
+    externalIdToDataSourceProviderInterfaceType.values
+  }
+
+  override def registerDataSourceProviderOriginType(dataSourceProviderOriginType: DataSourceProviderOriginTypeDescription): SensorCommonRegistry = {
+    externalIdToDataSourceProviderOriginType.put(dataSourceProviderOriginType.externalId, dataSourceProviderOriginType)
+
+    this
+  }
+
+  override def getDataSourceProviderOriginTypeByExternalId(externalId: String): Option[DataSourceProviderOriginTypeDescription] = {
+    externalIdToDataSourceProviderOriginType.get(externalId)
+  }
+
+  override def getAllDataSourceProviderOriginTypes(): Iterable[DataSourceProviderOriginTypeDescription] = {
+    externalIdToDataSourceProviderOriginType.values
   }
 }

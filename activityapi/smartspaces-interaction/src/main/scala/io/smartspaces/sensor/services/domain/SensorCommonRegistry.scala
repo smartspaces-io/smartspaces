@@ -16,6 +16,8 @@
 
 package io.smartspaces.sensor.services.domain
 
+import io.smartspaces.sensor.domain.DataSourceProviderInterfaceTypeDescription
+import io.smartspaces.sensor.domain.DataSourceProviderOriginTypeDescription
 import io.smartspaces.sensor.domain.DataSourceProviderTypeDescription
 import io.smartspaces.sensor.domain.MarkerTypeDescription
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
@@ -231,4 +233,78 @@ trait SensorCommonRegistry {
    * @return all data source types in the registry
    */
   def getAllDataSourceProviderTypes(): Iterable[DataSourceProviderTypeDescription]
+
+  /**
+   * Get all data source types from the registry that provide a given interface data source.
+   *
+   * @param interfaceId
+   *        the ID for an interface
+   *
+   * @return all data source types in the registry
+   */
+  def getAllDataSourceProviderTypesByInterface(interfaceId: String): Iterable[DataSourceProviderTypeDescription]
+
+  /**
+   * Get all data source types from the registry that provide a given data source interface.
+   *
+   * @param originId
+   *        the ID for an origin
+   *
+   * @return all data source types in the registry
+   */
+  def getAllDataSourceProviderTypesByOrigin(originId: String): Iterable[DataSourceProviderTypeDescription]
+
+  /**
+   * Register a data source provider interface with the registry.
+   *
+   * @param dataSourceProviderInterfaceType
+   *          the data source provider interface type to add
+   *
+   * @return this registry
+   */
+  def registerDataSourceProviderInterfaceType(dataSourceProviderInterfaceType: DataSourceProviderInterfaceTypeDescription): SensorCommonRegistry
+
+  /**
+   * Get a data source provider interface type from the registry by external ID.
+   *
+   * @param externalId
+   *          external id of the the data source provider interface type
+   *
+   * @return the data source provider interface type, if found
+   */
+  def getDataSourceProviderInterfaceTypeByExternalId(externalId: String): Option[DataSourceProviderInterfaceTypeDescription]
+
+  /**
+   * Get all data source provider interface types from the registry.
+   *
+   * @return all data source provider interface types in the registry
+   */
+  def getAllDataSourceProviderInterfaceTypes(): Iterable[DataSourceProviderInterfaceTypeDescription]
+
+  /**
+   * Register a data source provider origin with the registry.
+   *
+   * @param dataSourceProviderOriginType
+   *          the data source provider origin type to add
+   *
+   * @return this registry
+   */
+  def registerDataSourceProviderOriginType(dataSourceProviderOriginType: DataSourceProviderOriginTypeDescription): SensorCommonRegistry
+
+  /**
+   * Get a data source provider origin type from the registry by external ID.
+   *
+   * @param externalId
+   *          external id of the the data source provider origin type
+   *
+   * @return the data source provider origin type, if found
+   */
+  def getDataSourceProviderOriginTypeByExternalId(externalId: String): Option[DataSourceProviderOriginTypeDescription]
+
+  /**
+   * Get all data source provider origin types from the registry.
+   *
+   * @return all data source provider origin types in the registry
+   */
+  def getAllDataSourceProviderOriginTypes(): Iterable[DataSourceProviderOriginTypeDescription]
 }

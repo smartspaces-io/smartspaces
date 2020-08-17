@@ -159,7 +159,7 @@ object SensorDescriptionConstants {
   /**
    * The field for the data source for a sensor type.
    */
-  val SECTION_FIELD_SENSOR_TYPES_DATA_SOURCES = "dataSources"
+  val SECTION_FIELD_SENSOR_TYPES_DATA_SOURCE_PROVIDERS = "dataSourceProviders"
 
   /**
    * The sensor types section field for the origin provider ID of a sensor type data source.
@@ -281,9 +281,9 @@ object SensorDescriptionConstants {
   val ENTITY_DESCRIPTION_FIELD_MARKER_ID = "markerId"
 
   /**
-   * The field for the data sources for a marker type.
+   * The field for the data source providers for a marker type.
    */
-  val SECTION_FIELD_MARKER_TYPES_DATA_SOURCES = "dataSources"
+  val SECTION_FIELD_MARKER_TYPES_DATA_SOURCE_PROVIDERS = "dataSourceProviders"
 
   /**
    * The field in a marker entity description for the marker type.

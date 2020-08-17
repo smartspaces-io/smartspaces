@@ -251,7 +251,7 @@ class StandardSensorCommonDescriptionExtractor(
 
       val sensorUsageCategory = Option(sensorTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE))
 
-      sensorTypeData.down(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_DATA_SOURCES)
+      sensorTypeData.down(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_DATA_SOURCE_PROVIDERS)
       val numberDataSources = sensorTypeData.getSize
       val dataSources = for (pos <- 0 until numberDataSources) yield {
         sensorTypeData.getString(pos)
@@ -362,7 +362,7 @@ class StandardSensorCommonDescriptionExtractor(
 
         val markerUsageCategory = Option(markerTypeData.getString(SensorDescriptionConstants.SECTION_FIELD_SENSOR_TYPES_CATEGORY_USAGE))
 
-        markerTypeData.down(SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_DATA_SOURCES)
+        markerTypeData.down(SensorDescriptionConstants.SECTION_FIELD_MARKER_TYPES_DATA_SOURCE_PROVIDERS)
         val numberDataSources = markerTypeData.getSize
         val dataSources = for (pos <- 0 until numberDataSources) yield {
           markerTypeData.getString(pos)

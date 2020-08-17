@@ -24,12 +24,52 @@ package io.smartspaces.sensor.domain
 object SensorDescriptionConstants {
 
   /**
+   * The section header for the data source provider origin types section of the file.
+   */
+  val SECTION_HEADER_DATA_SOURCE_PROVIDER_ORIGIN_TYPES = "dataSourceProviderOriginTypes"
+
+  /**
+   * The data source origin provider section field for the external ID of a data source origin provider.
+   */
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_ORIGIN_TYPES_EXTERNAL_ID= "externalId"
+
+  /**
+   * The data source origin provider section field for the name of a data source origin provider.
+   */
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_ORIGIN_TYPES_NAME= "name"
+
+  /**
+   * The data source origin provider section field for the description of a data source origin provider.
+   */
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_ORIGIN_TYPES_DESCRIPTION= "description"
+
+  /**
+   * The section header for the data source provider interface types section of the file.
+   */
+  val SECTION_HEADER_DATA_SOURCE_PROVIDER_INTERFACE_TYPES = "dataSourceProviderInterfaceTypes"
+
+  /**
+   * The data source interface provider section field for the external ID of a data source interface provider.
+   */
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_INTERFACE_TYPES_EXTERNAL_ID= "externalId"
+
+  /**
+   * The data source interface provider section field for the name of a data source interface provider.
+   */
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_INTERFACE_TYPES_NAME= "name"
+
+  /**
+   * The data source interface provider section field for the description of a data source interface provider.
+   */
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_INTERFACE_TYPES_DESCRIPTION= "description"
+
+  /**
    * The section header for the data source provider types section of the file.
    */
   val SECTION_HEADER_DATA_SOURCE_PROVIDER_TYPES = "dataSourceProviderTypes"
 
   /**
-   * The data sources section field for the origin provider ID of a data source.
+   * The data sources provider section field for the external ID of a data source provider.
    */
   val SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_EXTERNAL_ID = "externalId"
 

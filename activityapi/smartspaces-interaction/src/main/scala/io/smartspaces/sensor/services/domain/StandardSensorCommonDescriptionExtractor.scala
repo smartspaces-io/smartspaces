@@ -24,6 +24,8 @@ import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
 import io.smartspaces.sensor.domain.SensorChannelDetailDescription
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
+import io.smartspaces.sensor.domain.SimpleDataSourceProviderInterfaceTypeDescription
+import io.smartspaces.sensor.domain.SimpleDataSourceProviderOriginTypeDescription
 import io.smartspaces.sensor.domain.SimpleDataSourceProviderTypeDescription
 import io.smartspaces.sensor.domain.SimpleMarkerTypeDescription
 import io.smartspaces.sensor.domain.SimpleMeasurementTypeDescription
@@ -57,6 +59,8 @@ class StandardSensorCommonDescriptionExtractor(
   override def extractDescriptions(data: DynamicObject, sensorRegistry: SensorCommonRegistry): SensorCommonDescriptionExtractor = {
     log.info("Extracting common sensor description")
 
+    getDataSourceProviderOriginTypes(sensorRegistry, data)
+    getDataSourceProviderInterfaceTypes(sensorRegistry, data)
     getDataSourceProviderTypes(sensorRegistry, data)
     getMeasurementTypes(sensorRegistry, data)
     getSensorTypes(sensorRegistry, data)
@@ -65,8 +69,63 @@ class StandardSensorCommonDescriptionExtractor(
 
     return this
   }
+
   /**
-   * Get all the data source type data.
+   * Get all the data source provider origin type data.
+   *
+   * @param sensorRegistry
+   *          the sensor registry to store the data in
+   * @param data
+   *          the data read from the input stream
+   */
+  private def getDataSourceProviderOriginTypes(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
+    data.down(SensorDescriptionConstants.SECTION_HEADER_DATA_SOURCE_PROVIDER_ORIGIN_TYPES)
+    data.getArrayEntries().asScala.foreach((dataSourceEntry: ArrayDynamicObjectEntry) => breakable {
+      val dataSourceData = dataSourceEntry.down()
+
+      val dataSourceExternalId = dataSourceData.getRequiredString(
+
+        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_ORIGIN_TYPES_EXTERNAL_ID)
+      val dataSourceOriginProviderId = dataSourceData.getRequiredString(
+        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_ORIGIN_TYPES_NAME)
+      val dataSourceInterfaceProviderId = Option(dataSourceData.getString(
+        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_ORIGIN_TYPES_DESCRIPTION))
+
+      sensorRegistry.registerDataSourceProviderOriginType(SimpleDataSourceProviderOriginTypeDescription(
+        dataSourceExternalId, dataSourceOriginProviderId, dataSourceInterfaceProviderId))
+    })
+    data.up
+  }
+
+  /**
+   * Get all the data source provider interface type data.
+   *
+   * @param sensorRegistry
+   *          the sensor registry to store the data in
+   * @param data
+   *          the data read from the input stream
+   */
+  private def getDataSourceProviderInterfaceTypes(sensorRegistry: SensorCommonRegistry, data: DynamicObject): Unit = {
+    data.down(SensorDescriptionConstants.SECTION_HEADER_DATA_SOURCE_PROVIDER_INTERFACE_TYPES)
+    data.getArrayEntries().asScala.foreach((dataSourceEntry: ArrayDynamicObjectEntry) => breakable {
+      val dataSourceData = dataSourceEntry.down()
+
+      val dataSourceExternalId = dataSourceData.getRequiredString(
+
+        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_INTERFACE_TYPES_EXTERNAL_ID)
+      val dataSourceOriginProviderId = dataSourceData.getRequiredString(
+        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_INTERFACE_TYPES_NAME)
+      val dataSourceInterfaceProviderId = Option(dataSourceData.getString(
+        SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_INTERFACE_TYPES_DESCRIPTION))
+
+       sensorRegistry.registerDataSourceProviderInterfaceType(SimpleDataSourceProviderInterfaceTypeDescription(
+        dataSourceExternalId, dataSourceOriginProviderId, dataSourceInterfaceProviderId))
+    })
+    data.up
+  }
+
+  /**
+   * Get all the data source provider type data.
    *
    * @param sensorRegistry
    *          the sensor registry to store the data in

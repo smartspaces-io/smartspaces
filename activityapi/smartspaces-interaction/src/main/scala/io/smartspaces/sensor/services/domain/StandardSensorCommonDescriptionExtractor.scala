@@ -146,9 +146,13 @@ class StandardSensorCommonDescriptionExtractor(
       val dataSourceAcquisitionMode = DataSourceAcquisitionModeCategoricalValue.fromLabel(
         dataSourceData.getRequiredString(
           SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_ACQUISITION_MODE)).get
+      val externalAuthorizationRequired = dataSourceData.getBoolean(
+          SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_EXTERNAL_AUTHORIZATION_REQUIRED,
+        false)
 
       sensorRegistry.registerDataSourceProviderType(SimpleDataSourceProviderTypeDescription(
-        dataSourceExternalId, dataSourceOriginProviderId, dataSourceInterfaceProviderId, dataSourceAcquisitionMode))
+        dataSourceExternalId, dataSourceOriginProviderId, dataSourceInterfaceProviderId,
+        dataSourceAcquisitionMode, externalAuthorizationRequired))
     })
     data.up
   }

@@ -28,11 +28,10 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = version
-    symbolicName = 'smartspaces.api.osgi.system'
+  bnd """
+    Bundle-SymbolicName: smartspaces.api.osgi.system
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        '*'
-  }
+    -exportcontents *
+  """
 }

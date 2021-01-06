@@ -23,22 +23,18 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.action'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.action
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.service.action.internal.osgi.ActionServiceActivator'
+    Bundle-Activator: \\
+        io.smartspaces.service.action.internal.osgi.ActionServiceActivator
 
-    instruction 'Export-Package',
-        '!io.smartspaces.service.action.internal.*',
-        '!io.smartspaces.service.scheduler.internal.*',
-        'io.smartspaces.service.action.*',
-        'io.smartspaces.service.scheduler.*'
+    -exportcontents *
         
-    instruction 'Private-Package',
-        'io.smartspaces.service.action.internal.*',
-        '!io.smartspaces.service.scheduler.internal.*'
-  }
+    Private-Package: \\
+        io.smartspaces.service.action.internal.*, \\
+        io.smartspaces.service.scheduler.internal.*
+  """
 }
 

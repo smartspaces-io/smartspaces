@@ -23,3 +23,12 @@ dependencies {
 }
 
 
+jar {
+  bnd """
+    Bundle-SymbolicName: org.apache.xmlrpc.server
+    Bundle-Version: ${version}
+
+    -exportcontents *
+  """
+}
+

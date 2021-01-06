@@ -45,7 +45,7 @@ task copyExtrasJars(type: Copy) {
 
 task copyExtraComponents(dependsOn: [copyResources, copyExtrasJars])
 
-task copyServiceArtifacts(type: Copy, dependsOn: [install]) {
+task copyServiceArtifacts(type: Copy, dependsOn: [publishToMavenLocal]) {
   from configurations.archives.allArtifacts.files
   into "${project.ext.baseServiceBuildFolder}"
 }
@@ -53,12 +53,12 @@ task copyServiceArtifacts(type: Copy, dependsOn: [install]) {
 task assembleExtras(dependsOn: [copyExtraComponents, copyServiceArtifacts])
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.comm.serial'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.comm.serial
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.service.comm.serial.internal.osgi.SerialCommunicationBundleActivator'
-  }
+    Bundle-Activator: \\
+        io.smartspaces.service.comm.serial.internal.osgi.SerialCommunicationBundleActivator
+  """
 }
 

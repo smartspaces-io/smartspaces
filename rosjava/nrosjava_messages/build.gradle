@@ -47,12 +47,16 @@ eclipse.classpath.file {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'org.ros.nrosjava_messages'
+  bnd """
+    Bundle-SymbolicName: org.ros.nrosjava_messages
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Fragment-Host',
-		'org.ros.nrosjava; bundle-version="[0.1.0,2.0.0)"'
-  }
+    Provide-Capability: org.ros.bootstrap
+
+    -exportcontents *
+
+    Fragment-Host: \\
+		  org.ros.nrosjava
+  """
 }
 

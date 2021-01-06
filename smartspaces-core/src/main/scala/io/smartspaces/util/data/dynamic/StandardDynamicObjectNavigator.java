@@ -16,6 +16,9 @@
 
 package io.smartspaces.util.data.dynamic;
 
+import io.smartspaces.util.data.mapper.JsonDataMapper;
+import io.smartspaces.util.data.mapper.StandardJsonDataMapper;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +36,11 @@ import java.util.Stack;
  * @author Keith M. Hughes
  */
 public class StandardDynamicObjectNavigator implements DynamicObject {
+
+  /**
+   * The JSON data mapper.
+   */
+  private final JsonDataMapper jsonMapper = StandardJsonDataMapper.INSTANCE;
 
   /**
    * The root object.
@@ -291,6 +299,26 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   }
 
   @Override
+  public Object getObject(String name) throws DynamicObjectSmartSpacesException {
+    return getObjectProperty(name);
+  }
+
+  @Override
+  public Object getRequiredObject(String name) throws DynamicObjectSmartSpacesException {
+    return getRequiredObjectProperty(name);
+  }
+
+  @Override
+  public String getObjectJson(String name) throws DynamicObjectSmartSpacesException {
+    return jsonMapper.toString(getObjectProperty(name));
+  }
+
+  @Override
+  public String getRequiredObjectJson(String name) throws DynamicObjectSmartSpacesException {
+    return jsonMapper.toString(getRequiredObjectProperty(name));
+  }
+
+  @Override
   public String getString(int pos) throws DynamicObjectSmartSpacesException {
     return (String) getArrayIndex(pos);
   }
@@ -323,6 +351,16 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   }
 
   @Override
+  public Object getObject(int pos) throws DynamicObjectSmartSpacesException {
+    return getArrayIndex(pos);
+  }
+
+  @Override
+  public String getObjectJson(int pos) throws DynamicObjectSmartSpacesException {
+    return jsonMapper.toString(getArrayIndex(pos));
+  }
+
+  @Override
   public int getSize() throws DynamicObjectSmartSpacesException {
     if (currentType == DynamicObjectType.ARRAY) {
       return currentArraySize;
@@ -334,7 +372,7 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   /**
    * Get the named property from the object.
    *
-   * @param name
+   * @param propertyName
    *          name of the property
    *
    * @return the value of the property, or {@code null} if none
@@ -348,6 +386,26 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
     } else {
       throw new DynamicObjectSmartSpacesException(String
           .format("Accessing object property %s, current level is not a object", propertyName));
+    }
+  }
+  /**
+   * Get the named property from the object. It is required.
+   *
+   * @param propertyName
+   *          name of the property
+   *
+   * @return the value of the property, or {@code null} if none
+   *
+   * @throws DynamicObjectSmartSpacesException
+   *           the current level is not an object
+   */
+  private Object getRequiredObjectProperty(String propertyName) {
+    Object property = getObjectProperty(propertyName);
+    if (property != null) {
+      return property;
+    } else {
+      throw new DynamicObjectSmartSpacesException(String
+              .format("Required object property %s does not exist", propertyName));
     }
   }
 
@@ -685,7 +743,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
   /**
    * Push a block. This prevents the user from going beyond a point.
    */
-  private void pushMark() {
+  @Override
+  public void pushMark() {
     marks.push(nav.size());
   }
 
@@ -695,7 +754,8 @@ public class StandardDynamicObjectNavigator implements DynamicObject {
    * @param remove
    *          if {code true} remove the mark
    */
-  private void resetToMark(boolean remove) {
+  @Override
+  public void resetToMark(boolean remove) {
     int pos;
     if (remove) {
       pos = marks.pop();

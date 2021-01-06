@@ -27,17 +27,17 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.master.controller'
+  bnd """
+    Bundle-SymbolicName: smartspaces.master.controller
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        'io.smartspaces.*'
+    -exportcontents *
 
-    instruction 'Import-Package',
-        'io.smartspaces.system.resources.*;resolution:="optional"',
-        'io.smartspaces.domain.*;resolution:="optional"',
-        '*'
-  }
+
+    Import-Package: \\
+        io.smartspaces.system.resources.*;resolution:="optional", \\
+        io.smartspaces.domain.*;resolution:="optional", \\
+        *
+  """
 }
 

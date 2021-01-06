@@ -28,23 +28,22 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.activity.runtime.standalone'
+  bnd """
+    Bundle-SymbolicName: smartspaces.activity.runtime.standalone
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.liveactivity.runtime.standalone.osgi.StandaloneBundleActivator'
+    Bundle-Activator: \\
+        io.smartspaces.liveactivity.runtime.standalone.osgi.StandaloneBundleActivator
 
-    instruction 'SmartSpaces-StartLevel',
-        'STARTUP_LEVEL_LAST'
+    SmartSpaces-StartLevel: \\
+        STARTUP_LEVEL_LAST
 
-    instruction 'Export-Package',
-        'io.smartspaces.*'
+    -exportcontents *
 
-    instruction 'Import-Package',
-        'org.apache.commons.logging.impl',
-        'io.smartspaces.evaluation',
-        '*'
-  }
+    Import-Package: \\
+        org.apache.commons.logging.impl, \\
+        io.smartspaces.evaluation, \\
+        *
+  """
 }
 

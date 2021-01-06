@@ -21,7 +21,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
-
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.scope.ManagedScope
 import io.smartspaces.sensor.domain.MarkerEntityDescription
@@ -38,13 +37,14 @@ import io.smartspaces.sensor.services.processing.value.SensorValueProcessorConte
 import io.smartspaces.sensor.services.processing.value.SimpleMarkerSensorValueProcessor
 import io.smartspaces.util.data.dynamic.StandardDynamicObjectBuilder
 import io.smartspaces.sensor.model.SensorChannelEntityModel
+import org.scalatest.junit.JUnitSuite
 
 /**
  * A test for the simple marker sensor value processor.
  *
  * @author Keith M. Hughes
  */
-class SimpleMarkerSensorValueProcessorTest {
+class SimpleMarkerSensorValueProcessorTest extends JUnitSuite {
 
   var processor: SimpleMarkerSensorValueProcessor = _
 

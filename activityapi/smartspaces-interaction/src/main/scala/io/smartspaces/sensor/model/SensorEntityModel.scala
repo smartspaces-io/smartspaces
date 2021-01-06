@@ -17,6 +17,7 @@
 package io.smartspaces.sensor.model
 
 import io.smartspaces.monitor.expectation.time.HeartbeatMonitorable
+import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValueInstances
 import io.smartspaces.sensor.domain.SensorEntityDescription
 
 /**
@@ -35,6 +36,11 @@ trait SensorEntityModel extends HeartbeatMonitorable {
    * The sensor entity description for the model.
    */
   def sensorEntityDescription: SensorEntityDescription
+
+  /**
+   * The acquisition mode for this model.
+   */
+  def acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance
 
   /**
    * Get the sensed entity model collection this model is in.

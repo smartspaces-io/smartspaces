@@ -16,24 +16,22 @@
 
 package io.smartspaces.util.statemachine
 
+import java.util.HashMap
+
 import io.smartspaces.SimpleSmartSpacesException
 import io.smartspaces.SmartSpacesException
 
-import scala.collection.JavaConversions._
-
-import java.util.HashMap
-import java.util.Map
-import java.util.Map.Entry
+import scala.collection.JavaConverters._
 
 /**
  * A state machine which uses equality on the trigger class to transition to the
  * next state.
  *
- * @param <S>
+ * @tparam S
  *          The state indicator type
- * @param <T>
+ * @tparam T
  *          The transition indicator type
- * @param <SO>
+ * @tparam SO
  *          The state object
  *
  * @author Keith M. Hughes
@@ -136,7 +134,7 @@ class EqualityTriggerStateMachine[S, T, SO <: StateMachineObject[S]] extends Sta
    *           the state machine is invalid
    */
   def validate (): Unit = {
-    internalStates.entrySet().foreach { (internalState) =>
+    internalStates.entrySet().asScala.foreach { (internalState) =>
       if (internalState.getValue().state.isEmpty) {
         throw new SimpleSmartSpacesException(
           s"State ${internalState.getKey()} is not explicity defined")
@@ -223,7 +221,7 @@ class EqualityTriggerStateMachine[S, T, SO <: StateMachineObject[S]] extends Sta
     }
     
     def getTransitions(): List[T] = {
-      transitionToState.keySet().toList
+      transitionToState.keySet().asScala.toList
     }
   }
 }

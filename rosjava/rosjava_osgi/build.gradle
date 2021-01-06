@@ -25,9 +25,10 @@
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'org.ros.osgi'
-    instruction 'Export-Package', 'org.ros.osgi.*'
-  }
+  bnd """
+    Bundle-SymbolicName: org.ros.osgi
+    Bundle-Version: ${osgiVersion}
+    
+    Export-Package: org.ros.osgi.*
+  """
 }

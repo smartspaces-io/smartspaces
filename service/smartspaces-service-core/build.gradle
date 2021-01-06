@@ -25,17 +25,16 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.core'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.core
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-		'*'
+    -exportcontents *
 
-    instruction 'Import-Package',
-        'org.eclipse.paho.client.mqttv3.*;resolution:="optional"',
-		'javax.jmdns.*;resolution:="optional"',
-        '*'
-  }
+    Import-Package: \\
+        org.eclipse.paho.client.mqttv3.*;resolution:="optional", \\
+		    javax.jmdns.*;resolution:="optional", \\
+        *
+  """
 }
 

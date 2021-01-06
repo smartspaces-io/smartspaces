@@ -16,15 +16,19 @@
 
 package io.smartspaces.sensor.services.domain
 
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.Map
-
 import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.sensor.domain.DataSourceProviderInterfaceTypeDescription
+import io.smartspaces.sensor.domain.DataSourceProviderOriginTypeDescription
+import io.smartspaces.sensor.domain.DataSourceProviderTypeDescription
+import io.smartspaces.sensor.domain.MarkerTypeDescription
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
 import io.smartspaces.sensor.domain.PhysicalSpaceTypeDescription
 import io.smartspaces.sensor.domain.SensorTypeDescription
 import javax.inject.Inject
+
+import scala.collection.mutable.HashMap
+import scala.collection.mutable.Map
 
 
 /**
@@ -32,7 +36,8 @@ import javax.inject.Inject
  * 
  * @author Keith M. Hughes
  */
-class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCommonRegistry {
+class InMemorySensorCommonRegistry @Inject() (
+  log: ExtendedLog) extends SensorCommonRegistry {
   
   /**
    * A map of persistence IDs to their measurement types.
@@ -65,14 +70,39 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
   private val externalIdToSensorType: Map[String, SensorTypeDescription] = new HashMap
 
   /**
+   * A map of persistence IDs to marker types.
+   */
+  private val idToMarkerType: Map[String, MarkerTypeDescription] = new HashMap
+
+  /**
+   * A map of external IDs to marker types.
+   */
+  private val externalIdToMarkerType: Map[String, MarkerTypeDescription] = new HashMap
+
+  /**
    * A map of persistence IDs to physical space types.
    */
   private val idToPhysicalSpaceType: Map[String, PhysicalSpaceTypeDescription] = new HashMap
 
   /**
-   * A map of external IDs to physical space typels.
+   * A map of external IDs to physical space types.
    */
   private val externalIdToPhysicalSpaceType: Map[String, PhysicalSpaceTypeDescription] = new HashMap
+
+  /**
+   * A map of external IDs to data source providers.
+   */
+  private val externalIdToDataSourceProviderType: Map[String, DataSourceProviderTypeDescription] = new HashMap
+
+  /**
+   * A map of external IDs to data source provider interfaces.
+   */
+  private val externalIdToDataSourceProviderInterfaceType: Map[String, DataSourceProviderInterfaceTypeDescription] = new HashMap
+
+  /**
+   * A map of external IDs to data source provider origins.
+   */
+  private val externalIdToDataSourceProviderOriginType: Map[String, DataSourceProviderOriginTypeDescription] = new HashMap
 
   override def registerMeasurementType(measurementType: MeasurementTypeDescription): SensorCommonRegistry = {
     idToMeasurementType.put(measurementType.id, measurementType)
@@ -94,8 +124,8 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
     externalIdToMeasurementType.get(externalId)
   }
  
-  override def getAllMeasurementTypes(): List[MeasurementTypeDescription] = {
-    idToMeasurementType.values.toList
+  override def getAllMeasurementTypes(): Iterable[MeasurementTypeDescription] = {
+    idToMeasurementType.values.toIterable
   }
 
   override def getMeasurementUnit(id: String): Option[MeasurementUnitDescription] = {
@@ -104,6 +134,10 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
 
   override def getMeasurementUnitByExternalId(externalId: String): Option[MeasurementUnitDescription] = {
     externalIdToMeasurementUnit.get(externalId)
+  }
+
+  override def getAllMeasurementUnits(): Iterable[MeasurementUnitDescription] = {
+    externalIdToMeasurementUnit.values
   }
 
   override def registerSensorType(sensorDetail: SensorTypeDescription): SensorCommonRegistry = {
@@ -121,8 +155,27 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
     externalIdToSensorType.get(externalId)
   }
 
-  override def getAllSensorTypes(): List[SensorTypeDescription] = {
-    idToSensorType.values.toList
+  override def getAllSensorTypes(): Iterable[SensorTypeDescription] = {
+    idToSensorType.values
+  }
+
+  override def registerMarkerType(markerDetail: MarkerTypeDescription): SensorCommonRegistry = {
+    idToMarkerType.put(markerDetail.id, markerDetail)
+    externalIdToMarkerType.put(markerDetail.externalId, markerDetail)
+
+    this
+  }
+
+  override def getMarkerType(id: String): Option[MarkerTypeDescription] = {
+    idToMarkerType.get(id)
+  }
+
+  override def getMarkerTypeByExternalId(externalId: String): Option[MarkerTypeDescription] = {
+    externalIdToMarkerType.get(externalId)
+  }
+
+  override def getAllMarkerTypes(): Iterable[MarkerTypeDescription] = {
+    idToMarkerType.values
   }
 
   override def registerPhysicalSpaceType(physicalSpaceType: PhysicalSpaceTypeDescription): SensorCommonRegistry = {
@@ -140,8 +193,57 @@ class InMemorySensorCommonRegistry @Inject()(log: ExtendedLog) extends SensorCom
     externalIdToPhysicalSpaceType.get(externalId)
   }
 
-  override def getAllPhysicalSpaceTypes(): List[PhysicalSpaceTypeDescription] = {
-    idToPhysicalSpaceType.values.toList
+  override def getAllPhysicalSpaceTypes(): Iterable[PhysicalSpaceTypeDescription] = {
+    idToPhysicalSpaceType.values
   }
 
+  override def registerDataSourceProviderType(dataSourceProviderType: DataSourceProviderTypeDescription): SensorCommonRegistry = {
+    externalIdToDataSourceProviderType.put(dataSourceProviderType.externalId, dataSourceProviderType)
+
+    this
+  }
+
+  override def getDataSourceProviderTypeByExternalId(externalId: String): Option[DataSourceProviderTypeDescription] = {
+    externalIdToDataSourceProviderType.get(externalId)
+  }
+
+  override def getAllDataSourceProviderTypes(): Iterable[DataSourceProviderTypeDescription] = {
+    externalIdToDataSourceProviderType.values
+  }
+
+  override def getAllDataSourceProviderTypesByInterface(interfaceId: String): Iterable[DataSourceProviderTypeDescription] = {
+    externalIdToDataSourceProviderType.values.filter(_.interfaceProviderId == interfaceId)
+  }
+
+  override def getAllDataSourceProviderTypesByOrigin(originId: String): Iterable[DataSourceProviderTypeDescription] = {
+    externalIdToDataSourceProviderType.values.filter(_.originProviderId == originId)
+  }
+
+  override def registerDataSourceProviderInterfaceType(dataSourceProviderInterfaceType: DataSourceProviderInterfaceTypeDescription): SensorCommonRegistry = {
+    externalIdToDataSourceProviderInterfaceType.put(dataSourceProviderInterfaceType.externalId, dataSourceProviderInterfaceType)
+
+    this
+  }
+
+  override def getDataSourceProviderInterfaceTypeByExternalId(externalId: String): Option[DataSourceProviderInterfaceTypeDescription] = {
+    externalIdToDataSourceProviderInterfaceType.get(externalId)
+  }
+
+  override def getAllDataSourceProviderInterfaceTypes(): Iterable[DataSourceProviderInterfaceTypeDescription] = {
+    externalIdToDataSourceProviderInterfaceType.values
+  }
+
+  override def registerDataSourceProviderOriginType(dataSourceProviderOriginType: DataSourceProviderOriginTypeDescription): SensorCommonRegistry = {
+    externalIdToDataSourceProviderOriginType.put(dataSourceProviderOriginType.externalId, dataSourceProviderOriginType)
+
+    this
+  }
+
+  override def getDataSourceProviderOriginTypeByExternalId(externalId: String): Option[DataSourceProviderOriginTypeDescription] = {
+    externalIdToDataSourceProviderOriginType.get(externalId)
+  }
+
+  override def getAllDataSourceProviderOriginTypes(): Iterable[DataSourceProviderOriginTypeDescription] = {
+    externalIdToDataSourceProviderOriginType.values
+  }
 }

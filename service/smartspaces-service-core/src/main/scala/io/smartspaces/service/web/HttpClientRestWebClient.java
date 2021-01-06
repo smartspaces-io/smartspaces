@@ -20,19 +20,15 @@ import io.smartspaces.SimpleSmartSpacesException;
 import io.smartspaces.SmartSpacesException;
 
 import com.google.common.base.Charsets;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
+import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.*;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.config.SocketConfig;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.DnsResolver;
 import org.apache.http.conn.HttpConnectionFactory;
 import org.apache.http.conn.ManagedHttpClientConnection;
@@ -50,6 +46,9 @@ import org.apache.http.impl.conn.SystemDefaultDnsResolver;
 import org.apache.http.impl.io.DefaultHttpRequestWriterFactory;
 import org.apache.http.io.HttpMessageParserFactory;
 import org.apache.http.io.HttpMessageWriterFactory;
+import org.apache.http.message.BasicHeaderElementIterator;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
@@ -83,6 +82,11 @@ public class HttpClientRestWebClient implements RestWebClient {
   private final int totalConnectionsAllowed;
 
   /**
+   * The default keep alive time for a connection.
+   */
+  private long keepAliveDefault = 0;
+
+  /**
    * Construct a performer which allows a maximum of
    * {@link #TOTAL_CONNECTIONS_ALLOWED_DEFAULT} connections.
    */
@@ -98,6 +102,11 @@ public class HttpClientRestWebClient implements RestWebClient {
    */
   public HttpClientRestWebClient(int totalConnectionsAllowed) {
     this.totalConnectionsAllowed = totalConnectionsAllowed;
+  }
+
+  @Override
+  public void setKeepAliveTimeDefault(long keepAliveDefault) {
+    this.keepAliveDefault = keepAliveDefault;
   }
 
   @Override
@@ -136,7 +145,28 @@ public class HttpClientRestWebClient implements RestWebClient {
     connManager.setValidateAfterInactivity(1000);
     connManager.setMaxTotal(totalConnectionsAllowed);
 
-    httpClient = HttpClients.custom().setConnectionManager(connManager).build();
+    ConnectionKeepAliveStrategy keepAliveStrategy = new ConnectionKeepAliveStrategy() {
+      @Override
+      public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+        HeaderElementIterator it = new BasicHeaderElementIterator
+            (response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+        while (it.hasNext()) {
+          HeaderElement he = it.nextElement();
+          String param = he.getName();
+          String value = he.getValue();
+          if (value != null && param.equalsIgnoreCase
+              ("timeout")) {
+            return Long.parseLong(value) * 1000;
+          }
+        }
+        return keepAliveDefault;
+      }
+    };
+
+    httpClient = HttpClients.custom()
+        .setKeepAliveStrategy(keepAliveStrategy)
+        .setConnectionManager(connManager)
+        .build();
   }
 
   @Override
@@ -171,7 +201,29 @@ public class HttpClientRestWebClient implements RestWebClient {
 
       return httpClient.execute(request, responseHandler);
     } catch (Exception e) {
-      throw new SimpleSmartSpacesException(String.format("REST call to %s failed.", sourceUri), e);
+      throw new SimpleSmartSpacesException(String.format("REST GET call to %s failed.", sourceUri), e);
+    }
+  }
+
+  @Override
+  public RestWebClientResponse performGetFull(String sourceUri, Map<String, String> headers)
+      throws SmartSpacesException {
+    return performGetFull(sourceUri, Charsets.UTF_8, headers);
+  }
+
+  @Override
+  public RestWebClientResponse performGetFull(String sourceUri, Charset charset, Map<String, String> headers)
+      throws SmartSpacesException {
+    try {
+      HttpGet request = new HttpGet(sourceUri);
+
+      placeHeadersInRequest(headers, request);
+
+      ResponseHandler<RestWebClientResponse> responseHandler = newResponseHandlerFull(charset);
+
+      return httpClient.execute(request, responseHandler);
+    } catch (Exception e) {
+      throw new SimpleSmartSpacesException(String.format("REST GET call to %s failed.", sourceUri), e);
     }
   }
 
@@ -200,6 +252,76 @@ public class HttpClientRestWebClient implements RestWebClient {
   }
 
   @Override
+  public RestWebClientResponse performPutFull(String sourceUri, String putContent, Map<String, String> headers)
+      throws SmartSpacesException {
+    return performPutFull(sourceUri, putContent, Charsets.UTF_8, headers);
+  }
+
+  @Override
+  public RestWebClientResponse performPutFull(String sourceUri, String putContent, Charset charset,
+                           Map<String, String> headers) throws SmartSpacesException {
+
+    try {
+      HttpPut request = new HttpPut(sourceUri);
+      request.setEntity(new StringEntity(putContent, charset.name()));
+
+      placeHeadersInRequest(headers, request);
+
+      ResponseHandler<RestWebClientResponse> responseHandler = newResponseHandlerFull(charset);
+
+      return httpClient.execute(request, responseHandler);
+    } catch (Exception e) {
+      throw new SimpleSmartSpacesException(String.format("REST PUT call to %s failed.", sourceUri), e);
+    }
+  }
+
+  @Override
+  public String performDelete(String sourceUri,
+                              Map<String, String> headers) throws SmartSpacesException {
+    return performDelete(sourceUri, Charsets.UTF_8,  headers);
+  }
+
+  @Override
+  public String performDelete(String sourceUri, Charset charset,
+                           Map<String, String> headers) throws SmartSpacesException {
+
+    try {
+      HttpDelete request = new HttpDelete(sourceUri);
+
+      placeHeadersInRequest(headers, request);
+
+      ResponseHandler<String> responseHandler = newResponseHandler(charset);
+
+      return httpClient.execute(request, responseHandler);
+    } catch (Exception e) {
+      throw new SimpleSmartSpacesException(String.format("REST call to %s failed.", sourceUri), e);
+    }
+  }
+
+  @Override
+  public RestWebClientResponse performDeleteFull(String sourceUri,
+                              Map<String, String> headers) throws SmartSpacesException {
+    return performDeleteFull(sourceUri, Charsets.UTF_8,  headers);
+  }
+
+  @Override
+  public RestWebClientResponse performDeleteFull(String sourceUri, Charset charset,
+                              Map<String, String> headers) throws SmartSpacesException {
+
+    try {
+      HttpDelete request = new HttpDelete(sourceUri);
+
+      placeHeadersInRequest(headers, request);
+
+      ResponseHandler<RestWebClientResponse> responseHandler = newResponseHandlerFull(charset);
+
+      return httpClient.execute(request, responseHandler);
+    } catch (Exception e) {
+      throw new SimpleSmartSpacesException(String.format("REST call to %s failed.", sourceUri), e);
+    }
+  }
+
+  @Override
   public String performPost(String sourceUri, String postContent, Map<String, String> headers)
       throws SmartSpacesException {
     return performPost(sourceUri, postContent, Charsets.UTF_8, headers);
@@ -212,7 +334,36 @@ public class HttpClientRestWebClient implements RestWebClient {
     return performPost(sourceUri, new StringEntity(postContent, charset.name()), charset, headers);
   }
 
-  public String performPost(String sourceUri, HttpEntity postContent, Charset charset,
+  @Override
+  public RestWebClientResponse performPostFull(String sourceUri, String postContent, Map<String, String> headers)
+      throws SmartSpacesException {
+    return performPostFull(sourceUri, postContent, Charsets.UTF_8, headers);
+  }
+
+  @Override
+  public RestWebClientResponse performPostFull(String sourceUri, String postContent, Charset charset,
+                            Map<String, String> headers) throws SmartSpacesException {
+
+    return performPostFull(sourceUri, new StringEntity(postContent, charset.name()), charset, headers);
+  }
+
+  /**
+   * Perform a POST operation.
+   *
+   * @param sourceUri
+   *        the URI for the POST
+   * @param postContent
+   *        the content of the POST, can be {@code null}
+   * @param charset
+   *        the charset for encoding
+   * @param headers
+   *        the headers for the call
+   *
+   * @return the response
+   *
+   * @throws SmartSpacesException
+   */
+  private String performPost(String sourceUri, HttpEntity postContent, Charset charset,
       Map<String, String> headers) throws SmartSpacesException {
 
     try {
@@ -225,7 +376,40 @@ public class HttpClientRestWebClient implements RestWebClient {
 
       return httpClient.execute(request, responseHandler);
     } catch (Exception e) {
-      throw new SimpleSmartSpacesException(String.format("REST call to %s failed.", sourceUri), e);
+      throw new SimpleSmartSpacesException(String.format("REST POST call to %s failed.", sourceUri), e);
+    }
+  }
+
+  /**
+   * Perform a POST operation.
+   *
+   * @param sourceUri
+   *        the URI for the POST
+   * @param postContent
+   *        the content of the POST, can be {@code null}
+   * @param charset
+   *        the charset for encoding
+   * @param headers
+   *        the headers for the call
+   *
+   * @return the response
+   *
+   * @throws SmartSpacesException
+   */
+  private RestWebClientResponse performPostFull(String sourceUri, HttpEntity postContent, Charset charset,
+                             Map<String, String> headers) throws SmartSpacesException {
+
+    try {
+      HttpPost request = new HttpPost(sourceUri);
+      request.setEntity(postContent);
+
+      placeHeadersInRequest(headers, request);
+
+      ResponseHandler<RestWebClientResponse> responseHandler = newResponseHandlerFull(charset);
+
+      return httpClient.execute(request, responseHandler);
+    } catch (Exception e) {
+      throw new SimpleSmartSpacesException(String.format("REST POST call to %s failed.", sourceUri), e);
     }
   }
 
@@ -251,7 +435,7 @@ public class HttpClientRestWebClient implements RestWebClient {
   }
 
   /**
-   * Create a new response handler.
+   * Create a new response handler that just returns content.
    * 
    * @param charset
    *          the charset for the response
@@ -275,4 +459,26 @@ public class HttpClientRestWebClient implements RestWebClient {
     return responseHandler;
   }
 
+  /**
+   * Create a new response handler that returns a full response.
+   *
+   * @param charset
+   *          the charset for the response
+   *
+   * @return the response handler
+   */
+  private ResponseHandler<RestWebClientResponse> newResponseHandlerFull(Charset charset) {
+    ResponseHandler<RestWebClientResponse> responseHandler = new ResponseHandler<RestWebClientResponse>() {
+      @Override
+      public RestWebClientResponse handleResponse(final HttpResponse response)
+          throws ClientProtocolException, IOException {
+        int status = response.getStatusLine().getStatusCode();
+        HttpEntity entity = response.getEntity();
+        String content = entity != null ? EntityUtils.toString(entity, charset) : null;
+
+        return new RestWebClientResponse(status, content);
+       }
+    };
+    return responseHandler;
+  }
 }

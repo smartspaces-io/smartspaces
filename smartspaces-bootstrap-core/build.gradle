@@ -14,19 +14,25 @@
  * the License.
  */
 
+ext {
+  exportVersion="1.0.0"
+}
+
 dependencies {
   compile 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'
 }
 
 jar {
-  manifest {
-	version = osgiVersion
-	symbolicName = 'smartspaces.bootstrap.core'
+  bnd """
+    Bundle-SymbolicName: smartspaces.bootstrap.core
+	  BundleVersion: ${osgiVersion}
 
-	instruction 'Export-Package',
-		'io.smartspaces.*'
+	  Export-Package: \\
+      io.smartspaces.system.core.configuration;version=1.0.0, \\
+      io.smartspaces.system.core.container;version=1.0.0, \\
+      io.smartspaces.system.core.logging;version=1.0.0
 
-	instruction 'Import-Package',
-		'*'
-  }
+	   Import-Package: \\
+		   *
+  """
 }

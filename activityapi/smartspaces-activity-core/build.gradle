@@ -18,7 +18,7 @@ dependencies {
   compile project(':smartspaces-core')
   compile project(':service:smartspaces-service-core')
   
-  compile('com.google.inject:guice:4.2.2') {
+  compile('com.google.inject:guice:4.2.3') {
 	  exclude module: 'aopalliance'
 	  exclude module: 'javax.inject'
   }
@@ -36,18 +36,17 @@ test {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.activity.core'
+  bnd """
+    Bundle-SymbolicName: smartspaces.activity.core
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        'io.smartspaces.*'
+    -exportcontents *
 
-    instruction 'Import-Package',
-        'org.apache.commons.ognl.*;resolution:="optional"',
-        'org.ros.*;resolution:="optional"',
-        'com.google.common;resolution:="optional"',
-        'smartspaces_msgs;resolution:="optional"',
-        '*'
-  }
+    Import-Package: \\
+        org.apache.commons.ognl.*;resolution:="optional", \\
+        org.ros.*;resolution:="optional", \\
+        com.google.common;resolution:="optional", \\
+        smartspaces_msgs;resolution:="optional", \\
+        *
+  """
 }

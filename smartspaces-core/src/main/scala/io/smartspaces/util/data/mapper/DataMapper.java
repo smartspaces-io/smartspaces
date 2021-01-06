@@ -74,7 +74,7 @@ public interface DataMapper {
   Map<String, Object> parseObject(String object) throws SmartSpacesException;
 
   /**
-   * Parse JSON.
+   * Parse the data.
    *
    * @param object
    *          the serialized string to parse

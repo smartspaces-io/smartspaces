@@ -39,7 +39,7 @@ task copyExtrasJars(type: Copy) {
 
 task copyExtraComponents(dependsOn: [copyExtrasJars])
 
-task copyServiceArtifacts(type: Copy, dependsOn: [install]) {
+task copyServiceArtifacts(type: Copy, dependsOn: [publishToMavenLocal]) {
   from configurations.archives.allArtifacts.files
   into "${project.ext.baseServiceBuildFolder}"
 }
@@ -48,15 +48,14 @@ task assembleExtras(dependsOn: [copyExtraComponents, copyServiceArtifacts])
 
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.comm.serial.bluetooth'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.comm.serial.bluetooth
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.service.comm.serial.bluetooth.internal.osgi.BluetoothCommunicationEndpointServiceBundleActivator'
+    Bundle-Activator: \\
+        io.smartspaces.service.comm.serial.bluetooth.internal.osgi.BluetoothCommunicationEndpointServiceBundleActivator
 
-    instruction 'Export-Package',
-        'io.smartspaces.hardware.driver.*'
-  }
+    -exportcontents *
+  """
 }
 

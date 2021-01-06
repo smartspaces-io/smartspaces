@@ -24,23 +24,22 @@ dependencies {
   
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
-  testCompile 'org.scalatest:scalatest_2.11:3.0.0'
+  testCompile 'org.scalatest:scalatest_2.12:3.0.0'
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.interaction'
+  bnd """
+    Bundle-SymbolicName: smartspaces.interaction
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        'io.smartspaces.*'
+    -exportcontents *
 
-    instruction 'Import-Package',
-        'org.apache.commons.ognl.*;resolution:="optional"',
-        'org.ros.*;resolution:="optional"',
-        'com.google.common;resolution:="optional"',
-        'smartspaces_msgs;resolution:="optional"',
-        'io.smartspaces.activity;resolution:="optional"',
-        '*'
-  }
+    Import-Package: \\
+        org.apache.commons.ognl.*;resolution:="optional", \\
+        org.ros.*;resolution:="optional", \\
+        com.google.common;resolution:="optional", \\
+        smartspaces_msgs;resolution:="optional", \\
+        io.smartspaces.activity;resolution:="optional", \\
+        *
+  """
 }

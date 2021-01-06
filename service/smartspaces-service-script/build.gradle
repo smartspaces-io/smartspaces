@@ -23,8 +23,8 @@ dependencies {
   compile project(':activityapi:smartspaces-activity-core')
 
   expandedJars 'org.codehaus.groovy:groovy-all:2.2.1'
-  expandedJars files("${project.getProperty('smartspaces.dependencies.home')}/python/jython/jython2.7.0/jython.jar")
-  expandedJars 'org.mozilla:rhino:1.7.7.1'
+  //expandedJars files("${project.getProperty('smartspaces.dependencies.home')}/python/jython/jython2.7.0/jython.jar")
+  expandedJars 'org.mozilla:rhino:1.7.11'
 
   provided "${project.ext.osgiContainerDependency}"
 
@@ -37,73 +37,87 @@ jar {
     from zipTree(it)
   }
 
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.script'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.script
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.service.script.internal.osgi.OsgiScriptServiceActivator'
+    Bundle-Activator: \\
+        io.smartspaces.service.script.internal.osgi.OsgiScriptServiceActivator
 
-    instruction 'Export-Package',
-        '!io.smartspaces.service.script.internal.*',
-        'io.smartspaces.service.script.*'
+    Export-Package: \\
+        !io.smartspaces.service.script.internal.*, \\
+        io.smartspaces.service.script.*; version=${osgiVersion}
 
-    instruction 'Private-Package',
-        'io.smartspaces.service.script.internal.*'
+    Private-Package: \\
+        io.smartspaces.service.script.internal.*
 
-    instruction 'Import-Package',
-        'io.smartspaces.activity',
-        'io.smartspaces.activity.impl',
-        'io.smartspaces.activity.impl.binary',
-        'io.smartspaces.activity.impl.route',
-        'io.smartspaces.activity.impl.web',
-        'io.smartspaces.activity.binary',
-        'io.smartspaces.activity.component',
-        'io.smartspaces.activity.component.comm',
-        'io.smartspaces.activity.component.comm.ros',
-        'io.smartspaces.activity.component.comm.route',
-        'io.smartspaces.activity.component.web',
-        'io.smartspaces.event',
-        'io.smartspaces.interaction.event.trigger;resolution:="optional"',
-        'io.smartspaces.tasks',
-        'io.smartspaces.util',
-        'io.smartspaces.util.data',
-        'io.smartspaces.util.data.persist',
-        'io.smartspaces.util.io',
-        'io.smartspaces.util.process.restart',
-        'io.smartspaces.util.messaging.ros',
-        'io.smartspaces.util.uuid',
-        'io.smartspaces.util.web',
-        'io.smartspaces.service.web.server',
-        'io.smartspaces.service.web.server.handler.barcode;resolution:="optional"',
-        'com.informix.jdbc.*;resolution:="optional"',
-        'javax.xml.*;resolution:="optional"',
-        'javax.imageio;resolution:="optional"',
-        'javax.servlet.*;resolution:="optional"',
-        'junit.framework.*;resolution:="optional"',
-        'oracle.jdbc.*;resolution:="optional"',
-        'oracle.sql.*;resolution:="optional"',
-        'org.antlr.stringtemplate;resolution:="optional"',
-        'org.apache.tools.ant;resolution:="optional"',
-        'org.apache.tools.ant.taskdefs;resolution:="optional"',
-        'org.apache.tools.ant.types;resolution:="optional"',
-        'org.apache.tools.ant.types.resources;resolution:="optional"',
-        'org.apache.tools.ant.util;resolution:="optional"',
-        'org.gnu.readline;resolution:="optional"',
-        'org.python.apache.xml.resolver;resolution:="optional"',
-        'org.python.apache.xml.resolver.readers;resolution:="optional"',
-        'org.python.objectweb.asm.tree;resolution:="optional"',
-        'org.python.objectweb.asm.tree.analysis;resolution:="optional"',
-        'sun.io;resolution:="optional"',
-        'sun.misc;resolution:="optional"',
-        'org.apache.xmlbeans;resolution:="optional"',
-        'com.kenai.jnr.x86asm;resolution:="optional"',
-        'org.codehaus.groovy.jsr223.*;resolution:="optional"',
-        'org.python.apache.*',
-        // These are because of the way that gradle and bnd are working together
-        // even though all classes are in the bundle
-        'org.mozilla.javascript.*;resolution:="optional"',
-        'org.python.*;resolution:="optional"',
-        '*'
-  }
+    Import-Package: \\
+        io.smartspaces.activity, \\
+        io.smartspaces.activity.impl, \\
+        io.smartspaces.activity.impl.binary, \\
+        io.smartspaces.activity.impl.route, \\
+        io.smartspaces.activity.impl.web, \\
+        io.smartspaces.activity.binary, \\
+        io.smartspaces.activity.component, \\
+        io.smartspaces.activity.component.comm, \\
+        io.smartspaces.activity.component.comm.ros, \\
+        io.smartspaces.activity.component.comm.route, \\
+        io.smartspaces.activity.component.web, \\
+        io.smartspaces.event, \\
+        io.smartspaces.interaction.event.trigger;resolution:="optional", \\
+        io.smartspaces.tasks, \\
+        io.smartspaces.util, \\
+        io.smartspaces.util.data, \\
+        io.smartspaces.util.data.persist, \\
+        io.smartspaces.util.io, \\
+        io.smartspaces.util.process.restart, \\
+        io.smartspaces.util.messaging.ros, \\
+        io.smartspaces.util.uuid, \\
+        io.smartspaces.util.web, \\
+        io.smartspaces.service.web.server, \\
+        io.smartspaces.service.web.server.handler.barcode;resolution:="optional", \\
+        com.informix.jdbc.*;resolution:="optional", \\
+        javax.xml.*;resolution:="optional", \\
+        javax.imageio;resolution:="optional", \\
+        javax.servlet.*;resolution:="optional", \\
+        junit.framework.*;resolution:="optional", \\
+        oracle.jdbc.*;resolution:="optional", \\
+        oracle.sql.*;resolution:="optional", \\
+        org.antlr.stringtemplate;resolution:="optional", \\
+        org.apache.tools.ant;resolution:="optional", \\
+        org.apache.tools.ant.taskdefs;resolution:="optional", \\
+        org.apache.tools.ant.types;resolution:="optional", \\
+        org.apache.tools.ant.types.resources;resolution:="optional", \\
+        org.apache.tools.ant.util;resolution:="optional", \\
+        org.gnu.readline;resolution:="optional", \\
+        sun.io;resolution:="optional", \\
+        sun.misc;resolution:="optional", \\
+        org.apache.xmlbeans;resolution:="optional", \\
+        com.kenai.jnr.x86asm;resolution:="optional", \\
+        org.codehaus.groovy.jsr223.*;resolution:="optional", \\
+        groovy.runtime.metaclass.*;resolution:="optional", \\
+        groovyjarjarasm.asm.tree.analysis.*;resolution:="optional", \\
+        jline.*;resolution:="optional", \\
+        junit.textui.*;resolution:="optional", \\
+        org.junit.*;resolution:="optional", \\
+        org.fusesource.jansi.*;resolution:="optional", \\
+        org.jdesktop.swingx.*;resolution:="optional", \\
+        org.apache.bsf.*;resolution:="optional", \\
+        org.apache.ivy.*;resolution:="optional", \\
+        org.apache.commons.cli.*;resolution:="optional", \\
+        org.apache.tools.ant.*;resolution:="optional", \\
+        sun.*;resolution:="optional", \\\\
+        org.mozilla.javascript.*;resolution:="optional", \\
+        com.thoughtworks.qdox.*;resolution:="optional", \\
+        com.thoughtworks.xstream.*;resolution:="optional", \\
+        *
+
+        // org.python.apache.*,
+        // org.python.*;resolution:="optional"
+        // org.python.apache.xml.resolver;resolution:="optional", 
+        // org.python.apache.xml.resolver.readers;resolution:="optional",
+        // org.python.objectweb.asm.tree;resolution:="optional",
+        // org.python.objectweb.asm.tree.analysis;resolution:="optional",
+
+  """
 }

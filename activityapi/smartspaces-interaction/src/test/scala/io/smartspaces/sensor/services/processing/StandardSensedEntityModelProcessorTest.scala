@@ -16,19 +16,11 @@
 
 package io.smartspaces.sensor.services.processing
 
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
-import org.mockito.ArgumentCaptor
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
-import org.scalatest.junit.JUnitSuite
-
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.scope.ManagedScope
-import io.smartspaces.sensor.domain.SensorAcquisitionModeCategoricalValueInstances
+import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValueInstances
 import io.smartspaces.sensor.domain.SensorEntityDescription
+import io.smartspaces.sensor.domain.SimpleDataSourceProviderDescription
 import io.smartspaces.sensor.domain.SimpleMeasurementTypeDescription
 import io.smartspaces.sensor.domain.SimplePhysicalSpaceSensedEntityDescription
 import io.smartspaces.sensor.domain.SimpleSensorChannelDetailDescription
@@ -43,6 +35,14 @@ import io.smartspaces.sensor.model.SimpleSensorChannelEntityModel
 import io.smartspaces.sensor.model.SimpleSensorEntityModel
 import io.smartspaces.sensor.services.processing.value.SensorValueProcessor
 import io.smartspaces.sensor.services.processing.value.StandardSensorValueProcessorRegistry
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
+import org.mockito.ArgumentCaptor
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
+import org.scalatest.junit.JUnitSuite
 
 /**
  * Tests for the {@link StandardSensedEntityModelProcessor}.
@@ -121,13 +121,16 @@ class StandardSensedEntityModelProcessorTest extends JUnitSuite {
     val channelDetail =
       new SimpleSensorChannelDetailDescription(channelId, "glorp", Option("norp"), measurementType, null, None, None)
     val sensorDetail = new SimpleSensorTypeDescription("1", "foo", "foo", Option("foo"),
-      None, None, None, None,
-      SensorAcquisitionModeCategoricalValueInstances.PULL, None, None, "*", List(channelDetail), List(channelDetail))
+      None, None, None, List(), None, None, "*", List(channelDetail))
 
     val sensor =
       new SimpleSensorEntityDescription("2", "foo", "foo", Option("foo"),
-        sensorDetail, "foo", None, None)
-    val sensorModel = new SimpleSensorEntityModel(sensor, completeSensedEntityModel, 0)
+        sensorDetail,
+        SimpleDataSourceProviderDescription("foo", Some("bar")),
+        None, None)
+    val sensorModel = new SimpleSensorEntityModel(
+      sensor, DataSourceAcquisitionModeCategoricalValueInstances.PUSH,
+      completeSensedEntityModel, 0)
 
     val sensedEntity =
       new SimplePhysicalSpaceSensedEntityDescription("1", "foo", "foo", Option("foo"), None, Set(), Set())

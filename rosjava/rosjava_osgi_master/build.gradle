@@ -24,12 +24,12 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'org.ros.osgi.master'
+  bnd """
+    Bundle-SymbolicName: org.ros.osgi.master
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        'org.ros.osgi.master.*'
- }
+    Export-Package: \\
+        org.ros.osgi.master.*
+ """
 }
 

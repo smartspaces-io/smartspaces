@@ -20,7 +20,7 @@ dependencies {
   compile 'org.apache.commons:com.springsource.org.apache.commons.io:1.4.0'
   compile 'commons-pool:commons-pool:1.6'
 
-  compile('com.google.guava:guava:25.1-jre') {
+  compile('com.google.guava:guava:27.1-jre') {
     exclude group: 'com.google.code.findbugs', module: 'jsr305'
     exclude group: 'org.checkerframework', module: 'checker-compat-qual'
     exclude group: 'com.google.errorprone', module: 'error_prone_annotations'
@@ -34,12 +34,16 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'org.ros.nrosjava_bootstrap'
+  bnd """
+    Bundle-SymbolicName: org.ros.nrosjava_bootstrap
+    Bundle-Version: ${osgiVersion}
+
+    -exportcontents *
+
+    Provide-Capability: org.ros.bootstrap
 	
-    instruction 'Fragment-Host', 
-		'org.ros.nrosjava; bundle-version="[0.1.0,2.0.0)"'
-  }
+    Fragment-Host: \\
+		  org.ros.nrosjava
+  """
 }
 

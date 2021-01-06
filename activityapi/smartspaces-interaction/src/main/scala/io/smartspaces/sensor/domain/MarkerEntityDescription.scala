@@ -27,7 +27,7 @@ trait MarkerEntityDescription extends EntityDescription {
   /**
    * The source of the marker data feed. 
    */
-  val markerSource: String
+  val markerDataSourceProvider: DataSourceProviderDescription
   
   /**
    * The type of the marker, i.e. the exact hardware specification.
@@ -46,13 +46,13 @@ trait MarkerEntityDescription extends EntityDescription {
  * @author Keith M. Hughes
  */
 class SimpleMarkerEntityDescription(
-  id: String,
-  externalId: String,
-  displayName: String,
-  displayDescription: Option[String],
-  override val markerSource: String,
-  override val markerType: String,
-  override val markerId: String) extends SimpleEntityDescription(id, externalId, displayName, displayDescription)
+                                     id: String,
+                                     externalId: String,
+                                     displayName: String,
+                                     displayDescription: Option[String],
+                                     override val markerDataSourceProvider: DataSourceProviderDescription,
+                                     override val markerType: String,
+                                     override val markerId: String) extends SimpleEntityDescription(id, externalId, displayName, displayDescription)
   with MarkerEntityDescription {
 
   override def toString(): String = {

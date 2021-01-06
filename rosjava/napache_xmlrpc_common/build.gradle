@@ -26,3 +26,13 @@ dependencies {
   
   compile 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'
 }
+
+jar {
+  bnd """
+    Bundle-SymbolicName: org.apache.xmlrpc.common
+    Bundle-Version: ${version}
+
+    -exportcontents *
+  """
+}
+

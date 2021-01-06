@@ -16,15 +16,10 @@
 
 package io.smartspaces.sensor.services.domain
 
-import scala.collection.JavaConverters.asScalaBufferConverter
-import scala.collection.JavaConverters.iterableAsScalaIterableConverter
-import scala.collection.JavaConverters.mapAsScalaMapConverter
-import scala.util.control.Breaks.break
-import scala.util.control.Breaks.breakable
-
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.domain.SensorDescriptionConstants
 import io.smartspaces.sensor.domain.SensorTypeDescription
+import io.smartspaces.sensor.domain.SimpleDataSourceProviderDescription
 import io.smartspaces.sensor.domain.SimpleMarkerEntityDescription
 import io.smartspaces.sensor.domain.SimplePersonSensedEntityDescription
 import io.smartspaces.sensor.domain.SimplePhysicalSpaceSensedEntityDescription
@@ -33,12 +28,20 @@ import io.smartspaces.util.data.dynamic.DynamicObject
 import io.smartspaces.util.data.dynamic.DynamicObject.ArrayDynamicObjectEntry
 import io.smartspaces.util.data.dynamic.DynamicObject.ObjectDynamicObjectEntry
 
+import scala.collection.JavaConverters.asScalaBufferConverter
+import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+import scala.collection.JavaConverters.mapAsScalaMapConverter
+import scala.util.control.Breaks.break
+import scala.util.control.Breaks.breakable
+
 /**
- * A YAML-based sensor instance description importer.
+ * A dynamic object-based sensor instance description importer.
  *
  * @author Keith M. Hughes
  */
-class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCommonRegistry, log: ExtendedLog) extends SensorInstanceDescriptionExtractor {
+class StandardDynamicObjectSensorInstanceDescriptionExtractor(
+  sensorCommonRegistry: SensorCommonRegistry,
+  log: ExtendedLog) extends SensorInstanceDescriptionExtractor[DynamicObject] {
 
   /**
    * The ID to be given to entities.
@@ -47,7 +50,9 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
    */
   private var id: Integer = 0
 
-  override def extractDescriptions(data: DynamicObject, sensorRegistry: SensorInstanceRegistry): SensorInstanceDescriptionExtractor = {
+  override def extractDescriptions(
+    data: DynamicObject,
+    sensorRegistry: SensorInstanceRegistry): SensorInstanceDescriptionExtractor[DynamicObject] = {
     getSensors(sensorRegistry, data)
     getPeople(sensorRegistry, data)
     getMarkers(sensorRegistry, data)
@@ -138,13 +143,18 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
         }
       }
 
+      val dataSourceProvider = SimpleDataSourceProviderDescription(
+        itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_PROVIDER_ID),
+        Option(itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_ACQUISITION_ID))
+      )
+
       val entity = new SimpleSensorEntityDescription(
         getNextId(),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
         itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
         sensorType.get,
-        itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_SENSORS_SENSOR_SOURCE),
+        dataSourceProvider,
         sensorUpdateTimeLimit,
         sensorHeartbeatUpdateTimeLimit)
 
@@ -170,12 +180,17 @@ class StandardSensorInstanceDescriptionExtractor(sensorCommonRegistry: SensorCom
       data.getArrayEntries().asScala.foreach((entry: ArrayDynamicObjectEntry) => {
         val itemData = entry.down()
 
+        val dataSourceProvider = SimpleDataSourceProviderDescription(
+          itemData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_PROVIDER_ID),
+          Option(itemData.getString(SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_ACQUISITION_ID))
+        )
+
         sensorRegistry.registerMarker(new SimpleMarkerEntityDescription(
           getNextId(),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(itemData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
-          itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_SOURCE),
+          dataSourceProvider,
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_TYPE),
           itemData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_MARKER_ID)))
       })

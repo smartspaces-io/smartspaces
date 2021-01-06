@@ -27,20 +27,17 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = version
-    symbolicName = 'smartspaces.system'
+  bnd """
+    Bundle-SymbolicName: smartspaces.system
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.system.bootstrap.osgi.GeneralSmartSpacesSupportActivator'
+    Bundle-Activator: \\
+        io.smartspaces.system.bootstrap.osgi.GeneralSmartSpacesSupportActivator
 
-    instruction 'Export-Package',
-        '!io.smartspaces.system.bootstrap.osgi.*',
-        '!io.smartspaces.system.internal.osgi.*',
-        'io.smartspaces.*'
+    -exportcontents *
 
-    instruction 'Private-Package',
-        'io.smartspaces.system.bootstrap.osgi.*',
-        'io.smartspaces.system.internal.osgi.*'
-  }
+    Private-Package: \\
+        io.smartspaces.system.bootstrap.osgi.*, \\
+        io.smartspaces.system.internal.osgi.*
+  """
 }

@@ -22,10 +22,10 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.scalatest.junit.JUnitSuite
-
 import io.smartspaces.event.observable.EventObservableRegistry
 import io.smartspaces.logging.ExtendedLog
 import io.smartspaces.sensor.domain.SensorEntityDescription
+import io.smartspaces.sensor.services.domain.SensorCommonRegistry
 import io.smartspaces.sensor.services.domain.SensorInstanceRegistry
 import io.smartspaces.sensor.services.processing.SensorProcessingEventEmitter
 import io.smartspaces.sensor.services.processing.value.SensorValueProcessorRegistry
@@ -42,13 +42,15 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
 
   @Mock var sensorValueProcessorRegistry: SensorValueProcessorRegistry = _
 
+  @Mock var sensorCommonRegistry: SensorCommonRegistry = _
+
   @Mock var sensorRegistry: SensorInstanceRegistry = _
 
   @Mock var eventObservableRegistry: EventObservableRegistry = _
 
   @Mock var eventEmitter: SensorProcessingEventEmitter = _
 
-  @Mock var log: ExtendedLog = null
+  @Mock var log: ExtendedLog = _
 
   @Mock var spaceEnvironment: SmartSpacesEnvironment = _
 
@@ -61,7 +63,7 @@ class StandardCompleteSensedEntityModelTest extends JUnitSuite {
     Mockito.when(spaceEnvironment.getEventObservableRegistry).thenReturn(eventObservableRegistry)
 
     allModels = new StandardCompleteSensedEntityModel(
-      sensorValueProcessorRegistry, sensorRegistry, eventEmitter, log, spaceEnvironment)
+      sensorValueProcessorRegistry, sensorCommonRegistry, sensorRegistry, eventEmitter, log, spaceEnvironment)
   }
 
   /**

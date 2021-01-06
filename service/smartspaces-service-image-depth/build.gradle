@@ -55,7 +55,7 @@ task copyExtraComponents(dependsOn: [
   copyExtrasNativeLibs2
 ])
 
-task copyServiceArtifacts(type: Copy, dependsOn: [install]) {
+task copyServiceArtifacts(type: Copy, dependsOn: [publishToMavenLocal]) {
   from configurations.archives.allArtifacts.files
   into "${project.ext.baseServiceBuildFolder}"
 }
@@ -63,23 +63,21 @@ task copyServiceArtifacts(type: Copy, dependsOn: [install]) {
 task assembleExtras(dependsOn: [copyExtraComponents, copyServiceArtifacts])
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.image.depth'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.image.depth
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.service.image.depth.internal.osgi.DepthCameraServiceActivator'
+    Bundle-Activator: \\
+        io.smartspaces.service.image.depth.internal.osgi.DepthCameraServiceActivator
 
-    instruction 'Export-Package',
-        '!io.smartspaces.service.image.depth.internal.*',
-        '*'
+   -exportcontents *
 
-    instruction 'Private-Package',
-        'io.smartspaces.service.image.depth.internal.*'
+    Private-Package: \\
+        io.smartspaces.service.image.depth.internal.*
 
-    instruction 'Import-Package',
-        'org.bridj.*;version="0.0.0"',
-        'io.smartspaces.service.image.depth.internal.openni2.libraries;version="0.0.0"',
-        '*'
-  }
+    Import-Package: \\
+        org.bridj.*;version="0.0.0", \\
+        io.smartspaces.service.image.depth.internal.openni2.libraries;version="0.0.0", \\
+        *
+  """
 }

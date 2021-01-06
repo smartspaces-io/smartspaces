@@ -34,11 +34,15 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'org.ros.nrosjava'
-    //instruction 'Export-Package', '!org.ros.internal.*, org.ros.*'
-    //instruction 'Private-Package', 'org.ros.internal.*'
-  }
+  bnd """
+    Bundle-SymbolicName: org.ros.nrosjava
+    Bundle-Version: ${osgiVersion}
+    Export-Package: !org.ros.internal.*, org.ros.*
+    Private-Package: org.ros.internal.*
+
+    Require-Capability: org.ros.bootstrap
+
+    Import-Package: android.os;resolution:="optional", *
+  """
 }
 

@@ -25,12 +25,11 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.web'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.web
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        '*'
-  }
+    -exportcontents *
+  """
 }
 

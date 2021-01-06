@@ -16,6 +16,10 @@
 
 dependencies {
   compile project(':smartspaces-core')
+
+
+  compile 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.jdom:2.0.6_1'
+
 //
 //  compile('org.apache.httpcomponents:com.springsource.org.apache.httpcomponents.httpcore:4.1') {
 //    //exclude module: 'com.springsource.org.apache.commons.logging'
@@ -29,8 +33,6 @@ dependencies {
 //
 //  compile(files("${project.getProperty('smartspaces.dependencies.home')}/expression/commons-ognl-4.0-SNAPSHOT.jar"))
 //
-//  compile 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.jdom:2.0.6_1'
-//
 //  compile 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'
 
 
@@ -39,21 +41,20 @@ dependencies {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.domain'
+  bnd """
+    Bundle-SymbolicName: smartspaces.domain
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        'io.smartspaces.*'
+    -exportcontents *
 
-    instruction 'Import-Package',
-        'org.apache.commons.ognl.*;resolution:="optional"',
-        'org.apache.http.*;resolution:="optional"',
-        'org.jdom2.*;resolution:="optional"',
-        'org.jboss.netty.handler.codec.http;resolution:="optional"',
-        'org.jboss.netty.bootstrap;resolution:="optional"',
-        'com.fasterxml.jackson.*;resolution:="optional"',
-        'com.google.common;resolution:="optional"',
-        '*'
-  }
+    Import-Package: \\
+        org.apache.commons.ognl.*;resolution:="optional", \\
+        org.apache.http.*;resolution:="optional", \\
+        org.jdom2.*;resolution:="optional", \\
+        org.jboss.netty.handler.codec.http;resolution:="optional", \\
+        org.jboss.netty.bootstrap;resolution:="optional", \\
+        com.fasterxml.jackson.*;resolution:="optional", \\
+        com.google.common;resolution:="optional", \\
+        *
+  """
 }

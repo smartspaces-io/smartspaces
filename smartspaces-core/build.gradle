@@ -29,7 +29,7 @@ dependencies {
   compile project(':rosjava:rosjava_osgi')
   compile project(':smartspaces-bootstrap-core')
 
-  compile('com.google.guava:guava:25.1-jre') {
+  compile('com.google.guava:guava:27.1-jre') {
     exclude group: 'com.google.code.findbugs', module: 'jsr305'
     exclude group: 'org.checkerframework', module: 'checker-compat-qual'
     exclude group: 'com.google.errorprone', module: 'error_prone_annotations'
@@ -39,9 +39,9 @@ dependencies {
 
   compile 'io.netty:netty:3.9.3.Final'
 
-  compile 'com.fasterxml.jackson.core:jackson-core:2.9.0'
-  compile 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
-  compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.0'
+  compile 'com.fasterxml.jackson.core:jackson-core:2.10.0'
+  compile 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+  compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.10.0'
   
   compile('org.apache.httpcomponents:httpcore-osgi:4.4.5') {
 	  transitive=false
@@ -58,8 +58,6 @@ dependencies {
   compile(files("${project.getProperty('smartspaces.dependencies.home')}/expression/commons-ognl-4.0-SNAPSHOT.jar"))
 
   compile 'org.jboss.javassist:com.springsource.javassist:3.12.1.GA'
-
-  compile 'org.apache.servicemix.bundles:org.apache.servicemix.bundles.jdom:2.0.6_1'
 
   compile 'org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1'
 
@@ -88,31 +86,29 @@ test {
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces'
+  bnd """
+    Bundle-SymbolicName: smartspaces
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        'io.smartspaces.*'
+    -exportcontents *
 
-    instruction 'Import-Package',
-        'org.apache.commons.ognl.*;resolution:="optional"',
-        'org.apache.http.*;resolution:="optional"',
-        'org.jdom2.*;resolution:="optional"',
-        'org.jboss.netty.handler.codec.http;resolution:="optional"',
-        'org.jboss.netty.bootstrap;resolution:="optional"',
-        'com.fasterxml.jackson.*;resolution:="optional"',
-        'org.apache.commons.net.ntp;resolution:="optional"',
-        'org.apache.commons.net.telnet;resolution:="optional"',
-        'org.ros.*;resolution:="optional"',
-        'org.joda.*;resolution:="optional"',
-        'org.eclipse.paho.client.mqttv3.*;resolution:="optional"',
-        'javassist.*;resolution:="optional"',
-        'io.smartspaces.system.bootstrap.osgi;resolution:="optional"',
-        'com.google.common;resolution:="optional"',
-        'rx;resolution:="optional"',
-        'org.bouncycastle;resolution:="optional"',
-        'org.osgi.*;resolution:="optional"',
-        '*'
-  }
+    Import-Package: \\
+        org.apache.commons.ognl.*;resolution:="optional", \\
+        org.apache.http.*;resolution:="optional", \\
+        org.jboss.netty.handler.codec.http;resolution:="optional", \\
+        org.jboss.netty.bootstrap;resolution:="optional", \\
+        com.fasterxml.jackson.*;resolution:="optional", \\
+        org.apache.commons.net.ntp;resolution:="optional", \\
+        org.apache.commons.net.telnet;resolution:="optional", \\
+        org.ros.*;resolution:="optional", \\
+        org.joda.*;resolution:="optional", \\
+        org.eclipse.paho.client.mqttv3.*;resolution:="optional", \\
+        javassist.*;resolution:="optional", \\
+        io.smartspaces.system.bootstrap.osgi;resolution:="optional", \\
+        com.google.common;resolution:="optional", \\
+        rx;resolution:="optional", \\
+        org.bouncycastle;resolution:="optional", \\
+        org.osgi.*;resolution:="optional", \\
+        *
+  """
 }

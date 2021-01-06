@@ -24,7 +24,7 @@ import java.util.List
 import java.util.Set
 import java.util.concurrent.CopyOnWriteArrayList
 
-import scala.collection.JavaConversions.asScalaSet
+import scala.collection.JavaConverters._
 
 /**
  * A collection of MQTT subscribers for a given set of topics.
@@ -43,7 +43,7 @@ class StandardMqttSubscribers(nodeName: String, log: ExtendedLog) extends MqttSu
 
     log.debug(s"Adding subscribers for topic names ${topicNames} to MQTT master ${mqttClient.mqttBrokerDescription}")
 
-    topicNames.foreach { topicName =>
+    topicNames.asScala.foreach { topicName =>
 
       log.debug(s"Adding subscriber topic ${topicName}")
 

@@ -19,18 +19,17 @@ dependencies {
   
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
-  testCompile 'org.scalatest:scalatest_2.11:3.0.0'
+  testCompile 'org.scalatest:scalatest_2.12:3.0.0'
 }
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.data'
+  bnd """
+    Bundle-SymbolicName: smartspaces.data
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Export-Package',
-        'io.smartspaces.*'
+    -exportcontents *
 
-    instruction 'Import-Package',
-        '*'
-  }
+    Import-Package: \\
+        *
+  """
 }

@@ -17,7 +17,6 @@
 
 package io.smartspaces.master.resource.deployment.internal;
 
-import org.apache.felix.bundlerepository.Repository;
 //import org.sat4j.pb.IPBSolver;
 //import org.sat4j.pb.SolverFactory;
 //import org.sat4j.pb.tools.DependencyHelper;
@@ -32,7 +31,7 @@ import org.apache.felix.bundlerepository.Repository;
  */
 public class Sat4jDependencySolver {
 
-  private final Repository repository;
+  // private final Repository repository;
 
   /**
    * The subset of the repository that we are interested in
@@ -41,9 +40,9 @@ public class Sat4jDependencySolver {
   // private SolutionImpl solution;
   // private DependencyHelper<Resource, String> helper;
 
-  public Sat4jDependencySolver(Repository repository) {
-    this.repository = repository;
-  }
+  // public Sat4jDependencySolver(Repository repository) {
+   // this.repository = repository;
+  //}
 
   /**
    * Find a solution to the dependency problem.

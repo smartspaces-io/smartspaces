@@ -31,28 +31,28 @@ dependencies {
   compile files("${project.getProperty('smartspaces.dependencies.home')}/gui/org.swinglabs.swingx-1.6.1.jar")
   compile 'biz.aQute:bndlib:1.50.0'
   
-  compile 'org.scala-lang:scala-compiler:2.11.8'
+  compile 'org.scala-lang:scala-compiler:2.12.10'
   
   // Needed by BND for some reason. Wish it was optional.
   runtime 'org.junit:com.springsource.junit:3.8.2'
 
-  compile project(':rosjava:rosjava_osgi_master')
+  //compile project(':rosjava:rosjava_osgi_master')
   
   testCompile 'junit:junit:4.8.2'
   testCompile 'org.mockito:mockito-all:1.9.5'
 }
 
 jar {
-  manifest {
-    version = version
-    symbolicName = 'smartspaces.workbench'
+  bnd """
+    Bundle-SymbolicName: smartspaces.workbench
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.workbench.osgi.SmartSpacesWorkbenchActivator'
+    Bundle-Activator: \\
+        io.smartspaces.workbench.osgi.SmartSpacesWorkbenchActivator
 
-    instruction 'Import-Packages',
-        'com.google',
-        'org.junit;version="[4,5)"',
-        '*'
-  }
+    Import-Packages: \\
+        com.google, \\
+        org.junit;version="[4,5)", \\
+        *
+  """
 }

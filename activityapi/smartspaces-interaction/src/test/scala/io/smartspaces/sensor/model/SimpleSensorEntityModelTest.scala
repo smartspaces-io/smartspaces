@@ -16,6 +16,7 @@
 
 package io.smartspaces.sensor.model
 
+import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValueInstances
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -24,7 +25,6 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.scalatest.junit.JUnitSuite
-
 import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.SensorTypeDescription
 import io.smartspaces.sensor.domain.SensorEntityDescription
@@ -57,7 +57,8 @@ class SimpleSensorEntityModelTest extends JUnitSuite {
 
     Mockito.when(sensorEntityDescription.sensorType).thenReturn(sensorDetail)
 
-    model = new SimpleSensorEntityModel(sensorEntityDescription, allModels, modelCreationTime)
+    model = new SimpleSensorEntityModel(
+      sensorEntityDescription, DataSourceAcquisitionModeCategoricalValueInstances.PULL, allModels, modelCreationTime)
   }
 
   /**

@@ -45,7 +45,7 @@ task copyExtrasJars(type: Copy) {
 
 task copyExtraComponents(dependsOn: [copyResources, copyExtrasJars])
 
-task copyServiceArtifacts(type: Copy, dependsOn: [install]) {
+task copyServiceArtifacts(type: Copy, dependsOn: [publishToMavenLocal]) {
   from configurations.archives.allArtifacts.files
   into "${project.ext.baseServiceBuildFolder}"
 }
@@ -53,12 +53,12 @@ task copyServiceArtifacts(type: Copy, dependsOn: [install]) {
 task assembleExtras(dependsOn: [copyExtraComponents, copyServiceArtifacts])
 
 jar {
-  manifest {
-    version = osgiVersion
-    symbolicName = 'smartspaces.service.comm.usb'
+  bnd """
+    Bundle-SymbolicName: smartspaces.service.comm.usb
+    Bundle-Version: ${osgiVersion}
 
-    instruction 'Bundle-Activator',
-        'io.smartspaces.service.comm.usb.internal.osgi.UsbCommunicationBundleActivator'
-  }
+    Bundle-Activator: \\
+        io.smartspaces.service.comm.usb.internal.osgi.UsbCommunicationBundleActivator
+  """
 }
 

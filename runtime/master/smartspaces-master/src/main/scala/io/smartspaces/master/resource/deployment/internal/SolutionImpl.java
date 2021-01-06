@@ -8,8 +8,6 @@ import io.smartspaces.resource.SimpleNamedVersionedResource;
 
 import java.util.Collection;
 
-import org.apache.felix.bundlerepository.Repository;
-
 /**
  * @author Keith M. Hughes
  */
@@ -17,14 +15,14 @@ public class SolutionImpl implements Solution {
 
   private SolutionState state;
 
-  private final Repository repository;
+  //private final Repository repository;
   private final Collection<NamedVersionedResourceDependency> dependencies;
 
   /**
    * The subset of the repository that we are interested in
    */
-  public SolutionImpl(Repository repository, Collection<NamedVersionedResourceDependency> dependencies) {
-    this.repository = repository;
+  public SolutionImpl(/* Repository repository,  */ Collection<NamedVersionedResourceDependency> dependencies) {
+    //this.repository = repository;
     this.dependencies = dependencies;
   }
 

@@ -23,13 +23,12 @@ buildscript {
 
   dependencies {
     classpath 'com.bmuschko:gradle-izpack-plugin:2.1'
-    // classpath 'org.gradle.api.plugins:gradle-android-plugin:1.2.1'
   }
 }
 
 plugins {
-    id 'idea'
-    id 'biz.aQute.bnd.builder'  version "4.2.0" apply false
+  id 'idea'
+  id 'biz.aQute.bnd.builder' version "4.2.0" apply false
 }
 
 allprojects {
@@ -41,17 +40,17 @@ allprojects {
     // be pushed to production.
     //
     // Final versions should set the qualifier to null.
-    smartSpacesVersion = '0.14.0'
+    smartSpacesVersion = '0.18.0'
     smartSpacesVersionQualifier = 'SNAPSHOT'
 
     // These specify the layout of SS containers.
-    
+
     // Where the JVM system libraries go
     smartSpacesContainerSystemJava = 'lib/system/jvm'
-    
+
     // Where the OSGi bootstrap bundles go
     smartSpacesContainerBootstrap = 'bootstrap'
-    
+
     // Where the extras support jars go.
     smartSpacesContainerExtrasSupportJars = 'extras/support/jars'
 
@@ -59,47 +58,47 @@ allprojects {
     containerBuildTarget = 'build/staging'
 
     // Project paths of non-Java projects
-    nonJvmProjects = [ 
-      ':rosjava',
-      ':common',
-      ':runtime',
-      ':runtime:common',
-      ':runtime:master',
-      ':runtime:activity',
-      ':runtime:infrastructure',
-      ':activityapi',
-      ':workbench',
-      ':service',
-      ':smartspaces_docs', 
-      ':smartspaces_build',   
-      ':smartspaces_build:master',
-      ':smartspaces_build:controller',
-      ':smartspaces_build:workbench',
-      ':api'
+    nonJvmProjects = [
+        ':rosjava',
+        ':common',
+        ':runtime',
+        ':runtime:common',
+        ':runtime:master',
+        ':runtime:activity',
+        ':runtime:infrastructure',
+        ':activityapi',
+        ':workbench',
+        ':service',
+        ':smartspaces_docs',
+        ':smartspaces_build',
+        ':smartspaces_build:master',
+        ':smartspaces_build:controller',
+        ':smartspaces_build:workbench',
+        ':api'
     ]
 
     nonOsgiJvmProjects = [
-      ':smartspaces-launcher',
-      ':smartspaces-launcher-bootstrap'
+        ':smartspaces-launcher',
+        ':smartspaces-launcher-bootstrap'
     ]
 
     nonScalaJvmProjects = [
-      ':smartspaces-launcher',
-      ':smartspaces-bootstrap-core',
-      ':smartspaces-launcher-bootstrap',
-      ':smartspaces-testing',
-      ':rosjava:nrosjava_bootstrap', 
-      ':rosjava:nrosjava_messages', 
-      ':rosjava:napache_xmlrpc_common',
-      ':rosjava:napache_xmlrpc_client', 
-      ':rosjava:napache_xmlrpc_server',
-      ':rosjava:nrosjava',
-      ':rosjava:nrosjava_geometry',
-      ':rosjava:rosjava_osgi',
-      ':rosjava:rosjava_osgi_master',
-      ':rosjava:rosjava_osgi_node',
+        ':smartspaces-launcher',
+        ':smartspaces-bootstrap-core',
+        ':smartspaces-launcher-bootstrap',
+        ':smartspaces-testing',
+        ':rosjava:nrosjava_bootstrap',
+        ':rosjava:nrosjava_messages',
+        ':rosjava:napache_xmlrpc_common',
+        ':rosjava:napache_xmlrpc_client',
+        ':rosjava:napache_xmlrpc_server',
+        ':rosjava:nrosjava',
+        ':rosjava:nrosjava_geometry',
+        ':rosjava:rosjava_osgi',
+        ':rosjava:rosjava_osgi_master',
+        ':rosjava:rosjava_osgi_node',
     ]
-    
+
     javaProjects = rootProject.subprojects.findResults {
       (!nonJvmProjects.contains(it.path)) ? it : null
     }
@@ -116,13 +115,11 @@ allprojects {
       androidSdkJar = "$androidPlatformHome/android.jar"
     }
 
-    mavenVersion = smartSpacesVersionQualifier ? 
+    mavenVersion = smartSpacesVersionQualifier ?
         smartSpacesVersion + "-" + smartSpacesVersionQualifier :
         smartSpacesVersion
 
-    osgiVersion = smartSpacesVersionQualifier ? 
-        smartSpacesVersion + "." + smartSpacesVersionQualifier :
-        smartSpacesVersion
+    osgiVersion = smartSpacesVersion
 
     if (project.hasProperty("testSize")) {
       ext.testSizing = project.testSize
@@ -137,9 +134,9 @@ allprojects {
   group = 'io.smartspaces'
   version = mavenVersion
 
-  tasks.withType(JavaCompile) { 
-    sourceCompatibility = "1.7"
-    targetCompatibility = "1.7" 
+  tasks.withType(JavaCompile) {
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
   }
 }
 
@@ -154,7 +151,7 @@ subprojects {
     } else {
       apply plugin: 'scala'
     }
-    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
     apply plugin: 'eclipse'
     apply plugin: 'idea'
 
@@ -165,11 +162,11 @@ subprojects {
     }
 
     if (!ext.nonOsgiJvmProjects.contains(path)) {
-      apply plugin: 'osgi'
+      apply plugin: 'biz.aQute.bnd.builder'
     }
 
     apply plugin: 'jacoco'
- 
+
     jacocoTestReport {
       group = "reporting"
       description = "Generate Jacoco coverage reports after running tests."
@@ -214,21 +211,21 @@ subprojects {
     }
 
     sourceSets {
-      main { 
-           // Provided libraries should be on the compile classpath, though
-           // not in the compile configuration.
-      	   compileClasspath += configurations.provided
-      	   compileClasspath += configurations.expandedJars
-      	   compileClasspath += configurations.extrasCompile
-      	   compileClasspath += configurations.extrasSupportCompile
+      main {
+        // Provided libraries should be on the compile classpath, though
+        // not in the compile configuration.
+        compileClasspath += configurations.provided
+        compileClasspath += configurations.expandedJars
+        compileClasspath += configurations.extrasCompile
+        compileClasspath += configurations.extrasSupportCompile
       }
-      test { 
-           // Provided libraries should be on the compile classpath, though
-           // not in the compile configuration.
-      	   compileClasspath += configurations.provided
-      	   compileClasspath += configurations.expandedJars
-      	   compileClasspath += configurations.extrasCompile
-      	   compileClasspath += configurations.extrasSupportCompile
+      test {
+        // Provided libraries should be on the compile classpath, though
+        // not in the compile configuration.
+        compileClasspath += configurations.provided
+        compileClasspath += configurations.expandedJars
+        compileClasspath += configurations.extrasCompile
+        compileClasspath += configurations.extrasSupportCompile
       }
     }
 
@@ -245,30 +242,37 @@ subprojects {
 
     if (!ext.nonScalaJvmProjects.contains(path)) {
       dependencies {
-        compile 'org.scala-lang:scala-library:2.11.8'
-        testCompile 'org.scalatest:scalatest_2.11:3.0.0'
+        compile 'org.scala-lang:scala-library:2.12.10'
+        testCompile 'org.scalatest:scalatest_2.12:3.0.0'
       }
     }
-    
+
     artifacts {
       archives jar
     }
 
-    install.dependsOn build
+    publishToMavenLocal.dependsOn build
 
+    publishing {
+      publications {
+        maven(MavenPublication) {
 
-  uploadArchives {
-    repositories {
-      mavenDeployer {
-        repository(url: "${nexusUrl}/repository/smartspaces-io-release/") {
-          authentication(userName: nexusUsername, password: nexusPassword)
+          from components.java
         }
-        snapshotRepository(url: "${nexusUrl}/repository/smartspaces-io-snapshot/") {
-          authentication(userName: nexusUsername, password: nexusPassword)
+      }
+      repositories {
+        maven {
+          def releaseRepoUrl = "${nexusUrl}/repository/smartspaces-io-release/"
+          def snapshotRepoUrl = "${nexusUrl}/repository/smartspaces-io-snapshot/"
+          url = version.endsWith("SNAPSHOT") ? snapshotRepoUrl : releaseRepoUrl
+
+          credentials {
+            username = nexusUsername
+            password = nexusPassword
+          }
         }
       }
     }
-  }
   }
 
   repositories {
@@ -281,14 +285,14 @@ subprojects {
       url 'https://oss.sonatype.org/content/repositories/snapshots'
     }
     maven {
-      url 'http://repo.spring.io/libs-release-remote'
+      url 'https://repo.spring.io/libs-release-remote'
     }
     jcenter()
 
     maven {
       url 'https://artifacts.alfresco.com/nexus/content/repositories/public'
     }
-    
+
     //maven {
     //  url 'http://repository.pentaho.org/artifactory/repo/'
     //}

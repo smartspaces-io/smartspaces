@@ -61,6 +61,11 @@ trait DataSourceProviderTypeDescription extends DataSourceProviderTypeReference 
    * The external ID for this data source
    */
   def externalId: String
+
+  /**
+   * [[ true ]] if authorization is required for this provider.
+   */
+  def authorizationRequired: Boolean
 }
 
 /**
@@ -72,7 +77,8 @@ case class SimpleDataSourceProviderTypeDescription(
   override val externalId: String,
   override val originProviderId: String,
   override val interfaceProviderId: String,
-  override val acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance
+  override val acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance,
+  override val authorizationRequired: Boolean
 ) extends DataSourceProviderTypeDescription
 
 /**

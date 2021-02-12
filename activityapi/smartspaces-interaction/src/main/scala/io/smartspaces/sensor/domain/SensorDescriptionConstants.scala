@@ -89,6 +89,11 @@ object SensorDescriptionConstants {
   val SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_ACQUISITION_MODE = "acquisitionMode"
 
   /**
+   * The data sources section field for whether a data source provider requires external authorization.
+   */
+  val SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_EXTERNAL_AUTHORIZATION_REQUIRED = "externalAuthorizationRequired"
+
+  /**
    * The field in all entity descriptions for the entity ID.
    */
   val ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID = "externalId"

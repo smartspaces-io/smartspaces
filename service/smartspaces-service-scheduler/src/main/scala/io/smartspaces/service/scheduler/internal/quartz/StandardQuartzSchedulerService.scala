@@ -94,14 +94,14 @@ object StandardQuartzSchedulerService {
 class StandardQuartzSchedulerService extends BaseSupportedService with BaseConditionalInitializerMixin[SchedulerService] with SchedulerService {
 
   /**
-   * The volatile scheduler.duler
+   * The volatile scheduler.
    */
   private var volatileScheduler: Scheduler = _
 
   /**
    * The persisted scheduler.
    */
-  private var persistedScheduler: Scheduler = _
+  //private var persistedScheduler: Scheduler = _
 
   override def getName(): String = {
     SchedulerService.SERVICE_NAME
@@ -111,28 +111,29 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
     try {
       val jobFactory = new MyJobFactory(getSpaceEnvironment)
 
-      // TODO(keith): Get Smart Spaces thread pool in here.
-      // Get URI, username, and password from config.
-      val orientDbUri = getSpaceEnvironment().getSystemConfiguration().evaluate(StandardQuartzSchedulerService.ORIENTDB_URI)
-      val jobStore =
-        new OrientDbJobStore(orientDbUri, StandardQuartzSchedulerService.ORIENTDB_USER, StandardQuartzSchedulerService.ORIENTDB_PASSWORD)
-      jobStore.setExecutorService(getSpaceEnvironment.getExecutorService)
-      jobStore.setExternalClassLoader(getClass.getClassLoader)
+//      // TODO(keith): Get Smart Spaces thread pool in here.
+//      // Get URI, username, and password from config.
+//      val orientDbUri = getSpaceEnvironment().getSystemConfiguration().evaluate(StandardQuartzSchedulerService.ORIENTDB_URI)
+//      val jobStore =
+//        new OrientDbJobStore(orientDbUri, StandardQuartzSchedulerService.ORIENTDB_USER, StandardQuartzSchedulerService.ORIENTDB_PASSWORD)
+//      jobStore.setExecutorService(getSpaceEnvironment.getExecutorService)
+//      jobStore.setExternalClassLoader(getClass.getClassLoader)
 
       val threadPool = new SimpleThreadPool(10, Thread.NORM_PRIORITY)
 
       val instance = DirectSchedulerFactory.getInstance()
 
-      instance.createScheduler(StandardQuartzSchedulerService.PERSISTED_SCHEDULER_NAME, StandardQuartzSchedulerService.PERSISTED_SCHEDULER_INSTANCE_ID,
-        threadPool, jobStore)
+//      instance.createScheduler(StandardQuartzSchedulerService.PERSISTED_SCHEDULER_NAME, StandardQuartzSchedulerService.PERSISTED_SCHEDULER_INSTANCE_ID,
+//        threadPool, jobStore)
+//
+//      persistedScheduler = instance.getScheduler(StandardQuartzSchedulerService.PERSISTED_SCHEDULER_NAME)
+//      persistedScheduler.setJobFactory(jobFactory)
+//
+//      persistedScheduler.start()
 
-      persistedScheduler = instance.getScheduler(StandardQuartzSchedulerService.PERSISTED_SCHEDULER_NAME)
-      persistedScheduler.setJobFactory(jobFactory)
-
-      persistedScheduler.start()
-
+      val volatileStore = new RAMJobStore()
       instance.createScheduler(StandardQuartzSchedulerService.VOLATILE_SCHEDULER_NAME, StandardQuartzSchedulerService.VOLATILE_SCHEDULER_INSTANCE_ID, threadPool,
-        new RAMJobStore())
+        volatileStore)
 
       volatileScheduler = instance.getScheduler(StandardQuartzSchedulerService.VOLATILE_SCHEDULER_NAME)
       volatileScheduler.setJobFactory(jobFactory)
@@ -142,29 +143,13 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
       // Make sure when SmartSpaces shuts down that orientDB is shut down.
       // Other code may be using OrientDB so we want this at container
       // shutdown.
-      getSpaceEnvironment.getContainerManagedScope.managedResources
-        .addResource(new BaseManagedResource() {
-          override def shutdown(): Unit = {
-//       persistedScheduler.shutdown()
-//           val latch = new CountDownLatch(1)
-//            val shutdownHandler = new OShutdownHandler() {
-//              override def getPriority(): Int = {
-//                Integer.MAX_VALUE
-//              }
-//              override def shutdown() = {
-//                println("OrientDB shutdown hook called")
-//              latch.countDown()
-//              }
-//            }
-            val instance = Orient.instance()
-//            instance.closeAllStorages()
-//            instance.addShutdownHandler(shutdownHandler)
-              instance.shutdown()
-
-            //latch.await(5, TimeUnit.SECONDS)
-            
-          }
-        })
+//      getSpaceEnvironment.getContainerManagedScope.managedResources
+//        .addResource(new BaseManagedResource() {
+//          override def shutdown(): Unit = {
+//            val instance = Orient.instance()
+//              instance.shutdown()
+//          }
+//        })
 
       getSpaceEnvironment.getLog.info("Quartz scheduling service started")
     } catch {
@@ -176,7 +161,7 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
   override def shutdown(): Unit = {
     try {
       volatileScheduler.shutdown()
-      persistedScheduler.shutdown()
+      //persistedScheduler.shutdown()
     } catch {
       case e: SchedulerException =>
         throw new SmartSpacesException("Could not shutdown Smart Spaces volatileScheduler", e)
@@ -190,12 +175,12 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
       case e: SchedulerException =>
         throw new SmartSpacesException("Unable to add map of entities to the volatileScheduler", e)
     }
-    try {
-      persistedScheduler.getContext().putAll(entities)
-    } catch {
-      case e: SchedulerException =>
-        throw new SmartSpacesException("Unable to add map of entities to the persistedScheduler", e)
-    }
+//    try {
+//      persistedScheduler.getContext().putAll(entities)
+//    } catch {
+//      case e: SchedulerException =>
+//        throw new SmartSpacesException("Unable to add map of entities to the persistedScheduler", e)
+//    }
   }
 
   override def scheduleScriptWithCron(jobName: String, groupName: String, id: String, schedule: String): Unit = {
@@ -209,7 +194,7 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
         TriggerBuilder.newTrigger().withIdentity(TriggerKey.triggerKey(jobName, groupName))
           .withSchedule(CronScheduleBuilder.cronSchedule(schedule)).build()
 
-      persistedScheduler.scheduleJob(detail, trigger)
+      volatileScheduler.scheduleJob(detail, trigger)
     } catch {
       case e: Throwable =>
         throw new SmartSpacesException(s"Unable to schedule job ${groupName}:${jobName}", e)
@@ -231,7 +216,7 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
 
       val trigger = TriggerBuilder.newTrigger().withIdentity(TriggerKey.triggerKey(jobName, groupName)).startAt(when).build()
 
-      persistedScheduler.scheduleJob(detail, trigger)
+      volatileScheduler.scheduleJob(detail, trigger)
 
       getSpaceEnvironment.getLog.info("Scheduled job ${groupName}:${jobName} for ${new SimpleDateFormat(\"MM/dd/yyyy@HH:mm:ss\").format(when)}\n")
     } catch {
@@ -257,7 +242,7 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
         TriggerBuilder.newTrigger().withIdentity(TriggerKey.triggerKey(jobName, groupName))
           .withSchedule(CronScheduleBuilder.cronSchedule(schedule)).build()
 
-      persistedScheduler.scheduleJob(detail, trigger)
+      volatileScheduler.scheduleJob(detail, trigger)
 
       getSpaceEnvironment().getLog().formatInfo("Scheduled job %s:%s with cron %s", groupName,
         jobName, schedule)
@@ -269,9 +254,9 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
 
   override def removeJobGroup(jobGroupName: String): Unit = {
     try {
-      val jobs = persistedScheduler.getJobKeys(GroupMatcher.jobGroupEquals(jobGroupName))
+      val jobs = volatileScheduler.getJobKeys(GroupMatcher.jobGroupEquals(jobGroupName))
       jobs.foreach { job =>
-        persistedScheduler.deleteJob(job)
+        volatileScheduler.deleteJob(job)
       }
     } catch {
       case e: SchedulerException =>
@@ -282,7 +267,7 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
 
   override def getJobGroupNames(): Set[String] = {
     try {
-      return Sets.newHashSet(persistedScheduler.getJobGroupNames())
+      return Sets.newHashSet(volatileScheduler.getJobGroupNames())
     } catch {
       case e: SchedulerException =>
         throw new SmartSpacesException("Unable to get all job group names", e)
@@ -293,7 +278,7 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
     try {
       val jobNames: Set[String] = new HashSet
 
-      val jobKeys = persistedScheduler.getJobKeys(GroupMatcher.groupEquals(groupName))
+      val jobKeys = volatileScheduler.getJobKeys(GroupMatcher.groupEquals(groupName))
       jobKeys foreach { key =>
         jobNames.add(key.getName())
       }
@@ -307,7 +292,7 @@ class StandardQuartzSchedulerService extends BaseSupportedService with BaseCondi
 
   override def doesJobExist(groupName: String, jobName: String): Boolean = {
     try {
-      return persistedScheduler.checkExists(new JobKey(jobName, groupName));
+      return volatileScheduler.checkExists(new JobKey(jobName, groupName));
     } catch {
       case e: SchedulerException =>
         throw SmartSpacesException.newFormattedException(e, "Could not check for job %s:%s",

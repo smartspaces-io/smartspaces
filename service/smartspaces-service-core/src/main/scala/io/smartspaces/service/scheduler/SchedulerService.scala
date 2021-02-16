@@ -23,6 +23,7 @@ import java.util.Date
 import java.util.Map
 import java.util.Set
 import io.smartspaces.resource.managed.ConditionalInitializerMixin
+import io.smartspaces.resource.managed.ManagedResource
 
 object SchedulerService {
 

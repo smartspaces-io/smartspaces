@@ -139,6 +139,9 @@ class StandardSensorCommonDescriptionExtractor(
 
       val dataSourceExternalId = dataSourceData.getRequiredString(
         SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_EXTERNAL_ID)
+      val dataSourceName = dataSourceData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME)
+      val dataSourceDescription = Option(dataSourceData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION))
+
       val dataSourceOriginProviderId = dataSourceData.getRequiredString(
         SensorDescriptionConstants.SECTION_FIELD_DATA_SOURCE_PROVIDER_TYPES_ORIGIN_PROVIDER_ID)
       val dataSourceInterfaceProviderId = dataSourceData.getRequiredString(
@@ -151,7 +154,7 @@ class StandardSensorCommonDescriptionExtractor(
         false)
 
       sensorRegistry.registerDataSourceProviderType(SimpleDataSourceProviderTypeDescription(
-        dataSourceExternalId, dataSourceOriginProviderId, dataSourceInterfaceProviderId,
+        dataSourceExternalId, dataSourceName, dataSourceDescription, dataSourceOriginProviderId, dataSourceInterfaceProviderId,
         dataSourceAcquisitionMode, externalAuthorizationRequired))
     })
     data.up
@@ -176,7 +179,7 @@ class StandardSensorCommonDescriptionExtractor(
       val valueType =
         measurementTypeData.getRequiredString(SensorDescriptionConstants.SECTION_FIELD_MEASUREMENT_TYPES_VALUE_TYPE)
       val measurementType = new SimpleMeasurementTypeDescription(
-        getNextId(),
+        getId(measurementTypeData),
         measurementTypeId,
         measurementTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(measurementTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
@@ -194,7 +197,7 @@ class StandardSensorCommonDescriptionExtractor(
           val measurementUnitData = measurementUnitEntry.down()
 
           val measurementUnit =
-            new SimpleMeasurementUnitDescription(measurementType, getNextId(),
+            new SimpleMeasurementUnitDescription(measurementType, getId(measurementUnitData),
               measurementUnitData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
               measurementUnitData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
               Option(measurementUnitData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)))
@@ -331,7 +334,7 @@ class StandardSensorCommonDescriptionExtractor(
       val allSensorChannels = allSensorChannelsBuffer.toList
 
       val sensorDetail = new SimpleSensorTypeDescription(
-        getNextId(),
+        getId(sensorTypeData),
         sensorTypeId,
         sensorTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
         Option(sensorTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
@@ -382,7 +385,7 @@ class StandardSensorCommonDescriptionExtractor(
         }
 
         val markerDetail = SimpleMarkerTypeDescription(
-          getNextId(),
+          getId(markerTypeData),
           markerTypeId,
           markerTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(markerTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)),
@@ -415,7 +418,7 @@ class StandardSensorCommonDescriptionExtractor(
         val physicalSpaceTypeData = physicalSpaceTypelEntry.down()
 
         val physicalSpaceType = new SimplePhysicalSpaceTypeDescription(
-          getNextId(),
+          getId(physicalSpaceTypeData),
           physicalSpaceTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID),
           physicalSpaceTypeData.getRequiredString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_NAME),
           Option(physicalSpaceTypeData.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_DESCRIPTION)))
@@ -426,6 +429,22 @@ class StandardSensorCommonDescriptionExtractor(
     }
   }
 
+  /**
+   * Get the ID field from data. If there is no ID, a sytheic ID will be created.
+   *
+   * @param data
+   *        the data object
+   *
+   * @return the ID to use
+   */
+  private def getId(data: DynamicObject): String = {
+    val id = data.getString(SensorDescriptionConstants.ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID)
+    if (id != null) {
+      return id
+    } else {
+      getNextId()
+    }
+  }
   /**
    * Get the next "database" ID.
    *

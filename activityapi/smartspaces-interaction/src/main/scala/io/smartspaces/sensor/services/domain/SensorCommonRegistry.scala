@@ -16,6 +16,7 @@
 
 package io.smartspaces.sensor.services.domain
 
+import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValueInstances
 import io.smartspaces.sensor.domain.DataSourceProviderInterfaceTypeDescription
 import io.smartspaces.sensor.domain.DataSourceProviderOriginTypeDescription
 import io.smartspaces.sensor.domain.DataSourceProviderTypeDescription
@@ -245,7 +246,7 @@ trait SensorCommonRegistry {
   def getAllDataSourceProviderTypesByInterface(interfaceId: String): Iterable[DataSourceProviderTypeDescription]
 
   /**
-   * Get all data source types from the registry that provide a given data source interface.
+   * Get all data source types from the registry that provide a given data source origin.
    *
    * @param originId
    *        the ID for an origin
@@ -253,6 +254,18 @@ trait SensorCommonRegistry {
    * @return all data source types in the registry
    */
   def getAllDataSourceProviderTypesByOrigin(originId: String): Iterable[DataSourceProviderTypeDescription]
+
+  /**
+   * Get all data source types from the registry that provide a given acquisition.
+   *
+   * @param acquisitionMode
+   *        the acquisition mode
+   *
+   * @return all data source types in the registry
+   */
+  def getAllDataSourceProviderTypesByAcquisitionMode(
+    acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance):
+  Iterable[DataSourceProviderTypeDescription]
 
   /**
    * Register a data source provider interface with the registry.

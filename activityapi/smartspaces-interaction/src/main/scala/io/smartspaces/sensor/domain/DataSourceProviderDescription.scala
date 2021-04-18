@@ -68,7 +68,7 @@ trait DataSourceProviderDescription {
   /**
    * The ID of the data source provider. This ID will be relative to the sensor or marker type.
    */
-  def providerId: String
+  def dataSourceProviderId: String
 
   /**
    * The ID of the sensor, for example the ID that the system uses if using the internal SmartThings
@@ -83,6 +83,6 @@ trait DataSourceProviderDescription {
  * @author Keith M. Hughes
  */
 case class SimpleDataSourceProviderDescription(
-  override val providerId: String,
+  override val dataSourceProviderId: String,
   override val acquisitionId: Option[String]
 ) extends DataSourceProviderDescription

@@ -17,6 +17,7 @@
 package io.smartspaces.sensor.services.domain
 
 import io.smartspaces.logging.ExtendedLog
+import io.smartspaces.sensor.domain.DataSourceAcquisitionModeCategoricalValueInstances
 import io.smartspaces.sensor.domain.DataSourceProviderInterfaceTypeDescription
 import io.smartspaces.sensor.domain.DataSourceProviderOriginTypeDescription
 import io.smartspaces.sensor.domain.DataSourceProviderTypeDescription
@@ -25,8 +26,8 @@ import io.smartspaces.sensor.domain.MeasurementTypeDescription
 import io.smartspaces.sensor.domain.MeasurementUnitDescription
 import io.smartspaces.sensor.domain.PhysicalSpaceTypeDescription
 import io.smartspaces.sensor.domain.SensorTypeDescription
-import javax.inject.Inject
 
+import javax.inject.Inject
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.Map
 
@@ -217,6 +218,12 @@ class InMemorySensorCommonRegistry @Inject() (
 
   override def getAllDataSourceProviderTypesByOrigin(originId: String): Iterable[DataSourceProviderTypeDescription] = {
     externalIdToDataSourceProviderType.values.filter(_.originProviderId == originId)
+  }
+
+  override def getAllDataSourceProviderTypesByAcquisitionMode(
+    acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance):
+  Iterable[DataSourceProviderTypeDescription] = {
+    externalIdToDataSourceProviderType.values.filter(_.acquisitionMode == acquisitionMode)
   }
 
   override def registerDataSourceProviderInterfaceType(dataSourceProviderInterfaceType: DataSourceProviderInterfaceTypeDescription): SensorCommonRegistry = {

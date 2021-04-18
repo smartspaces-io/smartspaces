@@ -96,6 +96,11 @@ object SensorDescriptionConstants {
   /**
    * The field in all entity descriptions for the entity ID.
    */
+  val ENTITY_DESCRIPTION_FIELD_ID = "id"
+
+  /**
+   * The field in all entity descriptions for the entity external ID.
+   */
   val ENTITY_DESCRIPTION_FIELD_EXTERNAL_ID = "externalId"
 
   /**

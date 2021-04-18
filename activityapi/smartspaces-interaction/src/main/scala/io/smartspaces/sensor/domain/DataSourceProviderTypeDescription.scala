@@ -58,9 +58,19 @@ case class SimpleDataSourceProviderTypeReference(
 trait DataSourceProviderTypeDescription extends DataSourceProviderTypeReference {
 
   /**
-   * The external ID for this data source
+   * The external ID for this data source provider.
    */
   def externalId: String
+
+  /**
+   * The name of the data source provider.
+   */
+  def name: String
+
+  /**
+   * The description of the data source provider, if any
+   */
+  def description: Option[String]
 
   /**
    * [[ true ]] if authorization is required for this provider.
@@ -75,6 +85,8 @@ trait DataSourceProviderTypeDescription extends DataSourceProviderTypeReference 
  */
 case class SimpleDataSourceProviderTypeDescription(
   override val externalId: String,
+  override val name: String,
+  override val description: Option[String],
   override val originProviderId: String,
   override val interfaceProviderId: String,
   override val acquisitionMode: DataSourceAcquisitionModeCategoricalValueInstances.DataSourceAcquisitionModeCategoricalValueInstance,
